@@ -207,7 +207,7 @@
   "pages": {
     "SignIn": {
       "appDescription": "Digital services shared by National Education agents",
-      "appVersion": "Test Alpha 0.1 Version",
+      "appVersion": "Test Alpha 0.2 Version",
       "emailLabel": "Username or Email",
       "pwdLabel": "Password",
       "connect": "Connect",
