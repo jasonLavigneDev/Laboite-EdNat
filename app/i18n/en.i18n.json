@@ -330,7 +330,8 @@
       "propulsedBy": "Propulsed by"
     },
     "PersonalSpace": {
-      "welcome": "Welcome on your personal space"
+      "welcome": "Welcome on your personal space",
+      "noFavYet": "Add here some elements from Applications tab"
     },
     "AdminSingleServicePage": {
       "edition": "Edition of the service",

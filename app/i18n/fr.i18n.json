@@ -333,7 +333,8 @@
       "propulsedBy": "Propulsé par"
     },
     "PersonalSpace": {
-      "welcome": "Bienvenue sur votre espace personnel"
+      "welcome": "Bienvenue sur votre espace personnel",
+      "noFavYet": "Ajoutez ici des éléments depuis l'onglet Applications"
     },
     "AdminSingleServicePage": {
       "edition": "Edition du service",

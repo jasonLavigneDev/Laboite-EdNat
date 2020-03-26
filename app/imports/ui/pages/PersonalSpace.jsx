@@ -12,7 +12,6 @@ import ServiceDetails from '../components/services/ServiceDetails';
 import Spinner from '../components/system/Spinner';
 import { Context } from '../contexts/context';
 import Services from '../../api/services/services';
-import Categories from '../../api/categories/categories';
 
 const useStyles = makeStyles((theme) => ({
   cardGrid: {
@@ -29,24 +28,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function ServicesPage({ services, ready, categories }) {
+function ServicesPage({ services, ready }) {
   const classes = useStyles();
   const [{ user, loadingUser }] = useContext(Context);
   const favs = loadingUser ? [] : user.favServices;
-  const [catList, setCatList] = useState([]);
-
-  const updateCatList = (catId) => {
-    // Call by click on categories of services
-    if (catList.includes(catId)) {
-      // catId already in list so remove it
-      setCatList(catList.filter((id) => id !== catId));
-    } else {
-      // add new catId to list
-      setCatList([...catList, catId]);
-    }
-  };
 
   const filterServices = (service) => favs.find((serviceId) => serviceId === service._id);
+
+  console.log('favs', favs);
 
   return (
     <>
@@ -59,16 +48,17 @@ function ServicesPage({ services, ready, categories }) {
               <Grid item xs={12} sm={12} md={12}>
                 <Typography variant="h4">{i18n.__('pages.PersonalSpace.welcome')}</Typography>
               </Grid>
-              {services
-                .filter((service) => filterServices(service))
-                .map((service) => {
-                  const favAction = favs.indexOf(service._id) === -1 ? 'fav' : 'unfav';
-                  return (
+              {favs.length > 0 ? (
+                services
+                  .filter((service) => filterServices(service))
+                  .map((service) => (
                     <Grid className={classes.gridItem} item key={service._id} xs={12} sm={6} md={4} lg={4}>
                       <ServiceDetails service={service} favAction="unfav" isShort />
                     </Grid>
-                  );
-                })}
+                  ))
+              ) : (
+                <Typography>{i18n.__('pages.PersonalSpace.noFavYet')}</Typography>
+              )}
             </Grid>
           </Container>
         </Fade>
@@ -79,19 +69,15 @@ function ServicesPage({ services, ready, categories }) {
 
 ServicesPage.propTypes = {
   services: PropTypes.arrayOf(PropTypes.object).isRequired,
-  categories: PropTypes.arrayOf(PropTypes.object).isRequired,
   ready: PropTypes.bool.isRequired,
 };
 
 export default withTracker(() => {
   const servicesHandle = Meteor.subscribe('services.all');
-  const categoriesHandle = Meteor.subscribe('categories.all');
   const services = Services.find({}, { sort: { title: 1 } }).fetch();
-  const ready = servicesHandle.ready() && categoriesHandle.ready();
-  const categories = Categories.find({}, { sort: { name: 1 } }).fetch();
+  const ready = servicesHandle.ready();
   return {
     services,
-    categories,
     ready,
   };
 })(ServicesPage);
