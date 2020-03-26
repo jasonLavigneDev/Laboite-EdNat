@@ -1,3 +1,5 @@
+import { Meteor } from 'meteor/meteor';
+
 // import i18n translation files
 import '../locales';
 
@@ -9,8 +11,10 @@ import './config/security';
 import './config/ValidationError';
 import './register-api';
 
-// Set up roles, initial accounts and services
-import './db-initialize/Accounts';
-import './db-initialize/Services';
-import './db-initialize/Categories';
-import './db-initialize/Groups';
+if (Meteor.isDevelopment === true) {
+  // Set up roles, initial accounts and services
+  import './db-initialize/Accounts';
+  import './db-initialize/Services';
+  import './db-initialize/Categories';
+  import './db-initialize/Groups';
+}
