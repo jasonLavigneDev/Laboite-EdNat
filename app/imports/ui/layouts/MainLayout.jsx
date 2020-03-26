@@ -15,11 +15,8 @@ import { Context } from '../contexts/context';
 // pages
 import ServicesPage from '../pages/services/ServicesPage';
 import SingleServicePage from '../pages/services/SingleServicePage';
-import GroupsPage from '../pages/groups/GroupsPage';
 import NotFound from '../pages/system/NotFound';
 import PersonalSpace from '../pages/PersonalSpace';
-import SingleGroupPage from '../pages/groups/SingleGroupPage';
-import AddressBook from '../pages/groups/AddressBook';
 import ProfilePage from '../pages/system/ProfilePage';
 
 // dynamic imports
@@ -27,8 +24,6 @@ const AdminSingleServicePage = lazy(() => import('../pages/admin/AdminSingleServ
 const AdminCategoriesPage = lazy(() => import('../pages/admin/AdminCategoriesPage'));
 const AdminServicesPage = lazy(() => import('../pages/admin/AdminServicesPage'));
 const AdminUserValidationPage = lazy(() => import('../pages/admin/AdminUserValidationPage'));
-const AdminGroupsPage = lazy(() => import('../pages/admin/AdminGroupsPage'));
-const AdminSingleGroupPage = lazy(() => import('../pages/admin/AdminSingleGroupPage'));
 
 // CSS
 const useStyles = (isMobile) => makeStyles((theme) => ({
@@ -76,12 +71,6 @@ function MainLayout() {
                 <Route exact path="/profile" component={ProfilePage} />
                 <Route exact path="/services" component={ServicesPage} />
                 <Route exact path="/services/:slug" component={SingleServicePage} />
-                <Route exact path="/groups" component={GroupsPage} />
-                <Route exact path="/groups/:slug" component={SingleGroupPage} />
-                <Route exact path="/groups/:slug/addressbook" component={AddressBook} />
-                <Route exact path="/admingroups" component={AdminGroupsPage} />
-                <Route exact path="/admingroups/new" component={AdminSingleGroupPage} />
-                <Route exact path="/admingroups/:_id" component={AdminSingleGroupPage} />
                 <AdminRoute
                   exact
                   path="/adminservices"

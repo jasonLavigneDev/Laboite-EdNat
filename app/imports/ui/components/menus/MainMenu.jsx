@@ -23,12 +23,7 @@ export const adminMenu = [
   },
 ];
 
-export const userMenu = [
-  {
-    path: '/admingroups',
-    content: 'menuAdminGroups',
-  },
-];
+export const userMenu = [];
 
 const MainMenu = ({ user = {} }) => {
   const [anchorEl, setAnchorEl] = useState(null);

@@ -3,7 +3,6 @@ import i18n from 'meteor/universe:i18n';
 import { useLocation, useHistory } from 'react-router-dom';
 import { Tabs, Tab, makeStyles } from '@material-ui/core';
 import { PropTypes } from 'prop-types';
-import GroupIcon from '@material-ui/icons/Group';
 import HomeIcon from '@material-ui/icons/Home';
 import SearchIcon from '@material-ui/icons/Search';
 
@@ -13,13 +12,6 @@ export const links = [
     content: 'menuMyspace',
     contentMobile: 'menuMyspaceMobile',
     icon: <HomeIcon />,
-    admin: false,
-  },
-  {
-    path: '/groups',
-    content: 'menuGroupes',
-    contentMobile: 'menuGroupesMobile',
-    icon: <GroupIcon />,
     admin: false,
   },
   {
