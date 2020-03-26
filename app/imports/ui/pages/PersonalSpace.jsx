@@ -64,14 +64,8 @@ function ServicesPage({ services, ready, categories }) {
                 .map((service) => {
                   const favAction = favs.indexOf(service._id) === -1 ? 'fav' : 'unfav';
                   return (
-                    <Grid className={classes.gridItem} item key={service._id} xs={12} sm={6} md={4} lg={3}>
-                      <ServiceDetails
-                        service={service}
-                        favAction={favAction}
-                        categories={categories}
-                        updateCategories={updateCatList}
-                        catList={catList}
-                      />
+                    <Grid className={classes.gridItem} item key={service._id} xs={12} sm={6} md={4} lg={4}>
+                      <ServiceDetails service={service} favAction="unfav" isShort />
                     </Grid>
                   );
                 })}
