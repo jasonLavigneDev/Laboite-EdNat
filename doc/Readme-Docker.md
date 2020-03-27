@@ -40,4 +40,7 @@ mongoexport --uri="mongodb://mongo:27017/meteor" --collection=categories --jsonA
 
 Importer ces mêmes collections
 
+```
 mongoimport --uri="mongodb://mongo:27017/meteor" --collection=categories --jsonArray --file=categories.json
+mongoimport --uri="mongodb://mongo:27017/meteor" --collection=services --jsonArray --file=services.json
+```
