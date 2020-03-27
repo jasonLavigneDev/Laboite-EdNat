@@ -16,18 +16,21 @@ Browse to localhost url with user 'eole@ac-dijon.fr' and password 'changeme'.
 docker-compose -f docker-compose-hub.yml up -d
 ```
 
-**Caution** : you may want to clean previous volume :
-`docker-compose -f docker-compose-hub.yml down -v`
+**Caution** : you may want to clean previous volume : `docker-compose -f docker-compose-hub.yml down -v`
 
 # Import/export of services/catégories :
 
 * Enter in mongo container
 
-`docker-compose exec mongo /bin/bash`
+```
+docker-compose exec mongo /bin/bash
+```
 
 * Go in shared volume folder
 
-`cd /data/db`
+```
+cd /data/db
+```
 
 * Export services and categories collections in 2 json files
 
