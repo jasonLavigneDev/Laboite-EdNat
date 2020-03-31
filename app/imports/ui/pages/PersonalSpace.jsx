@@ -35,8 +35,6 @@ function ServicesPage({ services, ready }) {
 
   const filterServices = (service) => favs.find((serviceId) => serviceId === service._id);
 
-  console.log('favs', favs);
-
   return (
     <>
       {!ready ? (
