@@ -105,6 +105,7 @@ const PublishersPage = () => {
                 fullWidth
                 onChange={updateSearch}
                 type="text"
+                value={search}
                 variant="outlined"
                 InputProps={{
                   startAdornment: (
