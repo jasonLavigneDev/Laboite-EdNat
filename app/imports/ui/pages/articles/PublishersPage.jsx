@@ -106,7 +106,6 @@ const PublishersPage = () => {
                 value={search}
                 onChange={updateSearch}
                 type="text"
-                value={search}
                 variant="outlined"
                 InputProps={{
                   startAdornment: (
