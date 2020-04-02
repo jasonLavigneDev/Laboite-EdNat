@@ -16,7 +16,7 @@ export const createArticle = new ValidatedMethod({
 
   run({ data }) {
     if (!isActive(this.userId)) {
-      throw new Meteor.Error('api.articles.createArticle.notLoggedIn', i18n.__('api.users.mustBeLoggedIn'));
+      throw new Meteor.Error('api.articles.createArticle.notLoggedIn', i18n.__('api.articles.mustBeLoggedIn'));
     }
     return Articles.insert(data);
   },
@@ -29,7 +29,7 @@ export const removeArticle = new ValidatedMethod({
 
   run({ articleId }) {
     if (!isActive(this.userId)) {
-      throw new Meteor.Error('api.articles.removeArticle.notLoggedIn', i18n.__('api.users.mustBeLoggedIn'));
+      throw new Meteor.Error('api.articles.removeArticle.notLoggedIn', i18n.__('api.articles.mustBeLoggedIn'));
     }
     const article = Articles.findOne({ _id: articleId });
     const authorized = this.userId === article.userId;

@@ -90,6 +90,20 @@
         "participantId": "Id De Participant"
       }
     },
+    "articles": {
+      "mustBeLoggedIn": "Vous devez être connecté.",
+      "adminArticleNeeded": "Vous n'avez pas les droits d'administration sur cette publication.",
+      "unknownArticle": "Cette publication n'existe pas",
+      "labels": {
+        "title": "Titre",
+        "slug": "URL de la publication",
+        "userId": "ID de l'auteur",
+        "description": "Courte description",
+        "content": "Contenu de la publication",
+        "createdAt": "Date de création",
+        "updatedAt": "Date de mise à jour"
+      }
+    },
     "methods": {
       "operationSuccessMsg": "Opération réalisée avec succès.",
       "labels": {
