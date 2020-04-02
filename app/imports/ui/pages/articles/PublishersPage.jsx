@@ -55,7 +55,7 @@ const ITEM_PER_PAGE = 10;
 const PublishersPage = () => {
   const classes = useStyles();
   const [{ publishersPage }, dispatch] = useContext(Context);
-  const { search } = publishersPage;
+  const { search = '' } = publishersPage;
   const {
     changePage, page, items, total, loading,
   } = usePagination(
@@ -103,6 +103,7 @@ const PublishersPage = () => {
                 label={i18n.__('pages.PublishersPage.searchText')}
                 name="search"
                 fullWidth
+                value={search}
                 onChange={updateSearch}
                 type="text"
                 value={search}

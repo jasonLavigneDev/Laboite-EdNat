@@ -45,6 +45,47 @@ const emptyArticle = {
   content: '',
   description: '',
 };
+
+function imageHandler() {
+  const range = this.quill.getSelection();
+  const value = prompt('What is the image URL');
+  console.log(value, range);
+  if (value) {
+    this.quill.insertEmbed(range.index, 'image', value);
+  }
+}
+
+const toolbarOptions = [
+  [{ header: [1, 2, 3, 4, 5, false] }],
+  ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+  [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
+  ['link', 'image'],
+  ['clean'],
+];
+const quillOptions = {
+  modules: {
+    toolbar: {
+      container: toolbarOptions,
+      handlers: {
+        image: imageHandler,
+      },
+    },
+  },
+  formats: [
+    'header',
+    'bold',
+    'italic',
+    'underline',
+    'strike',
+    'blockquote',
+    'list',
+    'bullet',
+    'indent',
+    'link',
+    'image',
+  ],
+};
+
 function EditArticlePage({
   article = {},
   ready,
@@ -145,7 +186,7 @@ function EditArticlePage({
         />
         <div className={classes.wysiwyg}>
           <InputLabel htmlFor="content">{i18n.__('pages.EditArticlePage.contentLabel')}</InputLabel>
-          <ReactQuill id="content" value={content} onChange={onUpdateRichText} />
+          <ReactQuill {...quillOptions} id="content" value={content} onChange={onUpdateRichText} />
         </div>
 
         <div className={classes.buttonGroup}>
