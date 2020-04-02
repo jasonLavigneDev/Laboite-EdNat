@@ -214,6 +214,9 @@
       "publicButton": "Open this publication public page",
       "publishedOn": "Published on the",
       "noDescription": "There is no description for this publication"
+    },
+    "AppVersion": {
+      "title": "Test Alpha Version"
     }
   },
   "validatejs": {
