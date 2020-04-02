@@ -28,38 +28,38 @@ function createUser(email, password, role, structure, firstName, lastName) {
   Meteor.users.update(userID, { $set: { isActive: true } });
 }
 
-if (Meteor.isDevelopment) {
-  if (Meteor.settings.keycloak) {
-    if (Meteor.settings.public.enableKeycloak === true) {
-      Accounts.config({
-        forbidClientAccountCreation: true,
-      });
-      ServiceConfiguration.configurations.upsert(
-        { service: 'keycloak' },
-        {
-          $set: {
-            loginStyle: 'redirect',
-            serverUrl: Meteor.settings.keycloak.url,
-            realm: Meteor.settings.keycloak.realm,
-            clientId: Meteor.settings.keycloak.client,
-            realmPublicKey: Meteor.settings.keycloak.pubkey,
-            bearerOnly: false,
-          },
+if (Meteor.settings.keycloak) {
+  if (Meteor.settings.public.enableKeycloak === true) {
+    Accounts.config({
+      forbidClientAccountCreation: true,
+    });
+    ServiceConfiguration.configurations.upsert(
+      { service: 'keycloak' },
+      {
+        $set: {
+          loginStyle: 'redirect',
+          serverUrl: Meteor.settings.keycloak.url,
+          realm: Meteor.settings.keycloak.realm,
+          clientId: Meteor.settings.keycloak.client,
+          realmPublicKey: Meteor.settings.keycloak.pubkey,
+          bearerOnly: false,
         },
-      );
-    }
-  } else {
-    console.log('No Keycloak configuration. Please invoke meteor with a settings file.');
+      },
+    );
   }
+} else {
+  console.log('No Keycloak configuration. Please invoke meteor with a settings file.');
+}
 
-  /* ensure all roles exist */
-  const existingRoles = Roles.getAllRoles()
-    .fetch()
-    .map((role) => role._id);
-  AppRoles.forEach((role) => {
-    if (existingRoles.indexOf(role) === -1) Roles.createRole(role);
-  });
+/* ensure all roles exist */
+const existingRoles = Roles.getAllRoles()
+  .fetch()
+  .map((role) => role._id);
+AppRoles.forEach((role) => {
+  if (existingRoles.indexOf(role) === -1) Roles.createRole(role);
+});
 
+if (Meteor.isDevelopment) {
   /** When running app for first time, pass a settings file to set up a default user account. */
   const NUMBER_OF_FAKE_USERS = 300;
   if (Meteor.users.find().count() === 0) {
