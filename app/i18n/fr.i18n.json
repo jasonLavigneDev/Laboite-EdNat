@@ -197,6 +197,7 @@
       "joinPublicGroupButtonLabel": "Rejoindre le groupe",
       "askToJoinModerateGroupButtonLabel": "Demander à rejoindre",
       "groupMember": "Membre",
+      "groupAnimator": "Animateur",
       "groupCandidate": "Candidature en cours",
       "waitingForValidation": "En validation",
       "leaveGroup": "Quitter le groupe",
@@ -217,6 +218,22 @@
     },
     "AppVersion": {
       "title": "Version Bêta"
+    },
+    "PersonalZone": {
+      "delZoneLabel": "Supprimer cette zone",
+      "forbiddenDelZoneLabel": "Vider la zone pour la supprimer",
+      "upZoneLabel": "Faire monter cette zone",
+      "downZoneLabel": "Faire descendre cette zone",
+      "addPersonalLink": "Ajouter un lien personnel à cette zone",
+      "modifyTitle": "Modifier le titre de la zone"
+    },
+    "PersonalLinkDetails": {
+      "visitLink": "Visiter ce lien",
+      "delLink": "Supprimer ce lien",
+      "titleLabel": "Titre du lien",
+      "urlLabel": "Url du lien",
+      "modifyLink": "Modifier le lien",
+      "saveLink": "Enregistrer le lien"
     }
   },
   "validatejs": {
@@ -372,9 +389,13 @@
       "open": "Ouvrir",
       "propulsedBy": "Propulsé par"
     },
-    "PersonalSpace": {
+    "PersonalPage": {
       "welcome": "Bienvenue sur votre espace personnel",
-      "noFavYet": "Ajoutez ici des éléments depuis l'onglet Applications"
+      "noFavYet": "Ajoutez ici des éléments depuis l'onglet Applications",
+      "unsorted": "À trier",
+      "addZoneStartButton": "Ajouter une nouvelle zone au début",
+      "addZoneEndButton": "Ajouter une nouvelle zone à la fin",
+      "toggleEdition": "Activer/Désactiver le mode édition"
     },
     "AdminSingleServicePage": {
       "edition": "Edition du service",
@@ -418,7 +439,9 @@
       "groupJoined": "Vous êtes membre du groupe",
       "candidateSent": "L'administrateur du groupe va être notifié de votre demande",
       "alreadyCandidate": "Vous avez déjà envoyé votre demande à ce groupe",
-      "candidateCancel": "Votre requête a été annulée"
+      "candidateCancel": "Votre requête a été annulée",
+      "stopAnimating": "Arrêter d'animer ce groupe",
+      "animationLeft": "Vous n'êtes plus animateur de ce groupe"
     },
     "AddressBook": {
       "sendEmail": "Envoyer un email à",
