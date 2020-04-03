@@ -15,7 +15,7 @@ import { Context } from '../contexts/context';
 import ServicesPage from '../pages/services/ServicesPage';
 import SingleServicePage from '../pages/services/SingleServicePage';
 import NotFound from '../pages/system/NotFound';
-import PersonalSpace from '../pages/PersonalSpace';
+import PersonalPage from '../pages/PersonalPage';
 import ProfilePage from '../pages/system/ProfilePage';
 import ArticlesPage from '../pages/articles/ArticlesPage';
 import EditArticlePage from '../pages/articles/EditArticlePage';
@@ -68,7 +68,7 @@ function MainLayout() {
           <Suspense fallback={<Spinner full />}>
             {user.isActive ? (
               <Switch>
-                <Route exact path="/" component={PersonalSpace} />
+                <Route exact path="/" component={PersonalPage} />
                 <Route exact path="/profile" component={ProfilePage} />
                 <Route exact path="/services" component={ServicesPage} />
                 <Route exact path="/publications" component={ArticlesPage} />
