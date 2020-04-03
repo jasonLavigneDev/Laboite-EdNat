@@ -46,9 +46,6 @@ Articles.schema = new SimpleSchema(
     userId: {
       type: String,
       label: getLabel('api.articles.labels.userId'),
-      autoValue() {
-        return Meteor.isDevelopment ? this.value : this.userId;
-      },
     },
     content: { type: String, label: getLabel('api.articles.labels.content') },
     description: { type: String, label: getLabel('api.articles.labels.description'), max: 400 },
