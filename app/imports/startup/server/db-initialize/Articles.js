@@ -13,6 +13,7 @@ if (Articles.find().count() === 0) {
   if (Meteor.settings.private.fillWithFakeData && Meteor.isDevelopment) {
     const PUBLISHERS_RANDOM = 100;
     const publishers = users(PUBLISHERS_RANDOM);
+    console.log('Creating the default articles.');
     publishers.forEach((userId) => {
       const array = new Array(Math.floor(Math.random() * 30));
       array.fill(0);

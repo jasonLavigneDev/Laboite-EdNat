@@ -111,17 +111,17 @@ function ArticlesPage() {
                   <AddIcon fontSize="large" />
                 </IconButton>
               </Link>
-
+            </Typography>
+            <div className={classes.spaceBetween}>
               <Tooltip
                 title={i18n.__('pages.ArticlesPage.openPublicPage')}
                 aria-label={i18n.__('pages.ArticlesPage.openPublicPage')}
               >
-                <IconButton onClick={() => window.open(`${Meteor.absoluteUrl()}public/${Meteor.userId()}`, '_blank')}>
+                <IconButton onClick={() => window.open(`${Meteor.absoluteUrl()}public/`, '_blank')}>
                   <OpenInNewIcon fontSize="large" />
                 </IconButton>
               </Tooltip>
-            </Typography>
-            <div className={classes.spaceBetween} />
+            </div>
           </Grid>
         </Grid>
         <Grid container spacing={4}>

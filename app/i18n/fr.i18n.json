@@ -450,7 +450,7 @@
     },
     "ArticlesPage": {
       "title": "Vos publications",
-      "openPublicPage": "Votre page publique",
+      "openPublicPage": "Voir toutes les publications",
       "searchText": "Que recherchez-vous ?"
     },
     "EditArticlePage": {
