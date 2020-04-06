@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
-import LanguageSwitcher from '../system/LanguageSwitcher';
 import MenuBar from './MenuBar';
 import MainMenu from './MainMenu';
 import { Context } from '../../contexts/context';
@@ -53,7 +52,6 @@ function TopBar({ publicMenu }) {
 
       {!isMobile && !publicMenu && <MenuBar />}
       <div className={classes.rightContainer}>
-        <LanguageSwitcher topbar />
         {!publicMenu && <MainMenu user={user} />}
       </div>
     </AppBar>
