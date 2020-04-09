@@ -86,6 +86,7 @@ const useStyles = makeStyles((theme) => ({
     },
     '&::after': {
       content: `"${i18n.__('components.PersonalZone.emptyDragZone')}"`,
+      whiteSpace: 'nowrap',
     },
   },
   title: {
