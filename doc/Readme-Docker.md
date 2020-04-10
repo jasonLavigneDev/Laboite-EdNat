@@ -20,28 +20,31 @@ docker-compose -f docker-compose-hub.yml up -d
 
 # Import/export of services/catégories :
 
-* Enter in mongo container
+- Enter in mongo container
 
 ```
 docker-compose exec mongo /bin/bash
 ```
 
-* Go in shared volume folder
+- Go in shared volume folder
 
 ```
 cd /data/db
 ```
 
-* Export services and categories collections in 2 json files
+- Export services and categories collections in 2 json files ("_id" keys of services are deleted to be recreated on new App instances)
 
 ```
 mongoexport --uri="mongodb://mongo:27017/meteor" --collection=services --jsonArray --pretty --out=services.json
+sed -i '/_id/d' services.json
 mongoexport --uri="mongodb://mongo:27017/meteor" --collection=categories --jsonArray --pretty --out=categories.json
 ```
 
-* Import those collections from json files
+- Put those collections into .env files (imported at startup)
 
 ```
-mongoimport --uri="mongodb://mongo:27017/meteor" --collection=categories --jsonArray --file=categories.json
-mongoimport --uri="mongodb://mongo:27017/meteor" --collection=services --jsonArray --file=services.json
+serv=$(cat services.json | jq -c .)
+cate=$(cat categories.json | jq -c .)
+jq ".services=$serv | .categories=$cate" <config/settings.development.json >config/settings.datas.json
+echo "METEOR_SETTINGS=$(cat config/settings.datas.json | jq -c .)" > .env
 ```

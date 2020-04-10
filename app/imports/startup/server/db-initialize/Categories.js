@@ -17,3 +17,12 @@ if (Meteor.isDevelopment) {
     }
   }
 }
+
+if (Categories.find().count() === 0) {
+  if (Meteor.settings.categories) {
+    console.log('Creating the new categories');
+    Meteor.settings.categories.map((categorie) => createCategorie(categorie));
+  } else {
+    console.log('No default categories to create !  Please invoke meteor with a settings file.');
+  }
+}

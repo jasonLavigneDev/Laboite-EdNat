@@ -18,3 +18,12 @@ if (Meteor.isDevelopment) {
     }
   }
 }
+
+if (Services.find().count() === 0) {
+  if (Meteor.settings.services) {
+    console.log('Creating the new services');
+    Meteor.settings.services.map(createService);
+  } else {
+    console.log('No default services to create !  Please invoke meteor with a settings file.');
+  }
+}
