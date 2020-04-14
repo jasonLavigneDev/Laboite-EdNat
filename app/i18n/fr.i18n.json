@@ -406,7 +406,7 @@
     "PersonalPage": {
       "welcome": "Bienvenue sur votre espace personnel",
       "noFavYet": "Ajoutez ici des éléments depuis l'onglet Applications",
-      "unsorted": "À trier",
+      "unsorted": "Mes Applications",
       "addZoneStartButton": "Ajouter une nouvelle zone au début",
       "addZoneEndButton": "Ajouter une nouvelle zone à la fin",
       "toggleEdition": "Activer/Désactiver le mode édition"

@@ -403,7 +403,7 @@
     "PersonalPage": {
       "welcome": "Welcome on your personal space",
       "noFavYet": "Add here some elements from Applications tab",
-      "unsorted": "To be sorted",
+      "unsorted": "My Applications",
       "addZoneStartButton": "Add a new zone at start",
       "addZoneEndButton": "Add a new zone at the end",
       "toggleEdition": "Toggle edition mode"
