@@ -28,7 +28,12 @@ export const adminMenu = [
   },
 ];
 
-export const userMenu = [];
+export const userMenu = [
+  {
+    path: '/medias',
+    content: 'menuMedias',
+  },
+];
 
 const MainMenu = ({ user = {} }) => {
   const [anchorEl, setAnchorEl] = useState(null);
