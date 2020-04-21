@@ -33,6 +33,10 @@ export const userMenu = [
     path: '/medias',
     content: 'menuMedias',
   },
+  {
+    path: '/publications',
+    content: 'menuPublications',
+  },
 ];
 
 const MainMenu = ({ user = {} }) => {
