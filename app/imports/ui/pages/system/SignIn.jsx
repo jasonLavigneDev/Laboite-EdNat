@@ -15,6 +15,7 @@ import {
 } from '@material-ui/core';
 import Spinner from '../../components/system/Spinner';
 import AppVersion from '../../components/system/AppVersion';
+import AppSettings from '../../../api/appsettings/appsettings';
 
 validate.options = {
   fullMessages: false,
@@ -62,7 +63,7 @@ if (Meteor.settings.public.enableKeycloak === true) {
   });
 }
 
-function SignIn({ loggingIn }) {
+function SignIn({ loggingIn, introduction, ready }) {
   const classes = useStyles();
 
   const [formState, setFormState] = useState({
@@ -152,6 +153,8 @@ function SignIn({ loggingIn }) {
         <Typography variant="h6" color="inherit" paragraph>
           <AppVersion />
         </Typography>
+        {!ready && !loggingIn && <Spinner />}
+        <div dangerouslySetInnerHTML={{ __html: introduction }} />
         <form onSubmit={handleSignIn} className={classes.form} noValidate>
           {loggingIn && <Spinner full />}
           {useKeycloak ? (
@@ -236,9 +239,14 @@ function SignIn({ loggingIn }) {
 
 export default withTracker(() => {
   const loggingIn = Meteor.loggingIn();
+  const subSettings = Meteor.subscribe('appsettings.introduction');
+  const appsettings = AppSettings.findOne() || {};
+  const ready = subSettings.ready();
 
   return {
     loggingIn,
+    ready,
+    introduction: appsettings.introduction ? appsettings.introduction.content : '',
   };
 })(SignIn);
 
@@ -248,4 +256,6 @@ SignIn.defaultProps = {
 
 SignIn.propTypes = {
   loggingIn: PropTypes.bool,
+  ready: PropTypes.bool.isRequired,
+  introduction: PropTypes.string.isRequired,
 };
