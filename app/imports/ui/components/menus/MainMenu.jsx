@@ -26,6 +26,10 @@ export const adminMenu = [
     path: '/usersvalidation',
     content: 'menuAdminUserValidation',
   },
+  {
+    path: '/settings',
+    content: 'menuAdminAppSettings',
+  },
 ];
 
 export const userMenu = [
