@@ -15,13 +15,8 @@ const useStyles = makeStyles((theme) => ({
     flex: 1,
   },
   wysiwyg: {
-    marginTop: theme.spacing(3),
+    marginTop: theme.spacing(2),
     marginBottom: theme.spacing(3),
-  },
-  wysiwygDisabled: {
-    marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(3),
-    opacity: 0.7,
   },
   buttonGroup: {
     display: 'flex',
@@ -68,9 +63,14 @@ const LegalComponent = ({ tabkey, data = {} }) => {
     }
   }, [state]);
 
+  const onCheckExternal = (event) => {
+    const { name, checked } = event.target;
+    setState({ [name]: checked });
+  };
+
   const onUpdateField = (event) => {
-    const { name, value, checked } = event.target;
-    setState({ [name]: value || checked });
+    const { name, value } = event.target;
+    setState({ [name]: value });
   };
 
   const onUpdateRichText = (html) => {
@@ -112,27 +112,30 @@ const LegalComponent = ({ tabkey, data = {} }) => {
         <>
           <FormControlLabel
             control={
-              <Checkbox checked={state.external || false} onChange={onUpdateField} name="external" color="primary" />
+              <Checkbox checked={state.external || false} onChange={onCheckExternal} name="external" color="primary" />
             }
             label={i18n.__(`components.LegalComponent.external_${tabkey}`)}
           />
-          <TextField
-            onChange={onUpdateField}
-            value={state.link}
-            name="link"
-            label={i18n.__(`components.LegalComponent.link_${tabkey}`)}
-            variant="outlined"
-            fullWidth
-            disabled={!state.external}
-            margin="normal"
-          />
+          {state.external ? (
+            <TextField
+              onChange={onUpdateField}
+              value={state.link}
+              name="link"
+              label={i18n.__(`components.LegalComponent.link_${tabkey}`)}
+              variant="outlined"
+              fullWidth
+              margin="normal"
+            />
+          ) : null}
         </>
       )}
 
-      <div className={state.external ? classes.wysiwygDisabled : classes.wysiwyg}>
-        <InputLabel htmlFor="content">{i18n.__(`components.LegalComponent.content_${tabkey}`)}</InputLabel>
-        <ReactQuill id="content" value={state.content || ''} onChange={onUpdateRichText} {...quillOptions} />
-      </div>
+      {state.external ? null : (
+        <div className={classes.wysiwyg}>
+          <InputLabel htmlFor="content">{i18n.__(`components.LegalComponent.content_${tabkey}`)}</InputLabel>
+          <ReactQuill id="content" value={state.content || ''} onChange={onUpdateRichText} {...quillOptions} />
+        </div>
+      )}
       {changes && (
         <div className={classes.buttonGroup}>
           <Button variant="contained" color="primary" onClick={onSubmitUpdateData} disabled={loading}>

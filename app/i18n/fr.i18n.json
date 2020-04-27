@@ -465,6 +465,7 @@
       }
     },
     "AdminUsersPage": {
+      "title": "Gestion des utilisateurs",
       "searchText": "Quel utilisateur cherchez-vous ?",
       "admin": "Administrateur",
       "setAdmin": "Donner les droits d'administrateur",

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 import i18n from 'meteor/universe:i18n';
 import {
@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import Spinner from '../../components/system/Spinner';
 import AppSettings from '../../../api/appsettings/appsettings';
 import LegalComponent from '../../components/admin/LegalComponent';
+import { Context } from '../../contexts/context';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,6 +34,9 @@ const useStyles = makeStyles((theme) => ({
     '& > span': {
       alignItems: 'end',
     },
+  },
+  tabs: {
+    borderRight: `1px solid ${theme.palette.divider}`,
   },
 }));
 
@@ -62,6 +66,8 @@ const tabs = [
 const AdminSettingsPage = ({ ready, appsettings }) => {
   const [selected, setSelected] = useState(0);
   const classes = useStyles();
+  const [{ isMobile }] = useContext(Context);
+
   const onChangeTab = (e, newTab) => {
     setSelected(newTab);
   };
@@ -76,10 +82,10 @@ const AdminSettingsPage = ({ ready, appsettings }) => {
         <Paper className={classes.root}>
           <Grid container spacing={4}>
             <Grid item md={12}>
-              <Typography variant="h3">{i18n.__('pages.AdminSettingsPage.edition')}</Typography>
+              <Typography variant={isMobile ? 'h6' : 'h4'}>{i18n.__('pages.AdminSettingsPage.edition')}</Typography>
             </Grid>
             <Grid item md={12} className={classes.container}>
-              <Tabs orientation="vertical" value={selected} onChange={onChangeTab}>
+              <Tabs orientation="vertical" value={selected} onChange={onChangeTab} className={classes.tabs}>
                 {tabs.map(({ title, key }, index) => (
                   <Tab className={classes.tab} label={title} id={index} key={key} />
                 ))}
