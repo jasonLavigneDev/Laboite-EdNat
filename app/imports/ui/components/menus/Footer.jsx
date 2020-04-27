@@ -39,7 +39,7 @@ const Footer = () => {
         key,
         external: newData[key].external,
         link: newData[key].external ? newData[key].link : LEGAL_ROUTES[key],
-        text: i18n.__(`components.Footer.${key}`),
+        text: key,
       }));
       setSettingsData(appsettings);
     });
@@ -55,13 +55,13 @@ const Footer = () => {
             if (external) {
               return (
                 <a key={key} className={classes.link} href={link} target="_blank" rel="noreferrer noopener">
-                  {text}
+                  {i18n.__(`components.Footer.${text}`)}
                 </a>
               );
             }
             return (
               <Link key={key} className={classes.link} to={`/legal/${link}`}>
-                {text}
+                {i18n.__(`components.Footer.${text}`)}
               </Link>
             );
           })}
