@@ -159,7 +159,6 @@ function SignIn({ loggingIn, introduction, ready }) {
           {loggingIn && <Spinner full />}
           {useKeycloak ? (
             <>
-              <RememberButton />
               <Button
                 disabled={loggingIn}
                 fullWidth
@@ -170,6 +169,7 @@ function SignIn({ loggingIn, introduction, ready }) {
               >
                 {i18n.__('pages.SignIn.loginKeycloak')}
               </Button>
+              <RememberButton />
             </>
           ) : (
             <>
@@ -206,7 +206,6 @@ function SignIn({ loggingIn, introduction, ready }) {
                 value={formState.values.password || ''}
                 disabled={loggingIn}
               />
-              <RememberButton />
               <Button
                 type="submit"
                 fullWidth
@@ -217,6 +216,7 @@ function SignIn({ loggingIn, introduction, ready }) {
               >
                 {i18n.__('pages.SignIn.connect')}
               </Button>
+              <RememberButton />
               <Grid container>
                 <Grid item xs>
                   <Link to="/" variant="body2">
