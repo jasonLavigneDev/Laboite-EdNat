@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
     position: 'relative',
     overflow: 'hidden',
   },
-  image: { position: 'absolute', height: '100%', position: 'absolute' },
+  image: { position: 'absolute', height: '100%' },
 }));
 
 const SingleStorageFile = ({ file, onSelect }) => {
