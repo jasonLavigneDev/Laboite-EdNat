@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Meteor } from 'meteor/meteor';
 import PropTypes from 'prop-types';
@@ -18,7 +18,7 @@ import PeopleIcon from '@material-ui/icons/People';
 import LockIcon from '@material-ui/icons/Lock';
 import ClearIcon from '@material-ui/icons/Clear';
 import EditIcon from '@material-ui/icons/Edit';
-import { Context } from '../../contexts/context';
+import { useAppContext } from '../../contexts/context';
 import Groups from '../../../api/groups/groups';
 import Services from '../../../api/services/services';
 import Spinner from '../../components/system/Spinner';
@@ -123,7 +123,7 @@ const useStyles = (member, candidate, type) => makeStyles((theme) => ({
 
 const SingleGroupPage = ({ group = {}, ready, services }) => {
   const { type } = group;
-  const [{ userId }] = useContext(Context);
+  const [{ userId }] = useAppContext();
   const [loading, setLoading] = useState(false);
   const [openedContent, toggleOpenedContent] = useState(false);
   const animator = Roles.userIsInRole(userId, 'animator', group._id);
