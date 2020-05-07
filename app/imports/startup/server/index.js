@@ -1,3 +1,6 @@
+import { Migrations } from 'meteor/percolate:migrations';
+import { Meteor } from 'meteor/meteor';
+
 // import i18n translation files
 import '../locales';
 
@@ -16,3 +19,7 @@ import './db-initialize/Categories';
 import './db-initialize/Articles';
 import './db-initialize/AppSettings';
 // import './db-initialize/PersonalSpaces';
+
+Meteor.startup(() => {
+  Migrations.migrateTo('latest');
+});
