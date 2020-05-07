@@ -1,5 +1,5 @@
 import { Migrations } from 'meteor/percolate:migrations';
-import Services from '../services';
+import Services from './services/services';
 
 Migrations.add({
   version: 1,
