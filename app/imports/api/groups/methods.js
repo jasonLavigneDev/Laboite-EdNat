@@ -11,6 +11,7 @@ import Groups from './groups';
 import { addGroup, removeElement } from '../personalspaces/methods';
 import kcClient from '../appclients/kcClient';
 import nextClient from '../appclients/nextcloud';
+import rcClient from '../appclients/rocketChat';
 
 export const favGroup = new ValidatedMethod({
   name: 'groups.favGroup',

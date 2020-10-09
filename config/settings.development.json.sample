@@ -5,6 +5,8 @@
     "keycloakRealm": "apps",
     "enableNextcloud": false,
     "nextcloudURL": "",
+    "enableRocketChat": true,
+    "rocketChatURL": "",
     "minioSSL": false,
     "minioPort": null,
     "minioAccess": "Uhjm4KJ8MV",
@@ -37,6 +39,10 @@
     "nextcloudUser": "",
     "nextcloudPassword": "",
     "nextcloudQuota": "1073741824"
+  },
+  "rocketChat": {
+    "rocketChatUser": "",
+    "rocketChatPassword": ""
   },
   "private": {
     "fillWithFakeData": true,

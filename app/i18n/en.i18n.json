@@ -231,6 +231,10 @@
       "groupRemoved": "Nextcloud: group {$groupName} removed",
       "groupRemoveError": "Nextcloud: Error removing group {$groupName}"
     },
+    "rocketChat": {
+      "initClient": "RocketChat: API client initialized",
+      "tokenError": "** RocketChat: could not get token, please check settings **"
+    },
     "logging": {
       "unknownLogLevel": "Specified log level does not exist",
       "info": "Server information",
