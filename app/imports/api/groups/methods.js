@@ -107,6 +107,10 @@ export const createGroup = new ValidatedMethod({
       // create associated groups and roles in keycloak
       kcClient.addGroup({ name }, this.userId);
     }
+    if (rcClient) {
+      // create associated private channel in Rocket Chat
+      rcClient.createGroup(name, this.userId);
+    }
     if (nextcloud && nextClient) {
       // create associated group in Nextcloud
       return nextClient.addGroup(name).then((response) => {
@@ -151,6 +155,10 @@ export const removeGroup = new ValidatedMethod({
     if (kcClient) {
       // delete associated groups and roles in keycloak
       kcClient.removeGroup(group, this.userId);
+    }
+    if (rcClient) {
+      // delete associated private channel in RocketChat
+      rcClient.removeGroup(group.name, this.userId);
     }
     // remove all roles set on this group
     Roles.removeScope(groupId);

@@ -64,6 +64,101 @@ class RocketChatClient {
         return null;
       });
   }
+
+  createGroup(name, callerId) {
+    this._getToken().then((token) => {
+      return axios
+        .post(
+          `${this.rcURL}/groups.create`,
+          {
+            // ATTENTION : les caractères 'spéciaux', accentués et les espace sont refusés ...
+            name,
+            // Retrouver et ajouter automatiquement les membres du groupe (ou canaux publics) ?
+            members: [],
+            readOnly: false,
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Accept: 'application/json',
+              'X-User-Id': this.adminId,
+              'X-Auth-Token': token,
+            },
+          },
+        )
+        .then((response) => {
+          if (response.data && response.data.success === true) {
+            logServer(i18n.__('api.rocketChat.groupAdded', { name }));
+          } else {
+            logServer(`${i18n.__('api.rocketChat.groupAddError', { name })} (${response.error})`, 'error', callerId);
+          }
+          return response.data.success === true ? 'ok' : response.error;
+        })
+        .catch((error) => {
+          logServer(i18n.__('api.rocketChat.groupAddError', { name }), 'error');
+          logServer(error.response && error.response.data ? error.response.data.error : error, 'error', callerId);
+          return null;
+        });
+    });
+  }
+
+  removeGroup(name, callerId) {
+    this._getToken().then((token) => {
+      return axios
+        .post(
+          `${this.rcURL}/groups.delete`,
+          {
+            roomName: name,
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Accept: 'application/json',
+              'X-User-Id': this.adminId,
+              'X-Auth-Token': token,
+            },
+          },
+        )
+        .then((response) => {
+          if (response.data.success === true) {
+            logServer(i18n.__('api.rocketChat.groupRemoved', { name }));
+          } else {
+            logServer(`${i18n.__('api.rocketChat.groupRemoveError', { name })} (${response.error})`, 'error', callerId);
+          }
+          return response.data.success === true ? 'ok' : response.error;
+        })
+        .catch((error) => {
+          logServer(i18n.__('api.rocketChat.groupRemoveError', { name }), 'error');
+          logServer(error.response && error.response.data ? error.response.data.error : error, 'error', callerId);
+          return null;
+        });
+    });
+  }
+
+  getUserByEmail(email) {
+    this._getToken().then((token) => {
+      return axios
+        .get(`${this.rcURL}/users.list`, {
+          params: {
+            query: { emails: { $elemMatch: { address: email } } },
+          },
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            'X-User-Id': this.adminId,
+            'X-Auth-Token': token,
+          },
+        })
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((error) => {
+          logServer(i18n.__('api.rocketChat.getUserError'), 'error');
+          logServer(error.response && error.response.data ? error.response.data : error, 'error');
+          return null;
+        });
+    });
+  }
 }
 
 const rcClient = Meteor.isServer && Meteor.settings.public.enableRocketChat ? new RocketChatClient() : null;

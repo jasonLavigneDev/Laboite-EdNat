@@ -233,7 +233,12 @@
     },
     "rocketChat": {
       "initClient": "RocketChat: API client initialized",
-      "tokenError": "** RocketChat: could not get token, please check settings **"
+      "tokenError": "** RocketChat: could not get token, please check settings **",
+      "groupAdded": "RocketChat: channel {$name} added",
+      "groupAddError": "RocketChat : ERROR adding channel {$name}",
+      "groupRemoved": "RocketChat: channel {$name} removed",
+      "groupRemoveError": "RocketChat: Error removing channel {$name}",
+      "getUserError": "RocketChat: Error getting user data"
     },
     "logging": {
       "unknownLogLevel": "Specified log level does not exist",
