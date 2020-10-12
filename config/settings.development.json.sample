@@ -5,7 +5,7 @@
     "keycloakRealm": "apps",
     "enableNextcloud": false,
     "nextcloudURL": "",
-    "enableRocketChat": true,
+    "enableRocketChat": false,
     "rocketChatURL": "",
     "minioSSL": false,
     "minioPort": null,

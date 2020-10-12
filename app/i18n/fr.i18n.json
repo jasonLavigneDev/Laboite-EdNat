@@ -238,7 +238,11 @@
       "groupAddError": "RocketChat : ERREUR lors de l'ajout du canal {$name}",
       "groupRemoved": "RocketChat: canal {$name} supprimé",
       "groupRemoveError": "RocketChat: Erreur lors de la suppression du canal {$name}",
-      "getUserError": "RocketChat: Erreur lors de la recherche de l'utilisateur"
+      "getUserError": "RocketChat: Erreur lors de la recherche de l'utilisateur",
+      "userInvited": "RocketChat: utilisateur {$email} ajouté au groupe {$groupId}",
+      "userInviteError": "RocketChat: Erreur lors de l'ajout de l'utilisateur {$email} au groupe {$groupId}",
+      "userAdded": "RocketChat: utilisateur {$email} créé",
+      "userAddError": "RocketChat: Erreur lors de la création de l'utilisateur {$email}"
     },
     "logging": {
       "unknownLogLevel": "Le niveau de log spécifié n'existe pas",
