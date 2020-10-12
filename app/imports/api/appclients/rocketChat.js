@@ -23,10 +23,9 @@ class RocketChatClient {
               if (resp === null) {
                 // create user if not existing
                 return this.createUser('bruno.boiget@ac-dijon.fr', 'Bruno', 'bboiget', null);
-              } else {
-                console.log('user found');
-                return Promise.resolve(resp);
               }
+              console.log('user found');
+              return Promise.resolve(resp);
             })
             .then((userData) => {
               if (userData === null) {
@@ -35,7 +34,7 @@ class RocketChatClient {
                 console.log(userData);
                 // remove/create group if user ok
                 this.removeGroup('group_test', null)
-                  .then((removeOk) => this.createGroup('group_test', null))
+                  .then(() => this.createGroup('group_test', null))
                   .then((group) => {
                     console.log(group);
                     // invite user in group
@@ -121,10 +120,9 @@ class RocketChatClient {
           if (response.data && response.data.success === true) {
             logServer(i18n.__('api.rocketChat.groupAdded', { name }));
             return response.data.group;
-          } else {
-            logServer(`${i18n.__('api.rocketChat.groupAddError', { name })} (${response.error})`, 'error', callerId);
-            return null;
           }
+          logServer(`${i18n.__('api.rocketChat.groupAddError', { name })} (${response.error})`, 'error', callerId);
+          return null;
         })
         .catch((error) => {
           logServer(i18n.__('api.rocketChat.groupAddError', { name }), 'error', callerId);
@@ -184,11 +182,10 @@ class RocketChatClient {
         .then((response) => {
           if (response.data && response.data.success === true) {
             if (response.data.users.length > 0) return response.data.users[0];
-            else return null;
-          } else {
-            logServer(`${i18n.__('api.rocketChat.getUserError')} (${response.error})`, 'error');
             return null;
           }
+          logServer(`${i18n.__('api.rocketChat.getUserError')} (${response.error})`, 'error');
+          return null;
         })
         .catch((error) => {
           logServer(i18n.__('api.rocketChat.getUserError'), 'error');
@@ -265,10 +262,9 @@ class RocketChatClient {
           if (response.data && response.data.success === true) {
             logServer(i18n.__('api.rocketChat.userAdded', { email }));
             return response.data.user;
-          } else {
-            logServer(`${i18n.__('api.rocketChat.userAddError', { email })} (${response.error})`, 'error', callerId);
-            return null;
           }
+          logServer(`${i18n.__('api.rocketChat.userAddError', { email })} (${response.error})`, 'error', callerId);
+          return null;
         })
         .catch((error) => {
           logServer(i18n.__('api.rocketChat.userAddError', { email }), 'error', callerId);
