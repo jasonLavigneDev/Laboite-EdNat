@@ -242,7 +242,17 @@
       "userInvited": "RocketChat: utilisateur {$email} ajouté au groupe {$groupId}",
       "userInviteError": "RocketChat: Erreur lors de l'ajout de l'utilisateur {$email} au groupe {$groupId}",
       "userAdded": "RocketChat: utilisateur {$email} créé",
-      "userAddError": "RocketChat: Erreur lors de la création de l'utilisateur {$email}"
+      "userAddError": "RocketChat: Erreur lors de la création de l'utilisateur {$email}",
+      "logout": "RocketChat: Invalidation du jeton actuel",
+      "logoutError": "RocketChat: Erreur lors de l'invalidation du jeton",
+      "userKicked": "RocketChat: utilisateur {$email} supprimé du groupe {$groupId}",
+      "userKickError": "RocketChat: Erreur lors de la suppression de l'utilisateur {$email} du groupe {$groupId}",
+      "roleSet": "RocketChat: Rôle {$role} attribué à l'utilisateur {$email} sur le groupe {$groupId}",
+      "setRoleError": "RocketChat: Erreur lors de l'attribution du rôle {$role} à l'utilisateur {$email} sur le groupe {$groupId}",
+      "roleUnset": "RocketChat: Rôle {$role} enlevé à l'utilisateur {$email} sur le groupe {$groupId}",
+      "unsetRoleError": "RocketChat: Erreur lors de la suppression du rôle {$role} à l'utilisateur {$email} sur le groupe {$groupId}",
+      "owner": "propriétaire",
+      "moderator": "modérateur"
     },
     "logging": {
       "unknownLogLevel": "Le niveau de log spécifié n'existe pas",

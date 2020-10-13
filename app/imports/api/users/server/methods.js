@@ -16,6 +16,7 @@ import { favGroup, unfavGroup } from '../../groups/methods';
 import PersonalSpaces from '../../personalspaces/personalspaces';
 import { createRoleNotification, createRequestNotification } from '../../notifications/server/notifsutils';
 import kcClient from '../../appclients/kcClient';
+import rcClient from '../../appclients/rocketChat';
 // users.findUsers: Returns users using pagination
 //   filter: string to search for in username/firstname/lastname/emails (case insensitive search)
 //   page: number of the page requested
@@ -409,6 +410,16 @@ export const setAdminOf = new ValidatedMethod({
     //   // update user's groups in Keycloak
     //   kcClient.setRole(userId, `admin_${group.name}`);
     // }
+    if (rcClient) {
+      rcClient.ensureUser(userId, this.userId).then((user) => {
+        if (user !== null) {
+          const email = user.emails[0].address;
+          rcClient
+            .inviteUser(group.slug, email, this.userId)
+            .then(() => rcClient.setRole(group.slug, email, 'owner', this.userId));
+        }
+      });
+    }
     // Notify user
     if (this.userId !== userId) createRoleNotification(this.userId, userId, groupId, 'admin', true);
   },
@@ -450,6 +461,18 @@ export const unsetAdminOf = new ValidatedMethod({
     //    // update user's groups in Keycloak
     //    kcClient.unsetRole(userId, `admin_${group.name}`);
     //  }
+    if (rcClient) {
+      rcClient.ensureUser(userId, this.userId).then((user) => {
+        if (user !== null) {
+          const email = user.emails[0].address;
+          rcClient.unsetRole(group.slug, email, 'owner', this.userId).then(() => {
+            if (!Roles.userIsInRole(userId, ['member', 'animator'], groupId)) {
+              rcClient.kickUser(group.slug, email, this.userId);
+            }
+          });
+        }
+      });
+    }
     // Notify user
     if (this.userId !== userId) createRoleNotification(this.userId, userId, groupId, 'admin', false);
   },
@@ -489,6 +512,16 @@ export const setAnimatorOf = new ValidatedMethod({
       // update user's groups in Keycloak
       kcClient.setRole(userId, group.name, this.userId);
       // kcClient.setRole(userId, `animator_${group.name}`);
+    }
+    if (rcClient) {
+      rcClient.ensureUser(userId, this.userId).then((user) => {
+        if (user != null) {
+          const email = user.emails[0].address;
+          rcClient
+            .inviteUser(group.slug, email, this.userId)
+            .then(() => rcClient.setRole(group.slug, email, 'moderator', this.userId));
+        }
+      });
     }
     // Notify user
     if (this.userId !== userId) createRoleNotification(this.userId, userId, groupId, 'animator', true);
@@ -530,6 +563,18 @@ export const unsetAnimatorOf = new ValidatedMethod({
       // update user's groups in Keycloak
       kcClient.unsetRole(userId, group.name, this.userId);
       // kcClient.unsetRole(userId, `animator_${group.name}`);
+    }
+    if (rcClient) {
+      rcClient.ensureUser(userId, this.userId).then((user) => {
+        if (user !== null) {
+          const email = user.emails[0].address;
+          rcClient.unsetRole(group.slug, email, 'moderator', this.userId).then(() => {
+            if (!Roles.userIsInRole(userId, ['member', 'admin'], groupId)) {
+              rcClient.kickUser(group.slug, email, this.userId);
+            }
+          });
+        }
+      });
     }
     // Notify user
     if (this.userId !== userId) createRoleNotification(this.userId, userId, groupId, 'animator', false);
@@ -584,6 +629,14 @@ export const setMemberOf = new ValidatedMethod({
       kcClient.setRole(userId, group.name, this.userId);
       // kcClient.setRole(userId, `member_${group.name}`);
     }
+    if (rcClient) {
+      rcClient.ensureUser(userId, this.userId).then((user) => {
+        if (user != null) {
+          const email = user.emails[0].address;
+          rcClient.inviteUser(group.slug, email, this.userId);
+        }
+      });
+    }
     // Notify user
     if (this.userId !== userId) createRoleNotification(this.userId, userId, groupId, 'member', true);
   },
@@ -626,6 +679,14 @@ export const unsetMemberOf = new ValidatedMethod({
       // update user's groups in Keycloak
       kcClient.unsetRole(userId, group.name, this.userId);
       // kcClient.unsetRole(userId, `member_${group.name}`);
+    }
+    if (rcClient && !Roles.userIsInRole(userId, ['animator', 'admin'], groupId)) {
+      rcClient.ensureUser(userId, this.userId).then((user) => {
+        if (user !== null) {
+          const email = user.emails[0].address;
+          rcClient.kickUser(group.slug, email, this.userId);
+        }
+      });
     }
     // Notify user
     if (this.userId !== userId) createRoleNotification(this.userId, userId, groupId, 'member', false);

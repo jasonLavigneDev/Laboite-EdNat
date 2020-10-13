@@ -12,6 +12,7 @@ import { addGroup, removeElement } from '../personalspaces/methods';
 import kcClient from '../appclients/kcClient';
 import nextClient from '../appclients/nextcloud';
 import rcClient from '../appclients/rocketChat';
+import slugify from 'slugify';
 
 export const favGroup = new ValidatedMethod({
   name: 'groups.favGroup',
@@ -89,6 +90,21 @@ function _createGroup({ name, type, content, description, nextcloud, userId }) {
   }
 }
 
+const createRocketGroup = (name, userId) => {
+  const slug = slugify(name, {
+    replacement: '-', // replace spaces with replacement
+    remove: null, // regex to remove characters
+    lower: true, // result in lower case
+  });
+  rcClient.createGroup(slug, userId).then(() => {
+    // adds user as channel admin
+    rcClient.ensureUser(userId, userId).then((user) => {
+      const email = user.emails[0].address;
+      rcClient.inviteUser(slug, email, userId).then(() => rcClient.setRole(slug, email, 'owner', userId));
+    });
+  });
+};
+
 export const createGroup = new ValidatedMethod({
   name: 'groups.createGroup',
   validate: new SimpleSchema({
@@ -109,7 +125,7 @@ export const createGroup = new ValidatedMethod({
     }
     if (rcClient) {
       // create associated private channel in Rocket Chat
-      rcClient.createGroup(name, this.userId);
+      createRocketGroup(name, this.userId);
     }
     if (nextcloud && nextClient) {
       // create associated group in Nextcloud
@@ -158,7 +174,7 @@ export const removeGroup = new ValidatedMethod({
     }
     if (rcClient) {
       // delete associated private channel in RocketChat
-      rcClient.removeGroup(group.name, this.userId);
+      rcClient.removeGroup(group.slug, this.userId);
     }
     // remove all roles set on this group
     Roles.removeScope(groupId);

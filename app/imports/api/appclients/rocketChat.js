@@ -15,38 +15,8 @@ class RocketChatClient {
     this._getToken().then((initToken) => {
       if (initToken) {
         logServer(i18n.__('api.rocketChat.initClient'));
-        // XXX REMOVE ME : tests
-        if (Meteor.settings.public.enableRocketChat) {
-          logServer('PERFORMING TEST CALLS');
-          this.getUserByEmail('bruno.boiget@ac-dijon.fr')
-            .then((resp) => {
-              if (resp === null) {
-                // create user if not existing
-                return this.createUser('bruno.boiget@ac-dijon.fr', 'Bruno', 'bboiget', null);
-              }
-              console.log('user found');
-              return Promise.resolve(resp);
-            })
-            .then((userData) => {
-              if (userData === null) {
-                console.log('CREATE USER FAILED !!');
-              } else {
-                console.log(userData);
-                // remove/create group if user ok
-                this.removeGroup('group_test', null)
-                  .then(() => this.createGroup('group_test', null))
-                  .then((group) => {
-                    console.log(group);
-                    // invite user in group
-                    this.inviteUser('group_test', userData);
-                  });
-              }
-            });
-        }
-        // END tests.
       }
     });
-    // APPELS API : fournir headers "X-User-Id" et "X-Auth-Token"
   }
 
   _authenticate() {
@@ -64,7 +34,32 @@ class RocketChatClient {
   }
 
   _expire() {
+    const previousToken = this.token;
     this.token = null;
+    // call Rocket Chat API to invalidate this token
+    return axios
+      .post(
+        `${this.rcURL}/logout`,
+        {},
+        {
+          headers: {
+            Accept: 'application/json',
+            'X-User-Id': this.adminId,
+            'X-Auth-Token': previousToken,
+          },
+        },
+      )
+      .then((response) => {
+        if (response.data.status === 'success') {
+          logServer(i18n.__('api.rocketChat.logout'));
+        } else {
+          logServer(i18n.__('api.rocketChat.logoutError'), 'error');
+        }
+      })
+      .catch((error) => {
+        logServer(i18n.__('api.rocketChat.logoutError'), 'error');
+        logServer(error.response && error.response.data ? error.response.data : error, 'error');
+      });
   }
 
   _setToken(token, timeout) {
@@ -79,8 +74,8 @@ class RocketChatClient {
       logServer('RocketChat : new token received');
       const newToken = response.data.data.authToken;
       this.adminId = response.data.data.userId;
-      // FIXME : Rocket Chat does not indicate token expiration
-      this._setToken(newToken, response.data.expires_in || 5000);
+      // Rocket Chat does not indicate token expiration (set to 15 minutes)
+      this._setToken(newToken, 900);
       return newToken;
     });
   }
@@ -96,182 +91,347 @@ class RocketChatClient {
   }
 
   createGroup(name, callerId) {
-    return this._getToken().then((token) => {
-      return axios
-        .post(
-          `${this.rcURL}/groups.create`,
-          {
-            // ATTENTION : les caractères 'spéciaux', accentués et les espace sont refusés ...
-            name,
-            // Retrouver et ajouter automatiquement les membres du groupe (ou canaux publics) ?
-            members: [],
-            readOnly: false,
-          },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              Accept: 'application/json',
-              'X-User-Id': this.adminId,
-              'X-Auth-Token': token,
+    return this._getToken()
+      .then((token) => {
+        return axios
+          .post(
+            `${this.rcURL}/groups.create`,
+            {
+              // ATTENTION : les caractères 'spéciaux', accentués et les espace sont refusés ...
+              name,
+              // Retrouver et ajouter automatiquement les membres du groupe (ou canaux publics) ?
+              members: [],
+              readOnly: false,
             },
-          },
-        )
-        .then((response) => {
-          if (response.data && response.data.success === true) {
-            logServer(i18n.__('api.rocketChat.groupAdded', { name }));
-            return response.data.group;
-          }
-          logServer(`${i18n.__('api.rocketChat.groupAddError', { name })} (${response.error})`, 'error', callerId);
-          return null;
-        })
-        .catch((error) => {
-          logServer(i18n.__('api.rocketChat.groupAddError', { name }), 'error', callerId);
-          logServer(error.response && error.response.data ? error.response.data.error : error, 'error');
-          return null;
-        });
-    });
+            {
+              headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                'X-User-Id': this.adminId,
+                'X-Auth-Token': token,
+              },
+            },
+          )
+          .then((response) => {
+            if (response.data && response.data.success === true) {
+              logServer(i18n.__('api.rocketChat.groupAdded', { name }));
+              return response.data.group;
+            }
+            logServer(`${i18n.__('api.rocketChat.groupAddError', { name })} (${response.error})`, 'error', callerId);
+            return null;
+          });
+      })
+      .catch((error) => {
+        logServer(i18n.__('api.rocketChat.groupAddError', { name }), 'error', callerId);
+        logServer(error.response && error.response.data ? error.response.data.error : error, 'error');
+        return null;
+      });
   }
 
   removeGroup(name, callerId) {
-    return this._getToken().then((token) => {
-      return axios
-        .post(
-          `${this.rcURL}/groups.delete`,
-          {
-            roomName: name,
-          },
-          {
+    return this._getToken()
+      .then((token) => {
+        return axios
+          .post(
+            `${this.rcURL}/groups.delete`,
+            {
+              roomName: name,
+            },
+            {
+              headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                'X-User-Id': this.adminId,
+                'X-Auth-Token': token,
+              },
+            },
+          )
+          .then((response) => {
+            if (response.data.success === true) {
+              logServer(i18n.__('api.rocketChat.groupRemoved', { name }));
+            } else {
+              logServer(
+                `${i18n.__('api.rocketChat.groupRemoveError', { name })} (${response.error})`,
+                'error',
+                callerId,
+              );
+            }
+            return response.data.success;
+          });
+      })
+      .catch((error) => {
+        logServer(i18n.__('api.rocketChat.groupRemoveError', { name }), 'error', callerId);
+        logServer(error.response && error.response.data ? error.response.data.error : error, 'error');
+        return null;
+      });
+  }
+
+  _getUserByEmail(email) {
+    return this._getToken()
+      .then((token) => {
+        return axios
+          .get(`${this.rcURL}/users.list`, {
+            params: {
+              query: { emails: { $elemMatch: { address: email } } },
+            },
             headers: {
               'Content-Type': 'application/json',
               Accept: 'application/json',
               'X-User-Id': this.adminId,
               'X-Auth-Token': token,
             },
-          },
-        )
-        .then((response) => {
-          if (response.data.success === true) {
-            logServer(i18n.__('api.rocketChat.groupRemoved', { name }));
-          } else {
-            logServer(`${i18n.__('api.rocketChat.groupRemoveError', { name })} (${response.error})`, 'error', callerId);
-          }
-          return response.data.success;
-        })
-        .catch((error) => {
-          logServer(i18n.__('api.rocketChat.groupRemoveError', { name }), 'error', callerId);
-          logServer(error.response && error.response.data ? error.response.data.error : error, 'error');
-          return null;
-        });
-    });
-  }
-
-  getUserByEmail(email) {
-    return this._getToken().then((token) => {
-      return axios
-        .get(`${this.rcURL}/users.list`, {
-          params: {
-            query: { emails: { $elemMatch: { address: email } } },
-          },
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-            'X-User-Id': this.adminId,
-            'X-Auth-Token': token,
-          },
-        })
-        .then((response) => {
-          if (response.data && response.data.success === true) {
-            if (response.data.users.length > 0) return response.data.users[0];
+          })
+          .then((response) => {
+            if (response.data && response.data.success === true) {
+              if (response.data.users.length > 0) return response.data.users[0];
+              return null;
+            }
+            logServer(`${i18n.__('api.rocketChat.getUserError')} (${response.error})`, 'error');
             return null;
-          }
-          logServer(`${i18n.__('api.rocketChat.getUserError')} (${response.error})`, 'error');
-          return null;
-        })
-        .catch((error) => {
-          logServer(i18n.__('api.rocketChat.getUserError'), 'error');
-          logServer(error.response && error.response.data ? error.response.data : error, 'error');
-          return null;
-        });
-    });
+          });
+      })
+      .catch((error) => {
+        logServer(i18n.__('api.rocketChat.getUserError'), 'error');
+        logServer(error.response && error.response.data ? error.response.data : error, 'error');
+        return null;
+      });
   }
 
-  inviteUser(groupId, user, callerId) {
+  inviteUser(groupId, email, callerId) {
     // user : user object as returned by API (i.e: this.getUserbyEmail)
-    const userEmail = user.emails[0].address;
-    return this._getToken().then((token) => {
-      return axios
-        .post(
-          `${this.rcURL}/groups.invite`,
-          {
-            roomId: groupId,
-            userId: user._id,
-          },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              Accept: 'application/json',
-              'X-User-Id': this.adminId,
-              'X-Auth-Token': token,
-            },
-          },
-        )
-        .then((response) => {
-          if (response.data && response.data.success === true) {
-            logServer(i18n.__('api.rocketChat.userInvited', { groupId, email: userEmail }));
-          } else {
-            logServer(
-              `${i18n.__('api.rocketChat.userInviteError', { groupId, email: userEmail })} (${response.error})`,
-              'error',
-              callerId,
-            );
-          }
-          return response.data.success;
-        })
-        .catch((error) => {
-          logServer(i18n.__('api.rocketChat.userInviteError', { groupId, email: userEmail }), 'error', callerId);
-          logServer(error.response && error.response.data ? error.response.data.error : error, 'error');
-          return null;
-        });
-    });
+    // role: boolean to set user as owner, moderator or member of this group
+    return this._getToken()
+      .then((token) =>
+        this._getUserByEmail(email).then((user) => {
+          return axios
+            .post(
+              `${this.rcURL}/groups.invite`,
+              {
+                roomName: groupId,
+                userId: user._id,
+              },
+              {
+                headers: {
+                  'Content-Type': 'application/json',
+                  Accept: 'application/json',
+                  'X-User-Id': this.adminId,
+                  'X-Auth-Token': token,
+                },
+              },
+            )
+            .then((response) => {
+              if (response.data && response.data.success === true) {
+                logServer(i18n.__('api.rocketChat.userInvited', { groupId, email }));
+              } else {
+                logServer(
+                  `${i18n.__('api.rocketChat.userInviteError', { groupId, email })} (${response.data.error})`,
+                  'error',
+                  callerId,
+                );
+              }
+              return response.data.success;
+            });
+        }),
+      )
+      .catch((error) => {
+        logServer(i18n.__('api.rocketChat.userInviteError', { groupId, email }), 'error', callerId);
+        logServer(error.response && error.response.data ? error.response.data.error : error, 'error');
+        return null;
+      });
+  }
+
+  setRole(groupId, email, role, callerId) {
+    // user : user object as returned by API (i.e: this.getUserbyEmail)
+    // role: boolean to set user as owner or moderator of a group
+    const APIUrl = role === 'owner' ? 'addOwner' : 'addModerator';
+    const displayRole = i18n.__(`api.rocketChat.${role}`);
+    return this._getToken()
+      .then((token) =>
+        this._getUserByEmail(email).then((user) => {
+          return axios
+            .post(
+              `${this.rcURL}/groups.${APIUrl}`,
+              {
+                roomName: groupId,
+                userId: user._id,
+              },
+              {
+                headers: {
+                  'Content-Type': 'application/json',
+                  Accept: 'application/json',
+                  'X-User-Id': this.adminId,
+                  'X-Auth-Token': token,
+                },
+              },
+            )
+            .then((response) => {
+              if (response.data && response.data.success === true) {
+                logServer(i18n.__('api.rocketChat.roleSet', { groupId, email, role: displayRole }));
+              } else {
+                logServer(
+                  `${i18n.__('api.rocketChat.setRoleError', { groupId, email, role: displayRole })} (${
+                    response.data.error
+                  })`,
+                  'error',
+                  callerId,
+                );
+              }
+              return response.data.success;
+            });
+        }),
+      )
+      .catch((error) => {
+        logServer(i18n.__('api.rocketChat.setRoleError', { groupId, email, role: displayRole }), 'error', callerId);
+        logServer(error.response && error.response.data ? error.response.data.error : error, 'error');
+        return null;
+      });
+  }
+
+  unsetRole(groupId, email, role, callerId) {
+    // user : user object as returned by API (i.e: this.getUserbyEmail)
+    // role: boolean to set user as owner or moderator of a group
+    const APIUrl = role === 'owner' ? 'removeOwner' : 'removeModerator';
+    const displayRole = i18n.__(`api.rocketChat.${role}`);
+    return this._getToken()
+      .then((token) =>
+        this._getUserByEmail(email).then((user) => {
+          return axios
+            .post(
+              `${this.rcURL}/groups.${APIUrl}`,
+              {
+                roomName: groupId,
+                userId: user._id,
+              },
+              {
+                headers: {
+                  'Content-Type': 'application/json',
+                  Accept: 'application/json',
+                  'X-User-Id': this.adminId,
+                  'X-Auth-Token': token,
+                },
+              },
+            )
+            .then((response) => {
+              if (response.data && response.data.success === true) {
+                logServer(i18n.__('api.rocketChat.roleUnset', { groupId, email, role: displayRole }));
+              } else {
+                logServer(
+                  `${i18n.__('api.rocketChat.unsetRoleError', { groupId, email, role: displayRole })} (${
+                    response.data.error
+                  })`,
+                  'error',
+                  callerId,
+                );
+              }
+              return response.data.success;
+            });
+        }),
+      )
+      .catch((error) => {
+        logServer(i18n.__('api.rocketChat.unsetRoleError', { groupId, email, role: displayRole }), 'error', callerId);
+        logServer(error.response && error.response.data ? error.response.data.error : error, 'error');
+        return null;
+      });
+  }
+
+  kickUser(groupId, email, callerId) {
+    // user : user object as returned by API (i.e: this.getUserbyEmail)
+    return this._getToken()
+      .then((token) =>
+        this._getUserByEmail(email).then((user) => {
+          return axios
+            .post(
+              `${this.rcURL}/groups.kick`,
+              {
+                roomName: groupId,
+                userId: user._id,
+              },
+              {
+                headers: {
+                  'Content-Type': 'application/json',
+                  Accept: 'application/json',
+                  'X-User-Id': this.adminId,
+                  'X-Auth-Token': token,
+                },
+              },
+            )
+            .then((response) => {
+              if (response.data && response.data.success === true) {
+                logServer(i18n.__('api.rocketChat.userKicked', { groupId, email }));
+              } else {
+                logServer(
+                  `${i18n.__('api.rocketChat.userKickError', { groupId, email })} (${response.data.error})`,
+                  'error',
+                  callerId,
+                );
+              }
+              return response.data.success;
+            });
+        }),
+      )
+      .catch((error) => {
+        logServer(i18n.__('api.rocketChat.userKickError', { groupId, email }), 'error', callerId);
+        logServer(error.response && error.response.data ? error.response.data.error : error, 'error');
+        return null;
+      });
   }
 
   createUser(email, name, username, callerId) {
-    return this._getToken().then((token) => {
-      return axios
-        .post(
-          `${this.rcURL}/users.create`,
-          {
-            email,
-            name,
-            username,
-            password: 'fixme',
-            active: true,
-            verified: true,
-            requirePasswordChange: false,
-          },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              Accept: 'application/json',
-              'X-User-Id': this.adminId,
-              'X-Auth-Token': token,
+    return this._getToken()
+      .then((token) => {
+        return axios
+          .post(
+            `${this.rcURL}/users.create`,
+            {
+              email,
+              name,
+              username,
+              password: 'fixme',
+              active: true,
+              verified: true,
+              requirePasswordChange: false,
             },
-          },
-        )
-        .then((response) => {
-          if (response.data && response.data.success === true) {
-            logServer(i18n.__('api.rocketChat.userAdded', { email }));
-            return response.data.user;
-          }
-          logServer(`${i18n.__('api.rocketChat.userAddError', { email })} (${response.error})`, 'error', callerId);
-          return null;
-        })
-        .catch((error) => {
-          logServer(i18n.__('api.rocketChat.userAddError', { email }), 'error', callerId);
-          logServer(error.response && error.response.data ? error.response.data.error : error, 'error');
-          return null;
-        });
-    });
+            {
+              headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                'X-User-Id': this.adminId,
+                'X-Auth-Token': token,
+              },
+            },
+          )
+          .then((response) => {
+            if (response.data && response.data.success === true) {
+              logServer(i18n.__('api.rocketChat.userAdded', { email }));
+              return response.data.user;
+            }
+            logServer(`${i18n.__('api.rocketChat.userAddError', { email })} (${response.error})`, 'error', callerId);
+            return null;
+          });
+      })
+      .catch((error) => {
+        logServer(i18n.__('api.rocketChat.userAddError', { email }), 'error', callerId);
+        logServer(error.response && error.response.data ? error.response.data.error : error, 'error');
+        return null;
+      });
+  }
+
+  ensureUser(userId, callerId) {
+    const meteorUser = Meteor.users.findOne(userId);
+    const email = meteorUser.emails[0].address;
+    return this._getToken().then((token) =>
+      this._getUserByEmail(email).then((user) => {
+        if (user === null) {
+          return this.createUser(
+            email,
+            `${meteorUser.firstName} ${meteorUser.lastName}`,
+            meteorUser.username !== email ? meteorUser.username : `${meteorUser.firstName}.${meteorUser.lastName}`,
+            callerId,
+          );
+        }
+        return Promise.resolve(user);
+      }),
+    );
   }
 }
 

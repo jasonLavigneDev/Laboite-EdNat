@@ -242,7 +242,17 @@
       "userInvited": "RocketChat: user {$email} added to group {$groupId}",
       "userInviteError": "RocketChat: Error inviting user {$email} to group {$groupId}",
       "userAdded": "RocketChat: user {$email} created",
-      "userAddError": "RocketChat: Error creating user {$email}"
+      "userAddError": "RocketChat: Error creating user {$email}",
+      "logout": "RocketChat: Invalidate current token",
+      "logoutError": "RocketChat: error while invalidating token",
+      "userKicked": "RocketChat: user {$email} removed from group {$groupId}",
+      "userKickError": "RocketChat: Error removing user {$email} from group {$groupId}",
+      "roleSet": "RocketChat: Role {$role} set for user {$email} on group {$groupId}",
+      "setRoleError": "RocketChat: Error setting role {$role} for user {$email} on group {$groupId}",
+      "roleUnset": "RocketChat: Role {$role} removed for user {$email} on group {$groupId}",
+      "unsetRoleError": "RocketChat: Error removing role {$role} for user {$email} on group {$groupId}",
+      "owner": "owner",
+      "moderator": "moderator"
     },
     "logging": {
       "unknownLogLevel": "Specified log level does not exist",
