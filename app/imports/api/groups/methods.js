@@ -6,13 +6,13 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { Roles } from 'meteor/alanning:roles';
 import i18n from 'meteor/universe:i18n';
 
+import slugify from 'slugify';
 import { isActive, getLabel } from '../utils';
 import Groups from './groups';
 import { addGroup, removeElement } from '../personalspaces/methods';
 import kcClient from '../appclients/kcClient';
 import nextClient from '../appclients/nextcloud';
 import rcClient from '../appclients/rocketChat';
-import slugify from 'slugify';
 
 export const favGroup = new ValidatedMethod({
   name: 'groups.favGroup',

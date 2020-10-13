@@ -411,9 +411,9 @@ export const setAdminOf = new ValidatedMethod({
     //   kcClient.setRole(userId, `admin_${group.name}`);
     // }
     if (rcClient) {
-      rcClient.ensureUser(userId, this.userId).then((user) => {
-        if (user !== null) {
-          const email = user.emails[0].address;
+      rcClient.ensureUser(userId, this.userId).then((rcUser) => {
+        if (rcUser !== null) {
+          const email = rcUser.emails[0].address;
           rcClient
             .inviteUser(group.slug, email, this.userId)
             .then(() => rcClient.setRole(group.slug, email, 'owner', this.userId));
@@ -514,9 +514,9 @@ export const setAnimatorOf = new ValidatedMethod({
       // kcClient.setRole(userId, `animator_${group.name}`);
     }
     if (rcClient) {
-      rcClient.ensureUser(userId, this.userId).then((user) => {
-        if (user != null) {
-          const email = user.emails[0].address;
+      rcClient.ensureUser(userId, this.userId).then((rcUser) => {
+        if (rcUser != null) {
+          const email = rcUser.emails[0].address;
           rcClient
             .inviteUser(group.slug, email, this.userId)
             .then(() => rcClient.setRole(group.slug, email, 'moderator', this.userId));
@@ -630,9 +630,9 @@ export const setMemberOf = new ValidatedMethod({
       // kcClient.setRole(userId, `member_${group.name}`);
     }
     if (rcClient) {
-      rcClient.ensureUser(userId, this.userId).then((user) => {
-        if (user != null) {
-          const email = user.emails[0].address;
+      rcClient.ensureUser(userId, this.userId).then((rcUser) => {
+        if (rcUser != null) {
+          const email = rcUser.emails[0].address;
           rcClient.inviteUser(group.slug, email, this.userId);
         }
       });

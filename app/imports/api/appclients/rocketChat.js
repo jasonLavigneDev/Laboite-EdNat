@@ -419,19 +419,17 @@ class RocketChatClient {
   ensureUser(userId, callerId) {
     const meteorUser = Meteor.users.findOne(userId);
     const email = meteorUser.emails[0].address;
-    return this._getToken().then((token) =>
-      this._getUserByEmail(email).then((user) => {
-        if (user === null) {
-          return this.createUser(
-            email,
-            `${meteorUser.firstName} ${meteorUser.lastName}`,
-            meteorUser.username !== email ? meteorUser.username : `${meteorUser.firstName}.${meteorUser.lastName}`,
-            callerId,
-          );
-        }
-        return Promise.resolve(user);
-      }),
-    );
+    return this._getUserByEmail(email).then((user) => {
+      if (user === null) {
+        return this.createUser(
+          email,
+          `${meteorUser.firstName} ${meteorUser.lastName}`,
+          meteorUser.username !== email ? meteorUser.username : `${meteorUser.firstName}.${meteorUser.lastName}`,
+          callerId,
+        );
+      }
+      return Promise.resolve(user);
+    });
   }
 }
 
