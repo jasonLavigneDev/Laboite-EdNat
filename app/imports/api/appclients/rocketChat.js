@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { Meteor } from 'meteor/meteor';
 import i18n from 'meteor/universe:i18n';
+import slugify from 'slugify';
+import Groups from '../groups/groups';
 import logServer from '../logging';
 
 class RocketChatClient {
@@ -433,6 +435,26 @@ class RocketChatClient {
   }
 }
 
-const rcClient = Meteor.isServer && Meteor.settings.public.enableRocketChat ? new RocketChatClient() : null;
+if (Meteor.isServer && Meteor.settings.public.enableRocketChat) {
+  const rcClient = new RocketChatClient();
 
-export default rcClient;
+  Meteor.afterMethod('groups.createGroup', function ({ name }) {
+    const slug = slugify(name, {
+      replacement: '-', // replace spaces with replacement
+      remove: null, // regex to remove characters
+      lower: true, // result in lower case
+    });
+    rcClient.createGroup(slug, this.userId).then(() => {
+      // adds user as channel admin
+      rcClient.ensureUser(this.userId, this.userId).then((user) => {
+        const email = user.emails[0].address;
+        rcClient.inviteUser(slug, email, this.userId).then(() => rcClient.setRole(slug, email, 'owner', this.userId));
+      });
+    });
+  });
+
+  Meteor.beforeMethod('groups.removeGroup', function ({ groupId }) {
+    const group = Groups.findOne({ _id: groupId });
+    rcClient.removeGroup(group.slug, this.userId);
+  });
+}
