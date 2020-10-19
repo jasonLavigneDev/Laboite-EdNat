@@ -126,6 +126,12 @@ Groups.schema = new SimpleSchema(
       defaultValue: false,
       label: getLabel('api.groups.labels.nextcloud'),
     },
+    plugins: {
+      type: Object,
+      optional: true,
+      blackbox: true,
+      label: getLabel('api.groups.labels.plugins'),
+    },
   },
   { tracker: Tracker },
 );
@@ -155,6 +161,7 @@ Groups.publicFields = {
   owner: 1,
   numCandidates: 1,
   nextcloud: 1,
+  plugins: 1,
 };
 Groups.allPublicFields = {
   content: 1,

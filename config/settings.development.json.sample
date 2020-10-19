@@ -5,8 +5,6 @@
     "keycloakRealm": "apps",
     "enableNextcloud": false,
     "nextcloudURL": "",
-    "enableRocketChat": false,
-    "rocketChatURL": "",
     "minioSSL": false,
     "minioPort": null,
     "minioAccess": "Uhjm4KJ8MV",
@@ -26,6 +24,12 @@
       "request": null,
       "group": null,
       "default": null
+    },
+    "groupPlugins": {
+      "rocketChat": {
+        "enable": false,
+        "URL": ""
+      }
     }
   },
   "keycloak": {

@@ -8,7 +8,8 @@ import logServer from '../logging';
 
 class RocketChatClient {
   constructor() {
-    this.rcURL = `${Meteor.settings.public.rocketChatURL}/api/v1`;
+    this.rcEnabled = Meteor.settings.public.groupPlugins.rocketChat.enable;
+    this.rcURL = `${Meteor.settings.public.groupPlugins.rocketChat.URL}/api/v1`;
     this.token = null;
     this.adminId = null;
     this._setToken = this._setToken.bind(this);
@@ -433,7 +434,7 @@ class RocketChatClient {
   }
 }
 
-if (Meteor.isServer && Meteor.settings.public.enableRocketChat) {
+if (Meteor.isServer && this.rcEnabled) {
   const rcClient = new RocketChatClient();
 
   Meteor.afterMethod('groups.createGroup', function rcCreateGroup({ name }) {
