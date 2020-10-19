@@ -169,13 +169,13 @@ class RocketChatClient {
       });
   }
 
-  _getUserByEmail(email) {
+  _getUserByUsername(username) {
     return this._getToken()
       .then((token) => {
         return axios
           .get(`${this.rcURL}/users.list`, {
             params: {
-              query: { emails: { $elemMatch: { address: email } } },
+              query: { username },
             },
             headers: {
               'Content-Type': 'application/json',
@@ -200,12 +200,11 @@ class RocketChatClient {
       });
   }
 
-  inviteUser(groupId, email, callerId) {
-    // user : user object as returned by API (i.e: this.getUserbyEmail)
+  inviteUser(groupId, username, callerId) {
     // role: boolean to set user as owner, moderator or member of this group
     return this._getToken()
       .then((token) =>
-        this._getUserByEmail(email).then((user) => {
+        this._getUserByUsername(username).then((user) => {
           return axios
             .post(
               `${this.rcURL}/groups.invite`,
@@ -224,10 +223,10 @@ class RocketChatClient {
             )
             .then((response) => {
               if (response.data && response.data.success === true) {
-                logServer(i18n.__('api.rocketChat.userInvited', { groupId, email }));
+                logServer(i18n.__('api.rocketChat.userInvited', { groupId, username }));
               } else {
                 logServer(
-                  `${i18n.__('api.rocketChat.userInviteError', { groupId, email })} (${response.data.error})`,
+                  `${i18n.__('api.rocketChat.userInviteError', { groupId, username })} (${response.data.error})`,
                   'error',
                   callerId,
                 );
@@ -237,20 +236,19 @@ class RocketChatClient {
         }),
       )
       .catch((error) => {
-        logServer(i18n.__('api.rocketChat.userInviteError', { groupId, email }), 'error', callerId);
+        logServer(i18n.__('api.rocketChat.userInviteError', { groupId, username }), 'error', callerId);
         logServer(error.response && error.response.data ? error.response.data.error : error, 'error');
         return null;
       });
   }
 
-  setRole(groupId, email, role, callerId) {
-    // user : user object as returned by API (i.e: this.getUserbyEmail)
+  setRole(groupId, username, role, callerId) {
     // role: boolean to set user as owner or moderator of a group
     const APIUrl = role === 'owner' ? 'addOwner' : 'addModerator';
     const displayRole = i18n.__(`api.rocketChat.${role}`);
     return this._getToken()
       .then((token) =>
-        this._getUserByEmail(email).then((user) => {
+        this._getUserByUsername(username).then((user) => {
           return axios
             .post(
               `${this.rcURL}/groups.${APIUrl}`,
@@ -269,10 +267,10 @@ class RocketChatClient {
             )
             .then((response) => {
               if (response.data && response.data.success === true) {
-                logServer(i18n.__('api.rocketChat.roleSet', { groupId, email, role: displayRole }));
+                logServer(i18n.__('api.rocketChat.roleSet', { groupId, username, role: displayRole }));
               } else {
                 logServer(
-                  `${i18n.__('api.rocketChat.setRoleError', { groupId, email, role: displayRole })} (${
+                  `${i18n.__('api.rocketChat.setRoleError', { groupId, username, role: displayRole })} (${
                     response.data.error
                   })`,
                   'error',
@@ -284,20 +282,19 @@ class RocketChatClient {
         }),
       )
       .catch((error) => {
-        logServer(i18n.__('api.rocketChat.setRoleError', { groupId, email, role: displayRole }), 'error', callerId);
+        logServer(i18n.__('api.rocketChat.setRoleError', { groupId, username, role: displayRole }), 'error', callerId);
         logServer(error.response && error.response.data ? error.response.data.error : error, 'error');
         return null;
       });
   }
 
-  unsetRole(groupId, email, role, callerId) {
-    // user : user object as returned by API (i.e: this.getUserbyEmail)
+  unsetRole(groupId, username, role, callerId) {
     // role: boolean to set user as owner or moderator of a group
     const APIUrl = role === 'owner' ? 'removeOwner' : 'removeModerator';
     const displayRole = i18n.__(`api.rocketChat.${role}`);
     return this._getToken()
       .then((token) =>
-        this._getUserByEmail(email).then((user) => {
+        this._getUserByUsername(username).then((user) => {
           return axios
             .post(
               `${this.rcURL}/groups.${APIUrl}`,
@@ -316,10 +313,10 @@ class RocketChatClient {
             )
             .then((response) => {
               if (response.data && response.data.success === true) {
-                logServer(i18n.__('api.rocketChat.roleUnset', { groupId, email, role: displayRole }));
+                logServer(i18n.__('api.rocketChat.roleUnset', { groupId, username, role: displayRole }));
               } else {
                 logServer(
-                  `${i18n.__('api.rocketChat.unsetRoleError', { groupId, email, role: displayRole })} (${
+                  `${i18n.__('api.rocketChat.unsetRoleError', { groupId, username, role: displayRole })} (${
                     response.data.error
                   })`,
                   'error',
@@ -331,17 +328,20 @@ class RocketChatClient {
         }),
       )
       .catch((error) => {
-        logServer(i18n.__('api.rocketChat.unsetRoleError', { groupId, email, role: displayRole }), 'error', callerId);
+        logServer(
+          i18n.__('api.rocketChat.unsetRoleError', { groupId, username, role: displayRole }),
+          'error',
+          callerId,
+        );
         logServer(error.response && error.response.data ? error.response.data.error : error, 'error');
         return null;
       });
   }
 
-  kickUser(groupId, email, callerId) {
-    // user : user object as returned by API (i.e: this.getUserbyEmail)
+  kickUser(groupId, username, callerId) {
     return this._getToken()
       .then((token) =>
-        this._getUserByEmail(email).then((user) => {
+        this._getUserByUsername(username).then((user) => {
           return axios
             .post(
               `${this.rcURL}/groups.kick`,
@@ -360,10 +360,10 @@ class RocketChatClient {
             )
             .then((response) => {
               if (response.data && response.data.success === true) {
-                logServer(i18n.__('api.rocketChat.userKicked', { groupId, email }));
+                logServer(i18n.__('api.rocketChat.userKicked', { groupId, username }));
               } else {
                 logServer(
-                  `${i18n.__('api.rocketChat.userKickError', { groupId, email })} (${response.data.error})`,
+                  `${i18n.__('api.rocketChat.userKickError', { groupId, username })} (${response.data.error})`,
                   'error',
                   callerId,
                 );
@@ -373,7 +373,7 @@ class RocketChatClient {
         }),
       )
       .catch((error) => {
-        logServer(i18n.__('api.rocketChat.userKickError', { groupId, email }), 'error', callerId);
+        logServer(i18n.__('api.rocketChat.userKickError', { groupId, username }), 'error', callerId);
         logServer(error.response && error.response.data ? error.response.data.error : error, 'error');
         return null;
       });
@@ -392,7 +392,9 @@ class RocketChatClient {
               password: 'fixme',
               active: true,
               verified: true,
+              sendWelcomeEmail: true,
               requirePasswordChange: false,
+              roles: ['user'],
             },
             {
               headers: {
@@ -405,15 +407,15 @@ class RocketChatClient {
           )
           .then((response) => {
             if (response.data && response.data.success === true) {
-              logServer(i18n.__('api.rocketChat.userAdded', { email }));
+              logServer(i18n.__('api.rocketChat.userAdded', { username }));
               return response.data.user;
             }
-            logServer(`${i18n.__('api.rocketChat.userAddError', { email })} (${response.error})`, 'error', callerId);
+            logServer(`${i18n.__('api.rocketChat.userAddError', { username })} (${response.error})`, 'error', callerId);
             return null;
           });
       })
       .catch((error) => {
-        logServer(i18n.__('api.rocketChat.userAddError', { email }), 'error', callerId);
+        logServer(i18n.__('api.rocketChat.userAddError', { username }), 'error', callerId);
         logServer(error.response && error.response.data ? error.response.data.error : error, 'error');
         return null;
       });
@@ -422,14 +424,9 @@ class RocketChatClient {
   ensureUser(userId, callerId) {
     const meteorUser = Meteor.users.findOne(userId);
     const email = meteorUser.emails[0].address;
-    return this._getUserByEmail(email).then((user) => {
+    return this._getUserByUsername(meteorUser.username).then((user) => {
       if (user === null) {
-        return this.createUser(
-          email,
-          `${meteorUser.firstName} ${meteorUser.lastName}`,
-          meteorUser.username !== email ? meteorUser.username : `${meteorUser.firstName}.${meteorUser.lastName}`,
-          callerId,
-        );
+        return this.createUser(email, `${meteorUser.firstName} ${meteorUser.lastName}`, meteorUser.username, callerId);
       }
       return Promise.resolve(user);
     });
@@ -439,7 +436,7 @@ class RocketChatClient {
 if (Meteor.isServer && Meteor.settings.public.enableRocketChat) {
   const rcClient = new RocketChatClient();
 
-  Meteor.afterMethod('groups.createGroup', function ({ name }) {
+  Meteor.afterMethod('groups.createGroup', function rcCreateGroup({ name }) {
     const slug = slugify(name, {
       replacement: '-', // replace spaces with replacement
       remove: null, // regex to remove characters
@@ -448,86 +445,88 @@ if (Meteor.isServer && Meteor.settings.public.enableRocketChat) {
     rcClient.createGroup(slug, this.userId).then(() => {
       // adds user as channel admin
       rcClient.ensureUser(this.userId, this.userId).then((user) => {
-        const email = user.emails[0].address;
-        rcClient.inviteUser(slug, email, this.userId).then(() => rcClient.setRole(slug, email, 'owner', this.userId));
+        const { username } = user;
+        rcClient
+          .inviteUser(slug, username, this.userId)
+          .then(() => rcClient.setRole(slug, username, 'owner', this.userId));
       });
     });
   });
 
-  Meteor.beforeMethod('groups.removeGroup', function ({ groupId }) {
+  Meteor.beforeMethod('groups.removeGroup', function rcRemoveGroup({ groupId }) {
     const group = Groups.findOne({ _id: groupId });
     rcClient.removeGroup(group.slug, this.userId);
   });
 
-  Meteor.afterMethod('users.setAdminOf', function ({ userId, groupId }) {
+  Meteor.afterMethod('users.setAdminOf', function rcSetAdminOf({ userId, groupId }) {
     const group = Groups.findOne({ _id: groupId });
     rcClient.ensureUser(userId, this.userId).then((rcUser) => {
       if (rcUser !== null) {
-        const email = rcUser.emails[0].address;
+        const { username } = rcUser;
         rcClient
-          .inviteUser(group.slug, email, this.userId)
-          .then(() => rcClient.setRole(group.slug, email, 'owner', this.userId));
+          .inviteUser(group.slug, username, this.userId)
+          .then(() => rcClient.setRole(group.slug, username, 'owner', this.userId));
       }
     });
   });
 
-  Meteor.beforeMethod('users.unsetAdminOf', function ({ userId, groupId }) {
+  Meteor.beforeMethod('users.unsetAdminOf', function rcUnsetAdminOf({ userId, groupId }) {
     const group = Groups.findOne({ _id: groupId });
     rcClient.ensureUser(userId, this.userId).then((user) => {
       if (user !== null) {
-        const email = user.emails[0].address;
-        rcClient.unsetRole(group.slug, email, 'owner', this.userId).then(() => {
+        const { username } = user;
+        rcClient.unsetRole(group.slug, username, 'owner', this.userId).then(() => {
           if (!Roles.userIsInRole(userId, ['member', 'animator'], groupId)) {
-            rcClient.kickUser(group.slug, email, this.userId);
+            rcClient.kickUser(group.slug, username, this.userId);
           }
         });
       }
     });
   });
 
-  Meteor.afterMethod('users.setAnimatorOf', function ({ userId, groupId }) {
+  Meteor.afterMethod('users.setAnimatorOf', function rcSetAnimatorOf({ userId, groupId }) {
     const group = Groups.findOne({ _id: groupId });
     rcClient.ensureUser(userId, this.userId).then((rcUser) => {
       if (rcUser != null) {
-        const email = rcUser.emails[0].address;
+        const { username } = rcUser;
         rcClient
-          .inviteUser(group.slug, email, this.userId)
-          .then(() => rcClient.setRole(group.slug, email, 'moderator', this.userId));
+          .inviteUser(group.slug, username, this.userId)
+          .then(() => rcClient.setRole(group.slug, username, 'moderator', this.userId));
       }
     });
   });
 
-  Meteor.beforeMethod('users.unsetAnimatorOf', function ({ userId, groupId }) {
+  Meteor.beforeMethod('users.unsetAnimatorOf', function rcUnsetAnimatorOf({ userId, groupId }) {
     const group = Groups.findOne({ _id: groupId });
     rcClient.ensureUser(userId, this.userId).then((user) => {
       if (user !== null) {
-        const email = user.emails[0].address;
-        rcClient.unsetRole(group.slug, email, 'moderator', this.userId).then(() => {
+        const { username } = user;
+        rcClient.unsetRole(group.slug, username, 'moderator', this.userId).then(() => {
           if (!Roles.userIsInRole(userId, ['member', 'admin'], groupId)) {
-            rcClient.kickUser(group.slug, email, this.userId);
+            rcClient.kickUser(group.slug, username, this.userId);
           }
         });
       }
     });
   });
 
-  Meteor.afterMethod('users.setMemberOf', function ({ userId, groupId }) {
+  Meteor.afterMethod('users.setMemberOf', function rcSetMemberOf({ userId, groupId }) {
     const group = Groups.findOne({ _id: groupId });
     rcClient.ensureUser(userId, this.userId).then((rcUser) => {
       if (rcUser != null) {
-        const email = rcUser.emails[0].address;
-        rcClient.inviteUser(group.slug, email, this.userId);
+        const { username } = rcUser;
+        rcClient.inviteUser(group.slug, username, this.userId);
       }
     });
   });
 
-  Meteor.beforeMethod('users.unsetMemberOf', function ({ userId, groupId }) {
+  Meteor.beforeMethod('users.unsetMemberOf', function rcUnsetMemberOf({ userId, groupId }) {
     const group = Groups.findOne({ _id: groupId });
     if (!Roles.userIsInRole(userId, ['animator', 'admin'], groupId)) {
       rcClient.ensureUser(userId, this.userId).then((user) => {
         if (user !== null) {
-          const email = user.emails[0].address;
-          rcClient.kickUser(group.slug, email, this.userId);
+          const { username } = user;
+          rcClient.kickUser(group.slug, username, this.userId);
         }
       });
     }
