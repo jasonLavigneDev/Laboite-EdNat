@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { Meteor } from 'meteor/meteor';
 import i18n from 'meteor/universe:i18n';
+import { Roles } from 'meteor/alanning:roles';
 import slugify from 'slugify';
 import Groups from '../groups/groups';
 import logServer from '../logging';
@@ -456,5 +457,79 @@ if (Meteor.isServer && Meteor.settings.public.enableRocketChat) {
   Meteor.beforeMethod('groups.removeGroup', function ({ groupId }) {
     const group = Groups.findOne({ _id: groupId });
     rcClient.removeGroup(group.slug, this.userId);
+  });
+
+  Meteor.afterMethod('users.setAdminOf', function ({ userId, groupId }) {
+    const group = Groups.findOne({ _id: groupId });
+    rcClient.ensureUser(userId, this.userId).then((rcUser) => {
+      if (rcUser !== null) {
+        const email = rcUser.emails[0].address;
+        rcClient
+          .inviteUser(group.slug, email, this.userId)
+          .then(() => rcClient.setRole(group.slug, email, 'owner', this.userId));
+      }
+    });
+  });
+
+  Meteor.beforeMethod('users.unsetAdminOf', function ({ userId, groupId }) {
+    const group = Groups.findOne({ _id: groupId });
+    rcClient.ensureUser(userId, this.userId).then((user) => {
+      if (user !== null) {
+        const email = user.emails[0].address;
+        rcClient.unsetRole(group.slug, email, 'owner', this.userId).then(() => {
+          if (!Roles.userIsInRole(userId, ['member', 'animator'], groupId)) {
+            rcClient.kickUser(group.slug, email, this.userId);
+          }
+        });
+      }
+    });
+  });
+
+  Meteor.afterMethod('users.setAnimatorOf', function ({ userId, groupId }) {
+    const group = Groups.findOne({ _id: groupId });
+    rcClient.ensureUser(userId, this.userId).then((rcUser) => {
+      if (rcUser != null) {
+        const email = rcUser.emails[0].address;
+        rcClient
+          .inviteUser(group.slug, email, this.userId)
+          .then(() => rcClient.setRole(group.slug, email, 'moderator', this.userId));
+      }
+    });
+  });
+
+  Meteor.beforeMethod('users.unsetAnimatorOf', function ({ userId, groupId }) {
+    const group = Groups.findOne({ _id: groupId });
+    rcClient.ensureUser(userId, this.userId).then((user) => {
+      if (user !== null) {
+        const email = user.emails[0].address;
+        rcClient.unsetRole(group.slug, email, 'moderator', this.userId).then(() => {
+          if (!Roles.userIsInRole(userId, ['member', 'admin'], groupId)) {
+            rcClient.kickUser(group.slug, email, this.userId);
+          }
+        });
+      }
+    });
+  });
+
+  Meteor.afterMethod('users.setMemberOf', function ({ userId, groupId }) {
+    const group = Groups.findOne({ _id: groupId });
+    rcClient.ensureUser(userId, this.userId).then((rcUser) => {
+      if (rcUser != null) {
+        const email = rcUser.emails[0].address;
+        rcClient.inviteUser(group.slug, email, this.userId);
+      }
+    });
+  });
+
+  Meteor.beforeMethod('users.unsetMemberOf', function ({ userId, groupId }) {
+    const group = Groups.findOne({ _id: groupId });
+    if (!Roles.userIsInRole(userId, ['animator', 'admin'], groupId)) {
+      rcClient.ensureUser(userId, this.userId).then((user) => {
+        if (user !== null) {
+          const email = user.emails[0].address;
+          rcClient.kickUser(group.slug, email, this.userId);
+        }
+      });
+    }
   });
 }
