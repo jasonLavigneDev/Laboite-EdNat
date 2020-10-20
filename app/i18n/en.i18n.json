@@ -97,7 +97,8 @@
         "animators": "Animators",
         "admins": "Admins",
         "applications": "Applications ID",
-        "nextcloud": "Create groupe in Nextcloud"
+        "nextcloud": "Create groupe in Nextcloud",
+        "plugins": "Related services managing groups"
       }
     },
     "services": {

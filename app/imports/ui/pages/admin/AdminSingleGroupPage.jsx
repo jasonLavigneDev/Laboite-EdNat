@@ -99,6 +99,10 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
   const [content, setContent] = useState('');
   const [nextcloud, setNextcloud] = useState(false);
   const nextEnabled = Meteor.settings.public.enableNextcloud === true;
+
+  const [plugins, setPlugins] = useState({});
+  const { groupPlugins } = Meteor.settings.public;
+
   const history = useHistory();
   const classes = useStyles();
 
@@ -111,6 +115,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
       setGroupData(group);
       setContent(group.content || '');
       setNextcloud(group.nextcloud);
+      setPlugins(group.plugins);
     }
   }, [group]);
 
@@ -154,6 +159,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
           ...rest,
           content,
           nextcloud,
+          plugins,
         },
       };
     } else {
@@ -161,6 +167,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
         ...rest,
         content,
         nextcloud,
+        plugins,
       };
     }
 
@@ -179,6 +186,31 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
     return <Spinner />;
   }
 
+  const groupPluginsShow = () => {
+    groupPlugins.forEach((plugin) => {
+      
+      if (plugin.enable){
+                return (
+                    <FormGroup>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={group.plugins[plugin]}
+                            onChange={() => setPlugins(!group.plugins[plugin])}
+                            name={plugin}
+                            color="primary"
+                            disabled={!isAdmin && !!params._id}
+                          />
+                        }
+                        label={i18n.__('pages.AdminSingleGroupPage.nextcloud')}
+                      />
+                    </FormGroup>
+                )
+      }
+      return null;
+    });
+  };
+
   return (
     <Fade in>
       <Container>
@@ -195,7 +227,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
               variant="outlined"
               fullWidth
               margin="normal"
-              disabled={(!isAdmin || (nextEnabled && group.nextcloud)) && !!params._id}
+              disabled={(!isAdmin || (nextEnabled && group.nextcloud)) && !!params._id} {/* FIXME! */}
             />
             <TextField
               onChange={onUpdateField}
@@ -223,6 +255,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
                 />
               </FormGroup>
             ) : null}
+            {groupPluginsShow()}
             <FormControl>
               <InputLabel htmlFor="type" id="type-label">
                 {i18n.__('pages.AdminSingleGroupPage.type')}

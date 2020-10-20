@@ -147,7 +147,7 @@ const SingleGroupPage = ({ group = {}, ready, services }) => {
   const classes = useStyles(member || animator, candidate, type)();
   const history = useHistory();
   const nextcloudEnabled = Meteor.settings.public.enableNextcloud === true;
-  const groupPlugins = Meteor.settings.public.groupPlugins;
+  const { groupPlugins } = Meteor.settings.public;
 
   const handleOpenedContent = () => {
     toggleOpenedContent(!openedContent);
