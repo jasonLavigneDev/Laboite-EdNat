@@ -188,24 +188,23 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
 
   const groupPluginsShow = () => {
     groupPlugins.forEach((plugin) => {
-      
-      if (plugin.enable){
-                return (
-                    <FormGroup>
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={group.plugins[plugin]}
-                            onChange={() => setPlugins(!group.plugins[plugin])}
-                            name={plugin}
-                            color="primary"
-                            disabled={!isAdmin && !!params._id}
-                          />
-                        }
-                        label={i18n.__('pages.AdminSingleGroupPage.nextcloud')}
-                      />
-                    </FormGroup>
-                )
+      if (plugin.enable) {
+        return (
+          <FormGroup>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={group.plugins[plugin]}
+                  onChange={() => setPlugins(!group.plugins[plugin])}
+                  name={plugin}
+                  color="primary"
+                  disabled={!isAdmin && !!params._id}
+                />
+              }
+              label={i18n.__('pages.AdminSingleGroupPage.nextcloud')}
+            />
+          </FormGroup>
+        );
       }
       return null;
     });
@@ -227,7 +226,8 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
               variant="outlined"
               fullWidth
               margin="normal"
-              disabled={(!isAdmin || (nextEnabled && group.nextcloud)) && !!params._id} {/* FIXME! */}
+              /* FIXME! */
+              disabled={(!isAdmin || (nextEnabled && group.nextcloud)) && !!params._id}
             />
             <TextField
               onChange={onUpdateField}
