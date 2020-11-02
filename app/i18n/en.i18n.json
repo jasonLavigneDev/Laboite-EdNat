@@ -761,7 +761,8 @@
       "save": "Save",
       "update": "Update",
       "cancel": "Cancel",
-      "nextcloud": "Create group in Nextcloud"
+      "nextcloud": "Create group in Nextcloud",
+      "rocketChat": "Create group in RocketChat"
     },
     "SingleGroupPage": {
       "backToList": "Back to the list",

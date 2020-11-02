@@ -128,6 +128,7 @@ Groups.schema = new SimpleSchema(
     },
     plugins: {
       type: Object,
+      defaultValue: {},
       optional: true,
       blackbox: true,
       label: getLabel('api.groups.labels.plugins'),

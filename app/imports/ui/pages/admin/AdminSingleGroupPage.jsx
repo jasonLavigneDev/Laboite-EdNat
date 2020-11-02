@@ -102,7 +102,6 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
 
   const [plugins, setPlugins] = useState({});
   const { groupPlugins } = Meteor.settings.public;
-
   const history = useHistory();
   const classes = useStyles();
 
@@ -115,7 +114,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
       setGroupData(group);
       setContent(group.content || '');
       setNextcloud(group.nextcloud);
-      setPlugins(group.plugins);
+      setPlugins(group.plugins || {});
     }
   }, [group]);
 
@@ -186,28 +185,26 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
     return <Spinner />;
   }
 
-  const groupPluginsShow = () => {
-    groupPlugins.forEach((plugin) => {
-      if (plugin.enable) {
-        return (
-          <FormGroup>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={group.plugins[plugin]}
-                  onChange={() => setPlugins(!group.plugins[plugin])}
-                  name={plugin}
-                  color="primary"
-                  disabled={!isAdmin && !!params._id}
-                />
-              }
-              label={i18n.__('pages.AdminSingleGroupPage.nextcloud')}
-            />
-          </FormGroup>
-        );
-      }
-      return null;
-    });
+  const groupPluginsShow = (plugin) => {
+    if (groupPlugins[plugin].enable) {
+      return (
+        <FormGroup>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={group.plugins[plugin] || false}
+                onChange={() => setPlugins(!group.plugins[plugin])}
+                name={plugin}
+                color="primary"
+                disabled={!isAdmin && !!params._id}
+              />
+            }
+            label={i18n.__(`pages.AdminSingleGroupPage.${plugin}`)}
+          />
+        </FormGroup>
+      );
+    }
+    return null;
   };
 
   return (
@@ -255,7 +252,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
                 />
               </FormGroup>
             ) : null}
-            {groupPluginsShow()}
+            {Object.keys(groupPlugins).map((p) => groupPluginsShow(p))}
             <FormControl>
               <InputLabel htmlFor="type" id="type-label">
                 {i18n.__('pages.AdminSingleGroupPage.type')}
