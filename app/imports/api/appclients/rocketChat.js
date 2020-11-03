@@ -6,9 +6,10 @@ import slugify from 'slugify';
 import Groups from '../groups/groups';
 import logServer from '../logging';
 
+rcEnabled = Meteor.settings.public.groupPlugins.rocketChat.enable;
+
 class RocketChatClient {
   constructor() {
-    this.rcEnabled = Meteor.settings.public.groupPlugins.rocketChat.enable;
     this.rcURL = `${Meteor.settings.public.groupPlugins.rocketChat.URL}/api/v1`;
     this.token = null;
     this.adminId = null;
@@ -432,9 +433,49 @@ class RocketChatClient {
       return Promise.resolve(user);
     });
   }
+
+  updateEmail(username, email) {
+    return this._getToken()
+      .then((token) =>
+        this._getUserByUsername(username).then((user) => {
+          return axios
+            .post(
+              `${this.rcURL}/users.update`,
+              {
+                userId: user._id,
+                data: { email, verified: true },
+              },
+              {
+                headers: {
+                  'Content-Type': 'application/json',
+                  Accept: 'application/json',
+                  'X-User-Id': this.adminId,
+                  'X-Auth-Token': token,
+                },
+              },
+            )
+            .then((response) => {
+              if (response.data && response.data.success === true) {
+                logServer(i18n.__('api.rocketChat.updateEmail', { username, email }));
+              } else {
+                logServer(
+                  `${i18n.__('api.rocketChat.updateEmailError', { username, email })} (${response.data.error})`,
+                  'error',
+                );
+              }
+              return response.data.success;
+            });
+        }),
+      )
+      .catch((error) => {
+        logServer(i18n.__('api.rocketChat.updateEmailError', { username, email }), 'error');
+        logServer(error.response && error.response.data ? error.response.data.error : error, 'error');
+        return false;
+      });
+  }
 }
 
-if (Meteor.isServer && this.rcEnabled) {
+if (Meteor.isServer && rcEnabled) {
   const rcClient = new RocketChatClient();
 
   Meteor.afterMethod('groups.createGroup', function rcCreateGroup({ name }) {
@@ -531,5 +572,19 @@ if (Meteor.isServer && this.rcEnabled) {
         }
       });
     }
+  });
+
+  Meteor.afterMethod('users.userUpdated', function rcUserUpdated(params) {
+    const { userId, data } = params;
+    if (data.email) {
+      rcClient.ensureUser(userId, this.userId).then((rcUser) => {
+        if (rcUser != null) {
+          const { username } = rcUser;
+          rcClient.updateEmail(username, data.email);
+        }
+      });
+    }
+    // console.log('RESULT : ', this.result);
+    // console.log('ERROR: ', this.error);
   });
 }

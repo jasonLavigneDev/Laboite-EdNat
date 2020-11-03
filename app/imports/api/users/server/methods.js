@@ -801,6 +801,28 @@ export const findUser = new ValidatedMethod({
   },
 });
 
+export const userUpdated = new ValidatedMethod({
+  name: 'users.userUpdated',
+  validate: new SimpleSchema({
+    userId: { type: String, regEx: SimpleSchema.RegEx.Id, label: getLabel('api.users.labels.id') },
+    data: {
+      type: Object,
+      optional: true,
+      blackbox: true,
+    },
+  }).validator(),
+
+  run({ userId, data }) {
+    // this function is used to provide hooks when user data is updated
+    // (currently when logging in with keycloak)
+    if (Meteor.isServer) {
+      return userId, data;
+    }
+    // this should be run by server side code only
+    throw new Meteor.Error('api.users.userUpdated.notPermitted', i18n.__('api.users.notPermitted'));
+  },
+});
+
 // Get list of all method names on User
 const LISTS_METHODS = _.pluck(
   [
@@ -823,6 +845,7 @@ const LISTS_METHODS = _.pluck(
     setLogoutType,
     setKeycloakId,
     setAvatar,
+    userUpdated,
   ],
   'name',
 );

@@ -252,6 +252,8 @@
       "setRoleError": "RocketChat: Erreur lors de l'attribution du rôle {$role} à l'utilisateur {$username} sur le groupe {$groupId}",
       "roleUnset": "RocketChat: Rôle {$role} enlevé à l'utilisateur {$username} sur le groupe {$groupId}",
       "unsetRoleError": "RocketChat: Erreur lors de la suppression du rôle {$role} à l'utilisateur {$username} sur le groupe {$groupId}",
+      "updateEmail": "RocketChat: Adresse email de l'utilisateur {$username} définie à {$email}",
+      "updateEmailError": "RocketChat: Erreur lors du passage de l'adresse email de l'utilisateur {$username} à {$email}",
       "owner": "propriétaire",
       "moderator": "modérateur"
     },
