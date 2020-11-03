@@ -75,3 +75,24 @@ Migrations.add({
     Groups.rawCollection().update({}, { $unset: { nextcloud: true } }, { multi: true });
   },
 });
+
+Migrations.add({
+  version: 6,
+  name: 'Add plugins setting to groups and remove nextcloud',
+  up: () => {
+    Groups.update({}, { $set: { plugins: {} } }, { multi: true });
+    Groups.update(
+      { nextcloud: true },
+      { $set: { plugins: { nextcloud: { enable: true } } }, $unset: { nextcloud: true } },
+      { multi: true },
+    );
+  },
+  down: () => {
+    Groups.rawCollection().update(
+      { plugins: { nextcloud: { enable: true } } },
+      { $set: { nextcloud: true } },
+      { multi: true },
+    );
+    Groups.rawCollection().update({}, { $unset: { plugins: true } }, { multi: true });
+  },
+});

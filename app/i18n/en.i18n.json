@@ -762,7 +762,7 @@
       "update": "Update",
       "cancel": "Cancel",
       "nextcloud": "Create group in Nextcloud",
-      "rocketChat": "Create group in RocketChat"
+      "rocketchat": "Create group in RocketChat"
     },
     "SingleGroupPage": {
       "backToList": "Back to the list",

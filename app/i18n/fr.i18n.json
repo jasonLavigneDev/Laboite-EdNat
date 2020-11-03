@@ -765,7 +765,7 @@
       "update": "Mettre à jour",
       "cancel": "Annuler",
       "nextcloud": "Créer le groupe dans Nextcloud",
-      "rocketChat": "Créer le groupe dans RocketChat"
+      "rocketchat": "Créer le groupe dans RocketChat"
     },
     "SingleGroupPage": {
       "backToList": "Retour à la liste",

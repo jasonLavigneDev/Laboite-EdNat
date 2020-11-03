@@ -3,8 +3,6 @@
     "enableKeycloak": true,
     "keycloakUrl": "https://auth.appseducation.fr/auth",
     "keycloakRealm": "apps",
-    "enableNextcloud": false,
-    "nextcloudURL": "",
     "minioSSL": false,
     "minioPort": null,
     "minioAccess": "Uhjm4KJ8MV",
@@ -26,7 +24,11 @@
       "default": null
     },
     "groupPlugins": {
-      "rocketChat": {
+      "rocketchat": {
+        "enable": false,
+        "URL": ""
+      },
+      "nextcloud": {
         "enable": false,
         "URL": ""
       }
