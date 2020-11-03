@@ -24,7 +24,7 @@
       "default": null
     },
     "groupPlugins": {
-      "rocketchat": {
+      "rocketChat": {
         "enable": false,
         "URL": ""
       },
