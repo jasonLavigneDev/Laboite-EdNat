@@ -267,6 +267,7 @@ class NextcloudClient {
   }
 }
 
-const nextEnabled = Meteor.settings.public.enableNextcloud === true;
+// const nextEnabled = Meteor.settings.public.enableNextcloud === true;
+const nextEnabled = Meteor.settings.public.groupPlugins.nextcloud.enable || false;
 const nextClient = Meteor.isServer && nextEnabled ? new NextcloudClient() : null;
 export default nextClient;

@@ -65,7 +65,7 @@ export const unfavGroup = new ValidatedMethod({
   },
 });
 
-function _createGroup({ name, type, content, description, nextcloud, userId }) {
+function _createGroup({ name, type, content, description, plugins, userId }) {
   try {
     const groupId = Groups.insert({
       name,
@@ -75,7 +75,7 @@ function _createGroup({ name, type, content, description, nextcloud, userId }) {
       owner: userId,
       admins: [userId],
       active: true,
-      nextcloud,
+      plugins,
     });
     Roles.addUsersToRoles(userId, 'admin', groupId);
     favGroup._execute({ userId }, { groupId });
@@ -95,10 +95,10 @@ export const createGroup = new ValidatedMethod({
     type: { type: SimpleSchema.Integer, min: 0, label: getLabel('api.groups.labels.type') },
     description: { type: String, label: getLabel('api.groups.labels.description') },
     content: { type: String, defaultValue: '', label: getLabel('api.groups.labels.content') },
-    nextcloud: { type: Boolean, defaultValue: false, label: getLabel('api.groups.labels.nextcloud') },
+    plugins: { type: Object, optional: true, blackbox: true, label: getLabel('api.groups.labels.plugins') },
   }).validator({ clean: true }),
 
-  run({ name, type, content, description, nextcloud }) {
+  run({ name, type, content, description, plugins }) {
     if (!isActive(this.userId)) {
       throw new Meteor.Error('api.groups.createGroup.notLoggedIn', i18n.__('api.users.mustBeLoggedIn'));
     }
@@ -106,25 +106,26 @@ export const createGroup = new ValidatedMethod({
       // create associated groups and roles in keycloak
       kcClient.addGroup({ name }, this.userId);
     }
-    if (nextcloud && nextClient) {
-      // create associated group in Nextcloud
-      return nextClient.addGroup(name).then((response) => {
-        if (response === 'ok') {
-          return nextClient.addGroupFolder(name, name).then((res) => {
-            if (res === false)
-              throw new Meteor.Error(
-                'api.groups.createGroup.nextcloudError',
-                i18n.__('api.nextcloud.addGroupFolderError'),
-              );
-            else return _createGroup({ name, type, content, description, nextcloud, userId: this.userId });
-          });
-        }
-        const msg =
-          response === 'group exists' ? i18n.__('api.nextcloud.groupExists') : i18n.__('api.nextcloud.addGroupError');
-        throw new Meteor.Error('api.groups.createGroup.nextcloudError', msg);
-      });
-    }
-    return _createGroup({ name, type, content, description, nextcloud, userId: this.userId });
+    // if (nextcloud && nextClient) {
+    //   // create associated group in Nextcloud
+    //   return nextClient.addGroup(name).then((response) => {
+    //     if (response === 'ok') {
+    //       return nextClient.addGroupFolder(name, name).then((res) => {
+    //         if (res === false)
+    //           throw new Meteor.Error(
+    //             'api.groups.createGroup.nextcloudError',
+    //             i18n.__('api.nextcloud.addGroupFolderError'),
+    //           );
+    //         else return _createGroup({ name, type, content, description, nextcloud, userId: this.userId });
+    //       });
+    //     }
+    //     const msg =
+    //       response === 'group exists' ? i18n.__('api.nextcloud.groupExists') : i18n.__('api.nextcloud.addGroupError');
+    //     throw new Meteor.Error('api.groups.createGroup.nextcloudError', msg);
+    //   });
+    // }
+    console.log('plugins', plugins);
+    return _createGroup({ name, type, content, description, plugins, userId: this.userId });
   },
 });
 
@@ -216,7 +217,7 @@ export const updateGroup = new ValidatedMethod({
     'data.active': { type: Boolean, optional: true, label: getLabel('api.groups.labels.active') },
     'data.groupPadId': { type: String, optional: true, label: getLabel('api.groups.labels.groupPadId') },
     'data.digest': { type: String, optional: true, label: getLabel('api.groups.labels.digest') },
-    'data.nextcloud': { type: Boolean, optional: true, label: getLabel('api.groups.labels.nextcloud') },
+    'data.plugins': { type: Object, optional: true, blackbox: true, label: getLabel('api.groups.labels.plugins') },
   }).validator({ clean: true }),
 
   run({ groupId, data }) {
@@ -244,32 +245,32 @@ export const updateGroup = new ValidatedMethod({
       kcClient.updateGroup(group.name, groupData.name, this.userId);
     }
     // create nextcloud group if needed
-    const nextRequired = data.nextcloud === true || (data.nextcloud === undefined && group.nextcloud === true);
-    if (nextClient && nextRequired) {
-      const groupName = groupData.name || group.name;
-      return nextClient.groupExists(groupName).then((resExists) => {
-        if (resExists === false) {
-          return nextClient.addGroup(groupName).then((response) => {
-            if (response === 'ok') {
-              return nextClient.addGroupFolder(groupName, groupName).then((res) => {
-                if (res === false)
-                  throw new Meteor.Error(
-                    'api.groups.updateGroup.nextcloudError',
-                    i18n.__('api.nextcloud.addGroupFolderError'),
-                  );
-                _updateGroup(groupId, groupData);
-              });
-            }
-            const msg =
-              response === 'group exists'
-                ? i18n.__('api.nextcloud.groupExists')
-                : i18n.__('api.nextcloud.addGroupError');
-            throw new Meteor.Error('api.groups.updateGroup.nextcloudError', msg);
-          });
-        }
-        return _updateGroup(groupId, groupData);
-      });
-    }
+    // const nextRequired = data.nextcloud === true || (data.nextcloud === undefined && group.nextcloud === true);
+    // if (nextClient && nextRequired) {
+    //   const groupName = groupData.name || group.name;
+    //   return nextClient.groupExists(groupName).then((resExists) => {
+    //     if (resExists === false) {
+    //       return nextClient.addGroup(groupName).then((response) => {
+    //         if (response === 'ok') {
+    //           return nextClient.addGroupFolder(groupName, groupName).then((res) => {
+    //             if (res === false)
+    //               throw new Meteor.Error(
+    //                 'api.groups.updateGroup.nextcloudError',
+    //                 i18n.__('api.nextcloud.addGroupFolderError'),
+    //               );
+    //             _updateGroup(groupId, groupData);
+    //           });
+    //         }
+    //         const msg =
+    //           response === 'group exists'
+    //             ? i18n.__('api.nextcloud.groupExists')
+    //             : i18n.__('api.nextcloud.addGroupError');
+    //         throw new Meteor.Error('api.groups.updateGroup.nextcloudError', msg);
+    //       });
+    //     }
+    //     return _updateGroup(groupId, groupData);
+    //   });
+    // }
     return _updateGroup(groupId, groupData);
   },
 });
