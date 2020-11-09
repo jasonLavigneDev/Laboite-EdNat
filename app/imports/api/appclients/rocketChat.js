@@ -394,7 +394,7 @@ class RocketChatClient {
               username,
               // auto-generate a rather long random password.
               // It will not be used to log in, but API requires one.
-              password: genRandomPassword(24),
+              password: genRandomPassword(256),
               active: true,
               verified: true,
               sendWelcomeEmail: true,
