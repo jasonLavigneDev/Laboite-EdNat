@@ -5,6 +5,7 @@ import { Roles } from 'meteor/alanning:roles';
 import slugify from 'slugify';
 import Groups from '../groups/groups';
 import logServer from '../logging';
+import { genRandomPassword } from '../utils';
 
 rcEnabled = Meteor.settings.public.groupPlugins.rocketChat.enable;
 
@@ -391,7 +392,9 @@ class RocketChatClient {
               email,
               name,
               username,
-              password: 'fixme',
+              // auto-generate a rather long random password.
+              // It will not be used to log in, but API requires one.
+              password: genRandomPassword(24),
               active: true,
               verified: true,
               sendWelcomeEmail: true,
