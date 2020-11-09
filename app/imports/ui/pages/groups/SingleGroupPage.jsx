@@ -146,7 +146,7 @@ const SingleGroupPage = ({ group = {}, ready, services }) => {
   const favorite = user.favGroups.includes(group._id);
   const classes = useStyles(member || animator, candidate, type)();
   const history = useHistory();
-  const nextcloudEnabled = Meteor.settings.public.enableNextcloud === true;
+
   const { groupPlugins } = Meteor.settings.public;
 
   const handleOpenedContent = () => {
@@ -249,36 +249,36 @@ const SingleGroupPage = ({ group = {}, ready, services }) => {
     history.goBack();
   };
 
-  const openGroupFolder = () => {
-    window.open(`${Meteor.settings.public.nextcloudURL}/apps/files/?dir=/${encodeURIComponent(group.name)}`, '_blank');
+  const openGroupFolder = (plugin) => {
+    window.open(plugin.groupURL.replace('[GROUPNAME]', encodeURIComponent(group.name)), '_blank');
   };
 
-  const groupPluginsShow = () => {
-    groupPlugins.forEach((plugin) => {
-      if (group.plugins[plugin] && plugin.enable && (member || animator)) {
-        return (
-          <>
-            <Grid item xs={12} sm={12} md={12} className={classes.cardGrid}>
-              <Typography className={classes.smallTitle} variant="h5">
-                {i18n.__('pages.SingleGroupPage.resources')}
-              </Typography>
-            </Grid>
-            <Grid item key={`share_${group._id}`} xs={12} sm={12} md={6} lg={4} className={classes.cardGrid}>
-              <Button
-                startIcon={<FolderIcon />}
-                className={classes.buttonAdmin}
-                size="large"
-                variant="contained"
-                onClick={openGroupFolder}
-              >
-                {i18n.__('pages.SingleGroupPage.shareGroupButtonLabel')}
-              </Button>
-            </Grid>
-          </>
-        );
-      }
-      return null;
-    });
+  const groupPluginsShow = (plugin) => {
+    if (Object.keys(group).length === 0) return null;
+    console.log('coucou');
+    if (group.plugins[plugin] && plugin.enable && (member || animator)) {
+      return (
+        <>
+          <Grid item xs={12} sm={12} md={12} className={classes.cardGrid}>
+            <Typography className={classes.smallTitle} variant="h5">
+              {i18n.__('pages.SingleGroupPage.resources')}
+            </Typography>
+          </Grid>
+          <Grid item key={`share_${group._id}`} xs={12} sm={12} md={6} lg={4} className={classes.cardGrid}>
+            <Button
+              startIcon={<FolderIcon />}
+              className={classes.buttonAdmin}
+              size="large"
+              variant="contained"
+              onClick={openGroupFolder(plugin)}
+            >
+              {i18n.__('pages.SingleGroupPage.shareGroupButtonLabel')}
+            </Button>
+          </Grid>
+        </>
+      );
+    }
+    return null;
   };
 
   return (
@@ -341,27 +341,7 @@ const SingleGroupPage = ({ group = {}, ready, services }) => {
               )}
             </Grid>
           </Grid>
-          {group.nextcloud && nextcloudEnabled && (member || animator) ? (
-            <>
-              <Grid item xs={12} sm={12} md={12} className={classes.cardGrid}>
-                <Typography className={classes.smallTitle} variant="h5">
-                  {i18n.__('pages.SingleGroupPage.resources')}
-                </Typography>
-              </Grid>
-              <Grid item key={`share_${group._id}`} xs={12} sm={12} md={6} lg={4} className={classes.cardGrid}>
-                <Button
-                  startIcon={<FolderIcon />}
-                  className={classes.buttonAdmin}
-                  size="large"
-                  variant="contained"
-                  onClick={openGroupFolder}
-                >
-                  {i18n.__('pages.SingleGroupPage.shareGroupButtonLabel')}
-                </Button>
-              </Grid>
-            </>
-          ) : null}
-          {groupPluginsShow()}
+          {Object.keys(groupPlugins).map((p) => groupPluginsShow(p))}
           <Grid item xs={12} sm={12} md={12} className={classes.cardGrid}>
             <Typography className={classes.smallTitle} variant="h5">
               {i18n.__('pages.SingleGroupPage.apps')}

@@ -10,7 +10,7 @@ import { isActive, getLabel } from '../utils';
 import Groups from './groups';
 import { addGroup, removeElement } from '../personalspaces/methods';
 import kcClient from '../appclients/kcClient';
-import nextClient from '../appclients/nextcloud';
+// import nextClient from '../appclients/nextcloud';
 
 export const favGroup = new ValidatedMethod({
   name: 'groups.favGroup',
@@ -157,28 +157,28 @@ export const removeGroup = new ValidatedMethod({
     Groups.remove(groupId);
     // remove from users favorite groups
     Meteor.users.update({ favGroups: { $all: [groupId] } }, { $pull: { favGroups: groupId } }, { multi: true });
-    if (nextClient && group.nextcloud) {
-      // remove group from nextcloud if it exists
-      return nextClient.groupExists(group.name).then((resExists) => {
-        if (resExists) {
-          return nextClient.removeGroupFolder(group.name).then((response) => {
-            if (response)
-              return nextClient.removeGroup(group.name).then((res) => {
-                if (res === false)
-                  throw new Meteor.Error(
-                    'api.groups.removeGroup.nextcloudError',
-                    i18n.__('api.nextcloud.removeGroupError'),
-                  );
-              });
-            throw new Meteor.Error(
-              'api.groups.removeGroup.nextcloudError',
-              i18n.__('api.nextcloud.removeGroupFolderError'),
-            );
-          });
-        }
-        return null;
-      });
-    }
+    // if (nextClient && group.nextcloud) {
+    //   // remove group from nextcloud if it exists
+    //   return nextClient.groupExists(group.name).then((resExists) => {
+    //     if (resExists) {
+    //       return nextClient.removeGroupFolder(group.name).then((response) => {
+    //         if (response)
+    //           return nextClient.removeGroup(group.name).then((res) => {
+    //             if (res === false)
+    //               throw new Meteor.Error(
+    //                 'api.groups.removeGroup.nextcloudError',
+    //                 i18n.__('api.nextcloud.removeGroupError'),
+    //               );
+    //           });
+    //         throw new Meteor.Error(
+    //           'api.groups.removeGroup.nextcloudError',
+    //           i18n.__('api.nextcloud.removeGroupFolderError'),
+    //         );
+    //       });
+    //     }
+    //     return null;
+    //   });
+    // }
     return null;
   },
 });

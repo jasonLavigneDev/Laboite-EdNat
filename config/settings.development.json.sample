@@ -26,11 +26,13 @@
     "groupPlugins": {
       "rocketChat": {
         "enable": false,
-        "URL": ""
+        "URL": "",
+        "groupURL": "[GROUPNAME]"
       },
       "nextcloud": {
         "enable": false,
-        "URL": ""
+        "URL": "",
+        "groupURL": "[GROUPNAME]"
       }
     }
   },

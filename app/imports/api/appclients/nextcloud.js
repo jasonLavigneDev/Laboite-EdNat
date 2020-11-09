@@ -14,7 +14,7 @@ function checkFolderActive(response) {
 
 class NextcloudClient {
   constructor() {
-    const ncURL = Meteor.settings.public.nextcloudURL || '';
+    const ncURL = Meteor.settings.public.groupPlugins.nextcloud.URL || '';
     const ncUser = (Meteor.settings.nextcloud && Meteor.settings.nextcloud.nextcloudUser) || '';
     const ncPassword = (Meteor.settings.nextcloud && Meteor.settings.nextcloud.nextcloudPassword) || '';
     this.nextURL = `${ncURL}/ocs/v1.php/cloud`;
