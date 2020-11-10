@@ -250,32 +250,24 @@ const SingleGroupPage = ({ group = {}, ready, services }) => {
   };
 
   const openGroupFolder = (plugin) => {
-    window.open(plugin.groupURL.replace('[GROUPNAME]', encodeURIComponent(group.name)), '_blank');
+    window.open(groupPlugins[plugin].groupURL.replace('[GROUPNAME]', encodeURIComponent(group.name)), '_blank');
   };
 
   const groupPluginsShow = (plugin) => {
-    if (Object.keys(group).length === 0) return null;
     console.log('coucou');
-    if (group.plugins[plugin] && plugin.enable && (member || animator)) {
+    if (group.plugins[plugin] && (member || animator)) {
       return (
-        <>
-          <Grid item xs={12} sm={12} md={12} className={classes.cardGrid}>
-            <Typography className={classes.smallTitle} variant="h5">
-              {i18n.__('pages.SingleGroupPage.resources')}
-            </Typography>
-          </Grid>
-          <Grid item key={`share_${group._id}`} xs={12} sm={12} md={6} lg={4} className={classes.cardGrid}>
-            <Button
-              startIcon={<FolderIcon />}
-              className={classes.buttonAdmin}
-              size="large"
-              variant="contained"
-              onClick={openGroupFolder(plugin)}
-            >
-              {i18n.__('pages.SingleGroupPage.shareGroupButtonLabel')}
-            </Button>
-          </Grid>
-        </>
+        <Grid item key={`${plugin}_${group._id}`} xs={12} sm={12} md={6} lg={4} className={classes.cardGrid}>
+          <Button
+            startIcon={<FolderIcon />}
+            className={classes.buttonAdmin}
+            size="large"
+            variant="contained"
+            onClick={() => openGroupFolder(plugin)}
+          >
+            {i18n.__('pages.SingleGroupPage.shareGroupButtonLabel')}
+          </Button>
+        </Grid>
       );
     }
     return null;
@@ -341,7 +333,23 @@ const SingleGroupPage = ({ group = {}, ready, services }) => {
               )}
             </Grid>
           </Grid>
-          {Object.keys(groupPlugins).map((p) => groupPluginsShow(p))}
+          {Object.keys(group.plugins || {}).filter((plug) => group.plugins[plug] === true).length > 0 ? (
+            <>
+              <Grid item xs={12} sm={12} md={12} className={classes.cardGrid}>
+                <Typography className={classes.smallTitle} variant="h5">
+                  {i18n.__('pages.SingleGroupPage.resources')}
+                </Typography>
+              </Grid>
+              <Grid>
+                {Object.keys(groupPlugins)
+                  .filter((p) => groupPlugins[p].enable === true)
+                  .map((p) => {
+                    console.log('Plugin : ', p);
+                    groupPluginsShow(p);
+                  })}
+              </Grid>
+            </>
+          ) : null}
           <Grid item xs={12} sm={12} md={12} className={classes.cardGrid}>
             <Typography className={classes.smallTitle} variant="h5">
               {i18n.__('pages.SingleGroupPage.apps')}
