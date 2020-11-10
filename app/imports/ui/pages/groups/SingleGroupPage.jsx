@@ -345,7 +345,7 @@ const SingleGroupPage = ({ group = {}, ready, services }) => {
                   .filter((p) => groupPlugins[p].enable === true)
                   .map((p) => {
                     console.log('Plugin : ', p);
-                    groupPluginsShow(p);
+                    return groupPluginsShow(p);
                   })}
               </Grid>
             </>
