@@ -9,8 +9,9 @@ import i18n from 'meteor/universe:i18n';
 import { isActive, getLabel } from '../utils';
 import Groups from './groups';
 import { addGroup, removeElement } from '../personalspaces/methods';
-import kcClient from '../appclients/kcClient';
-// import nextClient from '../appclients/nextcloud';
+
+// FIXME
+const kcClient = null;
 
 export const favGroup = new ValidatedMethod({
   name: 'groups.favGroup',
@@ -183,9 +184,11 @@ export const removeGroup = new ValidatedMethod({
   },
 });
 
-function _updateGroup(groupId, groupData) {
+function _updateGroup(groupId, groupData, oldGroup) {
   try {
-    Groups.update({ _id: groupId }, { $set: groupData });
+    newGroup = Groups.update({ _id: groupId }, { $set: groupData });
+    // return both old and new data to allow plugins to detect changes in 'after' hook
+    return newGroup, oldGroup;
   } catch (error) {
     if (error.code === 11000) {
       throw new Meteor.Error('api.groups.updateGroup.duplicateName', i18n.__('api.groups.groupAlreadyExist'));
@@ -271,7 +274,7 @@ export const updateGroup = new ValidatedMethod({
     //     return _updateGroup(groupId, groupData);
     //   });
     // }
-    return _updateGroup(groupId, groupData);
+    return _updateGroup(groupId, groupData, group);
   },
 });
 

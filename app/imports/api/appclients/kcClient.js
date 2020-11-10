@@ -2,6 +2,7 @@ import axios from 'axios';
 import { Meteor } from 'meteor/meteor';
 import i18n from 'meteor/universe:i18n';
 import AppRoles from '../users/users';
+import Groups from '../groups/groups';
 import logServer from '../logging';
 
 class KeyCloakClient {
@@ -468,6 +469,26 @@ class KeyCloakClient {
   }
 }
 
-const kcClient = Meteor.isServer && Meteor.settings.public.enableKeycloak ? new KeyCloakClient() : null;
+if (Meteor.isServer && Meteor.settings.public.enableKeycloak) {
+  const kcClient = new KeyCloakClient();
+  console.log('INIT KEYCLOAK HOOKS');
 
-export default kcClient;
+  Meteor.afterMethod('groups.createGroup', function kcCreateGroup({ name }) {
+    console.log('KC add group', name, this.userId);
+    kcClient.addGroup(name, this.userId);
+  });
+
+  Meteor.afterMethod('groups.updateGroup', function kcUpdateGroup({ groupId, data }) {
+    const [newGroup, oldGroup] = this.result;
+    console.log('KC updateGroup: ', newGroup, oldGroup);
+    if (newGroup.name !== oldGroup.name) {
+      kcClient.updateGroup(oldGroup.name, newGroup.name, this.userId);
+    }
+  });
+
+  Meteor.beforeMethod('groups.removeGroup', function kcRemoveGroup({ groupId }) {
+    const group = Groups.findOne({ _id: groupId });
+    console.log('KCCLiENT : remove group ', group.slug);
+    kcClient.removeGroup(group, this.userId);
+  });
+}

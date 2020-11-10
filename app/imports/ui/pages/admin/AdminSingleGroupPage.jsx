@@ -224,7 +224,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
               /* FIXME! 
               disabled={(!isAdmin || (nextEnabled && group.nextcloud)) && !!params._id}
               */
-              disabled={isAdmin && !!params._id}
+              disabled={!isAdmin && !!params._id}
             />
             <TextField
               onChange={onUpdateField}
