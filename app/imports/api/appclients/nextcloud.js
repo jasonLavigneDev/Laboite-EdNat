@@ -267,7 +267,67 @@ class NextcloudClient {
   }
 }
 
-// const nextEnabled = Meteor.settings.public.enableNextcloud === true;
-const nextEnabled = Meteor.settings.public.groupPlugins.nextcloud.enable || false;
-const nextClient = Meteor.isServer && nextEnabled ? new NextcloudClient() : null;
-export default nextClient;
+if (Meteor.isServer && Meteor.settings.public.groupPlugins.nextcloud.enable) {
+  const nextClient = new NextcloudClient();
+
+  Meteor.afterMethod('groups.createGroup', function nextCreateGroup({ name, type, content, description, plugins }) {
+    if (plugins.nextcloud) {
+      // create associated group in Nextcloud
+      nextClient.addGroup(name).then((response) => {
+        if (response === 'ok') {
+          nextClient.addGroupFolder(name, name).then((res) => {
+            _createGroup({ name, type, content, description, nextcloud, userId: this.userId });
+          });
+        } else {
+          const msg =
+            response === 'group exists' ? i18n.__('api.nextcloud.groupExists') : i18n.__('api.nextcloud.addGroupError');
+          logServer(i18n.__(msg), 'error', this.userId);
+        }
+      });
+    }
+  });
+
+  Meteor.beforeMethod('groups.removeGroup', function nextRemoveGroup({ groupId }) {
+    const group = Groups.findOne({ _id: groupId });
+    if (group.plugins.nextcloud) {
+      // remove group from nextcloud if it exists
+      nextClient.groupExists(group.name).then((resExists) => {
+        if (resExists) {
+          nextClient.removeGroupFolder(group.name).then((response) => {
+            if (response)
+              nextClient.removeGroup(group.name).then((res) => {
+                if (res === false) logServer(i18n.__('api.nextcloud.removeGroupError'), 'error', this.userId);
+              });
+            else logServer(i18n.__('api.nextcloud.removeGroupFolderError'), 'error', this.userId);
+          });
+        }
+      });
+    }
+  });
+
+  Meteor.afterMethod('groups.updateGroup', function nextUpdateGroup({ groupId, data }) {
+    const [newData, oldGroup] = this.result;
+    // create nextcloud group if needed
+    const group = Groups.findOne({ _id: groupId });
+    const groupName = group.name;
+    if (group.plugins.nextcloud === true) {
+      nextClient.groupExists(groupName).then((resExists) => {
+        if (resExists === false) {
+          nextClient.addGroup(groupName).then((response) => {
+            if (response === 'ok') {
+              nextClient.addGroupFolder(groupName, groupName).then((res) => {
+                if (res === false) logServer(i18n.__('api.nextcloud.addGroupFolderError'), 'error', this.userId);
+              });
+            } else {
+              const msg =
+                response === 'group exists'
+                  ? i18n.__('api.nextcloud.groupExists')
+                  : i18n.__('api.nextcloud.addGroupError');
+              logServer(msg, 'error', this.userId);
+            }
+          });
+        }
+      });
+    }
+  });
+}
