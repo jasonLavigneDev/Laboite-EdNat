@@ -271,7 +271,7 @@ if (Meteor.isServer && Meteor.settings.public.groupPlugins.nextcloud.enable) {
   const nextClient = new NextcloudClient();
 
   Meteor.afterMethod('groups.createGroup', function nextCreateGroup({ name, type, content, description, plugins }) {
-    if (plugins.nextcloud) {
+    if (plugins.nextcloud === true) {
       // create associated group in Nextcloud
       nextClient.addGroup(name).then((response) => {
         if (response === 'ok') {
@@ -289,7 +289,7 @@ if (Meteor.isServer && Meteor.settings.public.groupPlugins.nextcloud.enable) {
 
   Meteor.beforeMethod('groups.removeGroup', function nextRemoveGroup({ groupId }) {
     const group = Groups.findOne({ _id: groupId });
-    if (group.plugins.nextcloud) {
+    if (group.plugins.nextcloud === true) {
       // remove group from nextcloud if it exists
       nextClient.groupExists(group.name).then((resExists) => {
         if (resExists) {

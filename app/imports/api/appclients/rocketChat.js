@@ -2,7 +2,6 @@ import axios from 'axios';
 import { Meteor } from 'meteor/meteor';
 import i18n from 'meteor/universe:i18n';
 import { Roles } from 'meteor/alanning:roles';
-import slugify from 'slugify';
 import Groups from '../groups/groups';
 import logServer from '../logging';
 import { genRandomPassword } from '../utils';
@@ -482,98 +481,111 @@ if (Meteor.isServer && rcEnabled) {
   const rcClient = new RocketChatClient();
 
   Meteor.afterMethod('groups.createGroup', function rcCreateGroup({ name }) {
-    const slug = slugify(name, {
-      replacement: '-', // replace spaces with replacement
-      remove: null, // regex to remove characters
-      lower: true, // result in lower case
-    });
-    rcClient.createGroup(slug, this.userId).then(() => {
-      // adds user as channel admin
-      rcClient.ensureUser(this.userId, this.userId).then((user) => {
-        const { username } = user;
-        rcClient
-          .inviteUser(slug, username, this.userId)
-          .then(() => rcClient.setRole(slug, username, 'owner', this.userId));
+    const group = Groups.findOne({ name });
+    if (group.plugins.rocketChat === true) {
+      const slug = group.slug;
+      rcClient.createGroup(slug, this.userId).then(() => {
+        // adds user as channel admin
+        rcClient.ensureUser(this.userId, this.userId).then((user) => {
+          const { username } = user;
+          rcClient
+            .inviteUser(slug, username, this.userId)
+            .then(() => rcClient.setRole(slug, username, 'owner', this.userId));
+        });
       });
-    });
+    }
   });
 
   Meteor.beforeMethod('groups.removeGroup', function rcRemoveGroup({ groupId }) {
     const group = Groups.findOne({ _id: groupId });
-    rcClient.removeGroup(group.slug, this.userId);
+    if (group.plugins.rocketChat === true) {
+      rcClient.removeGroup(group.slug, this.userId);
+    }
   });
 
   Meteor.afterMethod('users.setAdminOf', function rcSetAdminOf({ userId, groupId }) {
     const group = Groups.findOne({ _id: groupId });
-    rcClient.ensureUser(userId, this.userId).then((rcUser) => {
-      if (rcUser !== null) {
-        const { username } = rcUser;
-        rcClient
-          .inviteUser(group.slug, username, this.userId)
-          .then(() => rcClient.setRole(group.slug, username, 'owner', this.userId));
-      }
-    });
+    if (group.plugins.rocketChat === true) {
+      rcClient.ensureUser(userId, this.userId).then((rcUser) => {
+        if (rcUser !== null) {
+          const { username } = rcUser;
+          rcClient
+            .inviteUser(group.slug, username, this.userId)
+            .then(() => rcClient.setRole(group.slug, username, 'owner', this.userId));
+        }
+      });
+    }
   });
 
   Meteor.beforeMethod('users.unsetAdminOf', function rcUnsetAdminOf({ userId, groupId }) {
     const group = Groups.findOne({ _id: groupId });
-    rcClient.ensureUser(userId, this.userId).then((user) => {
-      if (user !== null) {
-        const { username } = user;
-        rcClient.unsetRole(group.slug, username, 'owner', this.userId).then(() => {
-          if (!Roles.userIsInRole(userId, ['member', 'animator'], groupId)) {
-            rcClient.kickUser(group.slug, username, this.userId);
-          }
-        });
-      }
-    });
+    if (group.plugins.rocketChat === true) {
+      rcClient.ensureUser(userId, this.userId).then((user) => {
+        if (user !== null) {
+          const { username } = user;
+          rcClient.unsetRole(group.slug, username, 'owner', this.userId).then(() => {
+            if (!Roles.userIsInRole(userId, ['member', 'animator'], groupId)) {
+              rcClient.kickUser(group.slug, username, this.userId);
+            }
+          });
+        }
+      });
+    }
   });
 
   Meteor.afterMethod('users.setAnimatorOf', function rcSetAnimatorOf({ userId, groupId }) {
     const group = Groups.findOne({ _id: groupId });
-    rcClient.ensureUser(userId, this.userId).then((rcUser) => {
-      if (rcUser != null) {
-        const { username } = rcUser;
-        rcClient
-          .inviteUser(group.slug, username, this.userId)
-          .then(() => rcClient.setRole(group.slug, username, 'moderator', this.userId));
-      }
-    });
+    if (group.plugins.rocketChat === true) {
+      rcClient.ensureUser(userId, this.userId).then((rcUser) => {
+        if (rcUser != null) {
+          const { username } = rcUser;
+          rcClient
+            .inviteUser(group.slug, username, this.userId)
+            .then(() => rcClient.setRole(group.slug, username, 'moderator', this.userId));
+        }
+      });
+    }
   });
 
   Meteor.beforeMethod('users.unsetAnimatorOf', function rcUnsetAnimatorOf({ userId, groupId }) {
     const group = Groups.findOne({ _id: groupId });
-    rcClient.ensureUser(userId, this.userId).then((user) => {
-      if (user !== null) {
-        const { username } = user;
-        rcClient.unsetRole(group.slug, username, 'moderator', this.userId).then(() => {
-          if (!Roles.userIsInRole(userId, ['member', 'admin'], groupId)) {
-            rcClient.kickUser(group.slug, username, this.userId);
-          }
-        });
-      }
-    });
+    if (group.plugins.rocketChat === true) {
+      rcClient.ensureUser(userId, this.userId).then((user) => {
+        if (user !== null) {
+          const { username } = user;
+          rcClient.unsetRole(group.slug, username, 'moderator', this.userId).then(() => {
+            if (!Roles.userIsInRole(userId, ['member', 'admin'], groupId)) {
+              rcClient.kickUser(group.slug, username, this.userId);
+            }
+          });
+        }
+      });
+    }
   });
 
   Meteor.afterMethod('users.setMemberOf', function rcSetMemberOf({ userId, groupId }) {
     const group = Groups.findOne({ _id: groupId });
-    rcClient.ensureUser(userId, this.userId).then((rcUser) => {
-      if (rcUser != null) {
-        const { username } = rcUser;
-        rcClient.inviteUser(group.slug, username, this.userId);
-      }
-    });
+    if (group.plugins.rocketChat === true) {
+      rcClient.ensureUser(userId, this.userId).then((rcUser) => {
+        if (rcUser != null) {
+          const { username } = rcUser;
+          rcClient.inviteUser(group.slug, username, this.userId);
+        }
+      });
+    }
   });
 
   Meteor.beforeMethod('users.unsetMemberOf', function rcUnsetMemberOf({ userId, groupId }) {
     const group = Groups.findOne({ _id: groupId });
-    if (!Roles.userIsInRole(userId, ['animator', 'admin'], groupId)) {
-      rcClient.ensureUser(userId, this.userId).then((user) => {
-        if (user !== null) {
-          const { username } = user;
-          rcClient.kickUser(group.slug, username, this.userId);
-        }
-      });
+    if (group.plugins.rocketChat === true) {
+      if (!Roles.userIsInRole(userId, ['animator', 'admin'], groupId)) {
+        rcClient.ensureUser(userId, this.userId).then((user) => {
+          if (user !== null) {
+            const { username } = user;
+            rcClient.kickUser(group.slug, username, this.userId);
+          }
+        });
+      }
     }
   });
 
