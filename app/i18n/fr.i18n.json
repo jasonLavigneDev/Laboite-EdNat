@@ -242,6 +242,7 @@
       "groupRemoved": "RocketChat: canal {$name} supprimé",
       "groupRemoveError": "RocketChat: Erreur lors de la suppression du canal {$name}",
       "getUserError": "RocketChat: Erreur lors de la recherche de l'utilisateur",
+      "getGroupError": "RocketChat: Erreur lors de la recherche du groupe",
       "userInvited": "RocketChat: utilisateur {$username} ajouté au groupe {$groupId}",
       "userInviteError": "RocketChat: Erreur lors de l'ajout de l'utilisateur {$username} au groupe {$groupId}",
       "userAdded": "RocketChat: utilisateur {$username} créé",

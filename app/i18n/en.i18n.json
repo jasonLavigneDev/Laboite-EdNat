@@ -242,6 +242,7 @@
       "groupRemoved": "RocketChat: channel {$name} removed",
       "groupRemoveError": "RocketChat: Error removing channel {$name}",
       "getUserError": "RocketChat: Error getting user data",
+      "getGroupError": "RocketChat: Error getting group data",
       "userInvited": "RocketChat: user {$username} added to group {$groupId}",
       "userInviteError": "RocketChat: Error inviting user {$username} to group {$groupId}",
       "userAdded": "RocketChat: user {$username} created",

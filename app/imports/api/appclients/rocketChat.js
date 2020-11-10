@@ -95,6 +95,33 @@ class RocketChatClient {
       });
   }
 
+  getGroup(slug) {
+    return this._getToken()
+      .then((token) => {
+        return axios
+          .get(`${this.rcURL}/groups.info`, {
+            params: {
+              roomName: slug,
+            },
+            headers: {
+              'Content-Type': 'application/json',
+              Accept: 'application/json',
+              'X-User-Id': this.adminId,
+              'X-Auth-Token': token,
+            },
+          })
+          .then((response) => {
+            if (response.data && response.data.success === true) {
+              return true;
+            }
+            return false;
+          });
+      })
+      .catch((error) => {
+        return false;
+      });
+  }
+
   createGroup(name, callerId) {
     return this._getToken()
       .then((token) => {
@@ -500,6 +527,27 @@ if (Meteor.isServer && rcEnabled) {
     const group = Groups.findOne({ _id: groupId });
     if (group.plugins.rocketChat === true) {
       rcClient.removeGroup(group.slug, this.userId);
+    }
+  });
+
+  Meteor.afterMethod('groups.updateGroup', function nextUpdateGroup({ groupId, data }) {
+    // create rocketChat group if needed
+    const group = Groups.findOne({ _id: groupId });
+    const slug = group.slug;
+    if (group.plugins.rocketChat === true) {
+      rcClient.getGroup(slug).then((resExists) => {
+        if (resExists === false) {
+          rcClient.createGroup(slug, this.userId).then(() => {
+            // adds user as channel admin
+            rcClient.ensureUser(this.userId, this.userId).then((user) => {
+              const { username } = user;
+              rcClient
+                .inviteUser(slug, username, this.userId)
+                .then(() => rcClient.setRole(slug, username, 'owner', this.userId));
+            });
+          });
+        }
+      });
     }
   });
 
