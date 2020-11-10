@@ -2,6 +2,7 @@ import axios from 'axios';
 import { Meteor } from 'meteor/meteor';
 import i18n from 'meteor/universe:i18n';
 import AppRoles from '../users/users';
+import { Roles } from 'meteor/alanning:roles';
 import Groups from '../groups/groups';
 import logServer from '../logging';
 
@@ -469,26 +470,60 @@ class KeyCloakClient {
   }
 }
 
+// setup client calls on methods hooks
 if (Meteor.isServer && Meteor.settings.public.enableKeycloak) {
   const kcClient = new KeyCloakClient();
-  console.log('INIT KEYCLOAK HOOKS');
 
   Meteor.afterMethod('groups.createGroup', function kcCreateGroup({ name }) {
-    console.log('KC add group', name, this.userId);
     kcClient.addGroup(name, this.userId);
   });
 
   Meteor.afterMethod('groups.updateGroup', function kcUpdateGroup({ groupId, data }) {
-    const [newGroup, oldGroup] = this.result;
-    console.log('KC updateGroup: ', newGroup, oldGroup);
-    if (newGroup.name !== oldGroup.name) {
-      kcClient.updateGroup(oldGroup.name, newGroup.name, this.userId);
+    const [newData, oldGroup] = this.result;
+    if (newData.name !== oldGroup.name) {
+      kcClient.updateGroup(oldGroup.name, newData.name, this.userId);
     }
   });
 
   Meteor.beforeMethod('groups.removeGroup', function kcRemoveGroup({ groupId }) {
     const group = Groups.findOne({ _id: groupId });
-    console.log('KCCLiENT : remove group ', group.slug);
     kcClient.removeGroup(group, this.userId);
+  });
+
+  Meteor.afterMethod('users.setAdmin', function kcSetAdmin({ userId }) {
+    kcClient.setAdmin(userId, this.userId);
+  });
+
+  Meteor.afterMethod('users.unsetAdmin', function kcUnsetAdmin({ userId }) {
+    kcClient.unsetAdmin(userId, this.userId);
+  });
+
+  Meteor.afterMethod('users.setAnimatorOf', function kcSetAnimator({ userId, groupId }) {
+    // there is no difference between member and animator roles in keycloak
+    if (!Roles.userIsInRole(userId, 'member', groupId)) {
+      const group = Groups.findOne({ _id: groupId });
+      kcClient.setRole(userId, group.name, this.userId);
+    }
+  });
+
+  Meteor.afterMethod('users.unsetAnimatorOf', function kcUnsetAnimator({ userId, groupId }) {
+    if (!Roles.userIsInRole(userId, 'member', groupId)) {
+      const group = Groups.findOne({ _id: groupId });
+      kcClient.unsetRole(userId, group.name, this.userId);
+    }
+  });
+
+  Meteor.afterMethod('users.setMemberOf', function kcSetMember({ userId, groupId }) {
+    if (!Roles.userIsInRole(userId, 'animator', groupId)) {
+      const group = Groups.findOne({ _id: groupId });
+      kcClient.setRole(userId, group.name, this.userId);
+    }
+  });
+
+  Meteor.afterMethod('users.unsetMemberOf', function kcUnsetMember({ userId, groupId }) {
+    if (!Roles.userIsInRole(userId, 'animator', groupId)) {
+      const group = Groups.findOne({ _id: groupId });
+      kcClient.unsetRole(userId, group.name, this.userId);
+    }
   });
 }

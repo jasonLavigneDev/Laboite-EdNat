@@ -188,7 +188,7 @@ function _updateGroup(groupId, groupData, oldGroup) {
   try {
     newGroup = Groups.update({ _id: groupId }, { $set: groupData });
     // return both old and new data to allow plugins to detect changes in 'after' hook
-    return newGroup, oldGroup;
+    return [groupData, oldGroup];
   } catch (error) {
     if (error.code === 11000) {
       throw new Meteor.Error('api.groups.updateGroup.duplicateName', i18n.__('api.groups.groupAlreadyExist'));

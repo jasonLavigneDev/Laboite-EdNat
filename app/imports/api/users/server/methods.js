@@ -19,6 +19,7 @@ import { createRoleNotification, createRequestNotification } from '../../notific
 
 // FIXME
 const kcClient = null;
+
 // users.findUsers: Returns users using pagination
 //   filter: string to search for in username/firstname/lastname/emails (case insensitive search)
 //   page: number of the page requested
@@ -297,7 +298,7 @@ export const setAdmin = new ValidatedMethod({
     if (user === undefined) {
       throw new Meteor.Error('api.users.setAdmin.unknownUser', i18n.__('api.users.unknownUser'));
     }
-    if (Meteor.settings.public.enableKeycloak) {
+    if (kcClient) {
       // update user's groups in Keycloak
       kcClient.setAdmin(userId, this.userId);
     }
@@ -370,7 +371,7 @@ export const unsetAdmin = new ValidatedMethod({
     if (user === undefined) {
       throw new Meteor.Error('api.users.setAdmin.unknownUser', i18n.__('api.users.unknownUser'));
     }
-    if (Meteor.settings.public.enableKeycloak) {
+    if (kcClient) {
       // update user's groups in Keycloak
       kcClient.unsetAdmin(userId, this.userId);
     }
