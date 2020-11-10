@@ -230,7 +230,9 @@
       "folderRemoved": "Nextcloud: removed group folder {$id} ({$mount_point})",
       "folderRemoveError": "Nextcloud: ERROR deleting group folder {$id} ({$message})",
       "groupRemoved": "Nextcloud: group {$groupName} removed",
-      "groupRemoveError": "Nextcloud: Error removing group {$groupName}"
+      "groupRemoveError": "Nextcloud: Error removing group {$groupName}",
+      "enablePluginForGroup": "Create group in Nextcloud",
+      "buttonLinkPlugin": "Access shared files in Nextcloud"
     },
     "rocketChat": {
       "initClient": "RocketChat: API client initialized",
@@ -255,7 +257,9 @@
       "updateEmail": "RocketChat: updated email to {$email} for user {$username}",
       "updateEmailError": "RocketChat: error updating email to {$email} for user {$username}",
       "owner": "owner",
-      "moderator": "moderator"
+      "moderator": "moderator",
+      "enablePluginForGroup": "Create group in RocketChat",
+      "buttonLinkPlugin": "Access shared files in RocketChat"
     },
     "logging": {
       "unknownLogLevel": "Specified log level does not exist",
@@ -762,9 +766,7 @@
       "content": "Long description of the group",
       "save": "Save",
       "update": "Update",
-      "cancel": "Cancel",
-      "nextcloud": "Create group in Nextcloud",
-      "rocketChat": "Create group in RocketChat"
+      "cancel": "Cancel"
     },
     "SingleGroupPage": {
       "backToList": "Back to the list",
@@ -783,8 +785,7 @@
       "stopAnimating": "Stop animating this group",
       "animationLeft": "You are no longer animator of this group",
       "apps": "Applications",
-      "resources": "Group resources",
-      "shareGroupButtonLabel": "Access shared files"
+      "resources": "Group resources"
     },
     "AddressBook": {
       "sendEmail": "Send an email to",

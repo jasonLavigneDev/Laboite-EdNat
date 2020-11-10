@@ -197,7 +197,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
                 disabled={!isAdmin && !!params._id}
               />
             }
-            label={i18n.__(`pages.AdminSingleGroupPage.${plugin}`)}
+            label={i18n.__(`api.${plugin}.enablePluginForGroup`)}
           />
         </FormGroup>
       );

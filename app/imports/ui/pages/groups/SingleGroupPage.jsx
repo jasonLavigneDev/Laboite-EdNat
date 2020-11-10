@@ -254,7 +254,6 @@ const SingleGroupPage = ({ group = {}, ready, services }) => {
   };
 
   const groupPluginsShow = (plugin) => {
-    console.log('coucou');
     if (group.plugins[plugin] && (member || animator)) {
       return (
         <Grid item key={`${plugin}_${group._id}`} xs={12} sm={12} md={6} lg={4} className={classes.cardGrid}>
@@ -265,7 +264,7 @@ const SingleGroupPage = ({ group = {}, ready, services }) => {
             variant="contained"
             onClick={() => openGroupFolder(plugin)}
           >
-            {i18n.__('pages.SingleGroupPage.shareGroupButtonLabel')}
+            {i18n.__(`api.${plugin}.buttonLinkPlugin`)}
           </Button>
         </Grid>
       );
@@ -340,14 +339,11 @@ const SingleGroupPage = ({ group = {}, ready, services }) => {
                   {i18n.__('pages.SingleGroupPage.resources')}
                 </Typography>
               </Grid>
-              <Grid>
-                {Object.keys(groupPlugins)
-                  .filter((p) => groupPlugins[p].enable === true)
-                  .map((p) => {
-                    console.log('Plugin : ', p);
-                    return groupPluginsShow(p);
-                  })}
-              </Grid>
+              {Object.keys(groupPlugins)
+                .filter((p) => groupPlugins[p].enable === true)
+                .map((p) => {
+                  return groupPluginsShow(p);
+                })}
             </>
           ) : null}
           <Grid item xs={12} sm={12} md={12} className={classes.cardGrid}>

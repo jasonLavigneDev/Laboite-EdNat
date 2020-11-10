@@ -7,7 +7,7 @@ import Groups from '../groups/groups';
 import logServer from '../logging';
 import { genRandomPassword } from '../utils';
 
-rcEnabled = Meteor.settings.public.groupPlugins.rocketChat.enable;
+const rcEnabled = Meteor.settings.public.groupPlugins.rocketChat.enable;
 
 class RocketChatClient {
   constructor() {
