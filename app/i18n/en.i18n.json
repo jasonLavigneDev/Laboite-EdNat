@@ -450,6 +450,8 @@
       "menuProfileLabel": "Profile",
       "menuLogoutLabel": "Logout",
       "menuMedias": "Medias Storage",
+      "menuAdminStructureUsers": "Structure Users",
+      "menuAdminStructureServices": "Structure Services",
       "menuAdminApp": "Administration"
     },
     "AdminMenu": {

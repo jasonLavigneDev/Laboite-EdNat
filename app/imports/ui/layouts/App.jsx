@@ -10,6 +10,7 @@ import MsgHandler from '../components/system/MsgHandler';
 import DynamicStore, { useAppContext } from '../contexts/context';
 import lightTheme from '../themes/light';
 import UploaderNotifier from '../components/uploader/UploaderNotifier';
+import AdminRoute from '../components/system/AdminRoute';
 
 // dynamic imports
 const MainLayout = lazy(() => import('./MainLayout'));
@@ -51,7 +52,7 @@ function App() {
           <ProtectedRoute exact path="/logout" component={Logout} {...state} />
           <Route exact path="/legal/:legalKey" component={LegalPage} />
           <Route exact path="/contact" component={SignLayout} {...state} />
-          <ProtectedRoute path="/admin" component={AdminLayout} userId={userId} loadingUser={loadingUser} {...state} />
+          {!!userId && <AdminRoute path="/admin" component={AdminLayout} userId={userId} loadingUser={loadingUser} {...state} />}
           <ProtectedRoute path="/" component={MainLayout} {...state} />
         </Switch>
       </Suspense>
