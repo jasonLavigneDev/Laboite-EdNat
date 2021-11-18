@@ -16,8 +16,6 @@ import Nextcloud from '../../../api/nextcloud/nextcloud';
 import { removeNextcloudURL } from '../../../api/nextcloud/methods';
 import setMaterialTableLocalization from '../../components/initMaterialTableLocalization';
 import AdminNextCloudUrlEdit from '../../components/admin/AdminNextcloudUrlEdit';
-import Fade from '@material-ui/core/Fade';
-import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 function AdminNextcloudUrlPage({ loading, nextclouds }) {
-  const classes = useStyles()
+  const classes = useStyles();
   const ncloudData = {};
   const columns = [
     {
