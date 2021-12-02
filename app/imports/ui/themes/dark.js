@@ -1,18 +1,12 @@
 import { createTheme } from '@material-ui/core/styles';
+import RIZOMO_DARK from './rizomo/light';
+import LABOITE_DARK from './laboite/light';
 
-const darkTheme = createTheme({
-  palette: {
-    type: 'dark',
-    primary: {
-      main: '#011CAA',
-      light: '#ECEEF8',
-      dark: '#212F74',
-    },
-    secondary: {
-      main: '#EFAC61',
-      light: '#FFDBA5',
-    },
-  },
-});
+export const DARK_THEMES = {
+  rizomo: RIZOMO_DARK,
+  laboite: LABOITE_DARK,
+};
+
+const darkTheme = createTheme(DARK_THEMES[Meteor.settings.public.theme || 'laboite']);
 
 export default darkTheme;

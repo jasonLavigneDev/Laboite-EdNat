@@ -2,20 +2,20 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import { Route, Switch } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import LanguageSwitcher from '../components/system/LanguageSwitcher';
 import SignUp from '../pages/system/SignUp';
 import SignIn from '../pages/system/SignIn';
 import Footer from '../components/menus/Footer';
 import Contact from '../pages/system/Contact';
 import { useAppContext } from '../contexts/context';
-import { THEMES } from '../themes/light';
+import RizomoTitle from '../components/menus/RizomoTitle';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     minHeight: 'calc(100vh - 64px)',
     padding: '16px',
-    backgroundImage: THEMES[Meteor.settings.public.theme || 'laboite'].signinBackground,
+    backgroundImage: theme.signinBackground,
     backgroundRepeat: 'no-repeat',
     backgroundColor: theme.palette.grey[50],
     backgroundSize: 'cover',
@@ -41,6 +41,9 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: 'auto',
     paddingBottom: '5%',
   },
+  imgLogoRizomo: {
+    display: 'flex',
+  },
   mainFeaturedPostContent: {
     position: 'relative',
     // padding: theme.spacing(3),
@@ -54,6 +57,8 @@ const useStyles = makeStyles((theme) => ({
 export default function SignLayout() {
   const classes = useStyles();
   const [{ isMobile }] = useAppContext();
+  const theme = useTheme();
+  const isRizomo = Meteor.settings.public.theme === 'rizomo';
 
   return (
     <>
@@ -65,7 +70,10 @@ export default function SignLayout() {
         </Grid>
         <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
           <div className={classes.paper}>
-            <img src="/images/apps-logo-sansfond.svg" className={classes.imgLogo} alt="Logo" />
+            <div className={isRizomo ? classes.imgLogoRizomo : classes.imgLogo}>
+              <img src={theme.logos.LONG_LOGO} className={classes.imgLogo} alt="Logo" />
+              {isRizomo && !isMobile && <RizomoTitle />}
+            </div>
             <Switch>
               <Route exact path="/signin" component={SignIn} />
               <Route exact path="/signup" component={SignUp} />
