@@ -24,6 +24,7 @@ Deps:
   artifacts:
     paths:
       - app/node_modules/
+    expire_in: 2 hrs
 
 Lint:
   stage: lint
