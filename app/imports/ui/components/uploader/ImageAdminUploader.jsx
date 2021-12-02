@@ -30,6 +30,7 @@ const ImageAdminUploader = ({ src, alt, onImageChange, className, name, path, wi
   const [{ uploads }, dispatch] = useAppContext();
   const [loading, setLoading] = useState(false);
   const classes = useStyles();
+  const { minioEndPoint } = Meteor.settings.public;
 
   const PLACEHOLDER = `https://fakeimg.pl/${width}x${height}/`;
 
@@ -71,8 +72,8 @@ const ImageAdminUploader = ({ src, alt, onImageChange, className, name, path, wi
   return (
     <div className={`${classes.imageWrapper} ${className}`}>
       {loading && <Spinner full />}
+      {minioEndPoint && <input type="file" className={classes.imageInput} onChange={updateImage} />}
 
-      <input type="file" className={classes.imageInput} onChange={updateImage} />
       <img src={src || PLACEHOLDER} alt={alt} className={classes.image} />
     </div>
   );

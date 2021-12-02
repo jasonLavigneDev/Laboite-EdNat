@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import i18n from 'meteor/universe:i18n';
 import Tooltip from '@material-ui/core/Tooltip';
 
+const { minioEndPoint } = Meteor.settings.public;
+
 const isSafari = () => /^((?!chrome|android).)*safari/i.test(window.navigator.userAgent);
 
 const generateToolTipButton = (item, value, className) => (
@@ -61,9 +63,14 @@ function CustomToolbarArticle({ withMedia, withWebcam }) {
         })}
       </span>
       <span className="ql-formats">
-        {(withMedia ? ['link', 'image', 'video'] : ['link']).map((item) => generateToolTipButton(item))}
+        {(withMedia && minioEndPoint
+          ? ['link', 'image', 'video']
+          : withMedia && !minioEndPoint
+          ? ['link', 'video']
+          : ['link']
+        ).map((item) => generateToolTipButton(item))}
 
-        {withMedia ? (
+        {withMedia && minioEndPoint ? (
           <Tooltip
             id="audio-tooltip"
             arrow

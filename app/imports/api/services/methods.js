@@ -30,7 +30,7 @@ export const createService = new ValidatedMethod({
       },
     });
 
-    if (Meteor.isServer && !Meteor.isTest) {
+    if (Meteor.isServer && !Meteor.isTest && Meteor.settings.public.minioEndPoint) {
       const files = [args.logo, ...args.screenshots];
       try {
         Meteor.call('files.move', {
@@ -65,7 +65,7 @@ export const removeService = new ValidatedMethod({
     // remove service from users favorites
     Meteor.users.update({ favServices: { $all: [serviceId] } }, { $pull: { favServices: serviceId } }, { multi: true });
     Services.remove(serviceId);
-    if (Meteor.isServer && !Meteor.isTest) {
+    if (Meteor.isServer && !Meteor.isTest && Meteor.settings.public.minioEndPoint) {
       Meteor.call('files.removeFolder', { path: `services/${service._id}` });
     }
   },
@@ -94,7 +94,7 @@ export const updateService = new ValidatedMethod({
     // update service data, making sure that structure is not modified
     Services.update({ _id: serviceId }, { $set: { ...data, structure: currentService.structure } });
 
-    if (Meteor.isServer && !Meteor.isTest) {
+    if (Meteor.isServer && !Meteor.isTest && Meteor.settings.public.minioEndPoint) {
       const files = [data.logo, ...data.screenshots];
       Meteor.call('files.selectedRemove', {
         path: `services/${serviceId}/`,
