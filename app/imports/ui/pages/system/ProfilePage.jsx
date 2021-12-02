@@ -129,6 +129,7 @@ const ProfilePage = () => {
     if (keycloakMode) setLabelLogoutTypeWidth(logoutTypeLabel.current.offsetWidth);
   }, []);
   const [tempImageLoaded, setTempImageLoaded] = useState(false);
+  const { minioEndPoint } = Meteor.settings.public;
 
   const checkSubmitOk = () => {
     const errSum = Object.keys(errors).reduce((sum, name) => {
@@ -204,7 +205,7 @@ const ProfilePage = () => {
   const debouncedValidateName = debounce(validateName, 500);
 
   const resetForm = () => {
-    if (tempImageLoaded) {
+    if (tempImageLoaded && minioEndPoint) {
       // A temporary image has been loaded in minio with name "Avatar_TEMP"
       // => delete it
       Meteor.call('files.selectedRemove', {
@@ -296,7 +297,7 @@ const ProfilePage = () => {
     }
     if (userData.avatar !== user.avatar) {
       modifications = true;
-      if (tempImageLoaded) {
+      if (tempImageLoaded && minioEndPoint) {
         // A temporary image has been loaded in user minio with name "Avatar_TEMP"
         if (userData.avatar.includes('Avatar_TEMP')) {
           // This image will be the new user's avatar

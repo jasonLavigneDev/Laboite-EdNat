@@ -45,6 +45,7 @@ export const userMenu = [
   {
     path: '/medias',
     content: 'menuMedias',
+    hidden: !Meteor.settings.public.minioEndPoint,
   },
   {
     path: '/userBookmarks',
@@ -158,6 +159,9 @@ const MainMenu = ({ user = {} }) => {
         </MenuItem>
         <Divider />
         {menu.map((item) => {
+          if (item.hidden) {
+            return null;
+          }
           return item.content === 'Divider' ? (
             <Divider key={item.path} />
           ) : (

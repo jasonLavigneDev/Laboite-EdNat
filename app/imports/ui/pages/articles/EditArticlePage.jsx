@@ -53,7 +53,7 @@ import GroupFinder from '../../components/articles/GroupFinder';
 
 Quill.register('modules/ImageResize', ImageResize);
 
-const { minioEndPoint, minioPort, minioBucket, minioSSL } = Meteor.settings.public;
+const { minioEndPoint, minioPort, minioBucket, minioSSL, laboiteBlogURL } = Meteor.settings.public;
 
 const HOST = `http${minioSSL ? 's' : ''}://${minioEndPoint}${minioPort ? `:${minioPort}` : ''}/${minioBucket}/`;
 
@@ -133,49 +133,6 @@ const emptyArticle = {
   tags: [],
 };
 
-const quillOptionsMaker = ({ imageHandler, webcamHandler, audioHandler }) => ({
-  modules: {
-    toolbar: {
-      container: '#quill-toolbar',
-      handlers: {
-        image: imageHandler,
-        webcam: webcamHandler,
-        audio: audioHandler,
-      },
-    },
-    clipboard: {
-      matchVisual: false,
-      matchers: [],
-    },
-    imageResize: {
-      displayStyles: {
-        backgroundColor: 'black',
-        border: 'none',
-        color: 'white',
-      },
-      modules: ['Resize', 'DisplaySize', 'Toolbar'],
-    },
-  },
-  formats: [
-    'header',
-    'bold',
-    'italic',
-    'underline',
-    'strike',
-    'blockquote',
-    'list',
-    'bullet',
-    'indent',
-    'link',
-    'image',
-    'video',
-    'width',
-    'style',
-    'webcam',
-    'audio',
-  ],
-});
-
 let quillOptions;
 
 function EditArticlePage({
@@ -203,9 +160,54 @@ function EditArticlePage({
   const [updateStructure, setUpdateStructure] = useState(false);
   const [open, setOpen] = useState(false);
   const [showUpdateStructure, setShowUpdateStructure] = useState(false);
+
+  const quillOptionsMaker = (options) => ({
+    modules: {
+      toolbar: {
+        container: '#quill-toolbar',
+        handlers: minioEndPoint
+          ? {
+              image: options.imageHandler,
+              webcam: options.webcamHandler,
+              audio: options.audioHandler,
+            }
+          : {},
+      },
+      clipboard: {
+        matchVisual: false,
+        matchers: [],
+      },
+      imageResize: {
+        displayStyles: {
+          backgroundColor: 'black',
+          border: 'none',
+          color: 'white',
+        },
+        modules: ['Resize', 'DisplaySize', 'Toolbar'],
+      },
+    },
+    formats: [
+      'header',
+      'bold',
+      'italic',
+      'underline',
+      'strike',
+      'blockquote',
+      'list',
+      'bullet',
+      'indent',
+      'link',
+      'image',
+      'video',
+      'width',
+      'style',
+      'webcam',
+      'audio',
+    ],
+  });
   let publicURL;
-  if (Meteor.settings.public.laboiteBlogURL) {
-    publicURL = `${Meteor.settings.public.laboiteBlogURL}/articles/${data.slug}`;
+  if (laboiteBlogURL) {
+    publicURL = `${laboiteBlogURL}/articles/${data.slug}`;
   } else {
     publicURL = `${Meteor.absoluteUrl()}public/${Meteor.userId()}/${data.slug}`;
   }
@@ -245,11 +247,15 @@ function EditArticlePage({
   }
 
   useEffect(() => {
-    quillOptions = quillOptionsMaker({
-      imageHandler,
-      webcamHandler,
-      audioHandler,
-    });
+    if (minioEndPoint) {
+      quillOptions = quillOptionsMaker({
+        imageHandler,
+        webcamHandler,
+        audioHandler,
+      });
+    } else {
+      quillOptions = quillOptionsMaker({});
+    }
   }, []);
 
   const handleOpenDialog = () => {
@@ -532,7 +538,7 @@ function EditArticlePage({
     return <Spinner />;
   }
   return (
-    <div>
+    <>
       <Container>
         <Grid container spacing={4}>
           <Grid item xs={12} className={isMobile ? null : classes.flex}>
@@ -680,11 +686,11 @@ function EditArticlePage({
                   toastRef={toastRef}
                   value={content}
                   onChange={onUpdateRichText}
-                  handlers={{ imageHandler, webcamHandler, audioHandler }}
+                  handlers={minioEndPoint ? { imageHandler, webcamHandler, audioHandler } : {}}
                 />
               ) : (
                 <>
-                  <CustomToolbarArticle withMedia withWebcam />
+                  <CustomToolbarArticle withMedia withWebcam={minioEndPoint} />
                   <ReactQuill {...quillOptions} id="content" value={content} onChange={onUpdateRichText} />
                 </>
               )
@@ -721,9 +727,11 @@ function EditArticlePage({
             </div>
           </div>
         </form>
-        {picker && <ImagePicker selectFile={selectFile} onClose={() => togglePicker(false)} isMobile={isMobile} />}
-        {webcam && <WebcamModal selectFile={insertVideo} onClose={() => toggleWebcam(false)} />}
-        {audio && <AudioModal selectFile={insertAudio} onClose={() => toggleAudio(false)} />}
+        {picker && minioEndPoint && (
+          <ImagePicker selectFile={selectFile} onClose={() => togglePicker(false)} isMobile={isMobile} />
+        )}
+        {webcam && minioEndPoint && <WebcamModal selectFile={insertVideo} onClose={() => toggleWebcam(false)} />}
+        {audio && minioEndPoint && <AudioModal selectFile={insertAudio} onClose={() => toggleAudio(false)} />}
       </Container>
       <Dialog
         open={open}
@@ -746,7 +754,7 @@ function EditArticlePage({
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </>
   );
 }
 

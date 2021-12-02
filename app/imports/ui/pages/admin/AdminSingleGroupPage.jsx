@@ -111,6 +111,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
 
   const typeLabel = React.useRef(null);
   const [labelTypeWidth, setLabelTypeWidth] = React.useState(36);
+  const { minioEndPoint } = Meteor.settings.public;
   useEffect(() => {
     if (typeLabel.current) {
       setLabelTypeWidth(typeLabel.current.offsetWidth);
@@ -181,7 +182,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
     setContent(html);
   };
   const cancelForm = () => {
-    if (tempImageLoaded) {
+    if (tempImageLoaded && minioEndPoint) {
       // A temporary image has been loaded in minio with name "groupAvatar_TEMP"
       // => delete it
       if (params._id) {
@@ -204,7 +205,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
   };
   const submitUpdateGroup = () => {
     if (groupData.avatar !== group.avatar) {
-      if (tempImageLoaded) {
+      if (tempImageLoaded && minioEndPoint) {
         // A temporary image has been loaded in minio with name "groupAvatar_TEMP"
         if (groupData.avatar.includes('groupAvatar_TEMP')) {
           // This image will be the new group's avatar
