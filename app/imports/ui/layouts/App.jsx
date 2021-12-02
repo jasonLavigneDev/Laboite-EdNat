@@ -9,7 +9,6 @@ import Spinner from '../components/system/Spinner';
 import MsgHandler from '../components/system/MsgHandler';
 import DynamicStore, { useAppContext } from '../contexts/context';
 import lightTheme from '../themes/light';
-import UploaderNotifier from '../components/uploader/UploaderNotifier';
 import updateDocumentTitle from '../utils/updateDocumentTitle';
 
 // dynamic imports
@@ -20,6 +19,7 @@ const LegalPage = lazy(() => import('../pages/legal/LegalPage'));
 const ArticlesPage = lazy(() => import('../pages/articles/ArticlesPage'));
 const PublicArticleDetailsPage = lazy(() => import('../pages/articles/PublicArticleDetailsPage'));
 const PublishersPage = lazy(() => import('../pages/articles/PublishersPage'));
+const UploaderNotifier = lazy(() => import('../components/uploader/UploaderNotifier'));
 
 function Logout() {
   useEffect(() => {
@@ -33,7 +33,7 @@ function App() {
   const { userId, loadingUser = false, loading } = state;
   const useKeycloak = Meteor.settings.public.enableKeycloak;
   const externalBlog = typeof Meteor.settings.public.laboiteBlogURL !== 'undefined';
-  const { enableBlog } = Meteor.settings.public;
+  const { enableBlog, minioEndPoint } = Meteor.settings.public;
   useEffect(() => {
     updateDocumentTitle();
   }, []);
@@ -60,7 +60,7 @@ function App() {
         </Switch>
       </Suspense>
       <MsgHandler />
-      <UploaderNotifier />
+      {!!minioEndPoint && <UploaderNotifier />}
     </>
   );
 }

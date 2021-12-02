@@ -1024,7 +1024,8 @@
       "addScreenshots": "Add a screenshot",
       "save": "Save",
       "update": "Update",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "logo_url": "Logo URL"
     },
     "AdminSingleGroupPage": {
       "edition": "Edition of the group",

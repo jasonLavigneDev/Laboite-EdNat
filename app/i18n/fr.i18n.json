@@ -1029,7 +1029,8 @@
       "addScreenshots": "Ajouter un écran",
       "save": "Sauvegarder",
       "update": "Mettre à jour",
-      "cancel": "Annuler"
+      "cancel": "Annuler",
+      "logo_url": "URL du logo"
     },
     "AdminSingleGroupPage": {
       "edition": "Édition du groupe",

@@ -78,6 +78,7 @@ const AvatarPicker = ({ userAvatar, userFirstName, onAssignAvatar, avatar, type,
   const [openAvatarEdit, setOpenAvatarEdit] = useState(false);
   const [openCamCapture, setOpenCamCapture] = useState(false);
   const [openAvatarGallery, setOpenAvatarGallery] = useState(false);
+  const { minioEndPoint } = Meteor.settings.public;
 
   const uploadAvatarImg = ({ target: { files = [] } }) => {
     const readerImg = new FileReader();
@@ -119,22 +120,26 @@ const AvatarPicker = ({ userAvatar, userFirstName, onAssignAvatar, avatar, type,
           {renderAvatar}
         </Grid>
         <Grid item xs={12} className={classes.buttonWrapper}>
-          <Tooltip title={i18n.__('pages.ProfilePage.uploadImg')} aria-label={i18n.__('pages.ProfilePage.uploadImg')}>
-            <IconButton tabIndex={-1}>
-              <PublishIcon />
-              <Input className={classes.inputFile} type="file" id="avatarUpload" onChange={uploadAvatarImg} />
-            </IconButton>
-          </Tooltip>
+          {!!minioEndPoint && (
+            <Tooltip title={i18n.__('pages.ProfilePage.uploadImg')} aria-label={i18n.__('pages.ProfilePage.uploadImg')}>
+              <IconButton tabIndex={-1}>
+                <PublishIcon />
+                <Input className={classes.inputFile} type="file" id="avatarUpload" onChange={uploadAvatarImg} />
+              </IconButton>
+            </Tooltip>
+          )}
           <Tooltip title={i18n.__('pages.ProfilePage.useGallery')} aria-label={i18n.__('pages.ProfilePage.useGallery')}>
             <IconButton onClick={() => setOpenAvatarGallery(true)}>
               <FaceIcon />
             </IconButton>
           </Tooltip>
-          <Tooltip title={i18n.__('pages.ProfilePage.useCam')} aria-label={i18n.__('pages.ProfilePage.useCam')}>
-            <IconButton onClick={() => setOpenCamCapture(true)}>
-              <CameraEnhanceIcon />
-            </IconButton>
-          </Tooltip>
+          {!!minioEndPoint && (
+            <Tooltip title={i18n.__('pages.ProfilePage.useCam')} aria-label={i18n.__('pages.ProfilePage.useCam')}>
+              <IconButton onClick={() => setOpenCamCapture(true)}>
+                <CameraEnhanceIcon />
+              </IconButton>
+            </Tooltip>
+          )}
         </Grid>
       </Grid>
       {openAvatarEdit ? (
