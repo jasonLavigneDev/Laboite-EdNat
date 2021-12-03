@@ -1,41 +1,40 @@
-image: hub.eole.education/proxyhub/geoffreybooth/meteor-base:2.5
-
 stages:
   - deps
   - lint
   - test
 
-before_script:
-  - cd app
-
-cache:
-  paths:
-    - app/node_modules/
-
-variables:
-  METEOR_ALLOW_SUPERUSER: "true"
+# Common setup for all meteor based jobs
+.meteor:
+  image: hub.eole.education/proxyhub/geoffreybooth/meteor-base:2.5
+  before_script:
+    - cd app
+  cache:
+    paths:
+      - app/node_modules/
+  variables:
+    METEOR_ALLOW_SUPERUSER: "true"
+  rules:
+    - if: '$CI_COMMIT_MESSAGE  !~ /^(\[Draft\]|\(Draft\)|Draft:|\[WIP\]|WIP:)/'
 
 Deps:
   stage: deps
+  extends: .meteor
   script:
     - meteor npm ci && meteor npm install
   artifacts:
     paths:
       - app/node_modules/
-  rules:
-    - if: '$CI_COMMIT_MESSAGE  !~ /^(\[Draft\]|\(Draft\)|Draft:|\[WIP\]|WIP:)/'
+    expire_in: 2 hrs
 
 Lint:
   stage: lint
+  extends: .meteor
   script:
     - meteor npm install --only=dev
     - meteor npm run lint
-  rules:
-    - if: '$CI_COMMIT_MESSAGE  !~ /^(\[Draft\]|\(Draft\)|Draft:|\[WIP\]|WIP:)/'
 
 Test:
   stage: test
+  extends: .meteor
   script:
     - meteor npm test
-  rules:
-    - if: '$CI_COMMIT_MESSAGE  !~ /^(\[Draft\]|\(Draft\)|Draft:|\[WIP\]|WIP:)/'
