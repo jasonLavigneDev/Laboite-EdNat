@@ -50,7 +50,7 @@ export default function ServiceDetails({ service }) {
   };
 
   return (
-    <Card className={classes.card} elevation={3}>
+    <Card className={classes.card}>
       <CardActionArea onClick={launchService} disabled={service.state === 5}>
         <CardHeader
           classes={{ action: classes.action }}

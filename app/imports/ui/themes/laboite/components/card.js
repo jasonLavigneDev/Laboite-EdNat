@@ -4,6 +4,6 @@ export const cardOverrides = () => ({
 
 export const carProps = () => ({
   MuiCard: {
-    elevation: 1,
+    elevation: 3,
   },
 });

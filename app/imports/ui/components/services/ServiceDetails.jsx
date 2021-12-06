@@ -167,7 +167,7 @@ function ServiceDetails({ service, favAction, isShort }) {
   );
 
   return (
-    <Card className={classes.card} elevation={3}>
+    <Card className={classes.card}>
       {/* <CardHeader
         className={handleClasseName}
         action={(
@@ -223,7 +223,7 @@ function ServiceDetails({ service, favAction, isShort }) {
       {!isAddressBook && !isEvents && !isPoll && !isBookmark && (
         <CardContent className={isShort ? classes.cardContentMobile : classes.cardContent}>
           {!isShort && <Typography variant="body1">{service.description}</Typography>}
-          {/* <Paper variant="elevation" elevation={0} className={classes.paperChip}>
+          {/* <Paper variant="elevation"  className={classes.paperChip}>
           {service.categories.map((cat) => {
             const currentCategory = categories.find((categ) => categ._id === cat);
             return (

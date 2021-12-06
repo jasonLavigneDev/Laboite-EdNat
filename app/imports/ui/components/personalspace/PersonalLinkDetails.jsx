@@ -205,7 +205,7 @@ function PersonalLinkDetails({ link, globalEdit, isMobile, isSorted, needUpdate 
   };
 
   return (
-    <Card className={classes.card} elevation={3}>
+    <Card className={classes.card}>
       {showData()}
       {globalEdit ? (
         <CardActions className={classes.cardActions}>

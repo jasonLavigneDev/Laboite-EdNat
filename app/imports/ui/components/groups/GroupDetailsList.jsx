@@ -49,7 +49,7 @@ const GroupDetailsList = ({ group, member, candidate, animator, admin }) => {
     : i18n.__('components.GroupDetails.moderateGroup');
 
   return (
-    <Card className={classes.card} elevation={3}>
+    <Card className={classes.card}>
       <Tooltip
         title={i18n.__('components.GroupDetails.singleGroupButtonLabel')}
         aria-label={i18n.__('components.GroupDetails.singleGroupButtonLabel')}
