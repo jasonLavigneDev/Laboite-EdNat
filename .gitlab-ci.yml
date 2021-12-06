@@ -1,3 +1,15 @@
+# -*- coding: utf-8 -*-
+# vim: ft=yaml
+---
+include:
+  - project: EOLE/infra/ci-tools
+    ref: stable
+    file: /templates/Rules.yaml
+
+variables:
+  # `ci-tools` default branch is `stable`
+  STABLE_BRANCH: master
+
 stages:
   - deps
   - lint
@@ -5,6 +17,7 @@ stages:
 
 # Common setup for all meteor based jobs
 .meteor:
+  extends: .not-on-stable
   image: hub.eole.education/proxyhub/geoffreybooth/meteor-base:2.5
   before_script:
     - cd app
@@ -13,8 +26,6 @@ stages:
       - app/node_modules/
   variables:
     METEOR_ALLOW_SUPERUSER: "true"
-  rules:
-    - if: '$CI_COMMIT_MESSAGE  !~ /^(\[Draft\]|\(Draft\)|Draft:|\[WIP\]|WIP:)/'
 
 
 ###############################################################################
