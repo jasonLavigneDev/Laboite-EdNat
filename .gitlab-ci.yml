@@ -8,6 +8,9 @@ include:
   - project: EOLE/infra/ci-tools
     ref: stable
     file: /templates/Runners/apps.education-docker.yaml
+  - project: EOLE/infra/ci-tools
+    ref: stable
+    file: /templates/Lint/Commitlint.yaml
 
 variables:
   # `ci-tools` default branch is `stable`
@@ -52,7 +55,7 @@ cache-dependencies:
 
 
 ###############################################################################
-# `lint` stage: `meteor-lint`
+# `lint` stage: `commitlint`, `meteor-lint`
 ###############################################################################
 meteor-lint:
   stage: lint
