@@ -173,7 +173,7 @@ export default function ArticleDetails({ article, publicPage }) {
   );
 
   return (
-    <Card className={classes.card} elevation={3}>
+    <Card className={classes.card}>
       {publicPage ? (
         <CardActionArea
           title={i18n.__('components.ArticleDetails.open')}

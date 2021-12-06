@@ -1,4 +1,4 @@
-const snackbar = (palette) => ({
+export const snackbarOverrides = (palette) => ({
   MuiSnackbar: {
     root: {
       '& .MuiPaper-root': {
@@ -16,5 +16,3 @@ const snackbar = (palette) => ({
     },
   },
 });
-
-export default snackbar;

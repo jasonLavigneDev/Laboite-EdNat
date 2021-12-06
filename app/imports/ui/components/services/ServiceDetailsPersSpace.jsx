@@ -97,7 +97,7 @@ function ServiceDetailsPersSpace({ service, customDrag, isMobile, isSorted, need
   };
 
   return (
-    <Card className={classes.card} elevation={3}>
+    <Card className={classes.card}>
       <Tooltip
         TransitionComponent={Zoom}
         enterDelay={600}
