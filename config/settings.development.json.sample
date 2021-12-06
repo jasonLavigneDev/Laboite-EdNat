@@ -45,7 +45,7 @@
     "services":{
       "agendaUrl": "",
       "sondagesUrl": "",
-      "mezigUrl": "",
+      "mezigUrl": ""
     }
   },
   "keycloak": {
