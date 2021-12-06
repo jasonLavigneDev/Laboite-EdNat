@@ -19,12 +19,25 @@ const useStyles = (isMobile) =>
     root: {
       backgroundColor: theme.palette.tertiary.main,
       display: 'flex',
-      flexDirection: 'row',
+      flexDirection: 'column',
       justifyContent: 'space-between',
-      alignItems: 'center',
+      alignItems: 'flex-start',
       paddingLeft: theme.spacing(2),
       paddingRight: theme.spacing(2),
       minHeight: 48,
+    },
+    firstBar: {
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      width: '100%',
+    },
+    secondBar: {
+      display: 'flex',
+      justifyContent: 'center',
+      width: '100%',
+      borderTop: '1px solid rgba(0, 0, 0, 0.12)',
     },
     imgLogo: {
       height: isMobile || !isRizomo ? 30 : 120,
@@ -89,21 +102,28 @@ function TopBar({ publicMenu, root, appsettings, adminApp }) {
   return (
     <div>
       <AppBar position="fixed" className={classes.root}>
-        <Link to={root || (publicMenu ? '/public' : '/')} className={classes.imgLogo}>
-          <img src={LOGO} className={classes.imgLogo} alt="Logo" />
-          {Meteor.settings.public.theme === 'rizomo' && !isMobile && <RizomoTitle />}
-        </Link>
-        {!isMobile && !publicMenu && !adminApp && <MenuBar />}
-        <div className={classes.rightContainer}>
-          {publicMenu ? null : (
-            <>
-              <MainMenu user={user} />
-              <IconButton onClick={() => handleNotifsOpen()}>
-                <NotificationsBell />
-              </IconButton>
-            </>
-          )}
+        <div className={classes.firstBar}>
+          <Link to={root || (publicMenu ? '/public' : '/')} className={classes.imgLogo}>
+            <img src={LOGO} className={classes.imgLogo} alt="Logo" />
+            {isRizomo && !isMobile && <RizomoTitle />}
+          </Link>
+          {!isMobile && !publicMenu && !adminApp && !isRizomo && <MenuBar />}
+          <div className={classes.rightContainer}>
+            {publicMenu ? null : (
+              <>
+                <MainMenu user={user} />
+                <IconButton onClick={() => handleNotifsOpen()}>
+                  <NotificationsBell />
+                </IconButton>
+              </>
+            )}
+          </div>
         </div>
+        {!isMobile && !publicMenu && !adminApp && isRizomo && (
+          <div className={classes.secondBar}>
+            <MenuBar />
+          </div>
+        )}
       </AppBar>
     </div>
   );
