@@ -212,7 +212,7 @@ function GroupDetails({ group = {}, isShort, member, candidate, admin, animator 
   }
 
   return (
-    <Card className={classes.card} elevation={3}>
+    <Card className={classes.card}>
       {loading && <Spinner full />}
       <Tooltip
         title={i18n.__('components.GroupDetails.singleGroupButtonLabel')}

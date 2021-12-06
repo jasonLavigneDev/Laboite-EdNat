@@ -1,5 +1,6 @@
 import COMMONS from './commons';
-import overrides from './overrides';
+import { overrides, props } from './customs';
+import { computeCustoms } from '../utils';
 
 const palette = {
   type: 'dark',
@@ -50,7 +51,8 @@ const palette = {
 
 const RIZOMO_DARK = {
   palette,
-  overrides: overrides(palette),
+  props: computeCustoms(palette, props),
+  overrides: computeCustoms(palette, overrides),
   ...COMMONS,
 };
 

@@ -1,4 +1,4 @@
-const button = {
+export const buttonOverrides = () => ({
   MuiButton: {
     root: {
       boxShadow: 'none !important',
@@ -7,6 +7,4 @@ const button = {
       },
     },
   },
-};
-
-export default button;
+});
