@@ -16,7 +16,11 @@ stages:
   rules:
     - if: '$CI_COMMIT_MESSAGE  !~ /^(\[Draft\]|\(Draft\)|Draft:|\[WIP\]|WIP:)/'
 
-Deps:
+
+###############################################################################
+# `deps` stage: to download and cache dependencies
+###############################################################################
+cache-dependencies:
   stage: deps
   extends: .meteor
   script:
@@ -26,14 +30,22 @@ Deps:
       - app/node_modules/
     expire_in: 2 hrs
 
-Lint:
+
+###############################################################################
+# `lint` stage: `meteor-lint`
+###############################################################################
+meteor-lint:
   stage: lint
   extends: .meteor
   script:
     - meteor npm install --only=dev
     - meteor npm run lint
 
-Test:
+
+###############################################################################
+# `test` stage: `meteor-tests`
+###############################################################################
+meteor-tests:
   stage: test
   extends: .meteor
   script:
