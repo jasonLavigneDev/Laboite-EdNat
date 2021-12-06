@@ -5,6 +5,9 @@ include:
   - project: EOLE/infra/ci-tools
     ref: stable
     file: /templates/Rules.yaml
+  - project: EOLE/infra/ci-tools
+    ref: stable
+    file: /templates/Runners/apps.education-docker.yaml
 
 variables:
   # `ci-tools` default branch is `stable`
@@ -22,8 +25,15 @@ stages:
   before_script:
     - cd app
   cache:
+    key:
+      files:
+        # Generate new cache when one of the file changes
+        - app/package.json
+        - app/package-lock.json
     paths:
       - app/node_modules/
+    # Only use the cache created by `cache-dependencies` job
+    policy: pull
   variables:
     METEOR_ALLOW_SUPERUSER: "true"
 
@@ -34,12 +44,11 @@ stages:
 cache-dependencies:
   stage: deps
   extends: .meteor
+  cache:
+    # This job update dependencies
+    policy: pull-push
   script:
     - meteor npm ci && meteor npm install
-  artifacts:
-    paths:
-      - app/node_modules/
-    expire_in: 2 hrs
 
 
 ###############################################################################
