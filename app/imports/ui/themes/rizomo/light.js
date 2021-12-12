@@ -25,6 +25,7 @@ export const palette = {
   },
   background: {
     default: '#f6f6f6',
+    inputs: '#f0f0f0',
     paper: '#fff',
   },
   info: {
