@@ -111,7 +111,7 @@ function UserBookmarksPage({ loading, bookmarksList }) {
       {loading ? (
         <Spinner />
       ) : (
-        <div>
+        <>
           <Container style={{ overflowX: 'auto' }}>
             <Grid className={classes.goBackButton} item xs={12} sm={12} md={12}>
               <Button color="primary" startIcon={<ArrowBack />} onClick={goBack}>
@@ -212,7 +212,7 @@ function UserBookmarksPage({ loading, bookmarksList }) {
               onClose={() => setEditUrl(false)}
             />
           ) : null}
-        </div>
+        </>
       )}
     </>
   );

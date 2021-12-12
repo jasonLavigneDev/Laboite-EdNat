@@ -446,7 +446,7 @@ const ProfilePage = () => {
                     fullWidth
                     type="text"
                     value={userData.firstName || ''}
-                    variant="outlined"
+                    variant="filled"
                   />
                   <TextField
                     disabled={keycloakMode}
@@ -461,7 +461,7 @@ const ProfilePage = () => {
                     fullWidth
                     type="text"
                     value={userData.lastName || ''}
-                    variant="outlined"
+                    variant="filled"
                   />
                   <TextField
                     disabled={keycloakMode}
@@ -476,9 +476,9 @@ const ProfilePage = () => {
                     onChange={onUpdateField}
                     type="text"
                     value={userData.email || ''}
-                    variant="outlined"
+                    variant="filled"
                   />
-                  <FormControl variant="outlined" fullWidth disabled={keycloakMode} margin="normal">
+                  <FormControl variant="filled" fullWidth disabled={keycloakMode} margin="normal">
                     <InputLabel
                       error={errors.username !== ''}
                       htmlFor="username"
@@ -493,6 +493,7 @@ const ProfilePage = () => {
                       value={userData.username}
                       error={errors.username !== ''}
                       onChange={onUpdateField}
+                      // variant="filled"
                       labelWidth={labelUsernameWidth}
                       endAdornment={
                         <InputAdornment position="end">
@@ -524,7 +525,7 @@ const ProfilePage = () => {
               </Grid>
               <Grid item />
               <Grid item className={classes.maxWidth}>
-                <FormControl variant="outlined" className={classes.formControl} fullWidth>
+                <FormControl variant="filled" className={classes.formControl} fullWidth>
                   <InputLabel htmlFor="structure" id="structure-label" ref={structureLabel}>
                     {i18n.__('api.users.labels.structure')}
                   </InputLabel>
@@ -539,7 +540,7 @@ const ProfilePage = () => {
               </Grid>
               {keycloakMode ? (
                 <Grid item>
-                  <FormControl variant="outlined" fullWidth>
+                  <FormControl variant="filled" fullWidth>
                     <InputLabel htmlFor="logoutType" id="logoutType-label" ref={logoutTypeLabel}>
                       {i18n.__('pages.ProfilePage.logoutType')}
                     </InputLabel>

@@ -10,14 +10,15 @@ const SearchField = ({ updateSearch, checkEscape, search, inputRef, resetSearch,
   <TextField
     margin="normal"
     id="search"
-    label={label}
+    // label={label}
     name="search"
     fullWidth
     onChange={updateSearch}
     onKeyDown={checkEscape}
     type="text"
     value={search}
-    variant="outlined"
+    variant="filled"
+    placeholder={label}
     inputProps={{
       ref: inputRef,
     }}
