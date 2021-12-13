@@ -11,6 +11,9 @@ include:
   - project: EOLE/infra/ci-tools
     ref: stable
     file: /templates/Lint/Commitlint.yaml
+  - project: EOLE/infra/ci-tools
+    ref: stable
+    file: /templates/Release/Semantic-release.yaml
 
 variables:
   # `ci-tools` default branch is `stable`
@@ -20,6 +23,7 @@ stages:
   - deps
   - lint
   - test
+  - release
 
 # Common setup for all meteor based jobs
 .meteor:
@@ -73,3 +77,8 @@ meteor-tests:
   extends: .meteor
   script:
     - meteor npm test
+
+
+###############################################################################
+# `release` stage: `semantic-release`
+###############################################################################
