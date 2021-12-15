@@ -61,7 +61,7 @@ export const useLayoutStyles = (isMobile) =>
         duration: theme.transitions.duration.leavingScreen,
       }),
       overflow: 'hidden',
-      marginTop: theme.shape.headerHeight || 60,
+      marginTop: !isMobile && theme.shape.headerHeight ? theme.shape.headerHeight : 60,
       marginBottom: isMobile ? 100 : 50,
     },
     contentShift: {
