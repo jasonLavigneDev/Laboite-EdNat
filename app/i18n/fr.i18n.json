@@ -74,6 +74,15 @@
         "name": "Nom"
       }
     },
+    "structures": {
+      "unknownStructure": "La structure n'existe pas.",
+      "name": "Libellé",
+      "labels": {
+        "id": "Id de Structure",
+        "name": "Nom de la structure",
+        "children": "Sous structures"
+      }
+    },
     "users": {
       "unknownUser": "L'utilisateur n'existe pas.",
       "mustBeLoggedIn": "Vous devez être connecté.",
@@ -464,7 +473,8 @@
       "menuAdminAppSettings": "Réglages Administrateurs",
       "menuAdminStructureUsers": "Utilisateurs de la structure",
       "menuAdminStructureServices": "Services de la structure",
-      "menuAdminBackHome": "Retour à l'espace perso"
+      "menuAdminBackHome": "Retour à l'espace perso",
+      "menuUserStructure": "Gestion des Structures"
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Votre compte n'a pas été activé",
@@ -913,6 +923,19 @@
         "body_editTooltip": "Modifier ce Mot clé",
         "body_deleteTooltip": "Supprimer ce Mot clé",
         "body_editRow_deleteText": "Souhaitez vous réellement supprimer ce Mot clé ?"
+      }
+    },
+    "AdminStructuresManagementPage": {
+      "title": "Gestion des structures",
+      "columnName": "Nom",
+      "materialTableLocalization": {
+        "toolbar_searchPlaceholder": "Trouver structure",
+        "pagination_labelRowsSelect": "Structures par page",
+        "body_emptyDataSourceMessage": "Aucune structure enregistrée",
+        "body_addTooltip": "Ajouter une structure",
+        "body_editTooltip": "Modifier cette structure",
+        "body_deleteTooltip": "Supprimer cette structure",
+        "body_editRow_deleteText": "Souhaitez vous réellement supprimer cette structure ?"
       }
     },
     "AdminGroupsPage": {

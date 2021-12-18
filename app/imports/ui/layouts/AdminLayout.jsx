@@ -34,6 +34,7 @@ const AdminSettingsPage = lazy(() => import('../pages/admin/AdminSettingsPage'))
 const AdminSingleServicePage = lazy(() => import('../pages/admin/AdminSingleServicePage'));
 const AdminServicesPage = lazy(() => import('../pages/admin/AdminServicesPage'));
 const AdminStructureUsersPage = lazy(() => import('../pages/structure/AdminStructureUsersPage'));
+const AdminStructureManagementPage = lazy(() => import('../pages/admin/AdminStructuresManagementPage'));
 
 function AdminLayout() {
   const [{ userId, user, loadingUser, isMobile }] = useAppContext();
@@ -186,6 +187,13 @@ function AdminLayout() {
                       component={AdminSingleServicePage}
                       user={user}
                       loadingUser={loadingUser}
+                    />
+                    <AdminRoute
+                      userId={userId}
+                      loadingUser={loadingUser}
+                      exact
+                      path="/admin/structures"
+                      component={AdminStructureManagementPage}
                     />
                     <Route component={NotFound} />
                   </Switch>

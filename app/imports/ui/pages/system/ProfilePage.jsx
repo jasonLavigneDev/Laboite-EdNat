@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { Meteor } from 'meteor/meteor';
 import i18n from 'meteor/universe:i18n';
 import { makeStyles } from '@material-ui/core/styles';
+import { withTracker } from 'meteor/react-meteor-data';
 import Container from '@material-ui/core/Container';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
@@ -23,13 +25,13 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import MailIcon from '@material-ui/icons/Mail';
 import Spinner from '../../components/system/Spinner';
 import CustomSelect from '../../components/admin/CustomSelect';
-import { structureOptions } from '../../../api/users/structures';
 import { useAppContext } from '../../contexts/context';
 import LanguageSwitcher from '../../components/system/LanguageSwitcher';
 import debounce from '../../utils/debounce';
 import { useObjectState } from '../../utils/hooks';
 import { downloadBackupPublications, uploadBackupPublications } from '../../../api/articles/methods';
 import AvatarPicker from '../../components/users/AvatarPicker';
+import Structures from '../../../api/structures/structures';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -101,7 +103,7 @@ const logoutTypeLabels = {
   global: 'api.users.logoutTypes.global',
 };
 
-const ProfilePage = () => {
+const ProfilePage = ({ structures, loading }) => {
   const [, dispatch] = useAppContext();
   const [userData, setUserData] = useState(defaultState);
   const [submitOk, setSubmitOk] = useState(false);
@@ -529,13 +531,17 @@ const ProfilePage = () => {
                   <InputLabel htmlFor="structure" id="structure-label" ref={structureLabel}>
                     {i18n.__('api.users.labels.structure')}
                   </InputLabel>
-                  <CustomSelect
-                    value={userData.structureSelect || ''}
-                    error={false}
-                    onChange={onUpdateField}
-                    labelWidth={labelStructureWidth}
-                    options={structureOptions}
-                  />
+                  {loading ? (
+                    <Spinner />
+                  ) : (
+                    <CustomSelect
+                      value={userData.structureSelect || ''}
+                      error={false}
+                      onChange={onUpdateField}
+                      labelWidth={labelStructureWidth}
+                      options={structures.map((opt) => ({ value: opt._id, label: opt.name }))}
+                    />
+                  )}
                 </FormControl>
               </Grid>
               {keycloakMode ? (
@@ -650,4 +656,19 @@ const ProfilePage = () => {
   );
 };
 
-export default ProfilePage;
+// export default ProfilePage;
+
+ProfilePage.propTypes = {
+  structures: PropTypes.arrayOf(PropTypes.object).isRequired,
+  loading: PropTypes.bool.isRequired,
+};
+
+export default withTracker(() => {
+  const structuresHandle = Meteor.subscribe('structures.all');
+  const loading = !structuresHandle.ready();
+  const structures = Structures.find({}, { sort: { name: 1 } }).fetch();
+  return {
+    structures,
+    loading,
+  };
+})(ProfilePage);
