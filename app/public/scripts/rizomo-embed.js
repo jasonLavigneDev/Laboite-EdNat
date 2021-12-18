@@ -1,4 +1,12 @@
 {
+  // const DEV_DOMAIN = 'http://localhost:3000';
+  const STAGING_RIZOMO = 'https://rizomo-staging.osc-fr1.scalingo.io';
+  const RIZOMO_DOMAIN = STAGING_RIZOMO;
+
+  const CONFIG = Object.freeze({
+    URI: RIZOMO_DOMAIN,
+  });
+
   const styles = `
 	<style>
 			.rizomo {
@@ -150,10 +158,6 @@
 		</style>
 	`;
 
-  // const DEV_DOMAIN = 'http://localhost:3000';
-  const STAGING_RIZOMO = 'https://rizomo-staging.osc-fr1.scalingo.io';
-  const RIZOMO_DOMAIN = STAGING_RIZOMO;
-
   // ------------------ VARIABLES RIZOMO ------------------
   let notifications = 0;
 
@@ -164,7 +168,7 @@
 
   // create Logo
   const rizomoLogo = document.createElement('img');
-  rizomoLogo.setAttribute('src', `${RIZOMO_DOMAIN}/images/logos/rizomo/RobotR_Blc.svg`);
+  rizomoLogo.setAttribute('src', `${CONFIG.URI}/images/logos/rizomo/RobotR_Blc.svg`);
 
   // Create buttons container
   const buttonsContainer = document.createElement('div');
@@ -192,7 +196,7 @@
   const iframeContainer = document.createElement('iframe');
   iframeContainer.setAttribute('class', 'iframe-rizomo');
   iframeContainer.setAttribute('iframe-state', 'closed');
-  iframeContainer.setAttribute('src', RIZOMO_DOMAIN);
+  iframeContainer.setAttribute('src', CONFIG.URI);
 
   // Create Container for Rizomo
   const rizomoContainer = document.createElement('div');
@@ -207,7 +211,7 @@
   const openButton = document.createElement('button');
   openButton.setAttribute('class', 'rizomo closed');
   openButton.title = 'Ouvrir Rizomo';
-  openButton.innerHTML = `<img src="${RIZOMO_DOMAIN}/images/logos/rizomo/robot_button.svg" />`;
+  openButton.innerHTML = `<img src="${CONFIG.URI}/images/logos/rizomo/robot_button.svg" />`;
 
   // Get header and body from the page
   const target = document.body || document.querySelector('body');
@@ -240,13 +244,13 @@
       notifications = content;
       if (notifications > 0) {
         openButton.innerHTML = `
-        <img src="${RIZOMO_DOMAIN}/images/logos/rizomo/robot_button_notifs.svg" />
+        <img src="${CONFIG.URI}/images/logos/rizomo/robot_button_notifs.svg" />
         <div class="notifications">
           ${notifications}
         </div>
         `;
       } else {
-        openButton.innerHTML = `<img src="${RIZOMO_DOMAIN}/images/logos/rizomo/robot_button.svg" />`;
+        openButton.innerHTML = `<img src="${CONFIG.URI}/images/logos/rizomo/robot_button.svg" />`;
       }
     }
   };
