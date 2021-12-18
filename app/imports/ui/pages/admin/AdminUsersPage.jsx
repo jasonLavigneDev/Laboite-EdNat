@@ -20,6 +20,7 @@ import Divider from '@material-ui/core/Divider';
 import Tooltip from '@material-ui/core/Tooltip';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
+import SendIcon from '@material-ui/icons/Send';
 
 import IconButton from '@material-ui/core/IconButton';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
@@ -31,11 +32,11 @@ import { Roles } from 'meteor/alanning:roles';
 import { structures } from '../../../api/users/structures';
 import { usePagination } from '../../utils/hooks';
 import Spinner from '../../components/system/Spinner';
-import debounce from '../../utils/debounce';
 import { useAppContext } from '../../contexts/context';
 import UserAvatar from '../../components/users/UserAvatar';
 import AdminGroupQuota from '../../components/users/AdminGroupQuota';
 import SearchField from '../../components/system/SearchField';
+import AdminSendNotification from '../../components/users/AdminSendNotification';
 
 let userData = {};
 const useStyles = makeStyles((theme) => ({
@@ -70,6 +71,7 @@ const ITEM_PER_PAGE = 10;
 
 const AdminUsersPage = () => {
   const [openQuota, setOpenQuota] = useState(false);
+  const [openNotif, setOpenNotif] = useState(false);
   const classes = useStyles();
   const [{ isMobile }] = useAppContext();
   const [search, setSearch] = useState('');
@@ -107,8 +109,7 @@ const AdminUsersPage = () => {
     changePage(value);
   };
   const searchRef = useRef();
-  const debouncedSetSearch = debounce(setSearch, 500);
-  const updateSearch = (e) => debouncedSetSearch(e.target.value);
+  const updateSearch = (e) => setSearch(e.target.value);
   const resetSearch = () => setSearch('');
   useEffect(() => {
     if (searchRef.current) searchRef.current.value = search;
@@ -222,6 +223,18 @@ const AdminUsersPage = () => {
             <SettingsApplicationsIcon />
           </IconButton>
         </Tooltip>
+        <Tooltip title={i18n.__('pages.AdminUsersPage.sendNotif')} aria-label="send">
+          <IconButton
+            edge="end"
+            aria-label={i18n.__('pages.AdminUsersPage.sendNotif')}
+            onClick={() => {
+              userData = user;
+              setOpenNotif(true);
+            }}
+          >
+            <SendIcon />
+          </IconButton>
+        </Tooltip>
         <Tooltip title={i18n.__('pages.AdminUsersPage.deleteUser')} aria-label="del">
           <IconButton edge="end" aria-label="delete" onClick={() => setVerifyDelete(true)}>
             <DeleteIcon />
@@ -328,7 +341,8 @@ const AdminUsersPage = () => {
             </Grid>
           )}
         </Container>
-        {openQuota ? <AdminGroupQuota data={userData} open={openQuota} onClose={() => setOpenQuota(false)} /> : null}
+        {openQuota && <AdminGroupQuota data={userData} open={openQuota} onClose={() => setOpenQuota(false)} />}
+        {openNotif && <AdminSendNotification data={userData} open={openNotif} onClose={() => setOpenNotif(false)} />}
       </div>
     </Fade>
   );
