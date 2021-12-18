@@ -19,6 +19,8 @@ import Spinner from '../../components/system/Spinner';
 import AppVersion from '../../components/system/AppVersion';
 import AppSettings from '../../../api/appsettings/appsettings';
 
+import Structures from '../../../api/structures/structures';
+
 validate.options = {
   fullMessages: false,
 };
@@ -262,6 +264,23 @@ export const mainPagesTracker = (settingsSegment = 'all', component) => {
     const currentEntry = introduction.find((entry) => entry.language === language) || {};
     const defaultContent = introduction.find((entry) => !!entry.content.length);
 
+    /**
+     * @todo
+     * This does not work
+     */
+    if (settingsSegment === 'introduction') {
+      const structuresHandle = Meteor.subscribe('structures.all');
+      const loadingStructure = !structuresHandle.ready();
+      const structures = Structures.find({}, { sort: { name: 1 } }).fetch();
+      return {
+        loggingIn,
+        ready,
+        appsettings,
+        introduction: currentEntry.content || defaultContent,
+        structures,
+        loadingStructure,
+      };
+    }
     return {
       loggingIn,
       ready,

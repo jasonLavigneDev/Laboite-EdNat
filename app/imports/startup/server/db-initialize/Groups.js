@@ -75,7 +75,7 @@ if (Groups.find().count() === 0) {
       const servicesLength = Services.find().count();
       array.forEach(() => {
         const owner = Meteor.users.findOne({}, { skip: Math.floor(Math.random() * usersLength) })._id;
-        const name = faker.company.catchPhrase();
+        const name = faker.company.catchPhrase().substring(0, 59);
         const type = [0, 5, 10, 0][Math.floor(Math.random() * 3)];
         const animators = users(ANIMATORS_RANDOM);
         const members = users(MEMBERS_RANDOM);

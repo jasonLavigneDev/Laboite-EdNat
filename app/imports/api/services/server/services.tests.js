@@ -52,7 +52,8 @@ describe('services', function () {
       Roles.createRole('admin');
       Roles.createRole('adminStructure');
       const email = faker.internet.email();
-      userStruct = faker.company.companyName();
+      userStruct = Random.id();
+      Roles.createRole(userStruct);
       userId = Accounts.createUser({
         email,
         username: email,

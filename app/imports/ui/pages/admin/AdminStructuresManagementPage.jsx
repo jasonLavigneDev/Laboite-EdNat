@@ -1,26 +1,26 @@
 import React from 'react';
-import { Meteor } from 'meteor/meteor';
 import PropTypes from 'prop-types';
 import i18n from 'meteor/universe:i18n';
-import { withTracker } from 'meteor/react-meteor-data';
-import MaterialTable from '@material-table/core';
 import Fade from '@material-ui/core/Fade';
 import Container from '@material-ui/core/Container';
-import Spinner from '../../components/system/Spinner';
-import { createTag, updateTag, removeTag } from '../../../api/tags/methods';
-import setMaterialTableLocalization from '../../components/initMaterialTableLocalization';
-import Tags from '../../../api/tags/tags';
+import { withTracker } from 'meteor/react-meteor-data';
+import MaterialTable from '@material-table/core';
+import { createStructure, updateStructure, removeStructure } from '../../../api/structures/methods';
 import { handleResult } from '../../../api/utils';
+import Spinner from '../../components/system/Spinner';
+import setMaterialTableLocalization from '../../components/initMaterialTableLocalization';
+import Structures from '../../../api/structures/structures';
 
 const onRowAdd = ({ name }) =>
   new Promise((resolve, reject) => {
-    createTag.call({ name }, handleResult(resolve, reject));
+    createStructure.call({ name }, handleResult(resolve, reject));
   });
+
 const onRowUpdate = (newData, oldData) =>
   new Promise((resolve, reject) => {
-    updateTag.call(
+    updateStructure.call(
       {
-        tagId: oldData._id,
+        structureId: oldData._id,
         data: {
           name: newData.name,
         },
@@ -31,13 +31,13 @@ const onRowUpdate = (newData, oldData) =>
 
 const onRowDelete = (oldData) =>
   new Promise((resolve, reject) => {
-    removeTag.call({ tagId: oldData._id }, handleResult(resolve, reject));
+    removeStructure.call({ structureId: oldData._id }, handleResult(resolve, reject));
   });
 
-const AdminTagsPage = ({ tags, loading }) => {
+const AdminStructureManagementPage = ({ structures, loading }) => {
   const columns = [
     {
-      name: i18n.__('pages.AdminTagsPage.columnName'),
+      name: i18n.__('pages.AdminStructuresManagementPage.columnName'),
       field: 'name',
       defaultSort: 'asc',
     },
@@ -60,17 +60,12 @@ const AdminTagsPage = ({ tags, loading }) => {
         <Fade in>
           <Container style={{ overflowX: 'auto' }}>
             <MaterialTable
-              // other props
-              title={i18n.__('pages.AdminTagsPage.title')}
+              title={i18n.__('pages.AdminStructuresManagementPage.title')}
               columns={columns}
-              data={tags.map((row) => ({ ...row, id: row._id }))}
+              data={structures.map((row) => ({ ...row, id: row._id }))}
               options={options}
-              localization={setMaterialTableLocalization('pages.AdminTagsPage')}
-              editable={{
-                onRowAdd,
-                onRowDelete,
-                onRowUpdate,
-              }}
+              localization={setMaterialTableLocalization('pages.AdminStructuresManagementPage')}
+              editable={{ onRowAdd, onRowUpdate, onRowDelete }}
             />
           </Container>
         </Fade>
@@ -79,17 +74,17 @@ const AdminTagsPage = ({ tags, loading }) => {
   );
 };
 
-AdminTagsPage.propTypes = {
-  tags: PropTypes.arrayOf(PropTypes.object).isRequired,
+AdminStructureManagementPage.propTypes = {
+  structures: PropTypes.arrayOf(PropTypes.object).isRequired,
   loading: PropTypes.bool.isRequired,
 };
 
 export default withTracker(() => {
-  const tagsHandle = Meteor.subscribe('tags.all');
-  const loading = !tagsHandle.ready();
-  const tags = Tags.find({}, { sort: { name: 1 } }).fetch();
+  const structuresHandle = Meteor.subscribe('structures.all');
+  const loading = !structuresHandle.ready();
+  const structures = Structures.find({}, { sort: { name: 1 } }).fetch();
   return {
-    tags,
+    structures,
     loading,
   };
-})(AdminTagsPage);
+})(AdminStructureManagementPage);

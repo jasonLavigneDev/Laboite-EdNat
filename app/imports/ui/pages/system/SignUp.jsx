@@ -20,7 +20,6 @@ import validate from 'validate.js';
 import i18n from 'meteor/universe:i18n';
 import PropTypes from 'prop-types';
 import CustomSelect from '../../components/admin/CustomSelect';
-import { structureOptions } from '../../../api/users/structures';
 import Spinner from '../../components/system/Spinner';
 import { mainPagesTracker, useFormStateValidator } from './SignIn';
 
@@ -88,7 +87,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SignUp = ({ introduction, ready }) => {
+const SignUp = ({ introduction, ready, structures, loadingStructure }) => {
   const history = useHistory();
   const classes = useStyles();
 
@@ -268,13 +267,17 @@ const SignUp = ({ introduction, ready }) => {
                 >
                   {i18n.__('pages.SignUp.structureLabel')}
                 </InputLabel>
-                <CustomSelect
-                  value={formState.values.structureSelect || ''}
-                  error={hasError('structureSelect')}
-                  onChange={handleChange}
-                  labelWidth={labelWidth}
-                  options={structureOptions}
-                />
+                {loadingStructure ? (
+                  <Spinner />
+                ) : (
+                  <CustomSelect
+                    value={formState.values.structureSelect || ''}
+                    error={hasError('structureSelect')}
+                    onChange={handleChange}
+                    labelWidth={labelWidth}
+                    options={structures.map((opt) => ({ value: opt._id, label: opt.name }))}
+                  />
+                )}
                 <FormHelperText className={hasError('structureSelect') ? 'Mui-error' : ''}>
                   {hasError('structureSelect') ? i18n.__(formState.errors.structureSelect[0]) : null}
                 </FormHelperText>
@@ -306,4 +309,10 @@ SignUp.defaultProps = {
 SignUp.propTypes = {
   ready: PropTypes.bool.isRequired,
   introduction: PropTypes.string,
+  /**
+   *  @todo
+   * this does not work
+   */
+  structures: PropTypes.arrayOf(PropTypes.object).isRequired,
+  loadingStructure: PropTypes.bool.isRequired,
 };

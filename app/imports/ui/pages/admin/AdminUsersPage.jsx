@@ -29,7 +29,7 @@ import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Pagination from '@material-ui/lab/Pagination';
 import { Roles } from 'meteor/alanning:roles';
-import { structures } from '../../../api/users/structures';
+import { getStructureIds } from '../../../api/users/structures';
 import { usePagination } from '../../utils/hooks';
 import Spinner from '../../components/system/Spinner';
 import { useAppContext } from '../../contexts/context';
@@ -95,7 +95,7 @@ const AdminUsersPage = () => {
 
     const roleshandlers2 = Meteor.subscribe('roles.adminStructureAll');
     const adminsIds2 = Meteor.roleAssignment
-      .find({ scope: { $in: structures }, 'role._id': 'adminStructure' })
+      .find({ scope: { $in: getStructureIds() }, 'role._id': 'adminStructure' })
       .fetch()
       .map((assignment) => assignment.user._id);
 

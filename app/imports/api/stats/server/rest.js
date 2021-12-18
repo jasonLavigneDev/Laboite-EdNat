@@ -1,5 +1,5 @@
 import { Meteor } from 'meteor/meteor';
-import { structures } from '../../users/structures';
+import { getStructureIds } from '../../users/structures';
 import Groups from '../../groups/groups';
 import Articles from '../../articles/articles';
 
@@ -13,7 +13,7 @@ export default async function getStats() {
 
   // usersByStructure
   ret.usersByStructure = {};
-  structures.forEach((s) => {
+  getStructureIds().forEach((s) => {
     try {
       ret.usersByStructure[s] = Meteor.users.find({ structure: s }).count();
     } catch (error) {

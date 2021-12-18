@@ -74,6 +74,14 @@
         "name": "Name"
       }
     },
+    "structures": {
+      "name": "Label",
+      "labels": {
+        "id": "Structure Id",
+        "name": "Structure's name",
+        "children": "Under/Sub structures"
+      }
+    },
     "users": {
       "unknownUser": "User does not exist.",
       "mustBeLoggedIn": "You must be logged in.",
@@ -464,7 +472,8 @@
       "menuAdminGroups": "Groups Management",
       "menuAdminStructureUsers": "Structure Users",
       "menuAdminStructureServices": "Structure Services",
-      "menuAdminBackHome": "Back to Personnal Space"
+      "menuAdminBackHome": "Back to Personnal Space",
+      "menuUserStructure": "Structures Management"
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Your account has not been activated",
@@ -907,6 +916,19 @@
         "body_editTooltip": "Modify this tag",
         "body_deleteTooltip": "Remove this tag",
         "body_editRow_deleteText": "Do you really want to delete this tag ?"
+      }
+    },
+    "AdminStructuresManagementPage": {
+      "title": "Structure Management",
+      "columnName": "Name",
+      "materialTableLocalization": {
+        "toolbar_searchPlaceholder": "Find a structure",
+        "pagination_labelRowsSelect": "Structures par page",
+        "body_emptyDataSourceMessage": "No structure registered",
+        "body_addTooltip": "Add a structure",
+        "body_editTooltip": "Modify this structure",
+        "body_deleteTooltip": "Remove this structure",
+        "body_editRow_deleteText": "Do you really want to delete this structure ?"
       }
     },
     "AdminGroupsPage": {

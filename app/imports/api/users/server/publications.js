@@ -4,7 +4,7 @@ import { FindFromPublication } from 'meteor/percolate:find-from-publication';
 import SimpleSchema from 'simpl-schema';
 import { checkPaginationParams, isActive, getLabel } from '../../utils';
 import Groups from '../../groups/groups';
-import { structures } from '../structures';
+import { getStructureIds } from '../structures';
 import logServer from '../../logging';
 
 // publish additional fields for current user
@@ -62,7 +62,7 @@ Meteor.publish('roles.adminStructure', function publishStructureAdmins() {
 
 // publish all structure admin assignments for all structure
 Meteor.publish('roles.adminStructureAll', function publishStructureAdminsAll() {
-  const ret = Meteor.roleAssignment.find({ 'role._id': 'adminStructure', scope: { $in: structures } });
+  const ret = Meteor.roleAssignment.find({ 'role._id': 'adminStructure', scope: { $in: getStructureIds() } });
 
   if (
     !isActive(this.userId) ||

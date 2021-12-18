@@ -6,6 +6,7 @@ import Box from '@material-ui/core/Box';
 import List from '@material-ui/core/List';
 import PeopleAltIcon from '@material-ui/icons/People';
 import GroupWorkIcon from '@material-ui/icons/GroupWork';
+import BusinessIcon from '@material-ui/icons/Business';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -96,6 +97,12 @@ export default function AdminMenu() {
       content: 'menuAdminNextcloudUrl',
       hidden: !isAdmin || !Meteor.settings.nextcloud || (!isAdmin && !Meteor.settings.nextcloud.nextcloudUser),
       icon: <HttpIcon />,
+    },
+    {
+      path: '/admin/structures',
+      content: 'menuUserStructure',
+      hidden: !isAdmin,
+      icon: <BusinessIcon />,
     },
     {
       path: '/admin/settings',
