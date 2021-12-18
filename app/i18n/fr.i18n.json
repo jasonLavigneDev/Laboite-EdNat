@@ -694,6 +694,16 @@
       "ncloudURL": "URL Nextcloud",
       "changeURL": "Renouveller"
     },
+    "AdminSendNotification": {
+      "title": "Envoyer une notification à ",
+      "subtitle": "Envoyer une notification à ",
+      "cancel": "Annuler",
+      "title_label": "Titre",
+      "content_label": "Contenu de la notification",
+      "ValidateForm": "Valider",
+      "type_label": "Type de notification",
+      "info_type": "Info"
+    },
     "SkipLink": {
       "skipToContent": "Aller au contenu"
     }
@@ -963,7 +973,8 @@
       "successSetAdminStructure": "Droits d'administrateur de structure donnés",
       "successUnsetAdminStructure": "Droits d'administrateur de structure révoqués",
       "adminStructure": "Administrateur de structure",
-      "manageUser": "Gérer l'utilisateur"
+      "manageUser": "Gérer l'utilisateur",
+      "sendNotif": "Envoyer notification"
     },
     "AdminUserValidationPage": {
       "title": "Utilisateurs en attente de validation",

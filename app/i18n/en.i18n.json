@@ -692,6 +692,16 @@
       "ncloudURL": "Nextcloud URL",
       "changeURL": "Renew"
     },
+    "AdminSendNotification": {
+      "title": "Send notification to ",
+      "subtitle": "Send notification to ",
+      "cancel": "Cancel",
+      "title_label": "Title",
+      "content_label": "Notification content",
+      "ValidateForm": "Validate",
+      "type_label": "Notification type",
+      "info_type": "Info"
+    },
     "SkipLink": {
       "skipToContent": "Skip to content"
     }
@@ -958,7 +968,8 @@
       "successSetAdminStructure": "structure admin rights have been granted",
       "successUnsetAdminStructure": "structure admin rights have been revoked",
       "adminStructure": "Structure administrator",
-      "manageUser": "Manager user"
+      "manageUser": "Manager user",
+      "sendNotif": "Send notification"
     },
     "AdminUserValidationPage": {
       "title": "User validation",
