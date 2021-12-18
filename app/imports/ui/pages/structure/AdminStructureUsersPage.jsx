@@ -26,7 +26,6 @@ import { Roles } from 'meteor/alanning:roles';
 import { usePagination } from '../../utils/hooks';
 import Spinner from '../../components/system/Spinner';
 import SearchField from '../../components/system/SearchField';
-import debounce from '../../utils/debounce';
 import { useAppContext } from '../../contexts/context';
 import UserAvatar from '../../components/users/UserAvatar';
 
@@ -83,8 +82,7 @@ const AdminStructureUsersPage = () => {
     changePage(value);
   };
   const searchRef = useRef();
-  const debouncedSetSearch = debounce(setSearch, 500);
-  const updateSearch = (e) => debouncedSetSearch(e.target.value);
+  const updateSearch = (e) => setSearch(e.target.value);
   const resetSearch = () => setSearch('');
   useEffect(() => {
     if (searchRef.current) searchRef.current.value = search;
