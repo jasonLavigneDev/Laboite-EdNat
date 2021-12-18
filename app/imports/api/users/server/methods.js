@@ -11,12 +11,13 @@ import { isActive, getLabel } from '../../utils';
 import Groups from '../../groups/groups';
 // initialize Meteor.users customizations
 import AppRoles from '../users';
-import { structures } from '../structures';
+
 import { favGroup, unfavGroup } from '../../groups/methods';
 import PersonalSpaces from '../../personalspaces/personalspaces';
 import { createRoleNotification, createRequestNotification } from '../../notifications/server/notifsutils';
 import logServer from '../../logging';
 import { getRandomNCloudURL } from '../../nextcloud/methods';
+import Structures from '../../structures/structures';
 
 if (Meteor.settings.public.enableKeycloak === true) {
   const { whiteDomains } = Meteor.settings.private;
@@ -228,7 +229,11 @@ export const setStructure = new ValidatedMethod({
   validate: new SimpleSchema({
     structure: {
       type: String,
-      allowedValues: structures,
+      /**
+       * @deprecated
+       * Since we're now using dynamic structures, we do not need to check if it's allowed in the schema
+       */
+      // allowedValues: getStructureIds,
       label: getLabel('api.users.labels.structure'),
     },
   }).validator(),
@@ -237,6 +242,12 @@ export const setStructure = new ValidatedMethod({
     // check that user is logged in
     if (!this.userId) {
       throw new Meteor.Error('api.users.setStructure.notLoggedIn', i18n.__('api.users.mustBeLoggedIn'));
+    }
+
+    // check if structure exists
+    const structureToFind = Structures.findOne({ _id: structure });
+    if (!structureToFind) {
+      throw new Meteor.Error(`${structure} is not an allowed value`, i18n.__('SimpleSchema.notAllowed', structure));
     }
     // check if user has structure admin role and remove it only if new structure and old structure are different
     const user = Meteor.users.findOne({ _id: this.userId });

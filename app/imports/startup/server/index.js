@@ -15,6 +15,7 @@ import './register-api';
 import '../../api/restApi';
 
 // Set up roles, initial accounts and services
+import './db-initialize/Structures';
 import './db-initialize/Accounts';
 import './db-initialize/Services';
 import './db-initialize/Categories';

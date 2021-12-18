@@ -7,7 +7,7 @@ import { ServiceConfiguration } from 'meteor/service-configuration';
 import faker from 'faker';
 import logServer from '../../../api/logging';
 import AppRoles from '../../../api/users/users';
-import { structures } from '../../../api/users/structures';
+import { getStructureIds } from '../../../api/users/structures';
 import fakeData from './fakeData.json';
 
 if (Meteor.settings.keycloak) {
@@ -77,7 +77,7 @@ if (Meteor.users.find().count() === 0) {
           faker.internet.email(),
           faker.internet.password(),
           null,
-          faker.random.arrayElement(structures),
+          faker.random.arrayElement(getStructureIds()),
           faker.name.firstName(),
           faker.name.lastName(),
         ),
