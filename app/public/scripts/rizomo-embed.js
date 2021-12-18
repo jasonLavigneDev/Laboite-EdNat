@@ -30,6 +30,20 @@
 				height: 75px;
 			}
 
+      .rizomo .notifications {
+        position: absolute;
+        background-color: #ce0500;
+        font-size: 15px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        top: 0;
+        right: 0;
+        box-shadow: 0px 3px 5px -1px rgb(0 0 0 / 20%), 
+                    0px 6px 10px 0px rgb(0 0 0 / 14%), 
+                    0px 1px 18px 0px rgb(0 0 0 / 12%);
+      }
+
       .rizomo.opened {
         display: none;
       }
@@ -140,6 +154,9 @@
   const STAGING_RIZOMO = 'https://rizomo-staging.osc-fr1.scalingo.io';
   const RIZOMO_DOMAIN = STAGING_RIZOMO;
 
+  // ------------------ VARIABLES RIZOMO ------------------
+  let notifications = 0;
+
   // ------------------ HEADER RIZOMO ------------------
   // Create Header
   const rizomoHeader = document.createElement('div');
@@ -174,6 +191,7 @@
   // Create Iframe
   const iframeContainer = document.createElement('iframe');
   iframeContainer.setAttribute('class', 'iframe-rizomo');
+  iframeContainer.setAttribute('iframe-state', 'closed');
   iframeContainer.setAttribute('src', RIZOMO_DOMAIN);
 
   // Create Container for Rizomo
@@ -204,10 +222,12 @@
   // ------------------ FUNCTIONS RIZOMO ------------------
   const openRizimo = () => {
     rizomoContainer.setAttribute('class', 'rizomo-container opened');
+    iframeContainer.setAttribute('iframe-state', 'opened');
     openButton.setAttribute('class', 'rizomo opened');
   };
   const closeRizimo = () => {
     rizomoContainer.setAttribute('class', 'rizomo-container closed');
+    iframeContainer.setAttribute('iframe-state', 'closed');
     openButton.setAttribute('class', 'rizomo closed');
   };
   const toggleFullscreen = () => {
@@ -217,4 +237,23 @@
   openButton.addEventListener('click', openRizimo);
   closeButton.addEventListener('click', closeRizimo);
   fullscreenButton.addEventListener('click', toggleFullscreen);
+
+  const receiveMessage = ({ data }) => {
+    const { type, content } = data;
+    if (type === 'notifications') {
+      notifications = content;
+      if (notifications > 0) {
+        openButton.innerHTML = `
+        <img src="${RIZOMO_DOMAIN}/images/logos/rizomo/robot_button_notifs.svg" />
+        <div class="notifications">
+          ${notifications}
+        </div>
+        `;
+      } else {
+        openButton.innerHTML = `<img src="${RIZOMO_DOMAIN}/images/logos/rizomo/robot_button.svg" />`;
+      }
+    }
+  };
+
+  window.addEventListener('message', receiveMessage, false);
 }
