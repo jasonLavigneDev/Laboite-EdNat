@@ -10,19 +10,23 @@ import Notifications from '../../../api/notifications/notifications';
 import Notification from './Notification';
 import notificationSystem from './NotificationSystem';
 import { badgeStyle } from '../groups/GroupBadge';
+import { useAppContext } from '../../contexts/context';
 
 const useStyles = makeStyles((theme) => badgeStyle(theme));
 
 const NotificationsBell = ({ nonReadNotifsCount }) => {
+  const [{ isIframed }] = useAppContext();
   const classes = useStyles();
   useEffect(() => {
-    window.top.postMessage(
-      {
-        type: 'notifications',
-        content: nonReadNotifsCount,
-      },
-      '*',
-    );
+    if (isIframed) {
+      window.top.postMessage(
+        {
+          type: 'notifications',
+          content: nonReadNotifsCount,
+        },
+        '*',
+      );
+    }
   }, [nonReadNotifsCount]);
   return (
     <div id="NotificationsBell">

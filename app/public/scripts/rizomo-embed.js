@@ -234,10 +234,6 @@
     rizomoContainer.classList.toggle('fullscreen');
   };
 
-  openButton.addEventListener('click', openRizimo);
-  closeButton.addEventListener('click', closeRizimo);
-  fullscreenButton.addEventListener('click', toggleFullscreen);
-
   const receiveMessage = ({ data }) => {
     const { type, content } = data;
     if (type === 'notifications') {
@@ -255,5 +251,9 @@
     }
   };
 
+  // ------------------ EVENTS LISTENERS RIZOMO ------------------
+  openButton.addEventListener('click', openRizimo);
+  closeButton.addEventListener('click', closeRizimo);
+  fullscreenButton.addEventListener('click', toggleFullscreen);
   window.addEventListener('message', receiveMessage, false);
 }
