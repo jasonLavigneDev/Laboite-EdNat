@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
@@ -15,6 +15,15 @@ const useStyles = makeStyles((theme) => badgeStyle(theme));
 
 const NotificationsBell = ({ nonReadNotifsCount }) => {
   const classes = useStyles();
+  useEffect(() => {
+    window.top.postMessage(
+      {
+        type: 'notifications',
+        content: nonReadNotifsCount,
+      },
+      '*',
+    );
+  }, [nonReadNotifsCount]);
   return (
     <div id="NotificationsBell">
       {nonReadNotifsCount > 0 ? (
