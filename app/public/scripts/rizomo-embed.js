@@ -15,6 +15,7 @@
 				right: 5px;
 				width: 75px;
 				height: 75px;
+        z-index: 9999;
 			}
 
 			.rizomo {
@@ -27,11 +28,16 @@
         color: white;
         border: none;
         cursor: pointer;
+        padding: 0;
+        margin: 0;
         font-size: 25px;
         box-shadow: 0px 3px 5px -1px rgb(0 0 0 / 20%), 
                     0px 6px 10px 0px rgb(0 0 0 / 14%), 
                     0px 1px 18px 0px rgb(0 0 0 / 12%);
 			}
+      .rizomo *, .rizomo-container * {
+        box-sizing: content-box !important;
+      }
 
 			.rizomo > img {
 				width: 75px;
@@ -67,6 +73,7 @@
       }
 
       .rizomo-container.opened {
+        z-index: 9999;
         position: absolute;
         display: flex;
         flex-direction: column;
