@@ -24,6 +24,7 @@ variables:
   IMAGE_NAME: laboite
 
 stages:
+  - initial-checks
   - deps
   - lint
   - build
@@ -51,6 +52,14 @@ stages:
 
 
 ###############################################################################
+# `initial-checks` stage: `commitlint`
+###############################################################################
+# Execute `commitlint` before long `cache-dependencies` job
+commitlint:
+  stage: initial-checks
+
+
+###############################################################################
 # `deps` stage: to download and cache dependencies
 ###############################################################################
 cache-dependencies:
@@ -64,7 +73,7 @@ cache-dependencies:
 
 
 ###############################################################################
-# `lint` stage: `commitlint`, `meteor-lint`
+# `lint` stage: `meteor-lint`
 ###############################################################################
 meteor-lint:
   stage: lint
