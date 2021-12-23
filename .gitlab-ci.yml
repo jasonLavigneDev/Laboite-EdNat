@@ -108,5 +108,58 @@ meteor-tests:
 
 
 ###############################################################################
-# `release` stage: `semantic-release`
+# `release` stage: `semantic-release`, `tag *`
 ###############################################################################
+## tag contribution branches with a more stable name than `git-${CI_COMMIT_SHORT_SHA}`
+tag contrib branch:
+  extends:
+    - .tag-docker-image
+    - .on-branches
+  variables:
+    # `feature/foo-bar_quux` → `feature-foo-bar-quux`
+    IMAGE_TAG: $CI_COMMIT_REF_SLUG
+
+## dev images
+tag dev:
+  extends:
+    - .tag-docker-image
+    - .on-dev
+  variables:
+    IMAGE_TAG: dev
+
+## testing images
+tag testing:
+  extends:
+    - .tag-docker-image
+    - .on-testing
+  variables:
+    IMAGE_TAG: testing
+
+## stable images
+tag release:
+  extends: .tag-docker-image
+
+tag major:
+  extends: .tag-docker-image
+  before_script:
+    - export RELEASE_PREFIX=${RELEASE_PREFIX:-release/}
+    - export RELEASE=${CI_COMMIT_TAG#${RELEASE_PREFIX}}
+    - export IMAGE_TAG=${RELEASE%%.*}
+
+tag minor:
+  extends:
+    - .tag-docker-image
+  before_script:
+    - export RELEASE_PREFIX=${RELEASE_PREFIX:-release/}
+    - export RELEASE=${CI_COMMIT_TAG#${RELEASE_PREFIX}}
+    - export IMAGE_TAG=${RELEASE%.${RELEASE##*.}}
+
+tag stable:
+  extends: .tag-docker-image
+  variables:
+    IMAGE_TAG: stable
+
+tag latest:
+  extends: .tag-docker-image
+  variables:
+    IMAGE_TAG: latest
