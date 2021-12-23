@@ -108,8 +108,25 @@ meteor-tests:
 
 
 ###############################################################################
-# `release` stage: `semantic-release`, `tag *`
+# `release` stage: `semantic-release`, `merge-to-dev`, `tag *`
 ###############################################################################
+# Avoid regression and update `version` of app/package*.json in `$DEV_BRANCH`
+merge-to-dev:
+  stage: release
+  extends:
+    - .on-release-tag
+  image: 'hub.eole.education/eole/commitlint:latest'
+  script:
+    # Add `upstream` remote to get access to `upstream/dev`
+    # Use `${GITLAB_TOKEN}` for write permission
+    - "git remote show upstream 2> /dev/null || git remote add upstream ${CI_REPOSITORY_URL/${CI_JOB_TOKEN}/${GITLAB_TOKEN}}"
+    - 'git fetch --all'
+    - 'git checkout -b ${DEV_BRANCH} upstream/${DEV_BRANCH}'
+    - 'git merge --no-edit ${CI_COMMIT_TAG}'
+    - 'git push upstream ${DEV_BRANCH}'
+    # Remove `upstream` to avoid caching `CI_JOB_TOKEN`
+    - "git remote remove upstream"
+
 ## tag contribution branches with a more stable name than `git-${CI_COMMIT_SHORT_SHA}`
 tag contrib branch:
   extends:
