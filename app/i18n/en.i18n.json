@@ -52,10 +52,10 @@
       "updateIntroductionLanguage": {
         "notPermitted": "You don't have sufficient rights."
       },
-      "switchMaintenanceStatus":{
+      "switchMaintenanceStatus": {
         "notPermitted": "You don't have sufficient rights."
       },
-      "updateTextMaintenance":{
+      "updateTextMaintenance": {
         "notPermitted": "You don't have sufficient rights."
       }
     },
@@ -824,7 +824,6 @@
     "NotFound": { "backButtonLabel": "Back", "message": "Page not found !" },
     "ServicesPage": {
       "titleServices": "Discover the SNP apps",
-      "titleStructure": "Discover your structure's resources",
       "categories": "Filter by categories",
       "reset": "Reset filter",
       "validate": "Validate",
@@ -853,7 +852,7 @@
       "noGroup": "There is no group to display."
     },
     "AdminHome": {
-      "title":"Administration Page",
+      "title": "Administration Page",
       "subtitle": "Choose a setting to change"
     },
     "AdminServicesPage": {
