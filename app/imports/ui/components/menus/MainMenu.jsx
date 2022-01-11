@@ -78,11 +78,12 @@ const MainMenu = ({ user = {} }) => {
     history.push(item.path);
     setAnchorEl(null);
   };
-  let menu;
+  let menu = [...userMenu];
+  if (!isAdmin) {
+    menu = [...menu, ...userGroups];
+  }
   if (isAdmin || isAdminStructure) {
-    menu = [...userMenu, ...adminMenu];
-  } else {
-    menu = [...userMenu, ...userGroups];
+    menu = [...menu, ...adminMenu];
   }
   const currentLink = menu.find((link) => {
     if (link.path === pathname || pathname.search(link.path) > -1) {
