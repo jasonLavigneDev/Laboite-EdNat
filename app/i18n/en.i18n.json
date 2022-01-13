@@ -992,7 +992,9 @@
       "successUnsetAdminStructure": "structure admin rights have been revoked",
       "adminStructure": "Structure administrator",
       "manageUser": "Manager user",
-      "sendNotif": "Send notification"
+      "sendNotif": "Send notification",
+      "successCopyUserId": "User ID copied with success",
+      "copyUserId": "Copy user ID"
     },
     "AdminUserValidationPage": {
       "title": "User validation",

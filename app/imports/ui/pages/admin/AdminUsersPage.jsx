@@ -21,6 +21,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import SendIcon from '@material-ui/icons/Send';
+import VpnKeyIcon from '@material-ui/icons/VpnKey';
 
 import IconButton from '@material-ui/core/IconButton';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
@@ -162,6 +163,9 @@ const AdminUsersPage = () => {
     }`;
   const UserActions = ({ user }) => {
     const [verifyDelete, setVerifyDelete] = useState(false);
+    const copyUserId = () => {
+      navigator.clipboard.writeText(user._id).then(msg.success(i18n.__('pages.AdminUsersPage.successCopyUserId')));
+    };
     return verifyDelete ? (
       <>
         <Typography
@@ -221,6 +225,12 @@ const AdminUsersPage = () => {
             }}
           >
             <SettingsApplicationsIcon />
+          </IconButton>
+        </Tooltip>
+
+        <Tooltip title={i18n.__('pages.AdminUsersPage.copyUserId')} aria-label="show">
+          <IconButton edge="end" aria-label="show" onClick={copyUserId}>
+            <VpnKeyIcon />
           </IconButton>
         </Tooltip>
         <Tooltip title={i18n.__('pages.AdminUsersPage.sendNotif')} aria-label="send">

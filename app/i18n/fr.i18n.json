@@ -998,7 +998,9 @@
       "successUnsetAdminStructure": "Droits d'administrateur de structure révoqués",
       "adminStructure": "Administrateur de structure",
       "manageUser": "Gérer l'utilisateur",
-      "sendNotif": "Envoyer notification"
+      "sendNotif": "Envoyer notification",
+      "successCopyUserId": "ID de l'utilisateur copié avec succès",
+      "copyUserId": "Copier l'ID de l'utilisateur"
     },
     "AdminUserValidationPage": {
       "title": "Utilisateurs en attente de validation",
