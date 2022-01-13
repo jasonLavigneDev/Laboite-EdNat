@@ -111,8 +111,7 @@ const ProfilePage = ({ structures, loading }) => {
   const [submitted, setSubmitted] = useState(false);
   const [structChecked, setStructChecked] = useState(false);
   const classes = useStyles();
-  const keycloakMode = Meteor.settings.public.enableKeycloak === true;
-  const { enableBlog } = Meteor.settings.public;
+  const { enableBlog, enableKeycloak } = Meteor.settings.public;
   const [{ user, loadingUser, isMobile }] = useAppContext();
 
   const structureLabel = React.useRef(null);
@@ -128,7 +127,7 @@ const ProfilePage = ({ structures, loading }) => {
   const logoutTypeLabel = React.useRef(null);
   const [labelLogoutTypeWidth, setLabelLogoutTypeWidth] = React.useState(0);
   useEffect(() => {
-    if (keycloakMode) setLabelLogoutTypeWidth(logoutTypeLabel.current.offsetWidth);
+    if (enableKeycloak) setLabelLogoutTypeWidth(logoutTypeLabel.current.offsetWidth);
   }, []);
   const [tempImageLoaded, setTempImageLoaded] = useState(false);
   const { minioEndPoint } = Meteor.settings.public;
@@ -411,6 +410,18 @@ const ProfilePage = ({ structures, loading }) => {
     }
   };
 
+  const getAccessToken = () => {
+    Meteor.call('users.getAccessToken', (error, result) => {
+      if (!result) {
+        msg.error(i18n.__('pages.ProfilePage.noAccessToken'));
+      } else if (error) {
+        msg.error(error.reason);
+      } else {
+        navigator.clipboard.writeText(result).then(msg.success(i18n.__('pages.ProfilePage.successCopyAccessToken')));
+      }
+    });
+  };
+
   if (loadingUser) {
     return <Spinner />;
   }
@@ -424,7 +435,7 @@ const ProfilePage = ({ structures, loading }) => {
             <Grid container className={classes.form} spacing={2}>
               <Grid container spacing={2} style={{ alignItems: 'center' }}>
                 <Grid item xs={isMobile ? 16 : 8} style={{ paddingLeft: '18px' }}>
-                  {keycloakMode ? (
+                  {enableKeycloak ? (
                     <Paper className={classes.keycloakMessage}>
                       <Typography>{i18n.__('pages.ProfilePage.keycloakProcedure')}</Typography>
                       <br />
@@ -436,7 +447,7 @@ const ProfilePage = ({ structures, loading }) => {
                     </Paper>
                   ) : null}
                   <TextField
-                    disabled={keycloakMode}
+                    disabled={enableKeycloak}
                     margin="normal"
                     autoComplete="fname"
                     id="firstName"
@@ -451,7 +462,7 @@ const ProfilePage = ({ structures, loading }) => {
                     variant="filled"
                   />
                   <TextField
-                    disabled={keycloakMode}
+                    disabled={enableKeycloak}
                     margin="normal"
                     id="lastName"
                     autoComplete="lname"
@@ -466,7 +477,7 @@ const ProfilePage = ({ structures, loading }) => {
                     variant="filled"
                   />
                   <TextField
-                    disabled={keycloakMode}
+                    disabled={enableKeycloak}
                     margin="normal"
                     id="email"
                     label={i18n.__('pages.SignUp.emailLabel')}
@@ -480,7 +491,7 @@ const ProfilePage = ({ structures, loading }) => {
                     value={userData.email || ''}
                     variant="filled"
                   />
-                  <FormControl variant="filled" fullWidth disabled={keycloakMode} margin="normal">
+                  <FormControl variant="filled" fullWidth disabled={enableKeycloak} margin="normal">
                     <InputLabel
                       error={errors.username !== ''}
                       htmlFor="username"
@@ -504,7 +515,7 @@ const ProfilePage = ({ structures, loading }) => {
                             aria-label={i18n.__('pages.ProfilePage.useEmail')}
                           >
                             <span>
-                              <IconButton onClick={useEmail} disabled={keycloakMode}>
+                              <IconButton onClick={useEmail} disabled={enableKeycloak}>
                                 <MailIcon />
                               </IconButton>
                             </span>
@@ -544,7 +555,7 @@ const ProfilePage = ({ structures, loading }) => {
                   )}
                 </FormControl>
               </Grid>
-              {keycloakMode ? (
+              {enableKeycloak ? (
                 <Grid item>
                   <FormControl variant="filled" fullWidth>
                     <InputLabel htmlFor="logoutType" id="logoutType-label" ref={logoutTypeLabel}>
@@ -651,6 +662,20 @@ const ProfilePage = ({ structures, loading }) => {
             </p>
           ) : null}
         </Paper>
+        {!!enableKeycloak && (
+          <Paper className={classes.root}>
+            <Typography variant={isMobile ? 'h4' : 'h5'}>{i18n.__('pages.ProfilePage.accessTokenTitle')}</Typography>
+            <p>{i18n.__('pages.ProfilePage.accessTokenMessage')}</p>
+
+            <Grid container centered>
+              <Grid item xs={12} sm={6} md={6} className={classes.buttonWrapper}>
+                <Button variant="contained" onClick={getAccessToken} color="primary">
+                  {i18n.__('pages.ProfilePage.getAccessToken')}
+                </Button>
+              </Grid>
+            </Grid>
+          </Paper>
+        )}
       </Container>
     </Fade>
   );
