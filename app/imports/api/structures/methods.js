@@ -13,7 +13,7 @@ export const createStructure = new ValidatedMethod({
     ...Structures.schema,
   }).validator(),
 
-  run({ name, childrenIds }) {
+  run({ name, parentId }) {
     const authorized = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
     if (!authorized) {
       throw new Meteor.Error('api.structures.createStructure.notPermitted', i18n.__('api.users.notPermitted'));
@@ -21,7 +21,7 @@ export const createStructure = new ValidatedMethod({
 
     return Structures.insert({
       name,
-      childrenIds: childrenIds || [],
+      parentId,
     });
   },
 });

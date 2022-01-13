@@ -49,6 +49,7 @@ export const inputOverrides = (palette) => ({
     root: {
       borderRadius: '0.25rem 0.25rem 0 0',
       border: 'none',
+      marginTop: '25px',
       backgroundColor: palette.background.inputs,
       boxShadow: `inset 0 -2px 0 0 ${palette.primary.main}`,
       '&:hover': {
@@ -71,6 +72,11 @@ export const inputOverrides = (palette) => ({
         paddingLeft: 0,
       },
       paddingLeft: '0 !important',
+    },
+  },
+  MuiFormControl: {
+    root: {
+      marginTop: '25px',
     },
   },
 });
