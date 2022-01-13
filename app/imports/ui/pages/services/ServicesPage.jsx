@@ -234,7 +234,7 @@ function ServicesPage({ services, categories, ready, structureMode }) {
             <Grid container spacing={4}>
               <Grid item xs={12} className={isMobile ? null : classes.flex}>
                 <Typography variant={isMobile ? 'h6' : 'h4'} className={classes.flex}>
-                  {i18n.__(structureMode ? 'pages.ServicesPage.titleStructure' : 'pages.ServicesPage.titleServices')}
+                  {i18n.__(structureMode ? user.structure : 'pages.ServicesPage.titleServices')}
                 </Typography>
                 <div className={classes.spaceBetween}>{!isMobile && toggleButtons}</div>
               </Grid>

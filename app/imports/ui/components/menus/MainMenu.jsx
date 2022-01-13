@@ -36,36 +36,8 @@ export const adminMenu = [
     content: 'Divider',
   },
   {
-    path: '/admingroups',
-    content: 'menuAdminGroups',
-  },
-  {
-    path: '/adminservices',
-    content: 'menuAdminServices',
-  },
-  {
-    path: '/admincategories',
-    content: 'menuAdminCategories',
-  },
-  {
-    path: '/admintags',
-    content: 'menuAdminTags',
-  },
-  {
-    path: '/adminusers',
-    content: 'menuAdminUsers',
-  },
-  {
-    path: '/usersvalidation',
-    content: 'menuAdminUserValidation',
-  },
-  {
-    path: '/adminextcloudurl',
-    content: 'menuAdminNextcloudUrl',
-  },
-  {
-    path: '/settings',
-    content: 'menuAdminAppSettings',
+    path: '/admin',
+    content: 'menuAdminApp',
   },
 ];
 
@@ -88,21 +60,6 @@ export const userGroups = [
   },
 ];
 
-export const structureMenu = [
-  {
-    path: 'structDivider',
-    content: 'Divider',
-  },
-  {
-    path: '/adminstructureservices',
-    content: 'menuAdminStructureServices',
-  },
-  {
-    path: '/adminstructureusers',
-    content: 'menuAdminStructureUsers',
-  },
-];
-
 const MainMenu = ({ user = {} }) => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -121,13 +78,12 @@ const MainMenu = ({ user = {} }) => {
     history.push(item.path);
     setAnchorEl(null);
   };
-  let menu;
-  if (isAdmin) {
-    menu = [...userMenu, ...adminMenu, ...structureMenu];
-  } else if (isAdminStructure) {
-    menu = [...userMenu, ...userGroups, ...structureMenu];
-  } else {
-    menu = [...userMenu, ...userGroups];
+  let menu = [...userMenu];
+  if (!isAdmin) {
+    menu = [...menu, ...userGroups];
+  }
+  if (isAdmin || isAdminStructure) {
+    menu = [...menu, ...adminMenu];
   }
   const currentLink = menu.find((link) => {
     if (link.path === pathname || pathname.search(link.path) > -1) {

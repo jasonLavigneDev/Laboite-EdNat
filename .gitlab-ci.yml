@@ -1,41 +1,188 @@
-image: hub.eole.education/proxyhub/geoffreybooth/meteor-base:2.5
-
-stages:
-  - deps
-  - lint
-  - test
-
-before_script:
-  - cd app
-
-cache:
-  paths:
-    - app/node_modules/
+# -*- coding: utf-8 -*-
+# vim: ft=yaml
+---
+include:
+  - project: EOLE/infra/ci-tools
+    ref: stable
+    file: /templates/Rules.yaml
+  - project: EOLE/infra/ci-tools
+    ref: stable
+    file: /templates/Runners/apps.education-docker.yaml
+  - project: EOLE/infra/ci-tools
+    ref: stable
+    file: /templates/Lint/Commitlint.yaml
+  - project: EOLE/infra/ci-tools
+    ref: stable
+    file: /templates/Release/Semantic-release.yaml
+  - project: EOLE/infra/ci-tools
+    ref: stable
+    file: /templates/Docker.yaml
 
 variables:
-  METEOR_ALLOW_SUPERUSER: "true"
+  # `ci-tools` default branch is `stable`
+  STABLE_BRANCH: master
+  IMAGE_NAME: laboite
 
-Deps:
-  stage: deps
-  script:
-    - meteor npm ci && meteor npm install
-  artifacts:
+stages:
+  - initial-checks
+  - deps
+  - test
+  - build
+  - release
+
+# Common setup for all meteor based jobs
+.meteor:
+  extends: .not-on-stable
+  image: hub.eole.education/proxyhub/geoffreybooth/meteor-base:2.5
+  before_script:
+    - cd app
+  cache:
+    key:
+      files:
+        # Generate new cache when one of the file changes
+        - app/package.json
+        - app/package-lock.json
     paths:
       - app/node_modules/
-  rules:
-    - if: '$CI_COMMIT_MESSAGE  !~ /^(\[Draft\]|\(Draft\)|Draft:|\[WIP\]|WIP:)/'
+    # Only use the cache created by `cache-dependencies` job
+    policy: pull
+  variables:
+    METEOR_ALLOW_SUPERUSER: "true"
 
-Lint:
-  stage: lint
+
+###############################################################################
+# `initial-checks` stage: `commitlint`
+###############################################################################
+# Execute `commitlint` before long `cache-dependencies` job
+commitlint:
+  stage: initial-checks
+
+
+###############################################################################
+# `deps` stage: to download and cache dependencies
+###############################################################################
+cache-dependencies:
+  stage: deps
+  extends: .meteor
+  cache:
+    # This job update dependencies
+    policy: pull-push
+  script:
+    - meteor npm ci && meteor npm install
+
+
+###############################################################################
+# `test` stage: `meteor-lint`, `meteor-tests`
+###############################################################################
+# The test does not run on the builded container so do them before
+# building the container
+meteor-lint:
+  stage: test
+  extends: .meteor
   script:
     - meteor npm install --only=dev
     - meteor npm run lint
-  rules:
-    - if: '$CI_COMMIT_MESSAGE  !~ /^(\[Draft\]|\(Draft\)|Draft:|\[WIP\]|WIP:)/'
 
-Test:
+meteor-tests:
   stage: test
+  extends: .meteor
   script:
     - meteor npm test
+
+
+###############################################################################
+# `build` stage: `*-docker-build`
+###############################################################################
+# Build on release tag and every branches except for `$STABLE_BRANCH`
+# used only to create the release tag.
+#
+# The ordering is important:
+# 1. exclude schedules and drafts
+# 2. include `on-release-tag` which must match before `not-on-semantic-release-commit`
+# 3. we exclude stable which just produce the release tag
+# 4. we exclude `semantic-release` commits like when merging `release` on `dev`
+# 5. run on every branches
+build-docker:
+  extends: .build-docker-image
   rules:
-    - if: '$CI_COMMIT_MESSAGE  !~ /^(\[Draft\]|\(Draft\)|Draft:|\[WIP\]|WIP:)/'
+    - !reference [.rules-map, not-on-schedule]
+    - !reference [.rules-map, not-on-draft]
+    - !reference [.rules-map, on-release-tag]
+    - !reference [.rules-map, not-on-stable]
+    - !reference [.rules-map, not-on-semantic-release-commit]
+    - !reference [.rules-map, on-branch]
+
+
+###############################################################################
+# `release` stage: `semantic-release`, `merge-to-dev`, `tag *`
+###############################################################################
+# Avoid regression and update `version` of app/package*.json in `$DEV_BRANCH`
+merge-to-dev:
+  stage: release
+  extends:
+    - .on-release-tag
+  image: 'hub.eole.education/eole/commitlint:latest'
+  script:
+    # Add `upstream` remote to get access to `upstream/dev`
+    # Use `${GITLAB_TOKEN}` for write permission
+    - "git remote show upstream 2> /dev/null || git remote add upstream ${CI_REPOSITORY_URL/${CI_JOB_TOKEN}/${GITLAB_TOKEN}}"
+    - 'git fetch --all'
+    - 'git checkout -b ${DEV_BRANCH} upstream/${DEV_BRANCH}'
+    - 'git merge --no-edit ${CI_COMMIT_TAG}'
+    - 'git push upstream ${DEV_BRANCH}'
+    # Remove `upstream` to avoid caching `CI_JOB_TOKEN`
+    - "git remote remove upstream"
+
+## tag contribution branches with a more stable name than `git-${CI_COMMIT_SHORT_SHA}`
+tag contrib branch:
+  extends:
+    - .tag-docker-image
+    - .on-branches
+  variables:
+    # `feature/foo-bar_quux` → `feature-foo-bar-quux`
+    IMAGE_TAG: $CI_COMMIT_REF_SLUG
+
+## dev images
+tag dev:
+  extends:
+    - .tag-docker-image
+    - .on-dev
+  variables:
+    IMAGE_TAG: dev
+
+## testing images
+tag testing:
+  extends:
+    - .tag-docker-image
+    - .on-testing
+  variables:
+    IMAGE_TAG: testing
+
+## stable images
+tag release:
+  extends: .tag-docker-image
+
+tag major:
+  extends: .tag-docker-image
+  before_script:
+    - export RELEASE_PREFIX=${RELEASE_PREFIX:-release/}
+    - export RELEASE=${CI_COMMIT_TAG#${RELEASE_PREFIX}}
+    - export IMAGE_TAG=${RELEASE%%.*}
+
+tag minor:
+  extends:
+    - .tag-docker-image
+  before_script:
+    - export RELEASE_PREFIX=${RELEASE_PREFIX:-release/}
+    - export RELEASE=${CI_COMMIT_TAG#${RELEASE_PREFIX}}
+    - export IMAGE_TAG=${RELEASE%.${RELEASE##*.}}
+
+tag stable:
+  extends: .tag-docker-image
+  variables:
+    IMAGE_TAG: stable
+
+tag latest:
+  extends: .tag-docker-image
+  variables:
+    IMAGE_TAG: latest

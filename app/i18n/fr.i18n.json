@@ -52,10 +52,10 @@
       "updateIntroductionLanguage": {
         "notPermitted": "Vous n'avez pas les droits suffisants."
       },
-      "switchMaintenanceStatus":{
+      "switchMaintenanceStatus": {
         "notPermitted": "Vous n'avez pas les droits suffisants."
       },
-      "updateTextMaintenance":{
+      "updateTextMaintenance": {
         "notPermitted": "Vous n'avez pas les droits suffisants."
       }
     },
@@ -341,7 +341,7 @@
     }
   },
   "components": {
-    "SiteInMaintenance":{
+    "SiteInMaintenance": {
       "maintenanceInProgress": "Maintenance en cours"
     },
     "BookMarkEdit": {
@@ -445,6 +445,15 @@
       "inputSearchLabel": "Rechercher..."
     },
     "MainMenu": {
+      "menuAdminGroups": "Gestion des Groupes",
+      "menuUserBookmarks": "Marque-pages",
+      "menuProfileLabel": "Profil",
+      "menuLogoutLabel": "Se déconnecter",
+      "menuMedias": "Stockage de Médias",
+      "menuAdminApp": "Administration"
+    },
+    "AdminMenu": {
+      "title": "Administration",
       "menuAdminServices": "Gestion des Services",
       "menuAdminUserValidation": "Validation des utilisateurs",
       "menuAdminNextcloudUrl": "Gestion des URL Nextcloud",
@@ -452,13 +461,10 @@
       "menuAdminTags": "Gestion des mots clé",
       "menuAdminGroups": "Gestion des Groupes",
       "menuAdminUsers": "Gestion des utilisateurs",
-      "menuUserBookmarks": "Marque-pages",
-      "menuProfileLabel": "Profil",
-      "menuLogoutLabel": "Se déconnecter",
-      "menuMedias": "Stockage de Médias",
       "menuAdminAppSettings": "Réglages Administrateurs",
       "menuAdminStructureUsers": "Utilisateurs de la structure",
-      "menuAdminStructureServices": "Services de la structure"
+      "menuAdminStructureServices": "Services de la structure",
+      "menuAdminBackHome": "Retour à l'espace perso"
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Votre compte n'a pas été activé",
@@ -823,7 +829,6 @@
     },
     "ServicesPage": {
       "titleServices": "Découvrez les Services Numériques Partagés",
-      "titleStructure": "Découvrez les ressources de votre structure",
       "categories": "Filtrer par catégories",
       "reset": "Réinitialiser",
       "validate": "Valider",
@@ -850,6 +855,10 @@
       "filterGroupLabel": "Mes groupes seulement",
       "disableFilterGroup": "Afficher tous les groupes",
       "noGroup": "Il n'y a aucun groupe à afficher."
+    },
+    "AdminHome": {
+      "title": "Interface d'administration",
+      "subtitle": "Choisissez un paramètre à modifier"
     },
     "AdminServicesPage": {
       "title": "Gestion des Services",
