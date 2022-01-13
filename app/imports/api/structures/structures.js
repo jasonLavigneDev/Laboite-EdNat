@@ -26,15 +26,10 @@ Structures.schema = new SimpleSchema(
       /** No need to keep this to true since we use `_id` now */
       // unique: true,
     },
-    /** Sous structures */
-    childrenIds: {
-      type: Array,
-      optional: true,
-      label: getLabel('api.structures.children'),
-    },
-    'childrenIds.$': {
+    parentId: {
       type: SimpleSchema.RegEx.Id,
-      label: getLabel('api.structures.name'),
+      label: getLabel('api.structures.parentId'),
+      optional: true,
     },
   },
   {
@@ -45,7 +40,7 @@ Structures.schema = new SimpleSchema(
 Structures.publicFields = {
   _id: 1,
   name: 1,
-  childrenIds: 1,
+  parentId: 1,
 };
 
 Structures.attachSchema(Structures.schema);

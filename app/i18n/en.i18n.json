@@ -79,7 +79,7 @@
       "labels": {
         "id": "Structure Id",
         "name": "Structure's name",
-        "children": "Under/Sub structures"
+        "parent": "Superior structures"
       }
     },
     "users": {

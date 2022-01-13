@@ -234,107 +234,107 @@
     {
       "_id": "EviKfwznFZcjEWFdz",
       "name": "Ministère Education",
-      "childrenIds": []
+      "parentId": null
     },
     {
       "_id": "EviKfwAnFZcrEWFdz",
       "name": "Éducation",
-      "childrenIds": []
+      "parentId": null
     },
     {
       "_id": "EviKfwgnFZcjEWFdz",
       "name": "Auvergne-Rhône Alpes",
-      "childrenIds": []
+      "parentId": null
     },
     {
       "_id": "EviKdwAnFZcjEWFdz",
       "name": "Bourgogne-Franche Comté",
-      "childrenIds": []
+      "parentId": null
     },
     {
       "_id": "EviKfwqdFZcjEWFdz",
       "name": "Bretagne",
-      "childrenIds": []
+      "parentId": null
     },
     {
       "_id": "EviKfwAnFtcjEWFdz",
       "name": "Centre-Val de Loire",
-      "childrenIds": []
+      "parentId": null
     },
     {
       "_id": "EbiKfwAnFZcjEWFdz",
       "name": "Corse",
-      "childrenIds": []
+      "parentId": null
     },
     {
       "_id": "EviKfwAnFrcjEWFdz",
       "name": "Grand Est",
-      "childrenIds": []
+      "parentId": null
     },
     {
       "_id": "EviKfwAnFZcjEWFdm",
       "name": "Guadeloupe",
-      "childrenIds": []
+      "parentId": null
     },
     {
       "_id": "EviKfwAnFZcjlWFdz",
       "name": "Guyane",
-      "childrenIds": []
+      "parentId": null
     },
     {
       "_id": "EviKfoioFZcjEWFdz",
       "name": "Hauts-de France",
-      "childrenIds": []
+      "parentId": null
     },
     {
       "_id": "EviKfwAnFZcjuWFdz",
       "name": "Île-de France",
-      "childrenIds": []
+      "parentId": null
     },
     {
       "_id": "EviKfdsnFZcjEWFdz",
       "name": "Martinique",
-      "childrenIds": []
+      "parentId": null
     },
     {
       "_id": "EviKfwAnFZcjEazdz",
       "name": "Normandie",
-      "childrenIds": []
+      "parentId": null
     },
     {
       "_id": "EviKfwAnFZcjEWFde",
       "name": "Nouvelle-Aquitaine",
-      "childrenIds": []
+      "parentId": null
     },
     {
       "_id": "EviKfwAnFZcjEWFdc",
       "name": "Occitanie",
-      "childrenIds": []
+      "parentId": null
     },
     {
       "_id": "EviKfwAnFZcjEWsqz",
       "name": "Pays de la Loire",
-      "childrenIds": []
+      "parentId": null
     },
     {
       "_id": "EvijfwAnFZcjEWFdz",
       "name": "Provence-Alpes Côte d'Azur",
-      "childrenIds": []
+      "parentId": null
     },
     {
       "_id": "EviKfwAnfbcjEWFdz",
       "name": "La Réunion",
-      "childrenIds": []
+      "parentId": null
     },
     {
       "_id": "EviKfwAnzfcjEWFdz",
       "name": "Collectivité",
-      "childrenIds": []
+      "parentId": null
     },
     {
       "_id": "EviKfwAnFZcxEWFdz",
       "name": "Autre",
-      "childrenIds": []
+      "parentId": null
     }
   ]
 }

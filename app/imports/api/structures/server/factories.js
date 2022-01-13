@@ -4,5 +4,5 @@ import Structures from '../structures';
 
 Factory.define('structure', Structures, {
   name: faker.company.companyName(),
-  childrenIds: [],
+  parentId: '',
 });
