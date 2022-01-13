@@ -838,7 +838,12 @@
       "structureMessage": "Check this box to link all imported articles to your current attachment structure.",
       "advancedPersonalPage": "Activate advanced personal page",
       "languageLabel": "Change language",
-      "activateArticles": "Activate articles"
+      "activateArticles": "Activate articles",
+      "accessTokenTitle": "Get the Access Token",
+      "accessTokenMessage": "Your Access Token is your API identification used to communicate between applications",
+      "getAccessToken": "Get Access Token",
+      "noAccessToken": "No token to retrieve",
+      "successCopyAccessToken": "Token copied with success"
     },
     "NotFound": { "backButtonLabel": "Back", "message": "Page not found !" },
     "ServicesPage": {
@@ -991,7 +996,9 @@
       "successUnsetAdminStructure": "structure admin rights have been revoked",
       "adminStructure": "Structure administrator",
       "manageUser": "Manager user",
-      "sendNotif": "Send notification"
+      "sendNotif": "Send notification",
+      "successCopyUserId": "User ID copied with success",
+      "copyUserId": "Copy user ID"
     },
     "AdminUserValidationPage": {
       "title": "User validation",

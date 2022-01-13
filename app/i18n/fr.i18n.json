@@ -841,7 +841,12 @@
       "structureMessage": "Cocher cette case pour lier tous les articles importés à votre structure de rattachement actuelle.",
       "advancedPersonalPage": "Activer l'espace personnel avancé",
       "languageLabel": "Choix de la langue",
-      "activateArticles": "Activer les publications"
+      "activateArticles": "Activer les publications",
+      "accessTokenTitle": "Récupérer le token d'accès",
+      "accessTokenMessage": "Votre token d'accès est votre clé API de communication entre les différentes applications.",
+      "getAccessToken": "Récupérer le Token",
+      "noAccessToken": "Aucun token à récupérer",
+      "successCopyAccessToken": "Token copié avec succès"
     },
     "NotFound": {
       "backButtonLabel": "Retour",
@@ -997,7 +1002,9 @@
       "successUnsetAdminStructure": "Droits d'administrateur de structure révoqués",
       "adminStructure": "Administrateur de structure",
       "manageUser": "Gérer l'utilisateur",
-      "sendNotif": "Envoyer notification"
+      "sendNotif": "Envoyer notification",
+      "successCopyUserId": "ID de l'utilisateur copié avec succès",
+      "copyUserId": "Copier l'ID de l'utilisateur"
     },
     "AdminUserValidationPage": {
       "title": "Utilisateurs en attente de validation",

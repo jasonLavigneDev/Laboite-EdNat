@@ -963,6 +963,22 @@ export const toggleAdvancedPersonalPage = new ValidatedMethod({
   },
 });
 
+export const getAccessToken = new ValidatedMethod({
+  name: 'users.getAccessToken',
+  validate: null,
+  run() {
+    if (!this.userId) {
+      throw new Meteor.Error('api.users.getAccessToken.notPermitted', i18n.__('api.users.mustBeLoggedIn'));
+    }
+    // check user existence
+    const user = Meteor.users.findOne({ _id: this.userId });
+    if (user === undefined) {
+      throw new Meteor.Error('api.users.getAccessToken.unknownUser', i18n.__('api.users.unknownUser'));
+    }
+    return user.services?.keycloak?.accessToken;
+  },
+});
+
 // Get list of all method names on User
 const LISTS_METHODS = _.pluck(
   [
@@ -990,6 +1006,7 @@ const LISTS_METHODS = _.pluck(
     setAvatar,
     userUpdated,
     toggleAdvancedPersonalPage,
+    getAccessToken,
   ],
   'name',
 );
