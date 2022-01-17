@@ -80,7 +80,7 @@
       "labels": {
         "id": "Id de Structure",
         "name": "Nom de la structure",
-        "children": "Structure Supérieure"
+        "parent": "Structure Supérieure"
       }
     },
     "users": {
