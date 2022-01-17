@@ -454,12 +454,22 @@
       "inputSearchLabel": "Rechercher..."
     },
     "MainMenu": {
-      "menuAdminGroups": "Gestion des Groupes",
       "menuUserBookmarks": "Marque-pages",
       "menuProfileLabel": "Profil",
       "menuLogoutLabel": "Se déconnecter",
       "menuMedias": "Stockage de Médias",
-      "menuAdminApp": "Administration"
+      "menuAdminApp": "Administration",
+      "menuAdminServices": "Gestion des Services",
+      "menuAdminUserValidation": "Validation des utilisateurs",
+      "menuAdminNextcloudUrl": "Gestion des URL Nextcloud",
+      "menuAdminCategories": "Gestion des categories",
+      "menuAdminTags": "Gestion des mots clé",
+      "menuAdminGroups": "Gestion des Groupes",
+      "menuAdminUsers": "Gestion des utilisateurs",
+      "menuAdminAppSettings": "Réglages Administrateurs",
+      "menuAdminStructureUsers": "Utilisateurs de la structure",
+      "menuAdminStructureServices": "Services de la structure",
+      "menuAdminBackHome": "Retour à l'espace perso"
     },
     "AdminMenu": {
       "title": "Administration",

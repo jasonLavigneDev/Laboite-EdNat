@@ -458,7 +458,16 @@
       "menuProfileLabel": "Profile",
       "menuLogoutLabel": "Logout",
       "menuMedias": "Medias Storage",
-      "menuAdminApp": "Administration"
+      "menuAdminApp": "Administration",
+      "menuAdminAppSettings": "Admin Settings",
+      "menuAdminServices": "Service Management",
+      "menuAdminUsers": "Users Management",
+      "menuAdminNextcloudUrl": "Nextcloud URL management",
+      "menuAdminUserValidation": "User validation",
+      "menuAdminCategories": "Categories Management",
+      "menuAdminTags": "Tags Management",
+      "menuAdminStructureUsers": "Structure Users",
+      "menuAdminStructureServices": "Structure Services"
     },
     "AdminMenu": {
       "title": "Administration",
