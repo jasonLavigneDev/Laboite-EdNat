@@ -11,6 +11,8 @@ import Contact from '../pages/system/Contact';
 import { useAppContext } from '../contexts/context';
 import RizomoTitle from '../components/menus/RizomoTitle';
 
+const isRizomo = Meteor.settings.public.theme === 'rizomo';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     minHeight: 'calc(100vh - 64px)',
@@ -58,7 +60,6 @@ export default function SignLayout() {
   const classes = useStyles();
   const [{ isMobile }] = useAppContext();
   const theme = useTheme();
-  const isRizomo = Meteor.settings.public.theme === 'rizomo';
 
   return (
     <>

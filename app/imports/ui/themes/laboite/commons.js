@@ -7,7 +7,7 @@ const COMMONS = {
     LONG_LOGO_MAINTENANCE: '/images/logos/laboite/apps-logo-maintenance.svg',
   },
   shape: {
-    headerHeight: 60,
+    headerHeight: 168,
     borderRadius: 8,
   },
   typography: {

@@ -10,16 +10,17 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: 20,
   },
 }));
+const { appName, appDescription } = Meteor.settings.public;
 
 const RizomoTitle = () => {
   const classes = useStyles();
   return (
     <div className={classes.logoText}>
       <Typography variant="h4" component="h4">
-        Rizomo
+        {appName}
       </Typography>
       <Typography variant="subtitle1" component="h5">
-        Sac à dos numérique de l’agent public
+        {appDescription}
       </Typography>
     </div>
   );

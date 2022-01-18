@@ -4,15 +4,16 @@ import PropTypes from 'prop-types';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
 import { withTracker } from 'meteor/react-meteor-data';
 import NotificationsBell from '../notifications/NotificationsBell';
 import MenuBar from './MenuBar';
 import MainMenu from './MainMenu';
 import { useAppContext } from '../../contexts/context';
 import AppSettings from '../../../api/appsettings/appsettings';
-import RizomoTitle from './RizomoTitle';
 
 const isRizomo = Meteor.settings.public.theme === 'rizomo';
+const { appName, appDescription } = Meteor.settings.public;
 
 const useStyles = (isMobile) =>
   makeStyles((theme) => ({
@@ -39,12 +40,25 @@ const useStyles = (isMobile) =>
       width: '100%',
       borderTop: '1px solid rgba(0, 0, 0, 0.12)',
     },
+    imgLogoContainer: {
+      height: isMobile ? 30 : 120,
+      maxHeight: isMobile ? 30 : 120,
+      color: theme.palette.text.primary,
+      display: 'flex',
+      outline: 'none',
+    },
     imgLogo: {
       height: isMobile || !isRizomo ? 30 : 120,
       maxHeight: isMobile || !isRizomo ? 30 : 120,
       color: theme.palette.text.primary,
       display: 'flex',
       outline: 'none',
+    },
+    logoText: {
+      color: theme.palette.text.primary,
+      marginTop: 'auto',
+      marginBottom: 'auto',
+      marginLeft: 20,
     },
     grow: {
       flexGrow: 1,
@@ -61,6 +75,11 @@ const useStyles = (isMobile) =>
     },
     maintenanceBar: {
       marginTop: 50,
+    },
+    appName: {
+      '& .dot': {
+        color: '#5aa1d8',
+      },
     },
   }));
 
@@ -103,11 +122,26 @@ function TopBar({ publicMenu, root, appsettings, adminApp }) {
     <div>
       <AppBar position="fixed" className={classes.root}>
         <div className={classes.firstBar}>
-          <Link to={root || (publicMenu ? '/public' : '/')} className={classes.imgLogo}>
-            <img src={LOGO} className={classes.imgLogo} alt="Logo" />
-            {isRizomo && !isMobile && <RizomoTitle />}
+          <Link to={root || (publicMenu ? '/public' : '/')} className={classes.imgLogoContainer}>
+            <img src={isRizomo ? LOGO : SMALL_LOGO} className={classes.imgLogoContainer} alt="Logo" />
+            {!isMobile && (
+              <div className={classes.logoText}>
+                <Typography variant="h4" component="h4">
+                  <div
+                    className={classes.appName}
+                    dangerouslySetInnerHTML={{
+                      __html: appName.replaceAll('.', '<span class="dot">.</span>'),
+                    }}
+                  />
+                </Typography>
+                {appDescription && (
+                  <Typography variant="subtitle1" component="h5">
+                    {appDescription}
+                  </Typography>
+                )}
+              </div>
+            )}
           </Link>
-          {!isMobile && !publicMenu && !adminApp && !isRizomo && <MenuBar />}
           <div className={classes.rightContainer}>
             {publicMenu ? null : (
               <>
@@ -119,7 +153,7 @@ function TopBar({ publicMenu, root, appsettings, adminApp }) {
             )}
           </div>
         </div>
-        {!isMobile && !publicMenu && !adminApp && isRizomo && (
+        {!isMobile && !publicMenu && !adminApp && (
           <div className={classes.secondBar}>
             <MenuBar />
           </div>
