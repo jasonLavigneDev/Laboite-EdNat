@@ -1,6 +1,7 @@
 {
   "public": {
     "appName": "LaBoîte",
+    "appDescription": "Sac à dos numérique de l’agent public",
     "enableKeycloak": false,
     "keycloakUrl": "",
     "keycloakRealm": "",

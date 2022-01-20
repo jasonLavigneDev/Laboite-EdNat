@@ -21,7 +21,7 @@ import Structures from '../../structures/structures';
 
 if (Meteor.settings.public.enableKeycloak === true) {
   const { whiteDomains } = Meteor.settings.private;
-  if (whiteDomains.length > 0) {
+  if (!!whiteDomains && whiteDomains.length > 0) {
     logServer(i18n.__('api.users.logWhiteDomains', { domains: JSON.stringify(whiteDomains) }));
   }
 }
