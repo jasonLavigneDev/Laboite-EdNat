@@ -467,7 +467,8 @@
       "menuAdminCategories": "Categories Management",
       "menuAdminTags": "Tags Management",
       "menuAdminStructureUsers": "Structure Users",
-      "menuAdminStructureServices": "Structure Services"
+      "menuAdminStructureServices": "Structure Services",
+      "menuAdminBackHome": "Back to Personnal Space"
     },
     "AdminMenu": {
       "title": "Administration",
