@@ -243,12 +243,12 @@
     },
     {
       "_id": "EviKfwgnFZcjEWFdz",
-      "name": "Auvergne-Rhône Alpes",
+      "name": "Auvergne-Rhône-Alpes",
       "parentId": null
     },
     {
       "_id": "EviKdwAnFZcjEWFdz",
-      "name": "Bourgogne-Franche Comté",
+      "name": "Bourgogne-Franche-Comté",
       "parentId": null
     },
     {
@@ -283,12 +283,12 @@
     },
     {
       "_id": "EviKfoioFZcjEWFdz",
-      "name": "Hauts-de France",
+      "name": "Hauts-de-France",
       "parentId": null
     },
     {
       "_id": "EviKfwAnFZcjuWFdz",
-      "name": "Île-de France",
+      "name": "Île-de-France",
       "parentId": null
     },
     {
@@ -318,7 +318,7 @@
     },
     {
       "_id": "EvijfwAnFZcjEWFdz",
-      "name": "Provence-Alpes Côte d'Azur",
+      "name": "Provence-Alpes-Côte d'Azur",
       "parentId": null
     },
     {

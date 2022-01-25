@@ -364,7 +364,8 @@ Migrations.add({
   version: 20,
   name: 'Add maintenance and textMaintenance field for appsettings',
   up: () => {
-    if (Meteor.settings.public.theme === 'laboite') {
+    const isStructuresSet = Meteor.users.findOne({ structure: { $exists: true } });
+    if (isStructuresSet) {
       structureOptions.forEach((label) => {
         const structureDB = Structures.findOne({ name: label });
         let structureId = structureDB && structureDB._id;
@@ -376,12 +377,10 @@ Migrations.add({
     }
   },
   down: () => {
-    if (Meteor.settings.public.theme === 'laboite') {
-      Structures.find()
-        .fetch()
-        .forEach(({ name, _id }) => {
-          Meteor.users.rawCollection().updateMany({ structure: _id }, { $set: { structure: name } });
-        });
-    }
+    Structures.find()
+      .fetch()
+      .forEach(({ name, _id }) => {
+        Meteor.users.rawCollection().updateMany({ structure: _id }, { $set: { structure: name } });
+      });
   },
 });
