@@ -38,6 +38,7 @@ import UserAvatar from '../../components/users/UserAvatar';
 import AdminGroupQuota from '../../components/users/AdminGroupQuota';
 import SearchField from '../../components/system/SearchField';
 import AdminSendNotification from '../../components/users/AdminSendNotification';
+import { getStructure } from '../../../api/structures/utils';
 
 let userData = {};
 const useStyles = makeStyles((theme) => ({
@@ -135,6 +136,15 @@ const AdminUsersPage = () => {
     });
   };
   const isStructureAdmin = (user) => Roles.userIsInRole(user._id, 'adminStructure', user.structure);
+  useTracker(() => {
+    const structuresIds = [];
+    items.forEach(({ structure }) => {
+      if (structure && structuresIds.indexOf(structuresIds) === -1) {
+        structuresIds.push(structure);
+      }
+    });
+    Meteor.subscribe('structures.ids', { ids: structuresIds });
+  });
 
   const changeAdminStructure = (user) => {
     const method = isStructureAdmin(user) ? 'users.unsetAdminStructure' : 'users.setAdminStructure';
@@ -301,46 +311,55 @@ const AdminUsersPage = () => {
               </Grid>
               <Grid item xs={12} sm={12} md={12}>
                 <List className={classes.list} disablePadding>
-                  {items.map((user, i) => [
-                    <ListItem alignItems="flex-start" key={`user-${user.emails[0].address}`}>
-                      <ListItemAvatar>
-                        <UserAvatar
-                          customClass={
+                  {items.map((user, i) => {
+                    const structure = getStructure(user.structure);
+
+                    return [
+                      <ListItem alignItems="flex-start" key={`user-${user.emails[0].address}`}>
+                        <ListItemAvatar>
+                          <UserAvatar
+                            customClass={
+                              isAdmin(user)
+                                ? classes.admin
+                                : isStructureAdmin(user)
+                                ? classes.adminstructure
+                                : classes.avatar
+                            }
+                            userAvatar={user.avatar || user.username}
+                            userFirstName={user.firstName}
+                          />
+                        </ListItemAvatar>
+                        <ListItemText
+                          primary={`${user.firstName} ${user.lastName}${
                             isAdmin(user)
-                              ? classes.admin
+                              ? ` (${i18n.__('pages.AdminUsersPage.admin')})`
                               : isStructureAdmin(user)
-                              ? classes.adminstructure
-                              : classes.avatar
+                              ? ` (${i18n.__('pages.AdminUsersPage.adminStructure')})`
+                              : ''
+                          } ${loginInfo(user)}`}
+                          secondary={
+                            <>
+                              <Typography
+                                component="span"
+                                variant="body2"
+                                className={classes.inline}
+                                color="textPrimary"
+                              >
+                                {user.emails[0].address}
+                              </Typography>
+                              {` - ${structure ? structure.name : i18n.__('pages.AdminUsersPage.undefined')}`}
+                            </>
                           }
-                          userAvatar={user.avatar || user.username}
-                          userFirstName={user.firstName}
                         />
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={`${user.firstName} ${user.lastName}${
-                          isAdmin(user)
-                            ? ` (${i18n.__('pages.AdminUsersPage.admin')})`
-                            : isStructureAdmin(user)
-                            ? ` (${i18n.__('pages.AdminUsersPage.adminStructure')})`
-                            : ''
-                        } ${loginInfo(user)}`}
-                        secondary={
-                          <>
-                            <Typography component="span" variant="body2" className={classes.inline} color="textPrimary">
-                              {user.emails[0].address}
-                            </Typography>
-                            {` - ${user.structure ? user.structure : i18n.__('pages.AdminUsersPage.undefined')}`}
-                          </>
-                        }
-                      />
-                      <ListItemSecondaryAction>
-                        <UserActions user={user} />
-                      </ListItemSecondaryAction>
-                    </ListItem>,
-                    i < ITEM_PER_PAGE - 1 && i < total - 1 && (
-                      <Divider variant="inset" component="li" key={`divider-${user.emails[0].address}`} />
-                    ),
-                  ])}
+                        <ListItemSecondaryAction>
+                          <UserActions user={user} />
+                        </ListItemSecondaryAction>
+                      </ListItem>,
+                      i < ITEM_PER_PAGE - 1 && i < total - 1 && (
+                        <Divider variant="inset" component="li" key={`divider-${user.emails[0].address}`} />
+                      ),
+                    ];
+                  })}
                 </List>
               </Grid>
               {total > ITEM_PER_PAGE && (

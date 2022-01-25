@@ -28,6 +28,7 @@ import Spinner from '../../components/system/Spinner';
 import SearchField from '../../components/system/SearchField';
 import { useAppContext } from '../../contexts/context';
 import UserAvatar from '../../components/users/UserAvatar';
+import { useStructure } from '../../../api/structures/utils';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -58,7 +59,7 @@ const AdminStructureUsersPage = () => {
   const [{ userId, isMobile }] = useAppContext();
   const [search, setSearch] = useState('');
   const [sortByDate, setSortByDate] = useState(false);
-  const selfUser = Meteor.users.findOne({ _id: userId });
+  const structure = useStructure();
 
   const { changePage, page, items, total } = usePagination(
     'users.byStructure',
@@ -72,7 +73,7 @@ const AdminStructureUsersPage = () => {
   const { isLoading } = useTracker(() => {
     const roleshandlers = Meteor.subscribe('roles.adminStructure');
     const adminsIds = Meteor.roleAssignment
-      .find({ scope: selfUser.structure, 'role._id': 'adminStructure' })
+      .find({ scope: structure && structure._id, 'role._id': 'adminStructure' })
       .fetch()
       .map((assignment) => assignment.user._id);
 
@@ -148,7 +149,7 @@ const AdminStructureUsersPage = () => {
           <Grid container spacing={4}>
             <Grid item md={12}>
               <Typography variant={isMobile ? 'h6' : 'h4'}>
-                {i18n.__('pages.AdminStructureUsersPage.title')} {selfUser.structure}
+                {i18n.__('pages.AdminStructureUsersPage.title')} {structure && structure.name}
               </Typography>
             </Grid>
             <Grid item xs={12} sm={12} md={6}>

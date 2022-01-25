@@ -36,6 +36,7 @@ import Categories from '../../../api/categories/categories';
 import Spinner from '../../components/system/Spinner';
 import { useAppContext } from '../../contexts/context';
 import ServiceDetailsList from '../../components/services/ServiceDetailsList';
+import { useStructure } from '../../../api/structures/utils';
 
 const useStyles = (isMobile) =>
   makeStyles((theme) => ({
@@ -137,6 +138,7 @@ const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={r
 
 function ServicesPage({ services, categories, ready, structureMode }) {
   const [{ user, loadingUser, isMobile, servicePage }, dispatch] = useAppContext();
+  const structure = useStructure();
   const classes = useStyles(isMobile)();
   const {
     catList = [],
@@ -234,7 +236,7 @@ function ServicesPage({ services, categories, ready, structureMode }) {
             <Grid container spacing={4}>
               <Grid item xs={12} className={isMobile ? null : classes.flex}>
                 <Typography variant={isMobile ? 'h6' : 'h4'} className={classes.flex}>
-                  {i18n.__(structureMode ? user.structure : 'pages.ServicesPage.titleServices')}
+                  {i18n.__(structureMode ? structure && structure.name : 'pages.ServicesPage.titleServices')}
                 </Typography>
                 <div className={classes.spaceBetween}>{!isMobile && toggleButtons}</div>
               </Grid>
