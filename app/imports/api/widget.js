@@ -156,6 +156,8 @@ const styles = `
               </style>
           `;
 
+// The widget function is generated with a string form to be sent to the client
+// It has to grab some variables from the server before
 export const widget = () => `
 {
     // ------------------ VARIABLES WIDGET ------------------
@@ -164,9 +166,7 @@ export const widget = () => `
     let initY;
     let firstX;
     let firstY;
-    let dragged;
-    let downTimeStamp;
-    const TIMESTAMP = 500;
+    let dragged = false;
     // ------------------ HEADER WIDGET ------------------
     // Create Header
     const widgetHeader = document.createElement('div');
@@ -231,13 +231,12 @@ export const widget = () => `
   
     // ------------------ FUNCTIONS WIDGET ------------------
     const openRizimo = (e) => {
-      if (!dragged && downTimeStamp && e.timeStamp - downTimeStamp < TIMESTAMP) {
+      if (!dragged ) {
         widgetContainer.setAttribute('class', 'widget-container opened');
         iframeContainer.setAttribute('iframe-state', 'opened');
         openButton.setAttribute('class', 'widget opened');
       }
       dragged = false
-      downTimeStamp = null;
     };
     const closeRizimo = () => {
       widgetContainer.setAttribute('class', 'widget-container closed');
@@ -294,7 +293,6 @@ export const widget = () => `
       'mousedown',
       (e) => {
         e.preventDefault();
-        downTimeStamp = e.timeStamp;
         initX = openButton.offsetLeft;
         initY = openButton.offsetTop;
         firstX = e.pageX;

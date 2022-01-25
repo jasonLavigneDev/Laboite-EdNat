@@ -34,7 +34,9 @@ rest.get({ path: '/stats', version: '>=1.0.0' }, Meteor.bindEnvironment(getStats
 
 WebApp.connectHandlers.use('/scripts/widget', (req, res) => {
   const fileContent = widget();
-  res.writeHead(200);
+  res.writeHead(200, {
+    'Content-Type': 'application/javascript',
+  });
   res.write(fileContent);
   res.end();
 });
