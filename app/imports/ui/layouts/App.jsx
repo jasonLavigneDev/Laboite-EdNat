@@ -41,27 +41,25 @@ function App() {
   return loading ? (
     <Spinner />
   ) : (
-    <>
+    <Suspense fallback={<Spinner full />}>
       <CssBaseline />
-      <Suspense fallback={<Spinner full />}>
-        <Switch>
-          <PublicRoute exact path="/signin" component={SignLayout} {...state} />
-          {useKeycloak ? null : <PublicRoute exact path="/signup" component={SignLayout} {...state} />}
-          {externalBlog || !enableBlog ? null : <Route exact path="/public/" component={PublishersPage} />}
-          {externalBlog || !enableBlog ? null : <Route exact path="/public/:userId" component={ArticlesPage} />}
-          {externalBlog || !enableBlog ? null : (
-            <Route exact path="/public/:userId/:slug" component={PublicArticleDetailsPage} />
-          )}
-          <ProtectedRoute exact path="/logout" component={Logout} {...state} />
-          <Route exact path="/legal/:legalKey" component={LegalPage} />
-          <Route exact path="/contact" component={SignLayout} {...state} />
-          <ProtectedRoute path="/admin" component={AdminLayout} userId={userId} loadingUser={loadingUser} {...state} />
-          <ProtectedRoute path="/" component={MainLayout} {...state} />
-        </Switch>
-      </Suspense>
+      <Switch>
+        <PublicRoute exact path="/signin" component={SignLayout} {...state} />
+        {useKeycloak ? null : <PublicRoute exact path="/signup" component={SignLayout} {...state} />}
+        {externalBlog || !enableBlog ? null : <Route exact path="/public/" component={PublishersPage} />}
+        {externalBlog || !enableBlog ? null : <Route exact path="/public/:userId" component={ArticlesPage} />}
+        {externalBlog || !enableBlog ? null : (
+          <Route exact path="/public/:userId/:slug" component={PublicArticleDetailsPage} />
+        )}
+        <ProtectedRoute exact path="/logout" component={Logout} {...state} />
+        <Route exact path="/legal/:legalKey" component={LegalPage} />
+        <Route exact path="/contact" component={SignLayout} {...state} />
+        <ProtectedRoute path="/admin" component={AdminLayout} userId={userId} loadingUser={loadingUser} {...state} />
+        <ProtectedRoute path="/" component={MainLayout} {...state} />
+      </Switch>
       <MsgHandler />
       {!!minioEndPoint && <UploaderNotifier />}
-    </>
+    </Suspense>
   );
 }
 
