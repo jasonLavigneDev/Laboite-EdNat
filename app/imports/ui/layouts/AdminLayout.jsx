@@ -65,7 +65,7 @@ function AdminLayout() {
       ) : (
         <main className={classes.content} id="main">
           <AdminMenu />
-          <Suspense fallback={<Spinner full />}>
+          <Suspense fallback={<Spinner />}>
             <div className={classes.container}>
               {appsettings.maintenance ? (
                 <Alert className={classes.alertMaintenance} variant="filled" severity="error">

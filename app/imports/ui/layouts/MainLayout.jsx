@@ -51,8 +51,12 @@ export const useLayoutStyles = (isMobile) =>
     },
     container: {
       width: `calc(100% - ${isMobile ? 65 : 300}px)`,
+      position: 'relative',
+      minHeight: '50vh',
     },
     content: {
+      position: 'relative',
+      minHeight: '50vh',
       display: 'flex',
       flexGrow: 1,
       padding: isMobile ? null : theme.spacing(3),
@@ -100,7 +104,7 @@ function MainLayout({ appsettings, ready }) {
         <Spinner full />
       ) : (
         <main className={classes.content} id="main">
-          <Suspense fallback={<Spinner full />}>
+          <Suspense fallback={<Spinner />}>
             {appsettings.maintenance && isAdmin ? (
               <Alert className={classes.alertMaintenance} variant="filled" severity="error">
                 {i18n.__(`layouts.MainLayout.alertMaintenance`)}

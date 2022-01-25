@@ -30,20 +30,25 @@ const cubes = [
   '0.5s',
 ];
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   wrapper: {
     width: '100%',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    position: 'absolute',
-    height: '100vh',
+    position: 'relative',
+    height: '100%',
     backgroundColor: 'rgba(255, 255, 255, 0.75)',
     zIndex: 10,
     animation: '$fade-in 0.5s ease-in-out',
   },
   mainLoader: {
     position: 'fixed',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    zIndex: 100000,
   },
   loaderWrapper: {
     width: '100%',
@@ -69,7 +74,7 @@ const useStyles = makeStyles(() => ({
     height: '20%',
     float: 'left',
     animation: '$sk-grid 1.5s infinite ease-in-out',
-    backgroundImage: 'url("/images/logo.png")',
+    backgroundImage: `url("${theme.logos.SMALL_LOGO}")`,
     backgroundRepeat: 'no-repeat',
     backgroundAttachment: 'inherit',
     backgroundSize: 60,
