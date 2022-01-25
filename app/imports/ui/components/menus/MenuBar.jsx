@@ -14,8 +14,6 @@ import AppsIcon from '@material-ui/icons/Apps';
 import { useAppContext } from '../../contexts/context';
 import updateDocumentTitle from '../../utils/updateDocumentTitle';
 
-const isRizomo = Meteor.settings.public.theme === 'rizomo';
-
 export const links = [
   {
     path: '/',
@@ -123,7 +121,7 @@ const MenuBar = ({ mobile }) => {
         indicator: classes.indicator,
       }}
       value={currentLink ? currentLink.path : false}
-      indicatorColor={isRizomo ? 'primary' : 'secondary'}
+      indicatorColor="secondary"
       textColor="primary"
       aria-label="menu links"
       variant="scrollable"

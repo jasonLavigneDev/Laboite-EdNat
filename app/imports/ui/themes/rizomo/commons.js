@@ -1,13 +1,13 @@
 const COMMONS = {
   signinBackground: '',
   logos: {
-    SMALL_LOGO: '/images/logos/rizomo/logo-carre.jpg',
+    SMALL_LOGO: '/images/logos/rizomo/Robot _R.svg',
     LONG_LOGO: '/images/logos/rizomo/logo-rizomo.png',
-    SMALL_LOGO_MAINTENANCE: '/images/logos/rizomo/logo-carre.jpg',
+    SMALL_LOGO_MAINTENANCE: '/images/logos/rizomo/Robot _R.svg',
     LONG_LOGO_MAINTENANCE: '/images/logos/rizomo/logo-rizomo.png',
   },
   shape: {
-    headerHeight: 168,
+    headerHeight: 100,
     borderRadius: 2,
   },
   // shadows: Array(25)

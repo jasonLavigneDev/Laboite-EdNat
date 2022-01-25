@@ -9,9 +9,6 @@ import SignIn from '../pages/system/SignIn';
 import Footer from '../components/menus/Footer';
 import Contact from '../pages/system/Contact';
 import { useAppContext } from '../contexts/context';
-import RizomoTitle from '../components/menus/RizomoTitle';
-
-const isRizomo = Meteor.settings.public.theme === 'rizomo';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,9 +40,6 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: 'auto',
     paddingBottom: '5%',
   },
-  imgLogoRizomo: {
-    display: 'flex',
-  },
   mainFeaturedPostContent: {
     position: 'relative',
     // padding: theme.spacing(3),
@@ -71,9 +65,8 @@ export default function SignLayout() {
         </Grid>
         <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
           <div className={classes.paper}>
-            <div className={isRizomo ? classes.imgLogoRizomo : classes.imgLogo}>
+            <div className={classes.imgLogo}>
               <img src={theme.logos.LONG_LOGO} className={classes.imgLogo} alt="Logo" />
-              {isRizomo && !isMobile && <RizomoTitle />}
             </div>
             <Switch>
               <Route exact path="/signin" component={SignIn} />
