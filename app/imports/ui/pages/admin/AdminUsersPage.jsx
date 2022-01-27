@@ -9,7 +9,6 @@ import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import i18n from 'meteor/universe:i18n';
 import ListItemText from '@material-ui/core/ListItemText';
-import SearchIcon from '@material-ui/icons/Search';
 import ClearIcon from '@material-ui/icons/Clear';
 import CheckIcon from '@material-ui/icons/Check';
 import PersonAddDisabled from '@material-ui/icons/PersonAddDisabled';
@@ -19,10 +18,10 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import { makeStyles } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
 import Tooltip from '@material-ui/core/Tooltip';
-import TextField from '@material-ui/core/TextField';
-import InputAdornment from '@material-ui/core/InputAdornment';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
+import SendIcon from '@material-ui/icons/Send';
+import VpnKeyIcon from '@material-ui/icons/VpnKey';
 
 import IconButton from '@material-ui/core/IconButton';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
@@ -31,13 +30,15 @@ import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Pagination from '@material-ui/lab/Pagination';
 import { Roles } from 'meteor/alanning:roles';
-import { structures } from '../../../api/users/structures';
+import { getStructureIds } from '../../../api/users/structures';
 import { usePagination } from '../../utils/hooks';
 import Spinner from '../../components/system/Spinner';
-import debounce from '../../utils/debounce';
 import { useAppContext } from '../../contexts/context';
 import UserAvatar from '../../components/users/UserAvatar';
 import AdminGroupQuota from '../../components/users/AdminGroupQuota';
+import SearchField from '../../components/system/SearchField';
+import AdminSendNotification from '../../components/users/AdminSendNotification';
+import { getStructure } from '../../../api/structures/utils';
 
 let userData = {};
 const useStyles = makeStyles((theme) => ({
@@ -72,6 +73,7 @@ const ITEM_PER_PAGE = 10;
 
 const AdminUsersPage = () => {
   const [openQuota, setOpenQuota] = useState(false);
+  const [openNotif, setOpenNotif] = useState(false);
   const classes = useStyles();
   const [{ isMobile }] = useAppContext();
   const [search, setSearch] = useState('');
@@ -95,7 +97,7 @@ const AdminUsersPage = () => {
 
     const roleshandlers2 = Meteor.subscribe('roles.adminStructureAll');
     const adminsIds2 = Meteor.roleAssignment
-      .find({ scope: { $in: structures }, 'role._id': 'adminStructure' })
+      .find({ scope: { $in: getStructureIds() }, 'role._id': 'adminStructure' })
       .fetch()
       .map((assignment) => assignment.user._id);
 
@@ -109,8 +111,7 @@ const AdminUsersPage = () => {
     changePage(value);
   };
   const searchRef = useRef();
-  const debouncedSetSearch = debounce(setSearch, 500);
-  const updateSearch = (e) => debouncedSetSearch(e.target.value);
+  const updateSearch = (e) => setSearch(e.target.value);
   const resetSearch = () => setSearch('');
   useEffect(() => {
     if (searchRef.current) searchRef.current.value = search;
@@ -135,6 +136,15 @@ const AdminUsersPage = () => {
     });
   };
   const isStructureAdmin = (user) => Roles.userIsInRole(user._id, 'adminStructure', user.structure);
+  useTracker(() => {
+    const structuresIds = [];
+    items.forEach(({ structure }) => {
+      if (structure && structuresIds.indexOf(structuresIds) === -1) {
+        structuresIds.push(structure);
+      }
+    });
+    Meteor.subscribe('structures.ids', { ids: structuresIds });
+  });
 
   const changeAdminStructure = (user) => {
     const method = isStructureAdmin(user) ? 'users.unsetAdminStructure' : 'users.setAdminStructure';
@@ -163,6 +173,9 @@ const AdminUsersPage = () => {
     }`;
   const UserActions = ({ user }) => {
     const [verifyDelete, setVerifyDelete] = useState(false);
+    const copyUserId = () => {
+      navigator.clipboard.writeText(user._id).then(msg.success(i18n.__('pages.AdminUsersPage.successCopyUserId')));
+    };
     return verifyDelete ? (
       <>
         <Typography
@@ -224,6 +237,24 @@ const AdminUsersPage = () => {
             <SettingsApplicationsIcon />
           </IconButton>
         </Tooltip>
+
+        <Tooltip title={i18n.__('pages.AdminUsersPage.copyUserId')} aria-label="show">
+          <IconButton edge="end" aria-label="show" onClick={copyUserId}>
+            <VpnKeyIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title={i18n.__('pages.AdminUsersPage.sendNotif')} aria-label="send">
+          <IconButton
+            edge="end"
+            aria-label={i18n.__('pages.AdminUsersPage.sendNotif')}
+            onClick={() => {
+              userData = user;
+              setOpenNotif(true);
+            }}
+          >
+            <SendIcon />
+          </IconButton>
+        </Tooltip>
         <Tooltip title={i18n.__('pages.AdminUsersPage.deleteUser')} aria-label="del">
           <IconButton edge="end" aria-label="delete" onClick={() => setVerifyDelete(true)}>
             <DeleteIcon />
@@ -247,30 +278,12 @@ const AdminUsersPage = () => {
                 <Typography variant={isMobile ? 'h6' : 'h4'}>{i18n.__('pages.AdminUsersPage.title')}</Typography>
               </Grid>
               <Grid item xs={12} sm={12} md={6}>
-                <TextField
-                  margin="normal"
-                  id="search"
-                  label={i18n.__('pages.AdminUsersPage.searchText')}
-                  name="search"
-                  fullWidth
-                  onChange={updateSearch}
-                  type="text"
-                  variant="outlined"
+                <SearchField
+                  updateSearch={updateSearch}
+                  search={search}
                   inputRef={searchRef}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SearchIcon />
-                      </InputAdornment>
-                    ),
-                    endAdornment: search ? (
-                      <InputAdornment position="end">
-                        <IconButton onClick={resetSearch}>
-                          <ClearIcon />
-                        </IconButton>
-                      </InputAdornment>
-                    ) : null,
-                  }}
+                  resetSearch={resetSearch}
+                  label={i18n.__('pages.AdminUsersPage.searchText')}
                 />
               </Grid>
               <Grid item xs={12} sm={12} md={6} lg={6} className={classes.pagination}>
@@ -298,46 +311,55 @@ const AdminUsersPage = () => {
               </Grid>
               <Grid item xs={12} sm={12} md={12}>
                 <List className={classes.list} disablePadding>
-                  {items.map((user, i) => [
-                    <ListItem alignItems="flex-start" key={`user-${user.emails[0].address}`}>
-                      <ListItemAvatar>
-                        <UserAvatar
-                          customClass={
+                  {items.map((user, i) => {
+                    const structure = getStructure(user.structure);
+
+                    return [
+                      <ListItem alignItems="flex-start" key={`user-${user.emails[0].address}`}>
+                        <ListItemAvatar>
+                          <UserAvatar
+                            customClass={
+                              isAdmin(user)
+                                ? classes.admin
+                                : isStructureAdmin(user)
+                                ? classes.adminstructure
+                                : classes.avatar
+                            }
+                            userAvatar={user.avatar || user.username}
+                            userFirstName={user.firstName}
+                          />
+                        </ListItemAvatar>
+                        <ListItemText
+                          primary={`${user.firstName} ${user.lastName}${
                             isAdmin(user)
-                              ? classes.admin
+                              ? ` (${i18n.__('pages.AdminUsersPage.admin')})`
                               : isStructureAdmin(user)
-                              ? classes.adminstructure
-                              : classes.avatar
+                              ? ` (${i18n.__('pages.AdminUsersPage.adminStructure')})`
+                              : ''
+                          } ${loginInfo(user)}`}
+                          secondary={
+                            <>
+                              <Typography
+                                component="span"
+                                variant="body2"
+                                className={classes.inline}
+                                color="textPrimary"
+                              >
+                                {user.emails[0].address}
+                              </Typography>
+                              {` - ${structure ? structure.name : i18n.__('pages.AdminUsersPage.undefined')}`}
+                            </>
                           }
-                          userAvatar={user.avatar || user.username}
-                          userFirstName={user.firstName}
                         />
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={`${user.firstName} ${user.lastName}${
-                          isAdmin(user)
-                            ? ` (${i18n.__('pages.AdminUsersPage.admin')})`
-                            : isStructureAdmin(user)
-                            ? ` (${i18n.__('pages.AdminUsersPage.adminStructure')})`
-                            : ''
-                        } ${loginInfo(user)}`}
-                        secondary={
-                          <>
-                            <Typography component="span" variant="body2" className={classes.inline} color="textPrimary">
-                              {user.emails[0].address}
-                            </Typography>
-                            {` - ${user.structure ? user.structure : i18n.__('pages.AdminUsersPage.undefined')}`}
-                          </>
-                        }
-                      />
-                      <ListItemSecondaryAction>
-                        <UserActions user={user} />
-                      </ListItemSecondaryAction>
-                    </ListItem>,
-                    i < ITEM_PER_PAGE - 1 && i < total - 1 && (
-                      <Divider variant="inset" component="li" key={`divider-${user.emails[0].address}`} />
-                    ),
-                  ])}
+                        <ListItemSecondaryAction>
+                          <UserActions user={user} />
+                        </ListItemSecondaryAction>
+                      </ListItem>,
+                      i < ITEM_PER_PAGE - 1 && i < total - 1 && (
+                        <Divider variant="inset" component="li" key={`divider-${user.emails[0].address}`} />
+                      ),
+                    ];
+                  })}
                 </List>
               </Grid>
               {total > ITEM_PER_PAGE && (
@@ -348,7 +370,8 @@ const AdminUsersPage = () => {
             </Grid>
           )}
         </Container>
-        {openQuota ? <AdminGroupQuota data={userData} open={openQuota} onClose={() => setOpenQuota(false)} /> : null}
+        {openQuota && <AdminGroupQuota data={userData} open={openQuota} onClose={() => setOpenQuota(false)} />}
+        {openNotif && <AdminSendNotification data={userData} open={openNotif} onClose={() => setOpenNotif(false)} />}
       </div>
     </Fade>
   );

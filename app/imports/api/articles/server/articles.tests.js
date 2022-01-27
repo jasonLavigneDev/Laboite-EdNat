@@ -22,6 +22,7 @@ import {
 } from '../methods';
 import './publications';
 import './factories';
+import '../../structures/server/factories';
 
 describe('articles', function () {
   describe('mutators', function () {
@@ -39,7 +40,7 @@ describe('articles', function () {
         email,
         username: email,
         password: 'toto',
-        structure: faker.company.companyName(),
+        structure: Random.id(),
         firstName: faker.name.firstName(),
         lastName: faker.name.lastName(),
       });
@@ -109,7 +110,7 @@ describe('articles', function () {
         email,
         username: email,
         password: 'toto',
-        structure: `userId_${faker.company.companyName()}`,
+        structure: `userId_${Random.id()}`,
         firstName: faker.name.firstName(),
         lastName: faker.name.lastName(),
       });
@@ -117,7 +118,7 @@ describe('articles', function () {
         email: faker.internet.email(),
         username: 'otherUser',
         password: 'toto',
-        structure: faker.company.companyName(),
+        structure: Random.id(),
         firstName: faker.name.firstName(),
         lastName: faker.name.lastName(),
       });

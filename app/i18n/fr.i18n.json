@@ -74,6 +74,15 @@
         "name": "Nom"
       }
     },
+    "structures": {
+      "unknownStructure": "La structure n'existe pas.",
+      "name": "Libellé",
+      "labels": {
+        "id": "Id de Structure",
+        "name": "Nom de la structure",
+        "parent": "Structure Supérieure"
+      }
+    },
     "users": {
       "unknownUser": "L'utilisateur n'existe pas.",
       "mustBeLoggedIn": "Vous devez être connecté.",
@@ -445,12 +454,22 @@
       "inputSearchLabel": "Rechercher..."
     },
     "MainMenu": {
-      "menuAdminGroups": "Gestion des Groupes",
       "menuUserBookmarks": "Marque-pages",
       "menuProfileLabel": "Profil",
       "menuLogoutLabel": "Se déconnecter",
       "menuMedias": "Stockage de Médias",
-      "menuAdminApp": "Administration"
+      "menuAdminApp": "Administration",
+      "menuAdminServices": "Gestion des Services",
+      "menuAdminUserValidation": "Validation des utilisateurs",
+      "menuAdminNextcloudUrl": "Gestion des URL Nextcloud",
+      "menuAdminCategories": "Gestion des categories",
+      "menuAdminTags": "Gestion des mots clé",
+      "menuAdminGroups": "Gestion des Groupes",
+      "menuAdminUsers": "Gestion des utilisateurs",
+      "menuAdminAppSettings": "Réglages Administrateurs",
+      "menuAdminStructureUsers": "Utilisateurs de la structure",
+      "menuAdminStructureServices": "Services de la structure",
+      "menuAdminBackHome": "Retour à l'espace perso"
     },
     "AdminMenu": {
       "title": "Administration",
@@ -464,7 +483,8 @@
       "menuAdminAppSettings": "Réglages Administrateurs",
       "menuAdminStructureUsers": "Utilisateurs de la structure",
       "menuAdminStructureServices": "Services de la structure",
-      "menuAdminBackHome": "Retour à l'espace perso"
+      "menuAdminBackHome": "Retour à l'espace perso",
+      "menuUserStructure": "Gestion des Structures"
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Votre compte n'a pas été activé",
@@ -659,7 +679,7 @@
       "OpenInWindow": "Ouvrir le média",
       "copyUrl": "Copier l'URL de ce média"
     },
-    "UserAvatarEdit": {
+    "AvatarEdit": {
       "title": "Créez votre avatar",
       "subtitle": "à patir d'une image",
       "sendImage": "Envoyer cet avatar",
@@ -678,7 +698,7 @@
       "subtitle": "depuis la galerie d'images",
       "cancel": "Annuler"
     },
-    "UserAvatarCamCapture": {
+    "AvatarCamCapture": {
       "title": "Créez votre avatar",
       "subtitle": "à partir de la webcam",
       "takePicture": "Prendre une photo",
@@ -693,6 +713,16 @@
       "ValidateForm": "Valider",
       "ncloudURL": "URL Nextcloud",
       "changeURL": "Renouveller"
+    },
+    "AdminSendNotification": {
+      "title": "Envoyer une notification à ",
+      "subtitle": "Envoyer une notification à ",
+      "cancel": "Annuler",
+      "title_label": "Titre",
+      "content_label": "Contenu de la notification",
+      "ValidateForm": "Valider",
+      "type_label": "Type de notification",
+      "info_type": "Info"
     },
     "SkipLink": {
       "skipToContent": "Aller au contenu"
@@ -821,7 +851,12 @@
       "structureMessage": "Cocher cette case pour lier tous les articles importés à votre structure de rattachement actuelle.",
       "advancedPersonalPage": "Activer l'espace personnel avancé",
       "languageLabel": "Choix de la langue",
-      "activateArticles": "Activer les publications"
+      "activateArticles": "Activer les publications",
+      "accessTokenTitle": "Récupérer le token d'accès",
+      "accessTokenMessage": "Votre token d'accès est votre clé API de communication entre les différentes applications.",
+      "getAccessToken": "Récupérer le Token",
+      "noAccessToken": "Aucun token à récupérer",
+      "successCopyAccessToken": "Token copié avec succès"
     },
     "NotFound": {
       "backButtonLabel": "Retour",
@@ -904,6 +939,19 @@
         "body_editRow_deleteText": "Souhaitez vous réellement supprimer ce Mot clé ?"
       }
     },
+    "AdminStructuresManagementPage": {
+      "title": "Gestion des structures",
+      "columnName": "Nom",
+      "materialTableLocalization": {
+        "toolbar_searchPlaceholder": "Trouver structure",
+        "pagination_labelRowsSelect": "Structures par page",
+        "body_emptyDataSourceMessage": "Aucune structure enregistrée",
+        "body_addTooltip": "Ajouter une structure",
+        "body_editTooltip": "Modifier cette structure",
+        "body_deleteTooltip": "Supprimer cette structure",
+        "body_editRow_deleteText": "Souhaitez vous réellement supprimer cette structure ?"
+      }
+    },
     "AdminGroupsPage": {
       "title": "Gestion des groupes",
       "columnName": "Nom",
@@ -963,7 +1011,10 @@
       "successSetAdminStructure": "Droits d'administrateur de structure donnés",
       "successUnsetAdminStructure": "Droits d'administrateur de structure révoqués",
       "adminStructure": "Administrateur de structure",
-      "manageUser": "Gérer l'utilisateur"
+      "manageUser": "Gérer l'utilisateur",
+      "sendNotif": "Envoyer notification",
+      "successCopyUserId": "ID de l'utilisateur copié avec succès",
+      "copyUserId": "Copier l'ID de l'utilisateur"
     },
     "AdminUserValidationPage": {
       "title": "Utilisateurs en attente de validation",
@@ -1029,7 +1080,8 @@
       "addScreenshots": "Ajouter un écran",
       "save": "Sauvegarder",
       "update": "Mettre à jour",
-      "cancel": "Annuler"
+      "cancel": "Annuler",
+      "logo_url": "URL du logo"
     },
     "AdminSingleGroupPage": {
       "edition": "Édition du groupe",

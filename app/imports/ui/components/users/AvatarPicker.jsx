@@ -11,10 +11,11 @@ import PublishIcon from '@material-ui/icons/Publish';
 import CameraEnhanceIcon from '@material-ui/icons/CameraEnhance';
 import FaceIcon from '@material-ui/icons/Face';
 import { useAppContext } from '../../contexts/context';
-import UserAvatarEdit from './UserAvatarEdit';
-import UserAvatarCamCapture from './UserAvatarCamCapture';
-import UserAvatarGallery from './UserAvatarGallery';
+import AvatarGallery from './AvatarGallery';
 import UserAvatar from './UserAvatar';
+import AvatarCamCapture from './AvatarCamCapture';
+import AvatarEdit from './AvatarEdit';
+import GroupAvatar from '../groups/GroupAvatar';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -70,13 +71,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AvatarPicker = ({ userAvatar, userFirstName, onAssignAvatar }) => {
+const AvatarPicker = ({ userAvatar, userFirstName, onAssignAvatar, avatar, type, profil }) => {
   const classes = useStyles();
   const [{ isMobile }] = useAppContext();
   const [imageAvatar, setImageAvatar] = useState('');
   const [openAvatarEdit, setOpenAvatarEdit] = useState(false);
   const [openCamCapture, setOpenCamCapture] = useState(false);
   const [openAvatarGallery, setOpenAvatarGallery] = useState(false);
+  const { minioEndPoint } = Meteor.settings.public;
 
   const uploadAvatarImg = ({ target: { files = [] } }) => {
     const readerImg = new FileReader();
@@ -93,45 +95,56 @@ const AvatarPicker = ({ userAvatar, userFirstName, onAssignAvatar }) => {
     setOpenAvatarEdit(true);
   };
 
+  const renderAvatar = userFirstName ? (
+    isMobile ? (
+      <UserAvatar
+        customClass={userAvatar ? classes.avatarMobile : classes.avatarMobileDefault}
+        userAvatar={userAvatar || ''}
+        userFirstName={userFirstName || ''}
+      />
+    ) : (
+      <UserAvatar
+        customClass={userAvatar ? classes.avatar : classes.avatarDefault}
+        userAvatar={userAvatar || ''}
+        userFirstName={userFirstName || ''}
+      />
+    )
+  ) : (
+    <GroupAvatar type={type} avatar={avatar} profil={profil} />
+  );
+
   return (
     <div>
       <Grid container>
         <Grid item xs={12} className={classes.buttonWrapper}>
-          {isMobile ? (
-            <UserAvatar
-              customClass={userAvatar ? classes.avatarMobile : classes.avatarMobileDefault}
-              userAvatar={userAvatar || ''}
-              userFirstName={userFirstName || ''}
-            />
-          ) : (
-            <UserAvatar
-              customClass={userAvatar ? classes.avatar : classes.avatarDefault}
-              userAvatar={userAvatar || ''}
-              userFirstName={userFirstName || ''}
-            />
-          )}
+          {renderAvatar}
         </Grid>
         <Grid item xs={12} className={classes.buttonWrapper}>
-          <Tooltip title={i18n.__('pages.ProfilePage.uploadImg')} aria-label={i18n.__('pages.ProfilePage.uploadImg')}>
-            <IconButton tabIndex={-1}>
-              <PublishIcon />
-              <Input className={classes.inputFile} type="file" id="avatarUpload" onChange={uploadAvatarImg} />
-            </IconButton>
-          </Tooltip>
+          {!!minioEndPoint && (
+            <Tooltip title={i18n.__('pages.ProfilePage.uploadImg')} aria-label={i18n.__('pages.ProfilePage.uploadImg')}>
+              <IconButton tabIndex={-1}>
+                <PublishIcon />
+                <Input className={classes.inputFile} type="file" id="avatarUpload" onChange={uploadAvatarImg} />
+              </IconButton>
+            </Tooltip>
+          )}
           <Tooltip title={i18n.__('pages.ProfilePage.useGallery')} aria-label={i18n.__('pages.ProfilePage.useGallery')}>
             <IconButton onClick={() => setOpenAvatarGallery(true)}>
               <FaceIcon />
             </IconButton>
           </Tooltip>
-          <Tooltip title={i18n.__('pages.ProfilePage.useCam')} aria-label={i18n.__('pages.ProfilePage.useCam')}>
-            <IconButton onClick={() => setOpenCamCapture(true)}>
-              <CameraEnhanceIcon />
-            </IconButton>
-          </Tooltip>
+          {!!minioEndPoint && (
+            <Tooltip title={i18n.__('pages.ProfilePage.useCam')} aria-label={i18n.__('pages.ProfilePage.useCam')}>
+              <IconButton onClick={() => setOpenCamCapture(true)}>
+                <CameraEnhanceIcon />
+              </IconButton>
+            </Tooltip>
+          )}
         </Grid>
       </Grid>
       {openAvatarEdit ? (
-        <UserAvatarEdit
+        <AvatarEdit
+          profil={profil}
           open={openAvatarEdit}
           avatar={imageAvatar}
           onClose={() => setOpenAvatarEdit(false)}
@@ -139,15 +152,16 @@ const AvatarPicker = ({ userAvatar, userFirstName, onAssignAvatar }) => {
         />
       ) : null}
       {openCamCapture ? (
-        <UserAvatarCamCapture
+        <AvatarCamCapture
           open={openCamCapture}
           onClose={() => setOpenCamCapture(false)}
           onSendImage={sendCamCaptureToEditor}
         />
       ) : null}
       {openAvatarGallery ? (
-        <UserAvatarGallery
+        <AvatarGallery
           open={openAvatarGallery}
+          i18nCode={userFirstName ? 'UserAvatarGallery' : 'GroupAvatarGallery'}
           onClose={() => setOpenAvatarGallery(false)}
           onSendImage={onAssignAvatar}
         />
@@ -156,10 +170,19 @@ const AvatarPicker = ({ userAvatar, userFirstName, onAssignAvatar }) => {
   );
 };
 
+AvatarPicker.defaultProps = {
+  profil: '',
+  userAvatar: '',
+  userFirstName: '',
+};
+
 AvatarPicker.propTypes = {
-  userAvatar: PropTypes.string.isRequired,
-  userFirstName: PropTypes.string.isRequired,
+  userAvatar: PropTypes.string,
+  userFirstName: PropTypes.string,
   onAssignAvatar: PropTypes.func.isRequired,
+  avatar: PropTypes.string.isRequired,
+  type: PropTypes.number.isRequired,
+  profil: PropTypes.string,
 };
 
 export default AvatarPicker;

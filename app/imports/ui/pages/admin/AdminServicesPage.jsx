@@ -12,13 +12,13 @@ import Spinner from '../../components/system/Spinner';
 import Services from '../../../api/services/services';
 import { removeService } from '../../../api/services/methods';
 import setMaterialTableLocalization from '../../components/initMaterialTableLocalization';
-import { useAppContext } from '../../contexts/context';
+import { useStructure } from '../../../api/structures/utils';
 
 function AdminServicesPage({ services, loading, structureMode }) {
   const history = useHistory();
   // used to help generate url in structure mode
   const urlStruct = structureMode ? 'structure' : '';
-  const [{ user }] = useAppContext();
+  const structure = useStructure();
   const columns = [
     {
       title: i18n.__('pages.AdminServicesPage.columnLogo'),
@@ -71,7 +71,9 @@ function AdminServicesPage({ services, loading, structureMode }) {
           <Container style={{ overflowX: 'auto' }}>
             <MaterialTable
               // other props
-              title={`${i18n.__('pages.AdminServicesPage.title')} ${structureMode ? `(${user.structure})` : ''}`}
+              title={`${i18n.__('pages.AdminServicesPage.title')} ${
+                structureMode && structure ? `(${structure.name})` : ''
+              }`}
               columns={columns}
               data={services.map((row) => ({ ...row, id: row._id }))}
               options={options}

@@ -6,6 +6,7 @@ import Rest from 'connect-rest';
 
 import addNotification from './notifications/server/rest';
 import getStats from './stats/server/rest';
+import { widget } from './widget';
 
 WebApp.connectHandlers.use(bodyParser.urlencoded({ extended: false }));
 WebApp.connectHandlers.use(bodyParser.json());
@@ -30,3 +31,12 @@ WebApp.connectHandlers.use(rest.processRequest());
 // rest.get('/notifications/?userid', Meteor.bindEnvironment(getNotifications));
 rest.post({ path: '/notifications', version: '>=1.0.0' }, Meteor.bindEnvironment(addNotification));
 rest.get({ path: '/stats', version: '>=1.0.0' }, Meteor.bindEnvironment(getStats));
+
+WebApp.connectHandlers.use('/scripts/widget', (req, res) => {
+  const fileContent = widget();
+  res.writeHead(200, {
+    'Content-Type': 'application/javascript',
+  });
+  res.write(fileContent);
+  res.end();
+});

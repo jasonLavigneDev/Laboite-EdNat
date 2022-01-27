@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { Meteor } from 'meteor/meteor';
 import i18n from 'meteor/universe:i18n';
 import { makeStyles } from '@material-ui/core/styles';
+import { withTracker } from 'meteor/react-meteor-data';
 import Container from '@material-ui/core/Container';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
@@ -23,13 +25,13 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import MailIcon from '@material-ui/icons/Mail';
 import Spinner from '../../components/system/Spinner';
 import CustomSelect from '../../components/admin/CustomSelect';
-import { structureOptions } from '../../../api/users/structures';
 import { useAppContext } from '../../contexts/context';
 import LanguageSwitcher from '../../components/system/LanguageSwitcher';
 import debounce from '../../utils/debounce';
 import { useObjectState } from '../../utils/hooks';
 import { downloadBackupPublications, uploadBackupPublications } from '../../../api/articles/methods';
 import AvatarPicker from '../../components/users/AvatarPicker';
+import Structures from '../../../api/structures/structures';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -101,7 +103,7 @@ const logoutTypeLabels = {
   global: 'api.users.logoutTypes.global',
 };
 
-const ProfilePage = () => {
+const ProfilePage = ({ structures, loading }) => {
   const [, dispatch] = useAppContext();
   const [userData, setUserData] = useState(defaultState);
   const [submitOk, setSubmitOk] = useState(false);
@@ -109,8 +111,7 @@ const ProfilePage = () => {
   const [submitted, setSubmitted] = useState(false);
   const [structChecked, setStructChecked] = useState(false);
   const classes = useStyles();
-  const keycloakMode = Meteor.settings.public.enableKeycloak === true;
-  const { enableBlog } = Meteor.settings.public;
+  const { enableBlog, enableKeycloak } = Meteor.settings.public;
   const [{ user, loadingUser, isMobile }] = useAppContext();
 
   const structureLabel = React.useRef(null);
@@ -126,9 +127,10 @@ const ProfilePage = () => {
   const logoutTypeLabel = React.useRef(null);
   const [labelLogoutTypeWidth, setLabelLogoutTypeWidth] = React.useState(0);
   useEffect(() => {
-    if (keycloakMode) setLabelLogoutTypeWidth(logoutTypeLabel.current.offsetWidth);
+    if (enableKeycloak) setLabelLogoutTypeWidth(logoutTypeLabel.current.offsetWidth);
   }, []);
   const [tempImageLoaded, setTempImageLoaded] = useState(false);
+  const { minioEndPoint } = Meteor.settings.public;
 
   const checkSubmitOk = () => {
     const errSum = Object.keys(errors).reduce((sum, name) => {
@@ -204,7 +206,7 @@ const ProfilePage = () => {
   const debouncedValidateName = debounce(validateName, 500);
 
   const resetForm = () => {
-    if (tempImageLoaded) {
+    if (tempImageLoaded && minioEndPoint) {
       // A temporary image has been loaded in minio with name "Avatar_TEMP"
       // => delete it
       Meteor.call('files.selectedRemove', {
@@ -296,7 +298,7 @@ const ProfilePage = () => {
     }
     if (userData.avatar !== user.avatar) {
       modifications = true;
-      if (tempImageLoaded) {
+      if (tempImageLoaded && minioEndPoint) {
         // A temporary image has been loaded in user minio with name "Avatar_TEMP"
         if (userData.avatar.includes('Avatar_TEMP')) {
           // This image will be the new user's avatar
@@ -408,6 +410,18 @@ const ProfilePage = () => {
     }
   };
 
+  const getAccessToken = () => {
+    Meteor.call('users.getAccessToken', (error, result) => {
+      if (!result) {
+        msg.error(i18n.__('pages.ProfilePage.noAccessToken'));
+      } else if (error) {
+        msg.error(error.reason);
+      } else {
+        navigator.clipboard.writeText(result).then(msg.success(i18n.__('pages.ProfilePage.successCopyAccessToken')));
+      }
+    });
+  };
+
   if (loadingUser) {
     return <Spinner />;
   }
@@ -421,7 +435,7 @@ const ProfilePage = () => {
             <Grid container className={classes.form} spacing={2}>
               <Grid container spacing={2} style={{ alignItems: 'center' }}>
                 <Grid item xs={isMobile ? 16 : 8} style={{ paddingLeft: '18px' }}>
-                  {keycloakMode ? (
+                  {enableKeycloak ? (
                     <Paper className={classes.keycloakMessage}>
                       <Typography>{i18n.__('pages.ProfilePage.keycloakProcedure')}</Typography>
                       <br />
@@ -433,7 +447,7 @@ const ProfilePage = () => {
                     </Paper>
                   ) : null}
                   <TextField
-                    disabled={keycloakMode}
+                    disabled={enableKeycloak}
                     margin="normal"
                     autoComplete="fname"
                     id="firstName"
@@ -445,10 +459,10 @@ const ProfilePage = () => {
                     fullWidth
                     type="text"
                     value={userData.firstName || ''}
-                    variant="outlined"
+                    variant="filled"
                   />
                   <TextField
-                    disabled={keycloakMode}
+                    disabled={enableKeycloak}
                     margin="normal"
                     id="lastName"
                     autoComplete="lname"
@@ -460,10 +474,10 @@ const ProfilePage = () => {
                     fullWidth
                     type="text"
                     value={userData.lastName || ''}
-                    variant="outlined"
+                    variant="filled"
                   />
                   <TextField
-                    disabled={keycloakMode}
+                    disabled={enableKeycloak}
                     margin="normal"
                     id="email"
                     label={i18n.__('pages.SignUp.emailLabel')}
@@ -475,9 +489,9 @@ const ProfilePage = () => {
                     onChange={onUpdateField}
                     type="text"
                     value={userData.email || ''}
-                    variant="outlined"
+                    variant="filled"
                   />
-                  <FormControl variant="outlined" fullWidth disabled={keycloakMode} margin="normal">
+                  <FormControl variant="filled" fullWidth disabled={enableKeycloak} margin="normal">
                     <InputLabel
                       error={errors.username !== ''}
                       htmlFor="username"
@@ -492,6 +506,7 @@ const ProfilePage = () => {
                       value={userData.username}
                       error={errors.username !== ''}
                       onChange={onUpdateField}
+                      // variant="filled"
                       labelWidth={labelUsernameWidth}
                       endAdornment={
                         <InputAdornment position="end">
@@ -500,7 +515,7 @@ const ProfilePage = () => {
                             aria-label={i18n.__('pages.ProfilePage.useEmail')}
                           >
                             <span>
-                              <IconButton onClick={useEmail} disabled={keycloakMode}>
+                              <IconButton onClick={useEmail} disabled={enableKeycloak}>
                                 <MailIcon />
                               </IconButton>
                             </span>
@@ -523,22 +538,26 @@ const ProfilePage = () => {
               </Grid>
               <Grid item />
               <Grid item className={classes.maxWidth}>
-                <FormControl variant="outlined" className={classes.formControl} fullWidth>
+                <FormControl variant="filled" className={classes.formControl} fullWidth>
                   <InputLabel htmlFor="structure" id="structure-label" ref={structureLabel}>
                     {i18n.__('api.users.labels.structure')}
                   </InputLabel>
-                  <CustomSelect
-                    value={userData.structureSelect || ''}
-                    error={false}
-                    onChange={onUpdateField}
-                    labelWidth={labelStructureWidth}
-                    options={structureOptions}
-                  />
+                  {loading ? (
+                    <Spinner />
+                  ) : (
+                    <CustomSelect
+                      value={userData.structureSelect || ''}
+                      error={false}
+                      onChange={onUpdateField}
+                      labelWidth={labelStructureWidth}
+                      options={structures.map((opt) => ({ value: opt._id, label: opt.name }))}
+                    />
+                  )}
                 </FormControl>
               </Grid>
-              {keycloakMode ? (
+              {enableKeycloak ? (
                 <Grid item>
-                  <FormControl variant="outlined" fullWidth>
+                  <FormControl variant="filled" fullWidth>
                     <InputLabel htmlFor="logoutType" id="logoutType-label" ref={logoutTypeLabel}>
                       {i18n.__('pages.ProfilePage.logoutType')}
                     </InputLabel>
@@ -643,9 +662,38 @@ const ProfilePage = () => {
             </p>
           ) : null}
         </Paper>
+        {!!enableKeycloak && (
+          <Paper className={classes.root}>
+            <Typography variant={isMobile ? 'h4' : 'h5'}>{i18n.__('pages.ProfilePage.accessTokenTitle')}</Typography>
+            <p>{i18n.__('pages.ProfilePage.accessTokenMessage')}</p>
+
+            <Grid container centered>
+              <Grid item xs={12} sm={6} md={6} className={classes.buttonWrapper}>
+                <Button variant="contained" onClick={getAccessToken} color="primary">
+                  {i18n.__('pages.ProfilePage.getAccessToken')}
+                </Button>
+              </Grid>
+            </Grid>
+          </Paper>
+        )}
       </Container>
     </Fade>
   );
 };
 
-export default ProfilePage;
+// export default ProfilePage;
+
+ProfilePage.propTypes = {
+  structures: PropTypes.arrayOf(PropTypes.object).isRequired,
+  loading: PropTypes.bool.isRequired,
+};
+
+export default withTracker(() => {
+  const structuresHandle = Meteor.subscribe('structures.all');
+  const loading = !structuresHandle.ready();
+  const structures = Structures.find({}, { sort: { name: 1 } }).fetch();
+  return {
+    structures,
+    loading,
+  };
+})(ProfilePage);

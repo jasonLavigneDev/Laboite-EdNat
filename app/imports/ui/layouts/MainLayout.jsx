@@ -43,13 +43,21 @@ const AdminGroupsPage = lazy(() => import('../pages/admin/AdminGroupsPage'));
 const AdminSingleGroupPage = lazy(() => import('../pages/admin/AdminSingleGroupPage'));
 
 // CSS
-const useStyles = (isMobile) =>
+export const useLayoutStyles = (isMobile) =>
   makeStyles((theme) => ({
     root: {
       display: 'flex',
       position: 'relative',
     },
+    container: {
+      width: `calc(100% - ${isMobile ? 65 : 300}px)`,
+      position: 'relative',
+      minHeight: '50vh',
+    },
     content: {
+      position: 'relative',
+      minHeight: '50vh',
+      display: 'flex',
       flexGrow: 1,
       padding: isMobile ? null : theme.spacing(3),
       transition: theme.transitions.create('margin', {
@@ -57,7 +65,7 @@ const useStyles = (isMobile) =>
         duration: theme.transitions.duration.leavingScreen,
       }),
       overflow: 'hidden',
-      marginTop: 60,
+      marginTop: !isMobile && theme.shape.headerHeight ? theme.shape.headerHeight : 60,
       marginBottom: isMobile ? 100 : 50,
     },
     contentShift: {
@@ -68,14 +76,14 @@ const useStyles = (isMobile) =>
       marginLeft: 0,
     },
     alertMaintenance: {
-      marginTop: -10,
+      marginTop: isMobile ? 0 : -10,
       marginBottom: 30,
     },
   }));
 
 function MainLayout({ appsettings, ready }) {
   const [{ userId, user, loadingUser, isMobile }] = useAppContext();
-  const classes = useStyles(isMobile)();
+  const classes = useLayoutStyles(isMobile)();
   const location = useLocation();
   const { enableBlog } = Meteor.settings.public;
 
@@ -96,7 +104,7 @@ function MainLayout({ appsettings, ready }) {
         <Spinner full />
       ) : (
         <main className={classes.content} id="main">
-          <Suspense fallback={<Spinner full />}>
+          <Suspense fallback={<Spinner />}>
             {appsettings.maintenance && isAdmin ? (
               <Alert className={classes.alertMaintenance} variant="filled" severity="error">
                 {i18n.__(`layouts.MainLayout.alertMaintenance`)}

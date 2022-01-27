@@ -9,7 +9,6 @@ import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import i18n from 'meteor/universe:i18n';
 import ListItemText from '@material-ui/core/ListItemText';
-import SearchIcon from '@material-ui/icons/Search';
 import ClearIcon from '@material-ui/icons/Clear';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Typography from '@material-ui/core/Typography';
@@ -18,8 +17,6 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import { makeStyles } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
 import Tooltip from '@material-ui/core/Tooltip';
-import TextField from '@material-ui/core/TextField';
-import InputAdornment from '@material-ui/core/InputAdornment';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 
@@ -28,9 +25,10 @@ import Pagination from '@material-ui/lab/Pagination';
 import { Roles } from 'meteor/alanning:roles';
 import { usePagination } from '../../utils/hooks';
 import Spinner from '../../components/system/Spinner';
-import debounce from '../../utils/debounce';
+import SearchField from '../../components/system/SearchField';
 import { useAppContext } from '../../contexts/context';
 import UserAvatar from '../../components/users/UserAvatar';
+import { useStructure } from '../../../api/structures/utils';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -61,7 +59,7 @@ const AdminStructureUsersPage = () => {
   const [{ userId, isMobile }] = useAppContext();
   const [search, setSearch] = useState('');
   const [sortByDate, setSortByDate] = useState(false);
-  const selfUser = Meteor.users.findOne({ _id: userId });
+  const structure = useStructure();
 
   const { changePage, page, items, total } = usePagination(
     'users.byStructure',
@@ -75,7 +73,7 @@ const AdminStructureUsersPage = () => {
   const { isLoading } = useTracker(() => {
     const roleshandlers = Meteor.subscribe('roles.adminStructure');
     const adminsIds = Meteor.roleAssignment
-      .find({ scope: selfUser.structure, 'role._id': 'adminStructure' })
+      .find({ scope: structure && structure._id, 'role._id': 'adminStructure' })
       .fetch()
       .map((assignment) => assignment.user._id);
 
@@ -85,8 +83,7 @@ const AdminStructureUsersPage = () => {
     changePage(value);
   };
   const searchRef = useRef();
-  const debouncedSetSearch = debounce(setSearch, 500);
-  const updateSearch = (e) => debouncedSetSearch(e.target.value);
+  const updateSearch = (e) => setSearch(e.target.value);
   const resetSearch = () => setSearch('');
   useEffect(() => {
     if (searchRef.current) searchRef.current.value = search;
@@ -152,34 +149,16 @@ const AdminStructureUsersPage = () => {
           <Grid container spacing={4}>
             <Grid item md={12}>
               <Typography variant={isMobile ? 'h6' : 'h4'}>
-                {i18n.__('pages.AdminStructureUsersPage.title')} {selfUser.structure}
+                {i18n.__('pages.AdminStructureUsersPage.title')} {structure && structure.name}
               </Typography>
             </Grid>
             <Grid item xs={12} sm={12} md={6}>
-              <TextField
-                margin="normal"
-                id="search"
-                label={i18n.__('pages.AdminStructureUsersPage.searchText')}
-                name="search"
-                fullWidth
-                onChange={updateSearch}
-                type="text"
-                variant="outlined"
+              <SearchField
+                updateSearch={updateSearch}
+                search={search}
                 inputRef={searchRef}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SearchIcon />
-                    </InputAdornment>
-                  ),
-                  endAdornment: search ? (
-                    <InputAdornment position="end">
-                      <IconButton onClick={resetSearch}>
-                        <ClearIcon />
-                      </IconButton>
-                    </InputAdornment>
-                  ) : null,
-                }}
+                resetSearch={resetSearch}
+                label={i18n.__('pages.AdminStructureUsersPage.searchText')}
               />
             </Grid>
             <Grid item xs={12} sm={12} md={6} lg={6} className={classes.pagination}>

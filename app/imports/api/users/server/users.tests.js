@@ -34,13 +34,18 @@ import {
   toggleAdvancedPersonalPage,
   setArticlesEnable,
 } from './methods';
-import { structures } from '../structures';
+import logServer from '../../logging';
 import Groups from '../../groups/groups';
 import PersonalSpaces from '../../personalspaces/personalspaces';
 import Nextcloud from '../../nextcloud/nextcloud';
 import './publications';
+import { getStructureIds } from '../structures';
 
+let allowedStructures = [];
 describe('users', function () {
+  before(function () {
+    allowedStructures = getStructureIds();
+  });
   describe('publications', function () {
     let userId;
     let otherUserId;
@@ -212,20 +217,22 @@ describe('users', function () {
     });
     describe('roles.adminStructureAll', function () {
       it('sends all structure admin users', function (done) {
-        Meteor.users.update(userId, { $set: { structure: 'Occitanie' } });
-        Roles.addUsersToRoles(userId, 'adminStructure', 'Occitanie');
-        Meteor.users.update(otherUserId, { $set: { structure: 'Normandie' } });
-        Roles.addUsersToRoles(otherUserId, 'adminStructure', 'Normandie');
+        const structure1 = allowedStructures[1];
+        const structure2 = allowedStructures[2];
+        Meteor.users.update(userId, { $set: { structure: structure1 } });
+        Roles.addUsersToRoles(userId, 'adminStructure', structure1);
+        Meteor.users.update(otherUserId, { $set: { structure: structure2 } });
+        Roles.addUsersToRoles(otherUserId, 'adminStructure', structure2);
         const collector = new PublicationCollector({ userId });
         collector.collect('roles.adminStructureAll', (collections) => {
           assert.equal(collections['role-assignment'].length, 2);
           const assignment = collections['role-assignment'][0];
           assert.equal(assignment.user._id, userId);
           assert.equal(assignment.role._id, 'adminStructure');
-          done();
         });
-        Roles.removeUsersFromRoles(userId, 'adminStructure', 'Occitanie');
-        Roles.removeUsersFromRoles(otherUserId, 'adminStructure', 'Normandie');
+        Roles.removeUsersFromRoles(userId, 'adminStructure', structure1);
+        Roles.removeUsersFromRoles(otherUserId, 'adminStructure', structure2);
+        done();
       });
     });
     describe('users.group', function () {
@@ -488,7 +495,8 @@ describe('users', function () {
     });
     describe('setStructure', function () {
       it('users can set their structure', function () {
-        const newStructure = structures[0];
+        const newStructure = allowedStructures[0];
+        logServer(newStructure);
         setStructure._execute({ userId }, { structure: newStructure });
         const user = Meteor.users.findOne({ _id: userId });
         assert.equal(user.structure, newStructure);
@@ -503,7 +511,7 @@ describe('users', function () {
         );
       });
       it('only logged in users can set their structure', function () {
-        const newStructure = structures[0];
+        const newStructure = allowedStructures[0];
         assert.throws(
           () => {
             setStructure._execute({}, { structure: newStructure });
@@ -513,16 +521,16 @@ describe('users', function () {
         );
       });
       it('users loses structure admin role when structure changes', function () {
-        const newStructure = structures[0];
+        const newStructure = allowedStructures[0];
         setStructure._execute({ userId }, { structure: newStructure });
         const user = Meteor.users.findOne({ _id: userId });
         assert.equal(user.structure, newStructure);
         setAdminStructure._execute({ userId: adminId }, { userId });
-        assert.equal(Roles.userIsInRole(userId, 'adminStructure', structures[0]), true);
-        setStructure._execute({ userId }, { structure: structures[0] });
-        assert.equal(Roles.userIsInRole(userId, 'adminStructure', structures[0]), true);
-        setStructure._execute({ userId }, { structure: structures[1] });
-        assert.equal(Roles.userIsInRole(userId, 'adminStructure', structures[1]), false);
+        assert.equal(Roles.userIsInRole(userId, 'adminStructure', allowedStructures[0]), true);
+        setStructure._execute({ userId }, { structure: allowedStructures[0] });
+        assert.equal(Roles.userIsInRole(userId, 'adminStructure', allowedStructures[0]), true);
+        setStructure._execute({ userId }, { structure: allowedStructures[1] });
+        assert.equal(Roles.userIsInRole(userId, 'adminStructure', allowedStructures[1]), false);
       });
     });
     describe('setName', function () {

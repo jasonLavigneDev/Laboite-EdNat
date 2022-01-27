@@ -3,6 +3,7 @@ import { Meteor } from 'meteor/meteor';
 import Articles from './articles/articles';
 import Services from './services/services';
 import Groups from './groups/groups';
+import Structures from './structures/structures';
 import Tags from './tags/tags';
 import logServer from './logging';
 import AppSettings from './appsettings/appsettings';
@@ -332,5 +333,54 @@ Migrations.add({
   },
   down: () => {
     AppSettings.rawCollection().updateMany({}, { $unset: { maintenance: true, textMaintenance: true } });
+  },
+});
+
+const structureOptions = [
+  'Ministère Education',
+  'Éducation',
+  'Auvergne-Rhône-Alpes',
+  'Bourgogne-Franche-Comté',
+  'Bretagne',
+  'Centre-Val de Loire',
+  'Corse',
+  'Grand Est',
+  'Guadeloupe',
+  'Guyane',
+  'Hauts-de-France',
+  'Île-de-France',
+  'Martinique',
+  'Normandie',
+  'Nouvelle-Aquitaine',
+  'Occitanie',
+  'Pays de la Loire',
+  "Provence-Alpes-Côte d'Azur",
+  'La Réunion',
+  'Collectivité',
+  'Autre',
+];
+
+Migrations.add({
+  version: 20,
+  name: 'Add maintenance and textMaintenance field for appsettings',
+  up: () => {
+    const isStructuresSet = Meteor.users.findOne({ structure: { $exists: true } });
+    if (isStructuresSet) {
+      structureOptions.forEach((label) => {
+        const structureDB = Structures.findOne({ name: label });
+        let structureId = structureDB && structureDB._id;
+        if (!structureId) {
+          structureId = Structures.insert({ name: label });
+        }
+        Meteor.users.rawCollection().updateMany({ structure: label }, { $set: { structure: structureId } });
+      });
+    }
+  },
+  down: () => {
+    Structures.find()
+      .fetch()
+      .forEach(({ name, _id }) => {
+        Meteor.users.rawCollection().updateMany({ structure: _id }, { $set: { structure: name } });
+      });
   },
 });

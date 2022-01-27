@@ -90,3 +90,15 @@ export function genRandomPassword(pwdlen = 16) {
 
   return password;
 }
+
+export function handleResult(resolve, reject) {
+  return (error, result) => {
+    if (error) {
+      msg.error(error.reason);
+      reject(error);
+    } else {
+      msg.success(i18n.__('api.methods.operationSuccessMsg'));
+      resolve(result);
+    }
+  };
+}

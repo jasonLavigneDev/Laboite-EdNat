@@ -1,9 +1,12 @@
 {
   "public": {
+    "appName": "LaBoîte",
+    "appDescription": "Sac à dos numérique de l’agent public",
     "enableKeycloak": false,
     "keycloakUrl": "",
     "keycloakRealm": "",
     "enableBlog": false,
+    "theme": "laboite",
     "laboiteBlogURL": "",
     "enableBBB": false,
     "BBBUrl": "",
@@ -43,7 +46,7 @@
     "services":{
       "agendaUrl": "",
       "sondagesUrl": "",
-      "mezigUrl": "",
+      "mezigUrl": ""
     }
   },
   "keycloak": {

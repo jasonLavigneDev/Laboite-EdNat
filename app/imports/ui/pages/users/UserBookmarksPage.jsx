@@ -19,10 +19,10 @@ import Spinner from '../../components/system/Spinner';
 import { useAppContext } from '../../contexts/context';
 import { removeUserBookmark, updateUserBookmark } from '../../../api/userBookmarks/methods';
 import setMaterialTableLocalization from '../../components/initMaterialTableLocalization';
-import UserBookMarkEdit from '../../components/users/UserBookmarkEdit';
+import BookMarkEdit from '../../components/users/BookMarkEdit';
 import UserBookmarks from '../../../api/userBookmarks/userBookmarks';
 
-const useStyles = makeStyles(() => ({
+export const useBookmarkPageStyles = makeStyles(() => ({
   ErrorPage: {
     textAlign: 'center',
   },
@@ -39,46 +39,49 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+export const bookmarkColumns = (classes) => [
+  {
+    title: i18n.__('pages.BookmarksPage.columnIcon'),
+    field: 'icon',
+    editable: 'never',
+    render: (rowData) => {
+      const { icon } = rowData;
+
+      if (icon !== '') {
+        // eslint-disable-next-line jsx-a11y/alt-text
+        return <img src={`${icon}`} className={classes.icon} />;
+      }
+      return <LanguageIcon className={classes.icon} />;
+    },
+  },
+  {
+    title: i18n.__('pages.BookmarksPage.columnName'),
+    field: 'name',
+  },
+  {
+    title: i18n.__('pages.BookmarksPage.columnUrl'),
+    field: 'url',
+    render: (rowData) => {
+      const { url } = rowData;
+      return (
+        <a href={url} className={classes.link} target="_blank" rel="noreferrer noopener">
+          {url}
+        </a>
+      );
+    },
+  },
+  {
+    title: i18n.__('pages.BookmarksPage.columnTag'),
+    field: 'tag',
+  },
+];
+
 function UserBookmarksPage({ loading, bookmarksList }) {
   const [{ user, userId }] = useAppContext();
   const history = useHistory();
-  const classes = useStyles();
-  const columns = [
-    {
-      title: i18n.__('pages.BookmarksPage.columnIcon'),
-      field: 'icon',
-      editable: 'never',
-      render: (rowData) => {
-        const { icon } = rowData;
+  const classes = useBookmarkPageStyles();
 
-        if (icon !== '') {
-          // eslint-disable-next-line jsx-a11y/alt-text
-          return <img src={`${icon}`} className={classes.icon} />;
-        }
-        return <LanguageIcon className={classes.icon} />;
-      },
-    },
-    {
-      title: i18n.__('pages.BookmarksPage.columnName'),
-      field: 'name',
-    },
-    {
-      title: i18n.__('pages.BookmarksPage.columnUrl'),
-      field: 'url',
-      render: (rowData) => {
-        const { url } = rowData;
-        return (
-          <a href={url} className={classes.link} target="_blank" rel="noreferrer noopener">
-            {url}
-          </a>
-        );
-      },
-    },
-    {
-      title: i18n.__('pages.BookmarksPage.columnTag'),
-      field: 'tag',
-    },
-  ];
+  const columns = bookmarkColumns(classes);
 
   const [editUrl, setEditUrl] = useState(false);
   const [bkData, setBkData] = useState({});
@@ -108,7 +111,7 @@ function UserBookmarksPage({ loading, bookmarksList }) {
       {loading ? (
         <Spinner />
       ) : (
-        <div>
+        <>
           <Container style={{ overflowX: 'auto' }}>
             <Grid className={classes.goBackButton} item xs={12} sm={12} md={12}>
               <Button color="primary" startIcon={<ArrowBack />} onClick={goBack}>
@@ -201,9 +204,15 @@ function UserBookmarksPage({ loading, bookmarksList }) {
             />
           </Container>
           {editUrl ? (
-            <UserBookMarkEdit data={bkData} onEdit={onEdit} open={editUrl} onClose={() => setEditUrl(false)} />
+            <BookMarkEdit
+              method="userBookmark"
+              data={bkData}
+              onEdit={onEdit}
+              open={editUrl}
+              onClose={() => setEditUrl(false)}
+            />
           ) : null}
-        </div>
+        </>
       )}
     </>
   );

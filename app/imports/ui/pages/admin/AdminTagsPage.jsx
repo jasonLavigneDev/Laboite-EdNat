@@ -10,16 +10,7 @@ import Spinner from '../../components/system/Spinner';
 import { createTag, updateTag, removeTag } from '../../../api/tags/methods';
 import setMaterialTableLocalization from '../../components/initMaterialTableLocalization';
 import Tags from '../../../api/tags/tags';
-
-const handleResult = (resolve, reject) => (error, result) => {
-  if (error) {
-    msg.error(error.reason);
-    reject(error);
-  } else {
-    msg.success(i18n.__('api.methods.operationSuccessMsg'));
-    resolve(result);
-  }
-};
+import { handleResult } from '../../../api/utils';
 
 const onRowAdd = ({ name }) =>
   new Promise((resolve, reject) => {

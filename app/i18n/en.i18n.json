@@ -74,6 +74,14 @@
         "name": "Name"
       }
     },
+    "structures": {
+      "name": "Label",
+      "labels": {
+        "id": "Structure Id",
+        "name": "Structure's name",
+        "parent": "Superior structures"
+      }
+    },
     "users": {
       "unknownUser": "User does not exist.",
       "mustBeLoggedIn": "You must be logged in.",
@@ -450,7 +458,17 @@
       "menuProfileLabel": "Profile",
       "menuLogoutLabel": "Logout",
       "menuMedias": "Medias Storage",
-      "menuAdminApp": "Administration"
+      "menuAdminApp": "Administration",
+      "menuAdminAppSettings": "Admin Settings",
+      "menuAdminServices": "Service Management",
+      "menuAdminUsers": "Users Management",
+      "menuAdminNextcloudUrl": "Nextcloud URL management",
+      "menuAdminUserValidation": "User validation",
+      "menuAdminCategories": "Categories Management",
+      "menuAdminTags": "Tags Management",
+      "menuAdminStructureUsers": "Structure Users",
+      "menuAdminStructureServices": "Structure Services",
+      "menuAdminBackHome": "Back to Personnal Space"
     },
     "AdminMenu": {
       "title": "Administration",
@@ -464,7 +482,8 @@
       "menuAdminGroups": "Groups Management",
       "menuAdminStructureUsers": "Structure Users",
       "menuAdminStructureServices": "Structure Services",
-      "menuAdminBackHome": "Back to Personnal Space"
+      "menuAdminBackHome": "Back to Personnal Space",
+      "menuUserStructure": "Structures Management"
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Your account has not been activated",
@@ -657,7 +676,7 @@
       "OpenInWindow": "Open media",
       "copyUrl": "Copy this media URL"
     },
-    "UserAvatarEdit": {
+    "AvatarEdit": {
       "title": "Create your avatar",
       "subtitle": "from an image",
       "sendImage": "Send this avatar",
@@ -676,7 +695,7 @@
       "subtitle": "from image gallery",
       "cancel": "Cancel"
     },
-    "UserAvatarCamCapture": {
+    "AvatarCamCapture": {
       "title": "Create your avatar",
       "subtitle": "from the webcam",
       "takePicture": "Take a picture",
@@ -691,6 +710,16 @@
       "ValidateForm": "Validate",
       "ncloudURL": "Nextcloud URL",
       "changeURL": "Renew"
+    },
+    "AdminSendNotification": {
+      "title": "Send notification to ",
+      "subtitle": "Send notification to ",
+      "cancel": "Cancel",
+      "title_label": "Title",
+      "content_label": "Notification content",
+      "ValidateForm": "Validate",
+      "type_label": "Notification type",
+      "info_type": "Info"
     },
     "SkipLink": {
       "skipToContent": "Skip to content"
@@ -819,7 +848,12 @@
       "structureMessage": "Check this box to link all imported articles to your current attachment structure.",
       "advancedPersonalPage": "Activate advanced personal page",
       "languageLabel": "Change language",
-      "activateArticles": "Activate articles"
+      "activateArticles": "Activate articles",
+      "accessTokenTitle": "Get the Access Token",
+      "accessTokenMessage": "Your Access Token is your API identification used to communicate between applications",
+      "getAccessToken": "Get Access Token",
+      "noAccessToken": "No token to retrieve",
+      "successCopyAccessToken": "Token copied with success"
     },
     "NotFound": { "backButtonLabel": "Back", "message": "Page not found !" },
     "ServicesPage": {
@@ -899,6 +933,19 @@
         "body_editRow_deleteText": "Do you really want to delete this tag ?"
       }
     },
+    "AdminStructuresManagementPage": {
+      "title": "Structure Management",
+      "columnName": "Name",
+      "materialTableLocalization": {
+        "toolbar_searchPlaceholder": "Find a structure",
+        "pagination_labelRowsSelect": "Structures par page",
+        "body_emptyDataSourceMessage": "No structure registered",
+        "body_addTooltip": "Add a structure",
+        "body_editTooltip": "Modify this structure",
+        "body_deleteTooltip": "Remove this structure",
+        "body_editRow_deleteText": "Do you really want to delete this structure ?"
+      }
+    },
     "AdminGroupsPage": {
       "title": "Groups Management",
       "columnName": "Logo",
@@ -958,7 +1005,10 @@
       "successSetAdminStructure": "structure admin rights have been granted",
       "successUnsetAdminStructure": "structure admin rights have been revoked",
       "adminStructure": "Structure administrator",
-      "manageUser": "Manager user"
+      "manageUser": "Manager user",
+      "sendNotif": "Send notification",
+      "successCopyUserId": "User ID copied with success",
+      "copyUserId": "Copy user ID"
     },
     "AdminUserValidationPage": {
       "title": "User validation",
@@ -1024,7 +1074,8 @@
       "addScreenshots": "Add a screenshot",
       "save": "Save",
       "update": "Update",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "logo_url": "Logo URL"
     },
     "AdminSingleGroupPage": {
       "edition": "Edition of the group",

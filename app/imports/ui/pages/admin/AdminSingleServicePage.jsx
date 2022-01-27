@@ -128,6 +128,7 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
   const classes = useStyles();
   const structureMode = path.startsWith('/admin/structureservices');
   const [{ user }] = useAppContext();
+  const { minioEndPoint } = Meteor.settings.public;
 
   const removeUndefined = () => {
     let args;
@@ -142,7 +143,9 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
         path: `services/${params._id}`,
       };
     }
-    Meteor.call('files.selectedRemove', args);
+    if (minioEndPoint) {
+      Meteor.call('files.selectedRemove', args);
+    }
   };
 
   const onCancel = () => {
@@ -183,7 +186,13 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
     }
   };
 
-  const onUpdateLogo = (logo) => setServiceData({ ...serviceData, logo });
+  const onUpdateLogo = (event) => {
+    if (minioEndPoint) {
+      setServiceData({ ...serviceData, logo: event });
+    } else {
+      setServiceData({ ...serviceData, logo: event.target.value });
+    }
+  };
 
   const onUpdateRichText = (html) => setContent(html);
 
@@ -208,7 +217,7 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
     const newData = JSON.parse(JSON.stringify(serviceData));
     newData.screenshots = newData.screenshots.filter((img) => img !== screen);
 
-    if (!params._id) {
+    if (!params._id && minioEndPoint) {
       const args = {
         toRemove: [screen],
         path: 'services/undefined',
@@ -338,6 +347,17 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
                 width={100}
                 height={100}
               />
+              {!minioEndPoint && (
+                <TextField
+                  onChange={onUpdateLogo}
+                  value={serviceData.logo}
+                  name="url"
+                  label={i18n.__('pages.AdminSingleServicePage.logo_url')}
+                  variant="outlined"
+                  fullWidth
+                  margin="normal"
+                />
+              )}
             </div>
             <TextField
               onChange={onUpdateField}
@@ -383,37 +403,41 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
               })}
             </div>
 
-            <InputLabel>
-              {i18n.__('pages.AdminSingleServicePage.screenshots')} (
-              {(serviceData.screenshots && serviceData.screenshots.length) || 0})
-              <IconButton
-                color="primary"
-                aria-label={i18n.__('pages.AdminSingleServicePage.onAddScreenshots')}
-                onClick={onAddScreenshots}
-              >
-                <AddIcon />
-              </IconButton>
-            </InputLabel>
-            <Grid container spacing={4}>
-              {serviceData.screenshots &&
-                serviceData.screenshots.map((screen, i) => (
-                  <Grid lg={4} md={6} xs={12} item key={Math.random()} className={classes.screenshotWrapper}>
-                    <ImageAdminUploader
-                      onImageChange={(image) => onUpdateScreenshots(image, i)}
-                      name={`screenshot_${i}`}
-                      className={classes.screenshot}
-                      alt={`screenshot for ${serviceData.title}`}
-                      src={screen}
-                      path={`services/${params._id}`}
-                      width={900}
-                      height={600}
-                    />
-                    <IconButton onClick={() => onRemoveScreenshots(screen)} className={classes.screenshotDelete}>
-                      <DeleteIcon />
-                    </IconButton>
-                  </Grid>
-                ))}
-            </Grid>
+            {minioEndPoint && (
+              <InputLabel>
+                {i18n.__('pages.AdminSingleServicePage.screenshots')} (
+                {(serviceData.screenshots && serviceData.screenshots.length) || 0})
+                <IconButton
+                  color="primary"
+                  aria-label={i18n.__('pages.AdminSingleServicePage.onAddScreenshots')}
+                  onClick={onAddScreenshots}
+                >
+                  <AddIcon />
+                </IconButton>
+              </InputLabel>
+            )}
+            {minioEndPoint && (
+              <Grid container spacing={4}>
+                {serviceData.screenshots &&
+                  serviceData.screenshots.map((screen, i) => (
+                    <Grid lg={4} md={6} xs={12} item key={Math.random()} className={classes.screenshotWrapper}>
+                      <ImageAdminUploader
+                        onImageChange={(image) => onUpdateScreenshots(image, i)}
+                        name={`screenshot_${i}`}
+                        className={classes.screenshot}
+                        alt={`screenshot for ${serviceData.title}`}
+                        src={screen}
+                        path={`services/${params._id}`}
+                        width={900}
+                        height={600}
+                      />
+                      <IconButton onClick={() => onRemoveScreenshots(screen)} className={classes.screenshotDelete}>
+                        <DeleteIcon />
+                      </IconButton>
+                    </Grid>
+                  ))}
+              </Grid>
+            )}
 
             <div className={classes.buttonGroup}>
               <Button variant="contained" onClick={onCancel}>
