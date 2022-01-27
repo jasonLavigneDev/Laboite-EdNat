@@ -169,11 +169,19 @@ function GroupsPage() {
   );
 
   const filterSwitch = () => (
-    <FormControlLabel
-      control={<Switch checked={filterChecked} onChange={updateFilterCheck} name="filterSwitch" color="primary" />}
-      label={i18n.__('pages.GroupsPage.filterGroup')}
-      className={classes.leftSpace}
-    />
+    <Tooltip
+      title={
+        filterChecked
+          ? `${i18n.__('pages.GroupsPage.disableFilterGroup')}`
+          : `${i18n.__('pages.GroupsPage.filterGroup')}`
+      }
+    >
+      <FormControlLabel
+        control={<Switch checked={filterChecked} onChange={updateFilterCheck} name="filterSwitch" color="primary" />}
+        label={i18n.__('pages.GroupsPage.filterGroupLabel')}
+        className={classes.leftSpace}
+      />
+    </Tooltip>
   );
 
   return (
