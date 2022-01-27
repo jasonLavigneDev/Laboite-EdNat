@@ -492,7 +492,7 @@
     },
     "NoStructureSelected": {
       "noStructure": "Vous n'avez pas de structure de rattachement",
-      "selectStructure": "Sélectionnez une structure dans votre profil."
+      "selectStructure": "Cliquez ici pour selectionner votre structure."
     },
     "GroupUsersList": {
       "title": "",
