@@ -883,6 +883,7 @@
       "title": "Explorer les groupes",
       "searchText": "Quel groupe cherchez-vous ?",
       "searchGroup": "Rechercher un groupe",
+      "addGroup": "Gérer les groupes",
       "viewMode": "Changer le mode d'affichage",
       "viewCard": "Mode cartes",
       "viewList": "Mode liste",
