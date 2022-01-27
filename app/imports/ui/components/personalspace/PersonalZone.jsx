@@ -93,7 +93,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   emptyZone: {
-    minHeight: '150px',
+    minHeight: '90px',
     border: `2px dashed ${theme.palette.primary.main}`,
     borderRadius: theme.shape.borderRadius,
     margin: 'auto',
