@@ -7,7 +7,7 @@ const NoStructureSelected = () => {
       title="components.NoStructureSelected.noStructure"
       subtitle="components.NoStructureSelected.selectStructure"
       link="/profile"
-      linkText="components.MainMenu.menuProfileLabel"
+      linkText="components.NoStructureSelected.editProfileLabel"
     />
   );
 };
