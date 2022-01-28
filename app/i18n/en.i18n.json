@@ -140,7 +140,7 @@
         "id": "Group Id",
         "name": "Name",
         "slug": "Slug",
-        "desciption": "Description",
+        "description": "Description",
         "content": "Long description",
         "active": "Active",
         "groupPadID": "Group Pad ID",
@@ -764,6 +764,9 @@
         "body_editRow_deleteText": "Do you really want to delete this bookmark ?",
         "body_actionTooltip": "Open bookmark's URL"
       }
+    },
+    "EventsPage": {
+      "noAccess": "You don't have access to events of this group"
     },
     "LegalPage": {
       "personalData": "Personal Data",

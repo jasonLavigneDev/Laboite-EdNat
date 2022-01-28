@@ -141,7 +141,7 @@
         "id": "Id de Groupe",
         "name": "Nom",
         "slug": "Slug",
-        "desciption": "Description",
+        "description": "Description",
         "content": "Description longue",
         "active": "Actif",
         "groupPadID": "Id de Pad du groupe",
@@ -767,6 +767,9 @@
         "body_editRow_deleteText": "Voulez-vous réellement supprimer ce marque-page ?",
         "body_actionTooltip": "Ouvrir le lien du marque-page"
       }
+    },
+    "EventsPage": {
+      "noAccess": "Vous n'avez pas accès aux évènements de ce groupe"
     },
     "LegalPage": {
       "personalData": "Données Personnelles",

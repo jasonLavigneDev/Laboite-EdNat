@@ -25,6 +25,7 @@ import { bookmarkColumns, useBookmarkPageStyles } from '../users/UserBookmarksPa
 
 function BookmarksPage({ loading, bookmarksList, group }) {
   const [{ userId }] = useAppContext();
+
   const history = useHistory();
   const [filter, setFilter] = useState(false);
   const classes = useBookmarkPageStyles();
@@ -40,9 +41,7 @@ function BookmarksPage({ loading, bookmarksList, group }) {
 
   const filterOnURL = () => setFilter(!filter);
 
-  const userInGroup = (checkId) => {
-    return Roles.userIsInRole(checkId, ['member', 'animator', 'admin'], group._id);
-  };
+  const userInGroup = Roles.userIsInRole(userId, ['member', 'animator', 'admin'], group._id);
 
   const goBack = () => {
     history.goBack();
@@ -69,7 +68,7 @@ function BookmarksPage({ loading, bookmarksList, group }) {
     <>
       {loading ? (
         <Spinner />
-      ) : userInGroup(userId) ? (
+      ) : userInGroup ? (
         <div>
           <Container style={{ overflowX: 'auto' }}>
             <Grid className={classes.goBackButton} item xs={12} sm={12} md={12}>
