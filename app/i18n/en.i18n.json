@@ -491,7 +491,8 @@
     },
     "NoStructureSelected": {
       "noStructure": "You have not Attachment Structure",
-      "selectStructure": "Choose a structure in your profile."
+      "selectStructure": "Choose a structure in your profile.",
+      "editProfileLabel": "Update my Profile"
     },
     "GroupUsersList": {
       "title": "",
