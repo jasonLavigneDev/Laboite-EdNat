@@ -38,7 +38,6 @@ const CardMessage = ({ title, subtitle, link, linkText }) => {
             {!!link && (
               <Link to={link} className={classes.noUnderline}>
                 <Button variant="contained" color="primary">
-                  {linkText}
                   {i18n.__(linkText)}
                 </Button>
               </Link>
