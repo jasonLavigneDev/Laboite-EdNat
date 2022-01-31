@@ -31,12 +31,12 @@ const styles = `
             }
       
                   .lb_widget > img {
-                    width: 75px;
-                    height: 75px;
+                      width: 75px;
+                      height: 75px;
                   }
       
             .lb_widget .notifications {
-              position: absolute;
+              position: fixed;
               background-color: #ce0500;
               font-size: 15px;
               width: 20px;
