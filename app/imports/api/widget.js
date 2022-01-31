@@ -1,15 +1,15 @@
+/** Le préfixe choisi pour les classes CSS, afin d'assurer une unicité, est `lb_` */
 const styles = `
-          <style>
-                  .widget {
-                      position: fixed;
-                      bottom: 5px;
-                      right: 5px;
-                      width: 75px;
-                      height: 75px;
-              z-index: 9999;
-                  }
+              .lb_widget {
+                  position: fixed;
+                  bottom: 5px;
+                  right: 5px;
+                  width: 75px;
+                  height: 75px;
+                  z-index: 9999;
+              }
       
-                  .widget {
+            .lb_widget {
               display: flex;
               justify-content: center;
               align-items: center;
@@ -26,16 +26,16 @@ const styles = `
                           0px 6px 10px 0px rgb(0 0 0 / 14%), 
                           0px 1px 18px 0px rgb(0 0 0 / 12%);
                   }
-            .widget *, .widget-container * {
+            .lb_widget *, .lb_widget-container * {
               box-sizing: content-box !important;
             }
       
-                  .widget > img {
+                  .lb_widget > img {
                       width: 75px;
                       height: 75px;
                   }
       
-            .widget .notifications {
+            .lb_widget .notifications {
               position: fixed;
               background-color: #ce0500;
               font-size: 15px;
@@ -49,21 +49,21 @@ const styles = `
                           0px 1px 18px 0px rgb(0 0 0 / 12%);
             }
       
-            .widget.opened {
+            .lb_widget.opened {
               display: none;
             }
       
-            .widget-container.closed {
+            .lb_widget-container.closed {
               display: none;
             }
       
       
-            .widget-container.opened.fullscreen {
+            .lb_widget-container.opened.fullscreen {
               height: calc(100% - 10px);
               width: calc(100% - 10px);
             }
       
-            .widget-container.opened {
+            .lb_widget-container.opened {
               z-index: 9999;
               position: fixed;
               display: flex;
@@ -84,29 +84,29 @@ const styles = `
                           0px 1px 18px 0px rgb(0 0 0 / 12%);
             }
       
-            .widget-container.opened iframe {
+            .lb_widget-container.opened iframe {
               flex: 1;
               width: 100%;
               border: none;
               border-radius: 8px;
             }
       
-            .widget-container .widget-header {
+            .lb_widget-container .lb_widget-header {
               height: 35px;
               background-color: #000091;
               display: flex;
               padding: 5px;
               justify-content: space-between;
             }
-            .widget-container img {
+            .lb_widget-container img {
               height: 35px;
             }
       
-            .widget-container .buttons-container {
+            .lb_widget-container .buttons-container {
               display: flex;
             }
       
-            .widget-container .buttons-container button {
+            .lb_widget-container .buttons-container button {
               margin: 0;
               padding: 0;
               border: 0;
@@ -117,7 +117,7 @@ const styles = `
               cursor: pointer;
             }
       
-            .widget-container .cross-stand-alone:before, .cross-stand-alone:after {
+            .lb_widget-container .cross-stand-alone:before, .cross-stand-alone:after {
               content: "";
               position: absolute;
               top: 18px;
@@ -127,14 +127,14 @@ const styles = `
               background: #fff;
               border-radius: 4px;
             }
-            .widget-container .cross-stand-alone:before {
+            .lb_widget-container .cross-stand-alone:before {
               transform: rotate(45deg);
             }
-            .widget-container .cross-stand-alone:after {
+            .lb_widget-container .cross-stand-alone:after {
               transform: rotate(-45deg);
             }
       
-            .widget-container button.full-screen {
+            .lb_widget-container button.full-screen {
               width: 35px;
               height: 35px;
               color: #fff;
@@ -153,7 +153,6 @@ const styles = `
                 opacity: 1;
               }
             }
-              </style>
           `;
 
 // The widget function is generated with a string form to be sent to the client
@@ -170,7 +169,7 @@ export const widget = () => `
     // ------------------ HEADER WIDGET ------------------
     // Create Header
     const widgetHeader = document.createElement('div');
-    widgetHeader.setAttribute('class', 'widget-header');
+    widgetHeader.setAttribute('class', 'lb_widget-header');
   
     // create Logo
     const widgetLogo = document.createElement('img');
@@ -200,13 +199,13 @@ export const widget = () => `
     // ------------------ CONTAINER WIDGET ------------------
     // Create Iframe
     const iframeContainer = document.createElement('iframe');
-    iframeContainer.setAttribute('class', 'iframe-widget');
+    iframeContainer.setAttribute('class', 'lb_iframe-widget');
     iframeContainer.setAttribute('iframe-state', 'closed');
     iframeContainer.setAttribute('src', '${Meteor.absoluteUrl()}');
   
     // Create Container for Widget
     const widgetContainer = document.createElement('div');
-    widgetContainer.setAttribute('class', 'widget-container closed');
+    widgetContainer.setAttribute('class', 'lb_widget-container closed');
   
     // Insert Header and Iframe into container
     widgetContainer.append(widgetHeader);
@@ -215,14 +214,19 @@ export const widget = () => `
     // ------------------ ROBOT WIDGET ------------------
     // Create open button with the robot
     const openButton = document.createElement('button');
-    openButton.setAttribute('class', 'widget closed');
+    openButton.setAttribute('class', 'lb_widget closed');
     openButton.title = 'Ouvrir ${Meteor.settings.public.appName}';
     openButton.innerHTML = '<img src="${Meteor.absoluteUrl()}images/logos/rizomo/robot_button.svg" />';
   
+    // create Styles
+    const stylesBalise = document.createElement('style')
+    stylesBalise.innerHTML = \`${styles}\`
+
+
     // Get header and body from the page
     const target = document.body || document.querySelector('body');
     const head = document.head || document.querySelector('head');
-    head.innerHTML = \`${styles}\`;
+    head.append(stylesBalise)
   
     // ------------------ INSERT WIDGET ------------------
     // insert root
@@ -232,16 +236,16 @@ export const widget = () => `
     // ------------------ FUNCTIONS WIDGET ------------------
     const openRizimo = (e) => {
       if (!dragged ) {
-        widgetContainer.setAttribute('class', 'widget-container opened');
+        widgetContainer.setAttribute('class', 'lb_widget-container opened');
         iframeContainer.setAttribute('iframe-state', 'opened');
-        openButton.setAttribute('class', 'widget opened');
+        openButton.setAttribute('class', 'lb_widget opened');
       }
       dragged = false
     };
     const closeRizimo = () => {
-      widgetContainer.setAttribute('class', 'widget-container closed');
+      widgetContainer.setAttribute('class', 'lb_widget-container closed');
       iframeContainer.setAttribute('iframe-state', 'closed');
-      openButton.setAttribute('class', 'widget closed');
+      openButton.setAttribute('class', 'lb_widget closed');
     };
     const toggleFullscreen = () => {
       widgetContainer.classList.toggle('fullscreen');
