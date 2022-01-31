@@ -68,7 +68,7 @@ function BookmarksPage({ loading, bookmarksList, group }) {
     <>
       {loading ? (
         <Spinner />
-      ) : userInGroup ? (
+      ) : userInGroup || group.type === 0 ? (
         <div>
           <Container style={{ overflowX: 'auto' }}>
             <Grid className={classes.goBackButton} item xs={12} sm={12} md={12}>

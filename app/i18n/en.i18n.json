@@ -1123,7 +1123,8 @@
       "goToMezig": "See Mezig Page of",
       "goToBlog": "See Blog Page of",
       "back": "Back to the group",
-      "searchText": "Which user are you looking for ?"
+      "searchText": "Which user are you looking for ?",
+      "noAccess": "You don't have access to address book of this group"
     },
     "Events": {
       "seeEvent": "See event",
@@ -1136,7 +1137,8 @@
       "seePoll": "See poll",
       "back": "Back to the group",
       "searchText": "Which poll are you looking for ?",
-      "noPoll": "No current or upcoming polls were found for this group"
+      "noPoll": "No current or upcoming polls were found for this group",
+      "noAccess": "You don't have access to polls of this group"
     },
     "ArticlesPage": {
       "title": "Your publications",

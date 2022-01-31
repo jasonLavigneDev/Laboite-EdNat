@@ -134,7 +134,7 @@ const EventsPage = ({ loading, group }) => {
           </Grid>
           {loading ? (
             <Spinner />
-          ) : userInGroup ? (
+          ) : userInGroup || group.type === 0 ? (
             <>
               <Grid item xs={12} sm={12} md={6}>
                 <TextField
@@ -232,11 +232,6 @@ const EventsPage = ({ loading, group }) => {
       </Container>
     </Fade>
   );
-};
-
-EventsPage.propTypes = {
-  loading: PropTypes.bool.isRequired,
-  group: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 export default withTracker(
