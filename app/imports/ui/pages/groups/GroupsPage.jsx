@@ -1,4 +1,5 @@
 import React, { useRef, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Fade from '@material-ui/core/Fade';
 import Container from '@material-ui/core/Container';
@@ -8,6 +9,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 
 import SearchIcon from '@material-ui/icons/Search';
+import AddIcon from '@material-ui/icons/Add';
 import ViewListIcon from '@material-ui/icons/ViewList';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
@@ -70,6 +72,9 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
+  leftSpace: {
+    marginLeft: 10,
+  },
 }));
 
 const ITEM_PER_PAGE = 9;
@@ -77,6 +82,7 @@ const ITEM_PER_PAGE = 9;
 function GroupsPage() {
   const [{ isMobile, groupPage, userId }, dispatch] = useAppContext();
   const [filterChecked, setFilterChecked] = React.useState(false);
+  const history = useHistory();
   const classes = useStyles();
   const {
     search = '',
@@ -136,6 +142,7 @@ function GroupsPage() {
       updateGlobalState('searchToggle', false); // all groupPage values will be saved with this call
     }
   };
+  const goToAddGroup = () => history.push('/admingroups/new');
 
   const filterGroups = (group) => {
     let searchText = group.name + group.description + group.digest || '';
@@ -171,6 +178,7 @@ function GroupsPage() {
       <FormControlLabel
         control={<Switch checked={filterChecked} onChange={updateFilterCheck} name="filterSwitch" color="primary" />}
         label={i18n.__('pages.GroupsPage.filterGroupLabel')}
+        className={classes.leftSpace}
       />
     </Tooltip>
   );
@@ -185,6 +193,11 @@ function GroupsPage() {
               <Tooltip title={i18n.__('pages.GroupsPage.searchGroup')}>
                 <IconButton onClick={toggleSearch}>
                   <SearchIcon fontSize="large" />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title={i18n.__('pages.GroupsPage.addGroup')}>
+                <IconButton onClick={goToAddGroup}>
+                  <AddIcon fontSize="large" />
                 </IconButton>
               </Tooltip>
               {!isMobile && filterSwitch()}
