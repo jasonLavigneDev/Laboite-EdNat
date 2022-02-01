@@ -72,7 +72,9 @@ function AdminGroupsPage({ groups, loading, user }) {
         <Container style={{ overflowX: 'auto' }}>
           <MaterialTable
             // other props
-            title={`${i18n.__('pages.AdminGroupsPage.title')} (${user.groupCount}/${user.groupQuota})`}
+            title={`${i18n.__('pages.AdminGroupsPage.title')} (${
+              groups.length > user.groupCount ? `${groups.length}, ` : ''
+            }${user.groupCount}/${user.groupQuota})`}
             columns={columns}
             data={groups.map((row) => ({ ...row, id: row._id }))}
             options={options}
