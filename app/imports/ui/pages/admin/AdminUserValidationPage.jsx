@@ -64,7 +64,7 @@ function AdminUserValidationPage({ usersrequest, loading }) {
           <Container>
             <MaterialTable
               // other props
-              title={i18n.__('pages.AdminUserValidationPage.title')}
+              title={`${i18n.__('pages.AdminUserValidationPage.title')} (${usersrequest.length})`}
               columns={columns}
               data={usersrequest.map((row) => ({ ...row, id: row._id }))}
               options={options}
