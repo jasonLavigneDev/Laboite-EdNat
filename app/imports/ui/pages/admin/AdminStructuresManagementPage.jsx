@@ -222,6 +222,7 @@ const AdminStructureManagementPage = () => {
       ) : (
         <Fade in>
           <Container style={{ overflowX: 'auto' }}>
+<<<<<<< HEAD
             {modal()}
             <TreeView
               aria-label="rich object !"
@@ -236,6 +237,16 @@ const AdminStructureManagementPage = () => {
             >
               {renderTree(treeData)}
             </TreeView>
+=======
+            <MaterialTable
+              title={`${i18n.__('pages.AdminStructuresManagementPage.title')} (${structures.length})`}
+              columns={columns}
+              data={structures.map((row) => ({ ...row, id: row._id }))}
+              options={options}
+              localization={setMaterialTableLocalization('pages.AdminStructuresManagementPage')}
+              editable={{ onRowAdd, onRowUpdate, onRowDelete }}
+            />
+>>>>>>> d67ab4d... fix(ui): add structures count in admin strucutres page
           </Container>
         </Fade>
       )}
