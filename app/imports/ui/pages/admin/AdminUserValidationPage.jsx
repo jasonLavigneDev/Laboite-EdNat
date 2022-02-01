@@ -10,6 +10,7 @@ import Container from '@material-ui/core/Container';
 import Spinner from '../../components/system/Spinner';
 import '../../../api/users/users';
 import setMaterialTableLocalization from '../../components/initMaterialTableLocalization';
+import { getStructure } from '../../../api/structures/utils';
 
 function AdminUserValidationPage({ usersrequest, loading }) {
   const columns = [
@@ -38,6 +39,13 @@ function AdminUserValidationPage({ usersrequest, loading }) {
     {
       title: i18n.__('pages.AdminUserValidationPage.columnStructure'),
       field: 'structure',
+      render: (rowData) => {
+        const struc = getStructure(rowData.structure);
+        if (struc) {
+          return struc.name;
+        }
+        return i18n.__('pages.AdminUsersPage.undefined');
+      },
     },
     {
       title: i18n.__('pages.AdminUserValidationPage.columnCreatedAt'),
