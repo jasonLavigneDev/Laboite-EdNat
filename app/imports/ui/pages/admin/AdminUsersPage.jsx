@@ -275,7 +275,9 @@ const AdminUsersPage = () => {
           ) : (
             <Grid container spacing={4}>
               <Grid item md={12}>
-                <Typography variant={isMobile ? 'h6' : 'h4'}>{i18n.__('pages.AdminUsersPage.title')}</Typography>
+                <Typography variant={isMobile ? 'h6' : 'h4'}>
+                  {`${i18n.__('pages.AdminUsersPage.title')} (${total})`}
+                </Typography>
               </Grid>
               <Grid item xs={12} sm={12} md={6}>
                 <SearchField
