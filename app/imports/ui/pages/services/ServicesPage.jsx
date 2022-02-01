@@ -287,8 +287,7 @@ function ServicesPage({ services, categories, ready, structureMode }) {
               ) : viewMode === 'list' && isMobile ? (
                 mapList((service) => (
                   <Grid className={classes.gridItem} item xs={12} md={6} key={service._id}>
-                    <ServiceDetailsList service={service} />
-                    {/* favAction={favAction(service._id)} // PROPS FOR SERVICEDETAILSLIST */}
+                    <ServiceDetailsList service={service} favAction={favAction(service._id)} />
                   </Grid>
                 ))
               ) : (

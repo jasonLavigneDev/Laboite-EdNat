@@ -6,6 +6,13 @@ import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
 import CardActionArea from '@material-ui/core/CardActionArea';
+import AddIcon from '@material-ui/icons/Add';
+import RemoveIcon from '@material-ui/icons/Remove';
+// import OpenWithIcon from '@material-ui/icons/OpenWith';
+
+import Tooltip from '@material-ui/core/Tooltip';
+import Button from '@material-ui/core/Button';
+import i18n from 'meteor/universe:i18n';
 import { isUrlExternal } from '../../utils/utilsFuncs';
 
 const useStyles = makeStyles((theme) => ({
@@ -36,9 +43,35 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
-export default function ServiceDetails({ service }) {
+export default function ServiceDetails({ service, favAction }) {
   const classes = useStyles();
   const history = useHistory();
+  const favorite = favAction === 'fav';
+
+  const handleFavorite = (e) => {
+    e.stopPropagation(); // To prevent the CardActionArea onClick to launch
+    if (!favorite) {
+      Meteor.call('services.unfavService', { serviceId: service._id }, (err) => {
+        if (err) {
+          msg.error(err.reason);
+        } else {
+          msg.success(i18n.__('components.ServiceDetails.unfavSuccessMsg'));
+        }
+      });
+    } else {
+      Meteor.call('services.favService', { serviceId: service._id }, (err) => {
+        if (err) {
+          msg.error(err.reason);
+        } else {
+          msg.success(i18n.__('components.ServiceDetails.favSuccessMsg'));
+        }
+      });
+    }
+  };
+
+  const favButtonLabel = !favorite
+    ? i18n.__('components.ServiceDetails.favButtonLabelNoFav')
+    : i18n.__('components.ServiceDetails.favButtonLabelFav');
 
   const isExternal = isUrlExternal(service.url);
   const launchService = () => {
@@ -62,12 +95,34 @@ export default function ServiceDetails({ service }) {
           }}
           subheader={service.usage}
           subheaderTypographyProps={{ variant: 'body2', color: service.state === 5 ? 'textSecondary' : 'primary' }}
+          action={
+            !!favAction && (
+              <Tooltip title={favButtonLabel} aria-label={favButtonLabel}>
+                <Button
+                  // startIcon={favorite ? <BookmarkBorderIcon /> : <BookmarkIcon />}
+                  variant="outlined"
+                  color="primary"
+                  size="large"
+                  className={classes.fab}
+                  onClick={handleFavorite}
+                >
+                  {favorite ? <AddIcon /> : <RemoveIcon />}
+                  {/* {i18n.__(`components.ServiceDetails.${favorite ? '' : 'un'}pin`)} */}
+                </Button>
+              </Tooltip>
+            )
+          }
         />
       </CardActionArea>
     </Card>
   );
 }
 
+ServiceDetails.defaultProps = {
+  favAction: null,
+};
+
 ServiceDetails.propTypes = {
   service: PropTypes.objectOf(PropTypes.any).isRequired,
+  favAction: PropTypes.string,
 };
