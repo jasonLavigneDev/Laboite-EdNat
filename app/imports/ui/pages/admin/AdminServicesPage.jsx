@@ -73,7 +73,7 @@ function AdminServicesPage({ services, loading, structureMode }) {
               // other props
               title={`${i18n.__('pages.AdminServicesPage.title')} ${
                 structureMode && structure ? `(${structure.name})` : ''
-              }`}
+              } (${services.length})`}
               columns={columns}
               data={services.map((row) => ({ ...row, id: row._id }))}
               options={options}
