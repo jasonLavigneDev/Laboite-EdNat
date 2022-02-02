@@ -10,9 +10,17 @@ import Structures from './structures';
 export const createStructure = new ValidatedMethod({
   name: 'structures.createStructure',
   validate: new SimpleSchema({
-    ...Structures.schema,
+    name: {
+      type: String,
+      min: 1,
+      label: getLabel('api.structures.name'),
+    },
+    parentId: {
+      type: SimpleSchema.RegEx.Id,
+      label: getLabel('api.structures.parent'),
+      optional: true,
+    },
   }).validator(),
-
   run({ name, parentId }) {
     const authorized = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
     if (!authorized) {
@@ -29,12 +37,22 @@ export const createStructure = new ValidatedMethod({
 export const updateStructure = new ValidatedMethod({
   name: 'structures.updateStructure',
   validate: new SimpleSchema({
-    structureId: { type: String, regEx: SimpleSchema.RegEx.Id, label: getLabel('api.structures.labels.id') },
-    data: Object,
-    'data.name': { type: String, min: 1, label: getLabel('api.structures.labels.name') },
+    structureId: {
+      type: SimpleSchema.RegEx.Id,
+      label: getLabel('api.structures.id'),
+    },
+    name: {
+      type: String,
+      min: 1,
+      label: getLabel('api.structures.name'),
+    },
+    parentId: {
+      type: SimpleSchema.RegEx.Id,
+      label: getLabel('api.structures.parent'),
+      optional: true,
+    },
   }).validator(),
-
-  run({ structureId, data }) {
+  run({ structureId, name, parentId }) {
     // check structure existence
     const structure = Structures.findOne({ _id: structureId });
     if (structure === undefined) {
@@ -51,7 +69,15 @@ export const updateStructure = new ValidatedMethod({
       throw new Meteor.Error('api.structures.updateStructure.notPermitted', i18n.__('api.users.notPermitted'));
     }
 
-    return Structures.update({ _id: structureId }, { $set: data });
+    return Structures.update(
+      { _id: structureId },
+      {
+        $set: {
+          name,
+          parentId,
+        },
+      },
+    );
   },
 });
 
@@ -64,6 +90,8 @@ export const removeStructure = new ValidatedMethod({
   run({ structureId }) {
     // check structure existence
     const structure = Structures.findOne({ _id: structureId });
+    const children = Structures.find({ parentId: structureId }).fetch();
+
     if (structure === undefined) {
       throw new Meteor.Error(
         'api.structures.removeStructure.unknownStructure',
@@ -77,6 +105,8 @@ export const removeStructure = new ValidatedMethod({
     if (!authorized) {
       throw new Meteor.Error('api.structures.removeStructure.notPermitted', i18n.__('api.users.notPermitted'));
     }
+
+    if (children && children.length > 0) children.forEach((child) => Structures.remove(child._id));
 
     return Structures.remove(structureId);
   },
