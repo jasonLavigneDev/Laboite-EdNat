@@ -285,7 +285,6 @@ export const widget = () => `
     }
   
     const receiveMessage = ({ data }) => {
-      console.log(data, userLogged)
       const { type, content } = data;
       if (type === 'notifications') {
         handleNotification(content)
