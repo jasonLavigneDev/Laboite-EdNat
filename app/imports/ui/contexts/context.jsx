@@ -36,6 +36,16 @@ const logger = (state, action) => {
   return newState;
 };
 
+const sendStateToIframe = (userId) => {
+  window.top.postMessage(
+    {
+      type: 'userLogged',
+      content: !!userId,
+    },
+    '*',
+  );
+};
+
 const Store = ({ children, loggingIn, user, userId, authenticated, roles, loadingUser }) => {
   const [state, dispatch] = useReducer(logger, initialState);
   const { width } = useWindowSize();
@@ -63,6 +73,9 @@ const Store = ({ children, loggingIn, user, userId, authenticated, roles, loadin
           language: user.language,
         },
       });
+    }
+    if (state.isIframed) {
+      sendStateToIframe(userId);
     }
   }, [loggingIn, user, userId, authenticated, roles, loadingUser]);
 
