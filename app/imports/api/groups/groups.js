@@ -1,11 +1,8 @@
-import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import SimpleSchema from 'simpl-schema';
 import { Tracker } from 'meteor/tracker';
 import slugify from 'slugify';
 import { getLabel } from '../utils';
-
-import Events from '../events/events';
 
 const Groups = new Mongo.Collection('groups');
 
@@ -190,21 +187,6 @@ Groups.adminFields = {
   candidates: 1,
   ...Groups.allPublicFields,
 };
-
-Groups.helpers({
-  getEvents() {
-    return Events.find({ groupe: this._id }, { sort: { startsAt: -1 } });
-  },
-  getAdmins() {
-    return Meteor.users.find({ _id: { $in: this.admins } });
-  },
-  getMembers() {
-    return Meteor.users.find({ _id: { $in: this.members } });
-  },
-  getCandidates() {
-    return Meteor.users.find({ _id: { $in: this.candidates } });
-  },
-});
 
 Groups.attachSchema(Groups.schema);
 

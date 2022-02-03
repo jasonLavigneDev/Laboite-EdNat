@@ -51,6 +51,9 @@ describe('users', function () {
     let otherUserId;
     let email;
     let group;
+    let group2;
+    let group3;
+    let group4;
     const lastName = `test${faker.name.lastName()}`;
     const firstName = `test${faker.name.firstName()}`;
     before(function () {
@@ -97,8 +100,18 @@ describe('users', function () {
       Meteor.users.update(userId, { $set: { isActive: true, isRequest: false, articlesCount: 1 } });
       Meteor.users.update(otherUserId, { $set: { isActive: true, isRequest: false, articlesCount: 1 } });
       group = Factory.create('group', { owner: userId });
+      Roles.addUsersToRoles(userId, 'admin', group._id);
+      group2 = Factory.create('group', { type: 5, owner: otherUserId });
+      Roles.addUsersToRoles(otherUserId, 'admin', group2._id);
+      group3 = Factory.create('group', { type: 5, owner: otherUserId });
+      Roles.addUsersToRoles(otherUserId, 'admin', group3._id);
+      group4 = Factory.create('group', { owner: otherUserId, type: 0 });
+      Roles.addUsersToRoles(otherUserId, 'admin', group4._id);
       setMemberOf._execute({ userId }, { userId, groupId: group._id });
+      setMemberOf._execute({ userId: otherUserId }, { userId, groupId: group2._id });
       setMemberOf._execute({ userId: otherUserId }, { userId: otherUserId, groupId: group._id });
+      setMemberOf._execute({ userId: otherUserId }, { userId: otherUserId, groupId: group2._id });
+      setMemberOf._execute({ userId: otherUserId }, { userId: otherUserId, groupId: group4._id });
     });
     describe('users.request', function () {
       it('does not send data to non admin users', function (done) {
@@ -236,8 +249,8 @@ describe('users', function () {
       });
     });
     describe('users.group', function () {
-      it('sends all users from a group', function (done) {
-        const collector = new PublicationCollector({ userId });
+      it('sends all users from a public group', function (done) {
+        const collector = new PublicationCollector({ userId: otherUserId });
         collector.collect('users.group', { page: 1, itemPerPage: 5, slug: group.slug, search: '' }, (collections) => {
           assert.equal(collections.users.length, 2);
           assert.equal(
@@ -247,8 +260,8 @@ describe('users', function () {
           done();
         });
       });
-      it('sends all users from a group with filter', function (done) {
-        const collector = new PublicationCollector({ userId });
+      it('sends all users from a public group with filter', function (done) {
+        const collector = new PublicationCollector({ userId: otherUserId });
         collector.collect(
           'users.group',
           { page: 1, itemPerPage: 5, slug: group.slug, search: 'BobLeFilou' },
@@ -258,6 +271,32 @@ describe('users', function () {
             done();
           },
         );
+      });
+      it('does send users from a public group when not member', function (done) {
+        const collector = new PublicationCollector({ userId });
+        collector.collect('users.group', { page: 1, itemPerPage: 5, slug: group4.slug, search: '' }, (collections) => {
+          assert.equal(collections.users.length, 1);
+          assert.equal(collections.users[0].firstName, 'BobLeFilou');
+          done();
+        });
+      });
+      it('does not send users from a protected group when not member', function (done) {
+        const collector = new PublicationCollector({ userId });
+        collector.collect('users.group', { page: 1, itemPerPage: 5, slug: group3.slug, search: '' }, (collections) => {
+          assert.equal(collections.user, undefined);
+          done();
+        });
+      });
+      it('does send users from a protected group when member', function (done) {
+        const collector = new PublicationCollector({ userId });
+        collector.collect('users.group', { page: 1, itemPerPage: 5, slug: group2.slug, search: '' }, (collections) => {
+          assert.equal(collections.users.length, 2);
+          assert.equal(
+            collections.users.filter((user) => [firstName, 'BobLeFilou'].includes(user.firstName)).length,
+            2,
+          );
+          done();
+        });
       });
     });
     describe('users.publishers', function () {

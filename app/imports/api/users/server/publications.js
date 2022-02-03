@@ -40,6 +40,7 @@ Meteor.publish(null, function publishAssignments() {
   }
   return this.ready();
 });
+
 // publish all admin assignments (global admin)
 Meteor.publish('roles.admin', function publishAdmins() {
   if (!isActive(this.userId) || !Roles.userIsInRole(this.userId, 'admin')) {
@@ -82,8 +83,8 @@ Meteor.publish(null, function publishRoles() {
 });
 
 // build query for all users from group
-const queryUsersFromGroup = ({ slug, search }) => {
-  const { admins, members, animators } = Groups.findOne({ slug });
+const queryUsersFromGroup = ({ group, search }) => {
+  const { admins, members, animators } = group;
   const ids = [...admins, ...members, ...animators];
   const regex = new RegExp(search, 'i');
   const fieldsToSearch = ['firstName', 'lastName', 'emails.address', 'username'];
@@ -112,9 +113,14 @@ FindFromPublication.publish('users.group', function usersFromGroup({ page, itemP
     logServer(`publish users.group: ${err}`);
     this.error(err);
   }
+  const group = Groups.findOne({ slug });
+  // for protected/private groups, publish users only for allowed users
+  if (group.type !== 0 && !Roles.userIsInRole(this.userId, ['admin', 'animator', 'member'], group._id)) {
+    return this.ready();
+  }
 
   try {
-    const query = queryUsersFromGroup({ slug, search });
+    const query = queryUsersFromGroup({ group, search });
 
     return Meteor.users.find(query, {
       fields: Meteor.users.publicFields,

@@ -1,4 +1,5 @@
 import { FindFromPublication } from 'meteor/percolate:find-from-publication';
+import { Roles } from 'meteor/alanning:roles';
 import { Polls } from '../polls';
 import Groups from '../../groups/groups';
 
@@ -6,7 +7,7 @@ import { checkPaginationParams, isActive } from '../../utils';
 import logServer from '../../logging';
 
 // build query for all users from group
-const queryGroupPolls = ({ search, group }) => {
+const queryGroupPolls = ({ search, group, onlyPublic }) => {
   const regex = new RegExp(search, 'i');
   const fieldsToSearch = ['title', 'description'];
   const searchQuery = fieldsToSearch.map((field) => ({
@@ -14,6 +15,11 @@ const queryGroupPolls = ({ search, group }) => {
     groups: { $in: [group._id] },
     active: true,
   }));
+  if (onlyPublic)
+    return {
+      $or: searchQuery,
+      public: true,
+    };
   return {
     $or: searchQuery,
   };
@@ -39,7 +45,11 @@ FindFromPublication.publish('groups.polls', function groupsPolls({ page, search,
     },
   );
   try {
-    const query = queryGroupPolls({ search, group });
+    // for protected/private groups, publish only public polls for non member users
+    let query = {};
+    if (group.type !== 0 && !Roles.userIsInRole(this.userId, ['admin', 'animator', 'member'], group._id)) {
+      query = queryGroupPolls({ search, group, onlyPublic: true });
+    } else query = queryGroupPolls({ search, group, onlyPublic: false });
 
     const res = Polls.find(query, {
       fields: Polls.publicFields,

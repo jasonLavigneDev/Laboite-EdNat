@@ -1,4 +1,5 @@
 import { FindFromPublication } from 'meteor/percolate:find-from-publication';
+import { Roles } from 'meteor/alanning:roles';
 import { EventsAgenda } from '../eventsAgenda';
 import { checkPaginationParams, isActive } from '../../utils';
 import logServer from '../../logging';
@@ -36,6 +37,10 @@ FindFromPublication.publish('groups.events', function groupsEvents({ page, searc
       sort: { name: -1 },
     },
   );
+  // for protected/private groups, publish events only for allowed users
+  if (group.type !== 0 && !Roles.userIsInRole(this.userId, ['admin', 'animator', 'member'], group._id)) {
+    return this.ready();
+  }
 
   try {
     const query = queryGroupEvents({ search, group });
