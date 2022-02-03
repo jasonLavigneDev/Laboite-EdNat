@@ -31,12 +31,12 @@ const styles = `
             }
       
                   .lb_widget > img {
-                      width: 75px;
-                      height: 75px;
+                    width: 75px;
+                    height: 75px;
                   }
       
             .lb_widget .notifications {
-              position: fixed;
+              position: absolute;
               background-color: #ce0500;
               font-size: 15px;
               width: 20px;
@@ -157,6 +157,7 @@ const styles = `
 
 // The widget function is generated with a string form to be sent to the client
 // It has to grab some variables from the server before
+const { theme } = Meteor.settings.public;
 export const widget = () => `
 {
     // ------------------ VARIABLES WIDGET ------------------
@@ -166,6 +167,9 @@ export const widget = () => `
     let firstX;
     let firstY;
     let dragged = false;
+    let userLogged = "disconnected"
+
+    
     // ------------------ HEADER WIDGET ------------------
     // Create Header
     const widgetHeader = document.createElement('div');
@@ -173,7 +177,7 @@ export const widget = () => `
   
     // create Logo
     const widgetLogo = document.createElement('img');
-    widgetLogo.setAttribute('src', '${Meteor.absoluteUrl()}images/logos/rizomo/RobotR_Blc.svg');
+    widgetLogo.setAttribute('src', \`${Meteor.absoluteUrl()}images/logos/${theme}/widget/logo.svg\`);
   
     // Create buttons container
     const buttonsContainer = document.createElement('div');
@@ -190,7 +194,7 @@ export const widget = () => `
     fullscreenButton.innerHTML = '⛶';
     fullscreenButton.title = 'Plein écran';
   
-    // Insert logo and buttons into hedaer
+    // Insert logo and buttons into header
     buttonsContainer.append(fullscreenButton);
     buttonsContainer.append(closeButton);
     widgetHeader.append(widgetLogo);
@@ -216,7 +220,10 @@ export const widget = () => `
     const openButton = document.createElement('button');
     openButton.setAttribute('class', 'lb_widget closed');
     openButton.title = 'Ouvrir ${Meteor.settings.public.appName}';
-    openButton.innerHTML = '<img src="${Meteor.absoluteUrl()}images/logos/rizomo/robot_button.svg" />';
+    openButton.innerHTML = 
+        '<img src="${Meteor.absoluteUrl()}images/logos/${theme}/widget/' 
+        + userLogged + 
+        '.svg" />';
   
     // create Styles
     const stylesBalise = document.createElement('style')
@@ -234,6 +241,7 @@ export const widget = () => `
     target.append(widgetContainer);
   
     // ------------------ FUNCTIONS WIDGET ------------------
+
     const openRizimo = (e) => {
       if (!dragged ) {
         widgetContainer.setAttribute('class', 'lb_widget-container opened');
@@ -250,21 +258,38 @@ export const widget = () => `
     const toggleFullscreen = () => {
       widgetContainer.classList.toggle('fullscreen');
     };
+
+    const handleNotification = (content) => {
+      notifications = content;
+      if (notifications > 0) {
+        openButton.innerHTML = \`
+        <img src="${Meteor.absoluteUrl()}images/logos/${theme}/widget/notifications.svg" />
+        <div class="notifications">
+          \${notifications}
+        </div>
+        \`;
+      } else {
+        openButton.innerHTML = 
+            '<img src="${Meteor.absoluteUrl()}images/logos/${theme}/widget/' 
+            + userLogged + 
+            '.svg" />';
+      }
+    }
+    
+    const handleUserLogged = (content) => {
+      if(content){
+        userLogged = "connected"
+      } else {
+        userLogged = "disconnected"
+      }
+    }
   
     const receiveMessage = ({ data }) => {
       const { type, content } = data;
       if (type === 'notifications') {
-        notifications = content;
-        if (notifications > 0) {
-          openButton.innerHTML = \`
-          <img src="${Meteor.absoluteUrl()}images/logos/rizomo/robot_button_notifs.svg" />
-          <div class="notifications">
-            \${notifications}
-          </div>
-          \`;
-        } else {
-          openButton.innerHTML = '<img src="${Meteor.absoluteUrl()}images/logos/rizomo/robot_button.svg" />';
-        }
+        handleNotification(content)
+      } else if( type === "userLogged"){
+        handleUserLogged(content)
       }
     };
   
