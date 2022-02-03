@@ -60,7 +60,7 @@ const AdminStructureManagementPage = ({ structures, loading }) => {
         <Fade in>
           <Container style={{ overflowX: 'auto' }}>
             <MaterialTable
-              title={i18n.__('pages.AdminStructuresManagementPage.title')}
+              title={`${i18n.__('pages.AdminStructuresManagementPage.title')} (${structures.length})`}
               columns={columns}
               data={structures.map((row) => ({ ...row, id: row._id }))}
               options={options}

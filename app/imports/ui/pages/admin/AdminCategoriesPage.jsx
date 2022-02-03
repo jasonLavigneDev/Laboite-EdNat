@@ -61,7 +61,7 @@ const AdminCategoriesPage = ({ categories, loading }) => {
           <Container style={{ overflowX: 'auto' }}>
             <MaterialTable
               // other props
-              title={i18n.__('pages.AdminCategoriesPage.title')}
+              title={`${i18n.__('pages.AdminCategoriesPage.title')} (${categories.length})`}
               columns={columns}
               data={categories.map((row) => ({ ...row, id: row._id }))}
               options={options}

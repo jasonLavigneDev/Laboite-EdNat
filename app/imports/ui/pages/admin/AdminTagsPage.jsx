@@ -61,7 +61,7 @@ const AdminTagsPage = ({ tags, loading }) => {
           <Container style={{ overflowX: 'auto' }}>
             <MaterialTable
               // other props
-              title={i18n.__('pages.AdminTagsPage.title')}
+              title={`${i18n.__('pages.AdminTagsPage.title')} (${tags.length})`}
               columns={columns}
               data={tags.map((row) => ({ ...row, id: row._id }))}
               options={options}

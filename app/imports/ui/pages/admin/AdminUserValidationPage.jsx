@@ -10,6 +10,7 @@ import Container from '@material-ui/core/Container';
 import Spinner from '../../components/system/Spinner';
 import '../../../api/users/users';
 import setMaterialTableLocalization from '../../components/initMaterialTableLocalization';
+import { getStructure } from '../../../api/structures/utils';
 
 function AdminUserValidationPage({ usersrequest, loading }) {
   const columns = [
@@ -30,7 +31,7 @@ function AdminUserValidationPage({ usersrequest, loading }) {
       field: 'emails',
       render: (rowData) =>
         rowData.emails.map((m) => (
-          <a key={m.address} href={m.address} style={{ display: 'block' }}>
+          <a key={m.address} href={`mailto:${m.address}`} style={{ display: 'block' }}>
             {m.address}
           </a>
         )),
@@ -38,6 +39,13 @@ function AdminUserValidationPage({ usersrequest, loading }) {
     {
       title: i18n.__('pages.AdminUserValidationPage.columnStructure'),
       field: 'structure',
+      render: (rowData) => {
+        const struc = getStructure(rowData.structure);
+        if (struc) {
+          return struc.name;
+        }
+        return i18n.__('pages.AdminUsersPage.undefined');
+      },
     },
     {
       title: i18n.__('pages.AdminUserValidationPage.columnCreatedAt'),
@@ -64,7 +72,7 @@ function AdminUserValidationPage({ usersrequest, loading }) {
           <Container>
             <MaterialTable
               // other props
-              title={i18n.__('pages.AdminUserValidationPage.title')}
+              title={`${i18n.__('pages.AdminUserValidationPage.title')} (${usersrequest.length})`}
               columns={columns}
               data={usersrequest.map((row) => ({ ...row, id: row._id }))}
               options={options}
