@@ -8,8 +8,8 @@ import { checkPaginationParams, isActive, getLabel } from '../../utils';
 import Groups from '../groups';
 import AppRoles from '../../users/users';
 import logServer from '../../logging';
-import { Polls } from '../../polls/polls';
-import { EventsAgenda } from '../../eventsAgenda/eventsAgenda';
+import Polls from '../../polls/polls';
+import EventsAgenda from '../../eventsAgenda/eventsAgenda';
 import Bookmarks from '../../bookmarks/bookmarks';
 
 // publish groups that user is admin/animator of

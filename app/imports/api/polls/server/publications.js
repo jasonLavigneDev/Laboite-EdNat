@@ -1,6 +1,6 @@
 import { FindFromPublication } from 'meteor/percolate:find-from-publication';
 import { Roles } from 'meteor/alanning:roles';
-import { Polls } from '../polls';
+import Polls from '../polls';
 import Groups from '../../groups/groups';
 
 import { checkPaginationParams, isActive } from '../../utils';

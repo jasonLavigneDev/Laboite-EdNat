@@ -31,7 +31,7 @@ import { useAppContext } from '../../contexts/context';
 import Spinner from '../../components/system/Spinner';
 import Groups from '../../../api/groups/groups';
 
-import { EventsAgenda } from '../../../api/eventsAgenda/eventsAgenda';
+import EventsAgenda from '../../../api/eventsAgenda/eventsAgenda';
 
 export const useEvenstPageStyles = makeStyles((theme) => ({
   root: {

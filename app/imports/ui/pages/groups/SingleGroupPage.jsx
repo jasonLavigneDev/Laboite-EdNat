@@ -36,8 +36,8 @@ import Services from '../../../api/services/services';
 import Spinner from '../../components/system/Spinner';
 import ServiceDetails from '../../components/services/ServiceDetails';
 import GroupAvatar from '../../components/groups/GroupAvatar';
-import { Polls } from '../../../api/polls/polls';
-import { EventsAgenda } from '../../../api/eventsAgenda/eventsAgenda';
+import Polls from '../../../api/polls/polls';
+import EventsAgenda from '../../../api/eventsAgenda/eventsAgenda';
 import Bookmarks from '../../../api/bookmarks/bookmarks';
 import COMMON_STYLES from '../../themes/styles';
 

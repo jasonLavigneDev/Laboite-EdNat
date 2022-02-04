@@ -1,7 +1,7 @@
 import { Mongo } from 'meteor/mongo';
 //  import { Factory } from 'meteor/dburles:factory';
 
-export const EventsAgenda = new Mongo.Collection('eventsAgenda');
+const EventsAgenda = new Mongo.Collection('eventsAgenda');
 
 EventsAgenda.deny({
   insert() {
@@ -30,6 +30,6 @@ EventsAgenda.publicFields = {
 
 // Factory.define('eventsAgenda', EventsAgenda, {});
 
-EventsAgenda.attachSchema(EventsAgenda.schema);
+// EventsAgenda.attachSchema(EventsAgenda.schema);
 
 export default EventsAgenda;

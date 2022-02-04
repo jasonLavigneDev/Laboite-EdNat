@@ -1,6 +1,6 @@
 import { Mongo } from 'meteor/mongo';
 
-export const Polls = new Mongo.Collection('polls');
+const Polls = new Mongo.Collection('polls');
 
 // Deny all client-side updates since we will be using methods to manage this collection
 Polls.deny({

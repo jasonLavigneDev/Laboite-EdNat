@@ -1,6 +1,6 @@
 import { FindFromPublication } from 'meteor/percolate:find-from-publication';
 import { Roles } from 'meteor/alanning:roles';
-import { EventsAgenda } from '../eventsAgenda';
+import EventsAgenda from '../eventsAgenda';
 import { checkPaginationParams, isActive } from '../../utils';
 import logServer from '../../logging';
 import Groups from '../../groups/groups';

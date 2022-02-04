@@ -34,7 +34,6 @@ import {
   toggleAdvancedPersonalPage,
   setArticlesEnable,
 } from './methods';
-import logServer from '../../logging';
 import Groups from '../../groups/groups';
 import PersonalSpaces from '../../personalspaces/personalspaces';
 import Nextcloud from '../../nextcloud/nextcloud';
@@ -535,7 +534,6 @@ describe('users', function () {
     describe('setStructure', function () {
       it('users can set their structure', function () {
         const newStructure = allowedStructures[0];
-        logServer(newStructure);
         setStructure._execute({ userId }, { structure: newStructure });
         const user = Meteor.users.findOne({ _id: userId });
         assert.equal(user.structure, newStructure);

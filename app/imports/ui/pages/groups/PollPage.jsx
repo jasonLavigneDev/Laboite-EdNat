@@ -23,7 +23,7 @@ import { useHistory } from 'react-router-dom';
 import { usePagination } from '../../utils/hooks';
 import { useAppContext } from '../../contexts/context';
 import Groups from '../../../api/groups/groups';
-import { Polls } from '../../../api/polls/polls';
+import Polls from '../../../api/polls/polls';
 import SearchField from '../../components/system/SearchField';
 import Spinner from '../../components/system/Spinner';
 import { useEvenstPageStyles } from './EventsPage';
