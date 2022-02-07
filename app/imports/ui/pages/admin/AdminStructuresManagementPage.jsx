@@ -176,48 +176,6 @@ const AdminStructureManagementPage = () => {
     );
   };
 
-  const modal = () => (
-    <div
-      style={{
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%,-50%)',
-      }}
-    >
-      <Modal
-        className={modalClasses.modal}
-        open={isModalOpen}
-        onClose={closeModal}
-        closeAfterTransition
-        BackdropComponent={Backdrop}
-        BackdropProps={{
-          timeout: 500,
-        }}
-      >
-        <Fade in={isModalOpen}>
-          <div className={modalClasses.paper}>
-            <form onSubmit={onSubmit}>
-              <TextField
-                label={i18n.__('pages.AdminStructuresManagementPage.columnName')}
-                value={selectedStructure.name}
-                name="structureName"
-                fullWidth
-                onChange={(e) => {
-                  setSelectedStructure({ name: e.target.value });
-                }}
-                autoFocus
-              />
-              <Button type="submit" fullWidth color="primary">
-                Valider
-              </Button>
-            </form>
-          </div>
-        </Fade>
-      </Modal>
-    </div>
-  );
-
   return (
     <>
       {loading ? (
@@ -225,8 +183,45 @@ const AdminStructureManagementPage = () => {
       ) : (
         <Fade in>
           <Container style={{ overflowX: 'auto' }}>
-<<<<<<< HEAD
-            {modal()}
+            <div
+              style={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%,-50%)',
+              }}
+            >
+              <Modal
+                className={modalClasses.modal}
+                open={isModalOpen}
+                onClose={closeModal}
+                closeAfterTransition
+                BackdropComponent={Backdrop}
+                BackdropProps={{
+                  timeout: 500,
+                }}
+              >
+                <Fade in={isModalOpen}>
+                  <div className={modalClasses.paper}>
+                    <form onSubmit={onSubmit}>
+                      <TextField
+                        label={i18n.__('pages.AdminStructuresManagementPage.columnName')}
+                        value={selectedStructure.name}
+                        name="structureName"
+                        fullWidth
+                        onChange={(e) => {
+                          setSelectedStructure({ name: e.target.value });
+                        }}
+                        autoFocus
+                      />
+                      <Button type="submit" fullWidth color="primary">
+                        Valider
+                      </Button>
+                    </form>
+                  </div>
+                </Fade>
+              </Modal>
+            </div>
             <TreeView
               aria-label={i18n.__('pages.AdminStructuresManagementPage.list')}
               defaultCollapseIcon={<ExpandMoreIcon />}
@@ -239,16 +234,6 @@ const AdminStructureManagementPage = () => {
             >
               {treeData.map(renderTree)}
             </TreeView>
-=======
-            <MaterialTable
-              title={`${i18n.__('pages.AdminStructuresManagementPage.title')} (${structures.length})`}
-              columns={columns}
-              data={structures.map((row) => ({ ...row, id: row._id }))}
-              options={options}
-              localization={setMaterialTableLocalization('pages.AdminStructuresManagementPage')}
-              editable={{ onRowAdd, onRowUpdate, onRowDelete }}
-            />
->>>>>>> d67ab4d... fix(ui): add structures count in admin strucutres page
           </Container>
         </Fade>
       )}
