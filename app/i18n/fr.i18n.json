@@ -944,14 +944,12 @@
     "AdminStructuresManagementPage": {
       "title": "Gestion des structures",
       "columnName": "Nom",
-      "materialTableLocalization": {
-        "toolbar_searchPlaceholder": "Trouver structure",
-        "pagination_labelRowsSelect": "Structures par page",
-        "body_emptyDataSourceMessage": "Aucune structure enregistrée",
-        "body_addTooltip": "Ajouter une structure",
-        "body_editTooltip": "Modifier cette structure",
-        "body_deleteTooltip": "Supprimer cette structure",
-        "body_editRow_deleteText": "Souhaitez vous réellement supprimer cette structure ?"
+      "list": "Liste des structures",
+      "treeView": {
+        "createStructure": "Ajouter une structure",
+        "editStructure": "Modifier cette structure",
+        "deleteStructure": "Supprimer cette structure",
+        "confirm": "Supprimer cette structure aura pour effet de supprimer tout ses enfants. Etes-vous sûr de vouloir continuer ?"
       }
     },
     "AdminGroupsPage": {

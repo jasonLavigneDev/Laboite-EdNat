@@ -856,7 +856,10 @@
       "noAccessToken": "No token to retrieve",
       "successCopyAccessToken": "Token copied with success"
     },
-    "NotFound": { "backButtonLabel": "Back", "message": "Page not found !" },
+    "NotFound": {
+      "backButtonLabel": "Back",
+      "message": "Page not found !"
+    },
     "ServicesPage": {
       "titleServices": "Discover the SNP apps",
       "categories": "Filter by categories",
@@ -938,14 +941,12 @@
     "AdminStructuresManagementPage": {
       "title": "Structure Management",
       "columnName": "Name",
-      "materialTableLocalization": {
-        "toolbar_searchPlaceholder": "Find a structure",
-        "pagination_labelRowsSelect": "Structures par page",
-        "body_emptyDataSourceMessage": "No structure registered",
-        "body_addTooltip": "Add a structure",
-        "body_editTooltip": "Modify this structure",
-        "body_deleteTooltip": "Remove this structure",
-        "body_editRow_deleteText": "Do you really want to delete this structure ?"
+      "list": "Structure list",
+      "treeView": {
+        "createStructure": "Add a structure",
+        "editStructure": "Edit this structure",
+        "deleteStructure": "Remove this structure",
+        "confirm": "Removing this structure will remove all of its children. Are you sure ?"
       }
     },
     "AdminGroupsPage": {
