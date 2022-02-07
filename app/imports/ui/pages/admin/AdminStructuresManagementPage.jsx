@@ -75,7 +75,7 @@ const AdminStructureManagementPage = () => {
     const data = getTree(structures);
 
     return {
-      treeData: { _id: 'root', name: 'Gestion des structures', children: data },
+      treeData: { _id: 'root', name: i18n.__('pages.AdminStructuresManagementPage.title'), children: data },
       loading: isLoading,
     };
   });
@@ -128,10 +128,7 @@ const AdminStructureManagementPage = () => {
     if (
       /** Confirm is temporary */
       // eslint-disable-next-line no-restricted-globals
-      confirm(
-        `Supprimer cette structure aura pour effet de supprimer tout ses enfants,
-               êtes-vous sûr de vouloir continuer ?`,
-      )
+      confirm(i18n.__('pages.AdminStructuresManagementPage.treeView.confirm'))
     )
       onDelete({ structureId: nodes._id, name: nodes.name, parentId: nodes.parentId });
   };
@@ -140,11 +137,17 @@ const AdminStructureManagementPage = () => {
     return (
       <div className="treeViewCustom" key={nodes._id}>
         <TreeItem key={nodes._id} nodeId={nodes._id} label={nodes.name} style={{ width: '90%' }}>
-          <IconButton onClick={() => onClickAddBtn(nodes)} title="Créer une nouvelle structure">
+          <IconButton
+            onClick={() => onClickAddBtn(nodes)}
+            title={i18n.__('pages.AdminStructuresManagementPage.treeView.createStructure')}
+          >
             <AddIcon />
           </IconButton>
           {nodes._id !== 'root' && (
-            <IconButton onClick={() => onClickEditBtn(nodes)} title={`Editer la structure ${nodes.name}`}>
+            <IconButton
+              onClick={() => onClickEditBtn(nodes)}
+              title={i18n.__('pages.AdminStructuresManagementPage.treeView.editStructure')}
+            >
               <EditIcon />
             </IconButton>
           )}
@@ -152,7 +155,7 @@ const AdminStructureManagementPage = () => {
             <IconButton
               role="button"
               onClick={() => onClickDeleteBtn(nodes)}
-              title={`Supprimer la structure ${nodes.name}`}
+              title={i18n.__('pages.AdminStructuresManagementPage.treeView.deleteStructure')}
             >
               <DeleteIcon />
             </IconButton>
@@ -173,8 +176,6 @@ const AdminStructureManagementPage = () => {
       }}
     >
       <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
         className={modalClasses.modal}
         open={isModalOpen}
         onClose={closeModal}
@@ -188,7 +189,7 @@ const AdminStructureManagementPage = () => {
           <div className={modalClasses.paper}>
             <form onSubmit={onSubmit}>
               <TextField
-                label="Nom de la structure"
+                label={i18n.__('pages.AdminStructuresManagementPage.columnName')}
                 value={selectedStructure.name}
                 name="structureName"
                 fullWidth
@@ -198,7 +199,7 @@ const AdminStructureManagementPage = () => {
                 autoFocus
               />
               <Button type="submit" fullWidth color="primary">
-                {isEditMode ? 'Editer la structure' : 'Créer la nouvelle structure'}
+                Valider
               </Button>
             </form>
           </div>
@@ -217,7 +218,7 @@ const AdminStructureManagementPage = () => {
 <<<<<<< HEAD
             {modal()}
             <TreeView
-              aria-label="rich object !"
+              aria-label={i18n.__('pages.AdminStructuresManagementPage.list')}
               defaultCollapseIcon={<ExpandMoreIcon />}
               defaultExpanded={['root']}
               defaultExpandIcon={<ChevronRightIcon />}
