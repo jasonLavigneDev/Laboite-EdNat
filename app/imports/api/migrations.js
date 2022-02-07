@@ -362,7 +362,7 @@ const structureOptions = [
 
 Migrations.add({
   version: 20,
-  name: 'Add maintenance and textMaintenance field for appsettings',
+  name: 'Update structure key to hold id instead of structure name for user',
   up: () => {
     const isStructuresSet = Meteor.users.findOne({ structure: { $exists: true } });
     if (isStructuresSet) {
