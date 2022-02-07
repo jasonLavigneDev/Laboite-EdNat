@@ -64,7 +64,6 @@ export const useEvenstPageStyles = makeStyles((theme) => ({
 const ITEM_PER_PAGE = 10;
 
 const EventsPage = ({ loading, group }) => {
-  console.log(group);
   const [{ userId }] = useAppContext();
   const { slug } = group.slug;
   const classes = useEvenstPageStyles();

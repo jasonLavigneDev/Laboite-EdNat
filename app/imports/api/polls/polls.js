@@ -28,6 +28,6 @@ Polls.publicFields = {
   dates: 1,
 };
 
-Polls.attachSchema(Polls.schema);
+// Polls.attachSchema(Polls.schema);
 
 export default Polls;
