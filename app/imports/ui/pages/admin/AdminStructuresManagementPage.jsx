@@ -75,7 +75,7 @@ const AdminStructureManagementPage = () => {
     const data = getTree(structures);
 
     return {
-      treeData: { _id: 'root', name: i18n.__('pages.AdminStructuresManagementPage.title'), children: data },
+      treeData: data,
       loading: isLoading,
     };
   });
@@ -143,23 +143,22 @@ const AdminStructureManagementPage = () => {
           >
             <AddIcon />
           </IconButton>
-          {nodes._id !== 'root' && (
-            <IconButton
-              onClick={() => onClickEditBtn(nodes)}
-              title={i18n.__('pages.AdminStructuresManagementPage.treeView.editStructure')}
-            >
-              <EditIcon />
-            </IconButton>
-          )}
-          {nodes._id !== 'root' && (
-            <IconButton
-              role="button"
-              onClick={() => onClickDeleteBtn(nodes)}
-              title={i18n.__('pages.AdminStructuresManagementPage.treeView.deleteStructure')}
-            >
-              <DeleteIcon />
-            </IconButton>
-          )}
+
+          <IconButton
+            onClick={() => onClickEditBtn(nodes)}
+            title={i18n.__('pages.AdminStructuresManagementPage.treeView.editStructure')}
+          >
+            <EditIcon />
+          </IconButton>
+
+          <IconButton
+            role="button"
+            onClick={() => onClickDeleteBtn(nodes)}
+            title={i18n.__('pages.AdminStructuresManagementPage.treeView.deleteStructure')}
+          >
+            <DeleteIcon />
+          </IconButton>
+
           {Array.isArray(nodes.children) ? nodes.children.map((node) => renderTree(node)) : null}
         </TreeItem>
       </div>
@@ -220,7 +219,6 @@ const AdminStructureManagementPage = () => {
             <TreeView
               aria-label={i18n.__('pages.AdminStructuresManagementPage.list')}
               defaultCollapseIcon={<ExpandMoreIcon />}
-              defaultExpanded={['root']}
               defaultExpandIcon={<ChevronRightIcon />}
               sx={{
                 height: 110,
@@ -228,7 +226,7 @@ const AdminStructureManagementPage = () => {
                 overflowY: 'auto',
               }}
             >
-              {renderTree(treeData)}
+              {treeData.map(renderTree)}
             </TreeView>
 =======
             <MaterialTable
