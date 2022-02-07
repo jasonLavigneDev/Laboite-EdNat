@@ -98,14 +98,14 @@ describe('structures', function () {
     describe('createStructure', function () {
       it('does create a structure with admin user', function () {
         // logServer('User admin:', adminId);
-        createStructure._execute({ userId: adminId }, { name: structureName });
+        createStructure._execute({ userId: adminId }, { name: structureName, parentId: null });
         const structure = Structures.findOne({ _id: structureId });
         assert.typeOf(structure, 'object');
       });
       it('does not create a structure with a non admin user', function () {
         assert.throws(
           () => {
-            createStructure._execute({ userId }, { name: structureName });
+            createStructure._execute({ userId }, { name: structureName, parentId: null });
           },
           Meteor.Error,
           /api.structures.createStructure.notPermitted/,
@@ -117,12 +117,13 @@ describe('structures', function () {
       it('does update a structure with admin user', function () {
         const data = {
           name: 'UneSuperStructureModifiee',
+          parentId: null,
         };
         updateStructure._execute(
           { userId: adminId },
           {
             structureId,
-            data,
+            ...data,
           },
         );
         const structure = Structures.findOne(structureId);
@@ -131,6 +132,7 @@ describe('structures', function () {
       it('does not update a structure with non admin user', function () {
         const data = {
           name: 'UneSuperStructureModifiee',
+          parentId: null,
         };
         assert.throws(
           () => {
@@ -138,7 +140,7 @@ describe('structures', function () {
               { userId },
               {
                 structureId,
-                data,
+                ...data,
               },
             );
           },
