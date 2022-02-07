@@ -112,46 +112,46 @@ const AdminStructureManagementPage = () => {
     }
   };
 
+  const onClickAddBtn = (nodes) => {
+    openModal();
+    setCreateMode();
+    setSelectedStructure(nodes);
+  };
+
+  const onClickEditBtn = (nodes) => {
+    openModal();
+    setEditMode();
+    setSelectedStructure(nodes);
+  };
+
+  const onClickDeleteBtn = (nodes) => {
+    if (
+      /** Confirm is temporary */
+      // eslint-disable-next-line no-restricted-globals
+      confirm(
+        `Supprimer cette structure aura pour effet de supprimer tout ses enfants,
+               êtes-vous sûr de vouloir continuer ?`,
+      )
+    )
+      onDelete({ structureId: nodes._id, name: nodes.name, parentId: nodes.parentId });
+  };
+
   const renderTree = (nodes) => {
     return (
       <div className="treeViewCustom" key={nodes._id}>
         <TreeItem key={nodes._id} nodeId={nodes._id} label={nodes.name} style={{ width: '90%' }}>
-          <IconButton
-            onClick={() => {
-              openModal();
-              setCreateMode();
-              setSelectedStructure(nodes);
-            }}
-            title="Créer une nouvelle structure"
-          >
+          <IconButton onClick={() => onClickAddBtn(nodes)} title="Créer une nouvelle structure">
             <AddIcon />
           </IconButton>
           {nodes._id !== 'root' && (
-            <IconButton
-              onClick={() => {
-                openModal();
-                setEditMode();
-                setSelectedStructure(nodes);
-              }}
-              title={`Editer la structure ${nodes.name}`}
-            >
+            <IconButton onClick={() => onClickEditBtn(nodes)} title={`Editer la structure ${nodes.name}`}>
               <EditIcon />
             </IconButton>
           )}
           {nodes._id !== 'root' && (
             <IconButton
               role="button"
-              onClick={() => {
-                if (
-                  /** Confirm is temporary */
-                  // eslint-disable-next-line no-restricted-globals
-                  confirm(
-                    `Supprimer cette structure aura pour effet de supprimer tout ses enfants,
-               êtes-vous sûr de vouloir continuer ?`,
-                  )
-                )
-                  onDelete({ structureId: nodes._id, name: nodes.name, parentId: nodes.parentId });
-              }}
+              onClick={() => onClickDeleteBtn(nodes)}
               title={`Supprimer la structure ${nodes.name}`}
             >
               <DeleteIcon />
