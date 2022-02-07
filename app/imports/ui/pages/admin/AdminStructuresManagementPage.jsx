@@ -129,8 +129,9 @@ const AdminStructureManagementPage = () => {
       /** Confirm is temporary */
       // eslint-disable-next-line no-restricted-globals
       confirm(i18n.__('pages.AdminStructuresManagementPage.treeView.confirm'))
-    )
+    ) {
       onDelete({ structureId: nodes._id, name: nodes.name, parentId: nodes.parentId });
+    }
   };
 
   const renderTree = (nodes) => {
