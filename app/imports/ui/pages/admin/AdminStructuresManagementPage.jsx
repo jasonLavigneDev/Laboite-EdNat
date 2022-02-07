@@ -18,6 +18,7 @@ import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import Button from '@material-ui/core/Button';
+import Box from '@material-ui/core/Box';
 
 import Spinner from '../../components/system/Spinner';
 
@@ -136,33 +137,42 @@ const AdminStructureManagementPage = () => {
 
   const renderTree = (nodes) => {
     return (
-      <div className="treeViewCustom" key={nodes._id}>
-        <TreeItem key={nodes._id} nodeId={nodes._id} label={nodes.name} style={{ width: '90%' }}>
-          <IconButton
-            onClick={() => onClickAddBtn(nodes)}
-            title={i18n.__('pages.AdminStructuresManagementPage.treeView.createStructure')}
-          >
-            <AddIcon />
-          </IconButton>
+      <TreeItem
+        key={nodes._id}
+        nodeId={nodes._id}
+        label={
+          <Box display="flex" p={1}>
+            <Box flexGrow={1}>
+              <p>{nodes.name}</p>
+            </Box>
+            <Box>
+              <IconButton
+                onClick={() => onClickAddBtn(nodes)}
+                title={i18n.__('pages.AdminStructuresManagementPage.treeView.createStructure')}
+              >
+                <AddIcon />
+              </IconButton>
 
-          <IconButton
-            onClick={() => onClickEditBtn(nodes)}
-            title={i18n.__('pages.AdminStructuresManagementPage.treeView.editStructure')}
-          >
-            <EditIcon />
-          </IconButton>
+              <IconButton
+                onClick={() => onClickEditBtn(nodes)}
+                title={i18n.__('pages.AdminStructuresManagementPage.treeView.editStructure')}
+              >
+                <EditIcon />
+              </IconButton>
 
-          <IconButton
-            role="button"
-            onClick={() => onClickDeleteBtn(nodes)}
-            title={i18n.__('pages.AdminStructuresManagementPage.treeView.deleteStructure')}
-          >
-            <DeleteIcon />
-          </IconButton>
-
-          {Array.isArray(nodes.children) ? nodes.children.map((node) => renderTree(node)) : null}
-        </TreeItem>
-      </div>
+              <IconButton
+                role="button"
+                onClick={() => onClickDeleteBtn(nodes)}
+                title={i18n.__('pages.AdminStructuresManagementPage.treeView.deleteStructure')}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </Box>
+          </Box>
+        }
+      >
+        {Array.isArray(nodes.children) ? nodes.children.map((node) => renderTree(node)) : null}
+      </TreeItem>
     );
   };
 
