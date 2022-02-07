@@ -2,6 +2,7 @@ import React, { useEffect, lazy, Suspense } from 'react';
 import { useLocation, Route, Switch } from 'react-router-dom';
 import { useTracker } from 'meteor/react-meteor-data';
 import i18n from 'meteor/universe:i18n';
+import clsx from 'clsx';
 import Alert from '@material-ui/lab/Alert';
 import AppSettings from '../../api/appsettings/appsettings';
 
@@ -63,7 +64,7 @@ function AdminLayout() {
       {loadingUser && ready ? (
         <Spinner full />
       ) : (
-        <main className={classes.content} id="main">
+        <main className={clsx(classes.content, classes.flex)} id="main">
           <AdminMenu />
           <Suspense fallback={<Spinner />}>
             <div className={classes.container}>

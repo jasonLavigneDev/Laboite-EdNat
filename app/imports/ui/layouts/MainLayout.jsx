@@ -57,7 +57,6 @@ export const useLayoutStyles = (isMobile) =>
     content: {
       position: 'relative',
       minHeight: '50vh',
-      display: 'flex',
       flexGrow: 1,
       padding: isMobile ? null : theme.spacing(3),
       transition: theme.transitions.create('margin', {
@@ -67,6 +66,10 @@ export const useLayoutStyles = (isMobile) =>
       overflow: 'hidden',
       marginTop: !isMobile && theme.shape.headerHeight ? theme.shape.headerHeight : 60,
       marginBottom: isMobile ? 100 : 50,
+    },
+    flex: {
+      display: 'flex',
+      flexGrow: 1,
     },
     contentShift: {
       transition: theme.transitions.create('margin', {
@@ -104,12 +107,12 @@ function MainLayout({ appsettings, ready }) {
         <Spinner full />
       ) : (
         <main className={classes.content} id="main">
+          {appsettings.maintenance && isAdmin ? (
+            <Alert className={classes.alertMaintenance} variant="filled" severity="error">
+              {i18n.__(`layouts.MainLayout.alertMaintenance`)}
+            </Alert>
+          ) : null}
           <Suspense fallback={<Spinner />}>
-            {appsettings.maintenance && isAdmin ? (
-              <Alert className={classes.alertMaintenance} variant="filled" severity="error">
-                {i18n.__(`layouts.MainLayout.alertMaintenance`)}
-              </Alert>
-            ) : null}
             {!appsettings.maintenance || isAdmin ? (
               user.isActive ? (
                 user.structure !== undefined ? (
