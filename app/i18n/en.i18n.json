@@ -947,7 +947,8 @@
         "editStructure": "Edit this structure",
         "deleteStructure": "Remove this structure",
         "confirm": "Removing this structure will remove all of its children. Are you sure ?"
-      }
+      },
+      "close": "Close"
     },
     "AdminGroupsPage": {
       "title": "Groups Management",

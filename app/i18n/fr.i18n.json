@@ -950,7 +950,8 @@
         "editStructure": "Modifier cette structure",
         "deleteStructure": "Supprimer cette structure",
         "confirm": "Supprimer cette structure aura pour effet de supprimer tout ses enfants. Etes-vous sûr de vouloir continuer ?"
-      }
+      },
+      "close": "Fermer"
     },
     "AdminGroupsPage": {
       "title": "Gestion des groupes",
