@@ -15,6 +15,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import IconButton from '@material-ui/core/IconButton';
 import AddIcon from '@material-ui/icons/Add';
+import CloseIcon from '@material-ui/icons/Close';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import Button from '@material-ui/core/Button';
@@ -203,6 +204,14 @@ const AdminStructureManagementPage = () => {
               >
                 <Fade in={isModalOpen}>
                   <div className={modalClasses.paper}>
+                    <IconButton
+                      role="button"
+                      style={{ float: 'right' }}
+                      onClick={closeModal}
+                      title={i18n.__('pages.AdminStructuresManagementPage.close')}
+                    >
+                      <CloseIcon />
+                    </IconButton>
                     <form onSubmit={onSubmit}>
                       <TextField
                         label={i18n.__('pages.AdminStructuresManagementPage.columnName')}
