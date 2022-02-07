@@ -963,19 +963,37 @@ export const toggleAdvancedPersonalPage = new ValidatedMethod({
   },
 });
 
-export const getAccessToken = new ValidatedMethod({
-  name: 'users.getAccessToken',
+export const getAuthToken = new ValidatedMethod({
+  name: 'users.getAuthToken',
   validate: null,
   run() {
     if (!this.userId) {
-      throw new Meteor.Error('api.users.getAccessToken.notPermitted', i18n.__('api.users.mustBeLoggedIn'));
+      throw new Meteor.Error('api.users.getAuthToken.notPermitted', i18n.__('api.users.mustBeLoggedIn'));
     }
     // check user existence
     const user = Meteor.users.findOne({ _id: this.userId });
     if (user === undefined) {
-      throw new Meteor.Error('api.users.getAccessToken.unknownUser', i18n.__('api.users.unknownUser'));
+      throw new Meteor.Error('api.users.getAuthToken.unknownUser', i18n.__('api.users.unknownUser'));
     }
-    return user.services?.keycloak?.accessToken;
+    return user.authToken;
+  },
+});
+
+export const resetAuthToken = new ValidatedMethod({
+  name: 'users.resetAuthToken',
+  validate: null,
+  run() {
+    if (!this.userId) {
+      throw new Meteor.Error('api.users.resetAuthToken.notPermitted', i18n.__('api.users.mustBeLoggedIn'));
+    }
+    // check user existence
+    const user = Meteor.users.findOne({ _id: this.userId });
+    if (user === undefined) {
+      throw new Meteor.Error('api.users.resetAuthToken.unknownUser', i18n.__('api.users.unknownUser'));
+    }
+    const newToken = Random.secret(150);
+    Meteor.users.update({ _id: user._id }, { $set: { authToken: newToken } });
+    return newToken;
   },
 });
 
@@ -1006,7 +1024,7 @@ const LISTS_METHODS = _.pluck(
     setAvatar,
     userUpdated,
     toggleAdvancedPersonalPage,
-    getAccessToken,
+    getAuthToken,
   ],
   'name',
 );

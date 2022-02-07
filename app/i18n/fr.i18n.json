@@ -117,6 +117,7 @@
         "groupCount": "Nombre de groupes créés",
         "groupQuota": "Quota de groupes",
         "ncloud": "URL Nextcloud",
+        "authToken": "Token d'authentification API",
         "advancedPersonalPage": "Page personnelle avancée"
       },
       "logoutTypes": {
@@ -859,11 +860,14 @@
       "advancedPersonalPage": "Activer l'espace personnel avancé",
       "languageLabel": "Choix de la langue",
       "activateArticles": "Activer les publications",
-      "accessTokenTitle": "Récupérer le token d'accès",
-      "accessTokenMessage": "Votre token d'accès est votre clé API de communication entre les différentes applications.",
-      "getAccessToken": "Récupérer le Token",
-      "noAccessToken": "Aucun token à récupérer",
-      "successCopyAccessToken": "Token copié avec succès"
+      "authTokenTitle": "Récupérer le token d'accès",
+      "authTokenMessage": "Votre token d'accès est votre clé API de communication entre les différentes applications.",
+      "resetTokenMessage": "Si vous créez un nouveau Token pour une raison quelconque, n'oubliez pas d'utiliser le nouveau Token dans les autres applications ou cela bloquera la communication avec ces applications",
+      "getAuthToken": "Récupérer le Token",
+      "resetAuthToken": "Créer un nouveau Token",
+      "noAuthToken": "Aucun token à récupérer",
+      "successCopyAuthToken": "Token copié avec succès",
+      "successResetAndCopyAuthToken": "Nouveau Token créé et copié avec succès"
     },
     "NotFound": {
       "backButtonLabel": "Retour",

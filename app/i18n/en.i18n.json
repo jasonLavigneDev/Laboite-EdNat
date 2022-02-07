@@ -116,6 +116,7 @@
         "groupCount": "Amount of created groups",
         "groupQuota": "Amount of groups creatable",
         "ncloud": "Nextcloud URL",
+        "authToken": "API authentification token",
         "advancedPersonalPage": "Advanced personal page"
       },
       "logoutTypes": {
@@ -856,11 +857,14 @@
       "advancedPersonalPage": "Activate advanced personal page",
       "languageLabel": "Change language",
       "activateArticles": "Activate articles",
-      "accessTokenTitle": "Get the Access Token",
-      "accessTokenMessage": "Your Access Token is your API identification used to communicate between applications",
-      "getAccessToken": "Get Access Token",
-      "noAccessToken": "No token to retrieve",
-      "successCopyAccessToken": "Token copied with success"
+      "authTokenTitle": "Get the Access Token",
+      "authTokenMessage": "Your Access Token is your API identification used to communicate between applications",
+      "resetTokenMessage": "If your reset your token for any reason, don't forget to use the new one in others apps or it will break any communication with these apps",
+      "getAuthToken": "Get Access Token",
+      "resetAuthToken": "Reset Access Token",
+      "noAuthToken": "No token to retrieve",
+      "successCopyAuthToken": "Token copied with success",
+      "successResetAndCopyAuthToken": "New Token created and copied with success"
     },
     "NotFound": { "backButtonLabel": "Back", "message": "Page not found !" },
     "ServicesPage": {
