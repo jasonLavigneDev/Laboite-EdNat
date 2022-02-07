@@ -105,8 +105,11 @@ const AdminStructureManagementPage = () => {
     const { _id, parentId } = selectedStructure;
     const { value: structureName } = e.target.structureName;
 
-    if (isEditMode) onEdit({ structureId: _id, parentId: parentId || null, name: structureName });
-    else onCreate({ name: structureName, parentId: _id === 'root' ? null : _id || null });
+    if (isEditMode) {
+      onEdit({ structureId: _id, parentId: parentId || null, name: structureName });
+    } else {
+      onCreate({ name: structureName, parentId: _id === 'root' ? null : _id || null });
+    }
   };
 
   const renderTree = (nodes) => {
