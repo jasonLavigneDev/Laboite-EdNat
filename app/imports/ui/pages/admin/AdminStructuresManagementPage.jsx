@@ -113,58 +113,50 @@ const AdminStructureManagementPage = () => {
   };
 
   const renderTree = (nodes) => {
-    const btnAdd = (
-      <IconButton
-        onClick={() => {
-          openModal();
-          setCreateMode();
-          setSelectedStructure(nodes);
-        }}
-        title="Créer une nouvelle structure"
-      >
-        <AddIcon />
-      </IconButton>
-    );
-
-    const btnEdit = (
-      <IconButton
-        onClick={() => {
-          openModal();
-          setEditMode();
-          setSelectedStructure(nodes);
-        }}
-        title={`Editer la structure ${nodes.name}`}
-      >
-        <EditIcon />
-      </IconButton>
-    );
-
-    const btnDelete = (
-      <IconButton
-        role="button"
-        onClick={() => {
-          if (
-            /** Confirm is temporary */
-            // eslint-disable-next-line no-restricted-globals
-            confirm(
-              `Supprimer cette structure aura pour effet de supprimer tout ses enfants,
-               êtes-vous sûr de vouloir continuer ?`,
-            )
-          )
-            onDelete({ structureId: nodes._id, name: nodes.name, parentId: nodes.parentId });
-        }}
-        title={`Supprimer la structure ${nodes.name}`}
-      >
-        <DeleteIcon />
-      </IconButton>
-    );
-
     return (
       <div className="treeViewCustom" key={nodes._id}>
         <TreeItem key={nodes._id} nodeId={nodes._id} label={nodes.name} style={{ width: '90%' }}>
-          {btnAdd}
-          {nodes._id !== 'root' ? btnEdit : null}
-          {nodes._id !== 'root' ? btnDelete : null}
+          <IconButton
+            onClick={() => {
+              openModal();
+              setCreateMode();
+              setSelectedStructure(nodes);
+            }}
+            title="Créer une nouvelle structure"
+          >
+            <AddIcon />
+          </IconButton>
+          {nodes._id !== 'root' && (
+            <IconButton
+              onClick={() => {
+                openModal();
+                setEditMode();
+                setSelectedStructure(nodes);
+              }}
+              title={`Editer la structure ${nodes.name}`}
+            >
+              <EditIcon />
+            </IconButton>
+          )}
+          {nodes._id !== 'root' && (
+            <IconButton
+              role="button"
+              onClick={() => {
+                if (
+                  /** Confirm is temporary */
+                  // eslint-disable-next-line no-restricted-globals
+                  confirm(
+                    `Supprimer cette structure aura pour effet de supprimer tout ses enfants,
+               êtes-vous sûr de vouloir continuer ?`,
+                  )
+                )
+                  onDelete({ structureId: nodes._id, name: nodes.name, parentId: nodes.parentId });
+              }}
+              title={`Supprimer la structure ${nodes.name}`}
+            >
+              <DeleteIcon />
+            </IconButton>
+          )}
           {Array.isArray(nodes.children) ? nodes.children.map((node) => renderTree(node)) : null}
         </TreeItem>
       </div>
