@@ -3,6 +3,7 @@ import { useLocation, Route, Switch } from 'react-router-dom';
 import { useTracker } from 'meteor/react-meteor-data';
 import i18n from 'meteor/universe:i18n';
 import clsx from 'clsx';
+import { Roles } from 'meteor/alanning:roles';
 import Alert from '@material-ui/lab/Alert';
 import AppSettings from '../../api/appsettings/appsettings';
 
@@ -42,6 +43,7 @@ function AdminLayout() {
   const classes = useLayoutStyles(isMobile)();
   const location = useLocation();
 
+  const isAdmin = Roles.userIsInRole(userId, 'admin');
   const { appsettings = {}, ready = false } = useTracker(() => {
     const subSettings = Meteor.subscribe('appsettings.all');
     return {
@@ -74,7 +76,7 @@ function AdminLayout() {
                 </Alert>
               ) : null}
               {user.isActive ? (
-                user.structure !== undefined ? (
+                user.structure !== undefined || isAdmin ? (
                   <Switch>
                     <Route userId={userId} loadingUser={loadingUser} exact path="/admin" component={AdminHome} />
                     <AdminRoute
