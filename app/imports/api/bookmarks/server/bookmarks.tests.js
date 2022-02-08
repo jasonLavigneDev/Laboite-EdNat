@@ -3,6 +3,7 @@
 
 import { assert } from 'chai';
 import { Factory } from 'meteor/dburles:factory';
+import { PublicationCollector } from 'meteor/johanbrook:publication-collector';
 import { Meteor } from 'meteor/meteor';
 import '../../../../i18n/en.i18n.json';
 import faker from 'faker';
@@ -17,22 +18,92 @@ import { setAdminOf, setMemberOf } from '../../users/server/methods';
 describe('bookmarks', function () {
   describe('publications', function () {
     let userId;
+    let adminId;
+    let memberId;
+    let groupId;
+    let group2Id;
     before(function () {
       Meteor.users.remove({});
       Meteor.roleAssignment.remove({});
       Meteor.roles.remove({});
       Bookmarks.remove({});
+      Groups.remove({});
+      Roles.createRole('admin');
+      Roles.createRole('member');
 
       userId = Accounts.createUser({
-        username: 'yo',
+        username: 'randomguy',
         password: 'toto',
         email: faker.internet.email(),
         structure: faker.company.companyName(),
         firstName: faker.name.firstName(),
         lastName: faker.name.lastName(),
-        nclocator: '',
+        groupCount: 0,
+        groupQuota: 10,
       });
-      Meteor.users.update(userId, { $set: { isActive: true } });
+      adminId = Accounts.createUser({
+        email: faker.internet.email(),
+        username: 'admin',
+        password: 'toto',
+        structure: faker.company.companyName(),
+        firstName: faker.name.firstName(),
+        lastName: faker.name.lastName(),
+        groupCount: 0,
+        groupQuota: 10,
+      });
+      memberId = Accounts.createUser({
+        email: faker.internet.email(),
+        username: 'member',
+        password: 'toto',
+        structure: faker.company.companyName(),
+        firstName: faker.name.firstName(),
+        lastName: faker.name.lastName(),
+        groupCount: 0,
+        groupQuota: 10,
+      });
+      Meteor.users.update({}, { $set: { isActive: true } }, { multi: true });
+      Roles.addUsersToRoles(adminId, 'admin');
+      groupId = Factory.create('group', { owner: adminId, trype: 0 })._id;
+      group2Id = Factory.create('group', { owner: adminId, type: 5 })._id;
+      setMemberOf._execute({ userId: memberId }, { userId: memberId, groupId });
+      setMemberOf._execute({ userId: adminId }, { userId: memberId, groupId: group2Id });
+      const urls = ['Test/test', 'Test2/test', 'Test3/test'];
+      urls.forEach((url) =>
+        createBookmark._execute({ userId: adminId }, { url, name: url.split('/')[0], groupId, tag: 'Tag' }),
+      );
+      urls.forEach((url) =>
+        createBookmark._execute({ userId: adminId }, { url, name: url.split('/')[0], groupId: group2Id, tag: 'Tag' }),
+      );
+    });
+    describe('bookmark.group.all', function () {
+      it('does send bookmarks from a public group when not member', function (done) {
+        const collector = new PublicationCollector({ userId });
+        collector.collect('bookmark.group.all', { groupId }, (collections) => {
+          assert.equal(collections.bookmarks.length, 3);
+          done();
+        });
+      });
+      it('does not send bookmarks from a protected group when not member', function (done) {
+        const collector = new PublicationCollector({ userId });
+        collector.collect('bookmark.group.all', { groupId: group2Id }, (collections) => {
+          assert.equal(collections.bookmarks, undefined);
+          done();
+        });
+      });
+      it('does send bookmarks from a protected group when admin', function (done) {
+        const collector = new PublicationCollector({ userId: adminId });
+        collector.collect('bookmark.group.all', { groupId: group2Id }, (collections) => {
+          assert.equal(collections.bookmarks.length, 3);
+          done();
+        });
+      });
+      it('does send bookmarks from a protected group when member', function (done) {
+        const collector = new PublicationCollector({ userId: memberId });
+        collector.collect('bookmark.group.all', { groupId: group2Id }, (collections) => {
+          assert.equal(collections.bookmarks.length, 3);
+          done();
+        });
+      });
     });
   });
   describe('methods', function () {

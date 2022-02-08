@@ -13,6 +13,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Tooltip from '@material-ui/core/Tooltip';
 import add from '@material-ui/icons/Add';
 import Button from '@material-ui/core/Button';
+import Fade from '@material-ui/core/Fade';
 import { useHistory } from 'react-router-dom';
 import Spinner from '../../components/system/Spinner';
 import { useAppContext } from '../../contexts/context';
@@ -25,6 +26,7 @@ import { bookmarkColumns, useBookmarkPageStyles } from '../users/UserBookmarksPa
 
 function BookmarksPage({ loading, bookmarksList, group }) {
   const [{ userId }] = useAppContext();
+
   const history = useHistory();
   const [filter, setFilter] = useState(false);
   const classes = useBookmarkPageStyles();
@@ -40,9 +42,7 @@ function BookmarksPage({ loading, bookmarksList, group }) {
 
   const filterOnURL = () => setFilter(!filter);
 
-  const userInGroup = (checkId) => {
-    return Roles.userIsInRole(checkId, ['member', 'animator', 'admin'], group._id);
-  };
+  const userInGroup = Roles.userIsInRole(userId, ['member', 'animator', 'admin'], group._id);
 
   const goBack = () => {
     history.goBack();
@@ -66,17 +66,19 @@ function BookmarksPage({ loading, bookmarksList, group }) {
   };
 
   return (
-    <>
-      {loading ? (
-        <Spinner />
-      ) : userInGroup(userId) ? (
-        <div>
-          <Container style={{ overflowX: 'auto' }}>
-            <Grid className={classes.goBackButton} item xs={12} sm={12} md={12}>
-              <Button color="primary" startIcon={<ArrowBack />} onClick={goBack}>
-                {i18n.__('pages.Polls.back')}
-              </Button>
-            </Grid>
+    <Fade in>
+      <Container style={{ overflowX: 'auto' }}>
+        <Grid container spacing={4}>
+          <Grid item xs={12} sm={12} md={12}>
+            <Button color="primary" startIcon={<ArrowBack />} onClick={goBack}>
+              {i18n.__('pages.Polls.back')}
+            </Button>
+          </Grid>
+        </Grid>
+        {loading ? (
+          <Spinner />
+        ) : userInGroup || group.type === 0 ? (
+          <div>
             <Tooltip
               title={
                 filter
@@ -163,22 +165,22 @@ function BookmarksPage({ loading, bookmarksList, group }) {
                   }),
               }}
             />
-          </Container>
-          {editUrl ? (
-            <BookMarkEdit
-              data={bkData}
-              group={group}
-              onEdit={onEdit}
-              open={editUrl}
-              onClose={() => setEditUrl(false)}
-              method="bookmark"
-            />
-          ) : null}
-        </div>
-      ) : (
-        <p className={classes.ErrorPage}>{i18n.__('pages.BookmarksPage.noAccess')}</p>
-      )}
-    </>
+            {editUrl ? (
+              <BookMarkEdit
+                data={bkData}
+                group={group}
+                onEdit={onEdit}
+                open={editUrl}
+                onClose={() => setEditUrl(false)}
+                method="bookmark"
+              />
+            ) : null}
+          </div>
+        ) : (
+          <p className={classes.ErrorPage}>{i18n.__('pages.BookmarksPage.noAccess')}</p>
+        )}
+      </Container>
+    </Fade>
   );
 }
 

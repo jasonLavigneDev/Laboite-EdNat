@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { withTracker } from 'meteor/react-meteor-data';
+import { Roles } from 'meteor/alanning:roles';
 import PropTypes from 'prop-types';
-
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import Fade from '@material-ui/core/Fade';
@@ -22,9 +23,12 @@ import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import SendIcon from '@material-ui/icons/Send';
 import Pagination from '@material-ui/lab/Pagination';
 import { useHistory } from 'react-router-dom';
+import { useAppContext } from '../../contexts/context';
 import { usePagination } from '../../utils/hooks';
 import UserAvatar from '../../components/users/UserAvatar';
 import SearchField from '../../components/system/SearchField';
+import Spinner from '../../components/system/Spinner';
+import Groups from '../../../api/groups/groups';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,18 +47,19 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'flex-end',
     alignItems: 'center',
   },
+  ErrorPage: {
+    textAlign: 'center',
+  },
 }));
 
 const ITEM_PER_PAGE = 10;
 
-const AddressBook = ({
-  match: {
-    params: { slug },
-  },
-}) => {
+const AddressBook = ({ loading, group, slug }) => {
   const classes = useStyles();
   const history = useHistory();
   const [search, setSearch] = useState('');
+  const [{ userId }] = useAppContext();
+
   const { changePage, page, items, total } = usePagination(
     'users.group',
     { search, slug },
@@ -63,6 +68,8 @@ const AddressBook = ({
     { sort: { lastName: 1 } },
     ITEM_PER_PAGE,
   );
+
+  const userInGroup = Roles.userIsInRole(userId, ['member', 'animator', 'admin'], group._id);
 
   const handleChangePage = (event, value) => {
     changePage(value);
@@ -95,83 +102,97 @@ const AddressBook = ({
               {i18n.__('pages.AddressBook.back')}
             </Button>
           </Grid>
-          <Grid item xs={12} sm={12} md={6}>
-            <SearchField
-              updateSearch={updateSearch}
-              search={search}
-              resetSearch={resetSearch}
-              label={i18n.__('pages.AddressBook.searchText')}
-            />
-          </Grid>
-          {total > ITEM_PER_PAGE && (
-            <Grid item xs={12} sm={12} md={6} lg={6} className={classes.pagination}>
-              <Pagination count={Math.ceil(total / ITEM_PER_PAGE)} page={page} onChange={handleChangePage} />
-            </Grid>
-          )}
-          <Grid item xs={12} sm={12} md={12}>
-            <List className={classes.list} disablePadding>
-              {items.map((user, i) => [
-                <ListItem alignItems="flex-start" key={`user-${user.emails[0].address}`}>
-                  <ListItemAvatar>
-                    <UserAvatar userAvatar={user.avatar || ''} userFirstName={user.firstName} />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={`${user.firstName} ${user.lastName}`}
-                    secondary={
-                      <>
-                        <Typography component="span" variant="body2" className={classes.inline} color="textPrimary">
-                          {user.emails[0].address}
-                        </Typography>
-                        {user.structure ? ` - ${user.structure}` : null}
-                      </>
-                    }
-                  />
+          {loading ? (
+            <Spinner />
+          ) : userInGroup || group.type === 0 ? (
+            <>
+              <Grid item xs={12} sm={12} md={6}>
+                <SearchField
+                  updateSearch={updateSearch}
+                  search={search}
+                  resetSearch={resetSearch}
+                  label={i18n.__('pages.AddressBook.searchText')}
+                />
+              </Grid>
+              {total > ITEM_PER_PAGE && (
+                <Grid item xs={12} sm={12} md={6} lg={6} className={classes.pagination}>
+                  <Pagination count={Math.ceil(total / ITEM_PER_PAGE)} page={page} onChange={handleChangePage} />
+                </Grid>
+              )}
+              <Grid item xs={12} sm={12} md={12}>
+                <List className={classes.list} disablePadding>
+                  {items.map((user, i) => [
+                    <ListItem alignItems="flex-start" key={`user-${user.emails[0].address}`}>
+                      <ListItemAvatar>
+                        <UserAvatar userAvatar={user.avatar || ''} userFirstName={user.firstName} />
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={`${user.firstName} ${user.lastName}`}
+                        secondary={
+                          <>
+                            <Typography component="span" variant="body2" className={classes.inline} color="textPrimary">
+                              {user.emails[0].address}
+                            </Typography>
+                            {user.structure ? ` - ${user.structure}` : null}
+                          </>
+                        }
+                      />
 
-                  <ListItemSecondaryAction>
-                    {user.mezigName ? (
-                      <Tooltip title={`${i18n.__('pages.AddressBook.goToMezig')} ${user.firstName}`} aria-label="add">
-                        <IconButton
-                          edge="end"
-                          aria-label="comments"
-                          onClick={() =>
-                            window.open(
-                              `${Meteor.settings.public.services.mezigUrl}/profil/${user.mezigName}`,
-                              '_blank',
-                            )
-                          }
-                        >
-                          <LanguageIcon />
-                        </IconButton>
-                      </Tooltip>
-                    ) : null}
-                    {enableBlog && user.articlesCount !== 0 ? (
-                      <Tooltip title={`${i18n.__('pages.AddressBook.goToBlog')} ${user.firstName}`} aria-label="add">
-                        <IconButton
-                          edge="end"
-                          aria-label="comments"
-                          onClick={() => window.open(`${authorBlogPage}${user._id}`, '_blank')}
-                        >
-                          <LibraryBooksIcon />
-                        </IconButton>
-                      </Tooltip>
-                    ) : null}
-                    <Tooltip title={`${i18n.__('pages.AddressBook.sendEmail')} ${user.firstName}`} aria-label="add">
-                      <IconButton edge="end" aria-label="comments" href={`mailto:${user.emails[0].address}`}>
-                        <SendIcon />
-                      </IconButton>
-                    </Tooltip>
-                  </ListItemSecondaryAction>
-                </ListItem>,
-                i < ITEM_PER_PAGE - 1 && i < total - 1 && (
-                  <Divider variant="inset" component="li" key={`divider-${user.emails[0].address}`} />
-                ),
-              ])}
-            </List>
-          </Grid>
-          {total > ITEM_PER_PAGE && (
-            <Grid item xs={12} sm={12} md={12} lg={12} className={classes.pagination}>
-              <Pagination count={Math.ceil(total / ITEM_PER_PAGE)} page={page} onChange={handleChangePage} />
-            </Grid>
+                      <ListItemSecondaryAction>
+                        {user.mezigName ? (
+                          <Tooltip
+                            title={`${i18n.__('pages.AddressBook.goToMezig')} ${user.firstName}`}
+                            aria-label="add"
+                          >
+                            <IconButton
+                              edge="end"
+                              aria-label="comments"
+                              onClick={() =>
+                                window.open(
+                                  `${Meteor.settings.public.services.mezigUrl}/profil/${user.mezigName}`,
+                                  '_blank',
+                                )
+                              }
+                            >
+                              <LanguageIcon />
+                            </IconButton>
+                          </Tooltip>
+                        ) : null}
+                        {enableBlog && user.articlesCount !== 0 ? (
+                          <Tooltip
+                            title={`${i18n.__('pages.AddressBook.goToBlog')} ${user.firstName}`}
+                            aria-label="add"
+                          >
+                            <IconButton
+                              edge="end"
+                              aria-label="comments"
+                              onClick={() => window.open(`${authorBlogPage}${user._id}`, '_blank')}
+                            >
+                              <LibraryBooksIcon />
+                            </IconButton>
+                          </Tooltip>
+                        ) : null}
+                        <Tooltip title={`${i18n.__('pages.AddressBook.sendEmail')} ${user.firstName}`} aria-label="add">
+                          <IconButton edge="end" aria-label="comments" href={`mailto:${user.emails[0].address}`}>
+                            <SendIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </ListItemSecondaryAction>
+                    </ListItem>,
+                    i < ITEM_PER_PAGE - 1 && i < total - 1 && (
+                      <Divider variant="inset" component="li" key={`divider-${user.emails[0].address}`} />
+                    ),
+                  ])}
+                </List>
+              </Grid>
+              {total > ITEM_PER_PAGE && (
+                <Grid item xs={12} sm={12} md={12} lg={12} className={classes.pagination}>
+                  <Pagination count={Math.ceil(total / ITEM_PER_PAGE)} page={page} onChange={handleChangePage} />
+                </Grid>
+              )}
+            </>
+          ) : (
+            <p className={classes.ErrorPage}>{i18n.__('pages.AddressBook.noAccess')}</p>
           )}
         </Grid>
       </Container>
@@ -179,12 +200,25 @@ const AddressBook = ({
   );
 };
 
-export default AddressBook;
-
-AddressBook.defaultProps = {
-  match: {},
-};
+export default withTracker(
+  ({
+    match: {
+      params: { slug },
+    },
+  }) => {
+    const subGroup = Meteor.subscribe('groups.single', { slug });
+    const group = Groups.findOne({ slug }) || { slug: '' };
+    const loading = !subGroup.ready();
+    return {
+      loading,
+      group,
+      slug,
+    };
+  },
+)(AddressBook);
 
 AddressBook.propTypes = {
-  match: PropTypes.objectOf(PropTypes.any),
+  loading: PropTypes.bool.isRequired,
+  group: PropTypes.objectOf(PropTypes.any).isRequired,
+  slug: PropTypes.string.isRequired,
 };

@@ -53,7 +53,7 @@ export const createBookmark = new ValidatedMethod({
 
     const finalUrl = _formatURL(url);
 
-    const bk = Bookmarks.findOne({ url: finalUrl });
+    const bk = Bookmarks.findOne({ url: finalUrl, groupId });
     if (bk !== undefined) {
       throw new Meteor.Error(
         'api.bookmarks.createBookmark.URLAlreadyExists',

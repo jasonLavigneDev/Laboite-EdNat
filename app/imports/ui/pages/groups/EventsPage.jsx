@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { withTracker } from 'meteor/react-meteor-data';
+import { Roles } from 'meteor/alanning:roles';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import List from '@material-ui/core/List';
@@ -25,8 +27,11 @@ import IconButton from '@material-ui/core/IconButton';
 import Pagination from '@material-ui/lab/Pagination';
 import { useHistory } from 'react-router-dom';
 import { usePagination } from '../../utils/hooks';
+import { useAppContext } from '../../contexts/context';
+import Spinner from '../../components/system/Spinner';
+import Groups from '../../../api/groups/groups';
 
-import { EventsAgenda } from '../../../api/eventsAgenda/eventsAgenda';
+import EventsAgenda from '../../../api/eventsAgenda/eventsAgenda';
 
 export const useEvenstPageStyles = makeStyles((theme) => ({
   root: {
@@ -51,15 +56,16 @@ export const useEvenstPageStyles = makeStyles((theme) => ({
     display: 'inline-block',
     alignItems: 'center',
   },
+  ErrorPage: {
+    textAlign: 'center',
+  },
 }));
 
 const ITEM_PER_PAGE = 10;
 
-const EventsPage = ({
-  match: {
-    params: { slug },
-  },
-}) => {
+const EventsPage = ({ loading, group }) => {
+  const [{ userId }] = useAppContext();
+  const { slug } = group.slug;
   const classes = useEvenstPageStyles();
   const history = useHistory();
   const [search, setSearch] = useState('');
@@ -78,6 +84,8 @@ const EventsPage = ({
   };
   const updateSearch = (e) => setSearch(e.target.value);
   const resetSearch = () => setSearch('');
+
+  const userInGroup = Roles.userIsInRole(userId, ['member', 'animator', 'admin'], group._id);
 
   const goBack = () => {
     history.goBack();
@@ -123,84 +131,101 @@ const EventsPage = ({
               {i18n.__('pages.Events.back')}
             </Button>
           </Grid>
-          <Grid item xs={12} sm={12} md={6}>
-            <TextField
-              margin="normal"
-              id="search"
-              label={i18n.__('pages.Events.searchText')}
-              name="search"
-              fullWidth
-              onChange={updateSearch}
-              type="text"
-              value={search}
-              variant="outlined"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon />
-                  </InputAdornment>
-                ),
-                endAdornment: search ? (
-                  <InputAdornment position="end">
-                    <IconButton onClick={resetSearch}>
-                      <ClearIcon />
-                    </IconButton>
-                  </InputAdornment>
-                ) : null,
-              }}
-            />
-          </Grid>
-          {total > ITEM_PER_PAGE && (
-            <Grid item xs={12} sm={12} md={6} lg={6} className={classes.pagination}>
-              <Pagination count={Math.ceil(total / ITEM_PER_PAGE)} page={page} onChange={handleChangePage} />
-            </Grid>
-          )}
-          {items2.length > 0 ? (
-            <Grid item xs={12} sm={12} md={12}>
-              <List className={classes.list} disablePadding>
-                {items2.map((event, i) => [
-                  <ListItem alignItems="flex-start" key={`event-${event.title}`}>
-                    <EventAvailableIcon className={classes.icon} />
-                    <ListItemText
-                      primary={`${event.title} ${getEventLocation(event)}`}
-                      secondary={
-                        <>
-                          <Typography component="span" variant="body2" className={classes.inline} color="textPrimary">
-                            {`${formatDate(event)}`}
-                          </Typography>
-                        </>
-                      }
-                    />
-
-                    <ListItemSecondaryAction>
-                      <Tooltip title={`${i18n.__('pages.Events.seeEvent')} ${event.title}`} aria-label="add">
-                        <IconButton
-                          edge="end"
-                          aria-label="comments"
-                          onClick={() =>
-                            window.open(`${Meteor.settings.public.services.agendaUrl}`, '_blank', 'noreferrer,noopener')
-                          }
-                        >
-                          <ChevronRightIcon />
+          {loading ? (
+            <Spinner />
+          ) : userInGroup || group.type === 0 ? (
+            <>
+              <Grid item xs={12} sm={12} md={6}>
+                <TextField
+                  margin="normal"
+                  id="search"
+                  label={i18n.__('pages.Events.searchText')}
+                  name="search"
+                  fullWidth
+                  onChange={updateSearch}
+                  type="text"
+                  value={search}
+                  variant="outlined"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon />
+                      </InputAdornment>
+                    ),
+                    endAdornment: search ? (
+                      <InputAdornment position="end">
+                        <IconButton onClick={resetSearch}>
+                          <ClearIcon />
                         </IconButton>
-                      </Tooltip>
-                    </ListItemSecondaryAction>
-                  </ListItem>,
-                  i < ITEM_PER_PAGE - 1 && i < total - 1 && (
-                    <Divider variant="inset" component="li" key={`divider-${event.title}`} />
-                  ),
-                ])}
-              </List>
-            </Grid>
+                      </InputAdornment>
+                    ) : null,
+                  }}
+                />
+              </Grid>
+              {total > ITEM_PER_PAGE && (
+                <Grid item xs={12} sm={12} md={6} lg={6} className={classes.pagination}>
+                  <Pagination count={Math.ceil(total / ITEM_PER_PAGE)} page={page} onChange={handleChangePage} />
+                </Grid>
+              )}
+              {items2.length > 0 ? (
+                <Grid item xs={12} sm={12} md={12}>
+                  <List className={classes.list} disablePadding>
+                    {items2.map((event, i) => [
+                      <ListItem alignItems="flex-start" key={`event-${event.title}`}>
+                        <EventAvailableIcon className={classes.icon} />
+                        <ListItemText
+                          primary={`${event.title} ${getEventLocation(event)}`}
+                          secondary={
+                            <>
+                              <Typography
+                                component="span"
+                                variant="body2"
+                                className={classes.inline}
+                                color="textPrimary"
+                              >
+                                {`${formatDate(event)}`}
+                              </Typography>
+                            </>
+                          }
+                        />
+
+                        <ListItemSecondaryAction>
+                          <Tooltip title={`${i18n.__('pages.Events.seeEvent')} ${event.title}`} aria-label="add">
+                            <IconButton
+                              edge="end"
+                              aria-label="comments"
+                              onClick={() =>
+                                window.open(
+                                  `${Meteor.settings.public.services.agendaUrl}`,
+                                  '_blank',
+                                  'noreferrer,noopener',
+                                )
+                              }
+                            >
+                              <ChevronRightIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </ListItemSecondaryAction>
+                      </ListItem>,
+                      i < ITEM_PER_PAGE - 1 && i < total - 1 && (
+                        <Divider variant="inset" component="li" key={`divider-${event.title}`} />
+                      ),
+                    ])}
+                  </List>
+                </Grid>
+              ) : (
+                <Grid item xs={12} sm={12} md={12}>
+                  <p>{i18n.__('pages.Events.noEvents')}</p>
+                </Grid>
+              )}
+              {total > ITEM_PER_PAGE && (
+                <Grid item xs={12} sm={12} md={12} lg={12} className={classes.pagination}>
+                  <Pagination count={Math.ceil(total / ITEM_PER_PAGE)} page={page} onChange={handleChangePage} />
+                </Grid>
+              )}
+            </>
           ) : (
-            <Grid item xs={12} sm={12} md={12}>
-              <p>{i18n.__('pages.Events.noEvents')}</p>
-            </Grid>
-          )}
-          {total > ITEM_PER_PAGE && (
-            <Grid item xs={12} sm={12} md={12} lg={12} className={classes.pagination}>
-              <Pagination count={Math.ceil(total / ITEM_PER_PAGE)} page={page} onChange={handleChangePage} />
-            </Grid>
+            <p className={classes.ErrorPage}>{i18n.__('pages.EventsPage.noAccess')}</p>
           )}
         </Grid>
       </Container>
@@ -208,12 +233,23 @@ const EventsPage = ({
   );
 };
 
-export default EventsPage;
-
-EventsPage.defaultProps = {
-  match: {},
-};
+export default withTracker(
+  ({
+    match: {
+      params: { slug },
+    },
+  }) => {
+    const subGroup = Meteor.subscribe('groups.single', { slug });
+    const group = Groups.findOne({ slug }) || { slug: '' };
+    const loading = !subGroup.ready();
+    return {
+      loading,
+      group,
+    };
+  },
+)(EventsPage);
 
 EventsPage.propTypes = {
-  match: PropTypes.objectOf(PropTypes.any),
+  loading: PropTypes.bool.isRequired,
+  group: PropTypes.objectOf(PropTypes.any).isRequired,
 };

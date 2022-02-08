@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
-import { EventsAgenda } from './eventsAgenda';
+import EventsAgenda from './eventsAgenda';
 
 Meteor.methods({
   'eventsAgenda.getEventsWithTitleDateAuthor': (_title, startDate, endDate, author) => {

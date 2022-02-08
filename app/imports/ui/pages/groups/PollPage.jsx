@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { withTracker } from 'meteor/react-meteor-data';
+import { Roles } from 'meteor/alanning:roles';
 import PropTypes from 'prop-types';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -19,21 +21,20 @@ import IconButton from '@material-ui/core/IconButton';
 import Pagination from '@material-ui/lab/Pagination';
 import { useHistory } from 'react-router-dom';
 import { usePagination } from '../../utils/hooks';
-
-import { Polls } from '../../../api/polls/polls';
+import { useAppContext } from '../../contexts/context';
+import Groups from '../../../api/groups/groups';
+import Polls from '../../../api/polls/polls';
 import SearchField from '../../components/system/SearchField';
+import Spinner from '../../components/system/Spinner';
 import { useEvenstPageStyles } from './EventsPage';
 
 const ITEM_PER_PAGE = 10;
 
-const PollPage = ({
-  match: {
-    params: { slug },
-  },
-}) => {
+const PollPage = ({ loading, group, slug }) => {
   const classes = useEvenstPageStyles();
   const history = useHistory();
   const [search, setSearch] = useState('');
+  const [{ userId }] = useAppContext();
 
   const { changePage, page, items, total } = usePagination(
     'groups.polls',
@@ -43,6 +44,8 @@ const PollPage = ({
     { sorted: { title: -1 } },
     ITEM_PER_PAGE,
   );
+
+  const userInGroup = Roles.userIsInRole(userId, ['member', 'animator', 'admin'], group._id);
 
   const handleChangePage = (event, value) => {
     changePage(value);
@@ -69,69 +72,82 @@ const PollPage = ({
               {i18n.__('pages.Polls.back')}
             </Button>
           </Grid>
-          <Grid item xs={12} sm={12} md={6}>
-            <SearchField
-              updateSearch={updateSearch}
-              search={search}
-              resetSearch={resetSearch}
-              label={i18n.__('pages.Polls.searchText')}
-            />
-          </Grid>
-          {total > ITEM_PER_PAGE && (
-            <Grid item xs={12} sm={12} md={6} lg={6} className={classes.pagination}>
-              <Pagination count={Math.ceil(total / ITEM_PER_PAGE)} page={page} onChange={handleChangePage} />
-            </Grid>
-          )}
-          {items.length > 0 ? (
-            <Grid item xs={12} sm={12} md={12}>
-              <List className={classes.list} disablePadding>
-                {items.map((poll, i) => [
-                  <ListItem alignItems="flex-start" key={`user-${poll.title}`}>
-                    <PollIcon className={classes.icon} />
-                    <ListItemText
-                      primary={`${poll.title}`}
-                      secondary={
-                        <>
-                          <Typography component="span" variant="body2" className={classes.inline} color="textPrimary">
-                            {poll.description}
-                          </Typography>
-                        </>
-                      }
-                    />
-
-                    <ListItemSecondaryAction>
-                      <Tooltip title={`${i18n.__('pages.Polls.seePoll')} ${poll.title}`} aria-label="add">
-                        <IconButton
-                          edge="end"
-                          aria-label="comments"
-                          onClick={() =>
-                            window.open(
-                              `${Meteor.settings.public.services.sondagesUrl}/poll/answer/${poll._id}`,
-                              '_blank',
-                              'noreferrer,noopener',
-                            )
+          {loading ? (
+            <Spinner />
+          ) : userInGroup || group.type === 0 ? (
+            <>
+              <Grid item xs={12} sm={12} md={6}>
+                <SearchField
+                  updateSearch={updateSearch}
+                  search={search}
+                  resetSearch={resetSearch}
+                  label={i18n.__('pages.Polls.searchText')}
+                />
+              </Grid>
+              {total > ITEM_PER_PAGE && (
+                <Grid item xs={12} sm={12} md={6} lg={6} className={classes.pagination}>
+                  <Pagination count={Math.ceil(total / ITEM_PER_PAGE)} page={page} onChange={handleChangePage} />
+                </Grid>
+              )}
+              {items.length > 0 ? (
+                <Grid item xs={12} sm={12} md={12}>
+                  <List className={classes.list} disablePadding>
+                    {items.map((poll, i) => [
+                      <ListItem alignItems="flex-start" key={`user-${poll.title}`}>
+                        <PollIcon className={classes.icon} />
+                        <ListItemText
+                          primary={`${poll.title}`}
+                          secondary={
+                            <>
+                              <Typography
+                                component="span"
+                                variant="body2"
+                                className={classes.inline}
+                                color="textPrimary"
+                              >
+                                {poll.description}
+                              </Typography>
+                            </>
                           }
-                        >
-                          <ChevronRightIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </ListItemSecondaryAction>
-                  </ListItem>,
-                  i < ITEM_PER_PAGE - 1 && i < total - 1 && (
-                    <Divider variant="inset" component="li" key={`divider-${poll.title}`} />
-                  ),
-                ])}
-              </List>
-            </Grid>
+                        />
+
+                        <ListItemSecondaryAction>
+                          <Tooltip title={`${i18n.__('pages.Polls.seePoll')} ${poll.title}`} aria-label="add">
+                            <IconButton
+                              edge="end"
+                              aria-label="comments"
+                              onClick={() =>
+                                window.open(
+                                  `${Meteor.settings.public.services.sondagesUrl}/poll/answer/${poll._id}`,
+                                  '_blank',
+                                  'noreferrer,noopener',
+                                )
+                              }
+                            >
+                              <ChevronRightIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </ListItemSecondaryAction>
+                      </ListItem>,
+                      i < ITEM_PER_PAGE - 1 && i < total - 1 && (
+                        <Divider variant="inset" component="li" key={`divider-${poll.title}`} />
+                      ),
+                    ])}
+                  </List>
+                </Grid>
+              ) : (
+                <Grid item xs={12} sm={12} md={12}>
+                  <p>{i18n.__('pages.Polls.noPoll')}</p>
+                </Grid>
+              )}
+              {total > ITEM_PER_PAGE && (
+                <Grid item xs={12} sm={12} md={12} lg={12} className={classes.pagination}>
+                  <Pagination count={Math.ceil(total / ITEM_PER_PAGE)} page={page} onChange={handleChangePage} />
+                </Grid>
+              )}
+            </>
           ) : (
-            <Grid item xs={12} sm={12} md={12}>
-              <p>{i18n.__('pages.Polls.noPoll')}</p>
-            </Grid>
-          )}
-          {total > ITEM_PER_PAGE && (
-            <Grid item xs={12} sm={12} md={12} lg={12} className={classes.pagination}>
-              <Pagination count={Math.ceil(total / ITEM_PER_PAGE)} page={page} onChange={handleChangePage} />
-            </Grid>
+            <p className={classes.ErrorPage}>{i18n.__('pages.Polls.noAccess')}</p>
           )}
         </Grid>
       </Container>
@@ -139,12 +155,25 @@ const PollPage = ({
   );
 };
 
-export default PollPage;
-
-PollPage.defaultProps = {
-  match: {},
-};
+export default withTracker(
+  ({
+    match: {
+      params: { slug },
+    },
+  }) => {
+    const subGroup = Meteor.subscribe('groups.single', { slug });
+    const group = Groups.findOne({ slug }) || { slug: '' };
+    const loading = !subGroup.ready();
+    return {
+      loading,
+      group,
+      slug,
+    };
+  },
+)(PollPage);
 
 PollPage.propTypes = {
-  match: PropTypes.objectOf(PropTypes.any),
+  loading: PropTypes.bool.isRequired,
+  group: PropTypes.objectOf(PropTypes.any).isRequired,
+  slug: PropTypes.string.isRequired,
 };

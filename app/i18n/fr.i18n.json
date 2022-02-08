@@ -141,7 +141,7 @@
         "id": "Id de Groupe",
         "name": "Nom",
         "slug": "Slug",
-        "desciption": "Description",
+        "description": "Description",
         "content": "Description longue",
         "active": "Actif",
         "groupPadID": "Id de Pad du groupe",
@@ -756,7 +756,7 @@
       "filterTitle": "Seulement mes marque-pages",
       "disableFilter": "Afficher tous les marque-pages",
       "enableFilter": "Afficher seulement mes marque-pages",
-      "noAccess": "Vous n'avez pas accès aux marque-pages de ce groupe",
+      "noAccess": "Vous n'avez pas accès aux marque-pages de ce groupe.",
       "title": "Gestion des marque-pages",
       "materialTableLocalization": {
         "body_addTooltip": "Créer un nouveau marque-page",
@@ -768,6 +768,9 @@
         "body_editRow_deleteText": "Voulez-vous réellement supprimer ce marque-page ?",
         "body_actionTooltip": "Ouvrir le lien du marque-page"
       }
+    },
+    "EventsPage": {
+      "noAccess": "Vous n'avez pas accès aux évènements de ce groupe."
     },
     "LegalPage": {
       "personalData": "Données Personnelles",
@@ -1127,7 +1130,8 @@
       "goToMezig": "Voir la page Mezig de",
       "goToBlog": "Voir la page Blog de",
       "back": "Retour au groupe",
-      "searchText": "Quel utilisateur cherchez-vous ?"
+      "searchText": "Quel utilisateur cherchez-vous ?",
+      "noAccess": "Vous n'avez pas accès à l'annuaire de ce groupe."
     },
     "Events": {
       "seeEvent": "Voir l'événement",
@@ -1140,7 +1144,8 @@
       "seePoll": "Voir le sondage",
       "back": "Retour au groupe",
       "searchText": "Quel sondage cherchez-vous ?",
-      "noPoll": "Il n'y a actuellement aucun sondage en cours ou à venir pour ce groupe."
+      "noPoll": "Il n'y a actuellement aucun sondage en cours ou à venir pour ce groupe.",
+      "noAccess": "Vous n'avez pas accès aux sondages de ce groupe."
     },
     "ArticlesPage": {
       "title": "Vos publications",

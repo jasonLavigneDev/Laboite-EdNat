@@ -28,7 +28,7 @@ import '../../api/appsettings/server/publications';
 import '../../api/notifications/methods';
 import '../../api/notifications/server/publications';
 import '../../api/eventsAgenda/methods';
-import '../../api/eventsAgenda/server/publication';
+import '../../api/eventsAgenda/server/publications';
 import '../../api/polls/methods';
 import '../../api/polls/server/publications';
 import '../../api/migrations';
