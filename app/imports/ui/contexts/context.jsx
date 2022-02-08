@@ -4,7 +4,6 @@ import { withTracker } from 'meteor/react-meteor-data';
 import { Roles } from 'meteor/alanning:roles';
 import PropTypes from 'prop-types';
 
-import Structures from '../../api/structures/structures';
 import { useWindowSize } from '../utils/hooks';
 import reducer, { MOBILE_SIZE } from './reducer';
 import getLang from '../utils/getLang';
@@ -100,14 +99,13 @@ const DynamicStore = withTracker(() => {
   const structureIds = [];
 
   if (user && user.structure) {
-    (function enrichParents(parentId) {
-      const struct = Structures.findOne({ _id: parentId });
-      if (struct) {
-        structureIds.push(struct._id);
-        if (!struct.parentId) return;
-        enrichParents(struct.parentId);
+    Meteor.call('structures.getAllParentIdsTree', { structureId: user.structure }, (error, response) => {
+      if (error) {
+        msg.error(error.reason || error.details[0].message);
+      } else {
+        structureIds.push(...response);
       }
-    })(user.structure);
+    });
   }
 
   return {
