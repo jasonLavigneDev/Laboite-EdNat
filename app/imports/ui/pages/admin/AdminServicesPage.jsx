@@ -15,6 +15,7 @@ import Services from '../../../api/services/services';
 import { removeService } from '../../../api/services/methods';
 import setMaterialTableLocalization from '../../components/initMaterialTableLocalization';
 import { useStructure } from '../../../api/structures/utils';
+import { useAppContext } from '../../contexts/context';
 
 const { offlinePage } = Meteor.settings.public;
 
@@ -156,12 +157,15 @@ AdminServicesPage.propTypes = {
 };
 
 export default withTracker(({ match: { path } }) => {
+  const [{ structureIds }] = useAppContext();
   const structureMode = path === '/admin/structureservices';
-  const servicesHandle = Meteor.subscribe(structureMode ? 'services.structure' : 'services.all');
+  const subName = structureMode ? 'services.structure' : 'services.all';
+  const servicesHandle = Meteor.subscribe(subName, structureMode && { structureIds });
   const loading = !servicesHandle.ready();
   let services;
+
   if (structureMode) {
-    services = Services.findFromPublication('services.structure', {}, { sort: { title: 1 } }).fetch();
+    services = Services.findFromPublication(subName, {}, { sort: { title: 1 } }).fetch();
   } else {
     services = Services.find({}, { sort: { title: 1 } }).fetch();
   }
