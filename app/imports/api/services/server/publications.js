@@ -18,18 +18,15 @@ Meteor.publish('services.all', function servicesAll() {
 });
 
 // publish available sergices attached to current user structure
-FindFromPublication.publish('services.structure', function servicesStructure() {
+FindFromPublication.publish('services.structure', function servicesStructure({ structureIds } = { structureIds: [] }) {
   if (!isActive(this.userId)) {
     return this.ready();
   }
-  const userStructure = Meteor.users.findOne(this.userId).structure;
-  if (userStructure) {
-    return Services.find(
-      { structure: userStructure },
-      { fields: Services.publicFields, sort: { title: 1 }, limit: 1000 },
-    );
-  }
-  return this.ready();
+
+  return Services.find(
+    { structure: { $in: structureIds } },
+    { fields: Services.publicFields, sort: { title: 1 }, limit: 1000 },
+  );
 });
 
 FindFromPublication.publish('services.one.admin', function servicesOne({ _id }) {
