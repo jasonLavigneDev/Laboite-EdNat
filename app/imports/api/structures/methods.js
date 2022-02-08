@@ -112,8 +112,44 @@ export const removeStructure = new ValidatedMethod({
   },
 });
 
+export const getAllParentIdsTreeStructure = new ValidatedMethod({
+  name: 'structures.getAllParentIdsTree',
+  validate: new SimpleSchema({
+    structureId: { type: String, regEx: SimpleSchema.RegEx.Id, label: getLabel('api.structures.labels.id') },
+  }).validator(),
+  run({ structureId }) {
+    const structureIds = [];
+
+    (function enrichParents(parentId) {
+      const struct = Structures.findOne({ _id: parentId });
+      if (struct === undefined) {
+        throw new Meteor.Error(
+          'api.structures.getAllParentIdsTree.unknownStructure',
+          i18n.__('api.structures.unknownStructures'),
+        );
+      }
+      if (struct) {
+        structureIds.push(struct._id);
+        if (!struct.parentId) return;
+        enrichParents(struct.parentId);
+      }
+    })(structureId);
+
+    const authorized = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
+
+    if (!authorized) {
+      throw new Meteor.Error('api.structures.getAllParentIdsTree.notPermitted', i18n.__('api.users.notPermitted'));
+    }
+
+    return structureIds;
+  },
+});
+
 // Get list of all method names on Structures
-const LISTS_METHODS = _.pluck([createStructure, updateStructure, removeStructure], 'name');
+const LISTS_METHODS = _.pluck(
+  [createStructure, updateStructure, removeStructure, getAllParentIdsTreeStructure],
+  'name',
+);
 
 if (Meteor.isServer) {
   // Only allow 5 list operations per connection per second
