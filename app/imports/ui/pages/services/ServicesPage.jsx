@@ -380,16 +380,13 @@ ServicesPage.defaultProps = {
 };
 
 export default withTracker(({ match: { path } }) => {
+  const [{ structureIds }] = useAppContext();
   const structureMode = path === '/structure';
   const subName = structureMode ? 'services.structure' : 'services.all';
-  const servicesHandle = Meteor.subscribe(subName);
+  const servicesHandle = Meteor.subscribe(subName, structureMode && { structureIds });
   let services;
   if (structureMode) {
-    services = Services.findFromPublication(
-      'services.structure',
-      { state: { $ne: 10 } },
-      { sort: { title: 1 } },
-    ).fetch();
+    services = Services.findFromPublication(subName, { state: { $ne: 10 } }, { sort: { title: 1 } }).fetch();
   } else {
     services = Services.find({ state: { $ne: 10 } }, { sort: { title: 1 } }).fetch();
   }

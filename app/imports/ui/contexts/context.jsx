@@ -4,6 +4,7 @@ import { withTracker } from 'meteor/react-meteor-data';
 import { Roles } from 'meteor/alanning:roles';
 import PropTypes from 'prop-types';
 
+import Structures from '../../api/structures/structures';
 import { useWindowSize } from '../utils/hooks';
 import reducer, { MOBILE_SIZE } from './reducer';
 import getLang from '../utils/getLang';
@@ -23,6 +24,10 @@ const initialState = {
   notificationPage: {},
   roles: [],
   uploads: [],
+  /** Liste d'ids de structure pour les services.
+   * Celà concerne tout les ids de tout les parents de la structure actuelle.
+   */
+  structureIds: [],
 };
 
 const logger = (state, action) => {
@@ -46,7 +51,7 @@ const sendStateToIframe = (userId) => {
   );
 };
 
-const Store = ({ children, loggingIn, user, userId, authenticated, roles, loadingUser }) => {
+const Store = ({ children, loggingIn, user, userId, authenticated, roles, loadingUser, structureIds }) => {
   const [state, dispatch] = useReducer(logger, initialState);
   const { width } = useWindowSize();
 
@@ -64,6 +69,7 @@ const Store = ({ children, loggingIn, user, userId, authenticated, roles, loadin
         userId,
         authenticated,
         roles,
+        structureIds,
       },
     });
     if (user && user.language && user.language !== state.language) {
@@ -77,7 +83,7 @@ const Store = ({ children, loggingIn, user, userId, authenticated, roles, loadin
     if (state.isIframed) {
       sendStateToIframe(userId);
     }
-  }, [loggingIn, user, userId, authenticated, roles, loadingUser]);
+  }, [loggingIn, user, userId, authenticated, roles, loadingUser, structureIds]);
 
   return <Context.Provider value={[state, dispatch]}>{children}</Context.Provider>;
 };
@@ -91,6 +97,18 @@ const DynamicStore = withTracker(() => {
   const loggingIn = Meteor.loggingIn();
   const user = Meteor.user();
   const userId = Meteor.userId();
+  const structureIds = [];
+
+  if (user && user.structure) {
+    (function enrichParents(parentId) {
+      const struct = Structures.findOne({ _id: parentId });
+      if (struct) {
+        structureIds.push(struct._id);
+        if (!struct.parentId) return;
+        enrichParents(struct.parentId);
+      }
+    })(user.structure);
+  }
 
   return {
     loadingUser,
@@ -99,6 +117,7 @@ const DynamicStore = withTracker(() => {
     user,
     userId,
     roles: Roles.getRolesForUser(userId),
+    structureIds,
   };
 })(Store);
 
@@ -111,6 +130,7 @@ Store.defaultProps = {
   userId: undefined,
   user: {},
   roles: [],
+  structureIds: [],
 };
 
 Store.propTypes = {
@@ -121,4 +141,5 @@ Store.propTypes = {
   user: PropTypes.objectOf(PropTypes.any),
   roles: PropTypes.arrayOf(PropTypes.string),
   children: PropTypes.element.isRequired,
+  structureIds: PropTypes.arrayOf(PropTypes.string),
 };
