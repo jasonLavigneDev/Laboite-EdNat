@@ -159,7 +159,7 @@ AdminServicesPage.propTypes = {
 export default withTracker(({ match: { path } }) => {
   const [{ structureIds }] = useAppContext();
   const structureMode = path === '/admin/structureservices';
-  const subName = structureMode ? 'services.structure' : 'services.all';
+  const subName = structureMode ? 'services.structure.ids' : 'services.all';
   const servicesHandle = Meteor.subscribe(subName, structureMode && { structureIds });
   const loading = !servicesHandle.ready();
   let services;
