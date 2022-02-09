@@ -1086,7 +1086,8 @@
       "save": "Sauvegarder",
       "update": "Mettre à jour",
       "cancel": "Annuler",
-      "logo_url": "URL du logo"
+      "logo_url": "URL du logo",
+      "offlineService": "Activer ce service sur la page non connectée"
     },
     "AdminSingleGroupPage": {
       "edition": "Édition du groupe",
