@@ -57,7 +57,7 @@ Articles.schema = new SimpleSchema(
       optional: true,
     },
     structure: {
-      type: String,
+      type: SimpleSchema.RegEx.Id,
       label: getLabel('api.articles.labels.structure'),
     },
     markdown: { type: Boolean, label: getLabel('api.articles.labels.markdown'), defaultValue: false },

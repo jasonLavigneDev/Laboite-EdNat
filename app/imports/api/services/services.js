@@ -63,7 +63,7 @@ Services.schema = new SimpleSchema(
     screenshots: { type: Array, defaultValue: [], label: getLabel('api.services.labels.screenshots') },
     'screenshots.$': { type: String },
     structure: {
-      type: String,
+      type: SimpleSchema.RegEx.Id,
       index: true,
       label: getLabel('api.services.labels.structure'),
       defaultValue: '',

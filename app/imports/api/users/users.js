@@ -109,7 +109,7 @@ Meteor.users.schema = new SimpleSchema(
       type: { type: String, regEx: SimpleSchema.RegEx.Id },
     },
     structure: {
-      type: String,
+      type: SimpleSchema.RegEx.Id,
       optional: true,
       label: getLabel('api.users.labels.structure'),
     },
