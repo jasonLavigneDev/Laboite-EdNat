@@ -362,7 +362,7 @@ const structureOptions = [
 
 Migrations.add({
   version: 20,
-  name: 'Update structure key to hold id instead of structure name for user',
+  name: 'Attach users to their structure',
   up: () => {
     const isStructuresSet = Meteor.users.findOne({ structure: { $exists: true } });
     if (isStructuresSet) {
@@ -381,6 +381,34 @@ Migrations.add({
       .fetch()
       .forEach(({ name, _id }) => {
         Meteor.users.rawCollection().updateMany({ structure: _id }, { $set: { structure: name } });
+      });
+  },
+});
+
+Migrations.add({
+  version: 21,
+  name: 'Attach services to their structure if needed',
+  up: () => {
+    const allStructures = Structures.find({}).fetch();
+    const structIds = allStructures.map((struct) => struct._id);
+    const structuresInfo = {};
+    allStructures.forEach((struct) => {
+      structuresInfo[struct.name] = struct._id;
+    });
+    // check if we find services with structure set and not matching any structure id
+    Services.find({ structure: { $nin: ['', ...structIds] } })
+      .fetch()
+      .forEach((serv) => {
+        // if service structure matches any known structure name, replace by structure id
+        if (structuresInfo[serv.structure])
+          Services.update(serv._id, { $set: { structure: structuresInfo[serv.structure] } });
+      });
+  },
+  down: () => {
+    Structures.find()
+      .fetch()
+      .forEach(({ name, _id }) => {
+        Services.rawCollection().updateMany({ structure: _id }, { $set: { structure: name } });
       });
   },
 });
