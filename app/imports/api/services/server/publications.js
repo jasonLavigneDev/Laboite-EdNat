@@ -17,17 +17,35 @@ Meteor.publish('services.all', function servicesAll() {
   return Services.find({ structure: '' }, { fields: Services.publicFields, sort: { title: 1 }, limit: 1000 });
 });
 
-// publish available sergices attached to current user structure
-FindFromPublication.publish('services.structure', function servicesStructure({ structureIds } = { structureIds: [] }) {
+// publish available services attached to current user structure
+FindFromPublication.publish('services.structure', function servicesStructure() {
   if (!isActive(this.userId)) {
     return this.ready();
   }
-
-  return Services.find(
-    { structure: { $in: structureIds } },
-    { fields: Services.publicFields, sort: { title: 1 }, limit: 1000 },
-  );
+  const userStructure = Meteor.users.findOne(this.userId).structure;
+  if (userStructure) {
+    return Services.find(
+      { structure: userStructure },
+      { fields: Services.publicFields, sort: { title: 1 }, limit: 1000 },
+    );
+  }
+  return this.ready();
 });
+
+// publish services of given structure ids
+FindFromPublication.publish(
+  'services.structure.ids',
+  function servicesStructureByIds({ structureIds } = { structureIds: [] }) {
+    if (!isActive(this.userId)) {
+      return this.ready();
+    }
+
+    return Services.find(
+      { structure: { $in: structureIds } },
+      { fields: Services.publicFields, sort: { title: 1 }, limit: 1000 },
+    );
+  },
+);
 
 FindFromPublication.publish('services.one.admin', function servicesOne({ _id }) {
   try {
