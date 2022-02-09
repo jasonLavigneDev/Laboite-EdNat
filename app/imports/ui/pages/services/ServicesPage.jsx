@@ -382,7 +382,7 @@ ServicesPage.defaultProps = {
 export default withTracker(({ match: { path } }) => {
   const [{ structureIds }] = useAppContext();
   const structureMode = path === '/structure';
-  const subName = structureMode ? 'services.structure' : 'services.all';
+  const subName = structureMode ? 'services.structure.ids' : 'services.all';
   const servicesHandle = Meteor.subscribe(subName, structureMode && { structureIds });
   let services;
   if (structureMode) {
