@@ -2,6 +2,9 @@
   "name": "app",
   "private": true,
   "version": "3.3.4",
+  "license": "EUL",
+  "description": "Online service platform",
+  "author": "EOLE <team@eole.education> - DINUM",
   "scripts": {
     "start": "meteor --exclude-archs 'web.browser.legacy, web.cordova' --settings ../config/settings.development.json",
     "test": "meteor test --once --exclude-archs 'web.browser.legacy, web.cordova' --driver-package meteortesting:mocha --allow-superuser",
