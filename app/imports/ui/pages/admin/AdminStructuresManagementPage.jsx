@@ -242,31 +242,33 @@ const AdminStructureManagementPage = () => {
                 </Button>
               </DialogActions>
             </Dialog>
-            <TreeView
-              aria-label={i18n.__('pages.AdminStructuresManagementPage.list')}
-              defaultCollapseIcon={<ExpandMoreIcon />}
-              defaultExpandIcon={<ChevronRightIcon />}
-              sx={{
-                height: 110,
-                flexGrow: 1,
-                overflowY: 'auto',
-              }}
-              expanded={expandedIds}
-              onNodeToggle={(event, nodesIds) => {
-                setExpandedIds(nodesIds);
-              }}
-            >
-              {treeData.map((nodes) => (
-                <AdminStructureTreeItem
-                  key={nodes._id}
-                  nodes={nodes}
-                  onClickAddBtn={onClickAddBtn}
-                  onClickEditBtn={onClickEditBtn}
-                  onClickDeleteBtn={onClickDeleteBtn}
-                  updateParentIdsList={updateParentIdsList}
-                />
-              ))}
-            </TreeView>
+            <Card>
+              <TreeView
+                aria-label={i18n.__('pages.AdminStructuresManagementPage.list')}
+                defaultCollapseIcon={<ExpandMoreIcon />}
+                defaultExpandIcon={<ChevronRightIcon />}
+                sx={{
+                  height: 110,
+                  flexGrow: 1,
+                  overflowY: 'auto',
+                }}
+                expanded={expandedIds}
+                onNodeToggle={(event, nodesIds) => {
+                  setExpandedIds(nodesIds);
+                }}
+              >
+                {treeData.map((nodes) => (
+                  <AdminStructureTreeItem
+                    key={nodes._id}
+                    nodes={nodes}
+                    onClickAddBtn={onClickAddBtn}
+                    onClickEditBtn={onClickEditBtn}
+                    onClickDeleteBtn={onClickDeleteBtn}
+                    updateParentIdsList={updateParentIdsList}
+                  />
+                ))}
+              </TreeView>
+            </Card>
           </Container>
         </Fade>
       )}
