@@ -23,6 +23,7 @@ import IconButton from '@material-ui/core/IconButton';
 import ClearIcon from '@material-ui/icons/Clear';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
 
 import AdminStructureTreeItem from '../../components/admin/AdminStructureTreeItem';
 import Spinner from '../../components/system/Spinner';
@@ -30,6 +31,7 @@ import Spinner from '../../components/system/Spinner';
 import { useObjectState } from '../../utils/hooks';
 import { getTree } from '../../../api/utils';
 import Structures from '../../../api/structures/structures';
+import AdminStructureSearchBar from '../../components/admin/AdminStructureSearchBar';
 
 const onCreate = ({ name, parentId, updateParentIdsList }) => {
   Meteor.call('structures.createStructure', { name, parentId: parentId || null }, (error, success) => {
@@ -79,7 +81,8 @@ const AdminStructureManagementPage = () => {
   /** For controlled tree view api */
   const [expandedIds, setExpandedIds] = useState([]);
 
-  const { treeData, loading } = useTracker(() => {
+  const [filteredFlatData, setFilteredFlatData] = useState([]);
+  const { flatData, loading } = useTracker(() => {
     const structuresHandle = Meteor.subscribe('structures.top.with.childs', { parentIds });
     const isLoading = !structuresHandle.ready();
     const structures = Structures.find(
@@ -88,11 +91,10 @@ const AdminStructureManagementPage = () => {
       },
       { sort: { name: 1 } },
     ).fetch();
-    const data = getTree(structures);
-
+    setFilteredFlatData(structures);
     return {
-      treeData: data,
       loading: isLoading,
+      flatData: structures,
     };
   }, [parentIds]);
 
@@ -169,6 +171,17 @@ const AdminStructureManagementPage = () => {
     setIsOpenDeleteConfirm(false);
   };
 
+  const [searchText, setSearchText] = useState('');
+  const resetSearchText = () => setSearchText('');
+  const resetFilter = () => {
+    setFilteredFlatData(flatData);
+  };
+  const requestFilter = (filterValue) => {
+    if (searchText.length < 1) return resetFilter();
+    const data = flatData.filter((struct) => struct.name.toLowerCase().includes(filterValue.toLowerCase()));
+    return setFilteredFlatData(data);
+  };
+
   return (
     <>
       {loading ? (
@@ -243,7 +256,22 @@ const AdminStructureManagementPage = () => {
               </DialogActions>
             </Dialog>
             <Card>
-              <CardHeader title={i18n.__('pages.AdminStructuresManagementPage.title')} />
+              <Box display="flex" justifyContent="space-between">
+                <Box>
+                  <CardHeader title={i18n.__('pages.AdminStructuresManagementPage.title')} />
+                  <Typography color="textSecondary" style={{ paddingLeft: 16 }}>
+                    {i18n.__('pages.AdminStructuresManagementPage.helpText')}
+                  </Typography>
+                </Box>
+
+                {AdminStructureSearchBar({
+                  searchValue: searchText,
+                  setSearchText,
+                  requestFilter,
+                  resetSearchText,
+                  resetFilter,
+                })}
+              </Box>
               <CardContent>
                 <TreeView
                   aria-label={i18n.__('pages.AdminStructuresManagementPage.list')}
@@ -259,7 +287,7 @@ const AdminStructureManagementPage = () => {
                     setExpandedIds(nodesIds);
                   }}
                 >
-                  {treeData.map((nodes) => (
+                  {getTree(filteredFlatData).map((nodes) => (
                     <AdminStructureTreeItem
                       key={nodes._id}
                       nodes={nodes}
