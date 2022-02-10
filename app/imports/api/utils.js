@@ -129,7 +129,6 @@ export const getTree = (
   });
 
   if (!(rootKey in childrenToParents)) {
-    console.warn(rootKey, childrenToParents);
     return [];
   }
 
