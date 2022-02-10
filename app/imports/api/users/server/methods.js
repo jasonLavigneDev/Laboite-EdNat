@@ -228,7 +228,7 @@ export const setStructure = new ValidatedMethod({
   name: 'users.setStructure',
   validate: new SimpleSchema({
     structure: {
-      type: String,
+      type: SimpleSchema.RegEx.Id,
       /**
        * @deprecated
        * Since we're now using dynamic structures, we do not need to check if it's allowed in the schema
