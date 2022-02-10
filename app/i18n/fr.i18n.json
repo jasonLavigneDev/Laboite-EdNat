@@ -732,6 +732,10 @@
     "OfflineMenu": {
       "home": "Accueil",
       "apps": "Applications"
+    },
+    "AdminStructuresSearchBar": {
+      "clear": "Effacer",
+      "filterByName": "Filter par nom de structure de premier niveau"
     }
   },
   "validatejs": {
@@ -964,7 +968,8 @@
       "close": "Fermer",
       "confirmation": "Confirmation",
       "submit": "Valider",
-      "cancel": "Annuler"
+      "cancel": "Annuler",
+      "helpText": "Cliquez sur une structure pour dévoiler ses enfants potentiels."
     },
     "AdminGroupsPage": {
       "title": "Gestion des groupes",
