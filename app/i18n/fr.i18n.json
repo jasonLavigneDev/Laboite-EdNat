@@ -961,7 +961,10 @@
         "deleteStructure": "Supprimer cette structure",
         "confirm": "Supprimer cette structure aura pour effet de supprimer tout ses enfants. Etes-vous sûr de vouloir continuer ?"
       },
-      "close": "Fermer"
+      "close": "Fermer",
+      "confirmation": "Confirmation",
+      "submit": "Valider",
+      "cancel": "Annuler"
     },
     "AdminGroupsPage": {
       "title": "Gestion des groupes",
