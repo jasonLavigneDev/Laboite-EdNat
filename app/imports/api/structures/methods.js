@@ -112,6 +112,10 @@ export const removeStructure = new ValidatedMethod({
   },
 });
 
+// export const getAllTopLevelStructures = new ValidatedMethod({
+//   name: 'structures.getAllTopLevelStructures',
+//   run() {},
+// });
 export const getAllParentIdsTreeStructure = new ValidatedMethod({
   name: 'structures.getAllParentIdsTree',
   validate: new SimpleSchema({
@@ -123,10 +127,7 @@ export const getAllParentIdsTreeStructure = new ValidatedMethod({
     (function enrichParents(parentId) {
       const struct = Structures.findOne({ _id: parentId });
       if (struct === undefined) {
-        throw new Meteor.Error(
-          'api.structures.getAllParentIdsTree.unknownStructure',
-          i18n.__('api.structures.unknownStructures'),
-        );
+        return;
       }
       if (struct) {
         structureIds.push(struct._id);
