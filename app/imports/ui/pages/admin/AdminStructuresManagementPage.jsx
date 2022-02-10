@@ -243,31 +243,34 @@ const AdminStructureManagementPage = () => {
               </DialogActions>
             </Dialog>
             <Card>
-              <TreeView
-                aria-label={i18n.__('pages.AdminStructuresManagementPage.list')}
-                defaultCollapseIcon={<ExpandMoreIcon />}
-                defaultExpandIcon={<ChevronRightIcon />}
-                sx={{
-                  height: 110,
-                  flexGrow: 1,
-                  overflowY: 'auto',
-                }}
-                expanded={expandedIds}
-                onNodeToggle={(event, nodesIds) => {
-                  setExpandedIds(nodesIds);
-                }}
-              >
-                {treeData.map((nodes) => (
-                  <AdminStructureTreeItem
-                    key={nodes._id}
-                    nodes={nodes}
-                    onClickAddBtn={onClickAddBtn}
-                    onClickEditBtn={onClickEditBtn}
-                    onClickDeleteBtn={onClickDeleteBtn}
-                    updateParentIdsList={updateParentIdsList}
-                  />
-                ))}
-              </TreeView>
+              <CardHeader title={i18n.__('pages.AdminStructuresManagementPage.title')} />
+              <CardContent>
+                <TreeView
+                  aria-label={i18n.__('pages.AdminStructuresManagementPage.list')}
+                  defaultCollapseIcon={<ExpandMoreIcon />}
+                  defaultExpandIcon={<ChevronRightIcon />}
+                  sx={{
+                    height: 110,
+                    flexGrow: 1,
+                    overflowY: 'auto',
+                  }}
+                  expanded={expandedIds}
+                  onNodeToggle={(event, nodesIds) => {
+                    setExpandedIds(nodesIds);
+                  }}
+                >
+                  {treeData.map((nodes) => (
+                    <AdminStructureTreeItem
+                      key={nodes._id}
+                      nodes={nodes}
+                      onClickAddBtn={onClickAddBtn}
+                      onClickEditBtn={onClickEditBtn}
+                      onClickDeleteBtn={onClickDeleteBtn}
+                      updateParentIdsList={updateParentIdsList}
+                    />
+                  ))}
+                </TreeView>
+              </CardContent>
             </Card>
           </Container>
         </Fade>
