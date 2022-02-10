@@ -958,7 +958,10 @@
         "deleteStructure": "Remove this structure",
         "confirm": "Removing this structure will remove all of its children. Are you sure ?"
       },
-      "close": "Close"
+      "close": "Close",
+      "confirmation": "Confirmation",
+      "submit": "Submit",
+      "cancel": "Cancel"
     },
     "AdminGroupsPage": {
       "title": "Groups Management",
