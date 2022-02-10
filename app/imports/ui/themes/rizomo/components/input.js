@@ -14,6 +14,7 @@ export const inputOverrides = (palette) => ({
         borderWidth: 'unset',
         borderRadius: 'inherit',
       },
+      '&.MuiOutlinedInput-adornedStart': { paddingLeft: 0 },
     },
     notchedOutline: {
       borderColor: 'rgba(0,0,0,0)',
