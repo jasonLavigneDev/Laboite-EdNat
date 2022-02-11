@@ -13,9 +13,6 @@ import Dialog from '@material-ui/core/Dialog';
 import Fade from '@material-ui/core/Fade';
 import Backdrop from '@material-ui/core/Backdrop';
 import Container from '@material-ui/core/Container';
-import TreeView from '@material-ui/lab/TreeView';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import Modal from '@material-ui/core/Modal';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
@@ -25,13 +22,13 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 
-import AdminStructureTreeItem from '../../components/admin/AdminStructureTreeItem';
 import Spinner from '../../components/system/Spinner';
 
 import { useObjectState } from '../../utils/hooks';
 import { getTree } from '../../../api/utils';
 import Structures from '../../../api/structures/structures';
 import AdminStructureSearchBar from '../../components/admin/AdminStructureSearchBar';
+import AdminStructureTreeView from '../../components/admin/AdminStructureTreeView';
 
 const onCreate = ({ name, parentId, updateParentIdsList }) => {
   Meteor.call('structures.createStructure', { name, parentId: parentId || null }, (error, success) => {
@@ -273,31 +270,15 @@ const AdminStructureManagementPage = () => {
                 })}
               </Box>
               <CardContent>
-                <TreeView
-                  aria-label={i18n.__('pages.AdminStructuresManagementPage.list')}
-                  defaultCollapseIcon={<ExpandMoreIcon />}
-                  defaultExpandIcon={<ChevronRightIcon />}
-                  sx={{
-                    height: 110,
-                    flexGrow: 1,
-                    overflowY: 'auto',
-                  }}
-                  expanded={expandedIds}
-                  onNodeToggle={(event, nodesIds) => {
-                    setExpandedIds(nodesIds);
-                  }}
-                >
-                  {getTree(filteredFlatData).map((nodes) => (
-                    <AdminStructureTreeItem
-                      key={nodes._id}
-                      nodes={nodes}
-                      onClickAddBtn={onClickAddBtn}
-                      onClickEditBtn={onClickEditBtn}
-                      onClickDeleteBtn={onClickDeleteBtn}
-                      updateParentIdsList={updateParentIdsList}
-                    />
-                  ))}
-                </TreeView>
+                <AdminStructureTreeView
+                  treeData={getTree(filteredFlatData)}
+                  onClickAddBtn={onClickAddBtn}
+                  onClickEditBtn={onClickEditBtn}
+                  onClickDeleteBtn={onClickDeleteBtn}
+                  setExpandedIds={setExpandedIds}
+                  updateParentIdsList={updateParentIdsList}
+                  expandedIds={expandedIds}
+                />
               </CardContent>
             </Card>
           </Container>
