@@ -183,8 +183,10 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
       });
     } else if (name === 'state') {
       setServiceData({ ...serviceData, [name]: Number(value) });
+    } else if (name === 'offline') {
+      setServiceData({ ...serviceData, [name]: checked });
     } else {
-      setServiceData({ ...serviceData, [name]: typeof checked !== 'undefined' ? checked : value });
+      setServiceData({ ...serviceData, [name]: value });
     }
   };
 
