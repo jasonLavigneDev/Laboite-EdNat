@@ -11,7 +11,6 @@ import HomeIcon from '@material-ui/icons/Home';
 import HelpIcon from '@material-ui/icons/Help';
 import BusinessIcon from '@material-ui/icons/Business';
 import AppsIcon from '@material-ui/icons/Apps';
-import AppBar from '@material-ui/core/AppBar';
 import { useAppContext } from '../../contexts/context';
 import updateDocumentTitle from '../../utils/updateDocumentTitle';
 
@@ -61,11 +60,6 @@ export const links = [
 
 const useStyles = (mobile) =>
   makeStyles((theme) => ({
-    root: {
-      backgroundColor: theme.palette.tertiary.main,
-      bottom: 0,
-      top: 'auto',
-    },
     tabs: {
       color: theme.palette.text.primary,
     },
@@ -120,36 +114,34 @@ const MenuBar = ({ mobile }) => {
   };
 
   return (
-    <AppBar position="fixed" className={classes.root}>
-      <Tabs
-        className={classes.tabs}
-        classes={{
-          flexContainer: classes.flexContainer,
-          indicator: classes.indicator,
-        }}
-        value={currentLink ? currentLink.path : false}
-        indicatorColor="secondary"
-        textColor="primary"
-        aria-label="menu links"
-        variant="scrollable"
-        scrollButtons="on"
-      >
-        {finalLink.map((link, index) => (
-          <Tab
-            {...a11yProps(index)}
-            key={link.path}
-            value={link.path}
-            title={link.tooltip ? i18n.__(`components.MenuBar.${link.tooltip}`) : ''}
-            disableFocusRipple={mobile}
-            disableRipple={mobile}
-            className={mobile ? classes.mobileTabs : classes.elementTab}
-            icon={mobile ? link.icon : undefined}
-            label={<T>{link.contentMobile || link.content}</T>}
-            onClick={() => handleClick(link)}
-          />
-        ))}
-      </Tabs>
-    </AppBar>
+    <Tabs
+      className={classes.tabs}
+      classes={{
+        flexContainer: classes.flexContainer,
+        indicator: classes.indicator,
+      }}
+      value={currentLink ? currentLink.path : false}
+      indicatorColor="secondary"
+      textColor="primary"
+      aria-label="menu links"
+      variant="scrollable"
+      scrollButtons="on"
+    >
+      {finalLink.map((link, index) => (
+        <Tab
+          {...a11yProps(index)}
+          key={link.path}
+          value={link.path}
+          title={link.tooltip ? i18n.__(`components.MenuBar.${link.tooltip}`) : ''}
+          disableFocusRipple={mobile}
+          disableRipple={mobile}
+          className={mobile ? classes.mobileTabs : classes.elementTab}
+          icon={mobile ? link.icon : undefined}
+          label={<T>{link.contentMobile || link.content}</T>}
+          onClick={() => handleClick(link)}
+        />
+      ))}
+    </Tabs>
   );
 };
 
