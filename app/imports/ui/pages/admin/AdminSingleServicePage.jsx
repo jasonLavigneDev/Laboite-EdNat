@@ -382,7 +382,7 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
               margin="normal"
             />
 
-            {offlinePage && (
+            {offlinePage && !structureMode && (
               <FormControlLabel
                 control={
                   <Checkbox
