@@ -724,6 +724,10 @@
     },
     "SkipLink": {
       "skipToContent": "Skip to content"
+    },
+    "OfflineMenu": {
+      "home": "Home",
+      "apps": "Applications"
     }
   },
   "validatejs": {

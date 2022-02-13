@@ -727,6 +727,10 @@
     },
     "SkipLink": {
       "skipToContent": "Aller au contenu"
+    },
+    "OfflineMenu": {
+      "home": "Accueil",
+      "apps": "Applications"
     }
   },
   "validatejs": {
