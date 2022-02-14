@@ -71,6 +71,7 @@ const styles = `
                       bottom: 5px;
                       right: 5px;
               height: 600px;
+              max-height: 100%;
               width: 500px;
               max-width: 100%;
               border-width: 2px;
