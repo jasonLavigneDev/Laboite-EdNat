@@ -412,3 +412,31 @@ Migrations.add({
       });
   },
 });
+
+Migrations.add({
+  version: 22,
+  name: 'Attach structure admins to their structure',
+  up: () => {
+    const allStructures = Structures.find({}).fetch();
+    const structuresInfo = {};
+    allStructures.forEach((struct) => {
+      structuresInfo[struct.name] = struct._id;
+    });
+    // check if we find services with structure set and not matching any structure id
+    Meteor.roleAssignment
+      .find({ 'role._id': 'adminStructure', scope: { $ne: null } })
+      .fetch()
+      .forEach((assignment) => {
+        // if user structure matches any known structure name, replace by structure id
+        if (structuresInfo[assignment.scope])
+          Meteor.roleAssignment.update(assignment._id, { $set: { scope: structuresInfo[assignment.scope] } });
+      });
+  },
+  down: () => {
+    Structures.find()
+      .fetch()
+      .forEach(({ name, _id }) => {
+        Meteor.roleAssignment.rawCollection().updateMany({ scope: _id }, { $set: { scope: name } });
+      });
+  },
+});
