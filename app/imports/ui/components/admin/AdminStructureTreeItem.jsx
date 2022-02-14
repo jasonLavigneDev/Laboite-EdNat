@@ -31,15 +31,18 @@ const useStyles = makeStyles(() => ({
 }));
 
 const AdminStructureTreeItem = ({ nodes, onClickAddBtn, onClickEditBtn, onClickDeleteBtn, updateParentIdsList }) => {
-  const { _id: id, name, children } = nodes;
+  const { _id: id, name, children, childrenIds } = nodes;
   const classes = useStyles();
+  const hasChildren = childrenIds.length > 0;
   return (
     <StyledTreeItem
       key={id}
       nodeId={id}
+      onLabelClick={() => hasChildren && updateParentIdsList({ ids: [id] })}
+      onIconClick={() => hasChildren && updateParentIdsList({ ids: [id] })}
       label={
         <Box display="flex">
-          <Box flexGrow={1} className={classes.name} onClick={() => updateParentIdsList({ ids: [id] })}>
+          <Box flexGrow={1} className={classes.name}>
             <div>{name}</div>
           </Box>
           <Box>
@@ -68,18 +71,20 @@ const AdminStructureTreeItem = ({ nodes, onClickAddBtn, onClickEditBtn, onClickD
         </Box>
       }
     >
-      {Array.isArray(children)
-        ? children.map((node) => (
-            <AdminStructureTreeItem
-              key={node._id}
-              nodes={node}
-              onClickAddBtn={onClickAddBtn}
-              onClickEditBtn={onClickEditBtn}
-              onClickDeleteBtn={onClickDeleteBtn}
-              updateParentIdsList={updateParentIdsList}
-            />
-          ))
-        : null}
+      {Array.isArray(children) ? (
+        children.map((node) => (
+          <AdminStructureTreeItem
+            key={node._id}
+            nodes={node}
+            onClickAddBtn={onClickAddBtn}
+            onClickEditBtn={onClickEditBtn}
+            onClickDeleteBtn={onClickDeleteBtn}
+            updateParentIdsList={updateParentIdsList}
+          />
+        ))
+      ) : hasChildren ? (
+        <span>&nbsp;</span>
+      ) : null}
     </StyledTreeItem>
   );
 };

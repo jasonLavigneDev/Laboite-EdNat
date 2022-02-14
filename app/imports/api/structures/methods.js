@@ -17,8 +17,9 @@ export const createStructure = new ValidatedMethod({
     },
     parentId: {
       type: SimpleSchema.RegEx.Id,
-      label: getLabel('api.structures.parent'),
+      label: getLabel('api.structures.parentId'),
       optional: true,
+      defaultValue: null,
     },
   }).validator(),
   run({ name, parentId }) {
@@ -27,10 +28,21 @@ export const createStructure = new ValidatedMethod({
       throw new Meteor.Error('api.structures.createStructure.notPermitted', i18n.__('api.users.notPermitted'));
     }
 
-    return Structures.insert({
+    const structureId = Structures.insert({
       name,
       parentId,
     });
+
+    if (parentId) {
+      const parentStructure = Structures.findOne({ _id: parentId });
+      if (parentStructure) {
+        const { childrenIds: parentStructureChildrenIds } = parentStructure;
+        parentStructureChildrenIds.push(structureId);
+        Structures.update({ _id: parentId }, { $set: { childrenIds: [...new Set(parentStructureChildrenIds)] } });
+      }
+    }
+
+    return structureId;
   },
 });
 
@@ -49,7 +61,7 @@ export const updateStructure = new ValidatedMethod({
     parentId: {
       type: SimpleSchema.RegEx.Id,
       label: getLabel('api.structures.parent'),
-      optional: true,
+      defaultValue: null,
     },
   }).validator(),
   run({ structureId, name, parentId }) {
@@ -67,6 +79,31 @@ export const updateStructure = new ValidatedMethod({
 
     if (!authorized) {
       throw new Meteor.Error('api.structures.updateStructure.notPermitted', i18n.__('api.users.notPermitted'));
+    }
+
+    const { parentId: oldParentId } = structure;
+    if (oldParentId !== parentId) {
+      // update old parent's children ids array
+      const oldParentStructure = Structures.findOne({ _id: oldParentId });
+      if (oldParentStructure) {
+        const { childrenIds: oldChildrenIds } = oldParentStructure;
+        Structures.update(
+          { _id: oldParentId },
+          {
+            $set: {
+              childrenIds: _.without(oldChildrenIds, structureId),
+            },
+          },
+        );
+      }
+
+      // add id to new parent structure's children ids array
+      const parentStructure = Structures.findOne({ _id: parentId });
+      if (parentStructure) {
+        const { childrenIds: parentStructureChildrenIds } = parentStructure;
+        parentStructureChildrenIds.push(structureId);
+        Structures.update({ _id: parentId }, { $set: { childrenIds: [...new Set(parentStructureChildrenIds)] } });
+      }
     }
 
     return Structures.update(
@@ -90,7 +127,7 @@ export const removeStructure = new ValidatedMethod({
   run({ structureId }) {
     // check structure existence
     const structure = Structures.findOne({ _id: structureId });
-    const children = Structures.find({ parentId: structureId }).fetch();
+    const children = Structures.find({ parentId: structureId });
 
     if (structure === undefined) {
       throw new Meteor.Error(
@@ -107,15 +144,26 @@ export const removeStructure = new ValidatedMethod({
     }
 
     if (children && children.length > 0) children.forEach((child) => Structures.remove(child._id));
-
+    const { parentId: oldParentId } = structure;
+    if (oldParentId) {
+      // update old parent's children ids array
+      const oldParentStructure = Structures.findOne({ _id: oldParentId });
+      if (oldParentStructure) {
+        const { childrenIds: oldChildrenIds } = oldParentStructure;
+        Structures.update(
+          { _id: oldParentId },
+          {
+            $set: {
+              childrenIds: [...new Set(_.without(oldChildrenIds, structureId))],
+            },
+          },
+        );
+      }
+    }
     return Structures.remove(structureId);
   },
 });
 
-// export const getAllTopLevelStructures = new ValidatedMethod({
-//   name: 'structures.getAllTopLevelStructures',
-//   run() {},
-// });
 export const getAllParentIdsTreeStructure = new ValidatedMethod({
   name: 'structures.getAllParentIdsTree',
   validate: new SimpleSchema({
