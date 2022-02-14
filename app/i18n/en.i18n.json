@@ -76,6 +76,7 @@
       }
     },
     "structures": {
+      "unknownStructure": "Structure doesn't exist.",
       "name": "Label",
       "labels": {
         "id": "Structure Id",
