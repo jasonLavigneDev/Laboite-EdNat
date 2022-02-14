@@ -81,7 +81,8 @@
       "labels": {
         "id": "Id de Structure",
         "name": "Nom de la structure",
-        "parent": "Structure Supérieure"
+        "parent": "Structure Supérieure",
+        "children": "Structures enfants direct"
       }
     },
     "users": {
@@ -969,7 +970,7 @@
       "confirmation": "Confirmation",
       "submit": "Valider",
       "cancel": "Annuler",
-      "helpText": "Cliquez sur une structure pour dévoiler ses enfants potentiels."
+      "helpText": "Cliquez sur une structure pour dévoiler ses enfants."
     },
     "AdminGroupsPage": {
       "title": "Gestion des groupes",

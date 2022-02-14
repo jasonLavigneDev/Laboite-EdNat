@@ -30,7 +30,14 @@ Structures.schema = new SimpleSchema(
       type: SimpleSchema.RegEx.Id,
       label: getLabel('api.structures.parentId'),
       optional: true,
+      defaultValue: null,
     },
+    childrenIds: {
+      type: Array,
+      label: getLabel('api.structures.childrenIds'),
+      defaultValue: [],
+    },
+    'childrenIds.$': { type: String },
   },
   {
     tracker: Tracker,
@@ -41,6 +48,7 @@ Structures.publicFields = {
   _id: 1,
   name: 1,
   parentId: 1,
+  childrenIds: 1,
 };
 
 Structures.attachSchema(Structures.schema);
