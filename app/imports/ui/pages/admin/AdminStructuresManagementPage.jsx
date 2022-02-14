@@ -35,8 +35,11 @@ const onCreate = ({ name, parentId, updateParentIdsList }) => {
     if (error) {
       msg.error(error.reason || error.details[0].message);
     }
-    msg.success(i18n.__('api.methods.operationSuccessMsg'));
-    if (success) updateParentIdsList({ ids: [parentId] });
+    if (success) {
+      console.log(success);
+      msg.success(i18n.__('api.methods.operationSuccessMsg'));
+      updateParentIdsList({ ids: [parentId] });
+    }
   });
 };
 
@@ -144,7 +147,7 @@ const AdminStructureManagementPage = () => {
   const onClickAddBtn = (nodes) => {
     openModal();
     setCreateMode();
-    setSelectedStructure(nodes);
+    setSelectedStructure({ ...nodes, name: '' });
   };
 
   const onClickEditBtn = (nodes) => {
@@ -185,7 +188,7 @@ const AdminStructureManagementPage = () => {
       {loading ? (
         <Spinner />
       ) : (
-        <Fade in>
+        <Fade in timeout={{ enter: 200 }}>
           <Container style={{ overflowX: 'auto' }}>
             <Modal
               className={modalClasses.modal}
