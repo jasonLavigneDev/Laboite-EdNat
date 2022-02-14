@@ -8,17 +8,39 @@ import IconButton from '@material-ui/core/IconButton';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
+import { withStyles, alpha, makeStyles } from '@material-ui/core/styles';
+
+const StyledTreeItem = withStyles((theme) => ({
+  iconContainer: {
+    '& .close': {
+      opacity: 0.3,
+    },
+  },
+  group: {
+    marginLeft: 10,
+    paddingLeft: 18,
+    borderLeft: `1px dashed ${alpha(theme.palette.text.primary, 0.4)}`,
+  },
+}))((props) => <TreeItem {...props} />);
+
+const useStyles = makeStyles(() => ({
+  name: {
+    alignItems: 'center',
+    display: 'flex',
+  },
+}));
 
 const AdminStructureTreeItem = ({ nodes, onClickAddBtn, onClickEditBtn, onClickDeleteBtn, updateParentIdsList }) => {
   const { _id: id, name, children } = nodes;
+  const classes = useStyles();
   return (
-    <TreeItem
+    <StyledTreeItem
       key={id}
       nodeId={id}
       label={
-        <Box display="flex" p={1}>
-          <Box flexGrow={1} onClick={() => updateParentIdsList({ ids: [id] })}>
-            <p>{name}</p>
+        <Box display="flex">
+          <Box flexGrow={1} className={classes.name} onClick={() => updateParentIdsList({ ids: [id] })}>
+            <div>{name}</div>
           </Box>
           <Box>
             <IconButton
@@ -58,7 +80,7 @@ const AdminStructureTreeItem = ({ nodes, onClickAddBtn, onClickEditBtn, onClickD
             />
           ))
         : null}
-    </TreeItem>
+    </StyledTreeItem>
   );
 };
 
