@@ -60,15 +60,16 @@ const onDelete = ({ structureId }) => {
   });
 };
 
-const useModalStyles = makeStyles((theme) => ({
+const useModalStyles = makeStyles(() => ({
   modal: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  paper: {
-    backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(2, 4, 3),
+  actions: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
 }));
 
@@ -197,45 +198,43 @@ const AdminStructureManagementPage = () => {
               }}
             >
               <Fade in={isModalOpen}>
-                <div className={modalClasses.paper}>
-                  <Card>
-                    <CardHeader
-                      title={i18n.__(
-                        `pages.AdminStructuresManagementPage.treeView.${
-                          isEditMode ? 'editStructure' : 'createStructure'
-                        }`,
-                      )}
-                      action={
-                        <IconButton title={i18n.__('pages.AdminStructuresManagementPage.close')} onClick={closeModal}>
-                          <ClearIcon />
-                        </IconButton>
-                      }
-                    />
-                    <form onSubmit={onSubmit}>
-                      <CardContent>
-                        <TextField
-                          label={i18n.__('pages.AdminStructuresManagementPage.columnName')}
-                          value={selectedStructure.name}
-                          name="structureName"
-                          fullWidth
-                          onChange={(e) => {
-                            setSelectedStructure({ name: e.target.value });
-                          }}
-                          autoFocus
-                        />
-                      </CardContent>
-                      <CardActions>
-                        <Button onClick={closeModal}>
-                          <Typography>{i18n.__('pages.AdminStructuresManagementPage.cancel')}</Typography>
-                        </Button>
+                <Card>
+                  <CardHeader
+                    title={i18n.__(
+                      `pages.AdminStructuresManagementPage.treeView.${
+                        isEditMode ? 'editStructure' : 'createStructure'
+                      }`,
+                    )}
+                    action={
+                      <IconButton title={i18n.__('pages.AdminStructuresManagementPage.close')} onClick={closeModal}>
+                        <ClearIcon />
+                      </IconButton>
+                    }
+                  />
+                  <form onSubmit={onSubmit}>
+                    <CardContent>
+                      <TextField
+                        label={i18n.__('pages.AdminStructuresManagementPage.columnName')}
+                        value={selectedStructure.name}
+                        name="structureName"
+                        fullWidth
+                        onChange={(e) => {
+                          setSelectedStructure({ name: e.target.value });
+                        }}
+                        autoFocus
+                      />
+                    </CardContent>
+                    <CardActions className={modalClasses.actions}>
+                      <Button onClick={closeModal}>
+                        <Typography>{i18n.__('pages.AdminStructuresManagementPage.cancel')}</Typography>
+                      </Button>
 
-                        <Button type="submit" variant="contained" color="primary">
-                          <Typography>{i18n.__('pages.AdminStructuresManagementPage.submit')}</Typography>
-                        </Button>
-                      </CardActions>
-                    </form>
-                  </Card>
-                </div>
+                      <Button type="submit" variant="contained" color="primary">
+                        <Typography>{i18n.__('pages.AdminStructuresManagementPage.submit')}</Typography>
+                      </Button>
+                    </CardActions>
+                  </form>
+                </Card>
               </Fade>
             </Modal>
             <Dialog maxWidth="xs" open={isOpenDeleteConfirm}>
