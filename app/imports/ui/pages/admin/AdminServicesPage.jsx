@@ -101,7 +101,7 @@ function AdminServicesPage({ services, loading, structureMode }) {
                   icon: keyboardArrowRight,
                   tooltip: i18n.__('pages.AdminServicesPage.materialTableLocalization.body_goTooltip'),
                   onClick: (event, rowData) => {
-                    if (rowData.state === 0) {
+                    if (rowData.state !== 10) {
                       history.push(`/${structureMode ? urlStruct : 'services'}/${rowData.slug}`);
                     } else {
                       msg.warning(`Service ${i18n.__(Services.stateLabels[rowData.state])}`);
