@@ -6,7 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Services from '../../../api/services/services';
 import Categories from '../../../api/categories/categories';
 
-import ServiceDetailsList from '../../components/services/ServiceDetailsList';
+import ServiceDetailsList from './ServiceDetailsList';
 
 const useStyles = makeStyles((theme) => ({
   categoryItem: {

@@ -911,6 +911,7 @@
       "columnUsage": "Usage",
       "columnUrl": "Lien",
       "columnState": "État",
+      "columnOffline": "Non Connectée",
       "materialTableLocalization": {
         "toolbar_searchPlaceholder": "Rechercher un service",
         "pagination_labelRowsSelect": "services par page",

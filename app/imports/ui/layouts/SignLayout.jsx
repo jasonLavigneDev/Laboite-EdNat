@@ -9,7 +9,7 @@ import SignIn from '../pages/system/SignIn';
 import Footer from '../components/menus/Footer';
 import Contact from '../pages/system/Contact';
 import { useAppContext } from '../contexts/context';
-import OfflineServices from '../pages/services/OfflineServices';
+import OfflineServices from '../components/services/OfflineServices';
 import OfflineMenu from '../components/menus/OfflineMenu';
 
 const useStyles = makeStyles((theme) => ({

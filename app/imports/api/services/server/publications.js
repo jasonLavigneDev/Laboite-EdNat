@@ -91,5 +91,5 @@ publishComposite('services.one', ({ slug }) => {
 });
 
 Meteor.publish('services.offline', function servicesOffline() {
-  return Services.find({ offline: true }, { fields: Services.publicFields, sort: { title: 1 }, limit: 1000 });
+  return Services.find({ offline: true, state: 0 }, { fields: Services.publicFields, sort: { title: 1 }, limit: 1000 });
 });

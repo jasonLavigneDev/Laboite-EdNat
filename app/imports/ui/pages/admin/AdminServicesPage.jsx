@@ -5,7 +5,9 @@ import i18n from 'meteor/universe:i18n';
 import { withTracker } from 'meteor/react-meteor-data';
 import MaterialTable from '@material-table/core';
 import Container from '@material-ui/core/Container';
+import CheckIcon from '@material-ui/icons/Check';
 import Fade from '@material-ui/core/Fade';
+import CloseIcon from '@material-ui/icons/Close';
 import { useHistory } from 'react-router-dom';
 import keyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import Spinner from '../../components/system/Spinner';
@@ -13,6 +15,8 @@ import Services from '../../../api/services/services';
 import { removeService } from '../../../api/services/methods';
 import setMaterialTableLocalization from '../../components/initMaterialTableLocalization';
 import { useStructure } from '../../../api/structures/utils';
+
+const { offlinePage } = Meteor.settings.public;
 
 function AdminServicesPage({ services, loading, structureMode }) {
   const history = useHistory();
@@ -62,6 +66,20 @@ function AdminServicesPage({ services, loading, structureMode }) {
     emptyRowsWhenPaging: false,
   };
 
+  if (offlinePage) {
+    columns.push({
+      title: i18n.__('pages.AdminServicesPage.columnOffline'),
+      field: 'offline',
+      render: (rowData) => {
+        const { offline } = rowData;
+        if (offline) {
+          return <CheckIcon />;
+        }
+        return <CloseIcon />;
+      },
+    });
+    options.actionsColumnIndex = 6;
+  }
   return (
     <>
       {loading ? (
@@ -83,7 +101,11 @@ function AdminServicesPage({ services, loading, structureMode }) {
                   icon: keyboardArrowRight,
                   tooltip: i18n.__('pages.AdminServicesPage.materialTableLocalization.body_goTooltip'),
                   onClick: (event, rowData) => {
-                    history.push(`/${structureMode ? urlStruct : 'services'}/${rowData.slug}`);
+                    if (rowData.state === 0) {
+                      history.push(`/${structureMode ? urlStruct : 'services'}/${rowData.slug}`);
+                    } else {
+                      msg.warning(`Service ${i18n.__(Services.stateLabels[rowData.state])}`);
+                    }
                   },
                 },
                 {
