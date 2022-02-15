@@ -21,7 +21,7 @@ import ClearIcon from '@material-ui/icons/Clear';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-
+import AddIcon from '@material-ui/icons/Add';
 import Spinner from '../../components/system/Spinner';
 
 import { useObjectState } from '../../utils/hooks';
@@ -271,6 +271,22 @@ const AdminStructureManagementPage = () => {
                 })}
               </Box>
               <CardContent>
+                <Box display="flex" alignItems="center">
+                  <Box>
+                    <Typography variant="h6">
+                      {i18n.__('pages.AdminStructuresManagementPage.treeView.createStructure')}
+                    </Typography>
+                  </Box>
+                  <Box>
+                    <IconButton
+                      onClick={() => onClickAddBtn({})}
+                      title={i18n.__('pages.AdminStructuresManagementPage.treeView.createStructure')}
+                    >
+                      <AddIcon />
+                    </IconButton>
+                  </Box>
+                </Box>
+
                 <AdminStructureTreeView
                   treeData={getTree(filteredFlatData)}
                   onClickAddBtn={onClickAddBtn}
