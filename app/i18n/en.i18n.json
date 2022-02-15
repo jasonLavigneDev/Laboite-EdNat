@@ -81,8 +81,8 @@
       "labels": {
         "id": "Structure Id",
         "name": "Structure's name",
-        "parent": "Superior structures",
-        "children": "Structures enfants direct"
+        "parentId": "Superior structures",
+        "childrenIds": "Structures enfants direct"
       }
     },
     "users": {
