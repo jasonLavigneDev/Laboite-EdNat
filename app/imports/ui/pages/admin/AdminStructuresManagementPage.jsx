@@ -273,12 +273,13 @@ const AdminStructureManagementPage = () => {
               <CardContent>
                 <Box display="flex" alignItems="center">
                   <Box>
-                    <Typography variant="h6">
+                    <Typography variant="h6" onClick={() => onClickAddBtn({})} style={{ cursor: 'pointer' }}>
                       {i18n.__('pages.AdminStructuresManagementPage.treeView.createStructure')}
                     </Typography>
                   </Box>
                   <Box>
                     <IconButton
+                      id="create-structure-btn"
                       onClick={() => onClickAddBtn({})}
                       title={i18n.__('pages.AdminStructuresManagementPage.treeView.createStructure')}
                     >
