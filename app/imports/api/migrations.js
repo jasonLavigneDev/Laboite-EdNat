@@ -456,3 +456,33 @@ Migrations.add({
     Meteor.users.rawCollection().updateMany({}, { $unset: { authToken: true } });
   },
 });
+
+
+Migrations.add({
+  version: 24,
+  name: 'Add parentId, childrenIds and ancestorsIds to structures',
+  up: () => {
+    Structures.find({})
+      .fetch()
+      .forEach((structure) => {
+        // for each structure we add parentId, childrenIds and ancestorsIds if not present
+        Structures.update(
+          { _id: structure._id },
+          {
+            $set: {
+              childrenIds: structure.childrenIds || [],
+              parentId: structure.parentId || null,
+              ancestorsIds: structure.ancestorsIds || [],
+            },
+          },
+        );
+      });
+  },
+  down: () => {
+    Structures.rawCollection().updateMany(
+      {},
+      { $unset: { childrenIds: 1, parentId: 1, ancestorsIds: 1 } },
+      { multi: true },
+    );
+  },
+});
