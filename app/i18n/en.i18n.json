@@ -495,7 +495,6 @@
       "editProfileLabel": "Update my Profile"
     },
     "GroupUsersList": {
-      "title": "",
       "loadingTitle": "Loading ...",
       "columnUsername": "username",
       "columnFirstName": "firstName",
