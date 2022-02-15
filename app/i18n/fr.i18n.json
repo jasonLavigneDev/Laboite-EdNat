@@ -46,6 +46,7 @@
         "maintenance": "Statut de maintenance",
         "textMaintenance": "Raison de la maintenance"
       },
+      "migrationLockedText": "La migration de la base de données est bloquée.",
       "updateAppsettings": {
         "notPermitted": "Vous n'avez pas les droits suffisants."
       },
@@ -1232,7 +1233,7 @@
   },
   "layouts": {
     "MainLayout": {
-      "alertMaintenance": "Site en maintenance."
+      "alertMaintenance": "Site en maintenance"
     }
   },
   "languages": {

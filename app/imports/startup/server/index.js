@@ -24,9 +24,11 @@ import './db-initialize/Tags';
 import './db-initialize/Articles';
 import './db-initialize/AppSettings';
 import './db-initialize/PersonalSpaces';
+import checkMigrationStatus from './db-initialize/utils';
 
 Meteor.startup(() => {
   Migrations.migrateTo('latest');
+  checkMigrationStatus();
   // set up Default language to French in HTML attribute
   WebApp.addHtmlAttributeHook(() => ({ lang: 'fr' }));
 });
