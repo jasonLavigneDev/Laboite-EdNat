@@ -496,7 +496,6 @@
       "editProfileLabel": "Modifier mon profil"
     },
     "GroupUsersList": {
-      "title": "",
       "loadingTitle": "Chargement en cours ...",
       "columnUsername": "Pseudo",
       "columnFirstName": "Prénom",

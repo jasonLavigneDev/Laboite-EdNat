@@ -120,7 +120,7 @@ const GroupsUsersList = (props) => {
         groupUsers[entry._id] = entry;
       });
       setData(group[usersField].map((uId) => groupUsers[uId] || { ...unknownUser, _id: uId }));
-      setTitle(i18n.__('components.GroupUsersList.title'));
+      setTitle('');
     } else {
       setTitle(i18n.__('components.GroupUsersList.loadingTitle'));
     }
