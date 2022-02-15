@@ -61,6 +61,7 @@ export const updateStructure = new ValidatedMethod({
     parentId: {
       type: SimpleSchema.RegEx.Id,
       label: getLabel('api.structures.parent'),
+      optional: true,
       defaultValue: null,
     },
   }).validator(),
