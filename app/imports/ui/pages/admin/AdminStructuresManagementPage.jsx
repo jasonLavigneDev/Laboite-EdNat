@@ -36,7 +36,6 @@ const onCreate = ({ name, parentId, updateParentIdsList }) => {
       msg.error(error.reason || error.details[0].message);
     }
     if (success) {
-      console.log(success);
       msg.success(i18n.__('api.methods.operationSuccessMsg'));
       updateParentIdsList({ ids: [parentId] });
     }
