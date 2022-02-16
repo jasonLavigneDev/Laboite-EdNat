@@ -449,7 +449,7 @@ Migrations.add({
       .find()
       .fetch()
       .forEach(({ _id }) => {
-        Meteor.users.update({ _id }, { authToken: Random.secret(150) });
+        Meteor.users.update({ _id }, { $set: { authToken: Random.secret(150) } });
       });
   },
   down: () => {

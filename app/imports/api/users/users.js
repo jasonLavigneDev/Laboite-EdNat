@@ -185,6 +185,7 @@ Meteor.users.schema = new SimpleSchema(
       type: String,
       index: true,
       unique: true,
+      optional: true,
       autoValue() {
         if (this.isInsert) {
           return Random.secret(150);
