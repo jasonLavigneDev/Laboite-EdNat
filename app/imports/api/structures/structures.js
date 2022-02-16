@@ -38,6 +38,12 @@ Structures.schema = new SimpleSchema(
       defaultValue: [],
     },
     'childrenIds.$': { type: String },
+    ancestorsIds: {
+      type: Array,
+      label: getLabel('api.structures.ancestorsIds'),
+      defaultValue: [],
+    },
+    'ancestorsIds.$': { type: String },
   },
   {
     tracker: Tracker,
@@ -49,6 +55,7 @@ Structures.publicFields = {
   name: 1,
   parentId: 1,
   childrenIds: 1,
+  ancestorsIds: 1,
 };
 
 Structures.attachSchema(Structures.schema);

@@ -5,8 +5,8 @@ import TreeItem from '@material-ui/lab/TreeItem';
 import PropTypes from 'prop-types';
 import Box from '@material-ui/core/Box';
 import IconButton from '@material-ui/core/IconButton';
-import AddIcon from '@material-ui/icons/Add';
-import DeleteIcon from '@material-ui/icons/Delete';
+import AddBox from '@material-ui/icons/AddBox';
+import DeleteIcon from '@material-ui/icons/DeleteOutline';
 import EditIcon from '@material-ui/icons/Edit';
 import { withStyles, alpha, makeStyles } from '@material-ui/core/styles';
 
@@ -50,7 +50,7 @@ const AdminStructureTreeItem = ({ nodes, onClickAddBtn, onClickEditBtn, onClickD
               onClick={() => onClickAddBtn(nodes)}
               title={i18n.__('pages.AdminStructuresManagementPage.treeView.createStructure')}
             >
-              <AddIcon />
+              <AddBox />
             </IconButton>
 
             <IconButton

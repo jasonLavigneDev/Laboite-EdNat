@@ -82,7 +82,8 @@
         "id": "Structure Id",
         "name": "Structure's name",
         "parentId": "Superior structures",
-        "childrenIds": "Structures enfants direct"
+        "childrenIds": "Direct childs structures ids",
+        "ancestorsIds": "Parent's structures"
       }
     },
     "users": {
@@ -734,7 +735,7 @@
     },
     "AdminStructuresSearchBar": {
       "clear": "Clear",
-      "filterByName": "Filter by a top level structure's name"
+      "filterByName": "Filter by a structure's name (Three letter and more)"
     }
   },
   "validatejs": {
