@@ -9,7 +9,7 @@ import ClearIcon from '@material-ui/icons/Clear';
 import InputAdornment from '@material-ui/core/InputAdornment';
 
 const AdminStructureSearchBar = (props) => {
-  const { searchValue, setSearchText, requestFilter, resetSearchText, resetFilter } = props;
+  const { searchValue, setSearchText, resetSearchText, resetFilter } = props;
   return (
     <Box sx={{ p: 0.5, pb: 0 }}>
       <TextField
@@ -17,7 +17,7 @@ const AdminStructureSearchBar = (props) => {
         value={searchValue}
         onChange={(e) => {
           setSearchText(e.target.value);
-          requestFilter(e.target.value);
+          if (e.target.value.length < 1) resetFilter();
         }}
         placeholder={i18n.__('components.AdminStructuresSearchBar.filterByName')}
         title={i18n.__('components.AdminStructuresSearchBar.filterByName')}
@@ -51,7 +51,6 @@ const AdminStructureSearchBar = (props) => {
 AdminStructureSearchBar.propTypes = {
   searchValue: PropTypes.string.isRequired,
   setSearchText: PropTypes.func.isRequired,
-  requestFilter: PropTypes.func.isRequired,
   resetSearchText: PropTypes.func.isRequired,
   resetFilter: PropTypes.func.isRequired,
 };

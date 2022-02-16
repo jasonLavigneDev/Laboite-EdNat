@@ -21,7 +21,7 @@ import ClearIcon from '@material-ui/icons/Clear';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import AddIcon from '@material-ui/icons/Add';
+import AddBox from '@material-ui/icons/AddBox';
 import Spinner from '../../components/system/Spinner';
 
 import { useObjectState } from '../../utils/hooks';
@@ -81,22 +81,39 @@ const AdminStructureManagementPage = () => {
   /** For controlled tree view api */
   const [expandedIds, setExpandedIds] = useState([]);
 
+  const [searchText, setSearchText] = useState('');
+  const resetSearchText = () => setSearchText('');
+
   const [filteredFlatData, setFilteredFlatData] = useState([]);
   const { flatData, loading } = useTracker(() => {
-    const structuresHandle = Meteor.subscribe('structures.top.with.childs', { parentIds });
+    const structuresHandle = Meteor.subscribe('structures.top.with.childs', {
+      parentIds,
+      searchText,
+    });
     const isLoading = !structuresHandle.ready();
-    const structures = Structures.find(
-      {
-        $or: [{ parentId: null }, { parentId: { $in: parentIds } }],
-      },
-      { sort: { name: 1 } },
-    ).fetch();
+    const structures = Structures.findFromPublication('structures.top.with.childs').fetch();
+
+    /* Update the dom */
     setFilteredFlatData(structures);
+
+    /* Expand ids if we have children to show */
+    setExpandedIds(
+      structures.reduce((accumulator, structure) => {
+        if (structure.parentId) accumulator.push(structure.parentId);
+        return accumulator;
+      }, []),
+    );
+
     return {
       loading: isLoading,
       flatData: structures,
     };
-  }, [parentIds]);
+  }, [parentIds, searchText.length > 2 && searchText]);
+
+  const resetFilter = () => {
+    setFilteredFlatData(flatData);
+    setExpandedIds([]);
+  };
 
   /** Modal utilities  */
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -171,123 +188,108 @@ const AdminStructureManagementPage = () => {
     setIsOpenDeleteConfirm(false);
   };
 
-  const [searchText, setSearchText] = useState('');
-  const resetSearchText = () => setSearchText('');
-  const resetFilter = () => {
-    setFilteredFlatData(flatData);
-  };
-  const requestFilter = (filterValue) => {
-    if (searchText.length < 1) return resetFilter();
-    const data = flatData.filter((struct) => struct.name.toLowerCase().includes(filterValue.toLowerCase()));
-    return setFilteredFlatData(data);
-  };
-
   return (
     <>
-      {loading ? (
-        <Spinner />
-      ) : (
-        <Fade in timeout={{ enter: 200 }}>
-          <Container style={{ overflowX: 'auto' }}>
-            <Modal
-              className={modalClasses.modal}
-              open={isModalOpen}
-              onClose={closeModal}
-              closeAfterTransition
-              BackdropComponent={Backdrop}
-              BackdropProps={{
-                timeout: 500,
-              }}
-            >
-              <Fade in={isModalOpen}>
-                <Card>
-                  <CardHeader
-                    title={i18n.__(
-                      `pages.AdminStructuresManagementPage.treeView.${
-                        isEditMode ? 'editStructure' : 'createStructure'
-                      }`,
-                    )}
-                    action={
-                      <IconButton title={i18n.__('pages.AdminStructuresManagementPage.close')} onClick={closeModal}>
-                        <ClearIcon />
-                      </IconButton>
-                    }
-                  />
-                  <form onSubmit={onSubmit}>
-                    <CardContent>
-                      <TextField
-                        label={i18n.__('pages.AdminStructuresManagementPage.columnName')}
-                        value={selectedStructure.name}
-                        name="structureName"
-                        fullWidth
-                        onChange={(e) => {
-                          setSelectedStructure({ name: e.target.value });
-                        }}
-                        autoFocus
-                      />
-                    </CardContent>
-                    <CardActions className={modalClasses.actions}>
-                      <Button onClick={closeModal}>
-                        <Typography>{i18n.__('pages.AdminStructuresManagementPage.cancel')}</Typography>
-                      </Button>
+      <Fade in timeout={{ enter: 200 }}>
+        <Container style={{ overflowX: 'auto' }}>
+          <Modal
+            className={modalClasses.modal}
+            open={isModalOpen}
+            onClose={closeModal}
+            closeAfterTransition
+            BackdropComponent={Backdrop}
+            BackdropProps={{
+              timeout: 500,
+            }}
+          >
+            <Fade in={isModalOpen}>
+              <Card>
+                <CardHeader
+                  title={i18n.__(
+                    `pages.AdminStructuresManagementPage.treeView.${isEditMode ? 'editStructure' : 'createStructure'}`,
+                  )}
+                  action={
+                    <IconButton title={i18n.__('pages.AdminStructuresManagementPage.close')} onClick={closeModal}>
+                      <ClearIcon />
+                    </IconButton>
+                  }
+                />
+                <form onSubmit={onSubmit}>
+                  <CardContent>
+                    <TextField
+                      label={i18n.__('pages.AdminStructuresManagementPage.columnName')}
+                      value={selectedStructure.name}
+                      name="structureName"
+                      fullWidth
+                      onChange={(e) => {
+                        setSelectedStructure({ name: e.target.value });
+                      }}
+                      autoFocus
+                    />
+                  </CardContent>
+                  <CardActions className={modalClasses.actions}>
+                    <Button onClick={closeModal}>
+                      <Typography>{i18n.__('pages.AdminStructuresManagementPage.cancel')}</Typography>
+                    </Button>
 
-                      <Button type="submit" variant="contained" color="primary">
-                        <Typography>{i18n.__('pages.AdminStructuresManagementPage.submit')}</Typography>
-                      </Button>
-                    </CardActions>
-                  </form>
-                </Card>
-              </Fade>
-            </Modal>
-            <Dialog maxWidth="xs" open={isOpenDeleteConfirm}>
-              <DialogTitle>{selectedStructure.name}</DialogTitle>
-              <DialogContent>
-                <Typography>{i18n.__('pages.AdminStructuresManagementPage.treeView.confirm')}</Typography>
-              </DialogContent>
-              <DialogActions>
-                <Button autoFocus onClick={() => setIsOpenDeleteConfirm(false)}>
-                  <Typography>{i18n.__('pages.AdminStructuresManagementPage.cancel')}</Typography>
-                </Button>
-                <Button onClick={onDeleteConfirm} variant="contained" color="primary">
-                  <Typography>{i18n.__('pages.AdminStructuresManagementPage.submit')}</Typography>
-                </Button>
-              </DialogActions>
-            </Dialog>
-            <Card>
-              <Box display="flex" justifyContent="space-between">
+                    <Button type="submit" variant="contained" color="primary">
+                      <Typography>{i18n.__('pages.AdminStructuresManagementPage.submit')}</Typography>
+                    </Button>
+                  </CardActions>
+                </form>
+              </Card>
+            </Fade>
+          </Modal>
+          <Dialog maxWidth="xs" open={isOpenDeleteConfirm}>
+            <DialogTitle>{selectedStructure.name}</DialogTitle>
+            <DialogContent>
+              <Typography>{i18n.__('pages.AdminStructuresManagementPage.treeView.confirm')}</Typography>
+            </DialogContent>
+            <DialogActions>
+              <Button autoFocus onClick={() => setIsOpenDeleteConfirm(false)}>
+                <Typography>{i18n.__('pages.AdminStructuresManagementPage.cancel')}</Typography>
+              </Button>
+              <Button onClick={onDeleteConfirm} variant="contained" color="primary">
+                <Typography>{i18n.__('pages.AdminStructuresManagementPage.submit')}</Typography>
+              </Button>
+            </DialogActions>
+          </Dialog>
+          <Card>
+            <Box display="flex" justifyContent="space-between">
+              <Box>
+                <CardHeader title={i18n.__('pages.AdminStructuresManagementPage.title')} />
+                <Typography color="textSecondary" style={{ paddingLeft: 16 }}>
+                  {i18n.__('pages.AdminStructuresManagementPage.helpText')}
+                </Typography>
+              </Box>
+
+              <AdminStructureSearchBar
+                searchValue={searchText}
+                setSearchText={setSearchText}
+                resetSearchText={resetSearchText}
+                resetFilter={resetFilter}
+              />
+            </Box>
+            <CardContent>
+              <Box display="flex" alignItems="center">
                 <Box>
-                  <CardHeader title={i18n.__('pages.AdminStructuresManagementPage.title')} />
-                  <Typography color="textSecondary" style={{ paddingLeft: 16 }}>
-                    {i18n.__('pages.AdminStructuresManagementPage.helpText')}
+                  <Typography variant="h6" onClick={() => onClickAddBtn({})} style={{ cursor: 'pointer' }}>
+                    {i18n.__('pages.AdminStructuresManagementPage.treeView.createStructure')}
                   </Typography>
                 </Box>
-
-                {AdminStructureSearchBar({
-                  searchValue: searchText,
-                  setSearchText,
-                  requestFilter,
-                  resetSearchText,
-                  resetFilter,
-                })}
-              </Box>
-              <CardContent>
-                <Box display="flex" alignItems="center">
-                  <Box>
-                    <Typography variant="h6" onClick={() => onClickAddBtn({})} style={{ cursor: 'pointer' }}>
-                      {i18n.__('pages.AdminStructuresManagementPage.treeView.createStructure')}
-                    </Typography>
-                  </Box>
-                  <Box>
-                    <IconButton
-                      id="create-structure-btn"
-                      onClick={() => onClickAddBtn({})}
-                      title={i18n.__('pages.AdminStructuresManagementPage.treeView.createStructure')}
-                    >
-                      <AddIcon />
-                    </IconButton>
-                  </Box>
+                <Box>
+                  <IconButton
+                    id="create-structure-btn"
+                    onClick={() => onClickAddBtn({})}
+                    title={i18n.__('pages.AdminStructuresManagementPage.treeView.createStructure')}
+                  >
+                    <AddBox />
+                  </IconButton>
                 </Box>
-
+              </Box>
+              {loading ? (
+                <Spinner />
+              ) : (
                 <AdminStructureTreeView
                   treeData={getTree(filteredFlatData)}
                   onClickAddBtn={onClickAddBtn}
@@ -297,11 +299,11 @@ const AdminStructureManagementPage = () => {
                   updateParentIdsList={updateParentIdsList}
                   expandedIds={expandedIds}
                 />
-              </CardContent>
-            </Card>
-          </Container>
-        </Fade>
-      )}
+              )}
+            </CardContent>
+          </Card>
+        </Container>
+      </Fade>
     </>
   );
 };
