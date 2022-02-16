@@ -354,6 +354,10 @@
     }
   },
   "components": {
+    "CustomDialog": {
+      "cancel": "Fermer",
+      "validate": "Valider"
+    },
     "SiteInMaintenance": {
       "maintenanceInProgress": "Maintenance en cours"
     },

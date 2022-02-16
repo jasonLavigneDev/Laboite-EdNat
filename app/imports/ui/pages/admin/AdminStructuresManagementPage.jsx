@@ -6,10 +6,6 @@ import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardActions from '@material-ui/core/CardActions';
 import Card from '@material-ui/core/Card';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogActions from '@material-ui/core/DialogActions';
-import Dialog from '@material-ui/core/Dialog';
 import Fade from '@material-ui/core/Fade';
 import Backdrop from '@material-ui/core/Backdrop';
 import Container from '@material-ui/core/Container';
@@ -29,6 +25,7 @@ import { getTree } from '../../../api/utils';
 import Structures from '../../../api/structures/structures';
 import AdminStructureSearchBar from '../../components/admin/AdminStructureSearchBar';
 import AdminStructureTreeView from '../../components/admin/AdminStructureTreeView';
+import CustomDialog from '../../components/system/CustomDialog';
 
 const onCreate = ({ name, parentId, updateParentIdsList }) => {
   Meteor.call('structures.createStructure', { name, parentId: parentId || null }, (error, success) => {
@@ -240,20 +237,14 @@ const AdminStructureManagementPage = () => {
               </Card>
             </Fade>
           </Modal>
-          <Dialog maxWidth="xs" open={isOpenDeleteConfirm}>
-            <DialogTitle>{selectedStructure.name}</DialogTitle>
-            <DialogContent>
-              <Typography>{i18n.__('pages.AdminStructuresManagementPage.treeView.confirm')}</Typography>
-            </DialogContent>
-            <DialogActions>
-              <Button autoFocus onClick={() => setIsOpenDeleteConfirm(false)}>
-                <Typography>{i18n.__('pages.AdminStructuresManagementPage.cancel')}</Typography>
-              </Button>
-              <Button onClick={onDeleteConfirm} variant="contained" color="primary">
-                <Typography>{i18n.__('pages.AdminStructuresManagementPage.submit')}</Typography>
-              </Button>
-            </DialogActions>
-          </Dialog>
+          <CustomDialog
+            nativeProps={{ maxWidth: 'xs' }}
+            isOpen={isOpenDeleteConfirm}
+            title={selectedStructure.name}
+            content={i18n.__('pages.AdminStructuresManagementPage.treeView.confirm')}
+            onCancel={() => setIsOpenDeleteConfirm(false)}
+            onValidate={onDeleteConfirm}
+          />
           <Card>
             <Box display="flex" justifyContent="space-between">
               <Box>
