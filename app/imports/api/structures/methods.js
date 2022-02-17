@@ -8,6 +8,7 @@ import { getLabel, isActive } from '../utils';
 import Structures from './structures';
 import Services from '../services/services';
 import Users from '../users/users';
+import Articles from '../articles/articles';
 
 export const createStructure = new ValidatedMethod({
   name: 'structures.createStructure',
@@ -120,8 +121,14 @@ export const removeStructure = new ValidatedMethod({
 
     const usersCursor = Users.find({ structure: structureId });
     if (usersCursor.count() > 0) {
-      // if there are users attached to this, unset it
+      // if there are users attached to this structure, unset it
       Users.update({ structure: structureId }, { $set: { structure: null } });
+    }
+
+    const articlesCursor = Articles.find({ structure: structureId });
+    if (articlesCursor.count() > 0) {
+      // if there are articles attached to this structure, unset it
+      Articles.update({ structure: structureId }, { $set: { structure: null } });
     }
 
     if (structure === undefined) {
