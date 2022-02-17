@@ -147,41 +147,33 @@ export const removeStructure = new ValidatedMethod({
   },
 });
 
-export const getAllParentIdsTreeStructure = new ValidatedMethod({
-  name: 'structures.getAllParentIdsTree',
+export const getAncestorsIds = new ValidatedMethod({
+  name: 'structures.getAncestorsIds',
   validate: new SimpleSchema({
     structureId: { type: String, regEx: SimpleSchema.RegEx.Id, label: getLabel('api.structures.labels.id') },
   }).validator(),
   run({ structureId }) {
-    const structureIds = [];
+    const structure = Structures.findOne({ _id: structureId });
 
-    (function enrichParents(parentId) {
-      const struct = Structures.findOne({ _id: parentId });
-      if (struct === undefined) {
-        return;
-      }
-      if (struct) {
-        structureIds.push(struct._id);
-        if (!struct.parentId) return;
-        enrichParents(struct.parentId);
-      }
-    })(structureId);
+    if (structure === undefined) {
+      throw new Meteor.Error(
+        'api.structures.removeStructure.unknownStructure',
+        i18n.__('api.structures.unknownStructures'),
+      );
+    }
 
     const authorized = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
 
     if (!authorized) {
-      throw new Meteor.Error('api.structures.getAllParentIdsTree.notPermitted', i18n.__('api.users.notPermitted'));
+      throw new Meteor.Error('api.structures.getAncestorsIds.notPermitted', i18n.__('api.users.notPermitted'));
     }
 
-    return structureIds;
+    return structure.ancestorsIds;
   },
 });
 
 // Get list of all method names on Structures
-const LISTS_METHODS = _.pluck(
-  [createStructure, updateStructure, removeStructure, getAllParentIdsTreeStructure],
-  'name',
-);
+const LISTS_METHODS = _.pluck([createStructure, updateStructure, removeStructure, getAncestorsIds], 'name');
 
 if (Meteor.isServer) {
   // Only allow 5 list operations per connection per second
