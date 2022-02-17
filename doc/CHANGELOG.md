@@ -1,5 +1,28 @@
 # Changelog
 
+# [4.0.0](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/3.4.0...release/4.0.0) (2022-02-17)
+
+
+### Bug Fixes
+
+* **readme:** explanation of what it is comes before who does it ([97a4cd5](https://gitlab.mim-libre.fr/alphabet/laboite/commit/97a4cd5ec5a1973d9bf2278e61170a6cb6dd3a7f))
+
+
+### Documentation
+
+* **readme:** add Rizomo as contributor ([0af2e3d](https://gitlab.mim-libre.fr/alphabet/laboite/commit/0af2e3d14b2aef5e6d55f8998779691e81f42a05))
+* **readme:** better markdown formatting ([2c886fe](https://gitlab.mim-libre.fr/alphabet/laboite/commit/2c886fe057f5827f0ca28d5230244db2fcc63bf8))
+
+
+### Features
+
+* **semantic-release:** create `testing` prerelease ([10e4627](https://gitlab.mim-libre.fr/alphabet/laboite/commit/10e4627e20e901d15ced16b03b07140a1d228419))
+
+
+### BREAKING CHANGES
+
+* **readme:** integrate Rizomo contributions
+
 # [3.4.0](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/3.3.4...release/3.4.0) (2022-02-17)
 
 
