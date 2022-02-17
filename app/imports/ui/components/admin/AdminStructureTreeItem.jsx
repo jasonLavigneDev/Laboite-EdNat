@@ -9,6 +9,8 @@ import AddBox from '@material-ui/icons/AddBox';
 import DeleteIcon from '@material-ui/icons/DeleteOutline';
 import EditIcon from '@material-ui/icons/Edit';
 import { withStyles, alpha, makeStyles } from '@material-ui/core/styles';
+import Tooltip from '@material-ui/core/Tooltip';
+import Typography from '@material-ui/core/Typography';
 
 const StyledTreeItem = withStyles((theme) => ({
   iconContainer: {
@@ -43,30 +45,40 @@ const AdminStructureTreeItem = ({ nodes, onClickAddBtn, onClickEditBtn, onClickD
       label={
         <Box display="flex">
           <Box flexGrow={1} className={classes.name}>
-            <div>{name}</div>
+            <div>
+              <Typography>{name}</Typography>
+            </div>
           </Box>
           <Box>
-            <IconButton
-              onClick={() => onClickAddBtn(nodes)}
-              title={i18n.__('pages.AdminStructuresManagementPage.treeView.createStructure')}
-            >
-              <AddBox />
-            </IconButton>
+            <Tooltip title={i18n.__('pages.AdminStructuresManagementPage.treeView.createStructure')}>
+              <span>
+                <IconButton onClick={() => onClickAddBtn(nodes)}>
+                  <AddBox />
+                </IconButton>
+              </span>
+            </Tooltip>
 
-            <IconButton
-              onClick={() => onClickEditBtn(nodes)}
-              title={i18n.__('pages.AdminStructuresManagementPage.treeView.editStructure')}
-            >
-              <EditIcon />
-            </IconButton>
+            <Tooltip title={i18n.__('pages.AdminStructuresManagementPage.treeView.editStructure')}>
+              <span>
+                <IconButton onClick={() => onClickEditBtn(nodes)}>
+                  <EditIcon />
+                </IconButton>
+              </span>
+            </Tooltip>
 
-            <IconButton
-              role="button"
-              onClick={() => onClickDeleteBtn(nodes)}
-              title={i18n.__('pages.AdminStructuresManagementPage.treeView.deleteStructure')}
+            <Tooltip
+              title={i18n.__(
+                `pages.AdminStructuresManagementPage.treeView.${
+                  hasChildren ? 'canNotDeleteBecauseChildren' : 'deleteStructure'
+                }`,
+              )}
             >
-              <DeleteIcon />
-            </IconButton>
+              <span>
+                <IconButton disabled={hasChildren} role="button" onClick={() => onClickDeleteBtn(nodes)}>
+                  <DeleteIcon />
+                </IconButton>
+              </span>
+            </Tooltip>
           </Box>
         </Box>
       }

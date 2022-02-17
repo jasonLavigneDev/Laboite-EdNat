@@ -77,6 +77,7 @@
     },
     "structures": {
       "unknownStructure": "La structure n'existe pas.",
+      "hasChildren": "La structure possède des enfants, elle n'est pas supprimable.",
       "name": "Libellé",
       "labels": {
         "id": "Id de Structure",
@@ -969,7 +970,8 @@
         "createStructure": "Ajouter une structure",
         "editStructure": "Modifier cette structure",
         "deleteStructure": "Supprimer cette structure",
-        "confirm": "Supprimer cette structure aura pour effet de supprimer tout ses enfants. Etes-vous sûr de vouloir continuer ?"
+        "canNotDeleteBecauseChildren": "Cette structure s'est pas supprimable car elle a au moins un enfant.",
+        "confirm": "Etes-vous sûr de vouloir supprimer cette structure ?"
       },
       "close": "Fermer",
       "confirmation": "Confirmation",
