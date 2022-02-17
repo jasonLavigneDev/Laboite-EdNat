@@ -78,6 +78,7 @@
     "structures": {
       "unknownStructure": "Structure doesn't exist.",
       "hasChildren": "Structure has children, therefore it can not be deleted.",
+      "hasServices": "Structure has at least on service, therefore it can not be deleted.",
       "name": "Label",
       "labels": {
         "id": "Structure Id",

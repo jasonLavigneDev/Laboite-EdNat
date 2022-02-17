@@ -78,6 +78,7 @@
     "structures": {
       "unknownStructure": "La structure n'existe pas.",
       "hasChildren": "La structure possède des enfants, elle n'est pas supprimable.",
+      "hasServices": "La structure possède au moins un serice, elle n'est pas supprimable.",
       "name": "Libellé",
       "labels": {
         "id": "Id de Structure",
