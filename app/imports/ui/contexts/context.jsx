@@ -99,11 +99,11 @@ const DynamicStore = withTracker(() => {
   const structureIds = [];
 
   if (user && user.structure) {
-    Meteor.call('structures.getAllParentIdsTree', { structureId: user.structure }, (error, response) => {
+    Meteor.call('structures.getAncestorsIds', { structureId: user.structure }, (error, response) => {
       if (error) {
         msg.error(error.reason || error.details[0].message);
       } else {
-        structureIds.push(...response);
+        structureIds.push(...new Set([...response, user.structure]));
       }
     });
   }
