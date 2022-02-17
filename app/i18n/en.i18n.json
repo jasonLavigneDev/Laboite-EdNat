@@ -46,6 +46,7 @@
         "maintenance": "Maintenance status",
         "textMaintenance": "Maintenance reason text"
       },
+      "migrationLockedText": "Database migration is locked.",
       "updateAppsettings": {
         "notPermitted": "You don't have sufficient rights."
       },

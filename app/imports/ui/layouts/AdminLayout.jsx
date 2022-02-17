@@ -73,6 +73,7 @@ function AdminLayout() {
               {appsettings.maintenance ? (
                 <Alert className={classes.alertMaintenance} variant="filled" severity="error">
                   {i18n.__(`layouts.MainLayout.alertMaintenance`)}
+                  {appsettings.textMaintenance ? `: ${i18n.__(appsettings.textMaintenance)}` : null}
                 </Alert>
               ) : null}
               {user.isActive ? (
