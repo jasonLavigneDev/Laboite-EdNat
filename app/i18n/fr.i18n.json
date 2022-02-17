@@ -972,7 +972,7 @@
         "editStructure": "Modifier cette structure",
         "deleteStructure": "Supprimer cette structure",
         "canNotDeleteBecauseChildren": "Cette structure s'est pas supprimable car elle a au moins un enfant.",
-        "confirm": "Etes-vous sûr de vouloir supprimer cette structure ?"
+        "confirm": "Etes-vous sûr de vouloir supprimer cette structure ? Si un utilisateur y est rattaché, il se retrouvera sans."
       },
       "close": "Fermer",
       "confirmation": "Confirmation",

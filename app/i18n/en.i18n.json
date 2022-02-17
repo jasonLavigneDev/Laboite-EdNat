@@ -970,7 +970,7 @@
         "editStructure": "Edit this structure",
         "deleteStructure": "Remove this structure",
         "canNotDeleteBecauseChildren": "This structure can not be deleted, since it have at least one child.",
-        "confirm": "Are you sure you want to remove this structure ?"
+        "confirm": "Are you sure you want to remove this structure ? If any user is attached to it, they will become structure-less."
       },
       "close": "Close",
       "confirmation": "Confirmation",
