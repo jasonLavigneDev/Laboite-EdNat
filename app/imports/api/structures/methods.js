@@ -112,8 +112,8 @@ export const removeStructure = new ValidatedMethod({
       throw new Meteor.Error('api.structures.removeStructure.hasChildren', i18n.__('api.structures.hasChildren'));
     }
 
-    const servicesCount = Services.find({ structure: structureId }).count();
-    if (servicesCount > 0) {
+    const servicesCursor = Services.find({ structure: structureId });
+    if (servicesCursor.count() > 0) {
       throw new Meteor.Error('api.structures.removeStructure.hasServices', i18n.__('api.structures.hasServices'));
     }
 
