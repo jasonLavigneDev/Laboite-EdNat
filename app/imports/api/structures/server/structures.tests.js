@@ -117,7 +117,6 @@ describe('structures', function () {
       it('does update a structure with admin user', function () {
         const data = {
           name: 'UneSuperStructureModifiee',
-          parentId: null,
         };
         updateStructure._execute(
           { userId: adminId },
@@ -132,7 +131,6 @@ describe('structures', function () {
       it('does not update a structure with non admin user', function () {
         const data = {
           name: 'UneSuperStructureModifiee',
-          parentId: null,
         };
         assert.throws(
           () => {
