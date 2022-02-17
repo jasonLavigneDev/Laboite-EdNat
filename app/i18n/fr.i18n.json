@@ -726,6 +726,10 @@
     },
     "SkipLink": {
       "skipToContent": "Aller au contenu"
+    },
+    "OfflineMenu": {
+      "home": "Accueil",
+      "apps": "Applications"
     }
   },
   "validatejs": {
@@ -904,6 +908,7 @@
       "columnUsage": "Usage",
       "columnUrl": "Lien",
       "columnState": "État",
+      "columnOffline": "Non Connectée",
       "materialTableLocalization": {
         "toolbar_searchPlaceholder": "Rechercher un service",
         "pagination_labelRowsSelect": "services par page",
@@ -1083,7 +1088,8 @@
       "save": "Sauvegarder",
       "update": "Mettre à jour",
       "cancel": "Annuler",
-      "logo_url": "URL du logo"
+      "logo_url": "URL du logo",
+      "offlineService": "Activer ce service sur la page non connectée"
     },
     "AdminSingleGroupPage": {
       "edition": "Édition du groupe",

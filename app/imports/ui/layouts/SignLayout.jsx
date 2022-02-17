@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import { Route, Switch } from 'react-router-dom';
@@ -9,6 +9,8 @@ import SignIn from '../pages/system/SignIn';
 import Footer from '../components/menus/Footer';
 import Contact from '../pages/system/Contact';
 import { useAppContext } from '../contexts/context';
+import OfflineServices from '../components/services/OfflineServices';
+import OfflineMenu from '../components/menus/OfflineMenu';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -27,6 +29,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.primary.light,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
+    paddingBottom: 100,
   },
   paper: {
     margin: theme.spacing(8, 4),
@@ -38,6 +41,7 @@ const useStyles = makeStyles((theme) => ({
     alignSelf: 'center',
     maxWidth: '100%',
     maxHeight: 'auto',
+    width: '100%',
     paddingBottom: '5%',
   },
   mainFeaturedPostContent: {
@@ -50,34 +54,47 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const { offlinePage } = Meteor.settings.public;
+
 export default function SignLayout() {
+  const [{ isMobile, isIframed }] = useAppContext();
   const classes = useStyles();
-  const [{ isMobile }] = useAppContext();
   const theme = useTheme();
+  const [selectedTab, setTab] = useState('home');
+
+  const services =
+    (offlinePage && isMobile && isIframed && selectedTab === 'apps') || !isIframed || (isIframed && !isMobile);
+  const signin = (isIframed && isMobile && selectedTab === 'home') || !isIframed || (isIframed && !isMobile);
 
   return (
     <>
       <Grid container component="main" className={isMobile ? classes.rootMobile : classes.root}>
-        <Grid container item xs={false} sm={4} md={7} spacing={4}>
-          <Grid item md={12}>
-            <div className={classes.mainFeaturedPostContent} />
+        {services && <OfflineServices />}
+        {!offlinePage && (
+          <Grid container item xs={false} sm={4} md={7} spacing={4}>
+            <Grid item md={12}>
+              <div className={classes.mainFeaturedPostContent} />
+            </Grid>
           </Grid>
-        </Grid>
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-          <div className={classes.paper}>
-            <div className={classes.imgLogo}>
-              <img src={theme.logos.LONG_LOGO} className={classes.imgLogo} alt="Logo" />
+        )}
+
+        {signin && (
+          <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6}>
+            <div className={classes.paper}>
+              <div className={classes.imgLogo}>
+                <img src={theme.logos.LONG_LOGO} className={classes.imgLogo} alt="Logo" />
+              </div>
+              <Switch>
+                <Route exact path="/signin" component={SignIn} />
+                <Route exact path="/signup" component={SignUp} />
+                <Route exact path="/contact" component={Contact} />
+              </Switch>
+              <LanguageSwitcher />
             </div>
-            <Switch>
-              <Route exact path="/signin" component={SignIn} />
-              <Route exact path="/signup" component={SignUp} />
-              <Route exact path="/contact" component={Contact} />
-            </Switch>
-            <LanguageSwitcher />
-          </div>
-        </Grid>
+          </Grid>
+        )}
       </Grid>
-      <Footer />
+      {isIframed && offlinePage && isMobile ? <OfflineMenu state={[selectedTab, setTab]} /> : <Footer />}
     </>
   );
 }

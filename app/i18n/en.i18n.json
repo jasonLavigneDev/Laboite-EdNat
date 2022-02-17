@@ -723,6 +723,10 @@
     },
     "SkipLink": {
       "skipToContent": "Skip to content"
+    },
+    "OfflineMenu": {
+      "home": "Home",
+      "apps": "Applications"
     }
   },
   "validatejs": {
@@ -898,6 +902,7 @@
       "columnUsage": "Usage",
       "columnUrl": "Link",
       "columnState": "State",
+      "columnOffline": "Offline",
       "materialTableLocalization": {
         "toolbar_searchPlaceholder": "Find a service",
         "pagination_labelRowsSelect": "services per page",
@@ -1077,7 +1082,8 @@
       "save": "Save",
       "update": "Update",
       "cancel": "Cancel",
-      "logo_url": "Logo URL"
+      "logo_url": "Logo URL",
+      "offlineService": "Enable this service on the offline page"
     },
     "AdminSingleGroupPage": {
       "edition": "Edition of the group",

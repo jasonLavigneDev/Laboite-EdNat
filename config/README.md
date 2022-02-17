@@ -9,6 +9,7 @@ Copy `settings-development.json.sample` to `settings-development.json` and updat
 | enableKeycloak                           | boolean  | false                                | If true, keycloak is enabled                                                                |
 | keycloakUrl                              | string   | ""                                   | Keycloak URL                                                                                |
 | keycloakRealm                            | string   | ""                                   | Keycloak Realm                                                                              |
+| offlinePage                              | boolean  | false                                | If true, offline services at signin page                                                    |
 | theme                                    | string   | "laboite"                            | laboite or rizomo theme                                                                     |
 | appName                                  | string   | "LaBoîte"                            | Application Name                                                                            |
 | appDescription                           | string   | ""                                   | Application description, it will be displayed under the title                               |

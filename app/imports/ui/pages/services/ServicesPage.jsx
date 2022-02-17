@@ -136,9 +136,9 @@ const useStyles = (isMobile) =>
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
-function ServicesPage({ services, categories, ready, structureMode }) {
+export function ServicesPage({ services, categories, ready, structureMode, offline }) {
   const [{ user, loadingUser, isMobile, servicePage }, dispatch] = useAppContext();
-  const structure = useStructure();
+  const structure = offline ? null : useStructure();
   const classes = useStyles(isMobile)();
   const {
     catList = [],
@@ -147,7 +147,7 @@ function ServicesPage({ services, categories, ready, structureMode }) {
     viewMode = 'list', // Possible values : "card" or "list"
   } = servicePage;
 
-  const favs = loadingUser ? [] : user.favServices;
+  const favs = loadingUser || offline ? [] : user.favServices;
 
   const updateGlobalState = (key, value) =>
     dispatch({
@@ -372,6 +372,11 @@ ServicesPage.propTypes = {
   categories: PropTypes.arrayOf(PropTypes.object).isRequired,
   ready: PropTypes.bool.isRequired,
   structureMode: PropTypes.bool.isRequired,
+  offline: PropTypes.bool,
+};
+
+ServicesPage.defaultProps = {
+  offline: false,
 };
 
 export default withTracker(({ match: { path } }) => {
