@@ -6,6 +6,7 @@ import i18n from 'meteor/universe:i18n';
 import { _ } from 'meteor/underscore';
 import { getLabel, isActive } from '../utils';
 import Structures from './structures';
+import Services from '../services/services';
 
 export const createStructure = new ValidatedMethod({
   name: 'structures.createStructure',
@@ -111,6 +112,11 @@ export const removeStructure = new ValidatedMethod({
       throw new Meteor.Error('api.structures.removeStructure.hasChildren', i18n.__('api.structures.hasChildren'));
     }
 
+    const servicesCount = Services.find({ structure: structureId }).count();
+    if (servicesCount > 0) {
+      throw new Meteor.Error('api.structures.removeStructure.hasServices', i18n.__('api.structures.hasServices'));
+    }
+
     if (structure === undefined) {
       throw new Meteor.Error(
         'api.structures.removeStructure.unknownStructure',
@@ -124,6 +130,7 @@ export const removeStructure = new ValidatedMethod({
     if (!authorized) {
       throw new Meteor.Error('api.structures.removeStructure.notPermitted', i18n.__('api.users.notPermitted'));
     }
+
     const { ancestorsIds } = structure;
 
     // Remove id of structure from its ancestors
