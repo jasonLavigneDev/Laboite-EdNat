@@ -41,6 +41,7 @@ const useStyles = makeStyles((theme) => ({
     alignSelf: 'center',
     maxWidth: '100%',
     maxHeight: 'auto',
+    width: '100%',
     paddingBottom: '5%',
   },
   mainFeaturedPostContent: {
