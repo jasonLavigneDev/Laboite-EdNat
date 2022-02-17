@@ -94,12 +94,13 @@ const AdminStructureManagementPage = () => {
     setFilteredFlatData(structures);
 
     /* Expand ids if we have children to show */
-    setExpandedIds(
-      structures.reduce((accumulator, structure) => {
-        if (structure.parentId) accumulator.push(structure.parentId);
-        return accumulator;
-      }, []),
-    );
+    if (!isLoading)
+      setExpandedIds(
+        structures.reduce((accumulator, structure) => {
+          if (structure.parentId) accumulator.push(structure.parentId);
+          return accumulator;
+        }, []),
+      );
 
     return {
       loading: isLoading,
@@ -278,19 +279,16 @@ const AdminStructureManagementPage = () => {
                   </IconButton>
                 </Box>
               </Box>
-              {loading ? (
-                <Spinner />
-              ) : (
-                <AdminStructureTreeView
-                  treeData={getTree(filteredFlatData)}
-                  onClickAddBtn={onClickAddBtn}
-                  onClickEditBtn={onClickEditBtn}
-                  onClickDeleteBtn={onClickDeleteBtn}
-                  setExpandedIds={setExpandedIds}
-                  updateParentIdsList={updateParentIdsList}
-                  expandedIds={expandedIds}
-                />
-              )}
+              {loading && <Spinner full />}
+              <AdminStructureTreeView
+                treeData={getTree(filteredFlatData)}
+                onClickAddBtn={onClickAddBtn}
+                onClickEditBtn={onClickEditBtn}
+                onClickDeleteBtn={onClickDeleteBtn}
+                setExpandedIds={setExpandedIds}
+                updateParentIdsList={updateParentIdsList}
+                expandedIds={expandedIds}
+              />
             </CardContent>
           </Card>
         </Container>
