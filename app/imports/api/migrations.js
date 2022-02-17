@@ -440,3 +440,19 @@ Migrations.add({
       });
   },
 });
+
+Migrations.add({
+  version: 23,
+  name: 'add authToken to users',
+  up: () => {
+    Meteor.users
+      .find()
+      .fetch()
+      .forEach(({ _id }) => {
+        Meteor.users.update({ _id }, { $set: { authToken: Random.secret(150) } });
+      });
+  },
+  down: () => {
+    Meteor.users.rawCollection().updateMany({}, { $unset: { authToken: true } });
+  },
+});

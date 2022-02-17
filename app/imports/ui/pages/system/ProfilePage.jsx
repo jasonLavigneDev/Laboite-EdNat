@@ -410,14 +410,28 @@ const ProfilePage = ({ structures, loading }) => {
     }
   };
 
-  const getAccessToken = () => {
-    Meteor.call('users.getAccessToken', (error, result) => {
+  const getAuthToken = () => {
+    Meteor.call('users.getAuthToken', (error, result) => {
       if (!result) {
-        msg.error(i18n.__('pages.ProfilePage.noAccessToken'));
+        msg.error(i18n.__('pages.ProfilePage.noAuthToken'));
       } else if (error) {
         msg.error(error.reason);
       } else {
-        navigator.clipboard.writeText(result).then(msg.success(i18n.__('pages.ProfilePage.successCopyAccessToken')));
+        navigator.clipboard.writeText(result).then(msg.success(i18n.__('pages.ProfilePage.successCopyAuthToken')));
+      }
+    });
+  };
+
+  const resetAuthToken = () => {
+    Meteor.call('users.resetAuthToken', (error, result) => {
+      if (!result) {
+        msg.error(i18n.__('pages.ProfilePage.noAuthToken'));
+      } else if (error) {
+        msg.error(error.reason);
+      } else {
+        navigator.clipboard
+          .writeText(result)
+          .then(msg.success(i18n.__('pages.ProfilePage.successResetAndCopyAuthToken')));
       }
     });
   };
@@ -662,20 +676,26 @@ const ProfilePage = ({ structures, loading }) => {
             </p>
           ) : null}
         </Paper>
-        {!!enableKeycloak && (
-          <Paper className={classes.root}>
-            <Typography variant={isMobile ? 'h4' : 'h5'}>{i18n.__('pages.ProfilePage.accessTokenTitle')}</Typography>
-            <p>{i18n.__('pages.ProfilePage.accessTokenMessage')}</p>
+        <Paper className={classes.root}>
+          <Typography variant={isMobile ? 'h4' : 'h5'}>{i18n.__('pages.ProfilePage.authTokenTitle')}</Typography>
+          <p>{i18n.__('pages.ProfilePage.authTokenMessage')}</p>
+          <p>
+            <b>{i18n.__('pages.ProfilePage.resetTokenMessage')}</b>
+          </p>
 
-            <Grid container centered>
-              <Grid item xs={12} sm={6} md={6} className={classes.buttonWrapper}>
-                <Button variant="contained" onClick={getAccessToken} color="primary">
-                  {i18n.__('pages.ProfilePage.getAccessToken')}
-                </Button>
-              </Grid>
+          <Grid container centered>
+            <Grid item xs={12} sm={6} md={6} className={classes.buttonWrapper}>
+              <Button variant="contained" onClick={getAuthToken} color="primary">
+                {i18n.__('pages.ProfilePage.getAuthToken')}
+              </Button>
             </Grid>
-          </Paper>
-        )}
+            <Grid item xs={12} sm={6} md={6} className={classes.buttonWrapper}>
+              <Button variant="contained" onClick={resetAuthToken} color="secondary">
+                {i18n.__('pages.ProfilePage.resetAuthToken')}
+              </Button>
+            </Grid>
+          </Grid>
+        </Paper>
       </Container>
     </Fade>
   );
