@@ -108,14 +108,19 @@ build-docker:
     - !reference [.rules-map, not-on-schedule]
     - !reference [.rules-map, not-on-draft]
     - !reference [.rules-map, on-release-tag]
+    - !reference [.rules-map, on-testing-tag]
     - !reference [.rules-map, not-on-stable]
+    - !reference [.rules-map, not-on-testing]
     - !reference [.rules-map, not-on-semantic-release-commit]
     - !reference [.rules-map, on-branch]
 
 
 ###############################################################################
-# `release` stage: `semantic-release`, `merge-to-dev`, `tag *`
+# `release` stage: `semantic-release`, `testing-prerelease`, `merge-to-dev`, `tag *`
 ###############################################################################
+testing-prerelease:
+  extends: .semantic-release:testing
+
 # Avoid regression and update `version` of app/package*.json in `$DEV_BRANCH`
 merge-to-dev:
   stage: release
@@ -151,10 +156,15 @@ tag dev:
     IMAGE_TAG: dev
 
 ## testing images
+tag testing prerelease:
+  extends:
+    - .tag-docker-image
+    - .on-testing-tag
+
 tag testing:
   extends:
     - .tag-docker-image
-    - .on-testing
+    - .on-testing-tag
   variables:
     IMAGE_TAG: testing
 
