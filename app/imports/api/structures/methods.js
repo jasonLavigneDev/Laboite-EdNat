@@ -4,10 +4,10 @@ import SimpleSchema from 'simpl-schema';
 import { Roles } from 'meteor/alanning:roles';
 import i18n from 'meteor/universe:i18n';
 import { _ } from 'meteor/underscore';
+import { Meteor } from 'meteor/meteor';
 import { getLabel, isActive } from '../utils';
 import Structures from './structures';
 import Services from '../services/services';
-import Users from '../users/users';
 import Articles from '../articles/articles';
 
 export const createStructure = new ValidatedMethod({
@@ -73,6 +73,13 @@ export const updateStructure = new ValidatedMethod({
     },
   }).validator(),
   run({ structureId, name }) {
+    // check if current user is active AND is admin
+    const authorized = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
+
+    if (!authorized) {
+      throw new Meteor.Error('api.structures.updateStructure.notPermitted', i18n.__('api.users.notPermitted'));
+    }
+
     // check structure existence
     const structure = Structures.findOne({ _id: structureId });
     if (structure === undefined) {
@@ -80,13 +87,6 @@ export const updateStructure = new ValidatedMethod({
         'api.structures.updateStructure.unknownStructure',
         i18n.__('api.structures.unknownStructure'),
       );
-    }
-
-    // check if current user is active AND is admin
-    const authorized = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
-
-    if (!authorized) {
-      throw new Meteor.Error('api.structures.updateStructure.notPermitted', i18n.__('api.users.notPermitted'));
     }
 
     return Structures.update(
@@ -107,8 +107,22 @@ export const removeStructure = new ValidatedMethod({
   }).validator(),
 
   run({ structureId }) {
+    // check if current user is active AND is admin
+    const authorized = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
+
+    if (!authorized) {
+      throw new Meteor.Error('api.structures.removeStructure.notPermitted', i18n.__('api.users.notPermitted'));
+    }
+
     // check structure existence
     const structure = Structures.findOne({ _id: structureId });
+
+    if (structure === undefined) {
+      throw new Meteor.Error(
+        'api.structures.removeStructure.unknownStructure',
+        i18n.__('api.structures.unknownStructures'),
+      );
+    }
 
     if (structure.childrenIds.length > 0) {
       throw new Meteor.Error('api.structures.removeStructure.hasChildren', i18n.__('api.structures.hasChildren'));
@@ -119,31 +133,14 @@ export const removeStructure = new ValidatedMethod({
       throw new Meteor.Error('api.structures.removeStructure.hasServices', i18n.__('api.structures.hasServices'));
     }
 
-    const usersCursor = Users.find({ structure: structureId });
+    // if there are users attached to this structure, unset it
+    const usersCursor = Meteor.users.find({ structure: structureId });
     if (usersCursor.count() > 0) {
-      // if there are users attached to this structure, unset it
-      Users.update({ structure: structureId }, { $set: { structure: null } });
+      throw new Meteor.Error('api.structures.removeStructure.hasUsers', i18n.__('api.strutures.hasUsers'));
     }
 
-    const articlesCursor = Articles.find({ structure: structureId });
-    if (articlesCursor.count() > 0) {
-      // if there are articles attached to this structure, unset it
-      Articles.update({ structure: structureId }, { $set: { structure: null } });
-    }
-
-    if (structure === undefined) {
-      throw new Meteor.Error(
-        'api.structures.removeStructure.unknownStructure',
-        i18n.__('api.structures.unknownStructures'),
-      );
-    }
-
-    // check if current user is active AND is admin
-    const authorized = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
-
-    if (!authorized) {
-      throw new Meteor.Error('api.structures.removeStructure.notPermitted', i18n.__('api.users.notPermitted'));
-    }
+    // if there are articles attached to this structure, delete aticles
+    Articles.remove({ structure: structureId });
 
     const { ancestorsIds } = structure;
 

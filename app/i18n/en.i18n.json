@@ -78,7 +78,8 @@
     "structures": {
       "unknownStructure": "Structure doesn't exist.",
       "hasChildren": "Structure has children, therefore it can not be deleted.",
-      "hasServices": "Structure has at least on service, therefore it can not be deleted.",
+      "hasServices": "Structure has at least one service, therefore it can not be deleted.",
+      "hasUsers": "Structure has at least one user, therefore it can not be deleted.",
       "name": "Label",
       "labels": {
         "id": "Structure Id",
@@ -970,7 +971,7 @@
         "editStructure": "Edit this structure",
         "deleteStructure": "Remove this structure",
         "canNotDeleteBecauseChildren": "This structure can not be deleted, since it have at least one child.",
-        "confirm": "Are you sure you want to remove this structure ? If any user or articles is attached to it, they will become structure-less."
+        "confirm": "Are you sure you want to remove this structure ? If any article is attached to it, it will be destroyed."
       },
       "close": "Close",
       "confirmation": "Confirmation",
