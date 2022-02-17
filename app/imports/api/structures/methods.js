@@ -7,6 +7,7 @@ import { _ } from 'meteor/underscore';
 import { getLabel, isActive } from '../utils';
 import Structures from './structures';
 import Services from '../services/services';
+import Users from '../users/users';
 
 export const createStructure = new ValidatedMethod({
   name: 'structures.createStructure',
@@ -115,6 +116,12 @@ export const removeStructure = new ValidatedMethod({
     const servicesCursor = Services.find({ structure: structureId });
     if (servicesCursor.count() > 0) {
       throw new Meteor.Error('api.structures.removeStructure.hasServices', i18n.__('api.structures.hasServices'));
+    }
+
+    const usersCursor = Users.find({ structure: structureId });
+    if (usersCursor.count() > 0) {
+      // if there are users attached to this, unset it
+      Users.update({ structure: structureId }, { $set: { structure: null } });
     }
 
     if (structure === undefined) {
