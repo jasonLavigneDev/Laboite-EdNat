@@ -39,8 +39,8 @@ const onCreate = ({ name, parentId, updateParentIdsList }) => {
   });
 };
 
-const onEdit = ({ structureId, name, parentId }) => {
-  Meteor.call('structures.updateStructure', { structureId, name, parentId }, (error) => {
+const onEdit = ({ structureId, name }) => {
+  Meteor.call('structures.updateStructure', { structureId, name }, (error) => {
     if (error) {
       msg.error(error.reason || error.details[0].message);
     } else {
@@ -142,16 +142,16 @@ const AdminStructureManagementPage = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    const { _id, parentId } = selectedStructure;
+    const { _id } = selectedStructure;
     const { value: structureName } = e.target.structureName;
 
     if (isEditMode) {
-      onEdit({ structureId: _id, parentId: parentId || null, name: structureName });
+      onEdit({ structureId: _id, name: structureName });
     } else {
       onCreate({
         updateParentIdsList,
         name: structureName,
-        parentId: _id === 'root' ? null : _id || null,
+        parentId: _id || null,
       });
     }
 

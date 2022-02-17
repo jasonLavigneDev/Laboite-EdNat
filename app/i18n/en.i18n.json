@@ -77,6 +77,7 @@
     },
     "structures": {
       "unknownStructure": "Structure doesn't exist.",
+      "hasChildren": "Structure has children, therefore it can not be deleted.",
       "name": "Label",
       "labels": {
         "id": "Structure Id",
@@ -967,7 +968,8 @@
         "createStructure": "Add a structure",
         "editStructure": "Edit this structure",
         "deleteStructure": "Remove this structure",
-        "confirm": "Removing this structure will remove all of its children. Are you sure ?"
+        "canNotDeleteBecauseChildren": "This structure can not be deleted, since it have at least one child.",
+        "confirm": "Are you sure you want to remove this structure ?"
       },
       "close": "Close",
       "confirmation": "Confirmation",
