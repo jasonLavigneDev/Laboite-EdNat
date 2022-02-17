@@ -78,7 +78,8 @@
     "structures": {
       "unknownStructure": "La structure n'existe pas.",
       "hasChildren": "La structure possède des enfants, elle n'est pas supprimable.",
-      "hasServices": "La structure possède au moins un serice, elle n'est pas supprimable.",
+      "hasServices": "La structure possède au moins un service, elle n'est pas supprimable.",
+      "hasUsers": "La structure possède au moins un utilisateur, elle n'est pas supprimable.",
       "name": "Libellé",
       "labels": {
         "id": "Id de Structure",
@@ -972,7 +973,7 @@
         "editStructure": "Modifier cette structure",
         "deleteStructure": "Supprimer cette structure",
         "canNotDeleteBecauseChildren": "Cette structure s'est pas supprimable car elle a au moins un enfant.",
-        "confirm": "Etes-vous sûr de vouloir supprimer cette structure ? Si un utilisateur ou article y est rattaché, il se retrouvera sans."
+        "confirm": "Etes-vous sûr de vouloir supprimer cette structure ? Si des articles y sont attachés, ils seront supprimés."
       },
       "close": "Fermer",
       "confirmation": "Confirmation",

@@ -13,6 +13,8 @@ import { createStructure, removeStructure, updateStructure } from '../methods';
 import './publications';
 import './factories';
 import Structures from '../structures';
+import Articles from '../../articles/articles';
+import Services from '../../services/services';
 
 describe('structures', function () {
   describe('mutators', function () {
@@ -177,6 +179,40 @@ describe('structures', function () {
           () => removeStructure._execute({}, { structureId }),
           Meteor.Error,
           /api.structures.removeStructure.notPermitted/,
+        );
+      });
+
+      it('does not remove a structure if it has at least one user attached to', function () {
+        Meteor.users.update({ _id: adminId }, { $set: { structure: structureId } });
+        assert.throws(
+          () => {
+            removeStructure._execute({ userId: adminId }, { structureId });
+          },
+          Meteor.Error,
+          /api.structures.removeStructure.hasUsers/,
+        );
+      });
+
+      it('does remove attached articles if structure is removed', function () {
+        const article = Factory.create('article');
+        Articles.update({ _id: article._id }, { $set: { structure: structureId } });
+        const article2 = Factory.create('article');
+        Articles.update({ _id: article2._id }, { $set: { structure: structureId } });
+        removeStructure._execute({ userId: adminId }, { structureId });
+
+        const articlesCursor = Articles.find({ $or: [{ _id: article._id }, { _id: article2._id }] });
+        assert.equal(articlesCursor.count(), 0);
+      });
+
+      it('does not remove structure if it has at least one service attached to', function () {
+        const service = Factory.create('service');
+        Services.update({ _id: service._id }, { $set: { structure: structureId } });
+        assert.throws(
+          () => {
+            removeStructure._execute({ userId: adminId }, { structureId });
+          },
+          Meteor.Error,
+          /api.structures.removeStructure.hasServices/,
         );
       });
     });
