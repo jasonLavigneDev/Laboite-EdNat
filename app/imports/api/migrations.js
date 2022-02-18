@@ -457,7 +457,6 @@ Migrations.add({
   },
 });
 
-
 Migrations.add({
   version: 24,
   name: 'Add parentId, childrenIds and ancestorsIds to structures',
