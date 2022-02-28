@@ -75,6 +75,20 @@
         "name": "Name"
       }
     },
+    "helps": {
+      "unknownHelp": "Help does not exist.",
+      "labels": {
+        "id": "Help Id",
+        "title": "Title",
+        "description": "Description",
+        "type": "Type",
+        "content": "Content of the help"
+      },
+      "types": {
+        "external": "External link",
+        "iframed": "Embed link/video"
+      }
+    },
     "structures": {
       "name": "Label",
       "labels": {
@@ -475,6 +489,7 @@
     "AdminMenu": {
       "title": "Administration",
       "menuAdminAppSettings": "Admin Settings",
+      "menuAdminHelpPage": "Help page management",
       "menuAdminServices": "Service Management",
       "menuAdminUsers": "Users Management",
       "menuAdminNextcloudUrl": "Nextcloud URL management",
@@ -1035,6 +1050,22 @@
         "toolbar_searchPlaceholder": "Find a user",
         "pagination_labelRowsSelect": "users per page",
         "body_emptyDataSourceMessage": "No user to validate"
+      }
+    },
+    "AdminHelpPage": {
+      "title": "Helps Management",
+      "columnTitle": "Title",
+      "columnDescription": "Description",
+      "columnType": "Type",
+      "columnContent": "Content",
+      "materialTableLocalization": {
+        "toolbar_searchPlaceholder": "Find a help",
+        "pagination_labelRowsSelect": "helps per page",
+        "body_emptyDataSourceMessage": "No helps to manage",
+        "body_addTooltip": "Add a help item",
+        "body_editTooltip": "Modify this help item",
+        "body_deleteTooltip": "Remove this help item",
+        "body_editRow_deleteText": "Do you really want to delete this help item ?"
       }
     },
     "SingleServicePage": {

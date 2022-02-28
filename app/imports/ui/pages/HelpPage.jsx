@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Meteor } from 'meteor/meteor';
-import { withTracker } from 'meteor/react-meteor-data';
+import { useTracker } from 'meteor/react-meteor-data';
 import i18n from 'meteor/universe:i18n';
 import Fade from '@material-ui/core/Fade';
 import Container from '@material-ui/core/Container';
@@ -14,30 +13,18 @@ import Button from '@material-ui/core/Button';
 import Modal from '@material-ui/core/Modal';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import CancelIcon from '@material-ui/icons/CancelOutlined';
-import Groups from '../../api/groups/groups';
-import Services from '../../api/services/services';
-import PersonalSpaces from '../../api/personalspaces/personalspaces';
 import Screencast from '../components/screencast/Screencast';
 import { useAppContext } from '../contexts/context';
-
-const helpItems = [
-  {
-    title: 'titleCardStart',
-    video: 'https://tube-dijon.beta.education.fr/videos/embed/d72319ee-1f67-41ac-aa4d-ece4f8ad1478',
-  },
-  {
-    title: 'titleCardStart',
-    video: 'https://tube-dijon.beta.education.fr/videos/embed/57752b90-5b36-4b3f-9b83-1b7464e41a5f',
-  },
-  {
-    title: 'titleCardGroup',
-    video: 'https://tube-dijon.beta.education.fr/videos/embed/d024f709-8b65-4f69-b058-22569f2b881d',
-  },
-];
+import Helps from '../../api/helps/helps';
 
 function HelpPage() {
   const [openScreencast, setScreencastModal] = useState(false);
   const [{ isMobile }] = useAppContext();
+  const helps = useTracker(() => {
+    const subs = Meteor.subscribe('helps.all');
+    const ready = subs.ready();
+    return ready ? Helps.find({}, { sort: { title: 1 }, limit: 10000 }) : [];
+  });
 
   const useStyles = makeStyles((theme) => ({
     card: {
@@ -71,6 +58,7 @@ function HelpPage() {
       position: 'absolute',
       display: 'flex',
       justifyContent: 'right',
+      cursor: 'pointer',
     },
     button: {
       display: 'flex',
@@ -87,34 +75,45 @@ function HelpPage() {
     modal: {
       display: 'grid',
     },
-    header: {
-      height: '87px',
-    },
   }));
 
   const classes = useStyles();
-  const [link, setLink] = useState(
-    'https://tube-dijon.beta.education.fr/videos/embed/d72319ee-1f67-41ac-aa4d-ece4f8ad1478',
-  );
+  const [link, setLink] = useState('');
+
+  const openItem = (item) => {
+    if (item.type === 5) {
+      setLink(item.content);
+      setScreencastModal(true);
+    } else {
+      window.open(item.content);
+    }
+  };
 
   return (
     <Fade in>
       <Container>
-        <Typography variant={isMobile ? 'h5' : 'h4'}>{i18n.__('pages.HelpPage.title')}</Typography>
-        <Grid container spacing={2} direction={isMobile ? 'column' : 'row'} className={classes.grid}>
-          {helpItems.map(({ title, video }) => (
+        <Grid container spacing={4} direction={isMobile ? 'column' : 'row'} className={classes.grid}>
+          <Grid item md={12}>
+            <Typography variant={isMobile ? 'h5' : 'h4'}>{i18n.__('pages.HelpPage.title')}</Typography>
+          </Grid>
+          {helps.map(({ title, type, content, description }) => (
             <Grid item xs={12} md={6} lg={4} key={title}>
               <Card className={classes.card}>
-                <CardHeader className={classes.header} title={i18n.__(`pages.HelpPage.${title}`)} />
+                <CardHeader title={title} />
+
+                <CardContent>
+                  {!!description && (
+                    <Typography color="textSecondary" gutterBottom>
+                      {description}
+                    </Typography>
+                  )}
+                </CardContent>
                 <CardContent>
                   <Button
                     startIcon={<ExitToAppIcon />}
                     className={classes.buttonText}
                     size="large"
-                    onClick={() => {
-                      setLink(video);
-                      setScreencastModal(true);
-                    }}
+                    onClick={() => openItem({ title, type, content, description })}
                   >
                     {i18n.__('pages.HelpPage.tutoLabel')}
                   </Button>
@@ -136,15 +135,4 @@ function HelpPage() {
   );
 }
 
-export default withTracker(() => {
-  const subscription = Meteor.subscribe('personalspaces.self');
-  const personalspace = PersonalSpaces.findOne() || { userId: this.userId, unsorted: [], sorted: [] };
-  const allServices = Services.find().fetch();
-  const allGroups = Groups.find().fetch();
-  return {
-    personalspace,
-    isLoading: !subscription.ready(),
-    allServices,
-    allGroups,
-  };
-})(HelpPage);
+export default HelpPage;

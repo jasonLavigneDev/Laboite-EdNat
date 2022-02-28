@@ -38,3 +38,5 @@ import '../../api/appclients/nextcloud';
 import '../../api/smtp/methods';
 import '../../api/structures/methods';
 import '../../api/structures/server/publications';
+import '../../api/helps/methods';
+import '../../api/helps/server/publications';
