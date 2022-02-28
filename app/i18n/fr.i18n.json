@@ -75,6 +75,20 @@
         "name": "Nom"
       }
     },
+    "helps": {
+      "unknownHelp": "Cette aide n'existe pas.",
+      "labels": {
+        "id": "Id de l'aide",
+        "title": "Titre",
+        "description": "Description",
+        "type": "Type",
+        "content": "Contenu de l'aide"
+      },
+      "types": {
+        "external": "Lien externe",
+        "iframed": "Lien/Vidéo intégré"
+      }
+    },
     "structures": {
       "unknownStructure": "La structure n'existe pas.",
       "name": "Libellé",
@@ -488,6 +502,7 @@
       "menuAdminGroups": "Gestion des Groupes",
       "menuAdminUsers": "Gestion des utilisateurs",
       "menuAdminAppSettings": "Réglages Administrateurs",
+      "menuAdminHelpPage": "Gestion de la page d'aide",
       "menuAdminStructureUsers": "Utilisateurs de la structure",
       "menuAdminStructureServices": "Services de la structure",
       "menuAdminBackHome": "Retour à l'espace perso",
@@ -1054,6 +1069,22 @@
         "toolbar_searchPlaceholder": "Rechercher un utilisateur",
         "pagination_labelRowsSelect": "utilisateurs par page",
         "body_emptyDataSourceMessage": "Aucun utilisateur à valider"
+      }
+    },
+    "AdminHelpPage": {
+      "title": "Gestion de l'aide",
+      "columnTitle": "Titre",
+      "columnDescription": "Description",
+      "columnType": "Type",
+      "columnContent": "Contenu",
+      "materialTableLocalization": {
+        "toolbar_searchPlaceholder": "Rechercher une aide",
+        "pagination_labelRowsSelect": "aides par page",
+        "body_emptyDataSourceMessage": "Aucune aide à gérer",
+        "body_addTooltip": "Ajouter une aide",
+        "body_editTooltip": "Modifier cette aide",
+        "body_deleteTooltip": "Supprimer cette aide",
+        "body_editRow_deleteText": "Souhaitez vous réellement supprimer cette aide ?"
       }
     },
     "SingleServicePage": {
