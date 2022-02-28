@@ -38,7 +38,10 @@ FindFromPublication.publish('groups.events', function groupsEvents({ page, searc
     },
   );
   // for protected/private groups, publish events only for allowed users
-  if (group.type !== 0 && !Roles.userIsInRole(this.userId, ['admin', 'animator', 'member'], group._id)) {
+  if (
+    group === undefined ||
+    (group.type !== 0 && !Roles.userIsInRole(this.userId, ['admin', 'animator', 'member'], group._id))
+  ) {
     return this.ready();
   }
 

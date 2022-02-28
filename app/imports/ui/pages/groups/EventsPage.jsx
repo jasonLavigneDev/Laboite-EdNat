@@ -65,7 +65,7 @@ const ITEM_PER_PAGE = 10;
 
 const EventsPage = ({ loading, group }) => {
   const [{ userId }] = useAppContext();
-  const { slug } = group.slug;
+  const { slug } = group;
   const classes = useEvenstPageStyles();
   const history = useHistory();
   const [search, setSearch] = useState('');
