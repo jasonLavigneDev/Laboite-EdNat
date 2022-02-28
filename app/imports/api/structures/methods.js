@@ -180,7 +180,7 @@ export const getAncestorsIds = new ValidatedMethod({
       );
     }
 
-    const authorized = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
+    const authorized = isActive(this.userId);
 
     if (!authorized) {
       throw new Meteor.Error('api.structures.getAncestorsIds.notPermitted', i18n.__('api.users.notPermitted'));
