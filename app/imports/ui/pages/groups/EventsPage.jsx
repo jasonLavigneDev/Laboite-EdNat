@@ -196,7 +196,7 @@ const EventsPage = ({ loading, group }) => {
                               aria-label="comments"
                               onClick={() =>
                                 window.open(
-                                  `${Meteor.settings.public.services.agendaUrl}`,
+                                  `${Meteor.settings.public.services.agendaUrl}/event/${event._id}`,
                                   '_blank',
                                   'noreferrer,noopener',
                                 )
