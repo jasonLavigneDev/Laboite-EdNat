@@ -57,6 +57,7 @@ FindFromPublication.publish('services.one.admin', function servicesOne({ _id, st
       structureId: {
         type: String,
         regEx: SimpleSchema.RegEx.Id,
+        optional: true,
       },
     }).validate({ _id, structureId });
   } catch (err) {
