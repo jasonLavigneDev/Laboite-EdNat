@@ -11,7 +11,7 @@ Meteor.publish('structures.all', function structuresAll() {
 });
 
 // publish user  structure
-Meteor.publish('structures.one', function structuresOne() {
+Meteor.publish('structures.ofCurrentUser', function structuresOne() {
   if (!isActive(this.userId)) {
     return this.ready();
   }

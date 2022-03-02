@@ -9,7 +9,7 @@ export const useStructure = () => {
     },
   ] = useAppContext();
   return useTracker(() => {
-    Meteor.subscribe('structures.one');
+    Meteor.subscribe('structures.ofCurrentUser');
     return Structures.findOne({ _id: structure });
   }, [structure]);
 };
