@@ -317,7 +317,9 @@
       "_id": "GaiKfwAfFrcjEWFdz",
       "name": "Petit Est",
       "parentId": "EviKfwAnFrcjEWFdz",
-      "childrenIds": [],
+      "childrenIds": [
+        "mahKfgAfFrcjEWFdz"
+      ],
       "ancestorsIds": [
         "EviKfwAnFrcjEWFdz"
       ]
