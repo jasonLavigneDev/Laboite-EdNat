@@ -65,7 +65,7 @@ const ITEM_PER_PAGE = 10;
 
 const EventsPage = ({ loading, group }) => {
   const [{ userId }] = useAppContext();
-  const { slug } = group.slug;
+  const { slug } = group;
   const classes = useEvenstPageStyles();
   const history = useHistory();
   const [search, setSearch] = useState('');
@@ -196,7 +196,7 @@ const EventsPage = ({ loading, group }) => {
                               aria-label="comments"
                               onClick={() =>
                                 window.open(
-                                  `${Meteor.settings.public.services.agendaUrl}`,
+                                  `${Meteor.settings.public.services.agendaUrl}/event/${event._id}`,
                                   '_blank',
                                   'noreferrer,noopener',
                                 )
