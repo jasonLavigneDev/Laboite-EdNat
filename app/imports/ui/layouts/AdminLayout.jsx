@@ -180,7 +180,7 @@ function AdminLayout() {
                     />
                     <StructureAdminRoute
                       exact
-                      path="/admin/structureservices/new"
+                      path="/admin/structureservices/new/:structureId"
                       component={AdminSingleServicePage}
                       user={user}
                       loadingUser={loadingUser}

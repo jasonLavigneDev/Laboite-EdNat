@@ -136,7 +136,7 @@ export const removeStructure = new ValidatedMethod({
     // if there are users attached to this structure, unset it
     const usersCursor = Meteor.users.find({ structure: structureId });
     if (usersCursor.count() > 0) {
-      throw new Meteor.Error('api.structures.removeStructure.hasUsers', i18n.__('api.strutures.hasUsers'));
+      throw new Meteor.Error('api.structures.removeStructure.hasUsers', i18n.__('api.structures.hasUsers'));
     }
 
     // if there are articles attached to this structure, delete aticles
@@ -171,11 +171,11 @@ export const getAncestorsIds = new ValidatedMethod({
     structureId: { type: String, regEx: SimpleSchema.RegEx.Id, label: getLabel('api.structures.labels.id') },
   }).validator(),
   run({ structureId }) {
-    const structure = Structures.findOne({ _id: structureId });
+    const structure = Structures.findOne({ _id: structureId }, { fields: { ancestorsIds: 1 } });
 
     if (structure === undefined) {
       throw new Meteor.Error(
-        'api.structures.removeStructure.unknownStructure',
+        'api.structures.getAncestorsIds.unknownStructure',
         i18n.__('api.structures.unknownStructures'),
       );
     }
@@ -190,8 +190,37 @@ export const getAncestorsIds = new ValidatedMethod({
   },
 });
 
+export const getAllChilds = new ValidatedMethod({
+  name: 'structures.getAllChilds',
+  validate: new SimpleSchema({
+    structureId: { type: String, regEx: SimpleSchema.RegEx.Id, label: getLabel('api.structures.labels.id') },
+  }).validator(),
+  run({ structureId }) {
+    const structure = Structures.findOne({ _id: structureId });
+
+    if (structure === undefined) {
+      throw new Meteor.Error(
+        'api.structures.removeStructure.unknownStructure',
+        i18n.__('api.structures.unknownStructures'),
+      );
+    }
+
+    const authorized = isActive(this.userId);
+
+    if (!authorized) {
+      throw new Meteor.Error('api.structures.getAllChilds.notPermitted', i18n.__('api.users.notPermitted'));
+    }
+
+    const childs = Structures.find({ ancestorsIds: structureId }).fetch();
+    return childs;
+  },
+});
+
 // Get list of all method names on Structures
-const LISTS_METHODS = _.pluck([createStructure, updateStructure, removeStructure, getAncestorsIds], 'name');
+const LISTS_METHODS = _.pluck(
+  [createStructure, updateStructure, removeStructure, getAncestorsIds, getAllChilds],
+  'name',
+);
 
 if (Meteor.isServer) {
   // Only allow 5 list operations per connection per second

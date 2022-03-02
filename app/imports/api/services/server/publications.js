@@ -47,18 +47,23 @@ FindFromPublication.publish(
   },
 );
 
-FindFromPublication.publish('services.one.admin', function servicesOne({ _id }) {
+FindFromPublication.publish('services.one.admin', function servicesOne({ _id, structureId }) {
   try {
     new SimpleSchema({
       _id: {
         type: String,
         regEx: SimpleSchema.RegEx.Id,
       },
-    }).validate({ _id });
+      structureId: {
+        type: String,
+        regEx: SimpleSchema.RegEx.Id,
+      },
+    }).validate({ _id, structureId });
   } catch (err) {
     logServer(`publish services.one.admin : ${err}`);
     this.error(err);
   }
+
   const service = Services.findOne(_id);
   const isStructureAdmin = service.structure && Roles.userIsInRole(this.userId, 'adminStructure', service.structure);
   if (isActive(this.userId) && (Roles.userIsInRole(this.userId, 'admin') || isStructureAdmin)) {

@@ -919,6 +919,7 @@
     },
     "AdminServicesPage": {
       "title": "Service Management",
+      "selectStructure": "Select a structure",
       "columnLogo": "Logo",
       "columnTitle": "Name",
       "columnUsage": "Usage",

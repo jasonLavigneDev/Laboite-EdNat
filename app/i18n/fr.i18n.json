@@ -921,6 +921,7 @@
     },
     "AdminServicesPage": {
       "title": "Gestion des Services",
+      "selectStructure": "Selectionner une structure",
       "columnLogo": "Logo",
       "columnTitle": "Nom",
       "columnUsage": "Usage",

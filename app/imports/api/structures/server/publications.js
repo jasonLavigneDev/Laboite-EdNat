@@ -59,3 +59,11 @@ FindFromPublication.publish(
     });
   },
 );
+
+FindFromPublication.publish('structures.with.all.childs', function structuresWithAllChilds({ structureId }) {
+  if (!isActive(this.userId)) {
+    return this.ready();
+  }
+
+  return Structures.find({ $or: [{ ancestorsIds: structureId }, { _id: structureId }] });
+});
