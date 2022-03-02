@@ -156,7 +156,6 @@ const MainMenu = ({ user = {} }) => {
         >
           {i18n.__('components.MainMenu.menuProfileLabel')}
         </MenuItem>
-
         <MenuItem className={classes.menuItem} onClick={onLogout}>
           {i18n.__('components.MainMenu.menuLogoutLabel')}
         </MenuItem>
@@ -179,6 +178,14 @@ const MainMenu = ({ user = {} }) => {
           );
         })}
         <Divider />
+
+        <MenuItem
+          className={classes.menuItem}
+          onClick={() => handleMenuClick({ path: '/help', content: 'menuHelpLabel' })}
+          selected={pathname === '/help'}
+        >
+          {i18n.__('components.MainMenu.menuHelpLabel')}
+        </MenuItem>
         <MenuItem disabled style={{ opacity: 1 }}>
           <AppVersion />
         </MenuItem>

@@ -472,6 +472,7 @@
       "menuAdminGroups": "Groups Management",
       "menuUserBookmarks": "Bookmarks",
       "menuProfileLabel": "Profile",
+      "menuHelpLabel": "Help",
       "menuLogoutLabel": "Logout",
       "menuMedias": "Medias Storage",
       "menuAdminApp": "Administration",
@@ -1095,9 +1096,6 @@
     },
     "HelpPage": {
       "title": "Find here every tuto to help you master LaBoite",
-      "titleCardStart": "Starting with LaBoite",
-      "titleCardGroup": "Create and administrate a group",
-      "titleCardMezig": "How to use Mézig",
       "tutoLabel": "Go to tutorial"
     },
     "AdminSingleServicePage": {

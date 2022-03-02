@@ -472,6 +472,7 @@
     "MainMenu": {
       "menuUserBookmarks": "Marque-pages",
       "menuProfileLabel": "Profil",
+      "menuHelpLabel": "Aide",
       "menuLogoutLabel": "Se déconnecter",
       "menuMedias": "Stockage de Médias",
       "menuAdminApp": "Administration",
@@ -1101,9 +1102,6 @@
     },
     "HelpPage": {
       "title": "Retrouvez ici tous les tutoriels nécessaires pour maitriser LaBoite",
-      "titleCardStart": "Commencer avec LaBoite",
-      "titleCardGroup": "Créer et administrer un groupe",
-      "titleCardMezig": "Comment utiliser Mézig",
       "tutoLabel": "Voir le tutoriel"
     },
     "AdminSingleServicePage": {
