@@ -252,11 +252,16 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
         },
       };
     } else {
-      args = {
-        ...rest,
-        content,
-        structure: structureMode ? user.structure : '',
-      };
+      try {
+        const { structureId } = params;
+        args = {
+          ...rest,
+          content,
+          structure: structureMode ? structureId : '',
+        };
+      } catch (err) {
+        msg.error(err.message);
+      }
     }
 
     method.call(args, (error) => {
