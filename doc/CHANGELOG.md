@@ -1,5 +1,17 @@
 # Changelog
 
+## [4.0.1](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/4.0.0...release/4.0.1) (2022-03-03)
+
+
+### Bug Fixes
+
+* **ui:** show structure name in group addressbook ([9a27901](https://gitlab.mim-libre.fr/alphabet/laboite/commit/9a27901d1dfd5ada9c541abd342a59f1b04e585e))
+
+
+### Continuous Integration
+
+* **merge-to-dev:** non fast forward merge requires configured git ([99b9a9b](https://gitlab.mim-libre.fr/alphabet/laboite/commit/99b9a9bb94ff226558778f00657234e28e94602c))
+
 # [4.0.0](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/3.4.0...release/4.0.0) (2022-02-17)
 
 
