@@ -30,7 +30,9 @@ Meteor.publish('structures.ids', function structuresids({ ids } = { ids: [] }) {
 // publish top level structure and possibly childs
 FindFromPublication.publish(
   'structures.top.with.childs',
-  function structuresTopWithChilds({ parentIds, searchText } = { parentIds: [], searchText: '' }) {
+  function structuresTopWithChilds(
+    { parentIds, searchText, isAppAdminMode } = { parentIds: [], searchText: '', isAppAdminMode: true },
+  ) {
     if (!isActive(this.userId)) {
       return this.ready();
     }
@@ -49,7 +51,9 @@ FindFromPublication.publish(
       searchResult.forEach((res) => ids.push(...res.ancestorsIds, res._id, ...res.childrenIds));
       query._id = { $in: ids };
     } else {
-      query.$or = [{ parentId: null }, { parentId: { $in: parentIds } }];
+      query.$or = isAppAdminMode
+        ? [{ parentId: null }, { parentId: { $in: parentIds } }]
+        : [{ parentId: { $in: parentIds } }];
     }
 
     return Structures.find(query, {

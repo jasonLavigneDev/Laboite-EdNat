@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import i18n from 'meteor/universe:i18n';
 import { useTracker } from 'meteor/react-meteor-data';
+import PropTypes from 'prop-types';
 import { _ } from 'meteor/underscore';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -26,6 +27,8 @@ import Structures from '../../../api/structures/structures';
 import AdminStructureSearchBar from '../../components/admin/AdminStructureSearchBar';
 import AdminStructureTreeView from '../../components/admin/AdminStructureTreeView';
 import CustomDialog from '../../components/system/CustomDialog';
+
+import { useAppContext } from '../../contexts/context';
 
 const onCreate = ({ name, parentId, updateParentIdsList }) => {
   Meteor.call('structures.createStructure', { name, parentId: parentId || null }, (error, success) => {
@@ -72,7 +75,11 @@ const useModalStyles = makeStyles(() => ({
   },
 }));
 
-const AdminStructureManagementPage = () => {
+const AdminStructureManagementPage = ({ match: { path } }) => {
+  const [{ user }] = useAppContext();
+
+  const isAppAdminMode = !path.startsWith('/admin/substructures');
+
   const [parentIds, setParentIds] = useState([]);
 
   /** For controlled tree view api */
@@ -84,8 +91,9 @@ const AdminStructureManagementPage = () => {
   const [filteredFlatData, setFilteredFlatData] = useState([]);
   const { flatData, loading } = useTracker(() => {
     const structuresHandle = Meteor.subscribe('structures.top.with.childs', {
-      parentIds,
+      parentIds: [user.structure, ...parentIds],
       searchText,
+      isAppAdminMode,
     });
     const isLoading = !structuresHandle.ready();
     const structures = Structures.findFromPublication('structures.top.with.childs').fetch();
@@ -249,7 +257,11 @@ const AdminStructureManagementPage = () => {
           <Card>
             <Box display="flex" justifyContent="space-between">
               <Box>
-                <CardHeader title={i18n.__('pages.AdminStructuresManagementPage.title')} />
+                <CardHeader
+                  title={i18n.__(
+                    `pages.AdminStructuresManagementPage${!isAppAdminMode && '.onlyStructureAdmin'}.title`,
+                  )}
+                />
                 <Typography color="textSecondary" style={{ paddingLeft: 16 }}>
                   {i18n.__('pages.AdminStructuresManagementPage.helpText')}
                 </Typography>
@@ -263,31 +275,34 @@ const AdminStructureManagementPage = () => {
               />
             </Box>
             <CardContent>
-              <Box display="flex" alignItems="center">
-                <Box>
-                  <Typography variant="h6" onClick={() => onClickAddBtn({})} style={{ cursor: 'pointer' }}>
-                    {i18n.__('pages.AdminStructuresManagementPage.treeView.createStructure')}
-                  </Typography>
+              {isAppAdminMode && (
+                <Box display="flex" alignItems="center">
+                  <Box>
+                    <Typography variant="h6" onClick={() => onClickAddBtn({})} style={{ cursor: 'pointer' }}>
+                      {i18n.__('pages.AdminStructuresManagementPage.treeView.createStructure')}
+                    </Typography>
+                  </Box>
+                  <Box>
+                    <IconButton
+                      id="create-structure-btn"
+                      onClick={() => onClickAddBtn({})}
+                      title={i18n.__('pages.AdminStructuresManagementPage.treeView.createStructure')}
+                    >
+                      <AddBox />
+                    </IconButton>
+                  </Box>
                 </Box>
-                <Box>
-                  <IconButton
-                    id="create-structure-btn"
-                    onClick={() => onClickAddBtn({})}
-                    title={i18n.__('pages.AdminStructuresManagementPage.treeView.createStructure')}
-                  >
-                    <AddBox />
-                  </IconButton>
-                </Box>
-              </Box>
+              )}
               {loading && <Spinner full />}
               <AdminStructureTreeView
-                treeData={getTree(filteredFlatData)}
+                treeData={getTree(filteredFlatData, isAppAdminMode ? null : user.structure)}
                 onClickAddBtn={onClickAddBtn}
                 onClickEditBtn={onClickEditBtn}
                 onClickDeleteBtn={onClickDeleteBtn}
                 setExpandedIds={setExpandedIds}
                 updateParentIdsList={updateParentIdsList}
                 expandedIds={expandedIds}
+                isAppAdminMode={isAppAdminMode}
               />
             </CardContent>
           </Card>
@@ -297,4 +312,7 @@ const AdminStructureManagementPage = () => {
   );
 };
 
+AdminStructureManagementPage.propTypes = {
+  match: PropTypes.objectOf(PropTypes.any).isRequired,
+};
 export default AdminStructureManagementPage;

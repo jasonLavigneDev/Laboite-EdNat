@@ -495,7 +495,8 @@
       "menuAdminStructureUsers": "Structure Users",
       "menuAdminStructureServices": "Structure Services",
       "menuAdminBackHome": "Back to Personnal Space",
-      "menuUserStructure": "Structures Management"
+      "menuUserStructure": "Structures Management",
+      "menuAdminOfStructures": "Your structure management and its sub structures"
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Your account has not been activated",
@@ -965,6 +966,9 @@
     },
     "AdminStructuresManagementPage": {
       "title": "Structure Management",
+      "onlyStructureAdmin": {
+        "title": "Your structure management and its sub structures"
+      },
       "columnName": "Name",
       "list": "Structure list",
       "treeView": {
