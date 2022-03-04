@@ -26,7 +26,17 @@ export const createStructure = new ValidatedMethod({
     },
   }).validator(),
   run({ name, parentId }) {
-    const authorized = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
+    const ancestors = [];
+    if (parentId !== null) {
+      const _ancestors = Structures.findOne({ _id: parentId }, { fields: { ancestorsIds: 1 } });
+      if (_ancestors) ancestors.push(..._ancestors.ancestorsIds);
+    }
+
+    const isAdminStructure = ancestors.some((ancestor) => {
+      return Roles.userIsInRole(this.userId, 'adminStructure', ancestor);
+    });
+
+    const authorized = (isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin')) || isAdminStructure;
     if (!authorized) {
       throw new Meteor.Error('api.structures.createStructure.notPermitted', i18n.__('api.users.notPermitted'));
     }
@@ -73,8 +83,16 @@ export const updateStructure = new ValidatedMethod({
     },
   }).validator(),
   run({ structureId, name }) {
+    const ancestors = [];
+
+    const _ancestors = Structures.findOne({ _id: structureId }, { fields: { ancestorsIds: 1 } });
+    if (_ancestors) ancestors.push(..._ancestors.ancestorsIds);
+
+    const isAdminStructure = ancestors.some((ancestor) => {
+      return Roles.userIsInRole(this.userId, 'adminStructure', ancestor);
+    });
     // check if current user is active AND is admin
-    const authorized = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
+    const authorized = (isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin')) || isAdminStructure;
 
     if (!authorized) {
       throw new Meteor.Error('api.structures.updateStructure.notPermitted', i18n.__('api.users.notPermitted'));
@@ -107,8 +125,16 @@ export const removeStructure = new ValidatedMethod({
   }).validator(),
 
   run({ structureId }) {
+    const ancestors = [];
+
+    const _ancestors = Structures.findOne({ _id: structureId }, { fields: { ancestorsIds: 1 } });
+    if (_ancestors) ancestors.push(..._ancestors.ancestorsIds);
+
+    const isAdminStructure = ancestors.some((ancestor) => {
+      return Roles.userIsInRole(this.userId, 'adminStructure', ancestor);
+    });
     // check if current user is active AND is admin
-    const authorized = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
+    const authorized = (isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin')) || isAdminStructure;
 
     if (!authorized) {
       throw new Meteor.Error('api.structures.removeStructure.notPermitted', i18n.__('api.users.notPermitted'));
@@ -147,14 +173,14 @@ export const removeStructure = new ValidatedMethod({
     // Remove id of structure from its ancestors
     if (ancestorsIds.length > 0) {
       // update old parent's children ids array
-      const ancestors = Structures.find({ _id: { $in: ancestorsIds } });
-      if (ancestors.length > 0) {
-        ancestors.forEach((ancestor) => {
+      const ancestorsList = Structures.find({ _id: { $in: ancestorsIds } });
+      if (ancestorsList.length > 0) {
+        ancestorsList.forEach((ancestor) => {
           Structures.update(
             { _id: ancestor._id },
             {
               $set: {
-                childrenIds: [...new Set(_.without(ancestors.childrenIds, structureId))],
+                childrenIds: [...new Set(_.without(ancestorsList.childrenIds, structureId))],
               },
             },
           );

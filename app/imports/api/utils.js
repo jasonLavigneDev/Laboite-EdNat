@@ -109,9 +109,9 @@ export function handleResult(resolve, reject) {
  */
 export const getTree = (
   flatData,
-  getKey = (node) => node._id,
-  getParentKey = (node) => node.parentId,
   rootKey = null,
+  getParentKey = (node) => node.parentId,
+  getKey = (node) => node._id,
 ) => {
   if (!flatData) {
     return [];
@@ -145,5 +145,6 @@ export const getTree = (
   };
 
   const result = childrenToParents[rootKey].map((child) => trav(child));
+
   return result;
 };

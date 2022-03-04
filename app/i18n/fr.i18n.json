@@ -495,7 +495,8 @@
       "menuAdminStructureUsers": "Utilisateurs de la structure",
       "menuAdminStructureServices": "Services de la structure",
       "menuAdminBackHome": "Retour à l'espace perso",
-      "menuUserStructure": "Gestion des Structures"
+      "menuUserStructure": "Gestion des Structures",
+      "menuAdminOfStructures": "Gestion de votre structure administrée ainsi que ses sous-structures"
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Votre compte n'a pas été activé",
@@ -967,6 +968,9 @@
     },
     "AdminStructuresManagementPage": {
       "title": "Gestion des structures",
+      "onlyStructureAdmin": {
+        "title": "Gestion de votre structure administrée ainsi que ses sous-structures"
+      },
       "columnName": "Nom",
       "list": "Liste des structures",
       "treeView": {

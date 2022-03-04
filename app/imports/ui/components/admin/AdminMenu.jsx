@@ -127,6 +127,12 @@ export default function AdminMenu() {
       hidden: !isAdminStructure,
     },
     {
+      path: '/admin/substructures',
+      content: 'menuAdminOfStructures',
+      icon: <BusinessIcon />,
+      hidden: !isAdminStructure,
+    },
+    {
       path: 'adminDivider2',
       content: 'Divider',
     },

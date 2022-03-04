@@ -192,6 +192,13 @@ function AdminLayout() {
                       user={user}
                       loadingUser={loadingUser}
                     />
+                    <StructureAdminRoute
+                      user={user}
+                      loadingUser={loadingUser}
+                      exact
+                      path="/admin/substructures"
+                      component={AdminStructureManagementPage}
+                    />
                     <AdminRoute
                       userId={userId}
                       loadingUser={loadingUser}
