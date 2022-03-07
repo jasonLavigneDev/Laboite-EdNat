@@ -95,7 +95,7 @@ export default function AdminMenu() {
     {
       path: '/admin/nextcloudurl',
       content: 'menuAdminNextcloudUrl',
-      hidden: !isAdmin || !Meteor.settings.nextcloud || (!isAdmin && !Meteor.settings.nextcloud.nextcloudUser),
+      hidden: !isAdmin || !Meteor.settings.public.groupPlugins.nextcloud.enable,
       icon: <HttpIcon />,
     },
     {
