@@ -12,9 +12,12 @@ const AdminStructureTreeView = ({
   onClickAddBtn,
   onClickEditBtn,
   onClickDeleteBtn,
+  onClickSelectBtn,
   updateParentIdsList,
   setExpandedIds,
   expandedIds,
+  onlySelect,
+  selectedId,
 }) => {
   return (
     <TreeView
@@ -30,6 +33,7 @@ const AdminStructureTreeView = ({
       onNodeToggle={(event, nodesIds) => {
         setExpandedIds(nodesIds);
       }}
+      selected={selectedId}
     >
       {treeData.map((nodes) => (
         <AdminStructureTreeItem
@@ -38,7 +42,10 @@ const AdminStructureTreeView = ({
           onClickAddBtn={onClickAddBtn}
           onClickEditBtn={onClickEditBtn}
           onClickDeleteBtn={onClickDeleteBtn}
+          onClickSelectBtn={onClickSelectBtn}
           updateParentIdsList={updateParentIdsList}
+          onlySelect={onlySelect}
+          selectedId={selectedId}
         />
       ))}
     </TreeView>
@@ -59,6 +66,9 @@ AdminStructureTreeView.propTypes = {
   updateParentIdsList: PropTypes.func.isRequired,
   expandedIds: PropTypes.arrayOf(PropTypes.string).isRequired,
   setExpandedIds: PropTypes.func.isRequired,
+  onClickSelectBtn: PropTypes.func.isRequired,
+  onlySelect: PropTypes.bool.isRequired,
+  selectedId: PropTypes.string.isRequired,
 };
 
 export default AdminStructureTreeView;

@@ -882,7 +882,9 @@
       "resetAuthToken": "Créer un nouveau Token",
       "noAuthToken": "Aucun token à récupérer",
       "successCopyAuthToken": "Token copié avec succès",
-      "successResetAndCopyAuthToken": "Nouveau Token créé et copié avec succès"
+      "successResetAndCopyAuthToken": "Nouveau Token créé et copié avec succès",
+      "structureChoice": "Veuillez choisir votre structure de rattachement",
+      "openStructureSelection": "Selectioner la structure de rattachement"
     },
     "NotFound": {
       "backButtonLabel": "Retour",
