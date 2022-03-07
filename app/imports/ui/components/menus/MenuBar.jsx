@@ -88,6 +88,8 @@ const MenuBar = ({ mobile }) => {
   const classes = useStyles(mobile)();
   const T = i18n.createComponent('components.MenuBar');
   const [currentLink, setCurrentLink] = useState('/');
+  const { disabledFeatures = {} } = Meteor.settings.public;
+  const enableBlog = !disabledFeatures.blog;
 
   useEffect(() => {
     links.forEach((link) => {

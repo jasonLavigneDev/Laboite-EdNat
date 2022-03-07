@@ -40,9 +40,8 @@ Copy `settings-development.json.sample` to `settings-development.json` and updat
 | groupPlugins.PLUGINNAME.URL              | string   | ""                                   | Group plugin URL                                                                            |
 | groupPlugins.PLUGINNAME.groupURL         | string   | ""                                   | [URL]/group/[GROUPSLUG]" "[URL]/apps/files/?dir=/[GROUPNAME]                                |
 | groupPlugins.PLUGINNAME.enableChangeName | boolean  | true                                 | If true, changing the group name for this group plugin is possible                          |
-| disabledFeatures                         | object   | {}                                   | add features to disabled                                                                    |
-| disabledFeatures.blog                    | boolean  | false                                | disable all blog                                                                            |
-| disabledFeatures.groups                  | boolean  | false                                | disable all groups                                                                          |
+| disabledFeatures                         | object   | {"blog": false,"groups": false}      | add features to disabled it                                                                    |
+| disabledFeatures.blog                    | boolean  | false                                | disable all blog features|
 
 ## keycloak:
 
