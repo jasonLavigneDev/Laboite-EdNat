@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.0.2](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/4.0.1...release/4.0.2) (2022-03-07)
+
+
+### Bug Fixes
+
+* **ui:** display admin menu for nextcloud management ([a80766b](https://gitlab.mim-libre.fr/alphabet/laboite/commit/a80766be0d72d6aa1abd741585c2ef3fd6c4241f))
+
 ## [4.0.1](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/4.0.0...release/4.0.1) (2022-03-03)
 
 
