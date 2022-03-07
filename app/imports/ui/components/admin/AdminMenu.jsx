@@ -25,6 +25,8 @@ import { useHistory, useLocation } from 'react-router-dom';
 import updateDocumentTitle from '../../utils/updateDocumentTitle';
 import { useAppContext } from '../../contexts/context';
 
+const { disabledFeatures } = Meteor.settings.public;
+
 // CSS
 const useStyles = (isMobile) =>
   makeStyles(() => ({
@@ -60,7 +62,7 @@ export default function AdminMenu() {
       path: '/admin/groups',
       content: 'menuAdminGroups',
       icon: <GroupWorkIcon />,
-      hidden: !isAdmin,
+      hidden: !isAdmin || disabledFeatures.groups,
     },
     {
       path: '/admin/services',

@@ -111,7 +111,8 @@ const ProfilePage = ({ structures, loading }) => {
   const [submitted, setSubmitted] = useState(false);
   const [structChecked, setStructChecked] = useState(false);
   const classes = useStyles();
-  const { enableBlog, enableKeycloak } = Meteor.settings.public;
+  const { disabledFeatures = {}, enableKeycloak } = Meteor.settings.public;
+  const enableBlog = !disabledFeatures.blog;
   const [{ user, loadingUser, isMobile }] = useAppContext();
 
   const structureLabel = React.useRef(null);
@@ -640,42 +641,44 @@ const ProfilePage = ({ structures, loading }) => {
             </div>
           </form>
         </Paper>
-        <Paper className={classes.root}>
-          <Typography variant={isMobile ? 'h4' : 'h5'}>{i18n.__('pages.ProfilePage.backupTitle')}</Typography>
-          <p>{i18n.__('pages.ProfilePage.backupMessage')}</p>
+        {enableBlog && (
+          <Paper className={classes.root}>
+            <Typography variant={isMobile ? 'h4' : 'h5'}>{i18n.__('pages.ProfilePage.backupTitle')}</Typography>
+            <p>{i18n.__('pages.ProfilePage.backupMessage')}</p>
 
-          <Grid container>
-            <Grid item xs={12} sm={6} md={6} className={classes.buttonWrapper}>
-              <Button variant="contained" onClick={downloadBackup} color="secondary">
-                {i18n.__('pages.ProfilePage.downloadPublicationBackup')}
-              </Button>
-            </Grid>
-            <Grid item xs={12} sm={6} md={6} className={classes.buttonWrapper}>
-              <div className={classes.fileWrap}>
-                <Button variant="contained" htmlFor="upload" color="secondary" tabIndex={-1}>
-                  {i18n.__('pages.ProfilePage.UploadPublicationBackup')}
-                  <input className={classes.inputFile} type="file" id="upload" onChange={uploadData} />
+            <Grid container>
+              <Grid item xs={12} sm={6} md={6} className={classes.buttonWrapper}>
+                <Button variant="contained" onClick={downloadBackup} color="secondary">
+                  {i18n.__('pages.ProfilePage.downloadPublicationBackup')}
                 </Button>
-              </div>
+              </Grid>
+              <Grid item xs={12} sm={6} md={6} className={classes.buttonWrapper}>
+                <div className={classes.fileWrap}>
+                  <Button variant="contained" htmlFor="upload" color="secondary" tabIndex={-1}>
+                    {i18n.__('pages.ProfilePage.UploadPublicationBackup')}
+                    <input className={classes.inputFile} type="file" id="upload" onChange={uploadData} />
+                  </Button>
+                </div>
+              </Grid>
             </Grid>
-          </Grid>
-          {user.structure ? (
-            <p>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    disabled={!user.structure}
-                    color="primary"
-                    checked={structChecked}
-                    onChange={() => setStructChecked(!structChecked)}
-                    inputProps={{ 'aria-label': 'primary checkbox' }}
-                  />
-                }
-                label={i18n.__('pages.ProfilePage.structureMessage')}
-              />
-            </p>
-          ) : null}
-        </Paper>
+            {user.structure ? (
+              <p>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      disabled={!user.structure}
+                      color="primary"
+                      checked={structChecked}
+                      onChange={() => setStructChecked(!structChecked)}
+                      inputProps={{ 'aria-label': 'primary checkbox' }}
+                    />
+                  }
+                  label={i18n.__('pages.ProfilePage.structureMessage')}
+                />
+              </p>
+            ) : null}
+          </Paper>
+        )}
         <Paper className={classes.root}>
           <Typography variant={isMobile ? 'h4' : 'h5'}>{i18n.__('pages.ProfilePage.authTokenTitle')}</Typography>
           <p>{i18n.__('pages.ProfilePage.authTokenMessage')}</p>
