@@ -20,6 +20,7 @@ import AppVersion from '../../components/system/AppVersion';
 import AppSettings from '../../../api/appsettings/appsettings';
 
 import Structures from '../../../api/structures/structures';
+import { useAppContext } from '../../contexts/context';
 
 validate.options = {
   fullMessages: false,
@@ -106,6 +107,8 @@ export const useFormStateValidator = (formSchema) => {
 function SignIn({ loggingIn, introduction, appsettings, ready }) {
   const classes = useStyles();
 
+  const [{ isIframed }] = useAppContext();
+
   const [formState, handleChange] = useFormStateValidator(schema);
 
   const [rememberMe, setRememberMe] = useState(true);
@@ -167,85 +170,87 @@ function SignIn({ loggingIn, introduction, appsettings, ready }) {
         </Typography>
         {!ready && !loggingIn && <Spinner />}
         <div dangerouslySetInnerHTML={{ __html: introduction }} />
-        <form onSubmit={handleSignIn} className={classes.form} noValidate>
-          {loggingIn && <Spinner full />}
-          {useKeycloak ? (
-            <>
-              <Button
-                disabled={loggingIn}
-                fullWidth
-                variant="contained"
-                color={appsettings.maintenance ? 'inherit' : 'primary'}
-                className={classes.submit}
-                onClick={handleKeycloakAuth}
-              >
-                {appsettings.maintenance
-                  ? i18n.__('pages.SignIn.maintenanceLogin')
-                  : i18n.__('pages.SignIn.loginKeycloak')}
-              </Button>
-              <RememberButton />
-            </>
-          ) : (
-            <>
-              <TextField
-                margin="normal"
-                required
-                id="email"
-                label={i18n.__('pages.SignIn.emailLabel')}
-                name="email"
-                autoComplete="email"
-                autoFocus
-                error={hasError('email')}
-                fullWidth
-                helperText={hasError('email') ? i18n.__(formState.errors.email[0]) : null}
-                onChange={handleChange}
-                type="text"
-                value={formState.values.email || ''}
-                variant="outlined"
-                disabled={loggingIn}
-              />
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label={i18n.__('pages.SignIn.pwdLabel')}
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                error={hasError('password')}
-                helperText={hasError('password') ? i18n.__(formState.errors.password[0]) : null}
-                onChange={handleChange}
-                value={formState.values.password || ''}
-                disabled={loggingIn}
-              />
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-                className={classes.submit}
-                disabled={!formState.isValid || loggingIn}
-              >
-                {i18n.__('pages.SignIn.connect')}
-              </Button>
-              <RememberButton />
-              <Grid container>
-                <Grid item xs>
-                  <Link to="/" variant="body2">
-                    {i18n.__('pages.SignIn.forgotPwd')}
-                  </Link>
+        {!isIframed && (
+          <form onSubmit={handleSignIn} className={classes.form} noValidate>
+            {loggingIn && <Spinner full />}
+            {useKeycloak ? (
+              <>
+                <Button
+                  disabled={loggingIn}
+                  fullWidth
+                  variant="contained"
+                  color={appsettings.maintenance ? 'inherit' : 'primary'}
+                  className={classes.submit}
+                  onClick={handleKeycloakAuth}
+                >
+                  {appsettings.maintenance
+                    ? i18n.__('pages.SignIn.maintenanceLogin')
+                    : i18n.__('pages.SignIn.loginKeycloak')}
+                </Button>
+                <RememberButton />
+              </>
+            ) : (
+              <>
+                <TextField
+                  margin="normal"
+                  required
+                  id="email"
+                  label={i18n.__('pages.SignIn.emailLabel')}
+                  name="email"
+                  autoComplete="email"
+                  autoFocus
+                  error={hasError('email')}
+                  fullWidth
+                  helperText={hasError('email') ? i18n.__(formState.errors.email[0]) : null}
+                  onChange={handleChange}
+                  type="text"
+                  value={formState.values.email || ''}
+                  variant="outlined"
+                  disabled={loggingIn}
+                />
+                <TextField
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="password"
+                  label={i18n.__('pages.SignIn.pwdLabel')}
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                  error={hasError('password')}
+                  helperText={hasError('password') ? i18n.__(formState.errors.password[0]) : null}
+                  onChange={handleChange}
+                  value={formState.values.password || ''}
+                  disabled={loggingIn}
+                />
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  className={classes.submit}
+                  disabled={!formState.isValid || loggingIn}
+                >
+                  {i18n.__('pages.SignIn.connect')}
+                </Button>
+                <RememberButton />
+                <Grid container>
+                  <Grid item xs>
+                    <Link to="/" variant="body2">
+                      {i18n.__('pages.SignIn.forgotPwd')}
+                    </Link>
+                  </Grid>
+                  <Grid item>
+                    <Link to="/signup" variant="body2">
+                      {i18n.__('pages.SignIn.createAccount')}
+                    </Link>
+                  </Grid>
                 </Grid>
-                <Grid item>
-                  <Link to="/signup" variant="body2">
-                    {i18n.__('pages.SignIn.createAccount')}
-                  </Link>
-                </Grid>
-              </Grid>
-            </>
-          )}
-        </form>
+              </>
+            )}
+          </form>
+        )}
       </>
     </Fade>
   );
