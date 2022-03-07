@@ -259,7 +259,7 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
               <Box>
                 <CardHeader
                   title={i18n.__(
-                    `pages.AdminStructuresManagementPage${!isAppAdminMode && '.onlyStructureAdmin'}.title`,
+                    `pages.AdminStructuresManagementPage${!isAppAdminMode ? '.onlyStructureAdmin' : ''}.title`,
                   )}
                 />
                 <Typography color="textSecondary" style={{ paddingLeft: 16 }}>
