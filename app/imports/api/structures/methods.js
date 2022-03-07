@@ -146,7 +146,7 @@ export const removeStructure = new ValidatedMethod({
     if (structure === undefined) {
       throw new Meteor.Error(
         'api.structures.removeStructure.unknownStructure',
-        i18n.__('api.structures.unknownStructures'),
+        i18n.__('api.structures.unknownStructure'),
       );
     }
 
@@ -202,7 +202,7 @@ export const getAncestorsIds = new ValidatedMethod({
     if (structure === undefined) {
       throw new Meteor.Error(
         'api.structures.getAncestorsIds.unknownStructure',
-        i18n.__('api.structures.unknownStructures'),
+        i18n.__('api.structures.unknownStructure'),
       );
     }
 
@@ -227,7 +227,7 @@ export const getAllChilds = new ValidatedMethod({
     if (structure === undefined) {
       throw new Meteor.Error(
         'api.structures.removeStructure.unknownStructure',
-        i18n.__('api.structures.unknownStructures'),
+        i18n.__('api.structures.unknownStructure'),
       );
     }
 
