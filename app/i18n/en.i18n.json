@@ -880,7 +880,9 @@
       "resetAuthToken": "Reset Access Token",
       "noAuthToken": "No token to retrieve",
       "successCopyAuthToken": "Token copied with success",
-      "successResetAndCopyAuthToken": "New Token created and copied with success"
+      "successResetAndCopyAuthToken": "New Token created and copied with success",
+      "structureChoice": "Please choose your attachement structure",
+      "openStructureSelection": "Select attachement structure"
     },
     "NotFound": {
       "backButtonLabel": "Back",

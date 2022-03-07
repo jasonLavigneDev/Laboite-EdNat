@@ -2,11 +2,16 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Meteor } from 'meteor/meteor';
 import i18n from 'meteor/universe:i18n';
+import { _ } from 'meteor/underscore';
 import { makeStyles } from '@material-ui/core/styles';
-import { withTracker } from 'meteor/react-meteor-data';
+import { useTracker } from 'meteor/react-meteor-data';
 import Container from '@material-ui/core/Container';
 import Paper from '@material-ui/core/Paper';
+import Backdrop from '@material-ui/core/Backdrop';
+import Modal from '@material-ui/core/Modal';
 import Button from '@material-ui/core/Button';
+import Box from '@material-ui/core/Box';
+import ClearIcon from '@material-ui/icons/Clear';
 import IconButton from '@material-ui/core/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
@@ -23,8 +28,11 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import MailIcon from '@material-ui/icons/Mail';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardActions from '@material-ui/core/CardActions';
 import Spinner from '../../components/system/Spinner';
-import CustomSelect from '../../components/admin/CustomSelect';
 import { useAppContext } from '../../contexts/context';
 import LanguageSwitcher from '../../components/system/LanguageSwitcher';
 import debounce from '../../utils/debounce';
@@ -32,8 +40,17 @@ import { useObjectState } from '../../utils/hooks';
 import { downloadBackupPublications, uploadBackupPublications } from '../../../api/articles/methods';
 import AvatarPicker from '../../components/users/AvatarPicker';
 import Structures from '../../../api/structures/structures';
+import AdminStructureTreeView from '../../components/admin/AdminStructureTreeView';
+import { getTree } from '../../../api/utils';
+import AdminStructureSearchBar from '../../components/admin/AdminStructureSearchBar';
 
 const useStyles = makeStyles((theme) => ({
+  modal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  box: {},
   root: {
     padding: theme.spacing(2),
     marginTop: theme.spacing(1),
@@ -103,7 +120,142 @@ const logoutTypeLabels = {
   global: 'api.users.logoutTypes.global',
 };
 
-const ProfilePage = ({ structures, loading }) => {
+const StructuresSelection = ({ onUpdateField, isOpen, close, user, classes, startAncestorsIds }) => {
+  const [selectedStructure, setSelectedStructure] = React.useState(user.structure || null);
+  const [parentIds, setParentIds] = React.useState([]);
+  const [expandedIds, setExpandedIds] = React.useState([]);
+  const [structureSearchText, setStructureSearchText] = React.useState('');
+  const [filteredStructureFlatData, setFilteredStructureFlatData] = React.useState([]);
+
+  const { structuresFlatData, isStructuresFlatDataLoading } = useTracker(() => {
+    const userStructure = user.structure || null;
+    const parentIdsList = [...parentIds];
+    if (userStructure && user.structure.length > 0) {
+      parentIdsList.unshift(userStructure);
+    }
+
+    const structuresDataHandle = Meteor.subscribe('structures.top.with.childs', {
+      parentIds: parentIdsList,
+      searchText: structureSearchText,
+      isAppAdminMode: true,
+    });
+    const isStructuresDataHandleLoading = !structuresDataHandle.ready();
+    const data = Structures.findFromPublication('structures.top.with.childs').fetch();
+
+    setFilteredStructureFlatData(data);
+
+    if (!isStructuresDataHandleLoading) {
+      setExpandedIds(
+        data.reduce((accumulator, structure) => {
+          if (structure.parentId) accumulator.push(structure.parentId);
+          return accumulator;
+        }, []),
+      );
+    }
+    return {
+      structuresFlatData: data,
+      isStructuresFlatDataLoading: isStructuresDataHandleLoading,
+    };
+  }, [parentIds, structureSearchText.length > 2]);
+
+  const updateParentIdsList = ({ ids }) => {
+    const uniqueList = [...new Set([...parentIds, ...ids])];
+    if (_.isEqual(parentIds.sort(), uniqueList.sort())) return;
+    setExpandedIds([...expandedIds, ...ids]);
+    setParentIds(uniqueList);
+  };
+  React.useEffect(() => {
+    const hasStructure = startAncestorsIds.length > 0;
+    if (hasStructure) updateParentIdsList({ ids: [...parentIds, ...startAncestorsIds] });
+  }, []);
+  const resetStructureSearchFilter = () => {
+    setFilteredStructureFlatData(structuresFlatData);
+    setExpandedIds([]);
+  };
+
+  const onClickSelectBtn = (nodes) => {
+    onUpdateField({
+      target: {
+        value: nodes._id,
+        name: 'structureSelect',
+      },
+    });
+    setSelectedStructure(nodes._id);
+  };
+  return (
+    <Modal
+      className={classes.modal}
+      open={isOpen}
+      onClose={close}
+      closeAfterTransition
+      BackdropComponent={Backdrop}
+      BackdropProps={{
+        timeout: 500,
+      }}
+    >
+      <Fade in={isOpen}>
+        <Card style={{ height: '80vh', width: '80vw' }}>
+          <Box display="flex" justifyContent="space-between">
+            <Box>
+              <CardHeader
+                title={i18n.__(`pages.ProfilePage.structureChoice`)}
+                action={
+                  <IconButton title={i18n.__('pages.AdminStructuresManagementPage.close')} onClick={close}>
+                    <ClearIcon />
+                  </IconButton>
+                }
+              />
+              <Typography color="textSecondary" style={{ paddingLeft: 16 }}>
+                {i18n.__('pages.AdminStructuresManagementPage.helpText')}
+              </Typography>
+            </Box>
+          </Box>
+          <CardContent style={{ overflowY: 'auto', height: '100%' }}>
+            <Box>
+              <AdminStructureSearchBar
+                searchValue={structureSearchText}
+                setSearchText={setStructureSearchText}
+                resetSearchText={() => setStructureSearchText('')}
+                resetFilter={resetStructureSearchFilter}
+              />
+            </Box>
+            {isStructuresFlatDataLoading && <Spinner full />}
+            <Box>
+              <AdminStructureTreeView
+                treeData={getTree(filteredStructureFlatData)}
+                onClickAddBtn={() => {}}
+                onClickEditBtn={() => {}}
+                onClickDeleteBtn={() => {}}
+                onClickSelectBtn={onClickSelectBtn}
+                setExpandedIds={setExpandedIds}
+                updateParentIdsList={updateParentIdsList}
+                expandedIds={expandedIds}
+                onlySelect
+                selectedId={selectedStructure}
+              />
+            </Box>
+          </CardContent>
+          <CardActions>
+            <Button onClick={close}>
+              <Typography>Cancel</Typography>
+            </Button>
+          </CardActions>
+        </Card>
+      </Fade>
+    </Modal>
+  );
+};
+
+StructuresSelection.propTypes = {
+  onUpdateField: PropTypes.func.isRequired,
+  isOpen: PropTypes.bool.isRequired,
+  close: PropTypes.func.isRequired,
+  user: PropTypes.objectOf(PropTypes.any).isRequired,
+  classes: PropTypes.objectOf(PropTypes.any).isRequired,
+  startAncestorsIds: PropTypes.arrayOf(PropTypes.any).isRequired,
+};
+
+const ProfilePage = () => {
   const [, dispatch] = useAppContext();
   const [userData, setUserData] = useState(defaultState);
   const [submitOk, setSubmitOk] = useState(false);
@@ -112,13 +264,8 @@ const ProfilePage = ({ structures, loading }) => {
   const [structChecked, setStructChecked] = useState(false);
   const classes = useStyles();
   const { enableBlog, enableKeycloak } = Meteor.settings.public;
-  const [{ user, loadingUser, isMobile }] = useAppContext();
+  const [{ user, loadingUser, isMobile, structureIds }] = useAppContext();
 
-  const structureLabel = React.useRef(null);
-  const [labelStructureWidth, setLabelStructureWidth] = React.useState(0);
-  useEffect(() => {
-    setLabelStructureWidth(structureLabel.current.offsetWidth);
-  }, []);
   const usernameLabel = React.useRef(null);
   const [labelUsernameWidth, setLabelUsernameWidth] = React.useState(0);
   useEffect(() => {
@@ -436,6 +583,10 @@ const ProfilePage = ({ structures, loading }) => {
     });
   };
 
+  const [isStructureSelectionOpen, setIsStructureSelectionOpen] = React.useState(false);
+  const openStructureSelection = () => setIsStructureSelectionOpen(true);
+  const closeStructureSelection = () => setIsStructureSelectionOpen(false);
+
   if (loadingUser) {
     return <Spinner />;
   }
@@ -550,24 +701,20 @@ const ProfilePage = ({ structures, loading }) => {
                   />
                 </Grid>
               </Grid>
-              <Grid item />
               <Grid item className={classes.maxWidth}>
                 <FormControl variant="filled" className={classes.formControl} fullWidth>
-                  <InputLabel htmlFor="structure" id="structure-label" ref={structureLabel}>
-                    {i18n.__('api.users.labels.structure')}
-                  </InputLabel>
-                  {loading ? (
-                    <Spinner />
-                  ) : (
-                    <CustomSelect
-                      value={userData.structureSelect || ''}
-                      error={false}
-                      onChange={onUpdateField}
-                      labelWidth={labelStructureWidth}
-                      options={structures.map((opt) => ({ value: opt._id, label: opt.name }))}
-                    />
-                  )}
+                  <Button name="structureModal" variant="contained" onClick={openStructureSelection}>
+                    {i18n.__('pages.ProfilePage.openStructureSelection')}
+                  </Button>
                 </FormControl>
+                <StructuresSelection
+                  user={user}
+                  classes={classes}
+                  isOpen={isStructureSelectionOpen}
+                  close={closeStructureSelection}
+                  onUpdateField={onUpdateField}
+                  startAncestorsIds={structureIds}
+                />
               </Grid>
               {enableKeycloak ? (
                 <Grid item>
@@ -701,19 +848,4 @@ const ProfilePage = ({ structures, loading }) => {
   );
 };
 
-// export default ProfilePage;
-
-ProfilePage.propTypes = {
-  structures: PropTypes.arrayOf(PropTypes.object).isRequired,
-  loading: PropTypes.bool.isRequired,
-};
-
-export default withTracker(() => {
-  const structuresHandle = Meteor.subscribe('structures.all');
-  const loading = !structuresHandle.ready();
-  const structures = Structures.find({}, { sort: { name: 1 } }).fetch();
-  return {
-    structures,
-    loading,
-  };
-})(ProfilePage);
+export default ProfilePage;

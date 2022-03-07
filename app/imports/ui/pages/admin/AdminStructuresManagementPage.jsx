@@ -303,6 +303,7 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
                 updateParentIdsList={updateParentIdsList}
                 expandedIds={expandedIds}
                 isAppAdminMode={isAppAdminMode}
+                selectedId=""
               />
             </CardContent>
           </Card>

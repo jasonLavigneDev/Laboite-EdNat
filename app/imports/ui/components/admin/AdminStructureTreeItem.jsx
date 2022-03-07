@@ -8,6 +8,7 @@ import IconButton from '@material-ui/core/IconButton';
 import AddBox from '@material-ui/icons/AddBox';
 import DeleteIcon from '@material-ui/icons/DeleteOutline';
 import EditIcon from '@material-ui/icons/Edit';
+import CheckIcon from '@material-ui/icons/Check';
 import { withStyles, alpha, makeStyles } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
@@ -32,10 +33,20 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const AdminStructureTreeItem = ({ nodes, onClickAddBtn, onClickEditBtn, onClickDeleteBtn, updateParentIdsList }) => {
+const AdminStructureTreeItem = ({
+  nodes,
+  onClickAddBtn,
+  onClickEditBtn,
+  onClickDeleteBtn,
+  onClickSelectBtn,
+  updateParentIdsList,
+  onlySelect,
+  selectedId,
+}) => {
   const { _id: id, name, children, childrenIds } = nodes;
   const classes = useStyles();
   const hasChildren = childrenIds.length > 0;
+
   return (
     <StyledTreeItem
       key={id}
@@ -50,35 +61,47 @@ const AdminStructureTreeItem = ({ nodes, onClickAddBtn, onClickEditBtn, onClickD
             </div>
           </Box>
           <Box>
-            <Tooltip title={i18n.__('pages.AdminStructuresManagementPage.treeView.createStructure')}>
-              <span>
-                <IconButton onClick={() => onClickAddBtn(nodes)}>
-                  <AddBox />
-                </IconButton>
-              </span>
-            </Tooltip>
+            {onlySelect ? (
+              <Tooltip title="hehe">
+                <span>
+                  <IconButton disabled={(() => selectedId === nodes._id)()} onClick={() => onClickSelectBtn(nodes)}>
+                    <CheckIcon />
+                  </IconButton>
+                </span>
+              </Tooltip>
+            ) : (
+              <>
+                <Tooltip title={i18n.__('pages.AdminStructuresManagementPage.treeView.createStructure')}>
+                  <span>
+                    <IconButton onClick={() => onClickAddBtn(nodes)}>
+                      <AddBox />
+                    </IconButton>
+                  </span>
+                </Tooltip>
 
-            <Tooltip title={i18n.__('pages.AdminStructuresManagementPage.treeView.editStructure')}>
-              <span>
-                <IconButton onClick={() => onClickEditBtn(nodes)}>
-                  <EditIcon />
-                </IconButton>
-              </span>
-            </Tooltip>
+                <Tooltip title={i18n.__('pages.AdminStructuresManagementPage.treeView.editStructure')}>
+                  <span>
+                    <IconButton onClick={() => onClickEditBtn(nodes)}>
+                      <EditIcon />
+                    </IconButton>
+                  </span>
+                </Tooltip>
 
-            <Tooltip
-              title={i18n.__(
-                `pages.AdminStructuresManagementPage.treeView.${
-                  hasChildren ? 'canNotDeleteBecauseChildren' : 'deleteStructure'
-                }`,
-              )}
-            >
-              <span>
-                <IconButton disabled={hasChildren} role="button" onClick={() => onClickDeleteBtn(nodes)}>
-                  <DeleteIcon />
-                </IconButton>
-              </span>
-            </Tooltip>
+                <Tooltip
+                  title={i18n.__(
+                    `pages.AdminStructuresManagementPage.treeView.${
+                      hasChildren ? 'canNotDeleteBecauseChildren' : 'deleteStructure'
+                    }`,
+                  )}
+                >
+                  <span>
+                    <IconButton disabled={hasChildren} role="button" onClick={() => onClickDeleteBtn(nodes)}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </span>
+                </Tooltip>
+              </>
+            )}
           </Box>
         </Box>
       }
@@ -91,7 +114,10 @@ const AdminStructureTreeItem = ({ nodes, onClickAddBtn, onClickEditBtn, onClickD
             onClickAddBtn={onClickAddBtn}
             onClickEditBtn={onClickEditBtn}
             onClickDeleteBtn={onClickDeleteBtn}
+            onClickSelectBtn={onClickSelectBtn}
             updateParentIdsList={updateParentIdsList}
+            onlySelect={onlySelect}
+            selectedId={selectedId}
           />
         ))
       ) : hasChildren ? (
@@ -105,7 +131,10 @@ AdminStructureTreeItem.propTypes = {
   nodes: PropTypes.objectOf(PropTypes.any).isRequired,
   onClickAddBtn: PropTypes.func.isRequired,
   onClickEditBtn: PropTypes.func.isRequired,
+  onClickSelectBtn: PropTypes.func.isRequired,
   onClickDeleteBtn: PropTypes.func.isRequired,
   updateParentIdsList: PropTypes.func.isRequired,
+  onlySelect: PropTypes.bool.isRequired,
+  selectedId: PropTypes.string.isRequired,
 };
 export default AdminStructureTreeItem;
