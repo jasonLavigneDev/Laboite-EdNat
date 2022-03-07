@@ -98,7 +98,7 @@ const DynamicStore = withTracker(() => {
   const userId = Meteor.userId();
   const structureIds = [];
 
-  if (user && user.structure) {
+  if (user && user.structure && user.structure.length > 0) {
     Meteor.call('structures.getAncestorsIds', { structureId: user.structure }, (error, response) => {
       if (error) {
         msg.error(error.reason || error.details[0].message);
