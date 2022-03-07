@@ -88,7 +88,8 @@ function MainLayout({ appsettings, ready }) {
   const [{ userId, user, loadingUser, isMobile }] = useAppContext();
   const classes = useLayoutStyles(isMobile)();
   const location = useLocation();
-  const { enableBlog } = Meteor.settings.public;
+  const { disabledFeatures = {} } = Meteor.settings.public;
+  const enableBlog = !disabledFeatures.blog;
 
   const isAdmin = Roles.userIsInRole(userId, 'admin');
 

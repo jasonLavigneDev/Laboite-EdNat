@@ -92,7 +92,9 @@ const MenuBar = ({ mobile }) => {
   const history = useHistory();
   const classes = useStyles(mobile)();
   const T = i18n.createComponent('components.MenuBar');
-  const { enableBlog } = Meteor.settings.public;
+  const { disabledFeatures = {} } = Meteor.settings.public;
+  const enableBlog = !disabledFeatures.blog;
+
   const currentLink = links.find((link) => {
     if (link.path === pathname || (pathname.search(link.path) > -1 && link.path !== '/')) {
       return true;
