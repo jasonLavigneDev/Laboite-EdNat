@@ -62,7 +62,7 @@ const AdminStructureTreeItem = ({
           </Box>
           <Box>
             {onlySelect ? (
-              <Tooltip title="hehe">
+              <Tooltip title={i18n.__('pages.ProfilePage.chooseStructure')}>
                 <span>
                   <IconButton disabled={(() => selectedId === nodes._id)()} onClick={() => onClickSelectBtn(nodes)}>
                     <CheckIcon />
