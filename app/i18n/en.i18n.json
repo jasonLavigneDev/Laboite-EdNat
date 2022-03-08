@@ -882,7 +882,10 @@
       "successCopyAuthToken": "Token copied with success",
       "successResetAndCopyAuthToken": "New Token created and copied with success",
       "structureChoice": "Please choose your attachement structure",
-      "openStructureSelection": "Select attachement structure"
+      "openStructureSelection": "Select attachement structure",
+      "chooseStructure": "Choose the structure",
+      "noStructureCurrently":"You have no attachemnt structure for now",
+      "currentStructure":"You current attachement structure is:"
     },
     "NotFound": {
       "backButtonLabel": "Back",
