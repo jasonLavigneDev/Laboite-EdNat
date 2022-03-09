@@ -7,7 +7,7 @@
     "keycloakUrl": "",
     "keycloakRealm": "",
     "theme": "laboite",
-    "disabledPages": {
+    "disabledFeatures": {
       "blog": false,
       "groups": false
     }
