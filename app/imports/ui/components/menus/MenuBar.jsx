@@ -95,10 +95,7 @@ const MenuBar = ({ mobile }) => {
     return false;
   });
   const finalLinks = links.filter(({ path, hidden }) => {
-    if (hidden) {
-      return false;
-    }
-    if (path === '/publications' && user.articlesEnable) {
+    if (hidden || (path === '/publications' && !user.articlesEnable)) {
       return false;
     }
     return true;
