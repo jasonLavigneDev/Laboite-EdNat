@@ -9,6 +9,8 @@ import IconButton from '@material-ui/core/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
 import TextField from '@material-ui/core/TextField';
+import { useTracker } from 'meteor/react-meteor-data';
+import { useHistory } from 'react-router-dom';
 import Typography from '@material-ui/core/Typography';
 import InputLabel from '@material-ui/core/InputLabel';
 import Fade from '@material-ui/core/Fade';
@@ -17,16 +19,18 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Grid from '@material-ui/core/Grid';
+import Box from '@material-ui/core/Box';
 import Tooltip from '@material-ui/core/Tooltip';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import MailIcon from '@material-ui/icons/Mail';
-import StructureSelection from '../../components/profilePage/StructureSelection';
+import AutoComplete from '@material-ui/lab/Autocomplete';
 import Spinner from '../../components/system/Spinner';
 import { useAppContext } from '../../contexts/context';
 import LanguageSwitcher from '../../components/system/LanguageSwitcher';
 import debounce from '../../utils/debounce';
 import { useStructure } from '../../../api/structures/utils';
+import Structures from '../../../api/structures/structures';
 import { useObjectState } from '../../utils/hooks';
 import { downloadBackupPublications, uploadBackupPublications } from '../../../api/articles/methods';
 import AvatarPicker from '../../components/users/AvatarPicker';
@@ -116,9 +120,10 @@ const ProfilePage = () => {
   const [structChecked, setStructChecked] = useState(false);
   const classes = useStyles();
   const { enableBlog, enableKeycloak } = Meteor.settings.public;
-  const [{ user, loadingUser, isMobile, structureIds }] = useAppContext();
+  const [{ user, loadingUser, isMobile }] = useAppContext();
   const userStructure = useStructure();
   const usernameLabel = React.useRef(null);
+  const history = useHistory();
   const [labelUsernameWidth, setLabelUsernameWidth] = React.useState(0);
   useEffect(() => {
     setLabelUsernameWidth(usernameLabel.current.offsetWidth);
@@ -435,9 +440,19 @@ const ProfilePage = () => {
     });
   };
 
-  const [isStructureSelectionOpen, setIsStructureSelectionOpen] = React.useState(false);
-  const openStructureSelection = () => setIsStructureSelectionOpen(true);
-  const closeStructureSelection = () => setIsStructureSelectionOpen(false);
+  const [searchText, setSearchText] = useState('');
+  const { flatData } = useTracker(() => {
+    const ids = [];
+    if (userStructure && userStructure._id) ids.push(userStructure._id);
+    Meteor.subscribe('structures.top.with.childs', {
+      parentIds: ids,
+      searchText,
+    });
+    const structures = Structures.findFromPublication('structures.top.with.childs').fetch();
+    return {
+      flatData: structures,
+    };
+  }, [searchText.length > 2 && searchText]);
 
   if (loadingUser) {
     return <Spinner />;
@@ -559,19 +574,50 @@ const ProfilePage = () => {
                     ? `${i18n.__('pages.ProfilePage.currentStructure')} ${userStructure.name}`
                     : i18n.__('pages.ProfilePage.noStructureCurrently')}
                 </Typography>
-                <FormControl variant="filled" className={classes.formControl} fullWidth>
-                  <Button name="structureModal" variant="contained" onClick={openStructureSelection}>
-                    {i18n.__('pages.ProfilePage.openStructureSelection')}
-                  </Button>
-                </FormControl>
-                <StructureSelection
-                  user={user}
-                  classes={classes}
-                  isOpen={isStructureSelectionOpen}
-                  close={closeStructureSelection}
-                  onUpdateField={onUpdateField}
-                  startAncestorsIds={structureIds}
-                />
+                <Box display="flex" justifyContent="space-between">
+                  <AutoComplete
+                    options={flatData}
+                    getOptionLabel={(option) => option.name}
+                    renderOption={(option) => (
+                      <div style={{ display: 'flex', flexDirection: 'column' }}>
+                        <div>{option.name}</div>
+                        {!!option.parentId && (
+                          <div style={{ fontSize: 10, color: 'grey', fontStyle: 'italic' }}>
+                            &gt; {flatData.find((s) => s._id === option.parentId).name}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    onChange={(event, newValue) => {
+                      if (newValue) setUserData({ ...userData, structureSelect: newValue._id });
+                    }}
+                    inputValue={searchText}
+                    onInputChange={(event, newInputValue) => {
+                      setSearchText(newInputValue);
+                    }}
+                    getOptionSelected={(opt, val) => opt._id === val._id}
+                    style={{ width: 500 }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        onChange={({ target: { value } }) => setSearchText(value)}
+                        variant="outlined"
+                        label={i18n.__('pages.ProfilePage.chooseStructure')}
+                        placeholder={i18n.__('pages.ProfilePage.noSelectedStructure')}
+                      />
+                    )}
+                  />
+                  <FormControl variant="filled" className={classes.formControl}>
+                    <Button
+                      variant="outlined"
+                      onClick={() => {
+                        history.push('/profileStructure');
+                      }}
+                    >
+                      {i18n.__('pages.ProfilePage.openStructureSelection')}
+                    </Button>
+                  </FormControl>
+                </Box>
               </Grid>
               {enableKeycloak ? (
                 <Grid item>

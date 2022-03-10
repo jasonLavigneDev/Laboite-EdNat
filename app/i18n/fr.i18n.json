@@ -884,10 +884,11 @@
       "successCopyAuthToken": "Token copié avec succès",
       "successResetAndCopyAuthToken": "Nouveau Token créé et copié avec succès",
       "structureChoice": "Veuillez choisir votre structure de rattachement",
-      "openStructureSelection": "Selectionner la structure de rattachement",
-      "chooseStructure":"Choisir la structure",
+      "openStructureSelection": "Si vous ne trouvez pas votre structure, cliquez ici pour une vue détaillée !",
+      "chooseStructure": "Choisir la structure",
       "noStructureCurrently": "Vous n'avez pas de structure de rattachement pour le moment",
-      "currentStructure": "Votre structure de rattachement actuelle est :"
+      "currentStructure": "Votre structure de rattachement actuelle est :",
+      "noSelectedStructure": "Aucune Structure sélectionnée"
     },
     "NotFound": {
       "backButtonLabel": "Retour",

@@ -13,6 +13,7 @@ const AdminStructureSearchBar = (props) => {
   return (
     <Box sx={{ p: 0.5, pb: 0 }}>
       <TextField
+        fullWidth
         variant="outlined"
         value={searchValue}
         onChange={(e) => {
