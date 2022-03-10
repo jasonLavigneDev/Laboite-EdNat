@@ -118,7 +118,7 @@ const PollPage = ({ loading, group, slug }) => {
                               aria-label="comments"
                               onClick={() =>
                                 window.open(
-                                  `${Meteor.settings.public.services.sondagesUrl}/poll/answer/${poll._id}`,
+                                  `${Meteor.settings.public.services.sondagesUrl}/poll/answer/${poll._id}?autologin`,
                                   '_blank',
                                   'noreferrer,noopener',
                                 )
