@@ -44,11 +44,9 @@ FindFromPublication.publish(
       const searchResult = Structures.find({ name: { $regex: regex } }).fetch();
 
       const ids = searchResult.reduce((acc, struct) => {
-        acc.push(...struct.ancestorsIds, struct._id);
+        acc.push(...struct.ancestorsIds, struct._id, ...struct.childrenIds);
         return acc;
       }, []);
-
-      searchResult.forEach((res) => ids.push(...res.ancestorsIds, res._id, ...res.childrenIds));
       query._id = { $in: ids };
     } else {
       query.$or = isAppAdminMode
@@ -60,6 +58,32 @@ FindFromPublication.publish(
       fields: Structures.publicFields,
       sort: { name: 1 },
       limit: 10000,
+    });
+  },
+);
+
+FindFromPublication.publish(
+  'structures.top.with.direct.parent',
+  function structuresTopWithChilds({ searchText } = { searchText: '' }) {
+    if (!isActive(this.userId)) {
+      return this.ready();
+    }
+
+    const regex = new RegExp(searchText, 'i');
+    const searchResult = Structures.find({ name: { $regex: regex } }).fetch();
+
+    const ids = searchResult.reduce((acc, struct) => {
+      acc.push(struct._id);
+      if (struct.parentId) acc.push(struct.parentId);
+      return acc;
+    }, []);
+
+    const query = { _id: { $in: ids } };
+
+    return Structures.find(query, {
+      fields: Structures.publicFields,
+      sort: { name: 1 },
+      limit: 20,
     });
   },
 );

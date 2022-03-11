@@ -441,17 +441,22 @@ const ProfilePage = () => {
   };
 
   const [searchText, setSearchText] = useState('');
-  const { flatData } = useTracker(() => {
-    const ids = [];
-    if (userStructure && userStructure._id) ids.push(userStructure._id);
-    Meteor.subscribe('structures.top.with.childs', {
-      parentIds: ids,
-      searchText,
-    });
-    const structures = Structures.findFromPublication('structures.top.with.childs').fetch();
-    return {
-      flatData: structures,
-    };
+  const { flatData, isSearchLoading } = useTracker(() => {
+    // Add this check to prevent first run with empty searchText at component Mount
+    if (searchText.length > 2) {
+      const handle = Meteor.subscribe('structures.top.with.direct.parent', {
+        searchText,
+      });
+      const isLoading = !handle.ready();
+
+      const structures = Structures.findFromPublication('structures.top.with.direct.parent').fetch();
+
+      return {
+        flatData: structures,
+        isSearchLoading: isLoading,
+      };
+    }
+    return { flatData: [], isSearchLoading: false };
   }, [searchText.length > 2 && searchText]);
 
   if (loadingUser) {
@@ -577,19 +582,32 @@ const ProfilePage = () => {
                 <Box display="flex" justifyContent="space-between">
                   <AutoComplete
                     options={flatData}
+                    loading={isSearchLoading}
                     getOptionLabel={(option) => option.name}
-                    renderOption={(option) => (
-                      <div style={{ display: 'flex', flexDirection: 'column' }}>
-                        <div>{option.name}</div>
-                        {!!option.parentId && (
-                          <div style={{ fontSize: 10, color: 'grey', fontStyle: 'italic' }}>
-                            &gt; {flatData.find((s) => s._id === option.parentId).name}
-                          </div>
-                        )}
-                      </div>
-                    )}
+                    renderOption={(option) => {
+                      let parent;
+                      if (option.parentId) {
+                        parent = flatData.find((s) => s._id === option.parentId);
+                      }
+                      return (
+                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                          <div>{option.name}</div>
+                          {!!option.parentId && (
+                            <div style={{ fontSize: 10, color: 'grey', fontStyle: 'italic' }}>
+                              {parent ? parent.name : ''}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    }}
                     onChange={(event, newValue) => {
-                      if (newValue) setUserData({ ...userData, structureSelect: newValue._id });
+                      if (newValue && newValue._id)
+                        onUpdateField({
+                          target: {
+                            name: 'structureSelect',
+                            value: newValue._id,
+                          },
+                        });
                     }}
                     inputValue={searchText}
                     onInputChange={(event, newInputValue) => {
