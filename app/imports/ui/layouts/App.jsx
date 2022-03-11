@@ -33,7 +33,9 @@ function App() {
   const { userId, loadingUser = false, loading } = state;
   const useKeycloak = Meteor.settings.public.enableKeycloak;
   const externalBlog = typeof Meteor.settings.public.laboiteBlogURL !== 'undefined';
-  const { enableBlog, minioEndPoint } = Meteor.settings.public;
+  const { disabledFeatures = {}, minioEndPoint } = Meteor.settings.public;
+  const enableBlog = !disabledFeatures.blog;
+
   useEffect(() => {
     updateDocumentTitle();
   }, []);
