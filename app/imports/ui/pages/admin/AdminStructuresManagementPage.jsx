@@ -304,6 +304,8 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
                 expandedIds={expandedIds}
                 isAppAdminMode={isAppAdminMode}
                 selectedId=""
+                onlySelect={false}
+                onClickSelectBtn={() => {}}
               />
             </CardContent>
           </Card>
