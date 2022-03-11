@@ -88,7 +88,7 @@ function MainLayout({ appsettings, ready }) {
   const [{ userId, user, loadingUser, isMobile }] = useAppContext();
   const classes = useLayoutStyles(isMobile)();
   const location = useLocation();
-  const { enableBlog } = Meteor.settings.public;
+  const { disabledFeatures = {} } = Meteor.settings.public;
 
   const isAdmin = Roles.userIsInRole(userId, 'admin');
 
@@ -110,6 +110,7 @@ function MainLayout({ appsettings, ready }) {
           {appsettings.maintenance && isAdmin ? (
             <Alert className={classes.alertMaintenance} variant="filled" severity="error">
               {i18n.__(`layouts.MainLayout.alertMaintenance`)}
+              {appsettings.textMaintenance ? `: ${i18n.__(appsettings.textMaintenance)}` : null}
             </Alert>
           ) : null}
           <Suspense fallback={<Spinner />}>
@@ -123,21 +124,29 @@ function MainLayout({ appsettings, ready }) {
                     <Route exact path="/structure" component={ServicesPage} />
                     <Route exact path="/help" component={HelpPage} />
 
-                    {enableBlog && <Route exact path="/publications" component={ArticlesPage} />}
-                    {enableBlog && <Route exact path="/publications/new" component={EditArticlePage} />}
-                    {enableBlog && <Route exact path="/publications/:slug" component={EditArticlePage} />}
+                    {!disabledFeatures.blog && <Route exact path="/publications" component={ArticlesPage} />}
+                    {!disabledFeatures.blog && <Route exact path="/publications/new" component={EditArticlePage} />}
+                    {!disabledFeatures.blog && <Route exact path="/publications/:slug" component={EditArticlePage} />}
 
                     <Route exact path="/services/:slug" component={SingleServicePage} />
                     <Route exact path="/structure/:slug" component={SingleServicePage} />
-                    <Route exact path="/groups" component={GroupsPage} />
-                    <Route exact path="/groups/:slug" component={SingleGroupPage} />
-                    <Route exact path="/groups/:slug/addressbook" component={AddressBook} />
-                    <Route exact path="/groups/:slug/events" component={EventsPage} />
-                    <Route exact path="/groups/:slug/poll" component={PollPage} />
-                    <Route exact path="/groups/:slug/bookmarks" component={BookmarksPage} />
-                    <Route exact path="/admingroups" component={AdminGroupsPage} />
-                    <Route exact path="/admingroups/new" component={AdminSingleGroupPage} />
-                    <Route exact path="/admingroups/:_id" component={AdminSingleGroupPage} />
+                    {!disabledFeatures.groups && <Route exact path="/groups" component={GroupsPage} />}
+                    {!disabledFeatures.groups && <Route exact path="/groups/:slug" component={SingleGroupPage} />}
+                    {!disabledFeatures.groups && (
+                      <Route exact path="/groups/:slug/addressbook" component={AddressBook} />
+                    )}
+                    {!disabledFeatures.groups && <Route exact path="/groups/:slug/events" component={EventsPage} />}
+                    {!disabledFeatures.groups && <Route exact path="/groups/:slug/poll" component={PollPage} />}
+                    {!disabledFeatures.groups && (
+                      <Route exact path="/groups/:slug/bookmarks" component={BookmarksPage} />
+                    )}
+                    {!disabledFeatures.groups && <Route exact path="/admingroups" component={AdminGroupsPage} />}
+                    {!disabledFeatures.groups && (
+                      <Route exact path="/admingroups/new" component={AdminSingleGroupPage} />
+                    )}
+                    {!disabledFeatures.groups && (
+                      <Route exact path="/admingroups/:_id" component={AdminSingleGroupPage} />
+                    )}
                     <Route exact path="/medias" component={MediaStoragePage} />
                     <Route exact path="/userBookmarks" component={UserBookmarksPage} />
                     <Route component={NotFound} />

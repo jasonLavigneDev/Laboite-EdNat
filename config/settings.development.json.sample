@@ -3,10 +3,14 @@
     "appName": "LaBoîte",
     "appDescription": "Sac à dos numérique de l’agent public",
     "enableKeycloak": false,
+    "offlinePage": false,
     "keycloakUrl": "",
     "keycloakRealm": "",
-    "enableBlog": false,
     "theme": "laboite",
+    "disabledFeatures": {
+      "blog": false,
+      "groups": false
+    }
     "laboiteBlogURL": "",
     "enableBBB": false,
     "BBBUrl": "",

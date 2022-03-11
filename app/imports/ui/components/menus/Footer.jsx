@@ -51,7 +51,8 @@ const Footer = () => {
   const [settingsData, setSettingsData] = useState([]);
   const [{ isMobile }] = useAppContext();
   const externalBlog = Meteor.settings.public.laboiteBlogURL;
-  const { enableBlog } = Meteor.settings.public;
+  const { disabledFeatures = {} } = Meteor.settings.public;
+  const enableBlog = !disabledFeatures.blog;
 
   const toolbarContent = () => {
     return (

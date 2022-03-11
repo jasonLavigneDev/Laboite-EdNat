@@ -549,7 +549,8 @@ export default withTracker(
     const bookmarks = Bookmarks.find({}).count();
     const events = EventsAgenda.find({}).count();
     const subServices = Meteor.subscribe('services.group', { ids: group.applications });
-    const services = Services.findFromPublication('services.group', {}, { sort: { name: 1 } }).fetch() || [];
+    const services =
+      Services.findFromPublication('services.group', { state: { $ne: 10 } }, { sort: { name: 1 } }).fetch() || [];
     const ready = subGroup.ready() && subServices.ready();
     return {
       group,

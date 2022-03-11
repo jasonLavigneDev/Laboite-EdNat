@@ -1,10 +1,10 @@
 const COMMONS = {
   signinBackground: '',
   logos: {
-    SMALL_LOGO: '/images/logos/rizomo/Robot _R.svg',
-    LONG_LOGO: '/images/logos/rizomo/logo-rizomo.png',
-    SMALL_LOGO_MAINTENANCE: '/images/logos/rizomo/Robot _R.svg',
-    LONG_LOGO_MAINTENANCE: '/images/logos/rizomo/logo-rizomo.png',
+    SMALL_LOGO: '/images/logos/rizomo/logo_SAD_only.svg',
+    LONG_LOGO: '/images/logos/rizomo/logo_SAD_Rizomo.svg',
+    SMALL_LOGO_MAINTENANCE: '/images/logos/rizomo/logo_SAD_only.svg',
+    LONG_LOGO_MAINTENANCE: '/images/logos/rizomo/logo_SAD_Rizomo.svg',
   },
   shape: {
     headerHeight: 100,

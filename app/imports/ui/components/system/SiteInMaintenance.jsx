@@ -34,7 +34,7 @@ const SiteInMaintenance = ({ appsettings, ready }) => {
           </Typography>
 
           <Typography className={classes.paragraph} paragraph color="inherit">
-            {appsettings.textMaintenance}
+            {i18n.__(appsettings.textMaintenance)}
           </Typography>
         </>
       ) : null}

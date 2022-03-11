@@ -9,10 +9,10 @@ Copy `settings-development.json.sample` to `settings-development.json` and updat
 | enableKeycloak                           | boolean  | false                                | If true, keycloak is enabled                                                                |
 | keycloakUrl                              | string   | ""                                   | Keycloak URL                                                                                |
 | keycloakRealm                            | string   | ""                                   | Keycloak Realm                                                                              |
+| offlinePage                              | boolean  | false                                | If true, offline services at signin page                                                    |
 | theme                                    | string   | "laboite"                            | laboite or rizomo theme                                                                     |
 | appName                                  | string   | "LaBoîte"                            | Application Name                                                                            |
 | appDescription                           | string   | ""                                   | Application description, it will be displayed under the title                               |
-| enableBlog                               | boolean  | false                                | enable all features and links for the blog                                                  |
 | laboiteBlogURL                           | string   | ""                                   | Laboite Blog URL                                                                            |
 | enableBBB                                | boolean  | true                                 | If true, Big Blue Button is enabled                                                         |
 | BBBUrl                                   | string   | ""                                   | Big Blue Button URL                                                                         |
@@ -40,6 +40,9 @@ Copy `settings-development.json.sample` to `settings-development.json` and updat
 | groupPlugins.PLUGINNAME.URL              | string   | ""                                   | Group plugin URL                                                                            |
 | groupPlugins.PLUGINNAME.groupURL         | string   | ""                                   | [URL]/group/[GROUPSLUG]" "[URL]/apps/files/?dir=/[GROUPNAME]                                |
 | groupPlugins.PLUGINNAME.enableChangeName | boolean  | true                                 | If true, changing the group name for this group plugin is possible                          |
+| disabledFeatures                         | object   | {}                                   | add features to disabled                                                                    |
+| disabledFeatures.blog                    | boolean  | false                                | disable all blog                                                                            |
+| disabledFeatures.groups                  | boolean  | false                                | disable all groups                                                                          |
 
 ## keycloak:
 

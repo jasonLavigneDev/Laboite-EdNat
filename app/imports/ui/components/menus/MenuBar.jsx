@@ -8,11 +8,12 @@ import { PropTypes } from 'prop-types';
 import GroupIcon from '@material-ui/icons/Group';
 import LibraryBooks from '@material-ui/icons/LibraryBooks';
 import HomeIcon from '@material-ui/icons/Home';
-import HelpIcon from '@material-ui/icons/Help';
 import BusinessIcon from '@material-ui/icons/Business';
 import AppsIcon from '@material-ui/icons/Apps';
 import { useAppContext } from '../../contexts/context';
 import updateDocumentTitle from '../../utils/updateDocumentTitle';
+
+const { disabledFeatures = {} } = Meteor.settings.public;
 
 export const links = [
   {
@@ -20,20 +21,20 @@ export const links = [
     content: 'menuMyspace',
     contentMobile: 'menuMyspaceMobile',
     icon: <HomeIcon />,
-    admin: false,
+    hidden: false,
   },
   {
     path: '/groups',
     content: 'menuGroupes',
     contentMobile: 'menuGroupesMobile',
     icon: <GroupIcon />,
-    admin: false,
+    hidden: disabledFeatures.groups,
   },
   {
     path: '/services',
     content: 'menuServices',
     icon: <AppsIcon />,
-    admin: false,
+    hidden: false,
     tooltip: 'tooltipServices',
   },
   {
@@ -41,20 +42,14 @@ export const links = [
     content: 'menuArticles',
     contentMobile: 'menuArticlesMobile',
     icon: <LibraryBooks />,
-    admin: false,
+    hidden: disabledFeatures.blog,
   },
   {
     path: '/structure',
     content: 'menuStructure',
     icon: <BusinessIcon />,
-    admin: false,
+    hidden: false,
     tooltip: 'tooltipStructure',
-  },
-  {
-    path: '/help',
-    content: 'menuHelp',
-    icon: <HelpIcon />,
-    admin: false,
   },
 ];
 
@@ -92,15 +87,19 @@ const MenuBar = ({ mobile }) => {
   const history = useHistory();
   const classes = useStyles(mobile)();
   const T = i18n.createComponent('components.MenuBar');
-  const { enableBlog } = Meteor.settings.public;
+
   const currentLink = links.find((link) => {
     if (link.path === pathname || (pathname.search(link.path) > -1 && link.path !== '/')) {
       return true;
     }
     return false;
   });
-
-  const finalLink = user.articlesEnable && enableBlog ? links : links.filter(({ path }) => path !== '/publications');
+  const finalLinks = links.filter(({ path, hidden }) => {
+    if (hidden || (path === '/publications' && !user.articlesEnable)) {
+      return false;
+    }
+    return true;
+  });
 
   function a11yProps(index) {
     return {
@@ -124,10 +123,11 @@ const MenuBar = ({ mobile }) => {
       indicatorColor="secondary"
       textColor="primary"
       aria-label="menu links"
-      variant="scrollable"
+      variant={finalLinks.length < 4 && mobile ? '' : 'scrollable'}
       scrollButtons="on"
+      centered={finalLinks.length < 4 && mobile}
     >
-      {finalLink.map((link, index) => (
+      {finalLinks.map((link, index) => (
         <Tab
           {...a11yProps(index)}
           key={link.path}

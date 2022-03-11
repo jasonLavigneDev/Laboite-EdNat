@@ -82,7 +82,8 @@ const AddressBook = ({ loading, group, slug }) => {
     history.goBack();
   };
 
-  const { enableBlog } = Meteor.settings.public;
+  const { disabledFeatures = {} } = Meteor.settings.public;
+  const enableBlog = !disabledFeatures.blog;
   const authorBlogPage =
     Meteor.settings.public.laboiteBlogURL !== ''
       ? `${Meteor.settings.public.laboiteBlogURL}/authors/`

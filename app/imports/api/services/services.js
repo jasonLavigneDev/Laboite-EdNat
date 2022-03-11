@@ -68,6 +68,11 @@ Services.schema = new SimpleSchema(
       label: getLabel('api.services.labels.structure'),
       defaultValue: '',
     },
+    offline: {
+      type: Boolean,
+      optional: true,
+      label: getLabel('api.services.labels.offline'),
+    },
   },
   { clean: { removeEmptyStrings: false }, tracker: Tracker },
 );
@@ -88,6 +93,7 @@ Services.publicFields = {
   team: 1,
   slug: 1,
   state: 1,
+  offline: 1,
   structure: 1,
 };
 
