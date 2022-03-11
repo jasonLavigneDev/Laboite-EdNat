@@ -34,6 +34,7 @@ import ImageAdminUploader from '../../components/uploader/ImageAdminUploader';
 import { CustomToolbar } from '../../components/system/CustomQuill';
 import '../../utils/QuillVideo';
 import { useAppContext } from '../../contexts/context';
+import { useStructure } from '../../../api/structures/utils';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -270,6 +271,8 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
     });
   };
 
+  const structure = structureMode ? useStructure() : {};
+
   if (!ready || loading || (!!params._id && !service._id)) {
     return <Spinner full />;
   }
@@ -280,7 +283,7 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
         <Paper className={classes.root}>
           <Typography component="h1">
             {i18n.__(`pages.AdminSingleServicePage.${params._id ? 'edition' : 'creation'}`)}
-            <b> {serviceData.title}</b> {`${structureMode ? `(${user.structure})` : ''}`}
+            <b> {serviceData.title}</b> {`${structureMode ? `(${structure.name})` : ''}`}
           </Typography>
           <form noValidate autoComplete="off">
             <TextField
