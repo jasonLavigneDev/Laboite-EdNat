@@ -1,5 +1,54 @@
 # Changelog
 
+# [4.1.0](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/4.0.2...release/4.1.0) (2022-03-11)
+
+
+### Bug Fixes
+
+* **admin:** fix input field ([0024204](https://gitlab.mim-libre.fr/alphabet/laboite/commit/0024204320f7ecb99f2768497d3ddcb2dfba3d13))
+* **blog:** hide publication menu correctly ([6098b81](https://gitlab.mim-libre.fr/alphabet/laboite/commit/6098b81b9654715fd9e6fe393a2cedb905ba9ac8))
+* **groups:** do not display hidden apps in group apps ([b4b063a](https://gitlab.mim-libre.fr/alphabet/laboite/commit/b4b063af0e9c6711f6db7facc43711c9be819e91))
+* **groups:** fix publication and slug parsing for group events ([f8d84ad](https://gitlab.mim-libre.fr/alphabet/laboite/commit/f8d84ad055463426ddbdce49447dbcfbf62ac31e))
+* **groups:** hide routes from router ([bc3ee2e](https://gitlab.mim-libre.fr/alphabet/laboite/commit/bc3ee2e6d9ef7c0af2a9e1ae64b731059cfec62f))
+* **header:** fix menu bar ([23da5b0](https://gitlab.mim-libre.fr/alphabet/laboite/commit/23da5b0f276ab7956294daf2fb34f966d7a63142))
+* **migration:** set auth token to optional ([df45f39](https://gitlab.mim-libre.fr/alphabet/laboite/commit/df45f39e76d2ae1d62537b5d3a7ccc212f376d9d))
+* **offline:** add disabled services to list ([15d9085](https://gitlab.mim-libre.fr/alphabet/laboite/commit/15d90852dd3548e15d3eb2a09c8498f4150bac12))
+* **services:** hide inactive services in offline mode ([fc4aebf](https://gitlab.mim-libre.fr/alphabet/laboite/commit/fc4aebf70b8010725e5cb562871f79e7c759aef8))
+* **services:** remove offline from structure ([ef6464a](https://gitlab.mim-libre.fr/alphabet/laboite/commit/ef6464a8be688415c630f816e8a951630e5535e0))
+* **settings:** change disabled pages in sample ([2ae7e41](https://gitlab.mim-libre.fr/alphabet/laboite/commit/2ae7e41ccef71a850e9a613e99c99af8be084c36))
+* **settings:** fix sample commit error ([cdecc62](https://gitlab.mim-libre.fr/alphabet/laboite/commit/cdecc6262ac13d5104abd0e161e223d65e10aea6))
+* **structures:** display structure name on service ([e2569dd](https://gitlab.mim-libre.fr/alphabet/laboite/commit/e2569dd4ca80a8d78884df0da89d95497f0b67cc))
+* **ui:** display admin menu for nextcloud management ([f312fde](https://gitlab.mim-libre.fr/alphabet/laboite/commit/f312fde9e08ee58f3fd817eb80606b08600ef1b8))
+
+
+### Continuous Integration
+
+* **merge-to-dev:** can't merge to `dev` branch if it exists on runner ([8e725b5](https://gitlab.mim-libre.fr/alphabet/laboite/commit/8e725b51466c77d96deeecac72bbcbc4af0d860f))
+
+
+### Features
+
+* **groups:** link on group event redirects to agenda event page ([d567293](https://gitlab.mim-libre.fr/alphabet/laboite/commit/d5672931ecdf408c034255498715fbe22d6a3070))
+* **migration:** set maintenance mode if database migration is locked ([5e87b28](https://gitlab.mim-libre.fr/alphabet/laboite/commit/5e87b28dd8331f9db7693e2bf2165ab6a7285df4))
+* **notifications:** add auth token to users for the notifications api ([4581ac6](https://gitlab.mim-libre.fr/alphabet/laboite/commit/4581ac6dbdcef6b7ea0ae88b52735ea52700c0fb))
+* **offline:** add offline column in admin ([2bcb48a](https://gitlab.mim-libre.fr/alphabet/laboite/commit/2bcb48a8ff0ec0701aae048d48ef16200b76947c))
+* **offline:** add offline option to services ([e982632](https://gitlab.mim-libre.fr/alphabet/laboite/commit/e9826327427c0127cd7c68737ff2ad6f6e539c52))
+* **polls:** add autologin parameter when accessing a group poll ([4ec81b5](https://gitlab.mim-libre.fr/alphabet/laboite/commit/4ec81b5e006fb9a97817d962414bd54f351e3ac6))
+* **services:** add offlinePage to settings with services ([f8fc017](https://gitlab.mim-libre.fr/alphabet/laboite/commit/f8fc017aaee03086ccb576c6389a4d5d3a1ec4f9))
+* **settings:** disable group features ([2b765d7](https://gitlab.mim-libre.fr/alphabet/laboite/commit/2b765d7ae61edd027903316ba6299c7d0735bf01))
+* **settings:** replace enableblog with disabledfeatures ([bd8bb8c](https://gitlab.mim-libre.fr/alphabet/laboite/commit/bd8bb8c3ec303fea7c68fdb6705b7bf448d0ab33))
+
+
+### Styles
+
+* **rizomo:** change rizomo logo ([daaf799](https://gitlab.mim-libre.fr/alphabet/laboite/commit/daaf7991bc5b2464f0f806d682b6124f127c26ee))
+* **widget:** max-heigh ([45b729a](https://gitlab.mim-libre.fr/alphabet/laboite/commit/45b729a2d590f8b2e5878c1d84e9fc24bcc36f78))
+
+
+### Tests
+
+* **users:** add reset token test ([3c57da4](https://gitlab.mim-libre.fr/alphabet/laboite/commit/3c57da4c21d561524b93266082dbfb17a5dcd455))
+
 ## [4.0.2](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/4.0.1...release/4.0.2) (2022-03-07)
 
 
