@@ -29,6 +29,7 @@ import UserAvatar from '../../components/users/UserAvatar';
 import SearchField from '../../components/system/SearchField';
 import Spinner from '../../components/system/Spinner';
 import Groups from '../../../api/groups/groups';
+import { getStructure } from '../../../api/structures/utils';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -81,7 +82,8 @@ const AddressBook = ({ loading, group, slug }) => {
     history.goBack();
   };
 
-  const { enableBlog } = Meteor.settings.public;
+  const { disabledFeatures = {} } = Meteor.settings.public;
+  const enableBlog = !disabledFeatures.blog;
   const authorBlogPage =
     Meteor.settings.public.laboiteBlogURL !== ''
       ? `${Meteor.settings.public.laboiteBlogURL}/authors/`
@@ -121,68 +123,80 @@ const AddressBook = ({ loading, group, slug }) => {
               )}
               <Grid item xs={12} sm={12} md={12}>
                 <List className={classes.list} disablePadding>
-                  {items.map((user, i) => [
-                    <ListItem alignItems="flex-start" key={`user-${user.emails[0].address}`}>
-                      <ListItemAvatar>
-                        <UserAvatar userAvatar={user.avatar || ''} userFirstName={user.firstName} />
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={`${user.firstName} ${user.lastName}`}
-                        secondary={
-                          <>
-                            <Typography component="span" variant="body2" className={classes.inline} color="textPrimary">
-                              {user.emails[0].address}
-                            </Typography>
-                            {user.structure ? ` - ${user.structure}` : null}
-                          </>
-                        }
-                      />
+                  {items.map((user, i) => {
+                    const structure = getStructure(user.structure);
 
-                      <ListItemSecondaryAction>
-                        {user.mezigName ? (
+                    return [
+                      <ListItem alignItems="flex-start" key={`user-${user.emails[0].address}`}>
+                        <ListItemAvatar>
+                          <UserAvatar userAvatar={user.avatar || ''} userFirstName={user.firstName} />
+                        </ListItemAvatar>
+                        <ListItemText
+                          primary={`${user.firstName} ${user.lastName}`}
+                          secondary={
+                            <>
+                              <Typography
+                                component="span"
+                                variant="body2"
+                                className={classes.inline}
+                                color="textPrimary"
+                              >
+                                {user.emails[0].address}
+                              </Typography>
+                              {user.structure ? ` - ${structure.name}` : null}
+                            </>
+                          }
+                        />
+
+                        <ListItemSecondaryAction>
+                          {user.mezigName ? (
+                            <Tooltip
+                              title={`${i18n.__('pages.AddressBook.goToMezig')} ${user.firstName}`}
+                              aria-label="add"
+                            >
+                              <IconButton
+                                edge="end"
+                                aria-label="comments"
+                                onClick={() =>
+                                  window.open(
+                                    `${Meteor.settings.public.services.mezigUrl}/profil/${user.mezigName}`,
+                                    '_blank',
+                                  )
+                                }
+                              >
+                                <LanguageIcon />
+                              </IconButton>
+                            </Tooltip>
+                          ) : null}
+                          {enableBlog && user.articlesCount !== 0 ? (
+                            <Tooltip
+                              title={`${i18n.__('pages.AddressBook.goToBlog')} ${user.firstName}`}
+                              aria-label="add"
+                            >
+                              <IconButton
+                                edge="end"
+                                aria-label="comments"
+                                onClick={() => window.open(`${authorBlogPage}${user._id}`, '_blank')}
+                              >
+                                <LibraryBooksIcon />
+                              </IconButton>
+                            </Tooltip>
+                          ) : null}
                           <Tooltip
-                            title={`${i18n.__('pages.AddressBook.goToMezig')} ${user.firstName}`}
+                            title={`${i18n.__('pages.AddressBook.sendEmail')} ${user.firstName}`}
                             aria-label="add"
                           >
-                            <IconButton
-                              edge="end"
-                              aria-label="comments"
-                              onClick={() =>
-                                window.open(
-                                  `${Meteor.settings.public.services.mezigUrl}/profil/${user.mezigName}`,
-                                  '_blank',
-                                )
-                              }
-                            >
-                              <LanguageIcon />
+                            <IconButton edge="end" aria-label="comments" href={`mailto:${user.emails[0].address}`}>
+                              <SendIcon />
                             </IconButton>
                           </Tooltip>
-                        ) : null}
-                        {enableBlog && user.articlesCount !== 0 ? (
-                          <Tooltip
-                            title={`${i18n.__('pages.AddressBook.goToBlog')} ${user.firstName}`}
-                            aria-label="add"
-                          >
-                            <IconButton
-                              edge="end"
-                              aria-label="comments"
-                              onClick={() => window.open(`${authorBlogPage}${user._id}`, '_blank')}
-                            >
-                              <LibraryBooksIcon />
-                            </IconButton>
-                          </Tooltip>
-                        ) : null}
-                        <Tooltip title={`${i18n.__('pages.AddressBook.sendEmail')} ${user.firstName}`} aria-label="add">
-                          <IconButton edge="end" aria-label="comments" href={`mailto:${user.emails[0].address}`}>
-                            <SendIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </ListItemSecondaryAction>
-                    </ListItem>,
-                    i < ITEM_PER_PAGE - 1 && i < total - 1 && (
-                      <Divider variant="inset" component="li" key={`divider-${user.emails[0].address}`} />
-                    ),
-                  ])}
+                        </ListItemSecondaryAction>
+                      </ListItem>,
+                      i < ITEM_PER_PAGE - 1 && i < total - 1 && (
+                        <Divider variant="inset" component="li" key={`divider-${user.emails[0].address}`} />
+                      ),
+                    ];
+                  })}
                 </List>
               </Grid>
               {total > ITEM_PER_PAGE && (
@@ -206,9 +220,10 @@ export default withTracker(
       params: { slug },
     },
   }) => {
+    const structuresHandle = Meteor.subscribe('structures.all');
     const subGroup = Meteor.subscribe('groups.single', { slug });
     const group = Groups.findOne({ slug }) || { slug: '' };
-    const loading = !subGroup.ready();
+    const loading = !subGroup.ready() && !structuresHandle.ready();
     return {
       loading,
       group,

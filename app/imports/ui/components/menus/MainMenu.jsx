@@ -15,6 +15,8 @@ import LogoutDialog from '../system/LogoutDialog';
 import UserAvatar from '../users/UserAvatar';
 import updateDocumentTitle from '../../utils/updateDocumentTitle';
 
+const { disabledFeatures = {} } = Meteor.settings.public;
+
 const useStyles = makeStyles((theme) => ({
   avatar: {
     marginLeft: theme.spacing(1),
@@ -80,7 +82,7 @@ const MainMenu = ({ user = {} }) => {
     setAnchorEl(null);
   };
   let menu = [...userMenu];
-  if (!isAdmin) {
+  if (!isAdmin && !disabledFeatures.groups) {
     menu = [...menu, ...userGroups];
   }
   if (isAdmin || isAdminStructure) {

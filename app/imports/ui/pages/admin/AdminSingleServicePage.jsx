@@ -13,6 +13,8 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Chip from '@material-ui/core/Chip';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import IconButton from '@material-ui/core/IconButton';
 import Fade from '@material-ui/core/Fade';
 import Grid from '@material-ui/core/Grid';
@@ -32,6 +34,7 @@ import ImageAdminUploader from '../../components/uploader/ImageAdminUploader';
 import { CustomToolbar } from '../../components/system/CustomQuill';
 import '../../utils/QuillVideo';
 import { useAppContext } from '../../contexts/context';
+import { useStructure } from '../../../api/structures/utils';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -128,7 +131,7 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
   const classes = useStyles();
   const structureMode = path.startsWith('/admin/structureservices');
   const [{ user }] = useAppContext();
-  const { minioEndPoint } = Meteor.settings.public;
+  const { minioEndPoint, offlinePage } = Meteor.settings.public;
 
   const removeUndefined = () => {
     let args;
@@ -172,7 +175,7 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
   }, [service]);
 
   const onUpdateField = (event) => {
-    const { name, value } = event.target;
+    const { name, value, checked } = event.target;
     if (name === 'title') {
       setServiceData({
         ...serviceData,
@@ -181,6 +184,8 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
       });
     } else if (name === 'state') {
       setServiceData({ ...serviceData, [name]: Number(value) });
+    } else if (name === 'offline') {
+      setServiceData({ ...serviceData, [name]: checked });
     } else {
       setServiceData({ ...serviceData, [name]: value });
     }
@@ -266,6 +271,8 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
     });
   };
 
+  const structure = structureMode ? useStructure() : {};
+
   if (!ready || loading || (!!params._id && !service._id)) {
     return <Spinner full />;
   }
@@ -276,7 +283,7 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
         <Paper className={classes.root}>
           <Typography component="h1">
             {i18n.__(`pages.AdminSingleServicePage.${params._id ? 'edition' : 'creation'}`)}
-            <b> {serviceData.title}</b> {`${structureMode ? `(${user.structure})` : ''}`}
+            <b> {serviceData.title}</b> {`${structureMode ? `(${structure.name})` : ''}`}
           </Typography>
           <form noValidate autoComplete="off">
             <TextField
@@ -379,6 +386,21 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
               fullWidth
               margin="normal"
             />
+
+            {offlinePage && !structureMode && (
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    name="offline"
+                    color="primary"
+                    checked={serviceData.offline || false}
+                    onChange={onUpdateField}
+                    inputProps={{ 'aria-label': 'primary checkbox' }}
+                  />
+                }
+                label={i18n.__('pages.AdminSingleServicePage.offlineService')}
+              />
+            )}
             <div className={classes.wysiwyg}>
               <InputLabel htmlFor="content">{i18n.__('pages.AdminSingleServicePage.content')}</InputLabel>
               <CustomToolbar />

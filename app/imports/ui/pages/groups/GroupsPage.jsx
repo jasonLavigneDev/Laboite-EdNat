@@ -27,6 +27,7 @@ import { useAppContext } from '../../contexts/context';
 import { usePagination } from '../../utils/hooks';
 import GroupDetailsList from '../../components/groups/GroupDetailsList';
 import CollapsingSearch from '../../components/system/CollapsingSearch';
+import Spinner from '../../components/system/Spinner';
 
 const useStyles = makeStyles(() => ({
   small: {
@@ -89,7 +90,7 @@ function GroupsPage() {
     searchToggle = false,
     viewMode = 'list', // Possible values : "card" or "list"
   } = groupPage;
-  const { changePage, page, items, total } = !filterChecked
+  const { changePage, page, items, total, loading } = !filterChecked
     ? usePagination('groups.all', { search }, Groups, {}, { sort: { name: 1 } }, ITEM_PER_PAGE)
     : usePagination('groups.memberOf', { search, userId }, Groups, {}, { sort: { name: 1 } }, ITEM_PER_PAGE);
 
@@ -216,7 +217,9 @@ function GroupsPage() {
             </Grid>
           )}
         </Grid>
-        {total > 0 ? (
+        {loading ? (
+          <Spinner />
+        ) : total > 0 ? (
           <Grid container className={classes.cardGrid} spacing={isMobile ? 2 : 4}>
             {total > ITEM_PER_PAGE && (
               <Grid item xs={12} sm={12} md={12} lg={12} className={classes.pagination}>

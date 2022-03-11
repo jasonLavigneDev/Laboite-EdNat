@@ -128,15 +128,31 @@ merge-to-dev:
     - .on-release-tag
   image: 'hub.eole.education/eole/commitlint:latest'
   script:
+    # Configure git to be able to create merge commit
+    # Extract author name and mail if not SET
+    - echo -e "\e[0Ksection_start:`date +%s`:git-configure[collapsed=true]\r\e[0KConfigure git variables from '${CI_COMMIT_AUTHOR}'"
+    - export GIT_AUTHOR_NAME="${GIT_AUTHOR_NAME:-${CI_COMMIT_AUTHOR% <*}}"
+    - export TEMP_MAIL_PREFIX="${CI_COMMIT_AUTHOR#*<}"
+    - export GIT_AUTHOR_EMAIL="${GIT_AUTHOR_EMAIL:-${TEMP_MAIL_PREFIX%>}}"
+    - export GIT_COMMITTER_NAME="${GIT_COMMITTER_NAME:-${GIT_AUTHOR_NAME}}"
+    - export GIT_COMMITTER_EMAIL="${GIT_COMMITTER_EMAIL:-${GIT_AUTHOR_EMAIL}}"
+    - echo -e "\e[0Ksection_end:`date +%s`:git-configure\r\e[0K"
     # Add `upstream` remote to get access to `upstream/dev`
     # Use `${GITLAB_TOKEN}` for write permission
+    - echo -e "\e[0Ksection_start:`date +%s`:git-remote-upstream-add[collapsed=true]\r\e[0KAdd upstream repository and checkout '${DEV_BRANCH}'"
     - "git remote show upstream 2> /dev/null || git remote add upstream ${CI_REPOSITORY_URL/${CI_JOB_TOKEN}/${GITLAB_TOKEN}}"
     - 'git fetch --all'
     - 'git checkout -b ${DEV_BRANCH} upstream/${DEV_BRANCH}'
+    - echo -e "\e[0Ksection_end:`date +%s`:git-remote-upstream-add\r\e[0K"
+    # Merge the release tag
+    - echo -e "\e[0Ksection_start:`date +%s`:git-merge-release[collapsed=true]\r\e[0KMerge '${CI_COMMIT_TAG}' in '${DEV_BRANCH}'"
     - 'git merge --no-edit ${CI_COMMIT_TAG}'
     - 'git push upstream ${DEV_BRANCH}'
+    - echo -e "\e[0Ksection_end:`date +%s`:git-merge-release\r\e[0K"
     # Remove `upstream` to avoid caching `CI_JOB_TOKEN`
+    - echo -e "\e[0Ksection_start:`date +%s`:git-cleanup[collapsed=true]\r\e[0KCleanup git repository"
     - "git remote remove upstream"
+    - echo -e "\e[0Ksection_end:`date +%s`:git-cleanup\r\e[0K"
 
 ## tag contribution branches with a more stable name than `git-${CI_COMMIT_SHORT_SHA}`
 tag contrib branch:

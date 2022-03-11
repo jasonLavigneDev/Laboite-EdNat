@@ -38,6 +38,8 @@ const AdminServicesPage = lazy(() => import('../pages/admin/AdminServicesPage'))
 const AdminStructureUsersPage = lazy(() => import('../pages/structure/AdminStructureUsersPage'));
 const AdminStructureManagementPage = lazy(() => import('../pages/admin/AdminStructuresManagementPage'));
 
+const { disabledFeatures = {} } = Meteor.settings.public;
+
 function AdminLayout() {
   const [{ userId, user, loadingUser, isMobile }] = useAppContext();
   const classes = useLayoutStyles(isMobile)();
@@ -73,6 +75,7 @@ function AdminLayout() {
               {appsettings.maintenance ? (
                 <Alert className={classes.alertMaintenance} variant="filled" severity="error">
                   {i18n.__(`layouts.MainLayout.alertMaintenance`)}
+                  {appsettings.textMaintenance ? `: ${i18n.__(appsettings.textMaintenance)}` : null}
                 </Alert>
               ) : null}
               {user.isActive ? (
@@ -142,27 +145,33 @@ function AdminLayout() {
                       path="/admin/settings"
                       component={AdminSettingsPage}
                     />
-                    <AdminRoute
-                      userId={userId}
-                      loadingUser={loadingUser}
-                      exact
-                      path="/admin/groups"
-                      component={AdminGroupsPage}
-                    />
-                    <AdminRoute
-                      userId={userId}
-                      loadingUser={loadingUser}
-                      exact
-                      path="/admin/groups/new"
-                      component={AdminSingleGroupPage}
-                    />
-                    <AdminRoute
-                      userId={userId}
-                      loadingUser={loadingUser}
-                      exact
-                      path="/admin/groups/:_id"
-                      component={AdminSingleGroupPage}
-                    />
+                    {!disabledFeatures.groups && (
+                      <AdminRoute
+                        userId={userId}
+                        loadingUser={loadingUser}
+                        exact
+                        path="/admin/groups"
+                        component={AdminGroupsPage}
+                      />
+                    )}
+                    {!disabledFeatures.groups && (
+                      <AdminRoute
+                        userId={userId}
+                        loadingUser={loadingUser}
+                        exact
+                        path="/admin/groups/new"
+                        component={AdminSingleGroupPage}
+                      />
+                    )}
+                    {!disabledFeatures.groups && (
+                      <AdminRoute
+                        userId={userId}
+                        loadingUser={loadingUser}
+                        exact
+                        path="/admin/groups/:_id"
+                        component={AdminSingleGroupPage}
+                      />
+                    )}
                     <StructureAdminRoute
                       exact
                       path="/admin/structureusers"

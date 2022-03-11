@@ -181,6 +181,19 @@ Meteor.users.schema = new SimpleSchema(
       defaultValue: false,
       label: getLabel('api.users.labels.articlesEnable'),
     },
+    authToken: {
+      type: String,
+      index: true,
+      unique: true,
+      optional: true,
+      autoValue() {
+        if (this.isInsert) {
+          return Random.secret(150);
+        }
+        return this.value;
+      },
+      label: getLabel('api.users.labels.authToken'),
+    },
   },
   { clean: { removeEmptyStrings: false }, tracker: Tracker },
 );

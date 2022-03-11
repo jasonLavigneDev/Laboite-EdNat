@@ -2,15 +2,15 @@ import { useTracker } from 'meteor/react-meteor-data';
 import Structures from './structures';
 import { useAppContext } from '../../ui/contexts/context';
 
-export const useStructure = () => {
+export const useStructure = (_id) => {
   const [
     {
       user: { structure },
     },
   ] = useAppContext();
   return useTracker(() => {
-    Meteor.subscribe('structures.one');
-    return Structures.findOne({ _id: structure });
+    Meteor.subscribe('structures.one', { _id });
+    return Structures.findOne({ _id: _id || structure }) || {};
   }, [structure]);
 };
 

@@ -33,6 +33,7 @@ import {
   setNcloudUrlAll,
   toggleAdvancedPersonalPage,
   setArticlesEnable,
+  resetAuthToken,
 } from './methods';
 import Groups from '../../groups/groups';
 import PersonalSpaces from '../../personalspaces/personalspaces';
@@ -862,6 +863,14 @@ describe('users', function () {
           Meteor.Error,
           /api.users.toggleAdvancedPersonalPage.notPermitted/,
         );
+      });
+    });
+    describe('resetAuthToken', function () {
+      it('reset the auth token for a specific user', function () {
+        const user = Meteor.users.findOne({ _id: userId });
+        resetAuthToken._execute({ userId }, {});
+        const newToken = Meteor.users.findOne({ _id: userId }).authToken;
+        assert.notEqual(user.authToken, newToken);
       });
     });
   });

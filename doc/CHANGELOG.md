@@ -1,5 +1,47 @@
 # Changelog
 
+## [4.0.2](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/4.0.1...release/4.0.2) (2022-03-07)
+
+
+### Bug Fixes
+
+* **ui:** display admin menu for nextcloud management ([a80766b](https://gitlab.mim-libre.fr/alphabet/laboite/commit/a80766be0d72d6aa1abd741585c2ef3fd6c4241f))
+
+## [4.0.1](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/4.0.0...release/4.0.1) (2022-03-03)
+
+
+### Bug Fixes
+
+* **ui:** show structure name in group addressbook ([9a27901](https://gitlab.mim-libre.fr/alphabet/laboite/commit/9a27901d1dfd5ada9c541abd342a59f1b04e585e))
+
+
+### Continuous Integration
+
+* **merge-to-dev:** non fast forward merge requires configured git ([99b9a9b](https://gitlab.mim-libre.fr/alphabet/laboite/commit/99b9a9bb94ff226558778f00657234e28e94602c))
+
+# [4.0.0](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/3.4.0...release/4.0.0) (2022-02-17)
+
+
+### Bug Fixes
+
+* **readme:** explanation of what it is comes before who does it ([97a4cd5](https://gitlab.mim-libre.fr/alphabet/laboite/commit/97a4cd5ec5a1973d9bf2278e61170a6cb6dd3a7f))
+
+
+### Documentation
+
+* **readme:** add Rizomo as contributor ([0af2e3d](https://gitlab.mim-libre.fr/alphabet/laboite/commit/0af2e3d14b2aef5e6d55f8998779691e81f42a05))
+* **readme:** better markdown formatting ([2c886fe](https://gitlab.mim-libre.fr/alphabet/laboite/commit/2c886fe057f5827f0ca28d5230244db2fcc63bf8))
+
+
+### Features
+
+* **semantic-release:** create `testing` prerelease ([10e4627](https://gitlab.mim-libre.fr/alphabet/laboite/commit/10e4627e20e901d15ced16b03b07140a1d228419))
+
+
+### BREAKING CHANGES
+
+* **readme:** integrate Rizomo contributions
+
 # [3.4.0](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/3.3.4...release/3.4.0) (2022-02-17)
 
 
