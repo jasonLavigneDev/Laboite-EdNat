@@ -148,6 +148,7 @@ function MainLayout({ appsettings, ready }) {
                 ) : (
                   <Switch>
                     <Route exact path="/profile" component={ProfilePage} />
+                    <Route exact path="/profileStructure" component={StructureSelectionPage} />
                     <Route component={NoStructureSelected} />
                   </Switch>
                 )
