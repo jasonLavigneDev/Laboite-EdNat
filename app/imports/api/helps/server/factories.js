@@ -9,4 +9,5 @@ Factory.define('help', Helps, {
   description: faker.lorem.sentence().substring(0, 80),
   type: 0,
   content: faker.lorem.sentence(),
+  category: faker.lorem.word,
 });
