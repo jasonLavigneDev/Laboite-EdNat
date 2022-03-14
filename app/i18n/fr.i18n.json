@@ -1102,8 +1102,8 @@
       "toggleEdition": "Activer/Désactiver le mode édition"
     },
     "HelpPage": {
-      "title": "Retrouvez ici tous les tutoriels nécessaires pour maitriser LaBoite",
-      "tutoLabel": "Voir le tutoriel"
+      "title": "Retrouvez ici tout l'aide nécessaire pour maitriser",
+      "tutoLabel": "Ouvrir l'aide"
     },
     "AdminSingleServicePage": {
       "edition": "Edition du service",
