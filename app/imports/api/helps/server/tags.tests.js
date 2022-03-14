@@ -91,6 +91,7 @@ describe('helps', function () {
         title: 'application',
         content: theTag.content,
         description: theTag.description,
+        category: theTag.category,
         type: theTag.type,
       };
     });
@@ -134,6 +135,7 @@ describe('helps', function () {
         title: 'help',
         content: theTag.content,
         description: theTag.description,
+        category: theTag.category,
         type: theTag.type,
       };
       it('does update a help with admin user', function () {
