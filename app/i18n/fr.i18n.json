@@ -81,6 +81,7 @@
         "id": "Id de l'aide",
         "title": "Titre",
         "description": "Description",
+        "category": "Catégorie",
         "type": "Type",
         "content": "Contenu de l'aide"
       },

@@ -82,6 +82,7 @@
         "title": "Title",
         "description": "Description",
         "type": "Type",
+        "category": "Category",
         "content": "Content of the help"
       },
       "types": {
