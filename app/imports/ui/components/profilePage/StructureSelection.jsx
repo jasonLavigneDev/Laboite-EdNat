@@ -84,7 +84,7 @@ const StructureSelection = () => {
   return (
     <Fade in>
       <Box mx="auto" display="flex" justifyContent="center">
-        <Card mx="auto" style={{ height: '80vh', width: '80vw' }}>
+        <Card mx="auto" style={{ width: '80vw' }}>
           <Box display="flex">
             <Box>
               <CardHeader title={i18n.__(`pages.ProfilePage.structureChoice`)} />
