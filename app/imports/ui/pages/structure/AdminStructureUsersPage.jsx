@@ -204,7 +204,6 @@ const AdminStructureUsersPage = () => {
                           <Typography component="span" variant="body2" className={classes.inline} color="textPrimary">
                             {user.emails[0].address}
                           </Typography>
-                          {` - ${user.structure ? user.structure : i18n.__('pages.AdminStructureUsersPage.undefined')}`}
                         </>
                       }
                     />
