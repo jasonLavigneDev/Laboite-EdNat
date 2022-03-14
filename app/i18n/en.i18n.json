@@ -1070,6 +1070,7 @@
       "title": "Helps Management",
       "columnTitle": "Title",
       "columnDescription": "Description",
+      "columnCategory": "Category",
       "columnType": "Type",
       "columnContent": "Content",
       "materialTableLocalization": {

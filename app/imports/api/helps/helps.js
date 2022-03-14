@@ -41,6 +41,10 @@ Helps.schema = new SimpleSchema(
       type: String,
       label: getLabel('api.helps.labels.content'),
     },
+    category: {
+      type: String,
+      label: getLabel('api.helps.labels.category'),
+    },
   },
   { tracker: Tracker },
 );
@@ -50,6 +54,7 @@ Helps.publicFields = {
   description: 1,
   type: 1,
   content: 1,
+  category: 1,
 };
 
 Helps.typeLabels = {
