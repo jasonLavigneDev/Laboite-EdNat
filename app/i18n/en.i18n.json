@@ -1109,8 +1109,8 @@
       "toggleEdition": "Toggle edition mode"
     },
     "HelpPage": {
-      "title": "Find here every tuto to help you master LaBoite",
-      "tutoLabel": "Go to tutorial"
+      "title": "Find here all the help to master",
+      "tutoLabel": "Open the help item"
     },
     "AdminSingleServicePage": {
       "edition": "Edition of the service",

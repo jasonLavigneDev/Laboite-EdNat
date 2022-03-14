@@ -106,7 +106,9 @@ function HelpPage() {
       <Container>
         <Grid container spacing={4} direction={isMobile ? 'column' : 'row'} className={classes.grid}>
           <Grid item md={12}>
-            <Typography variant={isMobile ? 'h5' : 'h4'}>{i18n.__('pages.HelpPage.title')}</Typography>
+            <Typography variant={isMobile ? 'h5' : 'h4'}>{`${i18n.__('pages.HelpPage.title')} ${
+              Meteor.settings.public.appName
+            }`}</Typography>
           </Grid>
           {helps.map((category) => (
             <Grid item md={12}>
