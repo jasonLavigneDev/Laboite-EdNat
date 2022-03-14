@@ -1063,6 +1063,7 @@
       "title": "Gestion de l'aide",
       "columnTitle": "Titre",
       "columnDescription": "Description",
+      "columnCategory": "Catégorie",
       "columnType": "Type",
       "columnContent": "Contenu",
       "materialTableLocalization": {
