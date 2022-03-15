@@ -37,37 +37,27 @@ function OfflineServices() {
   const data = useTracker(() => {
     const servicesHandle = Meteor.subscribe('services.offline');
     const servicesReady = !servicesHandle.ready();
-    const services = Services.find().fetch();
     const categoriesHandle = Meteor.subscribe('categories.all');
     const categoriesReady = !categoriesHandle.ready();
-    const categories = Categories.find({}, { sort: { name: 1 } }).fetch();
     return {
       ready: servicesReady && categoriesReady,
-      services,
-      categories,
+      categories: Categories.find({}, { sort: { name: 1 } })
+        .fetch()
+        .map((category) => {
+          return {
+            category,
+            services: Services.find({ 'categories.0': category._id }, { sort: { name: 1 } }).fetch(),
+          };
+        }),
     };
   });
 
-  const createServicesTree = () => {
-    const servicesTree = {};
-    data.services.forEach((service) => {
-      if (!servicesTree[service.categories[0]]) {
-        servicesTree[service.categories[0]] = [service];
-      } else {
-        servicesTree[service.categories[0]].push(service);
-      }
-    });
-    return Object.keys(servicesTree).map((category) => ({
-      category: Categories.findOne({ _id: category }),
-      services: servicesTree[category],
-    }));
-  };
-
   return (
     <Grid item xs={12} sm={4} md={7} spacing={2}>
-      {createServicesTree().map(
+      {data.categories.map(
         ({ services, category }) =>
-          !!category && (
+          !!category &&
+          !!services.length && (
             <Grid
               justifyContent="center"
               alignItems="flex-start"
