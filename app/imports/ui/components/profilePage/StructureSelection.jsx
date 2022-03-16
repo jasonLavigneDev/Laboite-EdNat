@@ -69,9 +69,9 @@ const StructureSelection = () => {
     setParentIds(uniqueList);
   };
   React.useEffect(() => {
-    const hasStructure = !!userStructure;
+    const hasStructure = userStructure && userStructure._id;
     if (hasStructure) updateParentIdsList({ ids: [...parentIds, ...userStructure.ancestorsIds] });
-  }, []);
+  }, [userStructure && userStructure._id]);
   const resetStructureSearchFilter = () => {
     setFilteredStructureFlatData(structuresFlatData);
     setExpandedIds([]);
