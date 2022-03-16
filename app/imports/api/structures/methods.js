@@ -159,7 +159,7 @@ export const removeStructure = new ValidatedMethod({
     if (ancestorsIds.length > 0) {
       // update old parent's children ids array
       const ancestorsList = Structures.find({ _id: { $in: ancestorsIds } });
-      if (ancestorsList.length > 0) {
+      if (ancestorsList.count() > 0)
         ancestorsList.forEach((ancestor) => {
           Structures.update(
             { _id: ancestor._id },
@@ -170,7 +170,6 @@ export const removeStructure = new ValidatedMethod({
             },
           );
         });
-      }
     }
     return Structures.remove(structureId);
   },
