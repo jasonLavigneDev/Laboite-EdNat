@@ -5,6 +5,7 @@ import { checkMigrationStatus } from '../../api/appsettings/methods';
 
 // import i18n translation files
 import '../locales';
+import './inject-i18n';
 
 // Set up some rate limiting and other important security settings.
 import './config/security';
