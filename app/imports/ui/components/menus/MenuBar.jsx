@@ -18,6 +18,12 @@ const { disabledFeatures = {} } = Meteor.settings.public;
 
 export const links = [
   {
+    path: '/introduction',
+    content: 'menuIntroduction',
+    icon: <InfoIcon />,
+    hidden: false,
+  },
+  {
     path: '/',
     content: 'menuMyspace',
     contentMobile: 'menuMyspaceMobile',
@@ -51,12 +57,6 @@ export const links = [
     icon: <BusinessIcon />,
     hidden: false,
     tooltip: 'tooltipStructure',
-  },
-  {
-    path: '/introduction',
-    content: 'menuIntroduction',
-    icon: <InfoIcon />,
-    hidden: false,
   },
 ];
 
