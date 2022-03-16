@@ -496,7 +496,7 @@
       "menuAdminStructureServices": "Services de la structure",
       "menuAdminBackHome": "Retour à l'espace perso",
       "menuUserStructure": "Gestion des Structures",
-      "menuAdminOfStructures": "Gestion de votre structure administrée ainsi que ses sous-structures"
+      "menuAdminOfStructures": "Sous-structures de la structure"
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Votre compte n'a pas été activé",
