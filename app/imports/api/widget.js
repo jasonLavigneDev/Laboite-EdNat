@@ -36,7 +36,7 @@ const styles = `
                   }
       
             .lb_widget .notifications {
-              position: fixed;
+              position: absolute;
               background-color: #ce0500;
               font-size: 15px;
               width: 20px;
