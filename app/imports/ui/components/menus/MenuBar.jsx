@@ -10,6 +10,7 @@ import LibraryBooks from '@material-ui/icons/LibraryBooks';
 import HomeIcon from '@material-ui/icons/Home';
 import BusinessIcon from '@material-ui/icons/Business';
 import AppsIcon from '@material-ui/icons/Apps';
+import InfoIcon from '@material-ui/icons/Info';
 import { useAppContext } from '../../contexts/context';
 import updateDocumentTitle from '../../utils/updateDocumentTitle';
 
@@ -50,6 +51,12 @@ export const links = [
     icon: <BusinessIcon />,
     hidden: false,
     tooltip: 'tooltipStructure',
+  },
+  {
+    path: '/introduction',
+    content: 'menuIntroduction',
+    icon: <InfoIcon />,
+    hidden: false,
   },
 ];
 

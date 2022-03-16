@@ -435,7 +435,8 @@
       "menuAdminServices": "Service Management",
       "menuAdminUserValidation": "User validation",
       "tooltipServices": "SNP apps",
-      "tooltipStructure": "Resources from your structure"
+      "tooltipStructure": "Resources from your structure",
+      "menuIntroduction": "Informations"
     },
     "ServiceDetails": {
       "runServiceButtonLabel": "Run this service",
@@ -744,6 +745,9 @@
     "body_editRow_saveTooltip": "Confirm"
   },
   "pages": {
+    "IntroductionPage": {
+      "title": "Informations générales"
+    },
     "UserBookmarksPage": {
       "back": "Go back",
       "favoriteBookmark": "Add to your personal space",
@@ -867,7 +871,10 @@
       "successCopyAuthToken": "Token copied with success",
       "successResetAndCopyAuthToken": "New Token created and copied with success"
     },
-    "NotFound": { "backButtonLabel": "Back", "message": "Page not found !" },
+    "NotFound": {
+      "backButtonLabel": "Back",
+      "message": "Page not found !"
+    },
     "ServicesPage": {
       "titleServices": "Discover the SNP apps",
       "categories": "Filter by categories",
