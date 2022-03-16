@@ -19,6 +19,7 @@ import NoStructureSelected from '../components/system/NoStructureSelected';
 import AdminMenu from '../components/admin/AdminMenu';
 import StructureAdminRoute from '../components/system/StructureAdminRoute';
 import { useLayoutStyles } from './MainLayout';
+import AdminServicesByStructurePage from '../pages/admin/AdminServicesByStructurePage';
 
 // pages
 const NotificationsDisplay = lazy(() => import('../components/notifications/NotificationsDisplay'));
@@ -174,7 +175,7 @@ function AdminLayout() {
                     <StructureAdminRoute
                       exact
                       path="/admin/structureservices"
-                      component={AdminServicesPage}
+                      component={AdminServicesByStructurePage}
                       user={user}
                       loadingUser={loadingUser}
                     />
