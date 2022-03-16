@@ -765,7 +765,8 @@
     },
     "OfflineMenu": {
       "home": "Accueil",
-      "apps": "Applications"
+      "apps": "Applications",
+      "help": "AIde"
     }
   },
   "validatejs": {
