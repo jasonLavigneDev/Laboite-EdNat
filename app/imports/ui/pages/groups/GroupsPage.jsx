@@ -155,16 +155,16 @@ function GroupsPage() {
 
   const toggleButtons = (
     <ToggleButtonGroup value={viewMode} exclusive aria-label={i18n.__('pages.GroupsPage.viewMode')}>
-      <Tooltip title={i18n.__('pages.GroupsPage.viewCard')}>
-        <ToggleButton value="card" onClick={changeViewMode} aria-label={i18n.__('pages.GroupsPage.viewCard')}>
+      <ToggleButton value="card" onClick={changeViewMode} aria-label={i18n.__('pages.GroupsPage.viewCard')}>
+        <Tooltip title={i18n.__('pages.GroupsPage.viewCard')}>
           <DashboardIcon color="primary" />
-        </ToggleButton>
-      </Tooltip>
-      <Tooltip title={i18n.__('pages.GroupsPage.viewList')}>
-        <ToggleButton value="list" onClick={changeViewMode} aria-label={i18n.__('pages.GroupsPage.viewList')}>
+        </Tooltip>
+      </ToggleButton>
+      <ToggleButton value="list" onClick={changeViewMode} aria-label={i18n.__('pages.GroupsPage.viewList')}>
+        <Tooltip title={i18n.__('pages.GroupsPage.viewList')}>
           <ViewListIcon color="primary" />
-        </ToggleButton>
-      </Tooltip>
+        </Tooltip>
+      </ToggleButton>
     </ToggleButtonGroup>
   );
 
