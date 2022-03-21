@@ -43,6 +43,7 @@ const useStyles = makeStyles((theme) => ({
     left: 0,
     width: '100%',
     opacity: 0,
+    display: 'none',
   },
   fileWrap: {
     position: 'relative',
@@ -121,12 +122,18 @@ const AvatarPicker = ({ userAvatar, userFirstName, onAssignAvatar, avatar, type,
         </Grid>
         <Grid item xs={12} className={classes.buttonWrapper}>
           {!!minioEndPoint && (
-            <Tooltip title={i18n.__('pages.ProfilePage.uploadImg')} aria-label={i18n.__('pages.ProfilePage.uploadImg')}>
-              <IconButton tabIndex={-1}>
-                <PublishIcon />
-                <Input className={classes.inputFile} type="file" id="avatarUpload" onChange={uploadAvatarImg} />
-              </IconButton>
-            </Tooltip>
+            // eslint-disable-next-line jsx-a11y/label-has-associated-control
+            <label htmlFor="avatarUpload">
+              <Tooltip
+                title={i18n.__('pages.ProfilePage.uploadImg')}
+                aria-label={i18n.__('pages.ProfilePage.uploadImg')}
+              >
+                <IconButton tabIndex={-1}>
+                  <PublishIcon />
+                  <Input className={classes.inputFile} type="file" id="avatarUpload" onChange={uploadAvatarImg} />
+                </IconButton>
+              </Tooltip>
+            </label>
           )}
           <Tooltip title={i18n.__('pages.ProfilePage.useGallery')} aria-label={i18n.__('pages.ProfilePage.useGallery')}>
             <IconButton onClick={() => setOpenAvatarGallery(true)}>
