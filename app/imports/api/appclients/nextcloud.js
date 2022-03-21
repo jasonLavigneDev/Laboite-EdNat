@@ -7,6 +7,11 @@ import Groups from '../groups/groups';
 const nextcloudPlugin = Meteor.settings.public.groupPlugins.nextcloud;
 const { nextcloud } = Meteor.settings;
 
+function ocsUrl(ncURL) {
+  const origin = ncURL.startsWith('http') ? ncURL : `http://${ncURL}`;
+  return new URL('/ocs/v1.php/cloud', origin).href;
+}
+
 function checkFolderActive(response) {
   // checks that 'Group Folder' API is responding
   if (response.data === undefined || response.data.ocs === undefined) {
@@ -21,7 +26,7 @@ class NextcloudClient {
     const ncURL = (nextcloudPlugin && nextcloudPlugin.URL) || '';
     const ncUser = (nextcloud && nextcloud.nextcloudUser) || '';
     const ncPassword = (nextcloud && nextcloud.nextcloudPassword) || '';
-    this.nextURL = `${ncURL}/ocs/v1.php/cloud`;
+    this.nextURL = ocsUrl(ncURL);
     this.appsURL = `${ncURL}/apps`;
     this.basicAuth = Buffer.from(`${ncUser}:${ncPassword}`, 'binary').toString('base64');
   }
@@ -43,6 +48,28 @@ class NextcloudClient {
       })
       .catch((error) => {
         logServer(i18n.__('api.nextcloud.groupNotFound', { groupName }), 'error');
+        logServer(error.response && error.response.data ? error.response.data : error, 'error');
+        return false;
+      });
+  }
+
+  userExists(userId, ncURL = this.ncURL) {
+    return axios
+      .get(`${ocsUrl(ncURL)}/users`, {
+        params: {
+          search: userId,
+        },
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Basic ${this.basicAuth}`,
+          'OCS-APIRequest': true,
+        },
+      })
+      .then((response) => {
+        return response.data.ocs.data.users.includes(userId);
+      })
+      .catch((error) => {
+        logServer(i18n.__('api.nextcloud.apiError', { groupName: userId }), 'error');
         logServer(error.response && error.response.data ? error.response.data : error, 'error');
         return false;
       });
@@ -294,6 +321,35 @@ class NextcloudClient {
         return false;
       });
   }
+
+  addUser(userData, ncURL = this.ncURL) {
+    const userId = userData.userid;
+    return axios
+      .post(`${ocsUrl(ncURL)}/users`, userData, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Basic ${this.basicAuth}`,
+          'OCS-APIRequest': true,
+        },
+      })
+      .then((response) => {
+        const infos = response.data.ocs.meta;
+        if (infos.status === 'ok') {
+          logServer(i18n.__('api.nextcloud.userAdded', { userId }));
+        } else {
+          logServer(
+            `${i18n.__('api.nextcloud.userAddError', { userId })} (${infos.statuscode} - ${infos.message})`,
+            'error',
+          );
+        }
+        return infos.status === 'ok' ? infos.status : infos.message;
+      })
+      .catch((error) => {
+        logServer(i18n.__('api.nextcloud.userAddError', { userId }), 'error');
+        logServer(error.response && error.response.data ? error.response.data : error, 'error');
+        return i18n.__('api.nextcloud.userAddError', { userId });
+      });
+  }
 }
 
 if (Meteor.isServer && nextcloudPlugin && nextcloudPlugin.enable) {
@@ -354,6 +410,32 @@ if (Meteor.isServer && nextcloudPlugin && nextcloudPlugin.enable) {
                   ? i18n.__('api.nextcloud.groupExists')
                   : i18n.__('api.nextcloud.addGroupError');
               logServer(msg, 'error', this.userId);
+            }
+          });
+        }
+      });
+    }
+  });
+
+  Meteor.afterMethod('users.setActive', function nextAddUser({ userId }) {
+    // create nextcloud user if needed
+    // get nclocator for this user
+    const user = Meteor.users.findOne(userId);
+    if (!user.nclocator) {
+      logServer(i18n.__('api.nextcloud.misingNCLocator'), 'error');
+    } else {
+      nextClient.userExists(user.username, user.nclocator).then((resExists) => {
+        if (resExists === false) {
+          const ncData = {
+            userid: user.username,
+            password: '',
+            email: user.emails ? user.emails[0].address : '',
+            displayName: `${user.firstName} ${user.lastName}`,
+            language: user.language,
+          };
+          nextClient.addUser(ncData, user.nclocator).then((response) => {
+            if (response !== 'ok') {
+              logServer(i18n.__('api.nextcloud.addUserError'), 'error', this.userId);
             }
           });
         }

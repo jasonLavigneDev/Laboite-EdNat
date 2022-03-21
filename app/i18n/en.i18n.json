@@ -283,12 +283,15 @@
       "groupExists": "Group already exists in Nextcloud",
       "addGroupError": "Error, could not create group in Nextcloud",
       "addGroupFolderError": "Error, could not create group folder in Nextcloud",
+      "addUserError": "Error, could not create user in Nextcloud",
       "removeGroupError": "Warning, could not delete group in Nextcloud",
       "removeGroupFolderError": "Warning, could not delete group folder in Nextcloud",
       "groupFoldersInactive": "Nextcloud: ERROR, make sure 'Group Folders' application is active",
       "groupNotFound": "Nextcloud: ERROR getting group {$groupName}",
       "groupAdded": "Nextcloud: group {$groupName} added",
       "groupAddError": "Nextcloud: ERROR adding group {$groupName}",
+      "userAdded": "Nextcloud: user {$userId} added",
+      "userAddError": "Nextcloud: ERROR adding user {$userId}",
       "groupFolderAssignError": "Nextcloud: could not assign group {$groupName} to folder {$folderName}",
       "groupFolderAdded": "Nextcloud: group folder {$folderName} added",
       "permissionsSet": "Nextcloud: access and permissions set for group folder {$folderName}",
@@ -304,7 +307,9 @@
       "buttonLinkPlugin": "Access shared files in Nextcloud",
       "checkConfig": "Checking access to Nextcloud API ({$URL})",
       "badConfig": "Error accessing Nextcloud, check settings and make sure 'Group Folders' app is active",
-      "configOk": "connection to Nextcloud API successfull"
+      "configOk": "connection to Nextcloud API successfull",
+      "misingNCLocator": "nextcloud instance (nclocator) is missing.",
+      "apiError": "Error while accessing Nextcloud API"
     },
     "rocketChat": {
       "initClient": "RocketChat: API client initialized",
