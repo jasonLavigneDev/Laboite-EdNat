@@ -10,10 +10,10 @@ include:
     file: /templates/Runners/apps.education-docker.yaml
   - project: EOLE/infra/ci-tools
     ref: stable
-    file: /templates/Lint/Commitlint.yaml
+    file: /templates/Git.yaml
   - project: EOLE/infra/ci-tools
     ref: stable
-    file: /templates/Release/Semantic-release.yaml
+    file: /templates/Semantic-release.yaml
   - project: EOLE/infra/ci-tools
     ref: stable
     file: /templates/Docker.yaml
@@ -56,6 +56,7 @@ stages:
 # Execute `commitlint` before long `cache-dependencies` job
 commitlint:
   stage: initial-checks
+  extends: .git:commitlint
 
 
 ###############################################################################
@@ -103,7 +104,7 @@ meteor-tests:
 # 4. we exclude `semantic-release` commits like when merging `release` on `dev`
 # 5. run on every branches
 build-docker:
-  extends: .build-docker-image
+  extends: .docker:image:build
   rules:
     - !reference [.rules-map, not-on-schedule]
     - !reference [.rules-map, not-on-draft]
@@ -118,46 +119,19 @@ build-docker:
 ###############################################################################
 # `release` stage: `semantic-release`, `testing-prerelease`, `merge-to-dev`, `tag *`
 ###############################################################################
-testing-prerelease:
+new release:
+  extends: .semantic-release:stable
+
+testing prerelease:
   extends: .semantic-release:testing
 
 # Avoid regression and update `version` of app/package*.json in `$DEV_BRANCH`
-merge-to-dev:
-  stage: release
-  extends:
-    - .on-release-tag
-  image: 'hub.eole.education/eole/commitlint:latest'
-  script:
-    # Configure git to be able to create merge commit
-    # Extract author name and mail if not SET
-    - echo -e "\e[0Ksection_start:`date +%s`:git-configure[collapsed=true]\r\e[0KConfigure git variables from '${CI_COMMIT_AUTHOR}'"
-    - export GIT_AUTHOR_NAME="${GIT_AUTHOR_NAME:-${CI_COMMIT_AUTHOR% <*}}"
-    - export TEMP_MAIL_PREFIX="${CI_COMMIT_AUTHOR#*<}"
-    - export GIT_AUTHOR_EMAIL="${GIT_AUTHOR_EMAIL:-${TEMP_MAIL_PREFIX%>}}"
-    - export GIT_COMMITTER_NAME="${GIT_COMMITTER_NAME:-${GIT_AUTHOR_NAME}}"
-    - export GIT_COMMITTER_EMAIL="${GIT_COMMITTER_EMAIL:-${GIT_AUTHOR_EMAIL}}"
-    - echo -e "\e[0Ksection_end:`date +%s`:git-configure\r\e[0K"
-    # Add `upstream` remote to get access to `upstream/dev`
-    # Use `${GITLAB_TOKEN}` for write permission
-    - echo -e "\e[0Ksection_start:`date +%s`:git-remote-upstream-add[collapsed=true]\r\e[0KAdd upstream repository and checkout '${DEV_BRANCH}'"
-    - "git remote show upstream 2> /dev/null || git remote add upstream ${CI_REPOSITORY_URL/${CI_JOB_TOKEN}/${GITLAB_TOKEN}}"
-    - 'git fetch --all'
-    - 'git checkout -B ${DEV_BRANCH} upstream/${DEV_BRANCH}'
-    - echo -e "\e[0Ksection_end:`date +%s`:git-remote-upstream-add\r\e[0K"
-    # Merge the release tag
-    - echo -e "\e[0Ksection_start:`date +%s`:git-merge-release[collapsed=true]\r\e[0KMerge '${CI_COMMIT_TAG}' in '${DEV_BRANCH}'"
-    - 'git merge --no-edit ${CI_COMMIT_TAG}'
-    - 'git push upstream ${DEV_BRANCH}'
-    - echo -e "\e[0Ksection_end:`date +%s`:git-merge-release\r\e[0K"
-    # Remove `upstream` to avoid caching `CI_JOB_TOKEN`
-    - echo -e "\e[0Ksection_start:`date +%s`:git-cleanup[collapsed=true]\r\e[0KCleanup git repository"
-    - "git remote remove upstream"
-    - echo -e "\e[0Ksection_end:`date +%s`:git-cleanup\r\e[0K"
+merge-to-dev: {extends: '.git:merge-to', variables: {GIT_MERGE_TARGET: $DEV_BRANCH}}
 
 ## tag contribution branches with a more stable name than `git-${CI_COMMIT_SHORT_SHA}`
 tag contrib branch:
   extends:
-    - .tag-docker-image
+    - .docker:image:tag
     - .on-branches
   variables:
     # `feature/foo-bar_quux` → `feature-foo-bar-quux`
@@ -166,7 +140,7 @@ tag contrib branch:
 ## dev images
 tag dev:
   extends:
-    - .tag-docker-image
+    - .docker:image:tag
     - .on-dev
   variables:
     IMAGE_TAG: dev
@@ -174,22 +148,22 @@ tag dev:
 ## testing images
 tag testing prerelease:
   extends:
-    - .tag-docker-image
+    - .docker:image:tag
     - .on-testing-tag
 
 tag testing:
   extends:
-    - .tag-docker-image
+    - .docker:image:tag
     - .on-testing-tag
   variables:
     IMAGE_TAG: testing
 
 ## stable images
 tag release:
-  extends: .tag-docker-image
+  extends: .docker:image:tag
 
 tag major:
-  extends: .tag-docker-image
+  extends: .docker:image:tag
   before_script:
     - export RELEASE_PREFIX=${RELEASE_PREFIX:-release/}
     - export RELEASE=${CI_COMMIT_TAG#${RELEASE_PREFIX}}
@@ -197,18 +171,18 @@ tag major:
 
 tag minor:
   extends:
-    - .tag-docker-image
+    - .docker:image:tag
   before_script:
     - export RELEASE_PREFIX=${RELEASE_PREFIX:-release/}
     - export RELEASE=${CI_COMMIT_TAG#${RELEASE_PREFIX}}
     - export IMAGE_TAG=${RELEASE%.${RELEASE##*.}}
 
 tag stable:
-  extends: .tag-docker-image
+  extends: .docker:image:tag
   variables:
     IMAGE_TAG: stable
 
 tag latest:
-  extends: .tag-docker-image
+  extends: .docker:image:tag
   variables:
     IMAGE_TAG: latest
