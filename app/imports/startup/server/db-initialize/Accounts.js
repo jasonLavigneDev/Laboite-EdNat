@@ -72,16 +72,31 @@ if (Meteor.users.find().count() === 0) {
     if (Meteor.isDevelopment) {
       const array = new Array(NUMBER_OF_FAKE_USERS);
       array.fill(0);
-      array.map(() =>
-        createUser(
-          faker.internet.email(),
-          faker.internet.password(),
-          null,
-          faker.random.arrayElement(getStructureIds()),
-          faker.name.firstName(),
-          faker.name.lastName(),
-        ),
-      );
+      array.forEach(() => {
+        let retries = 3;
+        while (retries > 0) {
+          try {
+            createUser(
+              faker.internet.email(),
+              faker.internet.password(),
+              null,
+              faker.random.arrayElement(getStructureIds()),
+              faker.name.firstName(),
+              faker.name.lastName(),
+            );
+            retries = 0;
+          } catch (error) {
+            // error can occur if faker choses the same email several times
+            // abort and display error in other cases
+            if (error.reason && error.reason.indexOf('already exists') !== -1) {
+              retries -= 1;
+            } else {
+              logServer(`Error creating user: ${error.reason || error.message || error}`, 'error');
+              retries = 0;
+            }
+          }
+        }
+      });
     }
   } else {
     logServer('No default users to create !  Please invoke meteor with a settings file.');
