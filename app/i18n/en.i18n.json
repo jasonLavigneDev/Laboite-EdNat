@@ -44,7 +44,8 @@
         "link_personalData": "Personal Data text page link",
         "content_personalData": "Personal Data text",
         "maintenance": "Maintenance status",
-        "textMaintenance": "Maintenance reason text"
+        "textMaintenance": "Maintenance reason text",
+        "contact_address": "Contact Address"
       },
       "migrationLockedText": "Database migration is locked.",
       "updateAppsettings": {

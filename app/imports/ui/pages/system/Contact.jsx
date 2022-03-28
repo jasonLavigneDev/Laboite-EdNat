@@ -127,7 +127,7 @@ const Contact = () => {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="md">
       <CssBaseline />
       <div className={classes.paper}>
         <Typography component="h1" variant="h5">
@@ -143,7 +143,6 @@ const Contact = () => {
                 id="firstName"
                 autoFocus
                 fullWidth
-                helperText=" "
                 label={i18n.__('pages.ContactForm.firstNameLabel')}
                 name="firstName"
                 type="text"
@@ -162,7 +161,6 @@ const Contact = () => {
                 label={i18n.__('pages.ContactForm.nameLabel')}
                 name="lastName"
                 type="text"
-                helperText=" "
                 value={formState.values.lastName || ''}
                 error={hasError('lastName')}
                 onChange={handleChange}
@@ -178,7 +176,6 @@ const Contact = () => {
                 name="email"
                 autoComplete="email"
                 fullWidth
-                helperText=""
                 type="text"
                 value={formState.values.email || ''}
                 error={hasError('email')}

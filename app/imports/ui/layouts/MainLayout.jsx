@@ -20,6 +20,7 @@ import NoStructureSelected from '../components/system/NoStructureSelected';
 import SiteInMaintenance from '../components/system/SiteInMaintenance';
 
 // pages
+const Contact = lazy(() => import('../pages/system/Contact'));
 const ServicesPage = lazy(() => import('../pages/services/ServicesPage'));
 const HelpPage = lazy(() => import('../pages/HelpPage'));
 const SingleServicePage = lazy(() => import('../pages/services/SingleServicePage'));
@@ -120,6 +121,7 @@ function MainLayout({ appsettings, ready }) {
                   <Switch>
                     <Route exact path="/" component={PersonalPage} />
                     <Route exact path="/profile" component={ProfilePage} />
+                    <Route exact path="/contact" component={Contact} />
                     <Route exact path="/services" component={ServicesPage} />
                     <Route exact path="/structure" component={ServicesPage} />
                     <Route exact path="/help" component={HelpPage} />
@@ -154,12 +156,14 @@ function MainLayout({ appsettings, ready }) {
                 ) : (
                   <Switch>
                     <Route exact path="/profile" component={ProfilePage} />
+                    <Route exact path="/contact" component={Contact} />
                     <Route component={NoStructureSelected} />
                   </Switch>
                 )
               ) : (
                 <Switch>
                   <Route exact path="/profile" component={ProfilePage} />
+                  <Route exact path="/contact" component={Contact} />
                   <Route component={NotValidatedMessage} />
                 </Switch>
               )
