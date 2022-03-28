@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Roles } from 'meteor/alanning:roles';
+import { Counts } from 'meteor/tmeasday:publish-counts';
 import { FindFromPublication } from 'meteor/percolate:find-from-publication';
 import SimpleSchema from 'simpl-schema';
 import { checkPaginationParams, isActive, getLabel } from '../../utils';
@@ -31,6 +32,14 @@ Meteor.publish('users.request', function usersRequest() {
       fields: Meteor.users.adminFields,
     },
   );
+});
+
+Meteor.publish('users.request.count', function usersRequestCounter() {
+  if (!isActive(this.userId) || !Roles.userIsInRole(this.userId, 'admin')) {
+    return this.ready();
+  }
+  Counts.publish(this, 'users.request.count', Meteor.users.find({ isRequest: true }));
+  return [];
 });
 
 // automatically publish assignments for current user

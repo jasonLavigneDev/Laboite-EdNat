@@ -1,7 +1,10 @@
-import * as React from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import { useTracker } from 'meteor/react-meteor-data';
+import { Counts } from 'meteor/tmeasday:publish-counts';
 import { Roles } from 'meteor/alanning:roles';
 import i18n from 'meteor/universe:i18n';
+import Chip from '@material-ui/core/Chip';
 import Box from '@material-ui/core/Box';
 import List from '@material-ui/core/List';
 import PeopleAltIcon from '@material-ui/icons/People';
@@ -50,6 +53,11 @@ export default function AdminMenu() {
   const { pathname } = useLocation();
   const history = useHistory();
 
+  const requestsCount = useTracker(() => {
+    Meteor.subscribe('users.request.count');
+    return Counts.get('users.request.count');
+  });
+
   const isAdmin = Roles.userIsInRole(user._id, 'admin');
   const isAdminStructure = Roles.userIsInRole(user._id, 'adminStructure', user.structure);
 
@@ -92,6 +100,7 @@ export default function AdminMenu() {
       path: '/admin/usersvalidation',
       content: 'menuAdminUserValidation',
       icon: <PersonAddIcon />,
+      chip: requestsCount,
       hidden: !isAdmin,
     },
     {
@@ -148,7 +157,7 @@ export default function AdminMenu() {
       )}
       <Box sx={{ overflow: 'auto' }}>
         <List>
-          {adminMenu.map(({ content, path, icon, hidden }) =>
+          {adminMenu.map(({ content, path, icon, hidden, chip }) =>
             content === 'Divider' ? (
               <Divider key={path} />
             ) : (
@@ -159,7 +168,7 @@ export default function AdminMenu() {
                   key={content}
                   selected={pathname === path}
                 >
-                  <ListItemIcon>{icon}</ListItemIcon>
+                  <ListItemIcon>{!chip ? icon : <Chip size="small" label={chip} color="secondary" />}</ListItemIcon>
                   {!isMobile && <ListItemText primary={i18n.__(`components.AdminMenu.${content}`)} />}
                 </ListItem>
               )
