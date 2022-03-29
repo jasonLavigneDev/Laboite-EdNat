@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.1.1](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/4.1.0...release/4.1.1) (2022-03-29)
+
+
+### Bug Fixes
+
+* **dockerfile:** migrate to node 14.19.1 ([a86fe14](https://gitlab.mim-libre.fr/alphabet/laboite/commit/a86fe141177fdc63d1bbcff068d7b5de29795795))
+
 # [4.1.0](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/4.0.2...release/4.1.0) (2022-03-11)
 
 
