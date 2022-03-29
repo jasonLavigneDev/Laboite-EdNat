@@ -23,6 +23,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import MailIcon from '@material-ui/icons/Mail';
+import Input from '@material-ui/core/Input';
 import Spinner from '../../components/system/Spinner';
 import CustomSelect from '../../components/admin/CustomSelect';
 import { useAppContext } from '../../contexts/context';
@@ -654,10 +655,12 @@ const ProfilePage = ({ structures, loading }) => {
               </Grid>
               <Grid item xs={12} sm={6} md={6} className={classes.buttonWrapper}>
                 <div className={classes.fileWrap}>
-                  <Button variant="contained" htmlFor="upload" color="secondary" tabIndex={-1}>
-                    {i18n.__('pages.ProfilePage.UploadPublicationBackup')}
-                    <input className={classes.inputFile} type="file" id="upload" onChange={uploadData} />
-                  </Button>
+                  <label htmlFor="upload">
+                    <Input className={classes.inputFile} type="file" id="upload" onChange={uploadData} />
+                    <Button variant="contained" color="secondary" component="span" tabIndex={-1}>
+                      {i18n.__('pages.ProfilePage.UploadPublicationBackup')}
+                    </Button>
+                  </label>
                 </div>
               </Grid>
             </Grid>
