@@ -21,6 +21,7 @@ const initialState = {
   articlePage: {},
   publishersPage: {},
   notificationPage: {},
+  pollPage: {},
   roles: [],
   uploads: [],
 };

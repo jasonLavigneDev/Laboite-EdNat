@@ -42,6 +42,11 @@ const reducer = (state, action) => {
         ...newState,
         notificationPage: { ...data },
       };
+    case 'pollPage':
+      return {
+        ...newState,
+        pollPage: { ...data },
+      };
     case 'mobile':
       return {
         ...newState,

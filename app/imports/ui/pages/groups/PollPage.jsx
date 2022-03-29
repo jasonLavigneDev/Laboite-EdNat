@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Roles } from 'meteor/alanning:roles';
 import PropTypes from 'prop-types';
@@ -33,8 +33,9 @@ const ITEM_PER_PAGE = 10;
 const PollPage = ({ loading, group, slug }) => {
   const classes = useEvenstPageStyles();
   const history = useHistory();
-  const [search, setSearch] = useState('');
-  const [{ userId }] = useAppContext();
+  const [{ userId, pollPage }, dispatch] = useAppContext();
+
+  const { search = '', searchToggle = false } = pollPage;
 
   const { changePage, page, items, total } = usePagination(
     'groups.polls',
@@ -47,11 +48,34 @@ const PollPage = ({ loading, group, slug }) => {
 
   const userInGroup = Roles.userIsInRole(userId, ['member', 'animator', 'admin'], group._id);
 
+  const inputRef = useRef(null);
   const handleChangePage = (event, value) => {
     changePage(value);
   };
-  const updateSearch = (e) => setSearch(e.target.value);
-  const resetSearch = () => setSearch('');
+
+  const updateGlobalState = (key, value) =>
+    dispatch({
+      type: 'pollPage',
+      data: {
+        ...pollPage,
+        [key]: value,
+      },
+    });
+
+  // focus on search input when it appears
+  useEffect(() => {
+    if (inputRef.current && searchToggle) {
+      inputRef.current.focus();
+    }
+  }, [searchToggle]);
+  useEffect(() => {
+    if (page !== 1) {
+      changePage(1);
+    }
+  }, [search]);
+
+  const updateSearch = (e) => updateGlobalState('search', e.target.value);
+  const resetSearch = () => updateGlobalState('search', '');
 
   const goBack = () => {
     history.goBack();

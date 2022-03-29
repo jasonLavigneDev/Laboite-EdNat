@@ -12,7 +12,7 @@ const queryGroupPolls = ({ search, group, onlyPublic }) => {
   const fieldsToSearch = ['title', 'description'];
   const searchQuery = fieldsToSearch.map((field) => ({
     [field]: { $regex: regex },
-    groups: { $in: [group._id] },
+    groups: group._id,
     active: true,
   }));
   if (onlyPublic)
@@ -25,6 +25,23 @@ const queryGroupPolls = ({ search, group, onlyPublic }) => {
   };
 };
 
+Meteor.methods({
+  'get_groups.polls_count': function getPollsAllCount({ search, slug }) {
+    try {
+      const group = Groups.findOne({ slug });
+
+      let query = {};
+      if (group.type !== 0 && !Roles.userIsInRole(this.userId, ['admin', 'animator', 'member'], group._id)) {
+        query = queryGroupPolls({ search, group, onlyPublic: true });
+      } else query = queryGroupPolls({ search, group, onlyPublic: false });
+
+      return Polls.find(query).count();
+    } catch (error) {
+      return 0;
+    }
+  },
+});
+
 // publish all existing polls for one group
 FindFromPublication.publish('groups.polls', function groupsPolls({ page, search, slug, itemPerPage, ...rest }) {
   if (!isActive(this.userId)) {
@@ -36,14 +53,7 @@ FindFromPublication.publish('groups.polls', function groupsPolls({ page, search,
     logServer(`publish groups.polls : ${err}`);
     this.error(err);
   }
-  const group = Groups.findOne(
-    { slug },
-    {
-      fields: Groups.allPublicFields,
-      limit: 1,
-      sort: { name: -1 },
-    },
-  );
+  const group = Groups.findOne({ slug });
   try {
     // for protected/private groups, publish only public polls for non member users
     let query = {};
