@@ -93,5 +93,12 @@ FindFromPublication.publish('structures.with.all.childs', function structuresWit
     return this.ready();
   }
 
-  return Structures.find({ $or: [{ ancestorsIds: structureId }, { _id: structureId }] });
+  return Structures.find(
+    { $or: [{ ancestorsIds: structureId || '' }, { _id: structureId || '' }] },
+    {
+      fields: Structures.publicFields,
+      sort: { name: 1 },
+      limit: 10000,
+    },
+  );
 });
