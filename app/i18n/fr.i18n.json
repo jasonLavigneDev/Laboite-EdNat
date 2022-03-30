@@ -80,6 +80,7 @@
       "hasChildren": "La structure possède des enfants, elle n'est pas supprimable.",
       "hasServices": "La structure possède au moins un service, elle n'est pas supprimable.",
       "hasUsers": "La structure possède au moins un utilisateur, elle n'est pas supprimable.",
+      "nameAlreadyTaken":"Une structure portant le même nom existe déjà dans le même niveau. Sans prendre en compte la casse.",
       "name": "Libellé",
       "labels": {
         "id": "Id de Structure",

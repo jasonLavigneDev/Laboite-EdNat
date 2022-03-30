@@ -80,6 +80,7 @@
       "hasChildren": "Structure has children, therefore it can not be deleted.",
       "hasServices": "Structure has at least one service, therefore it can not be deleted.",
       "hasUsers": "Structure has at least one user, therefore it can not be deleted.",
+      "nameAlreadyTaken": "A structure with same name on the same level already exists. It is case-insensitive.",
       "name": "Label",
       "labels": {
         "id": "Structure Id",
@@ -884,8 +885,8 @@
       "structureChoice": "Please choose your attachement structure",
       "openStructureSelection": "Click here if you struggle to find your structure",
       "chooseStructure": "Choose the structure",
-      "noStructureCurrently":"You have no attachemnt structure for now",
-      "currentStructure":"You current attachement structure is:",
+      "noStructureCurrently": "You have no attachemnt structure for now",
+      "currentStructure": "You current attachement structure is:",
       "noSelectedStructure": "Aucune Structure sélectionnée"
     },
     "NotFound": {

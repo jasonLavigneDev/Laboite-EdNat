@@ -38,6 +38,12 @@ export const createStructure = new ValidatedMethod({
       throw new Meteor.Error('api.structures.createStructure.notPermitted', i18n.__('api.users.notPermitted'));
     }
 
+    const structuresWithSameNameOnSameLevel = Structures.find({ name, parentId });
+
+    if (structuresWithSameNameOnSameLevel.count() > 0) {
+      throw new Meteor.Error('api.structures.createStructure.notPermitted', i18n.__('api.structures.nameAlreadyTaken'));
+    }
+
     const structureId = Structures.insert({
       name,
       parentId,
