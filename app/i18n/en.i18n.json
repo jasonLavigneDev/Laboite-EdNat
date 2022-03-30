@@ -974,7 +974,7 @@
     "AdminStructuresManagementPage": {
       "title": "Structure Management",
       "onlyStructureAdmin": {
-        "title": "Your structure management and its sub structures"
+        "title": "Sub structures management"
       },
       "columnName": "Name",
       "list": "Structure list",

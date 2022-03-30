@@ -976,7 +976,7 @@
     "AdminStructuresManagementPage": {
       "title": "Gestion des structures",
       "onlyStructureAdmin": {
-        "title": "Gestion de votre structure administrée ainsi que ses sous-structures"
+        "title": "Gestion de sous-structures"
       },
       "columnName": "Nom",
       "list": "Liste des structures",
