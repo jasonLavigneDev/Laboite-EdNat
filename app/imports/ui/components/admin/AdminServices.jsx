@@ -124,7 +124,8 @@ const AdminServicesTable = ({ services, loading, selectedStructure }) => {
                 editable={{
                   onRowDelete: (oldData) =>
                     new Promise((resolve, reject) => {
-                      Meteor.call('services.removeService',
+                      Meteor.call(
+                        'services.removeService',
                         {
                           serviceId: oldData._id,
                         },

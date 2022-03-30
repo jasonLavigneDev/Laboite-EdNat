@@ -67,7 +67,8 @@ FindFromPublication.publish('services.one.admin', function servicesOne({ _id, st
   }
 
   const service = Services.findOne(_id);
-  const isStructureAdmin = service.structure && hasAdminRightOnStructure({userId: this.userId, structureId: service.structure})
+  const isStructureAdmin =
+    service.structure && hasAdminRightOnStructure({ userId: this.userId, structureId: service.structure });
   if (isActive(this.userId) && (Roles.userIsInRole(this.userId, 'admin') || isStructureAdmin)) {
     return Services.find({ _id }, { fields: Services.allPublicFields, sort: { title: 1 }, limit: 1 });
   }

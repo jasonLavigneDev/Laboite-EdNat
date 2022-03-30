@@ -263,7 +263,7 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
       }
     }
 
-    Meteor.call(method, args, (error, res) => {
+    Meteor.call(method, args, (error) => {
       if (error) {
         msg.error(error.reason);
         setLoading(false);
