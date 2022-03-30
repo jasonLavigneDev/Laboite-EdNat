@@ -195,16 +195,16 @@ export function ServicesPage({ services, categories, ready, structureMode, offli
 
   const toggleButtons = (
     <ToggleButtonGroup value={viewMode} exclusive aria-label={i18n.__('pages.ServicesPage.viewMode')}>
-      <Tooltip title={i18n.__('pages.ServicesPage.viewCard')} aria-label={i18n.__('pages.ServicesPage.viewCard')}>
-        <ToggleButton value="card" onClick={changeViewMode} aria-label={i18n.__('pages.ServicesPage.viewCard')}>
+      <ToggleButton value="card" onClick={changeViewMode} aria-label={i18n.__('pages.ServicesPage.viewCard')}>
+        <Tooltip title={i18n.__('pages.ServicesPage.viewCard')} aria-label={i18n.__('pages.ServicesPage.viewCard')}>
           <DashboardIcon color="primary" />
-        </ToggleButton>
-      </Tooltip>
-      <Tooltip title={i18n.__('pages.ServicesPage.viewList')} aria-label={i18n.__('pages.ServicesPage.viewList')}>
-        <ToggleButton value="list" onClick={changeViewMode} aria-label={i18n.__('pages.ServicesPage.viewList')}>
+        </Tooltip>
+      </ToggleButton>
+      <ToggleButton value="list" onClick={changeViewMode} aria-label={i18n.__('pages.ServicesPage.viewList')}>
+        <Tooltip title={i18n.__('pages.ServicesPage.viewList')} aria-label={i18n.__('pages.ServicesPage.viewList')}>
           <ViewListIcon color="primary" />
-        </ToggleButton>
-      </Tooltip>
+        </Tooltip>
+      </ToggleButton>
     </ToggleButtonGroup>
   );
 
