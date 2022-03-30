@@ -100,7 +100,8 @@ describe('structures', function () {
     describe('createStructure', function () {
       it('does create a structure with admin user', function () {
         // logServer('User admin:', adminId);
-        createStructure._execute({ userId: adminId }, { name: structureName, parentId: null });
+        /** Add '2' since we can not create a structure with same name */
+        createStructure._execute({ userId: adminId }, { name: `${structureName}2`, parentId: null });
         const structure = Structures.findOne({ _id: structureId });
         assert.typeOf(structure, 'object');
       });
