@@ -3,10 +3,10 @@ import Structures from '../structures';
 
 export const hasAdminRightOnStructure = ({ userId, structureId }) => {
   const ids = [structureId];
-  const _ancestorsIds = Structures.findOne({ _id: structureId }, { fields: { ancestorsIds: 1 } });
-  if (_ancestorsIds && _ancestorsIds.length > 0) {
-    _ancestorsIds.forEach((ancestor) => ids.push(ancestor));
-  }
-  const isAdmin = ids.some((ancestorId) => Roles.userIsInRole(userId, 'adminStructure', ancestorId));
+  const structure = Structures.findOne({ _id: structureId }, { fields: { ancestorsIds: 1 } });
+
+  if (structure && structure.ancestorsIds.length > 0) structure.ancestorsIds.forEach((ancestor) => ids.push(ancestor));
+
+  const isAdmin = ids.some((id) => Roles.userIsInRole(userId, 'adminStructure', id));
   return isAdmin;
 };
