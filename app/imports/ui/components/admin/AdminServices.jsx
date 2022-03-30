@@ -11,7 +11,6 @@ import { useHistory } from 'react-router-dom';
 import keyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import Spinner from '../system/Spinner';
 import Services from '../../../api/services/services';
-import { removeService } from '../../../api/services/methods';
 import setMaterialTableLocalization from '../initMaterialTableLocalization';
 
 const { offlinePage } = Meteor.settings.public;
@@ -125,7 +124,7 @@ const AdminServicesTable = ({ services, loading, selectedStructure }) => {
                 editable={{
                   onRowDelete: (oldData) =>
                     new Promise((resolve, reject) => {
-                      removeService.call(
+                      Meteor.call('services.removeService',
                         {
                           serviceId: oldData._id,
                         },

@@ -9,13 +9,16 @@ import i18n from 'meteor/universe:i18n';
 import { isActive, getLabel } from '../utils';
 import Services from './services';
 import { addService, removeElement } from '../personalspaces/methods';
+import { hasAdminRightOnStructure } from '../structures/server/utils';
 
 export const createService = new ValidatedMethod({
   name: 'services.createService',
   validate: Services.schema.omit('slug').validator({ clean: true }),
 
   run(args) {
-    const isStructureAdmin = args.structure && Roles.userIsInRole(this.userId, 'adminStructure', args.structure);
+    const isStructureAdmin =
+      args.structure && hasAdminRightOnStructure({ userId: this.userId, structureId: args.structure });
+
     // admins can create structure services only for their structure if they have adminStructure permissions
     const isAdmin = Roles.userIsInRole(this.userId, 'admin');
     const authorized = isActive(this.userId) && (isAdmin || isStructureAdmin);
@@ -57,7 +60,9 @@ export const removeService = new ValidatedMethod({
     if (service === undefined) {
       throw new Meteor.Error('api.services.removeService.unknownService', i18n.__('api.services.unknownService'));
     }
-    const isStructureAdmin = service.structure && Roles.userIsInRole(this.userId, 'adminStructure', service.structure);
+
+    const isStructureAdmin =
+      service.structure && hasAdminRightOnStructure({ userId: this.userId, structureId: service.structure });
     const authorized = isActive(this.userId) && (Roles.userIsInRole(this.userId, 'admin') || isStructureAdmin);
     if (!authorized) {
       throw new Meteor.Error('api.services.removeService.notPermitted', i18n.__('api.users.adminNeeded'));
@@ -86,7 +91,8 @@ export const updateService = new ValidatedMethod({
     }
     // check if current user has admin or structureAdmin rights (structure can not be changed)
     const isStructureAdmin =
-      currentService.structure && Roles.userIsInRole(this.userId, 'adminStructure', currentService.structure);
+      currentService.structure &&
+      hasAdminRightOnStructure({ userId: this.userId, structureId: currentService.structure });
     const authorized = isActive(this.userId) && (Roles.userIsInRole(this.userId, 'admin') || isStructureAdmin);
     if (!authorized) {
       throw new Meteor.Error('api.services.updateService.notPermitted', i18n.__('api.users.adminNeeded'));

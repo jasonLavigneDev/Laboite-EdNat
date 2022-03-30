@@ -27,7 +27,6 @@ import { useHistory } from 'react-router-dom';
 
 import Categories from '../../../api/categories/categories';
 import Spinner from '../../components/system/Spinner';
-import { createService, updateService } from '../../../api/services/methods';
 import Services from '../../../api/services/services';
 import slugy from '../../utils/slugy';
 import ImageAdminUploader from '../../components/uploader/ImageAdminUploader';
@@ -238,7 +237,7 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
   };
 
   const onSubmitUpdateService = () => {
-    const method = params._id ? updateService : createService;
+    const method = `services.${params._id ? 'updateService' : 'createService'}`;
     setLoading(true);
     const { _id, slug, ...rest } = serviceData;
     let args;
@@ -264,9 +263,9 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
       }
     }
 
-    method.call(args, (error) => {
+    Meteor.call(method, args, (error, res) => {
       if (error) {
-        msg.error(error.message);
+        msg.error(error.reason);
         setLoading(false);
       } else {
         msg.success(i18n.__('api.methods.operationSuccessMsg'));
