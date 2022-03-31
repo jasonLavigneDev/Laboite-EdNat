@@ -97,6 +97,7 @@ const AdminSendNotification = ({ data, open, onClose }) => {
               onChange={updateState}
             >
               <MenuItem value="info">{i18n.__('components.AdminSendNotification.info_type')}</MenuItem>
+              <MenuItem value="message">{i18n.__('components.AdminSendNotification.message_type')}</MenuItem>
             </Select>
           </CardContent>
           <CardActions className={classes.actions}>
