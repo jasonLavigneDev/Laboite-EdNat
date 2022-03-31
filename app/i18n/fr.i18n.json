@@ -411,6 +411,15 @@
       "removeAll": "Supprimer toutes les notifications",
       "confirmRemoveAll": "Êtes vous sûr de vouloir supprimer toutes les notifications ?"
     },
+    "TabbedNotificationsDisplay": {
+      "tabMessages": "Messagerie",
+      "tabSpaces": "Espaces Collaboratifs",
+      "confirm": "Oui",
+      "cancel": "Non",
+      "empty": "Vous n'avez aucune notification.",
+      "removeAll": "Supprimer toutes les notifications",
+      "confirmRemoveAll": "Êtes vous sûr de vouloir supprimer toutes les notifications ?"
+    },
     "Footer": {
       "personalData": "Données Personnelles",
       "gcu": "Conditions générales d'utilisation",
@@ -458,6 +467,7 @@
       "menuStructure": "Ma Structure",
       "menuGroupes": "Les Groupes",
       "menuGroupesMobile": "Groupes",
+      "menuNotifications": "Mes Notifications",
       "menuAdminServices": "Gestion des Services",
       "menuAdminUserValidation": "Validation des utilisateurs",
       "tooltipServices": "Services Numériques Partagés",
@@ -751,7 +761,8 @@
       "content_label": "Contenu de la notification",
       "ValidateForm": "Valider",
       "type_label": "Type de notification",
-      "info_type": "Info"
+      "info_type": "Info",
+      "message_type": "Message"
     },
     "SkipLink": {
       "skipToContent": "Aller au contenu"

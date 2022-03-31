@@ -38,6 +38,7 @@ const MediaStoragePage = lazy(() => import('../pages/MediaStoragePage'));
 const UserBookmarksPage = lazy(() => import('../pages/users/UserBookmarksPage'));
 const NotificationsDisplay = lazy(() => import('../components/notifications/NotificationsDisplay'));
 const BookmarksPage = lazy(() => import('../pages/groups/BookmarksPage'));
+const TabbedNotificationsDisplay = lazy(() => import('../components/notifications/TabbedNotificationsDisplay'));
 
 // dynamic imports
 const AdminGroupsPage = lazy(() => import('../pages/admin/AdminGroupsPage'));

@@ -43,6 +43,7 @@ Copy `settings-development.json.sample` to `settings-development.json` and updat
 | disabledFeatures                         | object   | {}                                   | add features to disabled                                                                    |
 | disabledFeatures.blog                    | boolean  | false                                | disable all blog                                                                            |
 | disabledFeatures.groups                  | boolean  | false                                | disable all groups                                                                          |
+| disabledFeatures.notificationsTab        | boolean  | false                                | disable notification divided in two tabs                                                    |
 
 ## keycloak:
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -10,6 +10,8 @@ import MenuBar from './MenuBar';
 import MainMenu from './MainMenu';
 import { useAppContext } from '../../contexts/context';
 import AppSettings from '../../../api/appsettings/appsettings';
+
+const { disabledFeatures } = Meteor.settings.public;
 
 const useStyles = (isMobile) =>
   makeStyles((theme) => ({
@@ -70,6 +72,7 @@ const useStyles = (isMobile) =>
 
 function TopBar({ publicMenu, root, appsettings, adminApp }) {
   const [{ isMobile, user, notificationPage }, dispatch] = useAppContext();
+  const history = useHistory();
   const theme = useTheme();
   const classes = useStyles(isMobile)();
   const { SMALL_LOGO, LONG_LOGO, SMALL_LOGO_MAINTENANCE, LONG_LOGO_MAINTENANCE } = theme.logos;
@@ -92,15 +95,19 @@ function TopBar({ publicMenu, root, appsettings, adminApp }) {
 
   const handleNotifsOpen = () => {
     const notifState = notificationPage.notifsOpen || false;
-    if (notifState) {
-      // On notifs close : mark all as read
-      Meteor.call('notifications.markAllNotificationAsRead', {}, (err) => {
-        if (err) {
-          msg.error(err.reason);
-        }
-      });
+    if (!disabledFeatures.notificationsTab) {
+      history.push('/notifications');
+    } else {
+      if (notifState) {
+        // On notifs close : mark all as read
+        Meteor.call('notifications.markAllNotificationAsRead', {}, (err) => {
+          if (err) {
+            msg.error(err.reason);
+          }
+        });
+      }
+      updateGlobalState('notifsOpen', !notifState);
     }
-    updateGlobalState('notifsOpen', !notifState);
   };
 
   return (
@@ -114,9 +121,11 @@ function TopBar({ publicMenu, root, appsettings, adminApp }) {
             {publicMenu ? null : (
               <>
                 <MainMenu user={user} />
-                <IconButton onClick={() => handleNotifsOpen()}>
-                  <NotificationsBell />
-                </IconButton>
+                {!disabledFeatures.notificationsTab && isMobile ? null : (
+                  <IconButton onClick={() => handleNotifsOpen()}>
+                    <NotificationsBell />
+                  </IconButton>
+                )}
               </>
             )}
           </div>
