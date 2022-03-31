@@ -18,7 +18,26 @@ const queryGroupEvents = ({ search, group }) => {
   };
 };
 
-// publish all existing groups
+Meteor.methods({
+  'get_groups.events_count': function getArticlesAllCount({ search, slug }) {
+    try {
+      const group = Groups.findOne(
+        { slug },
+        {
+          fields: Groups.allPublicFields,
+          limit: 1,
+          sort: { name: -1 },
+        },
+      );
+      const query = queryGroupEvents({ search, group });
+      return EventsAgenda.find(query).count();
+    } catch (error) {
+      return 0;
+    }
+  },
+});
+
+// publish all existing events for specific group
 FindFromPublication.publish('groups.events', function groupsEvents({ page, search, slug, itemPerPage, ...rest }) {
   if (!isActive(this.userId)) {
     return this.ready();
