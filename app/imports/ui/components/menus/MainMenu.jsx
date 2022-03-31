@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import i18n from 'meteor/universe:i18n';
+import { useTracker } from 'meteor/react-meteor-data';
+import { Counts } from 'meteor/tmeasday:publish-counts';
 import { Roles } from 'meteor/alanning:roles';
 import { useHistory, useLocation } from 'react-router-dom';
+import Chip from '@material-ui/core/Chip';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
@@ -20,6 +23,9 @@ const { disabledFeatures = {} } = Meteor.settings.public;
 const useStyles = makeStyles((theme) => ({
   avatar: {
     marginLeft: theme.spacing(1),
+  },
+  chip: {
+    marginRight: 8,
   },
   menuItem: {
     '&:hover': {
@@ -71,6 +77,11 @@ const MainMenu = ({ user = {} }) => {
   const { pathname } = useLocation();
   const isAdmin = Roles.userIsInRole(user._id, 'admin');
   const isAdminStructure = Roles.userIsInRole(user._id, 'adminStructure', user.structure);
+
+  const adminChip = useTracker(() => {
+    Meteor.subscribe('users.request.count');
+    return Counts.get('users.request.count') > 0;
+  });
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -174,6 +185,9 @@ const MainMenu = ({ user = {} }) => {
               onClick={() => handleMenuClick(item)}
               selected={currentLink ? currentLink.path === item.path : false}
             >
+              {item.content === 'menuAdminApp' && adminChip && (
+                <Chip className={classes.chip} size="small" label="!" color="secondary" />
+              )}
               {i18n.__(`components.MainMenu.${item.content}`)}
             </MenuItem>
           );
