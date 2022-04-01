@@ -1,13 +1,22 @@
 import { Meteor } from 'meteor/meteor';
+import { Migrations } from 'meteor/percolate:migrations';
 import { DDPRateLimiter } from 'meteor/ddp-rate-limiter';
 import { _ } from 'meteor/underscore';
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { Roles } from 'meteor/alanning:roles';
 import i18n from 'meteor/universe:i18n';
+import logServer from '../logging';
 
 import { isActive, getLabel } from '../utils';
 import AppSettings from './appsettings';
+
+export function checkMigrationStatus() {
+  if (Migrations._getControl().locked === true) {
+    logServer('Migration lock detected !!!!', 'error');
+    AppSettings.update({}, { $set: { maintenance: true, textMaintenance: 'api.appsettings.migrationLockedText' } });
+  }
+}
 
 export const updateAppsettings = new ValidatedMethod({
   name: 'appSettings.updateAppsettings',
@@ -49,9 +58,16 @@ export const updateAppsettings = new ValidatedMethod({
 
 export const switchMaintenanceStatus = new ValidatedMethod({
   name: 'appSettings.switchMaintenanceStatus',
-  validate: null,
+  validate: new SimpleSchema({
+    unlockMigration: {
+      type: Boolean,
+      label: getLabel('api.appsettings.labels.unlockMigration'),
+      optional: true,
+      defaultValue: false,
+    },
+  }).validator({ clean: true }),
 
-  run() {
+  run({ unlockMigration }) {
     try {
       // check if current user is admin
       const authorized = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
@@ -63,6 +79,13 @@ export const switchMaintenanceStatus = new ValidatedMethod({
       }
       const appsettings = AppSettings.findOne({ _id: 'settings' });
       const newValue = !(appsettings.maintenance || false);
+      if (Meteor.isServer === true && unlockMigration === true) {
+        Migrations.unlock();
+        // force migration to latest after unlock
+        Migrations.migrateTo('latest');
+        checkMigrationStatus();
+        return AppSettings.update({ _id: 'settings' }, { $set: { maintenance: newValue, textMaintenance: '' } });
+      }
       return AppSettings.update({ _id: 'settings' }, { $set: { maintenance: newValue } });
     } catch (error) {
       throw new Meteor.Error(error, error);

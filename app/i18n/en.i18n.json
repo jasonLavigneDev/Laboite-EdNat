@@ -790,7 +790,15 @@
       "maintenance": "Maintenance options",
       "toggleMaintenance": "Put the site in maintenance",
       "textMaintenance": "Maintenance reason",
-      "buttonTextMaintenance": "Validate message"
+      "buttonTextMaintenance": "Validate message",
+      "unlockMigration": {
+        "title": "Migration unlocking",
+        "mainText": "Database migration is currently locked.",
+        "checkLogs": "Please check server logs to investigate previous migration failure",
+        "ask": "Do you want to run migration again ?",
+        "cancel": "No",
+        "confirm": "Yes"
+      }
     },
     "SignIn": {
       "appDescription": "Digital services shared by National Education agents",
