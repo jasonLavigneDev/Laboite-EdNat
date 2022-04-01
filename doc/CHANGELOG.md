@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.1.2](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/4.1.1...release/4.1.2) (2022-04-01)
+
+
+### Bug Fixes
+
+* **avatar:** fix upload image button in profile page ([9db3249](https://gitlab.mim-libre.fr/alphabet/laboite/commit/9db324948d79768d582995a91fffb20f1341e97d))
+
 ## [4.1.1](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/4.1.0...release/4.1.1) (2022-03-29)
 
 
