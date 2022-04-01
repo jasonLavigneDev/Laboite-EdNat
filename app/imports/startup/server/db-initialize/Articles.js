@@ -25,14 +25,19 @@ if (Articles.find().count() === 0) {
       array.fill(0);
       array.forEach(() => {
         const title = faker.lorem.sentence();
-        logServer(`Creating article ${title} for user ${userId}.`);
-        Articles.insert({
-          userId,
-          structure,
-          title,
-          description: faker.lorem.paragraph(),
-          content: faker.lorem.paragraphs(),
-        });
+        // make sure that description length is limited to 400
+        const description = faker.lorem.paragraph().substring(0, 399);
+        try {
+          Articles.insert({
+            userId,
+            structure,
+            title,
+            description,
+            content: faker.lorem.paragraphs(),
+          });
+        } catch (error) {
+          logServer(`Error creating article: ${error.reason || error.message || error}`);
+        }
       });
     });
   }
