@@ -44,8 +44,7 @@
         "link_personalData": "Données Personnelles",
         "content_personalData": "Texte des Données Personnelles",
         "maintenance": "Statut de maintenance",
-        "textMaintenance": "Raison de la maintenance",
-        "contact_address": "Adresse de contact"
+        "textMaintenance": "Raison de la maintenance"
       },
       "migrationLockedText": "La migration de la base de données est bloquée.",
       "updateAppsettings": {
