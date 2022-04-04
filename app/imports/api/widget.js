@@ -52,6 +52,9 @@ const styles = `
             .lb_widget.opened {
               display: none;
             }
+            .lb_widget.moving {
+              transform: scale(1.2);
+            }
       
             .lb_widget-container.closed {
               display: none;
@@ -71,9 +74,9 @@ const styles = `
                       bottom: 5px;
                       right: 5px;
               height: 600px;
-              max-height: 100%;
+              max-height: calc(100% - 10px);
               width: 500px;
-              max-width: 100%;
+              max-width: calc(100% - 10px);
               border-width: 2px;
               border-style: solid;
               border-color: #000091;
@@ -169,6 +172,8 @@ export const widget = () => `
     let firstY;
     let dragged = false;
     let userLogged = "disconnected"
+    let timer;
+    let touchduration = 200; 
 
     
     // ------------------ HEADER WIDGET ------------------
@@ -206,7 +211,7 @@ export const widget = () => `
     const iframeContainer = document.createElement('iframe');
     iframeContainer.setAttribute('class', 'lb_iframe-widget');
     iframeContainer.setAttribute('iframe-state', 'closed');
-    iframeContainer.setAttribute('src', '${Meteor.absoluteUrl()}');
+    iframeContainer.setAttribute('src', '${process.env.ROOT_URL}');
   
     // Create Container for Widget
     const widgetContainer = document.createElement('div');
@@ -341,6 +346,31 @@ export const widget = () => `
       false,
     );
   
+    const onlongtouch = () => {
+      openButton.addEventListener('touchmove', swipeIt, false);
+      openButton.setAttribute('class', 'lb_widget closed moving');
+    }; 
+
+    const ontouchend = (e) => {
+      console.log(dragged)
+      e.preventDefault();
+      if (timer){
+        clearTimeout(timer)
+      }
+      if(!dragged){
+        openRizimo()
+      } else {
+        openButton.setAttribute('class', 'lb_widget closed');
+        dragged = false
+      }
+      openButton.removeEventListener('touchmove', swipeIt, false);
+      openButton.removeEventListener(
+        'touchend',
+        ontouchend,
+        false,
+      );
+    }
+
     openButton.addEventListener(
       'touchstart',
       (e) => {
@@ -348,19 +378,20 @@ export const widget = () => `
         initX = openButton.offsetLeft;
         initY = openButton.offsetTop;
         const touch = e.touches;
-        firstX = touch[0].pageX;
-        firstY = touch[0].pageY;
+        timer = setTimeout(onlongtouch, touchduration); 
+        if(
+          (touch[0].pageX > initX) && (initX + 75 > touch[0].pageX) &&
+          (touch[0].pageY > initY) && (initY + 75 > touch[0].pageY)
+        ) {
+          firstX = touch[0].pageX;
+          firstY = touch[0].pageY;
   
-        this.addEventListener('touchmove', swipeIt, false);
-  
-        window.addEventListener(
-          'touchend',
-          (e) => {
-            e.preventDefault();
-            openButton.removeEventListener('touchmove', swipeIt, false);
-          },
-          false,
-        );
+          openButton.addEventListener(
+            'touchend',
+            ontouchend,
+            false,
+          );
+        }
       },
       false,
     );
