@@ -5,6 +5,7 @@ import SimpleSchema from 'simpl-schema';
 import { checkPaginationParams, isActive, getLabel } from '../../utils';
 import Groups from '../../groups/groups';
 import { getStructureIds } from '../structures';
+import { hasAdminRightOnStructure } from '../../structures/server/utils';
 import logServer from '../../logging';
 
 // publish additional fields for current user
@@ -267,42 +268,45 @@ const queryUsersByStructure = ({ search }, currentStructure) => {
 };
 
 // publish all users with same structure
-FindFromPublication.publish('users.byStructure', function usersStructure({ page, itemPerPage, search, ...rest }) {
-  const currentUser = Meteor.users.findOne(this.userId);
-  if (
-    !isActive(this.userId) ||
-    (!Roles.userIsInRole(this.userId, 'admin') &&
-      !Roles.userIsInRole(this.userId, 'adminStructure', currentUser.structure))
-  ) {
-    return this.ready();
-  }
-  try {
-    checkPaginationParams.validate({ page, itemPerPage, search });
-  } catch (err) {
-    logServer(`publish users.byStructure : ${err}`);
-    this.error(err);
-  }
+FindFromPublication.publish(
+  'users.byStructure',
+  function usersStructure({ selectedStructureId = null, page, itemPerPage, search, ...rest }) {
+    const currentUser = Meteor.users.findOne(this.userId);
+    const usedStructure = selectedStructureId || currentUser.structure;
+    const hasAdminRight = hasAdminRightOnStructure({ userId: this.userId, structureId: usedStructure });
 
-  try {
-    const query = queryUsersByStructure({ search }, currentUser.structure);
-    return Meteor.users.find(query, {
-      fields: Meteor.users.adminFields,
-      skip: itemPerPage * (page - 1),
-      limit: itemPerPage,
-      sort: { lastName: 1, firstName: 1 },
-      ...rest,
-    });
-  } catch (error) {
-    return this.ready();
-  }
-});
+    const isAuthorized = isActive(this.userId) && (Roles.userIsInRole(this.userId, 'admin') || hasAdminRight);
+
+    if (!isAuthorized) {
+      return this.ready();
+    }
+    try {
+      checkPaginationParams.validate({ page, itemPerPage, search });
+    } catch (err) {
+      logServer(`publish users.byStructure : ${err}`);
+      this.error(err);
+    }
+    try {
+      const query = queryUsersByStructure({ search }, usedStructure);
+      return Meteor.users.find(query, {
+        fields: Meteor.users.adminFields,
+        skip: itemPerPage * (page - 1),
+        limit: itemPerPage,
+        sort: { lastName: 1, firstName: 1 },
+        ...rest,
+      });
+    } catch (error) {
+      return this.ready();
+    }
+  },
+);
+
 // count structure users
 Meteor.methods({
-  'get_users.byStructure_count': function queryUsersStructureCount({ search }) {
+  'get_users.byStructure_count': function queryUsersStructureCount({ selectedStructureId = null, search }) {
     const currentUser = Meteor.users.findOne(this.userId);
     try {
-      const query = queryUsersByStructure({ search }, currentUser.structure);
-
+      const query = queryUsersByStructure({ search }, selectedStructureId || currentUser.structure);
       return Meteor.users
         .find(query, {
           sort: { lastName: 1 },

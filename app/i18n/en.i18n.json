@@ -1263,7 +1263,8 @@
       "loginInfo": "last login",
       "neverConnected": "Never connected",
       "undefined": "Not defined",
-      "sortByLastLogin": "Sort by last login date"
+      "sortByLastLogin": "Sort by last login date",
+      "chooseStructure": "Choose structure"
     }
   },
   "layouts": {

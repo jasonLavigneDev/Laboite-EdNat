@@ -8,6 +8,8 @@ import Fade from '@material-ui/core/Fade';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import i18n from 'meteor/universe:i18n';
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
 import ListItemText from '@material-ui/core/ListItemText';
 import ClearIcon from '@material-ui/icons/Clear';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
@@ -27,8 +29,10 @@ import { usePagination } from '../../utils/hooks';
 import Spinner from '../../components/system/Spinner';
 import SearchField from '../../components/system/SearchField';
 import { useAppContext } from '../../contexts/context';
+import CustomSelect from '../../components/admin/CustomSelect';
+import Structures from '../../../api/structures/structures';
 import UserAvatar from '../../components/users/UserAvatar';
-import { useStructure } from '../../../api/structures/utils';
+import { getStructure, useStructure } from '../../../api/structures/utils';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -54,20 +58,43 @@ const useStyles = makeStyles((theme) => ({
 
 const ITEM_PER_PAGE = 10;
 
-const AdminStructureUsersPage = () => {
+const AdminStructureUsersPage = ({ match }) => {
+  const isStructureSpecific = match.path === '/admin/structureusers';
+
   const classes = useStyles();
   const [{ userId, isMobile }] = useAppContext();
   const [search, setSearch] = useState('');
+
   const [sortByDate, setSortByDate] = useState(false);
   const structure = useStructure();
 
+  const [selectedStructureId, setSelectedStructureId] = useState(null);
+  useEffect(() => {
+    if (structure && structure._id) {
+      setSelectedStructureId(structure._id);
+    }
+  }, [structure]);
+
+  const { loadingStructures, structures } = useTracker(() => {
+    const subName = 'structures.with.all.childs';
+
+    const structuresHandle = Meteor.subscribe(subName, { structureId: structure ? structure._id : '' });
+    const _loadingStructures = !structuresHandle.ready();
+
+    const _structures = Structures.findFromPublication(subName).fetch();
+    return {
+      loadingStructures: _loadingStructures,
+      structures: _structures,
+    };
+  }, [selectedStructureId, selectedStructureId != null]);
   const { changePage, page, items, total } = usePagination(
     'users.byStructure',
-    { search, sort: sortByDate ? { lastLogin: -1 } : { lastName: 1 } },
+    { selectedStructureId, search, sort: sortByDate ? { lastLogin: -1 } : { lastName: 1 } },
     Meteor.users,
     {},
     { sort: sortByDate ? { lastLogin: -1 } : { lastName: 1 } },
     ITEM_PER_PAGE,
+    [selectedStructureId, selectedStructureId != null],
   );
   // track all structure admin users
   const { isLoading } = useTracker(() => {
@@ -143,15 +170,40 @@ const AdminStructureUsersPage = () => {
   return (
     <Fade in>
       <Container className={classes.root}>
-        {isLoading ? (
+        {isLoading || loadingStructures ? (
           <Spinner />
         ) : (
           <Grid container spacing={4}>
             <Grid item md={12}>
               <Typography variant={isMobile ? 'h6' : 'h4'}>
-                {i18n.__('pages.AdminStructureUsersPage.title')} {structure && structure.name}
+                {i18n.__('pages.AdminStructureUsersPage.title')}{' '}
+                {selectedStructureId && getStructure(selectedStructureId).name}
               </Typography>
             </Grid>
+            {isStructureSpecific && (
+              <Grid item md={12}>
+                {!loadingStructures ? (
+                  <FormControl variant="filled" fullWidth>
+                    <InputLabel id="structure-label">
+                      {i18n.__('pages.AdminStructureUsersPage.chooseStructure')}
+                    </InputLabel>
+                    <CustomSelect
+                      labelWidth={100}
+                      id="structure-select"
+                      value={selectedStructureId}
+                      error={false}
+                      onChange={(e) => {
+                        if (e.target.value.trim().length < 1) return;
+                        setSelectedStructureId(e.target.value);
+                      }}
+                      options={structures.map((opt) => ({ value: opt._id, label: opt.name }))}
+                    />
+                  </FormControl>
+                ) : (
+                  <Spinner />
+                )}
+              </Grid>
+            )}
             <Grid item xs={12} sm={12} md={6}>
               <SearchField
                 updateSearch={updateSearch}
@@ -232,6 +284,10 @@ const AdminStructureUsersPage = () => {
       </Container>
     </Fade>
   );
+};
+
+AdminStructureUsersPage.propTypes = {
+  match: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 export default AdminStructureUsersPage;

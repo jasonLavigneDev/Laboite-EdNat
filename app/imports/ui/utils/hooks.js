@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTracker } from 'meteor/react-meteor-data';
 
-export const usePagination = (subName, args = {}, Collection, query = {}, options = {}, itemPerPage) => {
+export const usePagination = (subName, args = {}, Collection, query = {}, options = {}, itemPerPage, deps = []) => {
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const subscription = useTracker(() =>
@@ -21,9 +21,12 @@ export const usePagination = (subName, args = {}, Collection, query = {}, option
   );
   const loading = useTracker(() => !subscription.ready());
 
+  const itemsTrackerDeps = [page, loading, total];
+  if (deps.length > 0) itemsTrackerDeps.push(...deps);
+
   const items = useTracker(
     () => Collection.findFromPublication(subName, query, { ...options, limit: itemPerPage }).fetch(),
-    [page, loading, total],
+    itemsTrackerDeps,
   );
 
   useEffect(() => {
