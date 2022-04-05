@@ -122,7 +122,7 @@ export const removeStructure = new ValidatedMethod({
   }).validator(),
 
   run({ structureId }) {
-    const isAdminOfStructure = hasAdminRightOnStructure({ userid: this.userId, structureId });
+    const isAdminOfStructure = hasAdminRightOnStructure({ userId: this.userId, structureId });
 
     // check if current user is active AND is admin
     const authorized = (isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin')) || isAdminOfStructure;
