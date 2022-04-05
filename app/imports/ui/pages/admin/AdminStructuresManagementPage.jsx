@@ -23,6 +23,7 @@ import Spinner from '../../components/system/Spinner';
 
 import { useObjectState } from '../../utils/hooks';
 import { getTree } from '../../../api/utils';
+import { useStructure } from '../../../api/structures/utils';
 import Structures from '../../../api/structures/structures';
 import AdminStructureSearchBar from '../../components/admin/AdminStructureSearchBar';
 import AdminStructureTreeView from '../../components/admin/AdminStructureTreeView';
@@ -78,6 +79,7 @@ const useModalStyles = makeStyles(() => ({
 const AdminStructureManagementPage = ({ match: { path } }) => {
   const [{ user }] = useAppContext();
 
+  const userStructure = useStructure();
   const isAppAdminMode = !path.startsWith('/admin/substructures');
 
   const [parentIds, setParentIds] = useState([]);
@@ -275,24 +277,26 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
               />
             </Box>
             <CardContent>
-              {isAppAdminMode && (
-                <Box display="flex" alignItems="center">
-                  <Box>
-                    <Typography variant="h6" onClick={() => onClickAddBtn({})} style={{ cursor: 'pointer' }}>
-                      {i18n.__('pages.AdminStructuresManagementPage.treeView.createStructure')}
-                    </Typography>
-                  </Box>
-                  <Box>
-                    <IconButton
-                      id="create-structure-btn"
-                      onClick={() => onClickAddBtn({})}
-                      title={i18n.__('pages.AdminStructuresManagementPage.treeView.createStructure')}
-                    >
-                      <AddBox />
-                    </IconButton>
-                  </Box>
+              <Box display="flex" alignItems="center">
+                <Box>
+                  <Typography
+                    variant="h6"
+                    onClick={() => onClickAddBtn(isAppAdminMode ? {} : userStructure)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    {i18n.__('pages.AdminStructuresManagementPage.treeView.createStructure')}
+                  </Typography>
                 </Box>
-              )}
+                <Box>
+                  <IconButton
+                    id="create-structure-btn"
+                    onClick={() => onClickAddBtn(isAppAdminMode ? {} : userStructure)}
+                    title={i18n.__('pages.AdminStructuresManagementPage.treeView.createStructure')}
+                  >
+                    <AddBox />
+                  </IconButton>
+                </Box>
+              </Box>
               {loading && <Spinner full />}
               <AdminStructureTreeView
                 treeData={getTree(filteredFlatData, isAppAdminMode ? null : user.structure)}
