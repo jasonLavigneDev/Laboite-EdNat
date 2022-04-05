@@ -4,6 +4,7 @@ import { useTracker } from 'meteor/react-meteor-data';
 import Fade from '@material-ui/core/Fade';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
+import i18n from 'meteor/universe:i18n';
 import FormControl from '@material-ui/core/FormControl';
 import Container from '@material-ui/core/Container';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -61,11 +62,9 @@ const AdminServicesByStructurePage = () => {
             <Card>
               <Grid item>
                 <FormControl variant="filled" fullWidth>
-                  <InputLabel
-                    htmlFor="structure"
-                    id="structure-label"
-                    ref={() => selectedStructure && selectedStructure.name}
-                  />
+                  <InputLabel id="structure-label">
+                    {i18n.__('pages.AdminStructureUsersPage.chooseStructure')}
+                  </InputLabel>
                   <CustomSelect
                     labelWidth={100}
                     value={selectedStructureId}

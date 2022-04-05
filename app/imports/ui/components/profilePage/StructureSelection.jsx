@@ -114,7 +114,7 @@ const StructureSelection = () => {
                 updateParentIdsList={updateParentIdsList}
                 expandedIds={expandedIds}
                 onlySelect
-                selectedId={selectedStructure}
+                selectedId={selectedStructure || ''}
               />
             </Box>
           </CardContent>
