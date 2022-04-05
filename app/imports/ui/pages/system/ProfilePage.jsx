@@ -112,7 +112,6 @@ const logoutTypeLabels = {
 };
 
 const ProfilePage = () => {
-  const [, dispatch] = useAppContext();
   const [userData, setUserData] = useState(defaultState);
   const [submitOk, setSubmitOk] = useState(false);
   const [errors, setErrors] = useObjectState(defaultState);
@@ -120,9 +119,9 @@ const ProfilePage = () => {
   const [structChecked, setStructChecked] = useState(false);
   const classes = useStyles();
   const { enableBlog, enableKeycloak } = Meteor.settings.public;
-  const [{ user, loadingUser, isMobile }] = useAppContext();
+  const [{ user, loadingUser, isMobile }, dispatch] = useAppContext();
   const userStructure = useStructure();
-  const [selectedStructure, setSelectedStructure] = useState(userStructure || {});
+  const [selectedStructure, setSelectedStructure] = useState(userStructure || null);
   useEffect(() => {
     (async () => {
       if (user.structure && user.structure.length > 0) {
@@ -130,7 +129,8 @@ const ProfilePage = () => {
         setSelectedStructure(structure);
       }
     })();
-  }, [userStructure]);
+  }, [userStructure, user.structure]);
+
   const usernameLabel = React.useRef(null);
   const history = useHistory();
   const [labelUsernameWidth, setLabelUsernameWidth] = React.useState(0);
@@ -584,7 +584,7 @@ const ProfilePage = () => {
               </Grid>
               <Grid item className={classes.maxWidth}>
                 <Typography>
-                  {userStructure && selectedStructure && selectedStructure.name
+                  {selectedStructure && selectedStructure.name
                     ? `${i18n.__('pages.ProfilePage.currentStructure')} ${selectedStructure.name}`
                     : i18n.__('pages.ProfilePage.noStructureCurrently')}
                 </Typography>
