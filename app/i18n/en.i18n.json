@@ -290,7 +290,7 @@
       "groupNotFound": "Nextcloud: ERROR getting group {$groupName}",
       "groupAdded": "Nextcloud: group {$groupName} added",
       "groupAddError": "Nextcloud: ERROR adding group {$groupName}",
-      "userAdded": "Nextcloud: user {$userId} added",
+      "userAdded": "Nextcloud: user {$userId} added (server {$ncURL})",
       "userAddError": "Nextcloud: ERROR adding user {$userId}",
       "groupFolderAssignError": "Nextcloud: could not assign group {$groupName} to folder {$folderName}",
       "groupFolderAdded": "Nextcloud: group folder {$folderName} added",

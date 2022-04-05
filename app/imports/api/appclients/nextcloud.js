@@ -8,7 +8,7 @@ const nextcloudPlugin = Meteor.settings.public.groupPlugins.nextcloud;
 const { nextcloud } = Meteor.settings;
 
 function ocsUrl(ncURL) {
-  const origin = ncURL.startsWith('http') ? ncURL : `http://${ncURL}`;
+  const origin = ncURL.startsWith('http') ? ncURL : `https://${ncURL}`;
   return new URL('/ocs/v1.php/cloud', origin).href;
 }
 
@@ -322,7 +322,27 @@ class NextcloudClient {
       });
   }
 
-  addUser(userData, ncURL = this.ncURL) {
+  addUser(userId) {
+    const user = Meteor.users.findOne(userId);
+    if (!user.nclocator) {
+      logServer(i18n.__('api.nextcloud.misingNCLocator'), 'error');
+    } else {
+      this.userExists(user.username, user.nclocator).then((resExists) => {
+        if (resExists === false) {
+          const ncData = {
+            userid: user.username,
+            password: '',
+            email: user.emails ? user.emails[0].address : '',
+            displayName: `${user.firstName} ${user.lastName}`,
+            language: user.language,
+          };
+          this._addUser(ncData, user.nclocator);
+        }
+      });
+    }
+  }
+
+  _addUser(userData, ncURL = this.ncURL) {
     const userId = userData.userid;
     return axios
       .post(`${ocsUrl(ncURL)}/users`, userData, {
@@ -335,7 +355,7 @@ class NextcloudClient {
       .then((response) => {
         const infos = response.data.ocs.meta;
         if (infos.status === 'ok') {
-          logServer(i18n.__('api.nextcloud.userAdded', { userId }));
+          logServer(i18n.__('api.nextcloud.userAdded', { userId, ncURL }));
         } else {
           logServer(
             `${i18n.__('api.nextcloud.userAddError', { userId })} (${infos.statuscode} - ${infos.message})`,
@@ -420,26 +440,13 @@ if (Meteor.isServer && nextcloudPlugin && nextcloudPlugin.enable) {
   Meteor.afterMethod('users.setActive', function nextAddUser({ userId }) {
     // create nextcloud user if needed
     // get nclocator for this user
-    const user = Meteor.users.findOne(userId);
-    if (!user.nclocator) {
-      logServer(i18n.__('api.nextcloud.misingNCLocator'), 'error');
-    } else {
-      nextClient.userExists(user.username, user.nclocator).then((resExists) => {
-        if (resExists === false) {
-          const ncData = {
-            userid: user.username,
-            password: '',
-            email: user.emails ? user.emails[0].address : '',
-            displayName: `${user.firstName} ${user.lastName}`,
-            language: user.language,
-          };
-          nextClient.addUser(ncData, user.nclocator).then((response) => {
-            if (response !== 'ok') {
-              logServer(i18n.__('api.nextcloud.addUserError'), 'error', this.userId);
-            }
-          });
-        }
-      });
+    nextClient.addUser(userId);
+  });
+
+  Meteor.afterMethod('users.userUpdated', function rcUserUpdated(params) {
+    const { userId, data } = params;
+    if (data.isActive && data.isActive === true) {
+      nextClient.addUser(userId);
     }
   });
 }

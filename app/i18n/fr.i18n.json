@@ -291,7 +291,7 @@
       "groupNotFound": "Nextcloud: ERREUR de récupération du groupe {$groupName}",
       "groupAdded": "Nextcloud: groupe {$groupName} ajouté",
       "groupAddError": "Nextcloud: ERREUR lors de l'ajout du groupe {$groupName}",
-      "userAdded": "Nextcloud: utilisateur {$userId} ajouté",
+      "userAdded": "Nextcloud: utilisateur {$userId} ajouté (serveur {$ncURL})",
       "userAddError": "Nextcloud: ERREUR lors de l'ajout de l'utilisateur {$userId}",
       "groupFolderAssignError": "Nextcloud: impossible d'assigner le groupe {$groupName} au répertoire {$folderName}",
       "groupFolderAdded": "Nextcloud: répertoire de groupe {$folderName} ajouté",
