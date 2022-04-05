@@ -9,7 +9,7 @@ import { getLabel, isActive } from '../utils';
 import Structures from './structures';
 import Services from '../services/services';
 import Articles from '../articles/articles';
-import { hasAdminRightOnStructure } from './server/utils';
+import { hasAdminRightOnStructure, isAStructureWithSameNameExistWithSameParent } from './server/utils';
 
 export const createStructure = new ValidatedMethod({
   name: 'structures.createStructure',
@@ -38,9 +38,9 @@ export const createStructure = new ValidatedMethod({
       throw new Meteor.Error('api.structures.createStructure.notPermitted', i18n.__('api.users.notPermitted'));
     }
 
-    const structuresWithSameNameOnSameLevel = Structures.find({ name, parentId });
+    const structuresWithSameNameOnSameLevel = isAStructureWithSameNameExistWithSameParent({ name, parentId });
 
-    if (structuresWithSameNameOnSameLevel.count() > 0) {
+    if (structuresWithSameNameOnSameLevel) {
       throw new Meteor.Error('api.structures.createStructure.notPermitted', i18n.__('api.structures.nameAlreadyTaken'));
     }
 
@@ -102,6 +102,15 @@ export const updateStructure = new ValidatedMethod({
         'api.structures.updateStructure.unknownStructure',
         i18n.__('api.structures.unknownStructure'),
       );
+    }
+
+    const structuresWithSameNameOnSameLevel = isAStructureWithSameNameExistWithSameParent({
+      name,
+      parentId: structure.parentId,
+    });
+
+    if (structuresWithSameNameOnSameLevel) {
+      throw new Meteor.Error('api.structures.createStructure.notPermitted', i18n.__('api.structures.nameAlreadyTaken'));
     }
 
     return Structures.update(
