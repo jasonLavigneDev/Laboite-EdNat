@@ -29,7 +29,7 @@ import Spinner from '../../components/system/Spinner';
 import { useAppContext } from '../../contexts/context';
 import LanguageSwitcher from '../../components/system/LanguageSwitcher';
 import debounce from '../../utils/debounce';
-import { useStructure } from '../../../api/structures/utils';
+import { getStructure, useStructure } from '../../../api/structures/utils';
 import Structures from '../../../api/structures/structures';
 import { useObjectState } from '../../utils/hooks';
 import { downloadBackupPublications, uploadBackupPublications } from '../../../api/articles/methods';
@@ -122,6 +122,15 @@ const ProfilePage = () => {
   const { enableBlog, enableKeycloak } = Meteor.settings.public;
   const [{ user, loadingUser, isMobile }] = useAppContext();
   const userStructure = useStructure();
+  const [selectedStructure, setSelectedStructure] = useState(userStructure || {});
+  useEffect(() => {
+    (async () => {
+      if (user.structure && user.structure.length > 0) {
+        const structure = await getStructure(user.structure);
+        setSelectedStructure(structure);
+      }
+    })();
+  }, [userStructure]);
   const usernameLabel = React.useRef(null);
   const history = useHistory();
   const [labelUsernameWidth, setLabelUsernameWidth] = React.useState(0);
@@ -575,8 +584,8 @@ const ProfilePage = () => {
               </Grid>
               <Grid item className={classes.maxWidth}>
                 <Typography>
-                  {userStructure && userStructure.name
-                    ? `${i18n.__('pages.ProfilePage.currentStructure')} ${userStructure.name}`
+                  {userStructure && selectedStructure && selectedStructure.name
+                    ? `${i18n.__('pages.ProfilePage.currentStructure')} ${selectedStructure.name}`
                     : i18n.__('pages.ProfilePage.noStructureCurrently')}
                 </Typography>
                 <Box display="flex" justifyContent="space-between">
