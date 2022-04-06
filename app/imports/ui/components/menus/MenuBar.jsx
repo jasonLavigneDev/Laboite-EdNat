@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import i18n from 'meteor/universe:i18n';
 import { useLocation, useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
@@ -87,13 +87,16 @@ const MenuBar = ({ mobile }) => {
   const history = useHistory();
   const classes = useStyles(mobile)();
   const T = i18n.createComponent('components.MenuBar');
+  const [currentLink, setCurrentLink] = useState('/');
 
-  const currentLink = links.find((link) => {
-    if (link.path === pathname || (pathname.search(link.path) > -1 && link.path !== '/')) {
-      return true;
-    }
-    return false;
-  });
+  useEffect(() => {
+    links.forEach((link) => {
+      if (link.path === pathname || (pathname.search(link.path) > -1 && link.path !== '/')) {
+        setCurrentLink(link.path);
+      }
+    });
+  }, [pathname]);
+
   const finalLinks = links.filter(({ path, hidden }) => {
     if (hidden || (path === '/publications' && !user.articlesEnable)) {
       return false;
@@ -112,6 +115,12 @@ const MenuBar = ({ mobile }) => {
     history.push(link.path);
   };
 
+  const initIndicator = (actions) => {
+    if (actions) {
+      setTimeout(actions.updateIndicator.bind(actions), 500);
+    }
+  };
+
   return (
     <Tabs
       className={classes.tabs}
@@ -119,7 +128,8 @@ const MenuBar = ({ mobile }) => {
         flexContainer: classes.flexContainer,
         indicator: classes.indicator,
       }}
-      value={currentLink ? currentLink.path : false}
+      action={initIndicator}
+      value={currentLink}
       indicatorColor="secondary"
       textColor="primary"
       aria-label="menu links"
