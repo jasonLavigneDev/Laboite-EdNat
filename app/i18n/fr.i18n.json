@@ -798,7 +798,15 @@
       "maintenance": "Options de maintenance",
       "toggleMaintenance": "Mettre le site en maintenance",
       "textMaintenance": "Raison de la maintenance",
-      "buttonTextMaintenance": "Valider le message"
+      "buttonTextMaintenance": "Valider le message",
+      "unlockMigration": {
+        "title": "Déblocage de la migration",
+        "mainText": "La migration de la base de données est actuellement vérouillée.",
+        "checkLogs": "Veuillez consulter les logs du serveur concernant l'échec de la migration précédente.",
+        "ask": "Voulez vous relancer la migration ?",
+        "cancel": "Non",
+        "confirm": "Oui"
+      }
     },
     "SignIn": {
       "appDescription": "Les services numériques partagés des agents de l&apos;Éducation nationale",

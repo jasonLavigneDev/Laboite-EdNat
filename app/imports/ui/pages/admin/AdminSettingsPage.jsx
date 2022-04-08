@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 import i18n from 'meteor/universe:i18n';
 import Container from '@material-ui/core/Container';
@@ -12,6 +12,11 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import Grid from '@material-ui/core/Grid';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
 
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
@@ -94,6 +99,7 @@ const AdminSettingsPage = ({ ready, appsettings }) => {
   const classes = useStyles();
   const [loading, setLoading] = useState(true);
   const [{ isMobile }] = useAppContext();
+  const [open, setOpen] = useState(false);
 
   const onChangeTab = (e, newTab) => {
     setSelected(newTab);
@@ -103,14 +109,28 @@ const AdminSettingsPage = ({ ready, appsettings }) => {
     return <Spinner full />;
   }
 
-  const onCheckMaintenance = () => {
+  useEffect(() => {
+    if (appsettings.textMaintenance !== msgMaintenance) setMsgMaintenance(appsettings.textMaintenance);
+  }, [appsettings]);
+
+  const switchMaintenance = (unlockMigration = false) => {
     setLoading(true);
-    switchMaintenanceStatus.call({}, (error) => {
+    setOpen(false);
+    switchMaintenanceStatus.call({ unlockMigration }, (error) => {
       setLoading(false);
       if (error) {
+        console.log(error);
         msg.error(error.message);
       }
     });
+  };
+
+  const onCheckMaintenance = () => {
+    if (appsettings.maintenance && appsettings.textMaintenance === 'api.appsettings.migrationLockedText') {
+      setOpen(true);
+    } else {
+      switchMaintenance();
+    }
   };
 
   const onButtonMaintenanceClick = () => {
@@ -128,6 +148,10 @@ const AdminSettingsPage = ({ ready, appsettings }) => {
   const onUpdateField = (event) => {
     const { value } = event.target;
     setMsgMaintenance(value);
+  };
+
+  const handleCloseDialog = () => {
+    setOpen(false);
   };
 
   const buttonIsActive = !!(
@@ -203,6 +227,34 @@ const AdminSettingsPage = ({ ready, appsettings }) => {
             />
           </Grid>
         </Paper>
+        <Dialog
+          open={open}
+          onClose={handleCloseDialog}
+          aria-labelledby="alert-dialog-migration-title"
+          aria-describedby="alert-dialog-migration-description"
+        >
+          <DialogContent>
+            <DialogTitle id="alert-dialog-migration-title">
+              {i18n.__('pages.AdminSettingsPage.unlockMigration.title')}
+            </DialogTitle>
+            <DialogContentText id="alert-dialog-migration-description">
+              {i18n.__('pages.AdminSettingsPage.unlockMigration.mainText')}
+              <br />
+              {i18n.__('pages.AdminSettingsPage.unlockMigration.checkLogs')}
+              <br />
+              <br />
+              {i18n.__('pages.AdminSettingsPage.unlockMigration.ask')}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => switchMaintenance(true)} color="primary" autoFocus>
+              {i18n.__('pages.AdminSettingsPage.unlockMigration.confirm')}
+            </Button>
+            <Button onClick={() => switchMaintenance()} color="primary">
+              {i18n.__('pages.AdminSettingsPage.unlockMigration.cancel')}
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Container>
     </Fade>
   );

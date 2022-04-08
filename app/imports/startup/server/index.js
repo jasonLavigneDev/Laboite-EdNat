@@ -1,6 +1,7 @@
 import { Migrations } from 'meteor/percolate:migrations';
 import { Meteor } from 'meteor/meteor';
 import { WebApp } from 'meteor/webapp';
+import { checkMigrationStatus } from '../../api/appsettings/methods';
 
 // import i18n translation files
 import '../locales';
@@ -24,7 +25,6 @@ import './db-initialize/Tags';
 import './db-initialize/Articles';
 import './db-initialize/AppSettings';
 import './db-initialize/PersonalSpaces';
-import checkMigrationStatus from './db-initialize/utils';
 
 Meteor.startup(() => {
   Migrations.migrateTo('latest');
