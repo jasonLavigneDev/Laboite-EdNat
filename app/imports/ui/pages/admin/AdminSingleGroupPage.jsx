@@ -33,7 +33,7 @@ import { createGroup, updateGroup } from '../../../api/groups/methods';
 import Groups from '../../../api/groups/groups';
 import GroupsUsersList from '../../components/admin/GroupUsersList';
 import { useAppContext } from '../../contexts/context';
-import { CustomToolbar } from '../../components/system/CustomQuill';
+import { CustomToolbarArticle } from '../../components/system/CustomQuill';
 import '../../utils/QuillVideo';
 import AvatarPicker from '../../components/users/AvatarPicker';
 
@@ -85,13 +85,30 @@ const defaultState = {
 };
 
 const quillOptions = {
-  clipboard: {
-    matchVisual: false,
-  },
   toolbar: {
     container: '#quill-toolbar',
   },
+  clipboard: {
+    matchVisual: false,
+  },
 };
+
+const formats = [
+  'header',
+  'font',
+  'size',
+  'bold',
+  'italic',
+  'underline',
+  'strike',
+  'blockquote',
+  'list',
+  'bullet',
+  'indent',
+  'link',
+  'image',
+  'color',
+];
 
 const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
   const [, dispatch] = useAppContext();
@@ -365,8 +382,14 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
             </Grid>
             <div className={classes.wysiwyg}>
               <InputLabel htmlFor="content">{i18n.__('pages.AdminSingleGroupPage.content')}</InputLabel>
-              <CustomToolbar />
-              <ReactQuill id="content" value={content} onChange={onUpdateRichText} modules={quillOptions} />
+              <CustomToolbarArticle withMedia={false} withWebcam={false} />
+              <ReactQuill
+                id="content"
+                value={content}
+                onChange={onUpdateRichText}
+                modules={quillOptions}
+                formats={formats}
+              />
             </div>
             {params._id ? (
               // user management is not possible when creating a new group

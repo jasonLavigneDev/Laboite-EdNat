@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
 import MaterialTable from '@material-table/core';
@@ -41,6 +41,8 @@ const GroupsUsersList = (props) => {
     admin: 'users.setAdminOf',
   };
 
+  const preventRerender = useCallback((rowData) => rowData.emails.map((email) => email.address).join(', '), []);
+
   const columns = [
     { title: i18n.__('components.GroupUsersList.columnUsername'), field: 'username', defaultSort: 'asc' },
     { title: i18n.__('components.GroupUsersList.columnFirstName'), field: 'firstName' },
@@ -48,7 +50,7 @@ const GroupsUsersList = (props) => {
     {
       title: i18n.__('components.GroupUsersList.columnEmail'),
       field: 'emails',
-      render: (rowData) => rowData.emails.map((email) => email.address).join(', '),
+      render: preventRerender,
     },
   ];
 

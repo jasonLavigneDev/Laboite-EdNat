@@ -126,31 +126,4 @@ CustomToolbarArticle.propTypes = {
   withWebcam: PropTypes.bool,
 };
 
-function CustomToolbar() {
-  return (
-    <div id="quill-toolbar">
-      <Tooltip
-        id="header-tooltip"
-        arrow
-        title={i18n.__('components.CustomQuill.header')}
-        aria-label={i18n.__('components.CustomQuill.header')}
-      >
-        <span className="ql-formats">
-          <select className="ql-header" defaultValue="">
-            <option value="1" aria-labelledby="header-tooltip" />
-            <option value="2" aria-labelledby="header-tooltip" />
-            <option value="3" aria-labelledby="header-tooltip" />
-            <option aria-labelledby="header-tooltip" />
-          </select>
-        </span>
-      </Tooltip>
-      <span className="ql-formats">
-        {['bold', 'italic', 'underline', 'link'].map((item) => generateToolTipButton(item))}
-      </span>
-      <span className="ql-formats">{['ordered', 'bullet'].map((item) => generateToolTipButton(item))}</span>
-      <span className="ql-formats">{generateToolTipButton('clean')}</span>
-    </div>
-  );
-}
-
-export { CustomToolbarArticle, CustomToolbar };
+export { CustomToolbarArticle };
