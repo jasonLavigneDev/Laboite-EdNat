@@ -117,7 +117,7 @@ function HelpPage() {
                 <AccordionSummary
                   aria-controls={`zone-${category.name}`}
                   id={`expand-${category.name}`}
-                  zoneClasses={{
+                  className={{
                     expanded: zoneClasses.expansionpanelsummaryexpanded,
                     content: zoneClasses.expansionpanelsummarycontent,
                   }}
