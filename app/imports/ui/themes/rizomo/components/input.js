@@ -68,7 +68,7 @@ export const inputOverrides = (palette) => ({
         padding: '28px 13px',
         color: palette.background.paper,
       },
-      '& .MuiFilledInput-adornedStart': {
+      '& .MuiFilledInput-adornedStart, & .MuiOutlinedInput-adornedStart': {
         paddingLeft: 0,
       },
       paddingLeft: '0 !important',
