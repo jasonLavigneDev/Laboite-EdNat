@@ -45,6 +45,9 @@ function HelpPage() {
       display: 'flex',
       flexDirection: 'column',
     },
+    container: {
+      minHeight: 'calc(100vh - 245px)',
+    },
     grid: {
       display: 'flex',
       padding: 1,
@@ -103,12 +106,10 @@ function HelpPage() {
 
   return (
     <Fade in>
-      <Container>
+      <Container className={classes.container}>
         <Grid container spacing={4} direction={isMobile ? 'column' : 'row'} className={classes.grid}>
           <Grid item md={12}>
-            <Typography variant={isMobile ? 'h5' : 'h4'}>{`${i18n.__('pages.HelpPage.title')} ${
-              Meteor.settings.public.appName
-            }`}</Typography>
+            <Typography variant={isMobile ? 'h5' : 'h4'}>{i18n.__('pages.HelpPage.title')}</Typography>
           </Grid>
           {helps.map((category) => (
             <Grid item md={12}>
