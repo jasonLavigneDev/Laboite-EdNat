@@ -112,8 +112,8 @@ function HelpPage() {
             <Typography variant={isMobile ? 'h5' : 'h4'}>{i18n.__('pages.HelpPage.title')}</Typography>
           </Grid>
           {helps.map((category) => (
-            <Grid item md={12}>
-              <Accordion key={category.name} className={zoneClasses.expansionpanel} expanded>
+            <Grid item md={12} key={category.name}>
+              <Accordion className={zoneClasses.expansionpanel} expanded>
                 <AccordionSummary
                   aria-controls={`zone-${category.name}`}
                   id={`expand-${category.name}`}
