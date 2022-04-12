@@ -11,6 +11,7 @@ import Groups from '../groups/groups';
 import Services from '../services/services';
 import logServer from '../logging';
 import UserBookmarks from '../userBookmarks/userBookmarks';
+import StructureSpaces from '../structurespaces/structurespaces';
 
 const addItem = (userId, item) => {
   const currentPersonalSpace = PersonalSpaces.findOne({ userId });
@@ -287,6 +288,33 @@ export const backToDefaultElement = new ValidatedMethod({
       default:
         throw new Meteor.Error('api.personalspaces.backToDefaultElement.unknownType');
     }
+  },
+});
+
+export const generateDefaultPersonalSpace = new ValidatedMethod({
+  name: 'personalspaces.generateDefaultPersonalSpace',
+  validate: null,
+
+  run() {
+    // check if active and logged in
+    if (!isActive(this.userId)) {
+      throw new Meteor.Error('api.personalspaces.backToDefaultElement.notPermitted', i18n.__('api.users.notPermitted'));
+    }
+
+    const user = Meteor.users.findOne({ _id: this.userId });
+    const { structure } = user;
+    const defaultSpace = StructureSpaces.findOne({ structureId: structure });
+
+    // Copy the personal space from the defualt structure one
+    PersonalSpaces.update(
+      { userId: this.userId },
+      {
+        $set: {
+          unsorted: [],
+          sorted: defaultSpace.sorted,
+        },
+      },
+    );
   },
 });
 

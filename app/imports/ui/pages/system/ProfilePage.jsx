@@ -279,6 +279,15 @@ const ProfilePage = () => {
           msg.error(error.message);
         }
       });
+      if (!user.advancedPersonalPage) {
+        Meteor.call('personalspaces.generateDefaultPersonalSpace', {}, (error) => {
+          if (error) {
+            msg.error(error.message);
+          } else {
+            msg.success(i18n.__('pages.ProfilePage.personalSpaceGenerated'));
+          }
+        });
+      }
     }
     if (userData.logoutType !== user.logoutType) {
       modifications = true;
@@ -354,6 +363,19 @@ const ProfilePage = () => {
           msg.error(error.message);
         }
       });
+      if (
+        !userData.advancedPersonalPage &&
+        user.advancedPersonalPage &&
+        confirm(i18n.__('pages.ProfilePage.confirmResetPersonalSpace')) // eslint-disable-line
+      ) {
+        Meteor.call('personalspaces.generateDefaultPersonalSpace', {}, (error) => {
+          if (error) {
+            msg.error(error.message);
+          } else {
+            msg.success(i18n.__('pages.ProfilePage.personalSpaceGenerated'));
+          }
+        });
+      }
     }
     if (userData.articlesEnable !== user.articlesEnable) {
       modifications = true;
@@ -363,6 +385,7 @@ const ProfilePage = () => {
         }
       });
     }
+
     if (modifications === false) msg.info(i18n.__('pages.ProfilePage.noModifications'));
   };
 

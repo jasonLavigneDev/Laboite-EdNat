@@ -9,6 +9,7 @@ import Structures from './structures';
 import { hasAdminRightOnStructure, isAStructureWithSameNameExistWithSameParent } from './utils';
 import Services from '../services/services';
 import Articles from '../articles/articles';
+import StructureSpaces from '../structurespaces/structurespaces';
 
 export const createStructure = new ValidatedMethod({
   name: 'structures.createStructure',
@@ -166,7 +167,6 @@ export const removeStructure = new ValidatedMethod({
         });
       }
     }
-
     return Structures.remove(structureId);
   },
 });

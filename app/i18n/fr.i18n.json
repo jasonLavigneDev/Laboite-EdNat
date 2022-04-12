@@ -99,7 +99,11 @@
       "hasChildren": "La structure possède des enfants, elle n'est pas supprimable.",
       "hasServices": "La structure possède au moins un service, elle n'est pas supprimable",
       "hasUsers": "La structure possède au moins un utilisateur, elle n'est pas supprimable.",
+<<<<<<< 71-user-profile-with-3-levels-of-configuration
       "nameAlreadyTaken": "Une structure portant le même nom existe déjà dans le même niveau, sans prendre en compte la casse.",
+=======
+      "nameAlreadyTaken": "Une structure portant le même nom existe déjà dans le même niveau. Sans prendre en compte la casse.",
+>>>>>>> 337f198 feat(user): add default personal space
       "name": "Libellé",
       "labels": {
         "id": "Id de Structure",
@@ -522,6 +526,7 @@
       "menuAdminBackHome": "Retour à l'espace perso",
       "menuUserStructure": "Gestion des Structures",
       "menuAdminOfStructures": "Gestion des sous-structures"
+      "menuAdminStructureSpaces": "Espace perso par défaut",
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Votre compte n'a pas été activé",
@@ -942,6 +947,8 @@
       "noSelectedStructure": "Aucune structure sélectionnée",
       "noCurrentStructure": "Vous n'avez pas de structure de rattachement pour le moment",
       "chooseAttachementStructure": "Choose your attachement structure"
+      "personalSpaceGenerated": "Nouvel espace personnel généré",
+      "confirmResetPersonalSpace": "Votre espace personnel va être remis à zéro pour retrouver celui par défaut"
     },
     "NotFound": {
       "backButtonLabel": "Retour",

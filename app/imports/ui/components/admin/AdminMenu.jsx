@@ -17,6 +17,7 @@ import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import HttpIcon from '@material-ui/icons/Http';
 import LocalOfferIcon from '@material-ui/icons/LocalOffer';
 import SettingsInputComponentIcon from '@material-ui/icons/SettingsInputComponent';
+import RestorePageIcon from '@material-ui/icons/RestorePage';
 import SettingsIcon from '@material-ui/icons/Settings';
 import CategoryIcon from '@material-ui/icons/Category';
 import HomeIcon from '@material-ui/icons/Home';
@@ -148,6 +149,12 @@ export default function AdminMenu() {
       path: '/admin/substructures',
       content: 'menuAdminOfStructures',
       icon: <BusinessIcon />,
+      hidden: !isAdminStructure,
+    },
+    {
+      path: '/admin/structurespaces',
+      content: 'menuAdminStructureSpaces',
+      icon: <RestorePageIcon />,
       hidden: !isAdminStructure,
     },
     {
