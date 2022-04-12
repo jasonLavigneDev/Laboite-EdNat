@@ -48,8 +48,12 @@ const useStyles = makeStyles((theme) => ({
   },
   buttonGroup: {
     display: 'flex',
-    justifyContent: 'space-between',
     marginTop: '10px',
+    justifyContent: 'center',
+  },
+  button: {
+    marginLeft: '5%',
+    marginRight: '5%',
   },
 }));
 
@@ -407,11 +411,11 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
               </>
             ) : null}
             <div className={classes.buttonGroup}>
-              <Button variant="contained" onClick={cancelForm}>
+              <Button variant="contained" onClick={cancelForm} className={classes.button}>
                 {i18n.__('pages.AdminSingleGroupPage.cancel')}
               </Button>
 
-              <Button variant="contained" color="primary" onClick={submitUpdateGroup}>
+              <Button variant="contained" color="primary" onClick={submitUpdateGroup} className={classes.button}>
                 {params._id ? i18n.__('pages.AdminSingleGroupPage.update') : i18n.__('pages.AdminSingleGroupPage.save')}
               </Button>
             </div>
