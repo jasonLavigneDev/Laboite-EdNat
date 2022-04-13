@@ -18,6 +18,7 @@ import { createRoleNotification, createRequestNotification } from '../../notific
 import logServer from '../../logging';
 import { getRandomNCloudURL } from '../../nextcloud/methods';
 import Structures from '../../structures/structures';
+import Nextcloud from '../../nextcloud/nextcloud';
 
 if (Meteor.settings.public.enableKeycloak === true) {
   const { whiteDomains } = Meteor.settings.private;
@@ -180,6 +181,13 @@ export const removeUser = new ValidatedMethod({
     });
     Meteor.roleAssignment.remove({ 'user._id': userId });
     PersonalSpaces.remove({ userId });
+
+    const element = Nextcloud.findOne({ url: user.nclocator });
+
+    if (element !== undefined) {
+      element.count -= 1;
+      Nextcloud.update({ url: user.nclocator }, { $set: { count: element.count } });
+    }
     Meteor.users.remove({ _id: userId });
   },
 });
