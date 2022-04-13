@@ -298,15 +298,35 @@ export const generateDefaultPersonalSpace = new ValidatedMethod({
   run() {
     // check if active and logged in
     if (!isActive(this.userId)) {
-      throw new Meteor.Error('api.personalspaces.backToDefaultElement.notPermitted', i18n.__('api.users.notPermitted'));
+      throw new Meteor.Error(
+        'api.personalspaces.generateDefaultPersonalSpace.notPermitted',
+        i18n.__('api.users.notPermitted'),
+      );
     }
 
     const user = Meteor.users.findOne({ _id: this.userId });
     const { structure } = user;
     const defaultSpace = StructureSpaces.findOne({ structureId: structure });
 
-    // Copy the personal space from the defualt structure one
-    PersonalSpaces.update(
+    // add all ervices to favorites in user schema
+
+    let servicesAdded = [];
+    if (defaultSpace && defaultSpace.sorted) {
+      defaultSpace.sorted.forEach(({ elements = [] }) => {
+        if (elements) {
+          servicesAdded = [
+            ...servicesAdded,
+            ...elements.filter((item) => item.type === 'service').map((service) => service.element_id),
+          ];
+        }
+      });
+    }
+    Meteor.users.update(this.userId, {
+      $set: { favServices: servicesAdded },
+    });
+
+    // Copy the personal space from the default structure one
+    return PersonalSpaces.update(
       { userId: this.userId },
       {
         $set: {

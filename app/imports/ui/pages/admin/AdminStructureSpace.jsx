@@ -37,6 +37,7 @@ const AdminStructureSpace = () => {
   const classes = useStyles();
 
   const [selectedStructureId, setSelectedStructureId] = useState();
+  const [isSaving, setIsSaving] = useState(false);
 
   const updateSelect = (e) => {
     if (e.target.value.trim().length < 1) return;
@@ -93,16 +94,15 @@ const AdminStructureSpace = () => {
   }, [selectedStructureId, loading]);
 
   const handleEditionData = (data) => {
+    setIsSaving(true);
     Meteor.call('structurespaces.updateStructureSpace', { data }, (err) => {
+      setIsSaving(false);
       if (err) {
         msg.error(err.reason);
-      } else {
-        msg.success('saved');
       }
     });
   };
 
-  console.log(servicesList);
   return (
     <>
       {loading ? (
@@ -110,6 +110,7 @@ const AdminStructureSpace = () => {
       ) : (
         <Fade in>
           <Container style={{ overflowX: 'auto' }}>
+            {isSaving && <Spinner full />}
             <FormControl variant="filled" fullWidth>
               <InputLabel id="structure-label">{i18n.__('pages.AdminStructureUsersPage.chooseStructure')}</InputLabel>
               <CustomSelect
@@ -133,13 +134,9 @@ const AdminStructureSpace = () => {
                     url,
                   }))}
                   setList={() => null}
-                  //   onStart={suspendUpdate}
-                  //   onEnd={updateList}
                   animation={150}
                   forceFallback
-                  //   fallbackClass={classes.ghost}
                   group={{ name: 'zone', put: true }}
-                  //   handle={`.${classes.handle}`}
                   sort={false}
                 >
                   {servicesList.map((service) => (

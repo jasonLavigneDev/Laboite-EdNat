@@ -283,8 +283,6 @@ const ProfilePage = () => {
         Meteor.call('personalspaces.generateDefaultPersonalSpace', {}, (error) => {
           if (error) {
             msg.error(error.message);
-          } else {
-            msg.success(i18n.__('pages.ProfilePage.personalSpaceGenerated'));
           }
         });
       }
