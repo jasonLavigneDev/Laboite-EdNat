@@ -76,6 +76,9 @@ export const removeNextcloudURL = new ValidatedMethod({
         i18n.__('api.nextcloud.adminGroupNeeded'),
       );
     }
+    if (ncloud.count > 0) {
+      throw new Meteor.Error('api.nextcloud.removeNextcloudURL.notPermitted', i18n.__('api.nextcloud.mustNotBeUsed'));
+    }
 
     Nextcloud.remove({ url });
 

@@ -309,7 +309,8 @@
       "badConfig": "Error accessing Nextcloud, check settings and make sure 'Group Folders' app is active",
       "configOk": "connection to Nextcloud API successfull",
       "misingNCLocator": "nextcloud instance (nclocator) is missing.",
-      "apiError": "Error while accessing Nextcloud API"
+      "apiError": "Error while accessing Nextcloud API",
+      "mustNotBeUsed": "This url is used by at least one user and therefore cannot be deleted."
     },
     "rocketChat": {
       "initClient": "RocketChat: API client initialized",
