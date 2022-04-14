@@ -19,6 +19,7 @@ import NoStructureSelected from '../components/system/NoStructureSelected';
 import AdminMenu from '../components/admin/AdminMenu';
 import StructureAdminRoute from '../components/system/StructureAdminRoute';
 import { useLayoutStyles } from './MainLayout';
+import AdminHelpPage from '../pages/admin/AdminHelpPage';
 
 // pages
 const NotificationsDisplay = lazy(() => import('../components/notifications/NotificationsDisplay'));
@@ -206,6 +207,13 @@ function AdminLayout() {
                       exact
                       path="/admin/structures"
                       component={AdminStructureManagementPage}
+                    />
+                    <AdminRoute
+                      userId={userId}
+                      loadingUser={loadingUser}
+                      exact
+                      path="/admin/helps"
+                      component={AdminHelpPage}
                     />
                     <Route component={NotFound} />
                   </Switch>

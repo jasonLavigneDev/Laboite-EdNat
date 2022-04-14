@@ -18,6 +18,7 @@ import CustomToast from '../components/system/CustomToast';
 import { useAppContext } from '../contexts/context';
 import NoStructureSelected from '../components/system/NoStructureSelected';
 import SiteInMaintenance from '../components/system/SiteInMaintenance';
+import Footer from '../components/menus/Footer';
 
 // pages
 const ServicesPage = lazy(() => import('../pages/services/ServicesPage'));
@@ -100,82 +101,87 @@ function MainLayout({ appsettings, ready }) {
   }, [location]);
 
   return (
-    <div className={classes.root}>
-      <SkipLink />
-      <TopBar />
-      {loadingUser && ready ? (
-        <Spinner full />
-      ) : (
-        <main className={classes.content} id="main">
-          {appsettings.maintenance && isAdmin ? (
-            <Alert className={classes.alertMaintenance} variant="filled" severity="error">
-              {i18n.__(`layouts.MainLayout.alertMaintenance`)}
-              {appsettings.textMaintenance ? `: ${i18n.__(appsettings.textMaintenance)}` : null}
-            </Alert>
-          ) : null}
-          <Suspense fallback={<Spinner />}>
-            {!appsettings.maintenance || isAdmin ? (
-              user.isActive ? (
-                user.structure !== undefined ? (
-                  <Switch>
-                    <Route exact path="/" component={PersonalPage} />
-                    <Route exact path="/profile" component={ProfilePage} />
-                    <Route exact path="/services" component={ServicesPage} />
-                    <Route exact path="/structure" component={ServicesPage} />
-                    <Route exact path="/help" component={HelpPage} />
+    <>
+      <div className={classes.root}>
+        <SkipLink />
+        <TopBar />
+        {loadingUser && ready ? (
+          <Spinner full />
+        ) : (
+          <main className={classes.content} id="main">
+            {appsettings.maintenance && isAdmin ? (
+              <Alert className={classes.alertMaintenance} variant="filled" severity="error">
+                {i18n.__(`layouts.MainLayout.alertMaintenance`)}
+                {appsettings.textMaintenance ? `: ${i18n.__(appsettings.textMaintenance)}` : null}
+              </Alert>
+            ) : null}
+            <Suspense fallback={<Spinner />}>
+              {!appsettings.maintenance || isAdmin ? (
+                user.isActive ? (
+                  user.structure !== undefined ? (
+                    <Switch>
+                      <Route exact path="/" component={PersonalPage} />
+                      <Route exact path="/profile" component={ProfilePage} />
+                      <Route exact path="/services" component={ServicesPage} />
+                      <Route exact path="/structure" component={ServicesPage} />
+                      <Route exact path="/help" component={HelpPage} />
 
-                    {!disabledFeatures.blog && <Route exact path="/publications" component={ArticlesPage} />}
-                    {!disabledFeatures.blog && <Route exact path="/publications/new" component={EditArticlePage} />}
-                    {!disabledFeatures.blog && <Route exact path="/publications/:slug" component={EditArticlePage} />}
+                      {!disabledFeatures.blog && <Route exact path="/publications" component={ArticlesPage} />}
+                      {!disabledFeatures.blog && <Route exact path="/publications/new" component={EditArticlePage} />}
+                      {!disabledFeatures.blog && <Route exact path="/publications/:slug" component={EditArticlePage} />}
 
-                    <Route exact path="/services/:slug" component={SingleServicePage} />
-                    <Route exact path="/structure/:slug" component={SingleServicePage} />
-                    {!disabledFeatures.groups && <Route exact path="/groups" component={GroupsPage} />}
-                    {!disabledFeatures.groups && <Route exact path="/groups/:slug" component={SingleGroupPage} />}
-                    {!disabledFeatures.groups && (
-                      <Route exact path="/groups/:slug/addressbook" component={AddressBook} />
-                    )}
-                    {!disabledFeatures.groups && <Route exact path="/groups/:slug/events" component={EventsPage} />}
-                    {!disabledFeatures.groups && <Route exact path="/groups/:slug/poll" component={PollPage} />}
-                    {!disabledFeatures.groups && (
-                      <Route exact path="/groups/:slug/bookmarks" component={BookmarksPage} />
-                    )}
-                    {!disabledFeatures.groups && <Route exact path="/admingroups" component={AdminGroupsPage} />}
-                    {!disabledFeatures.groups && (
-                      <Route exact path="/admingroups/new" component={AdminSingleGroupPage} />
-                    )}
-                    {!disabledFeatures.groups && (
-                      <Route exact path="/admingroups/:_id" component={AdminSingleGroupPage} />
-                    )}
-                    <Route exact path="/medias" component={MediaStoragePage} />
-                    <Route exact path="/userBookmarks" component={UserBookmarksPage} />
-                    <Route component={NotFound} />
-                  </Switch>
+                      <Route exact path="/services/:slug" component={SingleServicePage} />
+                      <Route exact path="/structure/:slug" component={SingleServicePage} />
+                      {!disabledFeatures.groups && <Route exact path="/groups" component={GroupsPage} />}
+                      {!disabledFeatures.groups && <Route exact path="/groups/:slug" component={SingleGroupPage} />}
+                      {!disabledFeatures.groups && (
+                        <Route exact path="/groups/:slug/addressbook" component={AddressBook} />
+                      )}
+                      {!disabledFeatures.groups && <Route exact path="/groups/:slug/events" component={EventsPage} />}
+                      {!disabledFeatures.groups && <Route exact path="/groups/:slug/poll" component={PollPage} />}
+                      {!disabledFeatures.groups && (
+                        <Route exact path="/groups/:slug/bookmarks" component={BookmarksPage} />
+                      )}
+                      {!disabledFeatures.groups && <Route exact path="/admingroups" component={AdminGroupsPage} />}
+                      {!disabledFeatures.groups && (
+                        <Route exact path="/admingroups/new" component={AdminSingleGroupPage} />
+                      )}
+                      {!disabledFeatures.groups && (
+                        <Route exact path="/admingroups/:_id" component={AdminSingleGroupPage} />
+                      )}
+                      <Route exact path="/medias" component={MediaStoragePage} />
+                      <Route exact path="/userBookmarks" component={UserBookmarksPage} />
+                      <Route component={NotFound} />
+                    </Switch>
+                  ) : (
+                    <Switch>
+                      <Route exact path="/profile" component={ProfilePage} />
+                      <Route component={NoStructureSelected} />
+                    </Switch>
+                  )
                 ) : (
                   <Switch>
                     <Route exact path="/profile" component={ProfilePage} />
-                    <Route component={NoStructureSelected} />
+                    <Route component={NotValidatedMessage} />
                   </Switch>
                 )
               ) : (
                 <Switch>
-                  <Route exact path="/profile" component={ProfilePage} />
-                  <Route component={NotValidatedMessage} />
+                  <Route exact path="/" component={SiteInMaintenance} />
+                  <Route component={SiteInMaintenance} />
                 </Switch>
-              )
-            ) : (
-              <Switch>
-                <Route exact path="/" component={SiteInMaintenance} />
-                <Route component={SiteInMaintenance} />
-              </Switch>
-            )}
-          </Suspense>
-          {isMobile && <MobileMenu />}
-        </main>
-      )}
-      <NotificationsDisplay />
-      <CustomToast />
-    </div>
+              )}
+            </Suspense>
+            {isMobile && <MobileMenu />}
+          </main>
+        )}
+        <NotificationsDisplay />
+        <CustomToast />
+      </div>
+      <Switch>
+        <Route exact path="/help" component={Footer} />
+      </Switch>
+    </>
   );
 }
 

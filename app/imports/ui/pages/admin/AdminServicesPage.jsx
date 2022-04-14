@@ -15,6 +15,7 @@ import Services from '../../../api/services/services';
 import { removeService } from '../../../api/services/methods';
 import setMaterialTableLocalization from '../../components/initMaterialTableLocalization';
 import { useStructure } from '../../../api/structures/utils';
+import { handleResult } from '../../../api/utils';
 
 const { offlinePage } = Meteor.settings.public;
 
@@ -124,22 +125,12 @@ function AdminServicesPage({ services, loading, structureMode }) {
               ]}
               editable={{
                 onRowDelete: (oldData) =>
-                  new Promise((resolve, reject) => {
-                    removeService.call(
-                      {
-                        serviceId: oldData._id,
-                      },
-                      (err, res) => {
-                        if (err) {
-                          msg.error(err.reason);
-                          reject(err);
-                        } else {
-                          msg.success(i18n.__('api.methods.operationSuccessMsg'));
-                          resolve(res);
-                        }
-                      },
-                    );
-                  }),
+                  removeService.call(
+                    {
+                      serviceId: oldData._id,
+                    },
+                    handleResult,
+                  ),
               }}
             />
           </Container>

@@ -336,5 +336,19 @@
       "name": "Autre",
       "parentId": null
     }
+  ],
+  "defaultHelps": [
+    {
+      "title": "Commencer avec LaBoite",
+      "content": "https://tube-dijon.beta.education.fr/videos/embed/d72319ee-1f67-41ac-aa4d-ece4f8ad1478"
+    },
+    {
+      "title": "Comment utiliser Mézig",
+      "content": "https://tube-dijon.beta.education.fr/videos/embed/57752b90-5b36-4b3f-9b83-1b7464e41a5f"
+    },
+    {
+      "title": "Créer et administrer un groupe",
+      "content": "https://tube-dijon.beta.education.fr/videos/embed/d024f709-8b65-4f69-b058-22569f2b881d"
+    }
   ]
 }

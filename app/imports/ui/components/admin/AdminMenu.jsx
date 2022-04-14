@@ -20,6 +20,7 @@ import SettingsInputComponentIcon from '@material-ui/icons/SettingsInputComponen
 import SettingsIcon from '@material-ui/icons/Settings';
 import CategoryIcon from '@material-ui/icons/Category';
 import HomeIcon from '@material-ui/icons/Home';
+import HelpIcon from '@material-ui/icons/Help';
 import Drawer from '@material-ui/core/Drawer';
 import Typography from '@material-ui/core/Typography';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -114,6 +115,12 @@ export default function AdminMenu() {
       content: 'menuUserStructure',
       hidden: !isAdmin,
       icon: <BusinessIcon />,
+    },
+    {
+      path: '/admin/helps',
+      content: 'menuAdminHelpPage',
+      icon: <HelpIcon />,
+      hidden: !isAdmin,
     },
     {
       path: '/admin/settings',

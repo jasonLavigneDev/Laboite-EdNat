@@ -75,6 +75,21 @@
         "name": "Nom"
       }
     },
+    "helps": {
+      "unknownHelp": "Cette aide n'existe pas.",
+      "labels": {
+        "id": "Id de l'aide",
+        "title": "Titre",
+        "description": "Description",
+        "category": "Catégorie",
+        "type": "Type",
+        "content": "Contenu de l'aide"
+      },
+      "types": {
+        "external": "Lien externe",
+        "iframed": "Lien/Vidéo intégré"
+      }
+    },
     "structures": {
       "unknownStructure": "La structure n'existe pas.",
       "name": "Libellé",
@@ -463,6 +478,7 @@
     "MainMenu": {
       "menuUserBookmarks": "Marque-pages",
       "menuProfileLabel": "Profil",
+      "menuHelpLabel": "Aide",
       "menuLogoutLabel": "Se déconnecter",
       "menuMedias": "Stockage de Médias",
       "menuAdminApp": "Administration",
@@ -488,6 +504,7 @@
       "menuAdminGroups": "Gestion des Groupes",
       "menuAdminUsers": "Gestion des utilisateurs",
       "menuAdminAppSettings": "Réglages Administrateurs",
+      "menuAdminHelpPage": "Gestion de la page d'aide",
       "menuAdminStructureUsers": "Utilisateurs de la structure",
       "menuAdminStructureServices": "Services de la structure",
       "menuAdminBackHome": "Retour à l'espace perso",
@@ -1056,6 +1073,23 @@
         "body_emptyDataSourceMessage": "Aucun utilisateur à valider"
       }
     },
+    "AdminHelpPage": {
+      "title": "Gestion de l'aide",
+      "columnTitle": "Titre",
+      "columnDescription": "Description",
+      "columnCategory": "Catégorie",
+      "columnType": "Type",
+      "columnContent": "Contenu",
+      "materialTableLocalization": {
+        "toolbar_searchPlaceholder": "Rechercher une aide",
+        "pagination_labelRowsSelect": "aides par page",
+        "body_emptyDataSourceMessage": "Aucune aide à gérer",
+        "body_addTooltip": "Ajouter une aide",
+        "body_editTooltip": "Modifier cette aide",
+        "body_deleteTooltip": "Supprimer cette aide",
+        "body_editRow_deleteText": "Souhaitez vous réellement supprimer cette aide ?"
+      }
+    },
     "SingleServicePage": {
       "backToList": "Retour à la liste",
       "screenshots": "Captures d'écran",
@@ -1082,11 +1116,8 @@
       "toggleEdition": "Activer/Désactiver le mode édition"
     },
     "HelpPage": {
-      "title": "Retrouvez ici tous les tutoriels nécessaires pour maitriser LaBoite",
-      "titleCardStart": "Commencer avec LaBoite",
-      "titleCardGroup": "Créer et administrer un groupe",
-      "titleCardMezig": "Comment utiliser Mézig",
-      "tutoLabel": "Voir le tutoriel"
+      "title": "Retrouvez ici tout l'aide nécessaire",
+      "tutoLabel": "Ouvrir l'aide"
     },
     "AdminSingleServicePage": {
       "edition": "Edition du service",

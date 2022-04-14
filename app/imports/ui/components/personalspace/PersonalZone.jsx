@@ -27,7 +27,7 @@ import ServiceDetailsPersSpace from '../services/ServiceDetailsPersSpace';
 import GroupDetailsPersSpace from '../groups/GroupDetailsPersSpace';
 import PersonalLinkDetails from './PersonalLinkDetails';
 
-const useStyles = makeStyles((theme) => ({
+export const useZoneStyles = makeStyles((theme) => ({
   expansionpanel: {
     borderRadius: theme.shape.borderRadius,
     marginTop: 30,
@@ -165,7 +165,7 @@ const PersonalZone = ({
   setExpanded,
   needUpdate,
 }) => {
-  const classes = useStyles();
+  const classes = useZoneStyles();
   const [{ userId, isMobile }] = useAppContext();
   const [localIsExpanded, setIsExpanded] = useState(isExpanded || true);
 
