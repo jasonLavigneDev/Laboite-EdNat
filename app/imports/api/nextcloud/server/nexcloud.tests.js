@@ -126,6 +126,24 @@ describe('nextcloud', function () {
           /api.nextcloud.removeNextcloudURL.notPermitted/,
         );
       });
+      it("can't remove url if use by at least one user", function () {
+        // Throws if non owner/admin user, or logged out user
+        assert.throws(
+          () => {
+            updateNextcloudURL._execute({ userId: adminId }, { url: url3, active: true });
+            const element = Nextcloud.findOne({ url: url3 });
+            const user = Meteor.users.findOne({ _id: userId });
+
+            element.count += 1;
+            updateNextcloudURL._execute({ userId: adminId }, { url: element.url, active: true });
+            user.nclocator = element.url;
+
+            removeNextcloudURL._execute({ userId }, { url: element.url });
+          },
+          Meteor.Error,
+          /api.nextcloud.removeNextcloudURL.notPermitted/,
+        );
+      });
     });
     describe('setNCloudURL', function () {
       it('does count number of uses', function () {
