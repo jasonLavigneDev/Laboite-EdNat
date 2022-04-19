@@ -11,7 +11,7 @@ Meteor.publish('structures.all', function structuresAll() {
 });
 
 // publish user  structure
-Meteor.publish('structures.one', function structuresOne({ _id }) {
+Meteor.publish('structures.one', function structuresOne({ _id } = { _id: null }) {
   if (!isActive(this.userId)) {
     return this.ready();
   }
@@ -23,7 +23,7 @@ Meteor.publish('structures.one', function structuresOne({ _id }) {
 });
 
 // publish structures from a list ids
-Meteor.publish('structures.ids', function structuresids({ ids }) {
+Meteor.publish('structures.ids', function structuresids({ ids } = { ids: [] }) {
   // if (!isActive(this.userId)) {
   //   return this.ready();
   // }
