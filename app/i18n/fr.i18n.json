@@ -96,11 +96,17 @@
     },
     "structures": {
       "unknownStructure": "La structure n'existe pas.",
+      "hasChildren": "La structure possède des enfants, elle n'est pas supprimable.",
+      "hasServices": "La structure possède au moins un service, elle n'est pas supprimable",
+      "hasUsers": "La structure possède au moins un utilisateur, elle n'est pas supprimable.",
+      "nameAlreadyTaken": "Une structure portant le même nom existe déjà dans le même niveau, sans prendre en compte la casse.",
       "name": "Libellé",
       "labels": {
         "id": "Id de Structure",
         "name": "Nom de la structure",
-        "parent": "Structure Supérieure"
+        "parentId": "Id de la structure parent directe",
+        "childrenIds": "Ids de structures enfants directs",
+        "ancestorsIds": "Ids de structures parents"
       }
     },
     "users": {

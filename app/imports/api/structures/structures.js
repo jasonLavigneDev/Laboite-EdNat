@@ -22,15 +22,26 @@ Structures.schema = new SimpleSchema(
     name: {
       type: String,
       min: 1,
-      label: getLabel('api.structures.name'),
-      /** No need to keep this to true since we use `_id` now */
-      // unique: true,
+      label: getLabel('api.structures.labels.name'),
     },
     parentId: {
       type: SimpleSchema.RegEx.Id,
-      label: getLabel('api.structures.parentId'),
+      label: getLabel('api.structures.labels.parentId'),
       optional: true,
+      defaultValue: null,
     },
+    childrenIds: {
+      type: Array,
+      label: getLabel('api.structures.labels.childrenIds'),
+      defaultValue: [],
+    },
+    'childrenIds.$': { type: String },
+    ancestorsIds: {
+      type: Array,
+      label: getLabel('api.structures.labels.ancestorsIds'),
+      defaultValue: [],
+    },
+    'ancestorsIds.$': { type: String },
   },
   {
     tracker: Tracker,
@@ -41,6 +52,8 @@ Structures.publicFields = {
   _id: 1,
   name: 1,
   parentId: 1,
+  childrenIds: 1,
+  ancestorsIds: 1,
 };
 
 Structures.attachSchema(Structures.schema);
