@@ -8,6 +8,7 @@ import { getLabel, isActive } from '../../utils';
 import Services from '../services';
 import Categories from '../../categories/categories';
 import logServer from '../../logging';
+import { hasAdminRightOnStructure } from '../../structures/server/utils';
 
 // publish available services not attached to a structure
 Meteor.publish('services.all', function servicesAll() {
@@ -45,7 +46,8 @@ FindFromPublication.publish('services.one.admin', function servicesOne({ _id }) 
     this.error(err);
   }
   const service = Services.findOne(_id);
-  const isStructureAdmin = service.structure && Roles.userIsInRole(this.userId, 'adminStructure', service.structure);
+  const isStructureAdmin =
+    service.structure && hasAdminRightOnStructure({ userId: this.userId, structureId: service.structure });
   if (isActive(this.userId) && (Roles.userIsInRole(this.userId, 'admin') || isStructureAdmin)) {
     return Services.find({ _id }, { fields: Services.allPublicFields, sort: { title: 1 }, limit: 1 });
   }

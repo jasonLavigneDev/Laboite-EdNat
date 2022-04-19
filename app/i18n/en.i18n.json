@@ -95,11 +95,18 @@
       }
     },
     "structures": {
+      "unknownStructure": "Structure doesn't exist.",
+      "hasChildren": "Structure has children, therefore it can not be deleted.",
+      "hasServices": "Structure has at least one service, therefore it can not be deleted.",
+      "hasUsers": "Structure has at least one user, therefore it can not be deleted.",
+      "nameAlreadyTaken": "A structure with same name on the same level already exists. It is case-insensitive.",
       "name": "Label",
       "labels": {
         "id": "Structure Id",
         "name": "Structure's name",
-        "parent": "Superior structures"
+        "parentId": "Direct parent structures Id",
+        "childrenIds": "Direct childs structures ids",
+        "ancestorsIds": "Parent's structures ids"
       }
     },
     "users": {
@@ -903,7 +910,10 @@
       "successCopyAuthToken": "Token copied with success",
       "successResetAndCopyAuthToken": "New Token created and copied with success"
     },
-    "NotFound": { "backButtonLabel": "Back", "message": "Page not found !" },
+    "NotFound": {
+      "backButtonLabel": "Back",
+      "message": "Page not found !"
+    },
     "ServicesPage": {
       "titleServices": "Discover the SNP apps",
       "categories": "Filter by categories",
