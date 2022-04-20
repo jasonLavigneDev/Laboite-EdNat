@@ -767,6 +767,23 @@
     "CustomDialog": {
       "cancel": "Cancel",
       "validate": "Submit"
+    },
+    "AdminStructureTreeItem": {
+      "actions": {
+        "choose": "Choose structure",
+        "addStructure": "Add a structure",
+        "editStructure": "Edit this structure",
+        "deleteStructure": "Remove cette structure",
+        "deleteStructureImpossibleHasChildren": "This structure can not be deleted, since it have a least one child.",
+        "deleteStructureConfirm": "Are you sure you want to remove this structure? If any article is attached to it, it will be destroyed."
+      }
+    },
+    "AdminStructureTreeView": {
+      "title": "Structures list"
+    },
+    "AdminStructureSearchBar": {
+      "filterByName": "Filter by a structure's name (three letter and more)",
+      "clear": "Clear"
     }
   },
   "validatejs": {
@@ -996,15 +1013,12 @@
     },
     "AdminStructuresManagementPage": {
       "title": "Structure Management",
+      "helpText": "Click on a structure to reveal its children.",
       "columnName": "Name",
-      "materialTableLocalization": {
-        "toolbar_searchPlaceholder": "Find a structure",
-        "pagination_labelRowsSelect": "Structures par page",
-        "body_emptyDataSourceMessage": "No structure registered",
-        "body_addTooltip": "Add a structure",
-        "body_editTooltip": "Modify this structure",
-        "body_deleteTooltip": "Remove this structure",
-        "body_editRow_deleteText": "Do you really want to delete this structure ?"
+      "modal": {
+        "close": "Close",
+        "cancel": "Cancel",
+        "submit": "Submit"
       }
     },
     "AdminGroupsPage": {
