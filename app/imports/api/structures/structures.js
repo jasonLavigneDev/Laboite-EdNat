@@ -1,5 +1,6 @@
 import { Mongo } from 'meteor/mongo';
 import SimpleSchema from 'simpl-schema';
+import PropTypes from 'prop-types';
 import { Tracker } from 'meteor/tracker';
 import { getLabel } from '../utils';
 
@@ -57,5 +58,14 @@ Structures.publicFields = {
 };
 
 Structures.attachSchema(Structures.schema);
+
+export const propTypes = PropTypes.shape({
+  _id: PropTypes.string,
+  name: PropTypes.string,
+  /** Can be `null` if top level structure */
+  parentId: PropTypes.string,
+  ancestorsIds: PropTypes.arrayOf(PropTypes.string),
+  childrenIds: PropTypes.arrayOf(PropTypes.string),
+});
 
 export default Structures;
