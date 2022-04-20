@@ -772,6 +772,10 @@
     "OfflineMenu": {
       "home": "Accueil",
       "apps": "Applications"
+    },
+    "CustomDialog": {
+      "cancel": "Annuler",
+      "validate": "Valider"
     }
   },
   "validatejs": {
