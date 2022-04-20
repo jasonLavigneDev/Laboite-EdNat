@@ -102,3 +102,49 @@ export function handleResult(resolve, reject) {
     }
   };
 }
+
+/** - Transform a flat data into a tree data
+ *
+ *  - Aimed to use for structures
+ */
+export const getTree = (
+  flatData,
+  rootKey = null,
+  getParentKey = (node) => node.parentId,
+  getKey = (node) => node._id,
+) => {
+  if (!flatData) {
+    return [];
+  }
+
+  const childrenToParents = {};
+  flatData.forEach((child) => {
+    const parentKey = getParentKey(child);
+
+    if (parentKey in childrenToParents) {
+      childrenToParents[parentKey].push(child);
+    } else {
+      childrenToParents[parentKey] = [child];
+    }
+  });
+
+  if (!(rootKey in childrenToParents)) {
+    return [];
+  }
+
+  const trav = (parent) => {
+    const parentKey = getKey(parent);
+    if (parentKey in childrenToParents) {
+      return {
+        ...parent,
+        children: childrenToParents[parentKey].map((child) => trav(child)),
+      };
+    }
+
+    return { ...parent };
+  };
+
+  const result = childrenToParents[rootKey].map((child) => trav(child));
+
+  return result;
+};

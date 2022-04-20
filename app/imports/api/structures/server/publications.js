@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor';
+import { FindFromPublication } from 'meteor/percolate:find-from-publication';
 import { isActive } from '../../utils';
 import Structures from '../structures';
 
@@ -29,3 +30,59 @@ Meteor.publish('structures.ids', function structuresids({ ids } = { ids: [] }) {
   // }
   return Structures.find({ _id: { $in: ids } }, { fields: Structures.publicFields, sort: { name: 1 }, limit: 10000 });
 });
+
+FindFromPublication.publish(
+  'structures.top.with.childs',
+  function structuresTopWithChilds({ parentIds, searchText } = { parentIds: [], searchText: '' }) {
+    if (!isActive(this.userId)) {
+      return this.ready();
+    }
+
+    const query = {};
+
+    if (searchText.length > 2) {
+      const regex = new RegExp(searchText, 'i');
+      const searchResult = Structures.find({ name: { $regex: regex } }).fetch();
+
+      const ids = searchResult.reduce((acc, struct) => {
+        acc.push(...struct.ancestorsIds, struct._id, ...struct.childrenIds);
+        return acc;
+      }, []);
+      query._id = { $in: ids };
+    } else {
+      query.$or = [{ parentId: null }, { parentId: { $in: parentIds } }];
+    }
+
+    return Structures.find(query, {
+      fields: Structures.publicFields,
+      sort: { name: 1 },
+      limit: 10000,
+    });
+  },
+);
+
+FindFromPublication.publish(
+  'structures.top.with.direct.parent',
+  function structuresTopWithDirectParent({ searchText } = { searchText: '' }) {
+    if (!isActive(this.userId)) {
+      return this.ready();
+    }
+
+    const regex = new RegExp(searchText, 'i');
+    const searchResult = Structures.find({ name: { $regex: regex } }).fetch();
+
+    const ids = searchResult.reduce((acc, struct) => {
+      acc.push(struct._id);
+      if (struct.parentId) acc.push(struct.parentId);
+      return acc;
+    }, []);
+
+    const query = { _id: { $in: ids } };
+
+    return Structures.find(query, {
+      fields: Structures.publicFields,
+      sort: { name: 1 },
+      limit: 20,
+    });
+  },
+);
