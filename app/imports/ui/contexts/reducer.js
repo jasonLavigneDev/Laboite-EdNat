@@ -47,6 +47,11 @@ const reducer = (state, action) => {
         ...newState,
         pollPage: { ...data },
       };
+    case 'addressBookPage':
+      return {
+        ...newState,
+        addressBookPage: { ...data },
+      };
     case 'mobile':
       return {
         ...newState,

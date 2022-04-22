@@ -96,7 +96,7 @@ const queryUsersFromGroup = ({ group, search }) => {
   const { admins, members, animators } = group;
   const ids = [...admins, ...members, ...animators];
   const regex = new RegExp(search, 'i');
-  const fieldsToSearch = ['firstName', 'lastName', 'emails.address', 'username'];
+  const fieldsToSearch = ['firstName', 'lastName', 'emails.address', 'username', 'structure'];
   const searchQuery = fieldsToSearch.map((field) => ({ [field]: { $regex: regex } }));
   return {
     _id: { $in: ids },
