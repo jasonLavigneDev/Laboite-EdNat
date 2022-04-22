@@ -1071,7 +1071,9 @@
       "materialTableLocalization": {
         "toolbar_searchPlaceholder": "Rechercher un utilisateur",
         "pagination_labelRowsSelect": "utilisateurs par page",
-        "body_emptyDataSourceMessage": "Aucun utilisateur à valider"
+        "body_emptyDataSourceMessage": "Aucun utilisateur à valider",
+        "body_deleteTooltip": "Supprimer l'utilisateur",
+        "body_editRow_deleteText": "Souhaitez vous réellement supprimer cet utilisateur ?"
       }
     },
     "AdminHelpPage": {

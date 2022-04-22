@@ -90,6 +90,20 @@ function AdminUserValidationPage({ usersrequest, loading }) {
                   },
                 },
               ]}
+              editable={{
+                onRowDelete: (oldData) =>
+                  new Promise((resolve, reject) => {
+                    Meteor.call('users.removeUser', { userId: oldData._id }, (error, res) => {
+                      if (error) {
+                        msg.error(error.reason);
+                        reject(error);
+                      } else {
+                        msg.success(i18n.__('pages.AdminUsersPage.successDeleteUser'));
+                        resolve(res);
+                      }
+                    });
+                  }),
+              }}
             />
           </Container>
         </Fade>
