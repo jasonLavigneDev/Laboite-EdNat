@@ -104,8 +104,22 @@ const queryUsersFromGroup = ({ group, search }) => {
   };
 };
 
+Meteor.methods({
+  // count all users from a group
+  'get_users.group_count': function getGroupAllUsersCount({ search, slug }) {
+    try {
+      const group = Groups.findOne({ slug });
+      const query = queryUsersFromGroup({ group, search });
+
+      return Meteor.users.find(query).count();
+    } catch (error) {
+      return 0;
+    }
+  },
+});
+
 // publish all users from a group
-FindFromPublication.publish('users.group', function usersFromGroup({ page, itemPerPage, slug, search, ...rest }) {
+FindFromPublication.publish('users.group', function usersFromGroup({ page, itemPerPage, search, slug, ...rest }) {
   if (!isActive(this.userId)) {
     return this.ready();
   }
@@ -131,13 +145,14 @@ FindFromPublication.publish('users.group', function usersFromGroup({ page, itemP
   try {
     const query = queryUsersFromGroup({ group, search });
 
-    return Meteor.users.find(query, {
+    const data = Meteor.users.find(query, {
       fields: Meteor.users.publicFields,
       skip: itemPerPage * (page - 1),
       limit: itemPerPage,
       sort: { lastName: 1 },
       ...rest,
     });
+    return data;
   } catch (error) {
     return this.ready();
   }
@@ -181,20 +196,6 @@ FindFromPublication.publish('users.publishers', ({ page, itemPerPage, search, ..
 });
 
 Meteor.methods({
-  // count all users from a group
-  'get_users.group_count': ({ search, slug }) => {
-    try {
-      const query = queryUsersFromGroup({ slug, search });
-
-      return Meteor.users
-        .find(query, {
-          sort: { lastName: 1 },
-        })
-        .count();
-    } catch (error) {
-      return 0;
-    }
-  },
   // count all users who published
   'get_users.publishers_count': ({ search }) => {
     try {
