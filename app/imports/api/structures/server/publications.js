@@ -33,7 +33,9 @@ Meteor.publish('structures.ids', function structuresids({ ids } = { ids: [] }) {
 
 FindFromPublication.publish(
   'structures.top.with.childs',
-  function structuresTopWithChilds({ parentIds, searchText } = { parentIds: [], searchText: '' }) {
+  function structuresTopWithChilds(
+    { parentIds, searchText, getTopLevelStructures } = { parentIds: [], searchText: '', getTopLevelStructures: true },
+  ) {
     if (!isActive(this.userId)) {
       return this.ready();
     }
@@ -50,7 +52,9 @@ FindFromPublication.publish(
       }, []);
       query._id = { $in: ids };
     } else {
-      query.$or = [{ parentId: null }, { parentId: { $in: parentIds } }];
+      query.$or = getTopLevelStructures
+        ? [{ parentId: null }, { parentId: { $in: parentIds } }]
+        : [{ parentId: { $in: parentIds } }];
     }
 
     return Structures.find(query, {
