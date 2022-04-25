@@ -46,7 +46,7 @@ function HelpPage() {
       flexDirection: 'column',
     },
     container: {
-      minHeight: 'calc(100vh - 245px)',
+      minHeight: 'calc(100vh - 246px)',
     },
     grid: {
       display: 'flex',
