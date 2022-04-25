@@ -526,7 +526,8 @@
       "menuAdminStructureUsers": "Structure Users",
       "menuAdminStructureServices": "Structure Services",
       "menuAdminBackHome": "Back to Personnal Space",
-      "menuUserStructure": "Structures Management"
+      "menuUserStructure": "Structures Management",
+      "menuAdminOfStructures": "Sub structures Management"
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Your account has not been activated",
@@ -1026,6 +1027,9 @@
         "close": "Close",
         "cancel": "Cancel",
         "submit": "Submit"
+      },
+      "adminStructureMode": {
+        "title": "Sub structures management"
       }
     },
     "AdminGroupsPage": {
