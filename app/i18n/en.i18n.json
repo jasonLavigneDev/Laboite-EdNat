@@ -65,6 +65,10 @@
       "labels": {
         "id": "Category Id",
         "name": "Name"
+      },
+      "createCategorie": {
+        "alreadyExists": "This categorie already exists.",
+        "nameAlreadyUse": "Name already use."
       }
     },
     "tags": {

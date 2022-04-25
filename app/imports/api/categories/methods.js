@@ -18,6 +18,14 @@ export const createCategorie = new ValidatedMethod({
 
   run({ name }) {
     const authorized = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
+
+    const cat = Categories.findOne({ name });
+    if (cat !== undefined) {
+      throw new Meteor.Error(
+        'api.categories.createCategorie.alreadyExists',
+        i18n.__('api.categories.createCategorie.nameAlreadyUse'),
+      );
+    }
     if (!authorized) {
       throw new Meteor.Error('api.categories.createCategorie.notPermitted', i18n.__('api.users.adminNeeded'));
     }
