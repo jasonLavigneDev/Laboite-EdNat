@@ -18,6 +18,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import AddBox from '@material-ui/icons/AddBox';
+import PropTypes from 'prop-types';
 import Spinner from '../../components/system/Spinner';
 
 import { useObjectState } from '../../utils/hooks';
@@ -74,8 +75,10 @@ const useModalStyles = makeStyles(() => ({
   },
 }));
 
-const AdminStructureManagementPage = () => {
-  const [{ user }] = useAppContext();
+const AdminStructureManagementPage = ({ match: { path } }) => {
+  const [{ user, structure: currentUserStructure }] = useAppContext();
+
+  const isAdminStructureMode = path.startsWith('/admin/substructures');
 
   const [parentIds, setParentIds] = useState([]);
 
@@ -90,6 +93,11 @@ const AdminStructureManagementPage = () => {
     const structuresHandle = Meteor.subscribe('structures.top.with.childs', {
       parentIds: [user.structure, ...parentIds],
       searchText,
+      /** - We want top level structures in the application level admin page of management
+       *
+       * - In structure level admin page of manegement, we want the root to be the admin managed structure
+       */
+      getTopLevelStructures: !isAdminStructureMode,
     });
     const isLoading = !structuresHandle.ready();
     const structures = Structures.findFromPublication('structures.top.with.childs').fetch();
@@ -253,7 +261,11 @@ const AdminStructureManagementPage = () => {
           <Card>
             <Box display="flex" justifyContent="space-between">
               <Box>
-                <CardHeader title={i18n.__(`pages.AdminStructuresManagementPage.title`)} />
+                <CardHeader
+                  title={i18n.__(
+                    `pages.AdminStructuresManagementPage${isAdminStructureMode ? '.adminStructureMode' : ''}.title`,
+                  )}
+                />
                 <Typography color="textSecondary" style={{ paddingLeft: 16 }}>
                   {i18n.__('pages.AdminStructuresManagementPage.helpText')}
                 </Typography>
@@ -269,14 +281,18 @@ const AdminStructureManagementPage = () => {
             <CardContent>
               <Box display="flex" alignItems="center">
                 <Box>
-                  <Typography variant="h6" onClick={() => onClickAddBtn({})} style={{ cursor: 'pointer' }}>
+                  <Typography
+                    variant="h6"
+                    onClick={() => onClickAddBtn(isAdminStructureMode ? currentUserStructure : {})}
+                    style={{ cursor: 'pointer' }}
+                  >
                     {i18n.__('components.AdminStructureTreeItem.actions.addStructure')}
                   </Typography>
                 </Box>
                 <Box>
                   <IconButton
                     id="create-structure-btn"
-                    onClick={() => onClickAddBtn({})}
+                    onClick={() => onClickAddBtn(isAdminStructureMode ? currentUserStructure : {})}
                     title={i18n.__('components.AdminStructureTreeItem.actions.addStructure')}
                   >
                     <AddBox />
@@ -285,7 +301,7 @@ const AdminStructureManagementPage = () => {
               </Box>
               {loading && <Spinner full />}
               <AdminStructureTreeView
-                treeData={getTree(filteredFlatData, null)}
+                treeData={getTree(filteredFlatData, isAdminStructureMode ? user.structure : null)}
                 onClickAddBtn={onClickAddBtn}
                 onClickEditBtn={onClickEditBtn}
                 onClickDeleteBtn={onClickDeleteBtn}
@@ -300,6 +316,10 @@ const AdminStructureManagementPage = () => {
       </Fade>
     </>
   );
+};
+
+AdminStructureManagementPage.propTypes = {
+  match: PropTypes.shape({ path: PropTypes.string.isRequired }).isRequired,
 };
 
 export default AdminStructureManagementPage;
