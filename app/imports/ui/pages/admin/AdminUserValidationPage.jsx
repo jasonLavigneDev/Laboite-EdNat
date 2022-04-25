@@ -105,7 +105,8 @@ AdminUserValidationPage.propTypes = {
 
 export default withTracker(() => {
   const usersrequestHandle = Meteor.subscribe('users.request');
-  const loading = !usersrequestHandle.ready();
+  const structuresHandle = Meteor.subscribe('structures.all');
+  const loading = !usersrequestHandle.ready() || !structuresHandle.ready();
   const usersrequest = Meteor.users.find({ isRequest: true }).fetch();
   return {
     usersrequest,
