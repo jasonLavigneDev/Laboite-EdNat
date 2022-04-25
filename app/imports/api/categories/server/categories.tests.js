@@ -59,6 +59,7 @@ describe('categories', function () {
     let adminId;
     let categoryId;
     let chatData;
+    let chatData2;
     beforeEach(function () {
       // Clear
       Meteor.users.remove({});
@@ -91,6 +92,9 @@ describe('categories', function () {
       chatData = {
         name: 'application',
       };
+      chatData2 = {
+        name: 'application2',
+      };
     });
     describe('createCategorie', function () {
       it('does create a categorie with admin user', function () {
@@ -102,17 +106,27 @@ describe('categories', function () {
         // Throws if non admin user, or logged out user, tries to create a categorie
         assert.throws(
           () => {
-            createCategorie._execute({ userId }, chatData);
+            createCategorie._execute({ userId }, chatData2);
           },
           Meteor.Error,
           /api.categories.createCategorie.notPermitted/,
         );
         assert.throws(
           () => {
-            createCategorie._execute({}, chatData);
+            createCategorie._execute({}, chatData2);
           },
           Meteor.Error,
           /api.categories.createCategorie.notPermitted/,
+        );
+      });
+      it('does not create a categorie if name already use', function () {
+        // Throws if non admin user, or logged out user, tries to create a categorie
+        assert.throws(
+          () => {
+            createCategorie._execute({ userId: adminId }, chatData);
+          },
+          Meteor.Error,
+          /api.categories.createCategorie.alreadyExists/,
         );
       });
     });
