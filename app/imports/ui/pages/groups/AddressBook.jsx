@@ -29,7 +29,7 @@ import UserAvatar from '../../components/users/UserAvatar';
 import SearchField from '../../components/system/SearchField';
 import Spinner from '../../components/system/Spinner';
 import Groups from '../../../api/groups/groups';
-import { getStructure } from '../../../api/structures/utils';
+import { getStructure } from '../../../api/structures/hooks';
 
 const useStyles = makeStyles((theme) => ({
   root: {

@@ -8,7 +8,7 @@ import i18n from 'meteor/universe:i18n';
 
 import { isActive, getLabel } from '../utils';
 import slugy from '../../ui/utils/slugy';
-import { hasAdminRightOnStructure } from '../structures/server/utils';
+import { hasAdminRightOnStructure } from '../structures/utils';
 import Services from './services';
 import { addService, removeElement } from '../personalspaces/methods';
 
