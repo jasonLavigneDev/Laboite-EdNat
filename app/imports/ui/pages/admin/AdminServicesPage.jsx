@@ -14,8 +14,8 @@ import Spinner from '../../components/system/Spinner';
 import Services from '../../../api/services/services';
 import { removeService } from '../../../api/services/methods';
 import setMaterialTableLocalization from '../../components/initMaterialTableLocalization';
-import { useStructure } from '../../../api/structures/utils';
 import { handleResult } from '../../../api/utils';
+import { useStructure } from '../../../api/structures/hooks';
 
 const { offlinePage } = Meteor.settings.public;
 

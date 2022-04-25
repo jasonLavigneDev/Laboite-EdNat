@@ -38,7 +38,7 @@ import UserAvatar from '../../components/users/UserAvatar';
 import AdminGroupQuota from '../../components/users/AdminGroupQuota';
 import SearchField from '../../components/system/SearchField';
 import AdminSendNotification from '../../components/users/AdminSendNotification';
-import { getStructure } from '../../../api/structures/utils';
+import { getStructure } from '../../../api/structures/hooks';
 
 let userData = {};
 const useStyles = makeStyles((theme) => ({

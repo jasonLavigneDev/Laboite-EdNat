@@ -7,7 +7,7 @@ import { Roles } from 'meteor/alanning:roles';
 import i18n from 'meteor/universe:i18n';
 
 import { isActive, getLabel } from '../utils';
-import { hasAdminRightOnStructure } from '../structures/server/utils';
+import { hasAdminRightOnStructure } from '../structures/utils';
 import Services from './services';
 import { addService, removeElement } from '../personalspaces/methods';
 

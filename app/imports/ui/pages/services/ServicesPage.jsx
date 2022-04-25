@@ -36,7 +36,7 @@ import Categories from '../../../api/categories/categories';
 import Spinner from '../../components/system/Spinner';
 import { useAppContext } from '../../contexts/context';
 import ServiceDetailsList from '../../components/services/ServiceDetailsList';
-import { useStructure } from '../../../api/structures/utils';
+import { useStructure } from '../../../api/structures/hooks';
 
 const useStyles = (isMobile) =>
   makeStyles((theme) => ({

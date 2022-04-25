@@ -34,7 +34,7 @@ import ImageAdminUploader from '../../components/uploader/ImageAdminUploader';
 import { CustomToolbarArticle } from '../../components/system/CustomQuill';
 import '../../utils/QuillVideo';
 import { useAppContext } from '../../contexts/context';
-import { useStructure } from '../../../api/structures/utils';
+import { useStructure } from '../../../api/structures/hooks';
 
 const useStyles = makeStyles((theme) => ({
   root: {
