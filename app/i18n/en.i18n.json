@@ -68,7 +68,7 @@
       },
       "createCategorie": {
         "alreadyExists": "This categorie already exists.",
-        "nameAlreadyUse": "Name already use."
+        "nameAlreadyUse": "Name already exists."
       }
     },
     "tags": {
