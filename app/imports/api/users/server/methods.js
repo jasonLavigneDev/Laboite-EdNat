@@ -19,7 +19,7 @@ import logServer from '../../logging';
 import { getRandomNCloudURL } from '../../nextcloud/methods';
 import Structures from '../../structures/structures';
 import Nextcloud from '../../nextcloud/nextcloud';
-import { hasAdminRightOnStructure } from '../../structures/server/utils';
+import { hasAdminRightOnStructure } from '../../structures/utils';
 
 if (Meteor.settings.public.enableKeycloak === true) {
   const { whiteDomains } = Meteor.settings.private;

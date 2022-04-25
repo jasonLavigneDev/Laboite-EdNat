@@ -28,7 +28,7 @@ import Spinner from '../../components/system/Spinner';
 import SearchField from '../../components/system/SearchField';
 import { useAppContext } from '../../contexts/context';
 import UserAvatar from '../../components/users/UserAvatar';
-import { useStructure } from '../../../api/structures/utils';
+import { useStructure } from '../../../api/structures/hooks';
 
 const useStyles = makeStyles((theme) => ({
   root: {

@@ -6,7 +6,7 @@ import i18n from 'meteor/universe:i18n';
 import { _ } from 'meteor/underscore';
 import { getLabel, isActive } from '../utils';
 import Structures from './structures';
-import { hasAdminRightOnStructure, isAStructureWithSameNameExistWithSameParent } from './server/utils';
+import { hasAdminRightOnStructure, isAStructureWithSameNameExistWithSameParent } from './utils';
 import Services from '../services/services';
 import Articles from '../articles/articles';
 

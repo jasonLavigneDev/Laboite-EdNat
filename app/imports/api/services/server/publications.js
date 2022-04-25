@@ -8,7 +8,7 @@ import { getLabel, isActive } from '../../utils';
 import Services from '../services';
 import Categories from '../../categories/categories';
 import logServer from '../../logging';
-import { hasAdminRightOnStructure } from '../../structures/server/utils';
+import { hasAdminRightOnStructure } from '../../structures/utils';
 
 // publish available services not attached to a structure
 Meteor.publish('services.all', function servicesAll() {
