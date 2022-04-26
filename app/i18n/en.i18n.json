@@ -1319,6 +1319,9 @@
       "neverConnected": "Never connected",
       "undefined": "Not defined",
       "sortByLastLogin": "Sort by last login date"
+    },
+    "AdminServicesByStructurePage": {
+      "title": "Services management for structure"  
     }
   },
   "layouts": {
