@@ -381,15 +381,21 @@ ServicesPage.defaultProps = {
 
 export default withTracker(({ match: { path } }) => {
   const structureMode = path === '/structure';
-  const subName = structureMode ? 'services.structure' : 'services.all';
-  const servicesHandle = Meteor.subscribe(subName);
+  const [{ structure }] = useAppContext();
+  /**
+   * - Grab current user structure with the ancestors
+   *
+   * - This is used to get all services from top level to current one
+   */
+  const currentStructureWithAncestors = [];
+  if (structure && structure._id) {
+    currentStructureWithAncestors.push(structure._id, ...structure.ancestorsIds);
+  }
+  const subName = structureMode ? 'services.structure.ids' : 'services.all';
+  const servicesHandle = Meteor.subscribe(subName, structureMode && { structureIds: currentStructureWithAncestors });
   let services;
   if (structureMode) {
-    services = Services.findFromPublication(
-      'services.structure',
-      { state: { $ne: 10 } },
-      { sort: { title: 1 } },
-    ).fetch();
+    services = Services.findFromPublication(subName, { state: { $ne: 10 } }, { sort: { title: 1 } }).fetch();
   } else {
     services = Services.find({ state: { $ne: 10 } }, { sort: { title: 1 } }).fetch();
   }
