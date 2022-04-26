@@ -27,13 +27,11 @@ import { useHistory } from 'react-router-dom';
 
 import Categories from '../../../api/categories/categories';
 import Spinner from '../../components/system/Spinner';
-import { createService, updateService } from '../../../api/services/methods';
 import Services from '../../../api/services/services';
 import slugy from '../../utils/slugy';
 import ImageAdminUploader from '../../components/uploader/ImageAdminUploader';
 import { CustomToolbarArticle } from '../../components/system/CustomQuill';
 import '../../utils/QuillVideo';
-import { useAppContext } from '../../contexts/context';
 import { useStructure } from '../../../api/structures/hooks';
 
 const useStyles = makeStyles((theme) => ({
@@ -130,7 +128,6 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
   const history = useHistory();
   const classes = useStyles();
   const structureMode = path.startsWith('/admin/structureservices');
-  const [{ user }] = useAppContext();
   const { minioEndPoint, offlinePage } = Meteor.settings.public;
 
   const removeUndefined = () => {
@@ -239,7 +236,7 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
   };
 
   const onSubmitUpdateService = () => {
-    const method = params._id ? updateService : createService;
+    const method = `services.${params._id ? 'update' : 'create'}Service`;
     setLoading(true);
     const { _id, slug, ...rest } = serviceData;
     let args;
@@ -253,16 +250,17 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
         },
       };
     } else {
-      args = {
-        ...rest,
-        content,
-        structure: structureMode ? user.structure : '',
-      };
+      try {
+        const { structureId } = params;
+        args = { ...rest, content, structure: structureMode ? structureId : '' };
+      } catch (err) {
+        msg.error(err.message);
+      }
     }
 
-    method.call(args, (error) => {
+    Meteor.call(method, args, (error) => {
       if (error) {
-        msg.error(error.message);
+        msg.error(error.reason);
         setLoading(false);
       } else {
         msg.success(i18n.__('api.methods.operationSuccessMsg'));
@@ -271,7 +269,7 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
     });
   };
 
-  const structure = structureMode ? useStructure() : {};
+  const structure = structureMode && params.structureId ? useStructure(params.structureId) : {};
 
   if (!ready || loading || (!!params._id && !service._id)) {
     return <Spinner full />;
