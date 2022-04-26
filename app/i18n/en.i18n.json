@@ -1069,7 +1069,9 @@
       "materialTableLocalization": {
         "toolbar_searchPlaceholder": "Find a user",
         "pagination_labelRowsSelect": "users per page",
-        "body_emptyDataSourceMessage": "No user to validate"
+        "body_emptyDataSourceMessage": "No user to validate",
+        "body_deleteTooltip": "Delete user",
+        "body_editRow_deleteText": "Do you really want to remove this user?"
       }
     },
     "AdminHelpPage": {
