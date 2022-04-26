@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Meteor } from 'meteor/meteor';
@@ -28,7 +29,8 @@ import Spinner from '../../components/system/Spinner';
 import SearchField from '../../components/system/SearchField';
 import { useAppContext } from '../../contexts/context';
 import UserAvatar from '../../components/users/UserAvatar';
-import { useStructure } from '../../../api/structures/hooks';
+import { useStructure, useAdminSelectedStructure } from '../../../api/structures/hooks';
+import StructureSelect from '../../components/structures/StructureSelect';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -54,31 +56,43 @@ const useStyles = makeStyles((theme) => ({
 
 const ITEM_PER_PAGE = 10;
 
-const AdminStructureUsersPage = () => {
+const AdminStructureUsersPage = ({ match: { path } }) => {
+  const isStructureSpecific = path === '/admin/structureusers';
+
   const classes = useStyles();
   const [{ userId, isMobile }] = useAppContext();
   const [search, setSearch] = useState('');
   const [sortByDate, setSortByDate] = useState(false);
   const structure = useStructure();
 
+  const [selectedStructureId, setSelectedStructureId] = useState(structure && structure._id ? structure._id : '');
+  const {
+    loading: structuresLoading,
+    selectedStructure,
+    structures,
+  } = useAdminSelectedStructure({ selectedStructureId, setSelectedStructureId });
+
   const { changePage, page, items, total } = usePagination(
     'users.byStructure',
-    { search, sort: sortByDate ? { lastLogin: -1 } : { lastName: 1 } },
+    { selectedStructureId, search, sort: sortByDate ? { lastLogin: -1 } : { lastName: 1 } },
     Meteor.users,
     {},
     { sort: sortByDate ? { lastLogin: -1 } : { lastName: 1 } },
     ITEM_PER_PAGE,
+    [selectedStructureId, selectedStructureId != null],
   );
-  // track all structure admin users
+  // track structure admin users from structure id list (here, only the selected one)
   const { isLoading } = useTracker(() => {
-    const roleshandlers = Meteor.subscribe('roles.adminStructure');
+    const roleshandlers = Meteor.subscribe('roles.adminStructureIds', {
+      structureIds: [selectedStructureId],
+    });
     const adminsIds = Meteor.roleAssignment
-      .find({ scope: structure && structure._id, 'role._id': 'adminStructure' })
-      .fetch()
-      .map((assignment) => assignment.user._id);
+      .find({ scope: { $in: [selectedStructureId] }, 'role._id': 'adminStructure' })
+      .fetch();
 
     return { isLoading: !roleshandlers.ready(), adminsStructure: adminsIds };
-  });
+  }, [selectedStructureId]);
+
   const handleChangePage = (event, value) => {
     changePage(value);
   };
@@ -143,15 +157,29 @@ const AdminStructureUsersPage = () => {
   return (
     <Fade in>
       <Container className={classes.root}>
-        {isLoading ? (
+        {isLoading || structuresLoading ? (
           <Spinner />
         ) : (
           <Grid container spacing={4}>
             <Grid item md={12}>
               <Typography variant={isMobile ? 'h6' : 'h4'}>
-                {i18n.__('pages.AdminStructureUsersPage.title')} {structure && structure.name}
+                {i18n.__('pages.AdminStructureUsersPage.title')}{' '}
+                {selectedStructure && selectedStructure._id && selectedStructure.name}
               </Typography>
             </Grid>
+            {isStructureSpecific && (
+              <Grid item md={12}>
+                {!structuresLoading ? (
+                  <StructureSelect
+                    structures={structures}
+                    selectedStructureId={selectedStructureId}
+                    setSelectedStructureId={setSelectedStructureId}
+                  />
+                ) : (
+                  <Spinner />
+                )}
+              </Grid>
+            )}
             <Grid item xs={12} sm={12} md={6}>
               <SearchField
                 updateSearch={updateSearch}
@@ -231,6 +259,10 @@ const AdminStructureUsersPage = () => {
       </Container>
     </Fade>
   );
+};
+
+AdminStructureUsersPage.propTypes = {
+  match: PropTypes.shape({ path: PropTypes.string.isRequired }).isRequired,
 };
 
 export default AdminStructureUsersPage;
