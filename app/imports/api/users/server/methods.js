@@ -388,10 +388,11 @@ export const setAdminStructure = new ValidatedMethod({
     if (user === undefined) {
       throw new Meteor.Error('api.users.setAdminStructure.unknownUser', i18n.__('api.users.unknownUser'));
     }
-    // check if current user has global admin rights
+    // check if current user has global or structure-scoped admin rights
     const authorized =
       isActive(this.userId) &&
-      (Roles.userIsInRole(this.userId, 'admin') || Roles.userIsInRole(this.userId, 'adminStructure', user.structure));
+      (Roles.userIsInRole(this.userId, 'admin') ||
+        hasAdminRightOnStructure({ userId: this.userId, structureId: user.structure }));
     if (!authorized) {
       throw new Meteor.Error('api.users.setAdminStructure.notPermitted', i18n.__('api.users.adminNeeded'));
     }
