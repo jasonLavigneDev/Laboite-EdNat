@@ -1329,6 +1329,9 @@
       "neverConnected": "Jamais connecté",
       "undefined": "Non renseigné",
       "sortByLastLogin": "Trier par date de dernière connexion"
+    },
+    "AdminServicesByStructurePage": {
+      "title": "Gestion des services de la structure"
     }
   },
   "layouts": {
