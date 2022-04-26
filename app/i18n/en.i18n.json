@@ -785,6 +785,9 @@
     "AdminStructureSearchBar": {
       "filterByName": "Filter by a structure's name (three letter and more)",
       "clear": "Clear"
+    },
+    "StructureSelect": {
+      "label": "Choose structure"
     }
   },
   "validatejs": {

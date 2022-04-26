@@ -787,6 +787,9 @@
     "AdminStructureSearchBar": {
       "filterByName": "Filtrer par nom de structure (à partir de 3 lettres)",
       "clear": "Effacer"
+    },
+    "StructureSelect": {
+      "label": "Choisir la structure"
     }
   },
   "validatejs": {
