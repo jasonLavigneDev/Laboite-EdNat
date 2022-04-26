@@ -1185,7 +1185,7 @@
       "back": "Retour au groupe",
       "searchText": "Quel utilisateur cherchez-vous ?",
       "noAccess": "Vous n'avez pas accès à l'annuaire de ce groupe.",
-      "noUsers": "Il n'y a aucun utilisateurs trouvés pour ce groupe."
+      "noUsers": "Il n'y a aucun utilisateur trouvé pour ce groupe."
     },
     "Events": {
       "seeEvent": "Voir l'événement",
