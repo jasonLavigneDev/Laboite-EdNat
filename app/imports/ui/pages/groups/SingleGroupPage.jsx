@@ -153,6 +153,9 @@ const useStyles = (member, candidate, type) =>
       height: 100,
       width: 100,
     },
+    buttonViewMore: {
+      marginLeft: '45%',
+    },
   }));
 
 const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks }) => {
@@ -527,7 +530,14 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
               className={openedContent ? classes.openedContent : classes.content}
               dangerouslySetInnerHTML={{ __html: group.content }}
             />
-            <Button color="primary" disableElevation size="small" variant="outlined" onClick={handleOpenedContent}>
+            <Button
+              color="primary"
+              disableElevation
+              size="small"
+              variant="outlined"
+              onClick={handleOpenedContent}
+              className={classes.buttonViewMore}
+            >
               {i18n.__(`pages.SingleGroupPage.${openedContent ? 'seeLess' : 'seeMore'}`)}
             </Button>
           </Grid>

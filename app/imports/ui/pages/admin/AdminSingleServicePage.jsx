@@ -31,7 +31,7 @@ import { createService, updateService } from '../../../api/services/methods';
 import Services from '../../../api/services/services';
 import slugy from '../../utils/slugy';
 import ImageAdminUploader from '../../components/uploader/ImageAdminUploader';
-import { CustomToolbar } from '../../components/system/CustomQuill';
+import { CustomToolbarArticle } from '../../components/system/CustomQuill';
 import '../../utils/QuillVideo';
 import { useAppContext } from '../../contexts/context';
 import { useStructure } from '../../../api/structures/utils';
@@ -403,7 +403,7 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
             )}
             <div className={classes.wysiwyg}>
               <InputLabel htmlFor="content">{i18n.__('pages.AdminSingleServicePage.content')}</InputLabel>
-              <CustomToolbar />
+              <CustomToolbarArticle />
               <ReactQuill id="content" value={content} onChange={onUpdateRichText} modules={quillOptions} />
             </div>
 
