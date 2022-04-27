@@ -99,10 +99,9 @@ const AdminStructureUsersPage = ({ match: { path } }) => {
   const searchRef = useRef();
   const updateSearch = (e) => setSearch(e.target.value);
   const resetSearch = () => setSearch('');
+
   useEffect(() => {
     if (searchRef.current) searchRef.current.value = search;
-  }, [search]);
-  useEffect(() => {
     if (page !== 1) {
       changePage(1);
     }
