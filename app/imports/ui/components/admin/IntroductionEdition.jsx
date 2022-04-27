@@ -17,7 +17,7 @@ import { CustomToolbarArticle } from '../system/CustomQuill';
 import '../../utils/QuillVideo';
 import { getCurrentIntroduction } from '../../../api/utils';
 
-const useStyles = makeStyles((theme) => ({
+export const useStyles = makeStyles((theme) => ({
   root: {
     padding: `0 ${theme.spacing(2)}px 0 ${theme.spacing(2)}px`,
     flex: 1,
@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const quillOptions = {
+export const quillOptions = {
   modules: {
     toolbar: {
       container: '#quill-toolbar',

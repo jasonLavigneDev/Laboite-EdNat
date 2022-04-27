@@ -39,6 +39,7 @@ const AdminServicesPage = lazy(() => import('../pages/admin/AdminServicesPage'))
 const AdminStructureUsersPage = lazy(() => import('../pages/structure/AdminStructureUsersPage'));
 const AdminStructureManagementPage = lazy(() => import('../pages/admin/AdminStructuresManagementPage'));
 const AdminServicesByStructurePage = lazy(() => import('../pages/admin/AdminServicesByStructurePage'));
+const AdminIntroductionByStructurePage = lazy(() => import('../pages/admin/AdminIntroductionByStructurePage'));
 
 const { disabledFeatures = {} } = Meteor.settings.public;
 
@@ -207,6 +208,13 @@ function AdminLayout() {
                       path="/admin/substructures"
                       component={AdminStructureManagementPage}
                       user={user}
+                      loadingUser={loadingUser}
+                    />
+                    <StructureAdminRoute
+                      exact
+                      path="/admin/structuresintroduction"
+                      user={user}
+                      component={AdminIntroductionByStructurePage}
                       loadingUser={loadingUser}
                     />
                     <AdminRoute

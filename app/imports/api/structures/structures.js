@@ -18,6 +18,41 @@ Structures.deny({
   },
 });
 
+export const IntroductionStructure = {
+  language: {
+    type: String,
+    label: getLabel('api.structures.labels.introduction.language'),
+    optional: true,
+  },
+  title: {
+    type: String,
+    label: getLabel('api.structures.labels.introduction.title'),
+    optional: true,
+    defaultValue: null,
+  },
+  content: {
+    type: String,
+    label: getLabel('api.structures.labels.introduction.content'),
+    optional: true,
+    defaultValue: null,
+  },
+};
+
+const IntroductionSchema = new SimpleSchema(IntroductionStructure);
+
+export const defaultIntroduction = [
+  {
+    language: 'en',
+    title: null,
+    content: null,
+  },
+  {
+    language: 'fr',
+    title: null,
+    content: null,
+  },
+];
+
 Structures.schema = new SimpleSchema(
   {
     name: {
@@ -43,6 +78,14 @@ Structures.schema = new SimpleSchema(
       defaultValue: [],
     },
     'ancestorsIds.$': { type: String },
+    introduction: {
+      type: Array,
+      label: getLabel('api.structures.labels.introduction.label'),
+      defaultValue: defaultIntroduction,
+    },
+    'introduction.$': {
+      type: IntroductionSchema,
+    },
   },
   {
     tracker: Tracker,
@@ -55,6 +98,7 @@ Structures.publicFields = {
   parentId: 1,
   childrenIds: 1,
   ancestorsIds: 1,
+  introduction: 1,
 };
 
 Structures.attachSchema(Structures.schema);

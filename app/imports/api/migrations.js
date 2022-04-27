@@ -3,7 +3,7 @@ import { Meteor } from 'meteor/meteor';
 import Articles from './articles/articles';
 import Services from './services/services';
 import Groups from './groups/groups';
-import Structures from './structures/structures';
+import Structures, { defaultIntroduction } from './structures/structures';
 import Tags from './tags/tags';
 import logServer from './logging';
 import AppSettings from './appsettings/appsettings';
@@ -482,5 +482,21 @@ Migrations.add({
       { $unset: { childrenIds: 1, parentId: 1, ancestorsIds: 1 } },
       { multi: true },
     );
+  },
+});
+
+Migrations.add({
+  version: 25,
+  name: 'Add introduction to structures',
+  up: () => {
+    Structures.find({})
+      .fetch()
+      .forEach((structure) => {
+        const introduction = structure.introduction || defaultIntroduction;
+        Structures.update({ _id: structure._id }, { $set: { introduction } });
+      });
+  },
+  down: () => {
+    Structures.rawCollection().updateMany({}, { $unset: { introduction: 1 } }, { multi: true });
   },
 });
