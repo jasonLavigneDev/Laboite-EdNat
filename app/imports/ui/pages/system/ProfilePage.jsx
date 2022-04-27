@@ -4,6 +4,7 @@ import { Meteor } from 'meteor/meteor';
 import i18n from 'meteor/universe:i18n';
 import { makeStyles } from '@material-ui/core/styles';
 import { withTracker } from 'meteor/react-meteor-data';
+import { useHistory } from 'react-router-dom';
 import Container from '@material-ui/core/Container';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
@@ -105,6 +106,7 @@ const logoutTypeLabels = {
 };
 
 const ProfilePage = ({ structures, loading }) => {
+  const history = useHistory();
   const [, dispatch] = useAppContext();
   const [userData, setUserData] = useState(defaultState);
   const [submitOk, setSubmitOk] = useState(false);
@@ -569,6 +571,11 @@ const ProfilePage = ({ structures, loading }) => {
                       options={structures.map((opt) => ({ value: opt._id, label: opt.name }))}
                     />
                   )}
+                </FormControl>
+                <FormControl variant="filled" className={classes.formControl} fullWidth>
+                  <Button variant="outlined" onClick={() => history.push('/profileStructureSelection')}>
+                    {i18n.__('pages.ProfilePage.openStructureSelection')}
+                  </Button>
                 </FormControl>
               </Grid>
               {enableKeycloak ? (
