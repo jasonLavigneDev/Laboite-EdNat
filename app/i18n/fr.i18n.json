@@ -937,7 +937,11 @@
       "noAuthToken": "Aucun token à récupérer",
       "successCopyAuthToken": "Token copié avec succès",
       "successResetAndCopyAuthToken": "Nouveau Token créé et copié avec succès",
-      "openStructureSelection": "Si vous ne trouvez pas votre structure, cliquez ici pour une vue détaillée"
+      "openStructureSelection": "Si vous ne trouvez pas votre structure, cliquez ici pour une vue détaillée",
+      "currentStructure": "Votre structure de rattachement actuelle est :",
+      "noSelectedStructure": "Aucune structure sélectionnée",
+      "noCurrentStructure": "Vous n'avez pas de structure de rattachement pour le moment",
+      "chooseAttachementStructure": "Choose your attachement structure"
     },
     "NotFound": {
       "backButtonLabel": "Retour",

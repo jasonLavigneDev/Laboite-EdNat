@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { Meteor } from 'meteor/meteor';
 import i18n from 'meteor/universe:i18n';
 import { makeStyles } from '@material-ui/core/styles';
-import { withTracker } from 'meteor/react-meteor-data';
+import { useTracker } from 'meteor/react-meteor-data';
 import { useHistory } from 'react-router-dom';
 import Container from '@material-ui/core/Container';
 import Paper from '@material-ui/core/Paper';
@@ -25,8 +24,8 @@ import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import MailIcon from '@material-ui/icons/Mail';
 import Input from '@material-ui/core/Input';
+import AutoComplete from '@material-ui/lab/Autocomplete';
 import Spinner from '../../components/system/Spinner';
-import CustomSelect from '../../components/admin/CustomSelect';
 import { useAppContext } from '../../contexts/context';
 import LanguageSwitcher from '../../components/system/LanguageSwitcher';
 import debounce from '../../utils/debounce';
@@ -34,6 +33,7 @@ import { useObjectState } from '../../utils/hooks';
 import { downloadBackupPublications, uploadBackupPublications } from '../../../api/articles/methods';
 import AvatarPicker from '../../components/users/AvatarPicker';
 import Structures from '../../../api/structures/structures';
+import { getStructure, useStructure } from '../../../api/structures/hooks';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -105,9 +105,8 @@ const logoutTypeLabels = {
   global: 'api.users.logoutTypes.global',
 };
 
-const ProfilePage = ({ structures, loading }) => {
+const ProfilePage = () => {
   const history = useHistory();
-  const [, dispatch] = useAppContext();
   const [userData, setUserData] = useState(defaultState);
   const [submitOk, setSubmitOk] = useState(false);
   const [errors, setErrors] = useObjectState(defaultState);
@@ -116,13 +115,34 @@ const ProfilePage = ({ structures, loading }) => {
   const classes = useStyles();
   const { disabledFeatures = {}, enableKeycloak } = Meteor.settings.public;
   const enableBlog = !disabledFeatures.blog;
-  const [{ user, loadingUser, isMobile }] = useAppContext();
+  const [{ user, loadingUser, isMobile }, dispatch] = useAppContext();
 
-  const structureLabel = React.useRef(null);
-  const [labelStructureWidth, setLabelStructureWidth] = React.useState(0);
+  const userStructure = useStructure();
+
+  const [selectedStructure, setSelectedStructure] = useState(userStructure || null);
   useEffect(() => {
-    setLabelStructureWidth(structureLabel.current.offsetWidth);
-  }, []);
+    (async () => {
+      if (user.structure && user.structure.length > 0) {
+        const structure = await getStructure(user.structure);
+        setSelectedStructure(structure);
+      }
+    })();
+  }, [userStructure, user.structure]);
+
+  const [searchText, setSearchText] = useState('');
+  const { flatData, isSearchLoading } = useTracker(() => {
+    const subName = 'structures.top.with.direct.parent';
+    const ret = { flatData: [], isSearchLoading: false };
+    if (searchText.length > 2) {
+      const handle = Meteor.subscribe(subName, { searchText });
+      const isLoading = !handle.ready();
+      const structures = Structures.findFromPublication(subName).fetch();
+      ret.flatData = structures;
+      ret.isSearchLoading = isLoading;
+    }
+    return ret;
+  }, [searchText && searchText.length > 2]);
+
   const usernameLabel = React.useRef(null);
   const [labelUsernameWidth, setLabelUsernameWidth] = React.useState(0);
   useEffect(() => {
@@ -557,20 +577,56 @@ const ProfilePage = ({ structures, loading }) => {
               <Grid item />
               <Grid item className={classes.maxWidth}>
                 <FormControl variant="filled" className={classes.formControl} fullWidth>
-                  <InputLabel htmlFor="structure" id="structure-label" ref={structureLabel}>
-                    {i18n.__('api.users.labels.structure')}
-                  </InputLabel>
-                  {loading ? (
-                    <Spinner />
-                  ) : (
-                    <CustomSelect
-                      value={userData.structureSelect || ''}
-                      error={false}
-                      onChange={onUpdateField}
-                      labelWidth={labelStructureWidth}
-                      options={structures.map((opt) => ({ value: opt._id, label: opt.name }))}
-                    />
-                  )}
+                  <Typography>
+                    {selectedStructure && selectedStructure.name
+                      ? `${i18n.__('pages.ProfilePage.currentStructure')} ${selectedStructure.name}`
+                      : i18n.__('pages.ProfilePage.noCurrentStructure')}
+                  </Typography>
+                  <AutoComplete
+                    options={flatData}
+                    loading={isSearchLoading}
+                    getOptionLabel={(option) => option.name}
+                    renderOption={(option) => {
+                      let parent;
+                      if (option.parentId) {
+                        parent = flatData.find((s) => s._id === option.parentId);
+                      }
+                      return (
+                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                          <div>{option.name}</div>
+                          {!!option.parentId && (
+                            <div style={{ fontSize: 10, color: 'grey', fontStyle: 'italic' }}>
+                              {parent ? parent.name : ''}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    }}
+                    onChange={(event, newValue) => {
+                      if (newValue && newValue._id)
+                        onUpdateField({
+                          target: {
+                            name: 'structureSelect',
+                            value: newValue._id,
+                          },
+                        });
+                    }}
+                    inputValue={searchText}
+                    onInputChange={(event, newInputValue) => {
+                      setSearchText(newInputValue);
+                    }}
+                    getOptionSelected={(opt, val) => opt._id === val._id}
+                    style={{ width: 500 }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        onChange={({ target: { value } }) => setSearchText(value)}
+                        variant="outlined"
+                        label={i18n.__('pages.ProfilePage.chooseAttachementStructure')}
+                        placeholder={i18n.__('pages.ProfilePage.noSelectedStructure')}
+                      />
+                    )}
+                  />
                 </FormControl>
                 <FormControl variant="filled" className={classes.formControl} fullWidth>
                   <Button variant="outlined" onClick={() => history.push('/profileStructureSelection')}>
@@ -714,19 +770,14 @@ const ProfilePage = ({ structures, loading }) => {
   );
 };
 
-// export default ProfilePage;
+export default ProfilePage;
 
-ProfilePage.propTypes = {
-  structures: PropTypes.arrayOf(PropTypes.object).isRequired,
-  loading: PropTypes.bool.isRequired,
-};
-
-export default withTracker(() => {
-  const structuresHandle = Meteor.subscribe('structures.all');
-  const loading = !structuresHandle.ready();
-  const structures = Structures.find({}, { sort: { name: 1 } }).fetch();
-  return {
-    structures,
-    loading,
-  };
-})(ProfilePage);
+// export default withTracker(() => {
+//   const structuresHandle = Meteor.subscribe('structures.all');
+//   const loading = !structuresHandle.ready();
+//   const structures = Structures.find({}, { sort: { name: 1 } }).fetch();
+//   return {
+//     structures,
+//     loading,
+//   };
+// })(ProfilePage);
