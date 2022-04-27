@@ -148,7 +148,8 @@ export const markAllNotificationAsRead = new ValidatedMethod({
 export const markAllTypeNotificationAsRead = new ValidatedMethod({
   name: 'notifications.markAllTypeNotificationAsRead',
   validate: new SimpleSchema({
-    type: String,
+    type: Array,
+    'type.$': String,
   }).validator(),
   run({ type }) {
     if (!isActive(this.userId)) {
@@ -157,14 +158,19 @@ export const markAllTypeNotificationAsRead = new ValidatedMethod({
         i18n.__('api.notifications.mustBeLoggedIn'),
       );
     }
-    return Notifications.update({ userId: this.userId, type }, { $set: { read: true } }, { multi: true });
+    return Notifications.update(
+      { userId: this.userId, type: { $in: type } },
+      { $set: { read: true } },
+      { multi: true },
+    );
   },
 });
 
 export const removeAllTypeNotification = new ValidatedMethod({
   name: 'notifications.removeAllTypeNotification',
   validate: new SimpleSchema({
-    type: String,
+    type: Array,
+    'type.$': String,
   }).validator(),
 
   run({ type }) {
@@ -174,7 +180,7 @@ export const removeAllTypeNotification = new ValidatedMethod({
         i18n.__('api.notifications.mustBeLoggedIn'),
       );
     }
-    return Notifications.remove({ userId: this.userId, type });
+    return Notifications.remove({ userId: this.userId, type: { $in: type } });
   },
 });
 

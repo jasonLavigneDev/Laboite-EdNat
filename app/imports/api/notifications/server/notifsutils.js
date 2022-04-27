@@ -2,6 +2,7 @@ import i18n from 'meteor/universe:i18n';
 // import AppRoles from '../users/users';
 import Groups from '../../groups/groups';
 import { createNotification } from '../methods';
+import { NOTIFICATIONS_TYPES } from '../enums';
 
 /**
  * Send a notification for role change of user in a group
@@ -15,7 +16,7 @@ export function createRoleNotification(currentUser, userId, groupId, role, setRo
   // TODO: check role in AppRoles ?
   const group = Groups.findOne({ _id: groupId });
   if (group !== undefined) {
-    const type = setRole ? 'setRole' : 'unsetRole';
+    const type = setRole ? NOTIFICATIONS_TYPES.SET_ROLE : NOTIFICATIONS_TYPES.UNSET_ROLE;
     const roleLabel = i18n.__(`api.notifications.labels.roles.${role}`);
     const newNotif = {
       userId,
@@ -50,7 +51,7 @@ export function createRequestNotification(currentUser, userId, groupId) {
         group: group.name,
       }),
       link: `/admingroups/${groupId}`,
-      type: 'request',
+      type: NOTIFICATIONS_TYPES.REQUEST,
     };
     if (currentUser !== uid) {
       createNotification._execute({ userId: currentUser }, { data: newNotif });
@@ -71,7 +72,7 @@ export function createGroupNotification(currentUser, groupId, title, content, li
   const usersToSend = [...new Set([...group.admins, ...group.animators, ...group.members])]; // Concats arrays and removes duplicate user ids
   const notifLink = link === '' ? `/groups/${group.slug}` : link;
   usersToSend.forEach((uid) => {
-    const newNotif = { userId: uid, title, content, link: notifLink, type: 'group' };
+    const newNotif = { userId: uid, title, content, link: notifLink, type: NOTIFICATIONS_TYPES.GROUP };
     createNotification._execute({ userId: currentUser }, { data: newNotif });
   });
 }
@@ -86,7 +87,7 @@ export function createGroupNotification(currentUser, groupId, title, content, li
  */
 export function createMultiUsersNotification(currentUser, users, title, content, link) {
   users.forEach((uid) => {
-    const newNotif = { userId: uid, title, content, type: 'group', link };
+    const newNotif = { userId: uid, title, content, type: NOTIFICATIONS_TYPES.GROUP, link };
     createNotification._execute({ userId: currentUser }, { data: newNotif });
   });
 }

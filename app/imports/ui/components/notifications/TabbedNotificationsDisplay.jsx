@@ -16,23 +16,23 @@ import Notifications from '../../../api/notifications/notifications';
 import { useAppContext } from '../../contexts/context';
 import Notification from './Notification';
 import { useNotifDisplayStyles } from './styles';
-
-const notificationsType = ['message', 'info'];
+import { notificationsTabType } from '../../../api/notifications/enums';
 
 const TabbedNotificationsDisplay = () => {
   const classes = useNotifDisplayStyles();
   const [tab, setTab] = useState(0);
   const { notifications, messagesCounter, infoCounter } = useTracker(() => {
-    Meteor.subscribe('notifications.self.tabbed', { type: notificationsType[tab] });
+    Meteor.subscribe('notifications.self.tabbed', { types: notificationsTabType[tab] });
     return {
-      notifications: Notifications.find({ type: notificationsType[tab] }, { sort: { createdAt: -1 } }).fetch() || [],
+      notifications:
+        Notifications.find({ type: { $in: notificationsTabType[tab] } }, { sort: { createdAt: -1 } }).fetch() || [],
       messagesCounter: Counts.get('notifications.self.tabbed.messages'),
       infoCounter: Counts.get('notifications.self.tabbed.infos'),
     };
   });
 
   useEffect(() => {
-    Meteor.call('notifications.markAllTypeNotificationAsRead', { type: notificationsType[tab] }, (err) => {
+    Meteor.call('notifications.markAllTypeNotificationAsRead', { type: notificationsTabType[tab] }, (err) => {
       if (err) {
         msg.error(err.reason);
       }
@@ -50,7 +50,7 @@ const TabbedNotificationsDisplay = () => {
     });
 
   const handleRemoveAll = () => {
-    Meteor.call('notifications.removeAllTypeNotification', { type: notificationsType[tab] }, (err) => {
+    Meteor.call('notifications.removeAllTypeNotification', { type: notificationsTabType[tab] }, (err) => {
       if (err) {
         msg.error(err.reason);
       }
@@ -72,8 +72,13 @@ const TabbedNotificationsDisplay = () => {
           label={<div>{i18n.__('components.TabbedNotificationsDisplay.tabSpaces')}</div>}
         />
       </Tabs>
-      {notificationsType.map((value, i) => (
-        <div role="tabpanel" hidden={tab !== i} id={`simple-tabpanel-${value}`} aria-labelledby={`simple-tab-${value}`}>
+      {notificationsTabType.map((types, i) => (
+        <div
+          role="tabpanel"
+          hidden={tab !== i}
+          id={`simple-tabpanel-${types[0]}`}
+          aria-labelledby={`simple-tab-${types[0]}`}
+        >
           {tab === i && (
             <Box p={3}>
               <div className={notifications.length < 4 ? classes.notifsListEmpty : classes.notifsList}>

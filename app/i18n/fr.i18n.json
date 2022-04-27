@@ -760,9 +760,7 @@
       "title_label": "Titre",
       "content_label": "Contenu de la notification",
       "ValidateForm": "Valider",
-      "type_label": "Type de notification",
-      "info_type": "Info",
-      "message_type": "Message"
+      "type_label": "Type de notification"
     },
     "SkipLink": {
       "skipToContent": "Aller au contenu"
