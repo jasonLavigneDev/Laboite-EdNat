@@ -1350,6 +1350,7 @@
       "titleAppIntroduction": "Informations générales",
       "noContent": "Pas de contenu pour le moment",
       "noTitle": "Pas de titre pour le moment",
+      "informationsOf": "Informations de",
       "titleStructures": "Informations de structures"
     },
     "AdminIntroductionByStructurePage": {
