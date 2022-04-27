@@ -1,0 +1,22 @@
+export const NOTIFICATIONS_TYPES = {
+  MESSAGE: 'message',
+  INFO: 'info',
+  WARNING: 'warning',
+  ERROR: 'error',
+  REQUEST: 'request',
+  SET_ROLE: 'setRole',
+  UNSET_ROLE: 'unsetRole',
+  GROUP: 'group',
+};
+export const notificationsTabType = [
+  [NOTIFICATIONS_TYPES.MESSAGE],
+  [
+    NOTIFICATIONS_TYPES.REQUEST,
+    NOTIFICATIONS_TYPES.SET_ROLE,
+    NOTIFICATIONS_TYPES.UNSET_ROLE,
+    NOTIFICATIONS_TYPES.GROUP,
+    NOTIFICATIONS_TYPES.INFO,
+    NOTIFICATIONS_TYPES.WARNING,
+    NOTIFICATIONS_TYPES.ERROR,
+  ],
+];

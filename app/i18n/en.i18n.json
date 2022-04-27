@@ -772,9 +772,7 @@
       "title_label": "Title",
       "content_label": "Notification content",
       "ValidateForm": "Validate",
-      "type_label": "Notification type",
-      "info_type": "Info",
-      "message_type": "Message"
+      "type_label": "Notification type"
     },
     "SkipLink": {
       "skipToContent": "Skip to content"
