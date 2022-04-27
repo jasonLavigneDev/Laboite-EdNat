@@ -9,7 +9,8 @@
     "theme": "laboite",
     "disabledFeatures": {
       "blog": false,
-      "groups": false
+      "groups": false,
+      "introductionTab": false
     },
     "laboiteBlogURL": "",
     "enableBBB": false,
