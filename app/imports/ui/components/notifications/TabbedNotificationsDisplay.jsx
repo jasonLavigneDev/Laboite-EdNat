@@ -72,14 +72,9 @@ const TabbedNotificationsDisplay = () => {
           label={<div>{i18n.__('components.TabbedNotificationsDisplay.tabSpaces')}</div>}
         />
       </Tabs>
-      {[0, 1].map((value) => (
-        <div
-          role="tabpanel"
-          hidden={tab !== value}
-          id={`simple-tabpanel-${value}`}
-          aria-labelledby={`simple-tab-${value}`}
-        >
-          {tab === value && (
+      {notificationsType.map((value, i) => (
+        <div role="tabpanel" hidden={tab !== i} id={`simple-tabpanel-${value}`} aria-labelledby={`simple-tab-${value}`}>
+          {tab === i && (
             <Box p={3}>
               <div className={notifications.length < 4 ? classes.notifsListEmpty : classes.notifsList}>
                 {notifications.map((notif, index) => [

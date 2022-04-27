@@ -151,6 +151,7 @@ function MainLayout({ appsettings, ready }) {
                         <Route exact path="/admingroups/:_id" component={AdminSingleGroupPage} />
                       )}
                       <Route exact path="/medias" component={MediaStoragePage} />
+                      <Route exact path="/notifications" component={TabbedNotificationsDisplay} />
                       <Route exact path="/userBookmarks" component={UserBookmarksPage} />
                       <Route component={NotFound} />
                     </Switch>

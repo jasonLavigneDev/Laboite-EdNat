@@ -77,6 +77,12 @@ const AddressBook = ({ loading, group, slug }) => {
     changePage(value);
   };
 
+  // focus on search input when it appears
+  useEffect(() => {
+    if (inputRef.current && searchToggle) {
+      inputRef.current.focus();
+    }
+  }, [searchToggle]);
   const updateGlobalState = (key, value) =>
     dispatch({
       type: 'addressBookPage',
@@ -85,13 +91,6 @@ const AddressBook = ({ loading, group, slug }) => {
         [key]: value,
       },
     });
-
-  // focus on search input when it appears
-  useEffect(() => {
-    if (inputRef.current && searchToggle) {
-      inputRef.current.focus();
-    }
-  }, [searchToggle]);
   useEffect(() => {
     if (page !== 1) {
       changePage(1);
@@ -100,16 +99,6 @@ const AddressBook = ({ loading, group, slug }) => {
 
   const updateSearch = (e) => updateGlobalState('search', e.target.value);
   const resetSearch = () => updateGlobalState('search', '');
-
-  const goBack = () => {
-    history.goBack();
-  };
-
-  useEffect(() => {
-    if (page !== 1) {
-      changePage(1);
-    }
-  }, [search]);
 
   const { disabledFeatures = {} } = Meteor.settings.public;
   const enableBlog = !disabledFeatures.blog;
@@ -123,7 +112,7 @@ const AddressBook = ({ loading, group, slug }) => {
       <Container className={classes.root}>
         <Grid container spacing={4}>
           <Grid item xs={12} sm={12} md={12}>
-            <Button color="primary" startIcon={<ArrowBack />} onClick={goBack}>
+            <Button color="primary" startIcon={<ArrowBack />} onClick={history.goBack}>
               {i18n.__('pages.AddressBook.back')}
             </Button>
           </Grid>

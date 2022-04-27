@@ -50,23 +50,13 @@ export default function ServiceDetails({ service, favAction }) {
 
   const handleFavorite = (e) => {
     e.stopPropagation(); // To prevent the CardActionArea onClick to launch
-    if (!favorite) {
-      Meteor.call('services.unfavService', { serviceId: service._id }, (err) => {
-        if (err) {
-          msg.error(err.reason);
-        } else {
-          msg.success(i18n.__('components.ServiceDetails.unfavSuccessMsg'));
-        }
-      });
-    } else {
-      Meteor.call('services.favService', { serviceId: service._id }, (err) => {
-        if (err) {
-          msg.error(err.reason);
-        } else {
-          msg.success(i18n.__('components.ServiceDetails.favSuccessMsg'));
-        }
-      });
-    }
+    Meteor.call(`services.${!favorite ? 'un' : ''}favService`, { serviceId: service._id }, (err) => {
+      if (err) {
+        msg.error(err.reason);
+      } else {
+        msg.success(i18n.__(`components.ServiceDetails.${!favorite ? 'un' : ''}favSuccessMsg`));
+      }
+    });
   };
 
   const favButtonLabel = !favorite
