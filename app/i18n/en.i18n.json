@@ -778,7 +778,8 @@
         "deleteStructure": "Remove cette structure",
         "deleteStructureImpossibleHasChildren": "This structure can not be deleted, since it have a least one child.",
         "deleteStructureConfirm": "Are you sure you want to remove this structure? If any article is attached to it, it will be destroyed."
-      }
+      },
+      "attachToStructure": "Do you want to be attached to this structure?"
     },
     "AdminStructureTreeView": {
       "title": "Structures list"
@@ -933,7 +934,8 @@
       "resetAuthToken": "Reset Access Token",
       "noAuthToken": "No token to retrieve",
       "successCopyAuthToken": "Token copied with success",
-      "successResetAndCopyAuthToken": "New Token created and copied with success"
+      "successResetAndCopyAuthToken": "New Token created and copied with success",
+      "openStructureSelection": "Click here for a more detailled view if you struggle to find your structure"
     },
     "NotFound": {
       "backButtonLabel": "Back",
@@ -1321,7 +1323,10 @@
       "sortByLastLogin": "Sort by last login date"
     },
     "AdminServicesByStructurePage": {
-      "title": "Services management for structure"  
+      "title": "Services management for structure"
+    },
+    "StructureSelectionPage": {
+      "backToProfile": "Aller au profile"
     }
   },
   "layouts": {

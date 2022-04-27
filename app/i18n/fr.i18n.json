@@ -780,7 +780,8 @@
         "deleteStructure": "Supprimer cette structure",
         "deleteStructureImpossibleHasChildren": "Cette structure n'est pas supprimable car elle a au moins un enfant.",
         "deleteStructureConfirm": "Etes-vous sûr de vouloir supprimer cette structure ? Si des articles y sont attachés, ils seront supprimés."
-      }
+      },
+      "attachToStructure": "Souhaitez vous être rattaché(e) à cette structure ?"
     },
     "AdminStructureTreeView": {
       "title": "Liste des structures"
@@ -935,7 +936,8 @@
       "resetAuthToken": "Créer un nouveau Token",
       "noAuthToken": "Aucun token à récupérer",
       "successCopyAuthToken": "Token copié avec succès",
-      "successResetAndCopyAuthToken": "Nouveau Token créé et copié avec succès"
+      "successResetAndCopyAuthToken": "Nouveau Token créé et copié avec succès",
+      "openStructureSelection": "Si vous ne trouvez pas votre structure, cliquez ici pour une vue détaillée"
     },
     "NotFound": {
       "backButtonLabel": "Retour",
@@ -1323,6 +1325,9 @@
     },
     "AdminServicesByStructurePage": {
       "title": "Gestion des services de la structure"
+    },
+    "StructureSelectionPage": {
+      "backToProfile": "Aller au profile"
     }
   },
   "layouts": {
