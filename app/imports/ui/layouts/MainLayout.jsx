@@ -38,6 +38,7 @@ const MediaStoragePage = lazy(() => import('../pages/MediaStoragePage'));
 const UserBookmarksPage = lazy(() => import('../pages/users/UserBookmarksPage'));
 const NotificationsDisplay = lazy(() => import('../components/notifications/NotificationsDisplay'));
 const BookmarksPage = lazy(() => import('../pages/groups/BookmarksPage'));
+const StructureSelectionPage = lazy(() => import('../pages/system/StructureSelectionPage'));
 
 // dynamic imports
 const AdminGroupsPage = lazy(() => import('../pages/admin/AdminGroupsPage'));
@@ -122,6 +123,7 @@ function MainLayout({ appsettings, ready }) {
                     <Switch>
                       <Route exact path="/" component={PersonalPage} />
                       <Route exact path="/profile" component={ProfilePage} />
+                      <Route exact path="/profileStructureSelection" component={StructureSelectionPage} />
                       <Route exact path="/services" component={ServicesPage} />
                       <Route exact path="/structure" component={ServicesPage} />
                       <Route exact path="/help" component={HelpPage} />
@@ -156,6 +158,7 @@ function MainLayout({ appsettings, ready }) {
                   ) : (
                     <Switch>
                       <Route exact path="/profile" component={ProfilePage} />
+                      <Route exact path="/profileStructureSelection" component={StructureSelectionPage} />
                       <Route component={NoStructureSelected} />
                     </Switch>
                   )
