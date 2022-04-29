@@ -12,6 +12,7 @@ import '../../api/userBookmarks/server/publications';
 import '../../api/userBookmarks/server/server-methods';
 import '../../api/groups/server/publications';
 import '../../api/services/methods';
+import '../../api/services/server/methods';
 import '../../api/services/server/publications';
 import '../../api/categories/methods';
 import '../../api/categories/server/publications';

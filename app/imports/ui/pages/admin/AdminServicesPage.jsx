@@ -12,7 +12,6 @@ import { useHistory } from 'react-router-dom';
 import keyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import Spinner from '../../components/system/Spinner';
 import Services from '../../../api/services/services';
-import { removeService } from '../../../api/services/methods';
 import { handleResult } from '../../../api/utils';
 import setMaterialTableLocalization from '../../components/initMaterialTableLocalization';
 import { useStructure } from '../../../api/structures/utils';
@@ -126,7 +125,8 @@ function AdminServicesPage({ services, loading, structureMode }) {
               editable={{
                 onRowDelete: (oldData) =>
                   new Promise((resolve, reject) => {
-                    removeService.call(
+                    Meteor.call(
+                      'services.removeService',
                       {
                         serviceId: oldData._id,
                       },
