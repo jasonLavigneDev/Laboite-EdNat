@@ -180,6 +180,7 @@
     },
     "services": {
       "unknownService": "Le service n'existe pas.",
+      "ServiceAlreadyExists": "Ce service existe déjà.",
       "states": {
         "displayed": "affiché",
         "inactive": "inactif",
