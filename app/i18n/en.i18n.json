@@ -376,6 +376,12 @@
     }
   },
   "components": {
+    "AdminGroupDelete": {
+      "subtitle": "Group deletion",
+      "mainText": "Do you really want to remove this group? this action is irreversible.",
+      "cancel": "Cancel",
+      "ValidateForm": "Remove"
+    },
     "SiteInMaintenance": {
       "maintenanceInProgress": "Maintenance in progress"
     },
