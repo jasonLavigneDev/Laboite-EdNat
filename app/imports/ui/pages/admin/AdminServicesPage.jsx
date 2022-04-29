@@ -13,9 +13,9 @@ import keyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import Spinner from '../../components/system/Spinner';
 import Services from '../../../api/services/services';
 import { removeService } from '../../../api/services/methods';
+import { handleResult } from '../../../api/utils';
 import setMaterialTableLocalization from '../../components/initMaterialTableLocalization';
 import { useStructure } from '../../../api/structures/utils';
-import { handleResult } from '../../../api/utils';
 
 const { offlinePage } = Meteor.settings.public;
 
@@ -125,12 +125,14 @@ function AdminServicesPage({ services, loading, structureMode }) {
               ]}
               editable={{
                 onRowDelete: (oldData) =>
-                  removeService.call(
-                    {
-                      serviceId: oldData._id,
-                    },
-                    handleResult,
-                  ),
+                  new Promise((resolve, reject) => {
+                    removeService.call(
+                      {
+                        serviceId: oldData._id,
+                      },
+                      handleResult(resolve, reject),
+                    );
+                  }),
               }}
             />
           </Container>
