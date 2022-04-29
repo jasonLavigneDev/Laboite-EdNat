@@ -18,11 +18,8 @@ import COMMON_STYLES from '../../themes/styles';
 const useStyles = (isMobile) =>
   makeStyles((theme) => ({
     root: COMMON_STYLES.root,
-    media: COMMON_STYLES.media,
-    video: COMMON_STYLES.video,
     actions: COMMON_STYLES.actions,
     paper: COMMON_STYLES.paper(isMobile),
-    iconWrapper: COMMON_STYLES.iconWrapper,
     groupCountInfo: COMMON_STYLES.groupCountInfo,
     buttonGroup: {
       display: 'flex',

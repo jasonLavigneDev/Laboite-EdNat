@@ -60,9 +60,6 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'inherit',
     justifyContent: 'right',
   },
-  cardGrid: {
-    marginBottom: theme.spacing(1),
-  },
   flex: {
     display: 'flex',
     justifyContent: 'space-between',
