@@ -42,7 +42,7 @@ const AdminGroupDelete = ({ group, open, onClose }) => {
         msg.error(err.reason);
       } else {
         msg.success(i18n.__('pages.AdminSingleGroupPage.groupRemoved'));
-        history.goBack();
+        history.push('/groups');
       }
     });
     onClose();
