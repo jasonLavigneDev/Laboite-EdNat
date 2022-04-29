@@ -36,6 +36,7 @@ import { useAppContext } from '../../contexts/context';
 import { CustomToolbarArticle } from '../../components/system/CustomQuill';
 import '../../utils/QuillVideo';
 import AvatarPicker from '../../components/users/AvatarPicker';
+import AdminGroupDelete from '../../components/admin/AdminGroupDelete';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -54,6 +55,18 @@ const useStyles = makeStyles((theme) => ({
   button: {
     marginLeft: '5%',
     marginRight: '5%',
+  },
+  actionButtons: {
+    flexDirection: 'inherit',
+    justifyContent: 'right',
+  },
+  cardGrid: {
+    marginBottom: theme.spacing(1),
+  },
+  flex: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 }));
 
@@ -120,6 +133,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
   const [loading, setLoading] = useState(!!params._id);
   const [tabId, setTabId] = React.useState(0);
   const [content, setContent] = useState('');
+  const [openRemoveModal, setOpenRemoveModal] = useState(false);
 
   const [plugins, setPlugins] = useState({}); // { nextcloud: false, rocketChat: true}
   const [{ isMobile }] = useAppContext();
@@ -311,13 +325,33 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
     return null;
   };
 
+  const deleteGroup = () => {
+    setOpenRemoveModal(true);
+  };
+
   return (
     <Fade in>
       <Container>
         <Paper className={classes.root}>
-          <Typography component="h1">
-            {i18n.__(`pages.AdminSingleGroupPage.${params._id ? 'edition' : 'creation'}`)} <b>{groupData.name}</b>
-          </Typography>
+          <Grid item xs={12} sm={12} md={12} className={classes.flex}>
+            <Typography component="h1" style={{ width: '100%' }}>
+              {i18n.__(`pages.AdminSingleGroupPage.${params._id ? 'edition' : 'creation'}`)} <b>{groupData.name}</b>
+            </Typography>
+
+            {params._id ? (
+              <Grid container className={classes.actionButtons} spacing={1}>
+                <Button
+                  variant="contained"
+                  onClick={deleteGroup}
+                  style={{ backgroundColor: 'red', justifyItems: 'right', color: 'white' }}
+                  className={classes.button}
+                >
+                  {i18n.__('pages.AdminSingleGroupPage.delete')}
+                </Button>
+              </Grid>
+            ) : null}
+          </Grid>
+
           <form noValidate autoComplete="off">
             <Grid container spacing={2} style={{ alignItems: 'center' }}>
               <Grid item xs={isMobile ? 12 : 6} style={{ paddingLeft: '18px' }}>
@@ -421,6 +455,9 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
             </div>
           </form>
         </Paper>
+        {openRemoveModal ? (
+          <AdminGroupDelete group={group} open={openRemoveModal} onClose={() => setOpenRemoveModal(false)} />
+        ) : null}
       </Container>
     </Fade>
   );

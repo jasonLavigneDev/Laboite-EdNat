@@ -377,6 +377,12 @@
     }
   },
   "components": {
+    "AdminGroupDelete": {
+      "subtitle": "Suppression de groupe",
+      "mainText": "Souhaitez-vous réellement supprimer ce groupe ? Cette action est irréversible.",
+      "cancel": "Annuler",
+      "ValidateForm": "Supprimer"
+    },
     "SiteInMaintenance": {
       "maintenanceInProgress": "Maintenance en cours"
     },
@@ -1150,6 +1156,7 @@
     "AdminSingleGroupPage": {
       "edition": "Édition du groupe",
       "creation": "Création d'un nouveau groupe",
+      "delete": "Supprimer le groupe",
       "name": "Nom",
       "slug": "Slug",
       "type": "Type",
@@ -1157,7 +1164,8 @@
       "content": "Longue description du groupe",
       "save": "Sauvegarder",
       "update": "Mettre à jour",
-      "cancel": "Annuler"
+      "cancel": "Annuler",
+      "groupRemoved": "Groupe supprimé"
     },
     "SingleGroupPage": {
       "backToList": "Retour à la liste",
