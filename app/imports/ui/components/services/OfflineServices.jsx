@@ -53,19 +53,18 @@ function OfflineServices() {
   });
 
   return (
-    <Grid item xs={12} sm={4} md={7} spacing={2}>
+    <Grid item xs={12} sm={4} md={7}>
       {data.categories.map(
         ({ services, category }) =>
           !!category &&
           !!services.length && (
             <Grid
               justifyContent="center"
-              alignItems="flex-start"
+              alignItems="stretch"
               className={classes.categoryItem}
               container
-              item
               md={12}
-              spacing={4}
+              spacing={2}
             >
               <Chip color="primary" label={category.name} />
               {services.map((service) => (
