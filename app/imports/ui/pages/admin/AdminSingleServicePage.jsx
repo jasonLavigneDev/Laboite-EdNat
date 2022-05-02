@@ -262,7 +262,7 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
 
     method.call(args, (error) => {
       if (error) {
-        msg.error(error.message);
+        msg.error(error.reason || error.message);
         setLoading(false);
       } else {
         msg.success(i18n.__('api.methods.operationSuccessMsg'));
