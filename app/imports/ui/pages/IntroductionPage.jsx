@@ -16,6 +16,7 @@ const IntroductionPage = () => {
     useStructuresOfUserWithIntroductions();
 
   const [{ isMobile, user }] = useAppContext();
+  const { disabledFeatures = {} } = Meteor.settings.public;
 
   const haveStructuresIntroduction = structuresIntroductionContent && structuresIntroductionContent.length > 0;
 
@@ -32,27 +33,31 @@ const IntroductionPage = () => {
               body={introductionContent.content || i18n.__('pages.IntroductionPage.noContent')}
             />
           )}
-          {haveStructuresIntroduction ? (
-            structuresIntroductionLoading ? (
-              <Spinner />
-            ) : (
-              <>
-                <Divider />
-                <Typography variant={isMobile ? 'h6' : 'h4'}>
-                  {i18n.__('pages.IntroductionPage.titleStructures')}
-                </Typography>
-                {structuresIntroductionContent.map((structure) => (
-                  <IntroductionAccordion
-                    key={structure._id}
-                    startExpanded={(() => structure._id === user.structure)()}
-                    summary={structure.name}
-                    head={structure.introduction.title || `${i18n.__('pages.IntroductionPage.noTitle')}`}
-                    body={structure.introduction.content || `${i18n.__('pages.IntroductionPage.noContent')}`}
-                  />
-                ))}
-              </>
-            )
-          ) : null}
+          {!disabledFeatures.introductionTabStructuresInfos && (
+            <>
+              {haveStructuresIntroduction ? (
+                structuresIntroductionLoading ? (
+                  <Spinner />
+                ) : (
+                  <>
+                    <Divider />
+                    <Typography variant={isMobile ? 'h6' : 'h4'}>
+                      {i18n.__('pages.IntroductionPage.titleStructures')}
+                    </Typography>
+                    {structuresIntroductionContent.map((structure) => (
+                      <IntroductionAccordion
+                        key={structure._id}
+                        startExpanded={(() => structure._id === user.structure)()}
+                        summary={structure.name}
+                        head={structure.introduction.title || `${i18n.__('pages.IntroductionPage.noTitle')}`}
+                        body={structure.introduction.content || `${i18n.__('pages.IntroductionPage.noContent')}`}
+                      />
+                    ))}
+                  </>
+                )
+              ) : null}
+            </>
+          )}
         </Container>
       </Fade>
     </>
