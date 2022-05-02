@@ -334,19 +334,6 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
             <Typography component="h1" style={{ width: '100%' }}>
               {i18n.__(`pages.AdminSingleGroupPage.${params._id ? 'edition' : 'creation'}`)} <b>{groupData.name}</b>
             </Typography>
-
-            {params._id ? (
-              <Grid container className={classes.actionButtons} spacing={1}>
-                <Button
-                  variant="contained"
-                  onClick={deleteGroup}
-                  style={{ backgroundColor: 'red', justifyItems: 'right', color: 'white' }}
-                  className={classes.button}
-                >
-                  {i18n.__('pages.AdminSingleGroupPage.delete')}
-                </Button>
-              </Grid>
-            ) : null}
           </Grid>
 
           <form noValidate autoComplete="off">
@@ -445,7 +432,16 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
               <Button variant="contained" onClick={cancelForm} className={classes.button}>
                 {i18n.__('pages.AdminSingleGroupPage.cancel')}
               </Button>
-
+              {params._id ? (
+                <Button
+                  variant="contained"
+                  onClick={deleteGroup}
+                  style={{ backgroundColor: 'red', color: 'white' }}
+                  className={classes.button}
+                >
+                  {i18n.__('pages.AdminSingleGroupPage.delete')}
+                </Button>
+              ) : null}
               <Button variant="contained" color="primary" onClick={submitUpdateGroup} className={classes.button}>
                 {params._id ? i18n.__('pages.AdminSingleGroupPage.update') : i18n.__('pages.AdminSingleGroupPage.save')}
               </Button>
