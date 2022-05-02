@@ -7,6 +7,7 @@ import { Roles } from 'meteor/alanning:roles';
 import i18n from 'meteor/universe:i18n';
 
 import { isActive, getLabel } from '../utils';
+import slugy from '../../ui/utils/slugy';
 import Services from './services';
 import { addService, removeElement } from '../personalspaces/methods';
 
@@ -21,6 +22,13 @@ export const createService = new ValidatedMethod({
     const authorized = isActive(this.userId) && (isAdmin || isStructureAdmin);
     if (!authorized) {
       throw new Meteor.Error('api.services.createService.notPermitted', i18n.__('api.users.adminNeeded'));
+    }
+    const sv = Services.findOne({ slug: slugy(args.title), structure: args.structure });
+    if (sv !== undefined) {
+      throw new Meteor.Error(
+        'api.services.createService.ServiceAlreadyExists',
+        i18n.__('api.services.ServiceAlreadyExists'),
+      );
     }
     const serviceId = Services.insert(args);
     Services.update(serviceId, {
@@ -41,32 +49,6 @@ export const createService = new ValidatedMethod({
       } catch (error) {
         throw new Meteor.Error('api.services.createService.moveError', error.message);
       }
-    }
-  },
-});
-
-export const removeService = new ValidatedMethod({
-  name: 'services.removeService',
-  validate: new SimpleSchema({
-    serviceId: { type: String, regEx: SimpleSchema.RegEx.Id, label: getLabel('api.services.labels.id') },
-  }).validator(),
-
-  run({ serviceId }) {
-    // check service existence
-    const service = Services.findOne(serviceId);
-    if (service === undefined) {
-      throw new Meteor.Error('api.services.removeService.unknownService', i18n.__('api.services.unknownService'));
-    }
-    const isStructureAdmin = service.structure && Roles.userIsInRole(this.userId, 'adminStructure', service.structure);
-    const authorized = isActive(this.userId) && (Roles.userIsInRole(this.userId, 'admin') || isStructureAdmin);
-    if (!authorized) {
-      throw new Meteor.Error('api.services.removeService.notPermitted', i18n.__('api.users.adminNeeded'));
-    }
-    // remove service from users favorites
-    Meteor.users.update({ favServices: { $all: [serviceId] } }, { $pull: { favServices: serviceId } }, { multi: true });
-    Services.remove(serviceId);
-    if (Meteor.isServer && !Meteor.isTest && Meteor.settings.public.minioEndPoint) {
-      Meteor.call('files.removeFolder', { path: `services/${service._id}` });
     }
   },
 });
@@ -154,7 +136,7 @@ export const unfavService = new ValidatedMethod({
 });
 
 // Get list of all method names on User
-const LISTS_METHODS = _.pluck([createService, removeService, updateService, favService, unfavService], 'name');
+const LISTS_METHODS = _.pluck([createService, updateService, favService, unfavService], 'name');
 
 if (Meteor.isServer) {
   // Only allow 5 list operations per connection per second
