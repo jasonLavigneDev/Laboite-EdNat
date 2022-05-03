@@ -10,8 +10,6 @@ import Tooltip from '@material-ui/core/Tooltip';
 
 import SearchIcon from '@material-ui/icons/Search';
 import AddIcon from '@material-ui/icons/Add';
-import ViewListIcon from '@material-ui/icons/ViewList';
-import DashboardIcon from '@material-ui/icons/Dashboard';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import Switch from '@material-ui/core/Switch';
@@ -27,6 +25,7 @@ import { useAppContext } from '../../contexts/context';
 import { usePagination } from '../../utils/hooks';
 import GroupDetailsList from '../../components/groups/GroupDetailsList';
 import CollapsingSearch from '../../components/system/CollapsingSearch';
+import { useIconStyles, DetaiIconCustom, SimpleIconCustom } from '../../components/system/icons/icons';
 import Spinner from '../../components/system/Spinner';
 
 const useStyles = makeStyles(() => ({
@@ -85,6 +84,7 @@ function GroupsPage() {
   const [filterChecked, setFilterChecked] = React.useState(false);
   const history = useHistory();
   const classes = useStyles();
+  const classesIcons = useIconStyles();
   const {
     search = '',
     searchToggle = false,
@@ -155,14 +155,18 @@ function GroupsPage() {
 
   const toggleButtons = (
     <ToggleButtonGroup value={viewMode} exclusive aria-label={i18n.__('pages.GroupsPage.viewMode')}>
-      <ToggleButton value="card" onClick={changeViewMode} aria-label={i18n.__('pages.GroupsPage.viewCard')}>
-        <Tooltip title={i18n.__('pages.GroupsPage.viewCard')}>
-          <DashboardIcon color="primary" />
+      <ToggleButton value="card" onClick={changeViewMode} aria-label={i18n.__('pages.GroupsPage.viewDetail')}>
+        <Tooltip title={i18n.__('pages.GroupsPage.viewDetail')}>
+          <span className={classesIcons.size}>
+            <DetaiIconCustom />
+          </span>
         </Tooltip>
       </ToggleButton>
-      <ToggleButton value="list" onClick={changeViewMode} aria-label={i18n.__('pages.GroupsPage.viewList')}>
-        <Tooltip title={i18n.__('pages.GroupsPage.viewList')}>
-          <ViewListIcon color="primary" />
+      <ToggleButton value="list" onClick={changeViewMode} aria-label={i18n.__('pages.GroupsPage.viewSimple')}>
+        <Tooltip title={i18n.__('pages.GroupsPage.viewSimple')}>
+          <span className={classesIcons.size}>
+            <SimpleIconCustom />
+          </span>
         </Tooltip>
       </ToggleButton>
     </ToggleButtonGroup>
