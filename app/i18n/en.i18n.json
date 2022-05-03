@@ -1252,6 +1252,7 @@
     },
     "PublicArticlePage": {
       "title": "Publications by",
+      "searchArticle": "Search publication",
       "searchText": "What are you looking for ?",
       "goToList": "See the authors"
     },

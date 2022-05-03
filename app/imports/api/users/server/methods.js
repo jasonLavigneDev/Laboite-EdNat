@@ -900,7 +900,6 @@ export const findUser = new ValidatedMethod({
   validate: new SimpleSchema({
     userId: validateSchema.userId,
   }).validator(),
-
   run({ userId }) {
     return Meteor.users.findOne({ _id: userId }, { fields: { firstName: 1, lastName: 1, _id: 1 } });
   },

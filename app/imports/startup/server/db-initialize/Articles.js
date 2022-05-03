@@ -35,6 +35,7 @@ if (Articles.find().count() === 0) {
             description,
             content: faker.lorem.paragraphs(),
           });
+          Meteor.users.update({ _id: userId }, { $inc: { articlesCount: 1 }, $set: { lastArticle: new Date() } });
         } catch (error) {
           logServer(`Error creating article: ${error.reason || error.message || error}`);
         }

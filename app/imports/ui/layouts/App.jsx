@@ -32,7 +32,7 @@ function App() {
   const [state] = useAppContext();
   const { userId, loadingUser = false, loading } = state;
   const useKeycloak = Meteor.settings.public.enableKeycloak;
-  const externalBlog = typeof Meteor.settings.public.laboiteBlogURL !== 'undefined';
+  const externalBlog = !!Meteor.settings.public.laboiteBlogURL;
   const { disabledFeatures = {}, minioEndPoint } = Meteor.settings.public;
   const enableBlog = !disabledFeatures.blog;
 
