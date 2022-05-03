@@ -9,6 +9,7 @@ import i18n from 'meteor/universe:i18n';
 import { isActive, getLabel } from '../../utils';
 import Services from '../services';
 import { removeFilesFolder } from '../../files/server/methods';
+import { hasAdminRightOnStructure } from '../../structures/utils';
 
 export const removeService = new ValidatedMethod({
   name: 'services.removeService',
@@ -22,7 +23,8 @@ export const removeService = new ValidatedMethod({
     if (service === undefined) {
       throw new Meteor.Error('api.services.removeService.unknownService', i18n.__('api.services.unknownService'));
     }
-    const isStructureAdmin = service.structure && Roles.userIsInRole(this.userId, 'adminStructure', service.structure);
+    const isStructureAdmin =
+      service.structure && hasAdminRightOnStructure({ userId: this.userId, structureId: service.structure });
     const authorized = isActive(this.userId) && (Roles.userIsInRole(this.userId, 'admin') || isStructureAdmin);
     if (!authorized) {
       throw new Meteor.Error('api.services.removeService.notPermitted', i18n.__('api.users.adminNeeded'));
