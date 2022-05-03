@@ -74,8 +74,15 @@ function OfflineServices() {
             >
               <Chip color="primary" label={category.name} />
               {services.map((service) => (
-                <Grid className={classes.serviceItem} item xs={12} md={6} lg={4} key={service._id}>
-                  <ServiceDetailsList service={service} />
+                <Grid
+                  className={classes.serviceItem}
+                  item
+                  xs={isMobile ? 4 : 12}
+                  md={isMobile ? 2 : 6}
+                  lg={4}
+                  key={service._id}
+                >
+                  <ServiceDetailsList service={service} noIconMode />
                 </Grid>
               ))}
             </Grid>

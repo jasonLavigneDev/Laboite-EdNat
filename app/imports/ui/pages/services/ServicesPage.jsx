@@ -290,7 +290,7 @@ export function ServicesPage({ services, categories, ready, structureMode, offli
                 </Typography>
               ) : viewMode === 'list' && isMobile ? (
                 mapList((service) => (
-                  <Grid className={classes.gridItem} item xs={12} md={6} key={service._id}>
+                  <Grid className={classes.gridItem} item xs={4} md={2} key={service._id}>
                     <ServiceDetailsList service={service} favAction={favAction(service._id)} />
                   </Grid>
                 ))
