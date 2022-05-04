@@ -3,7 +3,6 @@ import i18n from 'meteor/universe:i18n';
 import Fade from '@material-ui/core/Fade';
 import Container from '@material-ui/core/Container';
 import Divider from '@material-ui/core/Divider';
-import Typography from '@material-ui/core/Typography';
 import Spinner from '../components/system/Spinner';
 import IntroductionAccordion from '../components/introduction/IntroductionAccordion';
 import { useCurrentIntroduction } from '../../api/appsettings/hooks';
@@ -15,10 +14,18 @@ const IntroductionPage = () => {
   const { data: structuresIntroductionContent, loading: structuresIntroductionLoading } =
     useStructuresOfUserWithIntroductions();
 
-  const [{ isMobile, user }] = useAppContext();
+  const [{ user }] = useAppContext();
   const { disabledFeatures = {} } = Meteor.settings.public;
 
-  const haveStructuresIntroduction = structuresIntroductionContent && structuresIntroductionContent.length > 0;
+  const isIntroductionEmpty = (introduction) =>
+    introduction.content == null && typeof introduction.content !== 'string';
+
+  const notEmptyIntroductions = structuresIntroductionContent.filter(
+    (structure) => !isIntroductionEmpty(structure.introduction),
+  );
+
+  const haveStructuresIntroduction =
+    structuresIntroductionContent && structuresIntroductionContent.length > 0 && notEmptyIntroductions.length > 0;
 
   return (
     <>
@@ -41,16 +48,13 @@ const IntroductionPage = () => {
                 ) : (
                   <>
                     <Divider />
-                    <Typography variant={isMobile ? 'h6' : 'h4'}>
-                      {i18n.__('pages.IntroductionPage.titleStructures')}
-                    </Typography>
-                    {structuresIntroductionContent.map((structure) => (
+                    {notEmptyIntroductions.map((structure) => (
                       <IntroductionAccordion
                         key={structure._id}
                         startExpanded={(() => structure._id === user.structure)()}
                         summary={structure.name}
-                        head={structure.introduction.title || `${i18n.__('pages.IntroductionPage.noTitle')}`}
-                        body={structure.introduction.content || `${i18n.__('pages.IntroductionPage.noContent')}`}
+                        head={structure.introduction.title || false}
+                        body={structure.introduction.content}
                       />
                     ))}
                   </>

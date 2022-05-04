@@ -14,6 +14,7 @@ import { CustomToolbarArticle } from '../system/CustomQuill';
 import { quillOptions, useStyles } from './IntroductionEdition';
 import Spinner from '../system/Spinner';
 import { getCurrentIntroduction } from '../../../api/utils';
+import { stripEmptyHtml } from '../../utils/QuillText';
 
 const AdminStructuresIntroductionEdition = ({ /** Can be a state */ structure }) => {
   const classes = useStyles();
@@ -60,14 +61,18 @@ const AdminStructuresIntroductionEdition = ({ /** Can be a state */ structure })
 
   const onSubmitUpdateData = () => {
     setLoading(true);
-    Meteor.call('structures.updateIntroduction', { structureId: structure._id, language, content, title }, (error) => {
-      setLoading(false);
-      if (error) {
-        msg.error(error.message);
-      } else {
-        msg.success(i18n.__('api.methods.operationSuccessMsg'));
-      }
-    });
+    Meteor.call(
+      'structures.updateIntroduction',
+      { structureId: structure._id, language, content: stripEmptyHtml(content), title },
+      (error) => {
+        setLoading(false);
+        if (error) {
+          msg.error(error.message);
+        } else {
+          msg.success(i18n.__('api.methods.operationSuccessMsg'));
+        }
+      },
+    );
   };
 
   if (loading) return <Spinner />;

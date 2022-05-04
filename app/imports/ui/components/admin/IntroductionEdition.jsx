@@ -16,6 +16,7 @@ import Spinner from '../system/Spinner';
 import { CustomToolbarArticle } from '../system/CustomQuill';
 import '../../utils/QuillVideo';
 import { getCurrentIntroduction } from '../../../api/utils';
+import { stripEmptyHtml } from '../../utils/QuillText';
 
 export const useStyles = makeStyles((theme) => ({
   root: {
@@ -85,7 +86,7 @@ const IntroductionEdition = ({ data = [] }) => {
   const onSubmitUpdateData = () => {
     setLoading(true);
 
-    updateIntroductionLanguage.call({ language, content }, (error) => {
+    updateIntroductionLanguage.call({ language, content: stripEmptyHtml(content) }, (error) => {
       setLoading(false);
       if (error) {
         msg.error(error.message);
