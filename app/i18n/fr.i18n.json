@@ -192,6 +192,7 @@
     },
     "services": {
       "unknownService": "Le service n'existe pas.",
+      "ServiceAlreadyExists": "Ce service existe déjà.",
       "states": {
         "displayed": "affiché",
         "inactive": "inactif",
@@ -389,6 +390,12 @@
     }
   },
   "components": {
+    "AdminGroupDelete": {
+      "subtitle": "Suppression de groupe",
+      "mainText": "Souhaitez-vous réellement supprimer ce groupe ? Cette action est irréversible.",
+      "cancel": "Annuler",
+      "ValidateForm": "Supprimer"
+    },
     "SiteInMaintenance": {
       "maintenanceInProgress": "Maintenance en cours"
     },
@@ -980,7 +987,7 @@
       "title": "Explorer les groupes",
       "searchText": "Quel groupe cherchez-vous ?",
       "searchGroup": "Rechercher un groupe",
-      "addGroup": "Gérer les groupes",
+      "addGroup": "Ajouter un groupe",
       "viewMode": "Changer le mode d'affichage",
       "viewCard": "Mode cartes",
       "viewList": "Mode liste",
@@ -1174,7 +1181,7 @@
       "toggleEdition": "Activer/Désactiver le mode édition"
     },
     "HelpPage": {
-      "title": "Retrouvez ici tout l'aide nécessaire",
+      "title": "Retrouvez ici toute l'aide nécessaire",
       "tutoLabel": "Ouvrir l'aide"
     },
     "AdminSingleServicePage": {
@@ -1201,6 +1208,7 @@
     "AdminSingleGroupPage": {
       "edition": "Édition du groupe",
       "creation": "Création d'un nouveau groupe",
+      "delete": "Supprimer le groupe",
       "name": "Nom",
       "slug": "Slug",
       "type": "Type",
@@ -1208,7 +1216,8 @@
       "content": "Longue description du groupe",
       "save": "Sauvegarder",
       "update": "Mettre à jour",
-      "cancel": "Annuler"
+      "cancel": "Annuler",
+      "groupRemoved": "Groupe supprimé"
     },
     "SingleGroupPage": {
       "backToList": "Retour à la liste",

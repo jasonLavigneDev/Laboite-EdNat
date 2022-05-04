@@ -3,6 +3,7 @@ import SimpleSchema from 'simpl-schema';
 import { Tracker } from 'meteor/tracker';
 import slugy from '../../ui/utils/slugy';
 import { getLabel } from '../utils';
+import logServer from '../logging';
 
 const Services = new Mongo.Collection('services');
 
@@ -29,7 +30,6 @@ Services.schema = new SimpleSchema(
     slug: {
       type: String,
       index: true,
-      unique: true,
       min: 1,
       label: getLabel('api.services.labels.slug'),
       autoValue() {
@@ -102,6 +102,22 @@ Services.allPublicFields = {
   screenshots: 1,
   content: 1,
 };
+
+if (Meteor.isServer) {
+  // remove old unique index on slug if existing
+  try {
+    const srv = Services.rawCollection();
+    srv.indexes({}, (err, res) => {
+      if (!err) {
+        if (res.find((index) => index.name === 'c2_slug' && index.unique === true) !== undefined) {
+          srv.dropIndex('c2_slug');
+        }
+      }
+    });
+  } catch (err) {
+    logServer(`Error removing old services slug index: ${err}`);
+  }
+}
 
 Services.attachSchema(Services.schema);
 

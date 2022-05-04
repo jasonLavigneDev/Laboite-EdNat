@@ -8,6 +8,7 @@ import i18n from 'meteor/universe:i18n';
 
 import { isActive, getLabel } from '../utils';
 import { hasAdminRightOnStructure } from '../structures/utils';
+import slugy from '../../ui/utils/slugy';
 import Services from './services';
 import { addService, removeElement } from '../personalspaces/methods';
 
@@ -23,6 +24,13 @@ export const createService = new ValidatedMethod({
     const authorized = isActive(this.userId) && (isAdmin || isStructureAdmin);
     if (!authorized) {
       throw new Meteor.Error('api.services.createService.notPermitted', i18n.__('api.users.adminNeeded'));
+    }
+    const sv = Services.findOne({ slug: slugy(args.title), structure: args.structure });
+    if (sv !== undefined) {
+      throw new Meteor.Error(
+        'api.services.createService.ServiceAlreadyExists',
+        i18n.__('api.services.ServiceAlreadyExists'),
+      );
     }
     const serviceId = Services.insert(args);
     Services.update(serviceId, {
@@ -158,7 +166,7 @@ export const unfavService = new ValidatedMethod({
 });
 
 // Get list of all method names on User
-const LISTS_METHODS = _.pluck([createService, removeService, updateService, favService, unfavService], 'name');
+const LISTS_METHODS = _.pluck([createService, updateService, favService, unfavService], 'name');
 
 if (Meteor.isServer) {
   // Only allow 5 list operations per connection per second
