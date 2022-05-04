@@ -186,6 +186,7 @@
     },
     "services": {
       "unknownService": "Service does not exist.",
+      "ServiceAlreadyExists": "Service already exists.",
       "states": {
         "displayed": "displayed",
         "inactive": "inactive",
@@ -383,6 +384,12 @@
     }
   },
   "components": {
+    "AdminGroupDelete": {
+      "subtitle": "Group deletion",
+      "mainText": "Do you really want to remove this group? this action is irreversible.",
+      "cancel": "Cancel",
+      "ValidateForm": "Remove"
+    },
     "SiteInMaintenance": {
       "maintenanceInProgress": "Maintenance in progress"
     },
@@ -1186,6 +1193,7 @@
     "AdminSingleGroupPage": {
       "edition": "Edition of the group",
       "creation": "Creation of a new group",
+      "delete": "Delete group",
       "name": "Name",
       "slug": "Slug",
       "type": "Type",
@@ -1193,7 +1201,8 @@
       "content": "Long description of the group",
       "save": "Save",
       "update": "Update",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "groupRemoved": "Group deleted"
     },
     "SingleGroupPage": {
       "backToList": "Back to the list",

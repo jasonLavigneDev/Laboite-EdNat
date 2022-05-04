@@ -68,28 +68,21 @@ export const filesupload = new ValidatedMethod({
   },
 });
 
-export const removeFilesFolder = new ValidatedMethod({
-  name: 'files.removeFolder',
-  validate: new SimpleSchema({
-    path: String,
-  }).validator(),
-  async run({ path }) {
-    checkUserAdminRights(path, this.userId);
-    const results = new Promise((resolve, reject) => {
-      const stream = s3Client.listObjectsV2(minioBucket, path, true, '');
-      stream.on('data', (obj) => {
-        s3Client.removeObject(minioBucket, obj.name);
-      });
-      stream.on('error', (error) => {
-        reject(error);
-      });
-      stream.on('end', () => {
-        resolve();
-      });
+export async function removeFilesFolder(path) {
+  const results = new Promise((resolve, reject) => {
+    const stream = s3Client.listObjectsV2(minioBucket, path, true, '');
+    stream.on('data', (obj) => {
+      s3Client.removeObject(minioBucket, obj.name);
     });
-    return results;
-  },
-});
+    stream.on('error', (error) => {
+      reject(error);
+    });
+    stream.on('end', () => {
+      resolve();
+    });
+  });
+  return results;
+}
 
 export const removeSelectedFiles = new ValidatedMethod({
   name: 'files.selectedRemove',
@@ -236,10 +229,7 @@ export const getFilesForCurrentUser = new ValidatedMethod({
 });
 
 // Get list of all method names on User
-const LISTS_METHODS = _.pluck(
-  [removeFilesFolder, filesupload, removeSelectedFiles, moveFiles, rename, getFilesForCurrentUser],
-  'name',
-);
+const LISTS_METHODS = _.pluck([filesupload, removeSelectedFiles, moveFiles, rename, getFilesForCurrentUser], 'name');
 
 // Only allow 5 list operations per connection per second
 DDPRateLimiter.addRule(
