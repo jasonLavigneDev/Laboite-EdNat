@@ -78,7 +78,7 @@ export const useStructuresOfUserWithIntroductions = () => {
       const introduction = getCurrentIntroduction({ introduction: struct.introduction });
       const introductionTitle =
         introduction.title || `${i18n.__('pages.IntroductionPage.informationsOf')} ${struct.name}`;
-      const introductionContent = introduction.content || `${i18n.__('pages.IntroductionPage.noContent')}`;
+      const introductionContent = introduction.content || null;
 
       return {
         ...struct,
