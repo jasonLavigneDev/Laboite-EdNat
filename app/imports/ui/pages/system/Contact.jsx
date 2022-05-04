@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
+import PropTypes from 'prop-types';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
@@ -12,9 +13,11 @@ import i18n from 'meteor/universe:i18n';
 import { useHistory } from 'react-router-dom';
 import validate from 'validate.js';
 import FormHelperText from '@material-ui/core/FormHelperText';
+import { withTracker } from 'meteor/react-meteor-data';
 import CustomSelect from '../../components/admin/CustomSelect';
-import { structureOptions } from '../../../api/users/structures';
-import { mainPagesTracker, useFormStateValidator } from './SignIn';
+import { useFormStateValidator } from './SignIn';
+import Structures from '../../../api/structures/structures';
+import Spinner from '../../components/system/Spinner';
 
 validate.options = {
   fullMessages: false,
@@ -84,7 +87,8 @@ const rndmNr1 = Math.floor(Math.random() * 100);
 const rndmNr2 = Math.floor(Math.random() * 10);
 const totalNr = rndmNr1 + rndmNr2;
 
-const Contact = () => {
+const Contact = ({ structures, loading }) => {
+  if (loading) return <Spinner full />;
   const history = useHistory();
   const classes = useStyles();
   const [formState, handleChange] = useFormStateValidator(schema);
@@ -200,7 +204,7 @@ const Contact = () => {
                   error={hasError('structureSelect')}
                   onChange={handleChange}
                   labelWidth={labelWidth}
-                  options={structureOptions}
+                  options={structures.map((opt) => ({ value: opt.name, label: opt.name }))}
                 />
                 <FormHelperText className={hasError('structureSelect') ? 'Mui-error' : ''}>
                   {hasError('structureSelect')}
@@ -261,8 +265,17 @@ const Contact = () => {
   );
 };
 
-export default mainPagesTracker('introduction', Contact);
-
-Contact.defaultProps = {
-  introduction: '',
+Contact.propTypes = {
+  structures: PropTypes.arrayOf(PropTypes.object).isRequired,
+  loading: PropTypes.bool.isRequired,
 };
+
+export default withTracker(() => {
+  const structuresHandle = Meteor.subscribe('structures.all');
+  const loading = !structuresHandle.ready();
+  const structures = Structures.find({}, { sort: { name: 1 } }).fetch();
+  return {
+    structures,
+    loading,
+  };
+})(Contact);
