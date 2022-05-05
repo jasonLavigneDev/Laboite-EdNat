@@ -12,8 +12,8 @@ import { useHistory } from 'react-router-dom';
 import keyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import Spinner from '../../components/system/Spinner';
 import Services from '../../../api/services/services';
-import { handleResult } from '../../../api/utils';
 import setMaterialTableLocalization from '../../components/initMaterialTableLocalization';
+import { handleResult } from '../../../api/utils';
 import { useStructure } from '../../../api/structures/hooks';
 
 const { offlinePage } = Meteor.settings.public;

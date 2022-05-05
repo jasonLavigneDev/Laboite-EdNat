@@ -474,7 +474,8 @@
       "menuAdminServices": "Gestion des Services",
       "menuAdminUserValidation": "Validation des utilisateurs",
       "tooltipServices": "Services Numériques Partagés",
-      "tooltipStructure": "Ressources de votre structure"
+      "tooltipStructure": "Ressources de votre structure",
+      "menuIntroduction": "Informations"
     },
     "ServiceDetails": {
       "runServiceButtonLabel": "Ouvrir l'application",
@@ -1340,6 +1341,10 @@
     },
     "StructureSelectionPage": {
       "backToProfile": "Aller au profile"
+    },
+    "IntroductionPage": {
+      "titleAppIntroduction": "Informations générales",
+      "noContent": "Pas de contenu pour le moment"
     }
   },
   "layouts": {

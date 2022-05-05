@@ -148,3 +148,11 @@ export const getTree = (
 
   return result;
 };
+
+/**
+ * - valid language is like `en` or `fr`
+ *
+ * - default value of language is current i18n one
+ */
+export const getCurrentIntroduction = ({ introduction, language = i18n.getLocale().split('-')[0] }) =>
+  introduction.find((entry) => entry.language === language);

@@ -474,7 +474,8 @@
       "menuAdminServices": "Service Management",
       "menuAdminUserValidation": "User validation",
       "tooltipServices": "SNP apps",
-      "tooltipStructure": "Resources from your structure"
+      "tooltipStructure": "Resources from your structure",
+      "menuIntroduction": "Informations"
     },
     "ServiceDetails": {
       "runServiceButtonLabel": "Run this service",
@@ -945,7 +946,7 @@
       "currentStructure": "Your current attachement structure is:",
       "noSelectedStructure": "No selected structure",
       "noCurrentStructure": "You have no attached structure for now",
-      "chooseAttachementStructure":"Choose your attachement structure"
+      "chooseAttachementStructure": "Choose your attachement structure"
     },
     "NotFound": {
       "backButtonLabel": "Back",
@@ -1339,6 +1340,10 @@
     },
     "StructureSelectionPage": {
       "backToProfile": "Aller au profile"
+    },
+    "IntroductionPage": {
+      "titleAppIntroduction": "General informations",
+      "noContent": "No content for now."
     }
   },
   "layouts": {

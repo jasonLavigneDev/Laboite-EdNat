@@ -20,6 +20,7 @@ import AppVersion from '../../components/system/AppVersion';
 import AppSettings from '../../../api/appsettings/appsettings';
 
 import Structures from '../../../api/structures/structures';
+import { getCurrentIntroduction } from '../../../api/utils';
 
 validate.options = {
   fullMessages: false,
@@ -257,11 +258,8 @@ export const mainPagesTracker = (settingsSegment = 'all', component) => {
     const subSettings = Meteor.subscribe(`appsettings.${settingsSegment}`);
     const appsettings = AppSettings.findOne() || {};
     const ready = subSettings.ready();
-    // locale may be fr-FR, en-EN, etc...
-    // laboite only manages fr, en, ...
-    const language = i18n.getLocale().split('-')[0];
     const { introduction = [] } = appsettings;
-    const currentEntry = introduction.find((entry) => entry.language === language) || {};
+    const currentEntry = getCurrentIntroduction({ introduction }) || {};
     const defaultContent = introduction.find((entry) => !!entry.content.length);
 
     /**
