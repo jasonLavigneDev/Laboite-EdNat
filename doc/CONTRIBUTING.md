@@ -13,6 +13,7 @@ the numerous automated processes that are used for this repo.
 Submitting a merge request is more than just code! To achieve a quality
 product, the tests and documentation need to be updated as well. An excellent
 merge request will include these in the changes, wherever relevant.
+Do not merge `testing` and `master` locally, prefer using a merge request for that.
 
 
 ## Commit message formatting
@@ -81,7 +82,7 @@ This project applies some customisation to the defaults, as outlined in the
 table below, based upon the type of the commit:
 
 | Type     | Heading                  | Description                                                                                             | Bump (default) | Bump (custom) |
-|----------|--------------------------|---------------------------------------------------------------------------------------------------------|----------------|---------------|
+| -------- | ------------------------ | ------------------------------------------------------------------------------------------------------- | -------------- | ------------- |
 | build    | Build System             | Changes related to the build system                                                                     | –              | _             |
 | chore    | –                        | Changes to the build process or auxiliary tools and libraries such as documentation generation          | –              | _             |
 | ci       | Continuous Integration   | Changes to the continuous integration configuration                                                     | –              | _             |
