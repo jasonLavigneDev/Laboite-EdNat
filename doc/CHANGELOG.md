@@ -1,5 +1,92 @@
 # Changelog
 
+# [4.2.0](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/4.1.2...release/4.2.0) (2022-05-05)
+
+
+### Bug Fixes
+
+* **addressBook:** fix pagination in group's address book ([af06afa](https://gitlab.mim-libre.fr/alphabet/laboite/commit/af06afa07908a21d89dfc8ef79e537afe1223a71))
+* **addressBook:** fix search and display in address book page ([81da4c4](https://gitlab.mim-libre.fr/alphabet/laboite/commit/81da4c476033d0b19ae048afc9e87c21f57ddb07))
+* **article factory:** limit description to 400 char ([54121d1](https://gitlab.mim-libre.fr/alphabet/laboite/commit/54121d19575464336b718a411ecb37e4c93a5af9))
+* **audit:** fix momentjs and reapply forced libs versions ([3eb601b](https://gitlab.mim-libre.fr/alphabet/laboite/commit/3eb601b2f09a3a4ba5af007297750a2f6d308010))
+* **audit:** update Dockerfile and CI ([fc372e0](https://gitlab.mim-libre.fr/alphabet/laboite/commit/fc372e00d9bbd7d77db54c17e46223ceae359ec9))
+* **audit:** update meteor and project dependencies ([40a250d](https://gitlab.mim-libre.fr/alphabet/laboite/commit/40a250dc8652cc4e855f3e77434f3ac1a538eb72))
+* **audit:** update minimist to version 1.2.6 ([ccad65b](https://gitlab.mim-libre.fr/alphabet/laboite/commit/ccad65b127dd2405d41e8895b85764ff0f188437))
+* **audit:** update to Meteor 2.7.1 (includes node 14.19.1) ([5ea0a6d](https://gitlab.mim-libre.fr/alphabet/laboite/commit/5ea0a6df67f4b7faf517b2b7f21c148af1d1ff5c))
+* **categorie:** fix translationwhen category already exists ([7b04cfe](https://gitlab.mim-libre.fr/alphabet/laboite/commit/7b04cfed5d86232359cdd8024377d70094063719))
+* **contact:** fix structure selection in contact form ([23abbf0](https://gitlab.mim-libre.fr/alphabet/laboite/commit/23abbf05e60f06e28ab888664b468ee76e9ed83a))
+* **css:** fix search box group event padding ([9226c12](https://gitlab.mim-libre.fr/alphabet/laboite/commit/9226c12ceb9d77a59577eedcb8a442a89c619e28))
+* **docs:** add a message to not merging release branches locally ([8810c94](https://gitlab.mim-libre.fr/alphabet/laboite/commit/8810c945e5540518622f25c2b3ade9c471151ab8))
+* **events:** fix pagination for group events page ([f616447](https://gitlab.mim-libre.fr/alphabet/laboite/commit/f616447566c4c7c5f4b322aabf47acf26324036c))
+* **fakedata article:** limit description length, prevent server crash ([21ed523](https://gitlab.mim-libre.fr/alphabet/laboite/commit/21ed523d35ebb360f81fb66cadbfad9ccf852ac1))
+* **fakedata:** fix url for codiMD in fake data ([a2adffe](https://gitlab.mim-libre.fr/alphabet/laboite/commit/a2adffe356239c7ee74422319edb8476f1a345a0))
+* **fakeData:** retry 3 times if email already exists for fake user ([21303f7](https://gitlab.mim-libre.fr/alphabet/laboite/commit/21303f7281efa55ba4d0e6e62af88a699de794d7))
+* **favicon:** update favicon with apps image ([1112437](https://gitlab.mim-libre.fr/alphabet/laboite/commit/11124376f823b9169a4c3dc8677eb90e2f5a4449))
+* **group admin:** temporarily disable group members import ([f686a8d](https://gitlab.mim-libre.fr/alphabet/laboite/commit/f686a8dd1edf9cbcb443a8b323c053ecd8b2b4c9))
+* **group:** fix and improve search on users.groups ([5451af7](https://gitlab.mim-libre.fr/alphabet/laboite/commit/5451af7a7a8f722d842f8fb2cf5f666daa4a408a))
+* **group:** remove useless code ([164eecc](https://gitlab.mim-libre.fr/alphabet/laboite/commit/164eeccc9416f63287083562811d7f8c31a48e6d))
+* **group:** replace delete button ([03ff509](https://gitlab.mim-libre.fr/alphabet/laboite/commit/03ff5093c9e023f608c419d3fb52abdacc252cfe))
+* **groups:** fix redirection after group deletion ([ab35b2d](https://gitlab.mim-libre.fr/alphabet/laboite/commit/ab35b2de6a395e3fd5c20b64eacbc94d56b774b2))
+* **help:** add key to each child ([0b6ac6e](https://gitlab.mim-libre.fr/alphabet/laboite/commit/0b6ac6e11b0f067778eb2ce2692e758a6413d74f))
+* **help:** remove appname from title ([fe5401c](https://gitlab.mim-libre.fr/alphabet/laboite/commit/fe5401c0986f514ac07b613e1c5df335aeba811e))
+* **help:** remove wrong zoneclasses prop ([34973f0](https://gitlab.mim-libre.fr/alphabet/laboite/commit/34973f01a98f97399d584498844e5bd5cffb6151))
+* **i18n:** add english trad for deletion modal ([5321247](https://gitlab.mim-libre.fr/alphabet/laboite/commit/5321247009386afb12c7f280fd36f5641d3b8a3f))
+* **i18n:** fix i18n ([b35b767](https://gitlab.mim-libre.fr/alphabet/laboite/commit/b35b7672706df47905e8eb85df83fc6ff2006c55))
+* **i18n:** fix label for help page ([97afef3](https://gitlab.mim-libre.fr/alphabet/laboite/commit/97afef32604ab23877f912ed53d2be2a2989258d))
+* **lint:** disable eslint rule react/forbid-prop-types ([70c1740](https://gitlab.mim-libre.fr/alphabet/laboite/commit/70c17404d07104badce8247d644982902dc2a46a))
+* **nclocator:** block deletion when url is used ([ca42949](https://gitlab.mim-libre.fr/alphabet/laboite/commit/ca42949fce03dd0f6bf4d054a89948cc0a53f5e0))
+* **nclocator:** fix url count when user is deleted ([1a6046a](https://gitlab.mim-libre.fr/alphabet/laboite/commit/1a6046aa916bd095e7956a9dc2c88e43ef81df16))
+* **offline:** sort offline categories and services ([d8e48a9](https://gitlab.mim-libre.fr/alphabet/laboite/commit/d8e48a93f38dc92adbfac61ad01a555122e85402))
+* **polls:** fix pagination for poll page ([808d687](https://gitlab.mim-libre.fr/alphabet/laboite/commit/808d6871ac57c52d2030b210d44675b8d4bdcd27))
+* **profile:** button load data entirely clickable ([88ea2fc](https://gitlab.mim-libre.fr/alphabet/laboite/commit/88ea2fcbf4beaa9ec5e945f087460b2f7d468965))
+* **profile:** delete second tooltip on load file button ([29ac847](https://gitlab.mim-libre.fr/alphabet/laboite/commit/29ac84731c2acbb3f5e78327a1c863ee41731994))
+* **profil:** fix input type file on load image button ([6c6f92f](https://gitlab.mim-libre.fr/alphabet/laboite/commit/6c6f92f78c0e9b47d9ebe4f8219ad14efbbbfaae))
+* **services:** fix promise on services deletion ([a2518b6](https://gitlab.mim-libre.fr/alphabet/laboite/commit/a2518b6f6c15ebbdcae7bd27cbc88da0b92a205d))
+* **services:** removeFolder function is server side only, remove checks ([7ab62f4](https://gitlab.mim-libre.fr/alphabet/laboite/commit/7ab62f42d32ccca200be205e9642fac159b434ec))
+* **services:** service name is unique by structure only ([ee04180](https://gitlab.mim-libre.fr/alphabet/laboite/commit/ee04180e886d275c09002112941b541d2695da5b))
+* **settings:** add missing comma ([1ab5c94](https://gitlab.mim-libre.fr/alphabet/laboite/commit/1ab5c944ca5c8fb08ffffc3476507ab242d14b94))
+* **structure:** fix bad display of users structure ([1846c78](https://gitlab.mim-libre.fr/alphabet/laboite/commit/1846c78fc1d1fbae000c5c43acb9e5f50805a1c7))
+* **structure:** fix structure display in validation page ([d9bd2d8](https://gitlab.mim-libre.fr/alphabet/laboite/commit/d9bd2d862fa6339a8bf9efe0e1c0d027fa1ea8e9))
+* **tabs:** fix menu indicator on first load ([2088b68](https://gitlab.mim-libre.fr/alphabet/laboite/commit/2088b68642ca3ff0d5f63cec92f76541e9629730))
+* **test:** add test for nclocator deletion ([ea88665](https://gitlab.mim-libre.fr/alphabet/laboite/commit/ea88665f9022a559244ba87de348f7208bfb70d5))
+* **tests:** fix factory for helps ([081824d](https://gitlab.mim-libre.fr/alphabet/laboite/commit/081824da7d9b4156c3241343ecfb81f100e7980f))
+* **tests:** fix factory for helps ([c4dab4a](https://gitlab.mim-libre.fr/alphabet/laboite/commit/c4dab4ad641c2e534234c3cb7721e11b394d94ff))
+* **ui:** fix favicon 404 with codiMD in fake data ([3a95c8b](https://gitlab.mim-libre.fr/alphabet/laboite/commit/3a95c8bc508b9b5a376bc5e7ae9503d688d667d2))
+* **ui:** fix label for + button in groups page ([7831604](https://gitlab.mim-libre.fr/alphabet/laboite/commit/7831604c61e0de2ec3015fd21df2e3a1efe1f548))
+* **ui:** fix scroll bar in help page ([18ff352](https://gitlab.mim-libre.fr/alphabet/laboite/commit/18ff3523522c11e8fbab1c5e6dc1b855c19f5fb3))
+* **ui:** fix view mode toggle buttons not displaying state ([a0e3d31](https://gitlab.mim-libre.fr/alphabet/laboite/commit/a0e3d31a88a2bff5a61fdb3faba7ea035458b0e0))
+* **ui:** fix warnings of librairies and components ([815f31b](https://gitlab.mim-libre.fr/alphabet/laboite/commit/815f31b2844c31f03a20aa7e39c87db90add3e6f))
+* **ui:** replace buttons in page ([f68ad38](https://gitlab.mim-libre.fr/alphabet/laboite/commit/f68ad385cd09242db423249ebc983bf2e0bfbaf9))
+* **widget:** improve widget behavior on mobile device ([27e7e5a](https://gitlab.mim-libre.fr/alphabet/laboite/commit/27e7e5a01e245d0c7e077ac9d57dd2b6332ad69e))
+
+
+### Code Refactoring
+
+* **gitlab-ci:** use new template jobs ([8cb8569](https://gitlab.mim-libre.fr/alphabet/laboite/commit/8cb85691ddaa0e8c5260e48ff61b27735999a836))
+* **mainmenu:** replace logout button at the bottom of the menu ([509affd](https://gitlab.mim-libre.fr/alphabet/laboite/commit/509affdde5695497e9203084e712c185817506e4))
+* **menu:** move help tap to right menu ([c787217](https://gitlab.mim-libre.fr/alphabet/laboite/commit/c787217f62dca8c062d5bd1f611d8356845b9bf2))
+
+
+### Features
+
+* **admin:** add chip to the main menu for admins ([bcad3ac](https://gitlab.mim-libre.fr/alphabet/laboite/commit/bcad3acb08f6c604761b82fd1b45aa994a0a313a))
+* **admin:** add counter in admin menu to verify users ([cc46e12](https://gitlab.mim-libre.fr/alphabet/laboite/commit/cc46e12e24f6b489adf10a234a4ec5a1f2ac33aa))
+* **admin:** db migration can be unlocked from appsettings UI ([22c42d1](https://gitlab.mim-libre.fr/alphabet/laboite/commit/22c42d1111372be65d32c96bfa434638a96076ef))
+* **categorie:** block creation when name already use ([39702d4](https://gitlab.mim-libre.fr/alphabet/laboite/commit/39702d4d43dd1bcbe8d5ed109adf517b5979494a))
+* **group:** add delete group button in edition page ([cd762d7](https://gitlab.mim-libre.fr/alphabet/laboite/commit/cd762d7d477573f6ad88e24f8d7f2d8dfefb2040))
+* **help:** add help administration ([b3fc037](https://gitlab.mim-libre.fr/alphabet/laboite/commit/b3fc03776bacf9d33d32a3484a3094dad9cb3f37))
+* **help:** change texts for the help page ([d87e8ed](https://gitlab.mim-libre.fr/alphabet/laboite/commit/d87e8ed710a426af05bd908a7308655734bc163c))
+* **help:** display help in categories ([b4e38cb](https://gitlab.mim-libre.fr/alphabet/laboite/commit/b4e38cb3ce3933a179cfcdeecca6f70688cae9ec))
+* **helps:** add category input to help items ([f6b1de8](https://gitlab.mim-libre.fr/alphabet/laboite/commit/f6b1de883ce10d5045c70a90440ab736da0bf5c9))
+* **nextcloud:** auto-create nextcloud users at activation ([e871b7c](https://gitlab.mim-libre.fr/alphabet/laboite/commit/e871b7c15ad1c706840f53bc479006be79dfab88))
+* **nextcloud:** create nextcloud users when auto-validating users ([f1384f6](https://gitlab.mim-libre.fr/alphabet/laboite/commit/f1384f671cafdfeba1928ae54d8723b597bf8abd))
+* **users:** add delete user button in validation page ([57f2a60](https://gitlab.mim-libre.fr/alphabet/laboite/commit/57f2a60fe7d86ff0912659ff0e07c1c3a8590425))
+
+
+### Tests
+
+* **help:** add test for help api ([0796519](https://gitlab.mim-libre.fr/alphabet/laboite/commit/07965195330ff96a35b927008d7e66b5724961e9))
+
 ## [4.1.2](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/4.1.1...release/4.1.2) (2022-04-01)
 
 
