@@ -10,7 +10,7 @@ import Container from '@material-ui/core/Container';
 import Spinner from '../../components/system/Spinner';
 import '../../../api/users/users';
 import setMaterialTableLocalization from '../../components/initMaterialTableLocalization';
-import { getStructure } from '../../../api/structures/utils';
+import { getStructure } from '../../../api/structures/hooks';
 
 function AdminUserValidationPage({ usersrequest, loading }) {
   const columns = [

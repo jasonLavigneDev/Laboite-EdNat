@@ -19,6 +19,7 @@ import logServer from '../../logging';
 import { getRandomNCloudURL } from '../../nextcloud/methods';
 import Structures from '../../structures/structures';
 import Nextcloud from '../../nextcloud/nextcloud';
+import { hasAdminRightOnStructure } from '../../structures/utils';
 
 if (Meteor.settings.public.enableKeycloak === true) {
   const { whiteDomains } = Meteor.settings.private;
@@ -387,10 +388,11 @@ export const setAdminStructure = new ValidatedMethod({
     if (user === undefined) {
       throw new Meteor.Error('api.users.setAdminStructure.unknownUser', i18n.__('api.users.unknownUser'));
     }
-    // check if current user has global admin rights
+    // check if current user has global or structure-scoped admin rights
     const authorized =
       isActive(this.userId) &&
-      (Roles.userIsInRole(this.userId, 'admin') || Roles.userIsInRole(this.userId, 'adminStructure', user.structure));
+      (Roles.userIsInRole(this.userId, 'admin') ||
+        hasAdminRightOnStructure({ userId: this.userId, structureId: user.structure }));
     if (!authorized) {
       throw new Meteor.Error('api.users.setAdminStructure.notPermitted', i18n.__('api.users.adminNeeded'));
     }
@@ -499,9 +501,9 @@ export const unsetAdminStructure = new ValidatedMethod({
       throw new Meteor.Error('api.users.unsetAdminStructure.unknownUser', i18n.__('api.users.unknownUser'));
     }
     // check if current user has global admin rights
-    const authorized =
-      isActive(this.userId) &&
-      (Roles.userIsInRole(this.userId, 'admin') || Roles.userIsInRole(this.userId, 'adminStructure', user.structure));
+    const isStructureAdmin =
+      user.structure && hasAdminRightOnStructure({ userId: this.userId, structureId: user.structure });
+    const authorized = isActive(this.userId) && (Roles.userIsInRole(this.userId, 'admin') || isStructureAdmin);
     if (!authorized) {
       throw new Meteor.Error('api.users.unsetAdminStructure.notPermitted', i18n.__('api.users.adminNeeded'));
     }
