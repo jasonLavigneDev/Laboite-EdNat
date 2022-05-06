@@ -55,7 +55,7 @@ function App() {
         )}
         <ProtectedRoute exact path="/logout" component={Logout} {...state} />
         <Route exact path="/legal/:legalKey" component={LegalPage} />
-        <Route exact path="/contact" component={SignLayout} {...state} />
+        {!userId && <PublicRoute exact path="/contact" component={SignLayout} {...state} />}
         <ProtectedRoute path="/admin" component={AdminLayout} userId={userId} loadingUser={loadingUser} {...state} />
         <ProtectedRoute path="/" component={MainLayout} {...state} />
       </Switch>

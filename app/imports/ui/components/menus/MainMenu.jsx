@@ -199,6 +199,13 @@ const MainMenu = ({ user = {} }) => {
           {i18n.__('components.MainMenu.menuLogoutLabel')}
         </MenuItem>
         <Divider />
+        <MenuItem
+          className={classes.menuItem}
+          onClick={() => history.push('/contact')}
+          selected={currentLink ? currentLink.path === '/contact' : false}
+        >
+          Contact
+        </MenuItem>
         <MenuItem disabled style={{ opacity: 1 }}>
           <AppVersion />
         </MenuItem>
