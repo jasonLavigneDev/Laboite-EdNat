@@ -12,6 +12,7 @@
       "groups": false,
       "introductionTab": false,
       "introductionTabStructuresInfos": true
+      "notificationsTab": false
     },
     "laboiteBlogURL": "",
     "enableBBB": false,

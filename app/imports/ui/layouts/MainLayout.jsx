@@ -41,6 +41,7 @@ const NotificationsDisplay = lazy(() => import('../components/notifications/Noti
 const BookmarksPage = lazy(() => import('../pages/groups/BookmarksPage'));
 const StructureSelectionPage = lazy(() => import('../pages/system/StructureSelectionPage'));
 const IntroductionPage = lazy(() => import('../pages/IntroductionPage'));
+const TabbedNotificationsDisplay = lazy(() => import('../components/notifications/TabbedNotificationsDisplay'));
 
 // dynamic imports
 const AdminGroupsPage = lazy(() => import('../pages/admin/AdminGroupsPage'));
@@ -159,6 +160,7 @@ function MainLayout({ appsettings, ready }) {
                         <Route exact path="/admingroups/:_id" component={AdminSingleGroupPage} />
                       )}
                       <Route exact path="/medias" component={MediaStoragePage} />
+                      <Route exact path="/notifications" component={TabbedNotificationsDisplay} />
                       <Route exact path="/userBookmarks" component={UserBookmarksPage} />
                       <Route component={NotFound} />
                     </Switch>

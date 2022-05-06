@@ -3,6 +3,7 @@ import { Meteor } from 'meteor/meteor';
 import SimpleSchema from 'simpl-schema';
 import { Tracker } from 'meteor/tracker';
 import { getLabel } from '../utils';
+import { NOTIFICATIONS_TYPES } from './enums';
 
 const Notifications = new Mongo.Collection('notifications');
 
@@ -30,6 +31,7 @@ Notifications.schema = new SimpleSchema(
     type: {
       type: String,
       label: getLabel('api.notifications.labels.type'),
+      allowedValues: Object.values(NOTIFICATIONS_TYPES),
     },
     link: { type: String, optional: true, label: getLabel('api.notifications.labels.link') },
     createdAt: {
