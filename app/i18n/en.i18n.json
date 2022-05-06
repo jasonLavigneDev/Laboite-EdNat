@@ -106,7 +106,13 @@
         "name": "Structure's name",
         "parentId": "Direct parent structures Id",
         "childrenIds": "Direct childs structures ids",
-        "ancestorsIds": "Parent's structures ids"
+        "ancestorsIds": "Parent's structures ids",
+        "introduction": {
+          "label": "Structure introduction",
+          "title": "Structure introduction title",
+          "content": "Structure introduction content",
+          "language": "Structure introduction language"
+        }
       }
     },
     "users": {
@@ -528,7 +534,8 @@
       "menuAdminStructureServices": "Structure Services",
       "menuAdminBackHome": "Back to Personnal Space",
       "menuUserStructure": "Structures Management",
-      "menuAdminOfStructures": "Sub structures Management"
+      "menuAdminOfStructures": "Sub structures Management",
+      "menuAdminOfStructureIntroduction": "Structure introduction"
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Your account has not been activated",
@@ -797,6 +804,12 @@
     },
     "StructureSelect": {
       "label": "Choose structure"
+    },
+    "AdminStructureIntroductionEdition": {
+      "form": {
+        "title": "Title (optional)",
+        "content": "Content"
+      }
     }
   },
   "validatejs": {
@@ -1343,7 +1356,13 @@
     },
     "IntroductionPage": {
       "titleAppIntroduction": "General informations",
-      "noContent": "No content for now."
+      "noContent": "No content for now.",
+      "noTitle": "No title for now.",
+      "informationsOf": "Informations of",
+      "titleStructures": "Structures informations"
+    },
+    "AdminIntroductionByStructurePage": {
+      "title": "Structure's introduction texts"
     }
   },
   "layouts": {

@@ -10,7 +10,8 @@
     "disabledFeatures": {
       "blog": false,
       "groups": false,
-      "introductionTab": false
+      "introductionTab": false,
+      "introductionTabStructuresInfos": true
     },
     "laboiteBlogURL": "",
     "enableBBB": false,

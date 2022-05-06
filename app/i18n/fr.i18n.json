@@ -106,7 +106,13 @@
         "name": "Nom de la structure",
         "parentId": "Id de la structure parent directe",
         "childrenIds": "Ids de structures enfants directs",
-        "ancestorsIds": "Ids de structures parents"
+        "ancestorsIds": "Ids de structures parents",
+        "introduction": {
+          "label": "Introduction de structure",
+          "title": "Titre d'introduction de structure",
+          "content": "Contenu d'introduction de structure",
+          "language": "Language d'introduction de structure"
+        }
       }
     },
     "users": {
@@ -528,7 +534,8 @@
       "menuAdminStructureServices": "Services de la structure",
       "menuAdminBackHome": "Retour à l'espace perso",
       "menuUserStructure": "Gestion des Structures",
-      "menuAdminOfStructures": "Gestion des sous-structures"
+      "menuAdminOfStructures": "Gestion des sous-structures",
+      "menuAdminStructureIntroduction": "Introduction de structure"
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Votre compte n'a pas été activé",
@@ -799,6 +806,12 @@
     },
     "StructureSelect": {
       "label": "Choisir la structure"
+    },
+    "AdminStructureIntroductionEdition": {
+      "form": {
+        "title": "Titre (facultatif)",
+        "content": "Contenu"
+      }
     }
   },
   "validatejs": {
@@ -1344,7 +1357,13 @@
     },
     "IntroductionPage": {
       "titleAppIntroduction": "Informations générales",
-      "noContent": "Pas de contenu pour le moment"
+      "noContent": "Pas de contenu pour le moment",
+      "noTitle": "Pas de titre pour le moment",
+      "informationsOf": "Informations de",
+      "titleStructures": "Informations de structures"
+    },
+    "AdminIntroductionByStructurePage": {
+      "title": "Texte d'introduction de structure"
     }
   },
   "layouts": {
