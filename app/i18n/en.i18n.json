@@ -779,6 +779,7 @@
     "OfflineMenu": {
       "home": "Home",
       "apps": "Applications"
+      "help": "Help"
     },
     "CustomDialog": {
       "cancel": "Cancel",

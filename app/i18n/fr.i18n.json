@@ -781,6 +781,7 @@
     "OfflineMenu": {
       "home": "Accueil",
       "apps": "Applications"
+      "help": "Aide"
     },
     "CustomDialog": {
       "cancel": "Annuler",

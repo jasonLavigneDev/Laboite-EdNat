@@ -8,6 +8,7 @@ import SignUp from '../pages/system/SignUp';
 import SignIn from '../pages/system/SignIn';
 import Footer from '../components/menus/Footer';
 import Contact from '../pages/system/Contact';
+import HelpPage from '../pages/HelpPage';
 import { useAppContext } from '../contexts/context';
 import OfflineServices from '../components/services/OfflineServices';
 import OfflineMenu from '../components/menus/OfflineMenu';
@@ -65,11 +66,13 @@ export default function SignLayout() {
   const services =
     (offlinePage && isMobile && isIframed && selectedTab === 'apps') || !isIframed || (isIframed && !isMobile);
   const signin = (isIframed && isMobile && selectedTab === 'home') || !isIframed || (isIframed && !isMobile);
+  const help = offlinePage && isIframed && isMobile && selectedTab === 'help';
 
   return (
     <>
       <Grid container component="main" className={isMobile ? classes.rootMobile : classes.root}>
         {services && <OfflineServices />}
+        {help && <HelpPage />}
         {!offlinePage && (
           <Grid container item xs={false} sm={4} md={7} spacing={4}>
             <Grid item md={12}>
