@@ -546,6 +546,7 @@
       "menuUserStructure": "Structures Management",
       "menuAdminOfStructures": "Sub structures Management",
       "menuAdminOfStructureIntroduction": "Structure introduction"
+      "menuAdminStructureSpaces": "Default structures space",
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Your account has not been activated",
@@ -970,6 +971,8 @@
       "noSelectedStructure": "No selected structure",
       "noCurrentStructure": "You have no attached structure for now",
       "chooseAttachementStructure": "Choose your attachement structure"
+      "personalSpaceGenerated": "New personal space generated",
+      "confirmResetPersonalSpace": "Your personal space will be reset to the default one"
     },
     "NotFound": {
       "backButtonLabel": "Back",

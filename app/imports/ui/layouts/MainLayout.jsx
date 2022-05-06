@@ -94,6 +94,7 @@ function MainLayout({ appsettings, ready }) {
   const classes = useLayoutStyles(isMobile)();
   const location = useLocation();
   const { disabledFeatures = {} } = Meteor.settings.public;
+  const enableBlog = !disabledFeatures.blog;
 
   const isAdmin = Roles.userIsInRole(userId, 'admin');
 

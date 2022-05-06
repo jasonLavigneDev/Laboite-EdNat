@@ -546,6 +546,7 @@
       "menuUserStructure": "Gestion des Structures",
       "menuAdminOfStructures": "Gestion des sous-structures",
       "menuAdminStructureIntroduction": "Introduction de structure"
+      "menuAdminStructureSpaces": "Espace perso par défaut",
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Votre compte n'a pas été activé",
@@ -972,6 +973,8 @@
       "noSelectedStructure": "Aucune structure sélectionnée",
       "noCurrentStructure": "Vous n'avez pas de structure de rattachement pour le moment",
       "chooseAttachementStructure": "Choose your attachement structure"
+      "personalSpaceGenerated": "Nouvel espace personnel généré",
+      "confirmResetPersonalSpace": "Votre espace personnel va être remis à zéro pour retrouver celui par défaut"
     },
     "NotFound": {
       "backButtonLabel": "Retour",

@@ -111,7 +111,7 @@ export const useZoneStyles = makeStyles((theme) => ({
       position: 'absolute',
       content: '"∅"',
       fontFamily: 'monospace',
-      fontSize: '80px',
+      fontSize: '40px',
       marginTop: '6px',
       color: theme.palette.primary.main,
     },
@@ -164,6 +164,7 @@ const PersonalZone = ({
   isExpanded,
   setExpanded,
   needUpdate,
+  edition,
 }) => {
   const classes = useZoneStyles();
   const [{ userId, isMobile }] = useAppContext();
@@ -340,6 +341,7 @@ const PersonalZone = ({
                             isMobile={isMobile}
                             isSorted={isSorted}
                             needUpdate={handleNeedUpdate}
+                            edition={edition}
                           />
                         </Grid>
                       );
@@ -424,6 +426,7 @@ PersonalZone.propTypes = {
   isExpanded: PropTypes.bool,
   setExpanded: PropTypes.func,
   needUpdate: PropTypes.func.isRequired,
+  edition: PropTypes.bool,
 };
 
 PersonalZone.defaultProps = {
@@ -436,6 +439,7 @@ PersonalZone.defaultProps = {
   lastZone: false,
   moveDownZone: null,
   moveUpZone: null,
+  edition: false,
 };
 
 export default PersonalZone;
