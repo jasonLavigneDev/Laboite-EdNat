@@ -156,3 +156,26 @@ export const getTree = (
  */
 export const getCurrentIntroduction = ({ introduction, language = i18n.getLocale().split('-')[0] }) =>
   introduction.find((entry) => entry.language === language);
+
+export function mergeDeep(...objects) {
+  const isObject = (obj) => obj && typeof obj === 'object';
+
+  return objects.reduce((prev, obj) => {
+    const newData = prev;
+    Object.keys(obj).forEach((key) => {
+      const pVal = prev[key];
+      const oVal = obj[key];
+
+      if (Array.isArray(pVal) && Array.isArray(oVal)) {
+        newData[key] = pVal.concat(...oVal);
+      } else if (isObject(pVal) && isObject(oVal)) {
+        newData[key] = mergeDeep(pVal, oVal);
+      } else {
+        newData[key] = oVal;
+      }
+    });
+
+    return newData;
+  }, {});
+}
+

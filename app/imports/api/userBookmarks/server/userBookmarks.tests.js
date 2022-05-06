@@ -3,7 +3,7 @@
 
 import { assert } from 'chai';
 import { Meteor } from 'meteor/meteor';
-import '../../../../i18n/en.i18n.json';
+import '../../../startup/i18n/en.i18n.json';
 import faker from 'faker';
 import { Roles } from 'meteor/alanning:roles';
 import { Accounts } from 'meteor/accounts-base';
