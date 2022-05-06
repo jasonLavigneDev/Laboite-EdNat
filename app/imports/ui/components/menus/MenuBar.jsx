@@ -20,50 +20,6 @@ import updateDocumentTitle from '../../utils/updateDocumentTitle';
 
 const { disabledFeatures = {} } = Meteor.settings.public;
 
-export const links = [
-  {
-    path: '/introduction',
-    content: 'menuIntroduction',
-    incon: <InfoIcon />,
-    hidden: disabledFeatures.introductionTab,
-  },
-  {
-    path: '/',
-    content: 'menuMyspace',
-    contentMobile: 'menuMyspaceMobile',
-    icon: <HomeIcon />,
-    hidden: false,
-  },
-  {
-    path: '/groups',
-    content: 'menuGroupes',
-    contentMobile: 'menuGroupesMobile',
-    icon: <GroupIcon />,
-    hidden: disabledFeatures.groups,
-  },
-  {
-    path: '/services',
-    content: 'menuServices',
-    icon: <AppsIcon />,
-    hidden: false,
-    tooltip: 'tooltipServices',
-  },
-  {
-    path: '/publications',
-    content: 'menuArticles',
-    contentMobile: 'menuArticlesMobile',
-    icon: <LibraryBooks />,
-    hidden: disabledFeatures.blog,
-  },
-  {
-    path: '/structure',
-    content: 'menuStructure',
-    icon: <BusinessIcon />,
-    hidden: false,
-    tooltip: 'tooltipStructure',
-  },
-];
-
 const useStyles = (mobile) =>
   makeStyles((theme) => ({
     tabs: {
@@ -103,6 +59,12 @@ const MenuBar = ({ mobile }) => {
     return Counts.get('notifications.self.counter');
   });
   const links = [
+    {
+      path: '/introduction',
+      content: 'menuIntroduction',
+      incon: <InfoIcon />,
+      hidden: disabledFeatures.introductionTab,
+    },
     {
       path: '/',
       content: 'menuMyspace',
