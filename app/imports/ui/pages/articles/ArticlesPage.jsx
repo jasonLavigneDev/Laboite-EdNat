@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import SearchIcon from '@material-ui/icons/Search';
@@ -28,7 +29,6 @@ import Footer from '../../components/menus/Footer';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    paddingTop: 60,
     marginBottom: -64,
     display: 'flex',
     minHeight: '100vh',
@@ -73,17 +73,34 @@ const useStyles = makeStyles((theme) => ({
 
 const ITEM_PER_PAGE = 5;
 
-function ArticlesPage() {
+function ArticlesPage({
+  match: {
+    params: { userId },
+  },
+}) {
   const [{ isMobile, articlePage }, dispatch] = useAppContext();
   const classes = useStyles();
   const { pathname } = useLocation();
   const publicPage = pathname.indexOf('/publications') !== 0;
   const i18nCode = publicPage ? 'PublicArticlePage' : 'ArticlesPage';
   const { search = '', searchToggle = false } = articlePage;
+  const [author, setAuthor] = useState({ firstName: '', lastName: '' });
+
+  useEffect(() => {
+    if (userId)
+      Meteor.call('users.findUser', { userId }, (err, res) => {
+        if (err) {
+          msg.error(err.reason || err.message);
+        } else {
+          setAuthor(res);
+        }
+      });
+  }, [userId]);
+
   const inputRef = useRef(null);
   const { changePage, page, items, total, loading } = usePagination(
     'articles.all',
-    { search },
+    { search, userId },
     Articles,
     {},
     { sort: { createdAt: -1 } },
@@ -132,8 +149,8 @@ function ArticlesPage() {
 
   const handleCopyURL = () => {
     let myPublicPublicationURL;
-    if (Meteor.settings.public.laboiteBlogURL !== '') {
-      myPublicPublicationURL = `${blogPage}/authors/${Meteor.userId()}`;
+    if (Meteor.settings.public.laboiteBlogURL) {
+      myPublicPublicationURL = `${blogPage}authors/${Meteor.userId()}`;
     } else {
       myPublicPublicationURL = `${blogPage}${Meteor.userId()}`;
     }
@@ -159,17 +176,20 @@ function ArticlesPage() {
             )}
             <Grid item xs={12} className={isMobile ? null : classes.flex}>
               <Typography variant={isMobile ? 'h6' : 'h4'} className={classes.flex}>
-                {i18n.__(`pages.${i18nCode}.title`)}
-
-                {!publicPage && (
-                  <Tooltip
-                    title={i18n.__(`pages.${i18nCode}.copyOwnPublicPageUrl`)}
-                    aria-label={i18n.__(`pages.${i18nCode}.copyOwnPublicPageUrl`)}
-                  >
-                    <IconButton onClick={handleCopyURL}>
-                      <ShareIcon fontSize="large" />
-                    </IconButton>
-                  </Tooltip>
+                {!publicPage ? (
+                  <>
+                    {i18n.__(`pages.${i18nCode}.title`)}
+                    <Tooltip
+                      title={i18n.__(`pages.${i18nCode}.copyOwnPublicPageUrl`)}
+                      aria-label={i18n.__(`pages.${i18nCode}.copyOwnPublicPageUrl`)}
+                    >
+                      <IconButton onClick={handleCopyURL}>
+                        <ShareIcon fontSize="large" />
+                      </IconButton>
+                    </Tooltip>
+                  </>
+                ) : (
+                  `${i18n.__(`pages.${i18nCode}.title`)} ${author.firstName} ${author.lastName}`
                 )}
                 <Tooltip
                   title={i18n.__(`pages.${i18nCode}.searchArticle`)}
@@ -243,5 +263,9 @@ function ArticlesPage() {
     </>
   );
 }
+
+ArticlesPage.propTypes = {
+  match: PropTypes.objectOf(PropTypes.any).isRequired,
+};
 
 export default ArticlesPage;

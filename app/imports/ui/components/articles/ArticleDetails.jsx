@@ -6,7 +6,6 @@ import Card from '@material-ui/core/Card';
 import Tooltip from '@material-ui/core/Tooltip';
 import Button from '@material-ui/core/Button';
 import CardHeader from '@material-ui/core/CardHeader';
-import IconButton from '@material-ui/core/IconButton';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -14,7 +13,6 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import i18n from 'meteor/universe:i18n';
 import { Link, useHistory } from 'react-router-dom';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import EditIcon from '@material-ui/icons/Edit';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import CreateIcon from '@material-ui/icons/Create';
@@ -106,16 +104,10 @@ export default function ArticleDetails({ article, publicPage }) {
     </div>
   );
 
-  const publicButton = (
-    <IconButton color="primary" onClick={handlePublic}>
-      <ChevronRightIcon fontSize="large" />
-    </IconButton>
-  );
-
   const cardHeader = (
     <CardHeader
       classes={{ action: classes.action }}
-      action={publicPage ? publicButton : actionButtons}
+      action={publicPage ? null : actionButtons}
       title={article.title}
       titleTypographyProps={{
         variant: 'h6',

@@ -25,6 +25,7 @@ describe('structures', function () {
     let userId;
     before(function () {
       Meteor.users.remove({});
+      Structures.remove({});
       const email = faker.internet.email();
       const struct = Factory.create('structure');
       userId = Accounts.createUser({
@@ -35,8 +36,7 @@ describe('structures', function () {
         firstName: faker.name.firstName(),
         lastName: faker.name.lastName(),
       });
-      Meteor.users.update(userId, { $set: { isActive: true } });
-      Structures.remove({});
+      Meteor.users.update(userId, { $set: { isActive: true, articlesCount: 2, lastArticle: new Date() } });
       _.times(4, () => {
         Factory.create('structure');
       });
@@ -45,7 +45,16 @@ describe('structures', function () {
       it('send all structures', function (done) {
         const collector = new PublicationCollector({ userId });
         collector.collect('structures.all', (collections) => {
-          assert.equal(collections.structures.length, 4);
+          assert.equal(collections.structures.length, 5);
+          done();
+        });
+      });
+    });
+    describe('structures.publishers', function () {
+      it('sends all structures whith at least one blog author', function (done) {
+        const collector = new PublicationCollector({ userId });
+        collector.collect('structures.publishers', (collections) => {
+          assert.equal(collections.structures.length, 1);
           done();
         });
       });

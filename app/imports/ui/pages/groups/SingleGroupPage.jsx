@@ -430,7 +430,7 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
                     </Button>
                   </Grid>
                 ) : null}
-                {Meteor.settings.public.laboiteBlogURL !== '' ? (
+                {Meteor.settings.public.laboiteBlogURL ? (
                   <Grid item key={`groupblog_${group._id}`} className={classes.cardGrid}>
                     <Button
                       startIcon={<LibraryBooksIcon />}

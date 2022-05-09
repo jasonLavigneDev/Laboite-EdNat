@@ -113,10 +113,9 @@ const AddressBook = ({ loading, group, slug }) => {
 
   const { disabledFeatures = {} } = Meteor.settings.public;
   const enableBlog = !disabledFeatures.blog;
-  const authorBlogPage =
-    Meteor.settings.public.laboiteBlogURL !== ''
-      ? `${Meteor.settings.public.laboiteBlogURL}/authors/`
-      : `${Meteor.absoluteUrl()}public/`;
+  const authorBlogPage = Meteor.settings.public.laboiteBlogURL
+    ? `${Meteor.settings.public.laboiteBlogURL}/authors/`
+    : `${Meteor.absoluteUrl()}public/`;
 
   return (
     <Fade in>

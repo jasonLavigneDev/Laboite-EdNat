@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { withTracker } from 'meteor/react-meteor-data';
 import { Meteor } from 'meteor/meteor';
+import PropTypes from 'prop-types';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import Fade from '@material-ui/core/Fade';
@@ -30,11 +32,11 @@ import TopBar from '../../components/menus/TopBar';
 import { useAppContext } from '../../contexts/context';
 import Footer from '../../components/menus/Footer';
 import UserAvatar from '../../components/users/UserAvatar';
+import Structures from '../../../api/structures/structures';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    paddingTop: 60,
     marginBottom: -64,
     display: 'flex',
     minHeight: '100vh',
@@ -73,13 +75,15 @@ const useStyles = makeStyles((theme) => ({
 
 const ITEM_PER_PAGE = 10;
 
-const PublishersPage = () => {
+const PublishersPage = ({ loading, structures }) => {
   const classes = useStyles();
   const history = useHistory();
   const [{ isMobile, publishersPage }, dispatch] = useAppContext();
   const { search = '' } = publishersPage;
   const [sortByDate, setSortByDate] = useState(false);
-  const { changePage, page, items, total, loading } = usePagination(
+  const [dataReady, setDataReady] = useState(false);
+  const [structNames, setStructNames] = useState({});
+  const { changePage, page, items, total, loadingUsers } = usePagination(
     'users.publishers',
     { search, sort: sortByDate ? { lastArticle: -1 } : { lastName: 1, firstName: 1 } },
     Meteor.users,
@@ -88,7 +92,18 @@ const PublishersPage = () => {
     ITEM_PER_PAGE,
   );
 
-  const handleChangePage = (value) => {
+  useEffect(() => {
+    if (!loading && !loadingUsers) {
+      const names = {};
+      structures.forEach((struct) => {
+        names[struct._id] = struct.name;
+      });
+      setStructNames(names);
+      setDataReady(true);
+    } else setDataReady(false);
+  }, [loading, loadingUsers]);
+
+  const handleChangePage = (event, value) => {
     changePage(value);
   };
 
@@ -175,7 +190,7 @@ const PublishersPage = () => {
           </Grid>
           <Grid item xs={12} sm={12} md={12} />
           <Grid item xs={12} sm={12} md={12}>
-            {loading ? (
+            {!dataReady ? (
               <Spinner />
             ) : (
               <List className={classes.list} disablePadding>
@@ -196,7 +211,7 @@ const PublishersPage = () => {
                       secondary={
                         <>
                           <Typography component="span" variant="body2" className={classes.inline} color="textPrimary">
-                            {user.structure}
+                            {structNames[user.structure]}
                           </Typography>
                         </>
                       }
@@ -240,4 +255,17 @@ const PublishersPage = () => {
   );
 };
 
-export default PublishersPage;
+export default withTracker(() => {
+  const subStructs = Meteor.subscribe('structures.publishers');
+  const structures = Structures.find().fetch();
+  const loading = !subStructs.ready();
+  return {
+    loading,
+    structures,
+  };
+})(PublishersPage);
+
+PublishersPage.propTypes = {
+  loading: PropTypes.bool.isRequired,
+  structures: PropTypes.arrayOf(PropTypes.any).isRequired,
+};
