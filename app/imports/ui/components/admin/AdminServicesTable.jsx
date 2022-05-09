@@ -2,27 +2,21 @@ import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import PropTypes from 'prop-types';
 import i18n from 'meteor/universe:i18n';
-import { withTracker } from 'meteor/react-meteor-data';
 import MaterialTable from '@material-table/core';
-import Container from '@material-ui/core/Container';
 import CheckIcon from '@material-ui/icons/Check';
-import Fade from '@material-ui/core/Fade';
 import CloseIcon from '@material-ui/icons/Close';
 import { useHistory } from 'react-router-dom';
 import keyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
-import Spinner from '../../components/system/Spinner';
+import Spinner from '../system/Spinner';
 import Services from '../../../api/services/services';
-import { handleResult } from '../../../api/utils';
-import setMaterialTableLocalization from '../../components/initMaterialTableLocalization';
-import { useStructure } from '../../../api/structures/hooks';
+import setMaterialTableLocalization from '../initMaterialTableLocalization';
 
 const { offlinePage } = Meteor.settings.public;
 
-function AdminServicesPage({ services, loading, structureMode }) {
-  const history = useHistory();
-  // used to help generate url in structure mode
+const AdminServicesTable = ({ services, loading, selectedStructure }) => {
+  const structureMode = selectedStructure && selectedStructure._id;
   const urlStruct = structureMode ? 'structure' : '';
-  const structure = useStructure();
+  const history = useHistory();
   const columns = [
     {
       title: i18n.__('pages.AdminServicesPage.columnLogo'),
@@ -80,17 +74,17 @@ function AdminServicesPage({ services, loading, structureMode }) {
     });
     options.actionsColumnIndex = 6;
   }
+
   return (
     <>
       {loading ? (
         <Spinner />
       ) : (
-        <Fade in>
-          <Container style={{ overflowX: 'auto' }}>
+        <>
+          {!loading && (
             <MaterialTable
-              // other props
               title={`${i18n.__('pages.AdminServicesPage.title')} ${
-                structureMode && structure ? `(${structure.name})` : ''
+                structureMode && !!selectedStructure.name ? `(${selectedStructure.name})` : ''
               } (${services.length})`}
               columns={columns}
               data={services.map((row) => ({ ...row, id: row._id }))}
@@ -119,7 +113,8 @@ function AdminServicesPage({ services, loading, structureMode }) {
                   icon: 'add',
                   tooltip: i18n.__('pages.AdminServicesPage.materialTableLocalization.body_addTooltip'),
                   isFreeAction: true,
-                  onClick: () => history.push(`/admin/${urlStruct}services/new`),
+                  onClick: () =>
+                    history.push(`/admin/${urlStruct}services/new/${structureMode ? selectedStructure._id : ''}`),
                 },
               ]}
               editable={{
@@ -130,37 +125,29 @@ function AdminServicesPage({ services, loading, structureMode }) {
                       {
                         serviceId: oldData._id,
                       },
-                      handleResult(resolve, reject),
+                      (err, res) => {
+                        if (err) {
+                          msg.error(err.reason);
+                          reject(err);
+                        } else {
+                          msg.success(i18n.__('api.methods.operationSuccessMsg'));
+                          resolve(res);
+                        }
+                      },
                     );
                   }),
               }}
             />
-          </Container>
-        </Fade>
+          )}
+        </>
       )}
     </>
   );
-}
-
-AdminServicesPage.propTypes = {
-  services: PropTypes.arrayOf(PropTypes.object).isRequired,
-  loading: PropTypes.bool.isRequired,
-  structureMode: PropTypes.bool.isRequired,
 };
-
-export default withTracker(({ match: { path } }) => {
-  const structureMode = path === '/admin/structureservices';
-  const servicesHandle = Meteor.subscribe(structureMode ? 'services.structure' : 'services.all');
-  const loading = !servicesHandle.ready();
-  let services;
-  if (structureMode) {
-    services = Services.findFromPublication('services.structure', {}, { sort: { title: 1 } }).fetch();
-  } else {
-    services = Services.find({}, { sort: { title: 1 } }).fetch();
-  }
-  return {
-    services,
-    loading,
-    structureMode,
-  };
-})(AdminServicesPage);
+AdminServicesTable.propTypes = {
+  services: PropTypes.arrayOf(PropTypes.any).isRequired,
+  loading: PropTypes.bool.isRequired,
+  /** Provide empty {} if no structure mode */
+  selectedStructure: PropTypes.objectOf(PropTypes.any).isRequired,
+};
+export default AdminServicesTable;

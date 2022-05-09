@@ -95,11 +95,18 @@
       }
     },
     "structures": {
+      "unknownStructure": "Structure doesn't exist.",
+      "hasChildren": "Structure has children, therefore it can not be deleted.",
+      "hasServices": "Structure has at least one service, therefore it can not be deleted.",
+      "hasUsers": "Structure has at least one user, therefore it can not be deleted.",
+      "nameAlreadyTaken": "A structure with same name on the same level already exists. It is case-insensitive.",
       "name": "Label",
       "labels": {
         "id": "Structure Id",
         "name": "Structure's name",
-        "parent": "Superior structures"
+        "parentId": "Direct parent structures Id",
+        "childrenIds": "Direct childs structures ids",
+        "ancestorsIds": "Parent's structures ids"
       }
     },
     "users": {
@@ -519,7 +526,8 @@
       "menuAdminStructureUsers": "Structure Users",
       "menuAdminStructureServices": "Structure Services",
       "menuAdminBackHome": "Back to Personnal Space",
-      "menuUserStructure": "Structures Management"
+      "menuUserStructure": "Structures Management",
+      "menuAdminOfStructures": "Sub structures Management"
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Your account has not been activated",
@@ -763,6 +771,31 @@
     "OfflineMenu": {
       "home": "Home",
       "apps": "Applications"
+    },
+    "CustomDialog": {
+      "cancel": "Cancel",
+      "validate": "Submit"
+    },
+    "AdminStructureTreeItem": {
+      "actions": {
+        "choose": "Choose structure",
+        "addStructure": "Add a structure",
+        "editStructure": "Edit this structure",
+        "deleteStructure": "Remove cette structure",
+        "deleteStructureImpossibleHasChildren": "This structure can not be deleted, since it have a least one child.",
+        "deleteStructureConfirm": "Are you sure you want to remove this structure? If any article is attached to it, it will be destroyed."
+      },
+      "attachToStructure": "Do you want to be attached to this structure?"
+    },
+    "AdminStructureTreeView": {
+      "title": "Structures list"
+    },
+    "AdminStructureSearchBar": {
+      "filterByName": "Filter by a structure's name (three letter and more)",
+      "clear": "Clear"
+    },
+    "StructureSelect": {
+      "label": "Choose structure"
     }
   },
   "validatejs": {
@@ -907,9 +940,17 @@
       "resetAuthToken": "Reset Access Token",
       "noAuthToken": "No token to retrieve",
       "successCopyAuthToken": "Token copied with success",
-      "successResetAndCopyAuthToken": "New Token created and copied with success"
+      "successResetAndCopyAuthToken": "New Token created and copied with success",
+      "openStructureSelection": "Click here for a more detailled view if you struggle to find your structure",
+      "currentStructure": "Your current attachement structure is:",
+      "noSelectedStructure": "No selected structure",
+      "noCurrentStructure": "You have no attached structure for now",
+      "chooseAttachementStructure":"Choose your attachement structure"
     },
-    "NotFound": { "backButtonLabel": "Back", "message": "Page not found !" },
+    "NotFound": {
+      "backButtonLabel": "Back",
+      "message": "Page not found !"
+    },
     "ServicesPage": {
       "titleServices": "Discover the SNP apps",
       "categories": "Filter by categories",
@@ -989,15 +1030,15 @@
     },
     "AdminStructuresManagementPage": {
       "title": "Structure Management",
+      "helpText": "Click on a structure to reveal its children.",
       "columnName": "Name",
-      "materialTableLocalization": {
-        "toolbar_searchPlaceholder": "Find a structure",
-        "pagination_labelRowsSelect": "Structures par page",
-        "body_emptyDataSourceMessage": "No structure registered",
-        "body_addTooltip": "Add a structure",
-        "body_editTooltip": "Modify this structure",
-        "body_deleteTooltip": "Remove this structure",
-        "body_editRow_deleteText": "Do you really want to delete this structure ?"
+      "modal": {
+        "close": "Close",
+        "cancel": "Cancel",
+        "submit": "Submit"
+      },
+      "adminStructureMode": {
+        "title": "Sub structures management"
       }
     },
     "AdminGroupsPage": {
@@ -1293,6 +1334,12 @@
       "neverConnected": "Never connected",
       "undefined": "Not defined",
       "sortByLastLogin": "Sort by last login date"
+    },
+    "AdminServicesByStructurePage": {
+      "title": "Services management for structure"
+    },
+    "StructureSelectionPage": {
+      "backToProfile": "Aller au profile"
     }
   },
   "layouts": {
