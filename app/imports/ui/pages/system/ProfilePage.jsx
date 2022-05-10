@@ -578,9 +578,13 @@ const ProfilePage = () => {
               <Grid item className={classes.maxWidth}>
                 <FormControl variant="filled" className={classes.formControl} fullWidth>
                   <Typography>
-                    {selectedStructure && selectedStructure.name
-                      ? `${i18n.__('pages.ProfilePage.currentStructure')} ${selectedStructure.name}`
-                      : i18n.__('pages.ProfilePage.noCurrentStructure')}
+                    {selectedStructure && selectedStructure.name ? (
+                      <span>
+                        {i18n.__('pages.ProfilePage.currentStructure')} <b>{selectedStructure.name}</b>
+                      </span>
+                    ) : (
+                      <span>{i18n.__('pages.ProfilePage.noCurrentStructure')}</span>
+                    )}
                   </Typography>
                   <AutoComplete
                     options={flatData}
