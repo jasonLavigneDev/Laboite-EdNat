@@ -269,7 +269,7 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
     });
   };
 
-  const structure = structureMode && params.structureId ? useStructure(params.structureId) : {};
+  const structure = useStructure(params.structureId || service.structure);
 
   if (!ready || loading || (!!params._id && !service._id)) {
     return <Spinner full />;
@@ -281,7 +281,7 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
         <Paper className={classes.root}>
           <Typography component="h1">
             {i18n.__(`pages.AdminSingleServicePage.${params._id ? 'edition' : 'creation'}`)}
-            <b> {serviceData.title}</b> {`${structureMode ? `(${structure.name})` : ''}`}
+            <b> {serviceData.title}</b> {`${structureMode && structure.name ? `(${structure.name})` : ''}`}
           </Typography>
           <form noValidate autoComplete="off">
             <TextField
