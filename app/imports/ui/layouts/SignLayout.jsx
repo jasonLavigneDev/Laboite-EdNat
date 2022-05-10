@@ -11,6 +11,7 @@ import Contact from '../pages/system/Contact';
 import { useAppContext } from '../contexts/context';
 import OfflineServices from '../components/services/OfflineServices';
 import OfflineMenu from '../components/menus/OfflineMenu';
+import AppVersion from '../components/system/AppVersion';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -79,21 +80,25 @@ export default function SignLayout() {
         )}
 
         {signin && (
-          <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6}>
-            <div className={classes.paper}>
-              <div className={classes.imgLogo}>
-                <img src={theme.logos.LONG_LOGO} className={classes.imgLogo} alt="Logo" />
+          <>
+            <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6}>
+              <div className={classes.paper}>
+                <div className={classes.imgLogo}>
+                  <img src={theme.logos.LONG_LOGO} className={classes.imgLogo} alt="Logo" />
+                </div>
+                <Switch>
+                  <Route exact path="/signin" component={SignIn} />
+                  <Route exact path="/signup" component={SignUp} />
+                  <Route exact path="/contact" component={Contact} />
+                </Switch>
+                <LanguageSwitcher />
               </div>
-              <Switch>
-                <Route exact path="/signin" component={SignIn} />
-                <Route exact path="/signup" component={SignUp} />
-                <Route exact path="/contact" component={Contact} />
-              </Switch>
-              <LanguageSwitcher />
-            </div>
-          </Grid>
+            </Grid>
+            <AppVersion />
+          </>
         )}
       </Grid>
+
       {isIframed && offlinePage && isMobile ? <OfflineMenu state={[selectedTab, setTab]} /> : <Footer />}
     </>
   );
