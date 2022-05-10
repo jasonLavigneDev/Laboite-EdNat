@@ -9,6 +9,7 @@ import Spinner from '../../components/system/Spinner';
 import AdminServicesTable from '../../components/admin/AdminServicesTable';
 import Services from '../../../api/services/services';
 import { useStructure } from '../../../api/structures/hooks';
+import { handleResult } from '../../../api/utils';
 
 function AdminServicesPage({ services, loading, structureMode }) {
   // used to help generate url in structure mode
