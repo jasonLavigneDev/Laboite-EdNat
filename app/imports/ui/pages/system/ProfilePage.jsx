@@ -584,6 +584,7 @@ const ProfilePage = () => {
                   </Typography>
                   <AutoComplete
                     options={flatData}
+                    noOptionsText={i18n.__('pages.ProfilePage.noOptions')}
                     loading={isSearchLoading}
                     getOptionLabel={(option) => option.name}
                     renderOption={(option) => {
