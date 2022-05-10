@@ -7,33 +7,37 @@ import Services from '../../../api/services/services';
 import Categories from '../../../api/categories/categories';
 
 import ServiceDetailsList from './ServiceDetailsList';
+import { useAppContext } from '../../contexts/context';
 
-const useStyles = makeStyles((theme) => ({
-  categoryItem: {
-    flexGrow: 1,
-    marginRight: 'auto',
-    background: theme.palette.primary.light,
-    marginTop: '50px',
-    paddingTop: '15px',
-    position: 'relative',
-    '& > .MuiChip-root': {
-      position: 'absolute',
-      top: '-15px',
+const useStyles = (isMobile) =>
+  makeStyles((theme) => ({
+    categoryItem: {
+      flexGrow: 1,
+      width: isMobile ? '100%' : null,
+      margin: isMobile ? 'auto' : null,
+      background: theme.palette.primary.light,
+      marginTop: '50px',
+      paddingTop: '15px',
+      position: 'relative',
+      '& > .MuiChip-root': {
+        position: 'absolute',
+        top: '-15px',
+      },
     },
-  },
-  categoryItemTitle: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  serviceItem: {},
-  cardGrid: {
-    marginBottom: '0px',
-  },
-}));
+    categoryItemTitle: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    serviceItem: {},
+    cardGrid: {
+      marginBottom: '0px',
+    },
+  }));
 
 function OfflineServices() {
-  const classes = useStyles();
+  const [{ isMobile }] = useAppContext();
+  const classes = useStyles(isMobile)();
   const data = useTracker(() => {
     const servicesHandle = Meteor.subscribe('services.offline');
     const servicesReady = !servicesHandle.ready();
@@ -63,6 +67,7 @@ function OfflineServices() {
               alignItems="stretch"
               className={classes.categoryItem}
               container
+              xs={12}
               md={12}
               spacing={2}
             >
