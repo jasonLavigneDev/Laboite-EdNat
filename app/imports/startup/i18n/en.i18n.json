@@ -789,6 +789,7 @@
     "AdminStructureTreeItem": {
       "actions": {
         "choose": "Choose structure",
+        "chooseShort": "Choose",
         "addStructure": "Add a structure",
         "editStructure": "Edit this structure",
         "deleteStructure": "Remove cette structure",
