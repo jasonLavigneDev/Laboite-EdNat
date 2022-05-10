@@ -53,6 +53,15 @@ const useStyles = makeStyles((theme) => ({
       paddingRight: 0,
     },
   },
+  version: {
+    position: 'absolute',
+    right: 5,
+    bottom: 5,
+    fontSize: 12,
+  },
+  grid: {
+    position: 'relative',
+  },
 }));
 
 const { offlinePage } = Meteor.settings.public;
@@ -80,22 +89,22 @@ export default function SignLayout() {
         )}
 
         {signin && (
-          <>
-            <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6}>
-              <div className={classes.paper}>
-                <div className={classes.imgLogo}>
-                  <img src={theme.logos.LONG_LOGO} className={classes.imgLogo} alt="Logo" />
-                </div>
-                <Switch>
-                  <Route exact path="/signin" component={SignIn} />
-                  <Route exact path="/signup" component={SignUp} />
-                  <Route exact path="/contact" component={Contact} />
-                </Switch>
-                <LanguageSwitcher />
+          <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} className={classes.grid}>
+            <div className={classes.paper}>
+              <div className={classes.imgLogo}>
+                <img src={theme.logos.LONG_LOGO} className={classes.imgLogo} alt="Logo" />
               </div>
-            </Grid>
-            <AppVersion />
-          </>
+              <Switch>
+                <Route exact path="/signin" component={SignIn} />
+                <Route exact path="/signup" component={SignUp} />
+                <Route exact path="/contact" component={Contact} />
+              </Switch>
+              <LanguageSwitcher />
+            </div>
+            <div className={classes.version}>
+              <AppVersion />
+            </div>
+          </Grid>
         )}
       </Grid>
 
