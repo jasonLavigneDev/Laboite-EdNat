@@ -13,6 +13,10 @@
       "groups": false,
       "introductionTab": false
     },
+    "matomo": {
+      "siteId": 1,
+      "urlBase": "https://URL.fr"
+    },
     "laboiteBlogURL": "",
     "enableBBB": false,
     "BBBUrl": "",
