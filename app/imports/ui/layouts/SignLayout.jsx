@@ -11,6 +11,7 @@ import Contact from '../pages/system/Contact';
 import { useAppContext } from '../contexts/context';
 import OfflineServices from '../components/services/OfflineServices';
 import OfflineMenu from '../components/menus/OfflineMenu';
+import AppVersion from '../components/system/AppVersion';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -52,6 +53,15 @@ const useStyles = makeStyles((theme) => ({
       paddingRight: 0,
     },
   },
+  version: {
+    position: 'absolute',
+    right: 5,
+    bottom: 5,
+    fontSize: 12,
+  },
+  grid: {
+    position: 'relative',
+  },
 }));
 
 const { offlinePage } = Meteor.settings.public;
@@ -79,7 +89,7 @@ export default function SignLayout() {
         )}
 
         {signin && (
-          <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6}>
+          <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} className={classes.grid}>
             <div className={classes.paper}>
               <div className={classes.imgLogo}>
                 <img src={theme.logos.LONG_LOGO} className={classes.imgLogo} alt="Logo" />
@@ -91,9 +101,13 @@ export default function SignLayout() {
               </Switch>
               <LanguageSwitcher />
             </div>
+            <div className={classes.version}>
+              <AppVersion />
+            </div>
           </Grid>
         )}
       </Grid>
+
       {isIframed && offlinePage && isMobile ? <OfflineMenu state={[selectedTab, setTab]} /> : <Footer />}
     </>
   );

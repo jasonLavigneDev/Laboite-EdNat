@@ -16,7 +16,6 @@ import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import Spinner from '../../components/system/Spinner';
-import AppVersion from '../../components/system/AppVersion';
 import AppSettings from '../../../api/appsettings/appsettings';
 
 import Structures from '../../../api/structures/structures';
@@ -161,9 +160,6 @@ function SignIn({ loggingIn, introduction, appsettings, ready }) {
       <>
         <Typography variant="h5" color="inherit" paragraph>
           {i18n.__('pages.SignIn.appDescription')}
-        </Typography>
-        <Typography variant="h6" color="inherit" paragraph>
-          <AppVersion />
         </Typography>
         {!ready && !loggingIn && <Spinner />}
         <div dangerouslySetInnerHTML={{ __html: introduction }} />
