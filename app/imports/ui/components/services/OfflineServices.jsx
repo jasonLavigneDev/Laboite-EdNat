@@ -7,33 +7,37 @@ import Services from '../../../api/services/services';
 import Categories from '../../../api/categories/categories';
 
 import ServiceDetailsList from './ServiceDetailsList';
+import { useAppContext } from '../../contexts/context';
 
-const useStyles = makeStyles((theme) => ({
-  categoryItem: {
-    flexGrow: 1,
-    marginRight: 'auto',
-    background: theme.palette.primary.light,
-    marginTop: '50px',
-    paddingTop: '15px',
-    position: 'relative',
-    '& > .MuiChip-root': {
-      position: 'absolute',
-      top: '-15px',
+const useStyles = (isMobile) =>
+  makeStyles((theme) => ({
+    categoryItem: {
+      flexGrow: 1,
+      width: isMobile ? '100%' : null,
+      margin: isMobile ? 'auto' : null,
+      background: theme.palette.primary.light,
+      marginTop: '50px',
+      paddingTop: '15px',
+      position: 'relative',
+      '& > .MuiChip-root': {
+        position: 'absolute',
+        top: '-15px',
+      },
     },
-  },
-  categoryItemTitle: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  serviceItem: {},
-  cardGrid: {
-    marginBottom: '0px',
-  },
-}));
+    categoryItemTitle: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    serviceItem: {},
+    cardGrid: {
+      marginBottom: '0px',
+    },
+  }));
 
 function OfflineServices() {
-  const classes = useStyles();
+  const [{ isMobile }] = useAppContext();
+  const classes = useStyles(isMobile)();
   const data = useTracker(() => {
     const servicesHandle = Meteor.subscribe('services.offline');
     const servicesReady = !servicesHandle.ready();
@@ -53,19 +57,19 @@ function OfflineServices() {
   });
 
   return (
-    <Grid item xs={12} sm={4} md={7} spacing={2}>
+    <Grid item xs={12} sm={4} md={7}>
       {data.categories.map(
         ({ services, category }) =>
           !!category &&
           !!services.length && (
             <Grid
               justifyContent="center"
-              alignItems="flex-start"
+              alignItems="stretch"
               className={classes.categoryItem}
               container
-              item
+              xs={12}
               md={12}
-              spacing={4}
+              spacing={2}
             >
               <Chip color="primary" label={category.name} />
               {services.map((service) => (
