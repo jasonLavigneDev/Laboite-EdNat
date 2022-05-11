@@ -132,7 +132,9 @@ const ToastUIEditor = ({ value, onChange, handlers, toastRef, language }) => {
   }, [toastRef]);
 
   const updateEditor = () => {
+    console.log('changed');
     const instance = toastRef.current.getInstance();
+    console.log(instance);
     onChange(instance.getMarkdown());
   };
 
@@ -148,10 +150,8 @@ const ToastUIEditor = ({ value, onChange, handlers, toastRef, language }) => {
         toolbarItems={[...toolbarItems, ...markdownEditorItems]}
         plugins={[chart, codeSyntaxHighlight, colorSyntax, tableMergedCell, uml]}
         ref={toastRef}
-        events={{
-          change: updateEditor,
-          caretChange: updateMode,
-        }}
+        onChange={updateEditor}
+        onCaretChange={updateMode}
       />
     </div>
   );
