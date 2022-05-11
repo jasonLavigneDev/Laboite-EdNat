@@ -449,7 +449,14 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
           </form>
         </Paper>
         {openRemoveModal ? (
-          <AdminGroupDelete group={group} open={openRemoveModal} onClose={() => setOpenRemoveModal(false)} />
+          <AdminGroupDelete
+            group={group}
+            open={openRemoveModal}
+            onClose={() => {
+              setOpenRemoveModal(false);
+              history.push('/groups');
+            }}
+          />
         ) : null}
       </Container>
     </Fade>

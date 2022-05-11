@@ -11,7 +11,6 @@ import ClearIcon from '@material-ui/icons/Clear';
 import PropTypes from 'prop-types';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
-import { useHistory } from 'react-router-dom';
 import { useAppContext } from '../../contexts/context';
 import COMMON_STYLES from '../../themes/styles';
 
@@ -31,7 +30,6 @@ const useStyles = (isMobile) =>
 
 const AdminGroupDelete = ({ group, open, onClose }) => {
   const [{ isMobile }] = useAppContext();
-  const history = useHistory();
   const classes = useStyles(isMobile)();
   const removeGroup = () => {
     Meteor.call('groups.removeGroup', { groupId: group._id }, (err) => {
@@ -39,7 +37,6 @@ const AdminGroupDelete = ({ group, open, onClose }) => {
         msg.error(err.reason);
       } else {
         msg.success(i18n.__('pages.AdminSingleGroupPage.groupRemoved'));
-        history.push('/groups');
       }
     });
     onClose();
