@@ -107,9 +107,13 @@ function TopBar({ publicMenu, root, appsettings, adminApp }) {
     <div>
       <AppBar position="fixed" className={classes.root}>
         <div className={classes.firstBar}>
-          <Link to={root || (publicMenu ? '/public' : '/')} className={classes.imgLogoContainer}>
-            <img src={LOGO} className={classes.imgLogoContainer} alt="Logo" />
-          </Link>
+          {LOGO ? (
+            <Link to={root || (publicMenu ? '/public' : '/')} className={classes.imgLogoContainer}>
+              <img src={LOGO} className={classes.imgLogoContainer} alt="Logo" />
+            </Link>
+          ) : (
+            <div />
+          )}
           <div className={classes.rightContainer}>
             {publicMenu ? null : (
               <>
