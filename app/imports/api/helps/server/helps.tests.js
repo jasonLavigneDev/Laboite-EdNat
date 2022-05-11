@@ -5,7 +5,6 @@ import { PublicationCollector } from 'meteor/johanbrook:publication-collector';
 import { assert } from 'chai';
 import { Meteor } from 'meteor/meteor';
 import { _ } from 'meteor/underscore';
-import '../../../../i18n/en.i18n.json';
 import faker from 'faker';
 import { Factory } from 'meteor/dburles:factory';
 import { Accounts } from 'meteor/accounts-base';

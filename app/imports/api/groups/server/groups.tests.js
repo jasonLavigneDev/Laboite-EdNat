@@ -8,7 +8,7 @@ import { Random } from 'meteor/random';
 import faker from 'faker';
 import { Meteor } from 'meteor/meteor';
 import { _ } from 'meteor/underscore';
-import '../../../../i18n/en.i18n.json';
+import '../../../startup/i18n/en.i18n.json';
 
 // this file also includes tests on users/permissions
 import { Accounts } from 'meteor/accounts-base';
