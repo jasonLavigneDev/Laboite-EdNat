@@ -16,6 +16,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { useAppContext } from '../../contexts/context';
 import COMMON_STYLES from '../../themes/styles';
 import { createNotification } from '../../../api/notifications/methods';
+import { NOTIFICATIONS_TYPES } from '../../../api/notifications/enums';
 
 const useStyles = (isMobile) =>
   makeStyles(() => ({
@@ -96,7 +97,11 @@ const AdminSendNotification = ({ data, open, onClose }) => {
               value={notifState.type}
               onChange={updateState}
             >
-              <MenuItem value="info">{i18n.__('components.AdminSendNotification.info_type')}</MenuItem>
+              {Object.values(NOTIFICATIONS_TYPES).map((type) => (
+                <MenuItem value={type} key={type}>
+                  {type}
+                </MenuItem>
+              ))}
             </Select>
           </CardContent>
           <CardActions className={classes.actions}>

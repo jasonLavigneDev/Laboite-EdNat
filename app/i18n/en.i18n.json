@@ -424,6 +424,15 @@
       "removeAll": "Remove all the notifications",
       "confirmRemoveAll": "Are you sure you want to delete all the notifications ?"
     },
+    "TabbedNotificationsDisplay": {
+      "tabMessages": "Messages",
+      "tabSpaces": "Shared Workspaces",
+      "confirm": "Yes",
+      "cancel": "No",
+      "empty": "You have no notifications",
+      "removeAll": "Remove all the notifications",
+      "confirmRemoveAll": "Are you sure you want to delete all the notifications ?"
+    },
     "Footer": {
       "personalData": "Personal Data",
       "gcu": "G.C.U",
@@ -471,6 +480,7 @@
       "menuStructure": "My Structure",
       "menuGroupes": "All Groups",
       "menuGroupesMobile": "Groups",
+      "menuNotifications": "My Alerts",
       "menuAdminServices": "Service Management",
       "menuAdminUserValidation": "User validation",
       "tooltipServices": "SNP apps",
@@ -762,8 +772,7 @@
       "title_label": "Title",
       "content_label": "Notification content",
       "ValidateForm": "Validate",
-      "type_label": "Notification type",
-      "info_type": "Info"
+      "type_label": "Notification type"
     },
     "SkipLink": {
       "skipToContent": "Skip to content"
