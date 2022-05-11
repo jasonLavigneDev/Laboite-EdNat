@@ -15,6 +15,7 @@ import { updateIntroductionLanguage } from '../../../api/appsettings/methods';
 import Spinner from '../system/Spinner';
 import { CustomToolbarArticle } from '../system/CustomQuill';
 import '../../utils/QuillVideo';
+import { getCurrentIntroduction } from '../../../api/utils';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -59,7 +60,7 @@ const IntroductionEdition = ({ data = [] }) => {
 
   useEffect(() => {
     if (data) {
-      const currentData = data.find((entry) => entry.language === language) || {};
+      const currentData = getCurrentIntroduction({ introduction: data }) || {};
       setContent(currentData.content || '');
       setLoading(false);
     }
@@ -67,7 +68,7 @@ const IntroductionEdition = ({ data = [] }) => {
 
   useEffect(() => {
     if (data) {
-      const currentData = data.find((entry) => entry.language === language) || {};
+      const currentData = getCurrentIntroduction({ introduction: data }) || {};
       if (content !== currentData.content) {
         setChanges(true);
       } else {
@@ -95,7 +96,7 @@ const IntroductionEdition = ({ data = [] }) => {
   };
 
   const onCancel = () => {
-    const currentData = data.find((entry) => entry.language === language) || {};
+    const currentData = getCurrentIntroduction({ introduction: data }) || {};
     setContent(currentData.content || '');
   };
 

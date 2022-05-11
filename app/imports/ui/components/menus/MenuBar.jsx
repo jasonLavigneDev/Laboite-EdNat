@@ -14,6 +14,7 @@ import NotificationsNoneIcon from '@material-ui/icons/NotificationsNone';
 import HomeIcon from '@material-ui/icons/Home';
 import BusinessIcon from '@material-ui/icons/Business';
 import AppsIcon from '@material-ui/icons/Apps';
+import InfoIcon from '@material-ui/icons/Info';
 import { useAppContext } from '../../contexts/context';
 import updateDocumentTitle from '../../utils/updateDocumentTitle';
 
@@ -58,6 +59,12 @@ const MenuBar = ({ mobile }) => {
     return Counts.get('notifications.self.counter');
   });
   const links = [
+    {
+      path: '/introduction',
+      content: 'menuIntroduction',
+      incon: <InfoIcon />,
+      hidden: disabledFeatures.introductionTab,
+    },
     {
       path: '/',
       content: 'menuMyspace',
