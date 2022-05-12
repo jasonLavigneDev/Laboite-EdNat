@@ -1,5 +1,6 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
+import { Roles } from 'meteor/alanning:roles';
 import PropTypes from 'prop-types';
 import i18n from 'meteor/universe:i18n';
 import { withTracker } from 'meteor/react-meteor-data';
@@ -15,6 +16,7 @@ import setMaterialTableLocalization from '../../components/initMaterialTableLoca
 
 function AdminGroupsPage({ groups, loading, user }) {
   const history = useHistory();
+  const adminURL = Roles.userIsInRole(user._id, 'admin') ? '/admin/groups' : '/admingroups';
   const columns = [
     {
       title: i18n.__('pages.AdminGroupsPage.columnName'),
@@ -49,7 +51,7 @@ function AdminGroupsPage({ groups, loading, user }) {
 
   const createNewGoup = () => {
     if (user.groupCount < user.groupQuota) {
-      history.push('/admingroups/new');
+      history.push(`${adminURL}/new`);
     } else {
       msg.error(i18n.__('api.groups.toManyGroup'));
     }
@@ -84,7 +86,7 @@ function AdminGroupsPage({ groups, loading, user }) {
                 icon: edit,
                 tooltip: i18n.__('pages.AdminGroupsPage.materialTableLocalization.body_editTooltip'),
                 onClick: (event, rowData) => {
-                  history.push(`/admingroups/${rowData._id}`);
+                  history.push(`${adminURL}/${rowData._id}`);
                 },
               },
               {
