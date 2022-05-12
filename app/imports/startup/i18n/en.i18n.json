@@ -780,7 +780,8 @@
     },
     "OfflineMenu": {
       "home": "Home",
-      "apps": "Applications"
+      "apps": "Applications",
+      "help": "Help"
     },
     "CustomDialog": {
       "cancel": "Cancel",

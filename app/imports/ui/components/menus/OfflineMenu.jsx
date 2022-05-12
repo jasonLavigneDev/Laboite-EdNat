@@ -7,6 +7,7 @@ import AppBar from '@material-ui/core/AppBar';
 import { PropTypes } from 'prop-types';
 import HomeIcon from '@material-ui/icons/Home';
 import AppsIcon from '@material-ui/icons/Apps';
+import HelpIcon from '@material-ui/icons/Help';
 
 export const links = [
   {
@@ -16,6 +17,10 @@ export const links = [
   {
     content: 'apps',
     icon: <AppsIcon />,
+  },
+  {
+    content: 'help',
+    icon: <HelpIcon />,
   },
 ];
 
