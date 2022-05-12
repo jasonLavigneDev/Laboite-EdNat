@@ -164,6 +164,7 @@ const AdminStructureUsersPage = ({ match: { path } }) => {
               <Typography variant={isMobile ? 'h6' : 'h4'}>
                 {i18n.__('pages.AdminStructureUsersPage.title')}{' '}
                 {selectedStructure && selectedStructure._id && selectedStructure.name}
+                {` (${total})`}
               </Typography>
             </Grid>
             {isStructureSpecific && (
