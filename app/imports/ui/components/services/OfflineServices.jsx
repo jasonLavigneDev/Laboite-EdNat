@@ -70,6 +70,7 @@ function OfflineServices() {
               xs={12}
               md={12}
               spacing={2}
+              key={category._id}
             >
               <Chip color="primary" label={category.name} />
               {services.map((service) => (
