@@ -132,9 +132,7 @@ const ToastUIEditor = ({ value, onChange, handlers, toastRef, language }) => {
   }, [toastRef]);
 
   const updateEditor = () => {
-    console.log('changed');
     const instance = toastRef.current.getInstance();
-    console.log(instance);
     onChange(instance.getMarkdown());
   };
 
