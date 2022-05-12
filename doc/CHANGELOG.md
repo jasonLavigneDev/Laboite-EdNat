@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.2.1](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/4.2.0...release/4.2.1) (2022-05-12)
+
+
+### Bug Fixes
+
+* **markdown:** change onchange handler ([0ec1257](https://gitlab.mim-libre.fr/alphabet/laboite/commit/0ec1257a3b220ba49b83a75f50f1c497f4f80f97))
+* **markdown:** remove console.log ([74253ac](https://gitlab.mim-libre.fr/alphabet/laboite/commit/74253ac1f55d442d96e2baaa7d4d60ecb1c59120))
+
 # [4.2.0](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/4.1.2...release/4.2.0) (2022-05-05)
 
 
