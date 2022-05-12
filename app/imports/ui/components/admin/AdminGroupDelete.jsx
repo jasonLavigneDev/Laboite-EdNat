@@ -39,7 +39,9 @@ const AdminGroupDelete = ({ group, open, onClose }) => {
         msg.error(err.reason);
       } else {
         msg.success(i18n.__('pages.AdminSingleGroupPage.groupRemoved'));
-        history.push('/groups');
+        const loc = window.location.toString();
+        if (loc.includes('/admin/groups')) history.push('/admin/groups');
+        else history.push('/groups');
       }
     });
     onClose();

@@ -115,7 +115,7 @@ const GroupsUsersList = (props) => {
   };
 
   useEffect(() => {
-    if (ready === true) {
+    if (ready === true && group) {
       const usersField = `${userRole}s`;
       const groupUsers = {};
       users.forEach((entry) => {
@@ -126,7 +126,7 @@ const GroupsUsersList = (props) => {
     } else {
       setTitle(i18n.__('components.GroupUsersList.loadingTitle'));
     }
-  }, [ready, users]);
+  }, [ready, users, group]);
 
   const actions = [
     {
