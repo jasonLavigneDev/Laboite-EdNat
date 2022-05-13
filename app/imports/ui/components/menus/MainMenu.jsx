@@ -189,6 +189,13 @@ const MainMenu = ({ user = {} }) => {
         })}
         <MenuItem
           className={classes.menuItem}
+          onClick={() => handleMenuClick({ path: '/contact', content: 'menuContact' })}
+          selected={pathname === '/contact'}
+        >
+          {i18n.__('components.MainMenu.menuContact')}
+        </MenuItem>
+        <MenuItem
+          className={classes.menuItem}
           onClick={() => handleMenuClick({ path: '/help', content: 'menuHelpLabel' })}
           selected={pathname === '/help'}
         >
