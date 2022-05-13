@@ -140,6 +140,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
 
   const [{ userId }] = useAppContext();
   const isAdmin = Roles.userIsInRole(userId, 'admin', params._id);
+  const canDelete = isAdmin || group.owner === userId;
 
   const typeLabel = React.useRef(null);
   const [labelTypeWidth, setLabelTypeWidth] = React.useState(36);
@@ -432,7 +433,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
               <Button variant="contained" onClick={cancelForm} className={classes.button}>
                 {i18n.__('pages.AdminSingleGroupPage.cancel')}
               </Button>
-              {params._id ? (
+              {params._id && canDelete ? (
                 <Button
                   variant="contained"
                   onClick={deleteGroup}
@@ -449,7 +450,13 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
           </form>
         </Paper>
         {openRemoveModal ? (
-          <AdminGroupDelete group={group} open={openRemoveModal} onClose={() => setOpenRemoveModal(false)} />
+          <AdminGroupDelete
+            group={group}
+            open={openRemoveModal}
+            onClose={() => {
+              setOpenRemoveModal(false);
+            }}
+          />
         ) : null}
       </Container>
     </Fade>

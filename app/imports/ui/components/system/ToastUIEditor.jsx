@@ -148,10 +148,8 @@ const ToastUIEditor = ({ value, onChange, handlers, toastRef, language }) => {
         toolbarItems={[...toolbarItems, ...markdownEditorItems]}
         plugins={[chart, codeSyntaxHighlight, colorSyntax, tableMergedCell, uml]}
         ref={toastRef}
-        events={{
-          change: updateEditor,
-          caretChange: updateMode,
-        }}
+        onChange={updateEditor}
+        onCaretChange={updateMode}
       />
     </div>
   );

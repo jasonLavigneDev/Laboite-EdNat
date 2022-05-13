@@ -1,5 +1,23 @@
 # Changelog
 
+## [4.2.2](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/4.2.1...release/4.2.2) (2022-05-12)
+
+
+### Bug Fixes
+
+* **group:** don't exit admin UI on group edit/create ([87e85d2](https://gitlab.mim-libre.fr/alphabet/laboite/commit/87e85d27e595d2cc5d9e2caa9c8e3f4f4d39befb))
+* **group:** fix deleting group ([bae4d5a](https://gitlab.mim-libre.fr/alphabet/laboite/commit/bae4d5a7a00888b2cb5c87c7aa7fbc1b6940c0fd))
+* **group:** fix redirect after group removal ([5a3893c](https://gitlab.mim-libre.fr/alphabet/laboite/commit/5a3893c24c2e8bc9538a828dee117ee1880a2c46))
+* **group:** no delete button for group animators ([dc6a933](https://gitlab.mim-libre.fr/alphabet/laboite/commit/dc6a933d343adad44249ee6401c1a307486e423b))
+
+## [4.2.1](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/4.2.0...release/4.2.1) (2022-05-12)
+
+
+### Bug Fixes
+
+* **markdown:** change onchange handler ([0ec1257](https://gitlab.mim-libre.fr/alphabet/laboite/commit/0ec1257a3b220ba49b83a75f50f1c497f4f80f97))
+* **markdown:** remove console.log ([74253ac](https://gitlab.mim-libre.fr/alphabet/laboite/commit/74253ac1f55d442d96e2baaa7d4d60ecb1c59120))
+
 # [4.2.0](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/4.1.2...release/4.2.0) (2022-05-05)
 
 
