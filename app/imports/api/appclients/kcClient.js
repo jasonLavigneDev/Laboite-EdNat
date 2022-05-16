@@ -502,6 +502,25 @@ if (Meteor.isServer && Meteor.settings.public.enableKeycloak) {
     kcClient.removeGroup(group.name, this.userId);
   });
 
+  Meteor.afterMethod('groups.addGroupMembersToGroup', function kcAddGroupMembersToGroup({ groupId, anotherGroupId }) {
+    if (!this.error) {
+      const group2 = Groups.findOne({ _id: anotherGroupId });
+
+      const usersGroup = group2.members;
+
+      let i;
+      for (i = 0; i < usersGroup.length; i += 1) {
+        if (!Roles.userIsInRole(usersGroup[i], 'member', anotherGroupId)) {
+          kcClient.setRole(usersGroup[i], group2.name, this.userId);
+          // remove candidate Role if present
+          if (Roles.userIsInRole(usersGroup[i], 'candidate', groupId)) {
+            kcClient.setRole(usersGroup[i], group2.name, this.userId);
+          }
+        }
+      }
+    }
+  });
+
   Meteor.afterMethod('users.setAdmin', function kcSetAdmin({ userId }) {
     kcClient.setAdmin(userId, this.userId);
   });
