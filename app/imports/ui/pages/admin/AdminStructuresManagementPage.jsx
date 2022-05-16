@@ -316,6 +316,7 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
                 updateParentIdsList={updateParentIdsList}
                 expandedIds={expandedIds}
                 selectedId=""
+                isStructuresFlatDataLoading={loading}
               />
             </CardContent>
           </Card>
