@@ -10,22 +10,17 @@ import Grid from '@material-ui/core/Grid';
 import i18n from 'meteor/universe:i18n';
 import ListItemText from '@material-ui/core/ListItemText';
 import ArrowBack from '@material-ui/icons/ArrowBack';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import PollIcon from '@material-ui/icons/Poll';
-import IconButton from '@material-ui/core/IconButton';
-import Pagination from '@material-ui/lab/Pagination';
 import { useHistory } from 'react-router-dom';
 import { usePagination } from '../../utils/hooks';
 import { useAppContext } from '../../contexts/context';
 import Groups from '../../../api/groups/groups';
 import Polls from '../../../api/polls/polls';
-import SearchField from '../../components/system/SearchField';
 import Spinner from '../../components/system/Spinner';
+import { GroupSearch, GroupPaginate, GroupListActions } from './common';
 import { useEvenstPageStyles } from './EventsPage';
 
 const ITEM_PER_PAGE = 10;
@@ -77,10 +72,6 @@ const PollPage = ({ loading, group, slug }) => {
   const updateSearch = (e) => updateGlobalState('search', e.target.value);
   const resetSearch = () => updateGlobalState('search', '');
 
-  const goBack = () => {
-    history.goBack();
-  };
-
   useEffect(() => {
     if (page !== 1) {
       changePage(1);
@@ -92,7 +83,7 @@ const PollPage = ({ loading, group, slug }) => {
       <Container className={classes.root}>
         <Grid container spacing={4}>
           <Grid item xs={12} sm={12} md={12}>
-            <Button color="primary" startIcon={<ArrowBack />} onClick={goBack}>
+            <Button color="primary" startIcon={<ArrowBack />} onClick={history.goBack}>
               {i18n.__('pages.Polls.back')}
             </Button>
           </Grid>
@@ -100,19 +91,19 @@ const PollPage = ({ loading, group, slug }) => {
             <Spinner />
           ) : userInGroup || group.type === 0 ? (
             <>
-              <Grid item xs={12} sm={12} md={6}>
-                <SearchField
-                  updateSearch={updateSearch}
-                  search={search}
-                  resetSearch={resetSearch}
-                  label={i18n.__('pages.Polls.searchText')}
-                />
-              </Grid>
-              {total > ITEM_PER_PAGE && (
-                <Grid item xs={12} sm={12} md={6} lg={6} className={classes.pagination}>
-                  <Pagination count={Math.ceil(total / ITEM_PER_PAGE)} page={page} onChange={handleChangePage} />
-                </Grid>
-              )}
+              <GroupSearch
+                update={updateSearch}
+                reset={resetSearch}
+                search={search}
+                label={i18n.__('pages.Polls.searchText')}
+              />
+              <GroupPaginate
+                total={total}
+                nbItems={ITEM_PER_PAGE}
+                cls={classes.pagination}
+                page={page}
+                handler={handleChangePage}
+              />
               {items.length > 0 ? (
                 <Grid item xs={12} sm={12} md={12}>
                   <List className={classes.list} disablePadding>
@@ -135,23 +126,10 @@ const PollPage = ({ loading, group, slug }) => {
                           }
                         />
 
-                        <ListItemSecondaryAction>
-                          <Tooltip title={`${i18n.__('pages.Polls.seePoll')} ${poll.title}`} aria-label="add">
-                            <IconButton
-                              edge="end"
-                              aria-label="comments"
-                              onClick={() =>
-                                window.open(
-                                  `${Meteor.settings.public.services.sondagesUrl}/poll/answer/${poll._id}?autologin`,
-                                  '_blank',
-                                  'noreferrer,noopener',
-                                )
-                              }
-                            >
-                              <ChevronRightIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </ListItemSecondaryAction>
+                        <GroupListActions
+                          url={`${Meteor.settings.public.services.sondagesUrl}/poll/answer/${poll._id}?autologin`}
+                          title={`${i18n.__('pages.Polls.seePoll')} ${poll.title}`}
+                        />
                       </ListItem>,
                       i < ITEM_PER_PAGE - 1 && i < total - 1 && (
                         <Divider variant="inset" component="li" key={`divider-${poll.title}`} />
@@ -164,11 +142,13 @@ const PollPage = ({ loading, group, slug }) => {
                   <p>{i18n.__('pages.Polls.noPoll')}</p>
                 </Grid>
               )}
-              {total > ITEM_PER_PAGE && (
-                <Grid item xs={12} sm={12} md={12} lg={12} className={classes.pagination}>
-                  <Pagination count={Math.ceil(total / ITEM_PER_PAGE)} page={page} onChange={handleChangePage} />
-                </Grid>
-              )}
+              <GroupPaginate
+                total={total}
+                nbItems={ITEM_PER_PAGE}
+                cls={classes.pagination}
+                page={page}
+                handler={handleChangePage}
+              />
             </>
           ) : (
             <p className={classes.ErrorPage}>{i18n.__('pages.Polls.noAccess')}</p>

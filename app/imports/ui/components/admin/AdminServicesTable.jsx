@@ -7,15 +7,12 @@ import CheckIcon from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
 import { useHistory } from 'react-router-dom';
 import keyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
-import Spinner from '../system/Spinner';
 import Services from '../../../api/services/services';
+import { handleResult } from '../../../api/utils';
 import setMaterialTableLocalization from '../initMaterialTableLocalization';
 
-const { offlinePage } = Meteor.settings.public;
-
-const AdminServicesTable = ({ services, loading, selectedStructure }) => {
-  const structureMode = selectedStructure && selectedStructure._id;
-  const urlStruct = structureMode ? 'structure' : '';
+const AdminServicesTable = ({ tableTitle, structureMode, urlStruct, urlNew, services }) => {
+  const { offlinePage } = Meteor.settings.public;
   const history = useHistory();
   const columns = [
     {
@@ -76,78 +73,61 @@ const AdminServicesTable = ({ services, loading, selectedStructure }) => {
   }
 
   return (
-    <>
-      {loading ? (
-        <Spinner />
-      ) : (
-        <>
-          {!loading && (
-            <MaterialTable
-              title={`${i18n.__('pages.AdminServicesPage.title')} ${
-                structureMode && !!selectedStructure.name ? `(${selectedStructure.name})` : ''
-              } (${services.length})`}
-              columns={columns}
-              data={services.map((row) => ({ ...row, id: row._id }))}
-              options={options}
-              localization={setMaterialTableLocalization('pages.AdminServicesPage')}
-              actions={[
-                {
-                  icon: keyboardArrowRight,
-                  tooltip: i18n.__('pages.AdminServicesPage.materialTableLocalization.body_goTooltip'),
-                  onClick: (event, rowData) => {
-                    if (rowData.state !== 10) {
-                      history.push(`/${structureMode ? urlStruct : 'services'}/${rowData.slug}`);
-                    } else {
-                      msg.warning(`Service ${i18n.__(Services.stateLabels[rowData.state])}`);
-                    }
-                  },
-                },
-                {
-                  icon: 'edit',
-                  tooltip: i18n.__('pages.AdminServicesPage.materialTableLocalization.body_editTooltip'),
-                  onClick: (event, rowData) => {
-                    history.push(`/admin/${urlStruct}services/${rowData._id}`);
-                  },
-                },
-                {
-                  icon: 'add',
-                  tooltip: i18n.__('pages.AdminServicesPage.materialTableLocalization.body_addTooltip'),
-                  isFreeAction: true,
-                  onClick: () =>
-                    history.push(`/admin/${urlStruct}services/new/${structureMode ? selectedStructure._id : ''}`),
-                },
-              ]}
-              editable={{
-                onRowDelete: (oldData) =>
-                  new Promise((resolve, reject) => {
-                    Meteor.call(
-                      'services.removeService',
-                      {
-                        serviceId: oldData._id,
-                      },
-                      (err, res) => {
-                        if (err) {
-                          msg.error(err.reason);
-                          reject(err);
-                        } else {
-                          msg.success(i18n.__('api.methods.operationSuccessMsg'));
-                          resolve(res);
-                        }
-                      },
-                    );
-                  }),
-              }}
-            />
-          )}
-        </>
-      )}
-    </>
+    <MaterialTable
+      // other props
+      title={tableTitle}
+      columns={columns}
+      data={services.map((row) => ({ ...row, id: row._id }))}
+      options={options}
+      localization={setMaterialTableLocalization('pages.AdminServicesPage')}
+      actions={[
+        {
+          icon: keyboardArrowRight,
+          tooltip: i18n.__('pages.AdminServicesPage.materialTableLocalization.body_goTooltip'),
+          onClick: (event, rowData) => {
+            if (rowData.state !== 10) {
+              history.push(`/${structureMode ? urlStruct : 'services'}/${rowData.slug}`);
+            } else {
+              msg.warning(`Service ${i18n.__(Services.stateLabels[rowData.state])}`);
+            }
+          },
+        },
+        {
+          icon: 'edit',
+          tooltip: i18n.__('pages.AdminServicesPage.materialTableLocalization.body_editTooltip'),
+          onClick: (event, rowData) => {
+            history.push(`/admin/${urlStruct}services/${rowData._id}`);
+          },
+        },
+        {
+          icon: 'add',
+          tooltip: i18n.__('pages.AdminServicesPage.materialTableLocalization.body_addTooltip'),
+          isFreeAction: true,
+          onClick: () => history.push(urlNew),
+        },
+      ]}
+      editable={{
+        onRowDelete: (oldData) =>
+          new Promise((resolve, reject) => {
+            Meteor.call(
+              'services.removeService',
+              {
+                serviceId: oldData._id,
+              },
+              handleResult(resolve, reject),
+            );
+          }),
+      }}
+    />
   );
 };
+
 AdminServicesTable.propTypes = {
+  tableTitle: PropTypes.string.isRequired,
+  structureMode: PropTypes.bool.isRequired,
+  urlStruct: PropTypes.string.isRequired,
+  urlNew: PropTypes.string.isRequired,
   services: PropTypes.arrayOf(PropTypes.any).isRequired,
-  loading: PropTypes.bool.isRequired,
-  /** Provide empty {} if no structure mode */
-  selectedStructure: PropTypes.objectOf(PropTypes.any).isRequired,
 };
+
 export default AdminServicesTable;

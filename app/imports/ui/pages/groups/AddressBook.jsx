@@ -21,15 +21,14 @@ import IconButton from '@material-ui/core/IconButton';
 import LanguageIcon from '@material-ui/icons/Language';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import SendIcon from '@material-ui/icons/Send';
-import Pagination from '@material-ui/lab/Pagination';
 import { useHistory } from 'react-router-dom';
 import { useAppContext } from '../../contexts/context';
 import { usePagination } from '../../utils/hooks';
 import UserAvatar from '../../components/users/UserAvatar';
-import SearchField from '../../components/system/SearchField';
 import Spinner from '../../components/system/Spinner';
 import Groups from '../../../api/groups/groups';
 import { getStructure } from '../../../api/structures/hooks';
+import { GroupSearch, GroupPaginate } from './common';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -119,19 +118,19 @@ const AddressBook = ({ loading, group, slug }) => {
             <Spinner />
           ) : userInGroup || group.type === 0 ? (
             <>
-              <Grid item xs={12} sm={12} md={6}>
-                <SearchField
-                  updateSearch={updateSearch}
-                  search={search}
-                  resetSearch={resetSearch}
-                  label={i18n.__('pages.AddressBook.searchText')}
-                />
-              </Grid>
-              {total > ITEM_PER_PAGE && (
-                <Grid item xs={12} sm={12} md={6} lg={6} className={classes.pagination}>
-                  <Pagination count={Math.ceil(total / ITEM_PER_PAGE)} page={page} onChange={handleChangePage} />
-                </Grid>
-              )}
+              <GroupSearch
+                update={updateSearch}
+                reset={resetSearch}
+                search={search}
+                label={i18n.__('pages.AddressBook.searchText')}
+              />
+              <GroupPaginate
+                total={total}
+                nbItems={ITEM_PER_PAGE}
+                cls={classes.pagination}
+                page={page}
+                handler={handleChangePage}
+              />
               {items.length > 0 ? (
                 <Grid item xs={12} sm={12} md={12}>
                   <List className={classes.list} disablePadding>
@@ -216,11 +215,13 @@ const AddressBook = ({ loading, group, slug }) => {
                   <p>{i18n.__('pages.AddressBook.noUsers')}</p>
                 </Grid>
               )}
-              {total > ITEM_PER_PAGE && (
-                <Grid item xs={12} sm={12} md={12} lg={12} className={classes.pagination}>
-                  <Pagination count={Math.ceil(total / ITEM_PER_PAGE)} page={page} onChange={handleChangePage} />
-                </Grid>
-              )}
+              <GroupPaginate
+                total={total}
+                nbItems={ITEM_PER_PAGE}
+                cls={classes.pagination}
+                page={page}
+                handler={handleChangePage}
+              />
             </>
           ) : (
             <p className={classes.ErrorPage}>{i18n.__('pages.AddressBook.noAccess')}</p>
