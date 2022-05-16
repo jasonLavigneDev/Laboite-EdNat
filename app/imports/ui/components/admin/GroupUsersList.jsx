@@ -136,15 +136,13 @@ const GroupsUsersList = (props) => {
       onClick: () => setShowSearch(!showSearch),
     },
   ];
-  // fixme: temporarily disable group import function
-  if (false) {
-    actions.push({
-      icon: GroupAddIcon,
-      tooltip: i18n.__('components.GroupUsersList.materialTableLocalization.body_addGroupTooltip'),
-      isFreeAction: true,
-      onClick: () => setShowSearchGroup(!showSearchGroup),
-    });
-  }
+
+  actions.push({
+    icon: GroupAddIcon,
+    tooltip: i18n.__('components.GroupUsersList.materialTableLocalization.body_addGroupTooltip'),
+    isFreeAction: true,
+    onClick: () => setShowSearchGroup(!showSearchGroup),
+  });
 
   if (userRole === 'candidate') {
     actions.push({

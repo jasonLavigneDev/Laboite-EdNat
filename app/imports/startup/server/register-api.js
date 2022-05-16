@@ -3,6 +3,7 @@ import '../../api/nextcloud/server/publications';
 import '../../api/users/server/methods';
 import '../../api/users/server/publications';
 import '../../api/groups/methods';
+import '../../api/groups/server/methods';
 import '../../api/groups/server/bbbMethods';
 import '../../api/bookmarks/methods';
 import '../../api/bookmarks/server/publications';
