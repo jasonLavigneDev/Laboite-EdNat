@@ -21,6 +21,8 @@ import { useAppContext } from '../contexts/context';
 import Helps from '../../api/helps/helps';
 import { useZoneStyles } from '../components/personalspace/PersonalZone';
 
+const sortCategName = (a, b) => a - b;
+
 function HelpPage() {
   const [openScreencast, setScreencastModal] = useState(false);
   const [{ isMobile }] = useAppContext();
@@ -29,8 +31,9 @@ function HelpPage() {
     const helpsData = Helps.find({}, { sort: { title: 1 }, limit: 10000 });
     const categorieData = new Set([]);
     helpsData.forEach(({ category }) => categorieData.add(category));
+    const categoryArray = Array.from(categorieData);
     return subs.ready()
-      ? [...categorieData].map((category) => ({
+      ? [...categoryArray.sort(sortCategName)].map((category) => ({
           name: category,
           items: Helps.find({ category }, { sort: { title: 1 }, limit: 10000 }),
         }))
