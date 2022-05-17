@@ -32,27 +32,27 @@ export const addGroupMembersToGroup = new ValidatedMethod({
     const usersGroup = group2.members;
 
     let nb = 0;
-    let i;
-    for (i = 0; i < usersGroup.length; i += 1) {
+    usersGroup.forEach((user) => {
       // add role to user collection
-      if (!Roles.userIsInRole(usersGroup[i], 'member', groupId)) {
-        Roles.addUsersToRoles(usersGroup[i], 'member', groupId);
+      if (!Roles.userIsInRole(user, 'member', groupId)) {
+        Roles.addUsersToRoles(user, 'member', groupId);
         // remove candidate Role if present
-        if (Roles.userIsInRole(usersGroup[i], 'candidate', groupId)) {
-          Roles.removeUsersFromRoles(usersGroup[i], 'candidate', groupId);
+        if (Roles.userIsInRole(user, 'candidate', groupId)) {
+          Roles.removeUsersFromRoles(user, 'candidate', groupId);
         }
         // store info in group collection
-        if (group.members.indexOf(usersGroup[i]) === -1) {
+        if (group.members.indexOf(user) === -1) {
           Groups.update(groupId, {
-            $push: { members: usersGroup[i] },
-            $pull: { candidates: usersGroup[i] },
+            $push: { members: user },
+            $pull: { candidates: user },
           });
         }
         // update user personalSpace
         favGroup._execute({ userId: usersGroup[nb] }, { groupId });
         nb += 1;
       }
-    }
+    });
+
     return nb;
   },
 });

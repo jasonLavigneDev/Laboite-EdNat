@@ -641,16 +641,15 @@ if (Meteor.isServer && rcEnabled) {
 
       const users = Meteor.users.find({ _id: { $in: group2.members } });
 
-      let i;
-      for (i = 0; i < users.length; i += 1) {
-        if (!Roles.userIsInRole(users[i]._id, 'member', anotherGroupId)) {
-          rcClient.setRole(group2.slug, users[i].username, 'member', this.userId);
+      users.forEach((user) => {
+        if (!Roles.userIsInRole(user._id, 'member', anotherGroupId)) {
+          rcClient.setRole(group2.slug, user.username, 'member', this.userId);
           // remove candidate Role if present
-          if (Roles.userIsInRole(users[i]._id, 'candidate', groupId)) {
-            rcClient.setRole(group2.slug, users[i].username, 'member', this.userId);
+          if (Roles.userIsInRole(user._id, 'candidate', groupId)) {
+            rcClient.setRole(group2.slug, user.username, 'member', this.userId);
           }
         }
-      }
+      });
     }
   });
 
