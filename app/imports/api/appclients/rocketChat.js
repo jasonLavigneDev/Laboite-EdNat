@@ -637,17 +637,19 @@ if (Meteor.isServer && rcEnabled) {
 
   Meteor.afterMethod('groups.addGroupMembersToGroup', function kcAddGroupMembersToGroup({ groupId, anotherGroupId }) {
     if (!this.error) {
+      const group = Groups.findOne({ _id: groupId });
       const group2 = Groups.findOne({ _id: anotherGroupId });
 
-      const users = Meteor.users.find({ _id: { $in: group2.members } });
+      const users = Meteor.users.find({ _id: { $in: group.members } });
 
       users.forEach((user) => {
         if (!Roles.userIsInRole(user._id, 'member', anotherGroupId)) {
-          rcClient.setRole(group2.slug, user.username, 'member', this.userId);
-          // remove candidate Role if present
-          if (Roles.userIsInRole(user._id, 'candidate', groupId)) {
-            rcClient.setRole(group2.slug, user.username, 'member', this.userId);
-          }
+          rcClient.ensureUser(user._id, this.userId).then((rcUser) => {
+            if (rcUser != null) {
+              const { username } = rcUser;
+              rcClient.setRole(group2.slug, username, 'member', this.userId);
+            }
+          });
         }
       });
     }
