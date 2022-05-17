@@ -972,8 +972,8 @@
       "tabAllServicesLabel": "All services",
       "emptyFilter": "There is no filter available.",
       "viewMode": "Change view mode",
-      "viewCard": "Card view",
-      "viewList": "List view",
+      "viewDetail": "Detail view",
+      "viewSimple": "Simple view",
       "filter": "Filter",
       "NoStructureServices": "No service defined for your structure",
       "NoServices": "No services defined"
@@ -984,8 +984,8 @@
       "searchGroup": "Search a group",
       "addGroup": "Add group",
       "viewMode": "Change view mode",
-      "viewCard": "Card view",
-      "viewList": "List view",
+      "viewDetail": "Detail view",
+      "viewSimple": "Simple view",
       "endOfList": "End of the list",
       "filterGroup": "Show only joined groups",
       "noGroup": "There is no group to display."

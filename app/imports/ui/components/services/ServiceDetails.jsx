@@ -6,8 +6,6 @@ import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
-import AddIcon from '@material-ui/icons/Add';
-import RemoveIcon from '@material-ui/icons/Remove';
 // import OpenWithIcon from '@material-ui/icons/OpenWith';
 
 import Tooltip from '@material-ui/core/Tooltip';
@@ -15,8 +13,10 @@ import Button from '@material-ui/core/Button';
 import CardHeader from '@material-ui/core/CardHeader';
 import i18n from 'meteor/universe:i18n';
 import { Link } from 'react-router-dom';
+import FavButton from './FavButton';
 
 import { isUrlExternal } from '../../utils/utilsFuncs';
+import { getServiceInternalUrl } from '../../../api/services/utils';
 
 const useStyles = makeStyles((theme) => ({
   cardActions: {
@@ -118,30 +118,6 @@ function ServiceDetails({ service, favAction, isShort }) {
   const isPoll = service._id === 'polls';
   const isBookmark = service._id === 'bookmarks';
 
-  const handleFavorite = () => {
-    if (!favorite) {
-      Meteor.call('services.unfavService', { serviceId: service._id }, (err) => {
-        if (err) {
-          msg.error(err.reason);
-        } else {
-          msg.success(i18n.__('components.ServiceDetails.unfavSuccessMsg'));
-        }
-      });
-    } else {
-      Meteor.call('services.favService', { serviceId: service._id }, (err) => {
-        if (err) {
-          msg.error(err.reason);
-        } else {
-          msg.success(i18n.__('components.ServiceDetails.favSuccessMsg'));
-        }
-      });
-    }
-  };
-
-  const favButtonLabel = !favorite
-    ? i18n.__('components.ServiceDetails.favButtonLabelNoFav')
-    : i18n.__('components.ServiceDetails.favButtonLabelFav');
-
   const isExternal = isUrlExternal(service.url);
   const openButton = (
     <Button
@@ -180,20 +156,7 @@ function ServiceDetails({ service, favAction, isShort }) {
         title={i18n.__('components.ServiceDetails.singleServiceButtonLabel')}
         aria-label={i18n.__('components.ServiceDetails.singleServiceButtonLabel')}
       >
-        <Link
-          to={
-            isAddressBook
-              ? service.url
-              : isEvents
-              ? service.url
-              : isPoll
-              ? service.url
-              : isBookmark
-              ? service.url
-              : `/services/${service.slug}`
-          }
-          className={classes.noUnderline}
-        >
+        <Link to={getServiceInternalUrl({ service })} className={classes.noUnderline}>
           <CardHeader
             className={classes.cardHeader}
             avatar={
@@ -242,21 +205,7 @@ function ServiceDetails({ service, favAction, isShort }) {
           <div className={isShort ? classes.cardActionShort : classes.cardActions}>
             {service.state === 5 ? inactiveButton : isExternal ? openButton : linkButton}
 
-            {!!favAction && (
-              <Tooltip title={favButtonLabel} aria-label={favButtonLabel}>
-                <Button
-                  // startIcon={favorite ? <BookmarkBorderIcon /> : <BookmarkIcon />}
-                  variant="outlined"
-                  color="primary"
-                  size="large"
-                  className={classes.fab}
-                  onClick={handleFavorite}
-                >
-                  {favorite ? <AddIcon /> : <RemoveIcon />}
-                  {/* {i18n.__(`components.ServiceDetails.${favorite ? '' : 'un'}pin`)} */}
-                </Button>
-              </Tooltip>
-            )}
+            {!!favAction && <FavButton classesArray={[classes.fab]} service={service} favorite={favorite} />}
           </div>
         </CardContent>
       )}
