@@ -76,9 +76,9 @@ export default function ServiceDetails({ service, favAction, noIconMode = false 
   const isExternal = isUrlExternal(service.url);
   const launchService = () => {
     trackEvent({
-      category: 'sample-page',
-      action: 'click-event',
-      name: `Ouverture de ${service.name}`, // optional
+      category: 'signin-page',
+      action: 'open-service',
+      name: `Ouverture de ${service.title}`, // optional
     });
     if (isExternal) {
       window.open(service.url, '_blank', 'noreferrer,noopener');

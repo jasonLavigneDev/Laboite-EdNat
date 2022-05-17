@@ -8,6 +8,7 @@ import { PropTypes } from 'prop-types';
 import HomeIcon from '@material-ui/icons/Home';
 import AppsIcon from '@material-ui/icons/Apps';
 import HelpIcon from '@material-ui/icons/Help';
+import { useMatomo } from '@datapunt/matomo-tracker-react';
 
 export const links = [
   {
@@ -61,6 +62,7 @@ const useStyles = () =>
   }));
 
 const OfflineMenu = ({ state: [selectedTab, setTab] }) => {
+  const { trackEvent } = useMatomo();
   const classes = useStyles()();
 
   function a11yProps(index) {
@@ -69,6 +71,15 @@ const OfflineMenu = ({ state: [selectedTab, setTab] }) => {
       'aria-controls': `scrollable-force-tabpanel-${index}`,
     };
   }
+
+  const handleChangeMenu = (menuItem) => {
+    trackEvent({
+      category: 'signin-page',
+      action: 'click-menu',
+      name: `Sélectionne la page ${menuItem}`,
+    });
+    setTab(menuItem);
+  };
 
   return (
     <AppBar position="fixed" className={classes.root}>
@@ -95,7 +106,7 @@ const OfflineMenu = ({ state: [selectedTab, setTab] }) => {
             className={classes.elementTab}
             icon={link.icon}
             label={i18n.__(`components.OfflineMenu.${link.content}`)}
-            onClick={() => setTab(link.content)}
+            onClick={() => handleChangeMenu(link.content)}
           />
         ))}
       </Tabs>

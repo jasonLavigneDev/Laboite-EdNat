@@ -16,6 +16,7 @@ import Button from '@material-ui/core/Button';
 import Modal from '@material-ui/core/Modal';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import CancelIcon from '@material-ui/icons/CancelOutlined';
+import { useMatomo } from '@datapunt/matomo-tracker-react';
 import Screencast from '../components/screencast/Screencast';
 import { useAppContext } from '../contexts/context';
 import Helps from '../../api/helps/helps';
@@ -24,6 +25,7 @@ import { useZoneStyles } from '../components/personalspace/PersonalZone';
 const sortCategName = (a, b) => a.localeCompare(b);
 
 function HelpPage() {
+  const { trackEvent } = useMatomo();
   const [openScreencast, setScreencastModal] = useState(false);
   const [{ isMobile }] = useAppContext();
   const helps = useTracker(() => {
@@ -99,6 +101,11 @@ function HelpPage() {
   const [link, setLink] = useState('');
 
   const openItem = (item) => {
+    trackEvent({
+      category: 'signin-page',
+      action: 'click-help',
+      name: `Ouvre l'aide ${item.title}`,
+    });
     if (item.type === 5) {
       setLink(item.content);
       setScreencastModal(true);

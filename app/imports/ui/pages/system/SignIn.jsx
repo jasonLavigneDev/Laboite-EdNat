@@ -22,6 +22,7 @@ import AppSettings from '../../../api/appsettings/appsettings';
 import Structures from '../../../api/structures/structures';
 import { getCurrentIntroduction } from '../../../api/utils';
 import { usePageTracking } from '../../utils/matomo';
+import { useAppContext } from '../../contexts/context';
 
 validate.options = {
   fullMessages: false,
@@ -106,10 +107,17 @@ export const useFormStateValidator = (formSchema) => {
 };
 
 function SignIn({ loggingIn, introduction, appsettings, ready }) {
+  const [{ isIframed }] = useAppContext();
   const classes = useStyles();
   const { trackEvent } = useMatomo();
   usePageTracking({
     documentTitle: 'Page de connexion',
+    customDimensions: [
+      {
+        id: 'Widget',
+        value: isIframed,
+      },
+    ], // optional
   });
 
   const [formState, handleChange] = useFormStateValidator(schema);
@@ -138,8 +146,8 @@ function SignIn({ loggingIn, introduction, appsettings, ready }) {
 
   const handleKeycloakAuth = () => {
     trackEvent({
-      category: 'sample-page',
-      action: 'click-event',
+      category: 'signin-page',
+      action: 'connexion-click',
       name: 'Connexion avec Keycloak', // optional
     });
     checkRememberMe();

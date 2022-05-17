@@ -4,14 +4,14 @@ import { Meteor } from 'meteor/meteor';
 import { Helmet } from 'react-helmet';
 import { MuiThemeProvider, useTheme } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import { MatomoProvider } from '@datapunt/matomo-tracker-react';
+import { MatomoProvider, useMatomo } from '@datapunt/matomo-tracker-react';
 import ProtectedRoute from '../components/system/ProtectedRoute';
 import PublicRoute from '../components/system/PublicRoute';
 import Spinner from '../components/system/Spinner';
 import MsgHandler from '../components/system/MsgHandler';
 import DynamicStore, { useAppContext } from '../contexts/context';
 import lightTheme from '../themes/light';
-import { instance, usePageTracking } from '../utils/matomo';
+import { instance } from '../utils/matomo';
 
 // dynamic imports
 const MainLayout = lazy(() => import('./MainLayout'));
@@ -33,6 +33,9 @@ function Logout() {
 function App() {
   const [state] = useAppContext();
   const theme = useTheme();
+  const { enableLinkTracking } = useMatomo();
+  enableLinkTracking();
+
   const { userId, loadingUser = false, loading } = state;
   const useKeycloak = Meteor.settings.public.enableKeycloak;
   const externalBlog = !!Meteor.settings.public.laboiteBlogURL;
