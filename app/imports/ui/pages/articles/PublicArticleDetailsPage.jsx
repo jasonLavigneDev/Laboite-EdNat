@@ -21,6 +21,7 @@ import '@toast-ui/editor/dist/toastui-editor.css'; // Editor's Style
 import { Viewer } from '@toast-ui/react-editor';
 import chart from '@toast-ui/editor-plugin-chart';
 import uml from '@toast-ui/editor-plugin-uml';
+import '@toast-ui/editor/dist/i18n/fr-fr';
 import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
 import colorSyntax from '@toast-ui/editor-plugin-color-syntax';
 import tableMergedCell from '@toast-ui/editor-plugin-table-merged-cell';
@@ -30,6 +31,21 @@ import { useAppContext } from '../../contexts/context';
 import TopBar from '../../components/menus/TopBar';
 import Footer from '../../components/menus/Footer';
 // import Tags from '../../../api/tags/tags';
+
+const modifiedColorSyntax = (context, options) => {
+  const newContext = { ...context };
+  const {
+    i18n: {
+      langs: { values },
+    },
+  } = newContext;
+  const newValues = values.map((lang) => ({
+    ...lang,
+    OK: 'OK',
+  }));
+  newContext.i18n.langs.values = newValues;
+  return colorSyntax(newContext, options);
+};
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -224,7 +240,7 @@ function PublicArticleDetailsPage({
                 <Viewer
                   ref={toastRef}
                   initialValue={article.content}
-                  plugins={[chart, codeSyntaxHighlight, colorSyntax, tableMergedCell, uml]}
+                  plugins={[chart, codeSyntaxHighlight, tableMergedCell, uml, modifiedColorSyntax]}
                 />
               ) : (
                 <div className={`ql-editor ${classes.content}`} dangerouslySetInnerHTML={{ __html: article.content }} />
