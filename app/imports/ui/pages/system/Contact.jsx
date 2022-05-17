@@ -73,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
   },
   emailForm: {
-    marginTop: -32,
+    marginTop: -15,
   },
   form: {
     width: '100%', // Fix IE 11 issue.
@@ -177,7 +177,6 @@ const Contact = ({ structures, loading }) => {
                 autoFocus
                 fullWidth
                 disabled={user}
-                helperText=" "
                 label={i18n.__('pages.ContactForm.firstNameLabel')}
                 name="firstName"
                 type="text"
@@ -197,7 +196,6 @@ const Contact = ({ structures, loading }) => {
                 label={i18n.__('pages.ContactForm.nameLabel')}
                 name="lastName"
                 type="text"
-                helperText=" "
                 value={user ? user.lastName : formState.values.lastName || ''}
                 error={hasError('lastName')}
                 onChange={handleChange}
@@ -216,7 +214,7 @@ const Contact = ({ structures, loading }) => {
                 fullWidth
                 helperText=""
                 type="text"
-                value={user ? user.emails[0].address : formState.values.email || ''}
+                value={user ? (user.emails ? user.emails[0].address : '') : formState.values.email || ''}
                 error={hasError('email')}
                 onChange={handleChange}
                 variant="outlined"
