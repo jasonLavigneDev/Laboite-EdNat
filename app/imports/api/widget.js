@@ -69,6 +69,7 @@ const styles = `
             }
       
             .lb_widget-container.opened {
+              transition: all 0.2s ease-in-out;
               z-index: 9999;
               position: fixed;
               display: flex;

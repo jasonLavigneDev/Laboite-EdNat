@@ -36,7 +36,7 @@ const useStyles = (isMobile) =>
   }));
 
 function OfflineServices() {
-  const [{ isMobile }] = useAppContext();
+  const [{ isMobile, isIframed }] = useAppContext();
   const classes = useStyles(isMobile)();
   const data = useTracker(() => {
     const servicesHandle = Meteor.subscribe('services.offline');
@@ -57,7 +57,7 @@ function OfflineServices() {
   });
 
   return (
-    <Grid item xs={12} sm={4} md={7}>
+    <Grid item xs={12} sm={isIframed ? 10 : 4} md={isIframed ? 9 : 7}>
       {data.categories.map(
         ({ services, category }) =>
           !!category &&
@@ -77,9 +77,9 @@ function OfflineServices() {
                 <Grid
                   className={classes.serviceItem}
                   item
-                  xs={isMobile ? 4 : 12}
-                  md={isMobile ? 2 : 6}
-                  lg={4}
+                  xs={isMobile && !isIframed ? 4 : 12}
+                  md={isMobile && !isIframed ? 2 : isIframed ? 4 : 6}
+                  lg={isIframed ? 3 : 4}
                   key={service._id}
                 >
                   <ServiceDetailsList service={service} noIconMode />
