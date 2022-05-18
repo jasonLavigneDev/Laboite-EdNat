@@ -269,7 +269,8 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
     });
   };
 
-  const structure = useStructure(params.structureId || service.structure);
+  const structure =
+    useStructure(params.structureId || service.structure || Services.findOne(params._id).structure) || null;
 
   if (!ready || loading || (!!params._id && !service._id)) {
     return <Spinner full />;
