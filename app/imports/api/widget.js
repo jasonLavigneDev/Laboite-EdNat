@@ -285,7 +285,7 @@ export const widget = () => `
     const handleUserLogged = (content) => {
       if(content){
         userLogged = "connected"
-        '<img src="${Meteor.absoluteUrl()}images/logos/${theme}/widget/connected.svg" />';
+        openButton.innerHTML = '<img src="${Meteor.absoluteUrl()}images/logos/${theme}/widget/connected.svg" />';
       } else {
         openButton.innerHTML = 
             '<img src="${Meteor.absoluteUrl()}images/logos/${theme}/widget/disconnected.svg" />';
