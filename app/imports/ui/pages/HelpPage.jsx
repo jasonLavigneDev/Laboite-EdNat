@@ -21,7 +21,7 @@ import { useAppContext } from '../contexts/context';
 import Helps from '../../api/helps/helps';
 import { useZoneStyles } from '../components/personalspace/PersonalZone';
 
-const sortCategName = (a, b) => a - b;
+const sortCategName = (a, b) => a.localeCompare(b);
 
 function HelpPage() {
   const [openScreencast, setScreencastModal] = useState(false);
