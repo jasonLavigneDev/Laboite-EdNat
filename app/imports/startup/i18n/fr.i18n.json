@@ -521,7 +521,8 @@
       "menuAdminAppSettings": "Réglages Administrateurs",
       "menuAdminStructureUsers": "Utilisateurs de la structure",
       "menuAdminStructureServices": "Services de la structure",
-      "menuAdminBackHome": "Retour à l'espace perso"
+      "menuAdminBackHome": "Retour à l'espace perso",
+      "menuContact": "Contact"
     },
     "AdminMenu": {
       "title": "Administration",

@@ -31,6 +31,7 @@ const SingleGroupPage = lazy(() => import('../pages/groups/SingleGroupPage'));
 const AddressBook = lazy(() => import('../pages/groups/AddressBook'));
 const EventsPage = lazy(() => import('../pages/groups/EventsPage'));
 const PollPage = lazy(() => import('../pages/groups/PollPage'));
+const ContactPage = lazy(() => import('../pages/system/Contact'));
 const ProfilePage = lazy(() => import('../pages/system/ProfilePage'));
 const ArticlesPage = lazy(() => import('../pages/articles/ArticlesPage'));
 const EditArticlePage = lazy(() => import('../pages/articles/EditArticlePage'));
@@ -125,6 +126,7 @@ function MainLayout({ appsettings, ready }) {
                     <Switch>
                       <Route exact path="/" component={PersonalPage} />
                       <Route exact path="/profile" component={ProfilePage} />
+                      <Route exact path="/contact" component={ContactPage} />
                       <Route exact path="/profileStructureSelection" component={StructureSelectionPage} />
                       <Route exact path="/services" component={ServicesPage} />
                       <Route exact path="/structure" component={ServicesPage} />

@@ -521,7 +521,8 @@
       "menuAdminTags": "Tags Management",
       "menuAdminStructureUsers": "Structure Users",
       "menuAdminStructureServices": "Structure Services",
-      "menuAdminBackHome": "Back to Personnal Space"
+      "menuAdminBackHome": "Back to Personnal Space",
+      "menuContact": "Contact"
     },
     "AdminMenu": {
       "title": "Administration",
