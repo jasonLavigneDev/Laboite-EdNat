@@ -647,7 +647,7 @@ if (Meteor.isServer && rcEnabled) {
           rcClient.ensureUser(user._id, this.userId).then((rcUser) => {
             if (rcUser != null) {
               const { username } = rcUser;
-              rcClient.setRole(group2.slug, username, 'member', this.userId);
+              rcClient.inviteUser(group2.slug, username, this.userId);
             }
           });
         }
