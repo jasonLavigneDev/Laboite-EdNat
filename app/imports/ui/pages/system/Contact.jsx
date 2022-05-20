@@ -269,6 +269,7 @@ const Contact = ({ structures, loading }) => {
                 multiline
                 fullWidth
                 rows={10}
+                autoFocus
                 label={i18n.__('pages.ContactForm.textLabel')}
                 value={formState.values.text || ''}
                 onChange={handleChange}
