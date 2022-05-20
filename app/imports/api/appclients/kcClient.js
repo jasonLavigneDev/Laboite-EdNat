@@ -510,7 +510,7 @@ if (Meteor.isServer && Meteor.settings.public.enableKeycloak) {
       const usersGroup = group2.members;
 
       usersGroup.forEach((user) => {
-        if (!Roles.userIsInRole(user, 'member', groupId)) {
+        if (!Roles.userIsInRole(user, 'animator', groupId)) {
           kcClient.setRole(user, group.name, this.userId);
         }
       });
