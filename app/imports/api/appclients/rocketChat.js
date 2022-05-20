@@ -640,18 +640,19 @@ if (Meteor.isServer && rcEnabled) {
       const group = Groups.findOne({ _id: groupId });
       const group2 = Groups.findOne({ _id: anotherGroupId });
 
-      const users = Meteor.users.find({ _id: { $in: group.members } });
-
-      users.forEach((user) => {
-        if (!Roles.userIsInRole(user._id, 'member', anotherGroupId)) {
-          rcClient.ensureUser(user._id, this.userId).then((rcUser) => {
-            if (rcUser != null) {
-              const { username } = rcUser;
-              rcClient.inviteUser(group2.slug, username, this.userId);
-            }
-          });
-        }
-      });
+      if (group2.plugins.rocketChat === true) {
+        const users = Meteor.users.find({ _id: { $in: group.members } });
+        users.forEach((user) => {
+          if (!Roles.userIsInRole(user._id, ['member', 'animator', 'admin'], anotherGroupId)) {
+            rcClient.ensureUser(user._id, this.userId).then((rcUser) => {
+              if (rcUser != null) {
+                const { username } = rcUser;
+                rcClient.inviteUser(group2.slug, username, this.userId);
+              }
+            });
+          }
+        });
+      }
     }
   });
 
