@@ -596,6 +596,7 @@
     "GroupFinder": {
       "addGroup": "Add ",
       "noGroup": "No group found",
+      "noUser": "No group found",
       "groupLabel": "Group",
       "placeholder": "Type to search a group",
       "clear": "Clear",
