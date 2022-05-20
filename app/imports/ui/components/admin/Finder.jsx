@@ -62,8 +62,16 @@ function Finder({ onSelected, hidden, exclude, opened, i18nCode, method }) {
       onClose={() => {
         setOpen(false);
       }}
-      getOptionSelected={(option, value) => option.username === value.username}
-      getOptionLabel={(option) => `${option.username} (${option.firstName || ''} ${option.lastName || ''})`}
+      getOptionSelected={
+        method === 'users.findUsers'
+          ? (option, value) => option.username === value.username
+          : (option, value) => option.name === value.name
+      }
+      getOptionLabel={
+        method === 'users.findUsers'
+          ? (option) => `${option.username} (${option.firstName || ''} ${option.lastName || ''})`
+          : (option) => `${option.name || ''}`
+      }
       noOptionsText={i18n.__(`components.${i18nCode}.noUser`)}
       clearText={i18n.__(`components.${i18nCode}.clear`)}
       loadingText={i18n.__(`components.${i18nCode}.loading`)}

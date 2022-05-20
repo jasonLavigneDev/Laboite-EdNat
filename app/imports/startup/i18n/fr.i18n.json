@@ -600,6 +600,8 @@
     "GroupFinder": {
       "noTag": "Aucun groupe trouvé",
       "groupLabel": "Groupe",
+      "userLabel": "Groupes",
+      "noUser":"Aucun groupe trouvé",
       "placeholder": "Saisir pour rechercher",
       "clear": "Effacer",
       "loading": "Chargement...",
