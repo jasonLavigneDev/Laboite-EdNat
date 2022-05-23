@@ -1,6 +1,6 @@
 /* eslint-disable react/no-this-in-sfc */
 import React, { useState, useEffect } from 'react';
-import { withTracker } from 'meteor/react-meteor-data';
+import { withTracker, useTracker } from 'meteor/react-meteor-data';
 import i18n from 'meteor/universe:i18n';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
@@ -32,7 +32,7 @@ import slugy from '../../utils/slugy';
 import ImageAdminUploader from '../../components/uploader/ImageAdminUploader';
 import { CustomToolbarArticle } from '../../components/system/CustomQuill';
 import '../../utils/QuillVideo';
-import { useStructure } from '../../../api/structures/hooks';
+import Structures from '../../../api/structures/structures';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -269,8 +269,12 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
     });
   };
 
-  const structure =
-    useStructure(params.structureId || service.structure || Services.findOne(params._id).structure) || null;
+  const { structure } = useTracker(() => {
+    const _id = params.structureId ? params.structureId : serviceData.structure;
+    Meteor.subscribe('structures.one', { _id });
+    const data = Structures.findOne(_id);
+    return { structure: data };
+  }, [serviceData, params]);
 
   if (!ready || loading || (!!params._id && !service._id)) {
     return <Spinner full />;
@@ -282,7 +286,7 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
         <Paper className={classes.root}>
           <Typography component="h1">
             {i18n.__(`pages.AdminSingleServicePage.${params._id ? 'edition' : 'creation'}`)}
-            <b> {serviceData.title}</b> {`${structureMode && structure.name ? `(${structure.name})` : ''}`}
+            <b> {serviceData.title}</b> {`${structureMode && structure != null ? `(${structure.name})` : ''}`}
           </Typography>
           <form noValidate autoComplete="off">
             <TextField
