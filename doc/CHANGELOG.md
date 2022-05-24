@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.2.3](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/4.2.2...release/4.2.3) (2022-05-24)
+
+
+### Bug Fixes
+
+* **blog:** fix audio record button ([f110e62](https://gitlab.mim-libre.fr/alphabet/laboite/commit/f110e621dcd5e8c93ee39dc7787c24357a70bc5d))
+
 ## [4.2.2](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/4.2.1...release/4.2.2) (2022-05-12)
 
 

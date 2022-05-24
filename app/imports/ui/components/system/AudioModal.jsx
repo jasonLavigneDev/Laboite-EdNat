@@ -265,7 +265,7 @@ const AudioModal = ({ onClose, selectFile, admin }) => {
               },
               {
                 label: 'components.AudioModal.start',
-                disabled: !capturing || loading || !!audioPlayer,
+                disabled: capturing || loading || !!audioPlayer,
                 onClick: audioPlayer ? null : handleStartCaptureClick,
                 icon: <FiberManualRecordIcon style={{ color: capturing ? null : 'red' }} />,
               },
