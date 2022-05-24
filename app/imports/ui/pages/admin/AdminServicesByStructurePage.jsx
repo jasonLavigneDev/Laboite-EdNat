@@ -46,6 +46,10 @@ const AdminServicesByStructurePage = () => {
     return { loading: !_servicesHandle.ready(), services: _services };
   }, [selectedStructureId, selectedStructureId != null]);
 
+  const urlStruct = 'structure';
+  const title = `${i18n.__('pages.AdminServicesPage.title')} ${selectedStructure.name} (${services.length})`;
+  const urlNew = `/admin/${urlStruct}services/new/${selectedStructure._id}`;
+
   return (
     <Fade in>
       <Container className={classes.root}>
@@ -71,9 +75,11 @@ const AdminServicesByStructurePage = () => {
                 <Spinner />
               ) : (
                 <AdminServicesTable
+                  tableTitle={title}
+                  structureMode
+                  urlStruct={urlStruct}
+                  urlNew={urlNew}
                   services={services}
-                  loading={servicesLoading}
-                  selectedStructure={selectedStructure}
                 />
               )}
             </Grid>
