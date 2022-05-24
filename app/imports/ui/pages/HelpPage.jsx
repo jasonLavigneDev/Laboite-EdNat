@@ -6,6 +6,7 @@ import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
+import Box from '@material-ui/core/Box';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import Accordion from '@material-ui/core/Accordion';
@@ -68,13 +69,8 @@ function HelpPage() {
       },
     },
     closeButton: {
-      marginRight: '20px',
-      marginTop: '-30px',
       width: '30px',
       height: '30px',
-      position: 'absolute',
-      display: 'flex',
-      justifyContent: 'right',
       cursor: 'pointer',
     },
     button: {
@@ -92,21 +88,39 @@ function HelpPage() {
     modal: {
       display: 'grid',
     },
+    modalHead: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      margin: 20,
+      alignItems: 'center',
+    },
   }));
 
   const classes = useStyles();
   const zoneClasses = useZoneStyles();
-  const [link, setLink] = useState('');
+
+  const [modalState, setModalState] = useState({
+    link: '',
+    name: '',
+  });
 
   const openItem = (item) => {
     if (item.type === 5) {
-      setLink(item.content);
+      setModalState({
+        link: item.content,
+        name: item.title,
+      });
+
       setScreencastModal(true);
     } else {
       window.open(item.content);
     }
   };
 
+  // React.useEffect(() => {
+  //   // openItem(helps[0]);
+  //   console.log({ helps });
+  // }, [helps]);
   return (
     <Fade in>
       <Container className={classes.container}>
@@ -164,9 +178,15 @@ function HelpPage() {
         </Grid>
         <Modal open={openScreencast} onClose={() => setScreencastModal(false)}>
           <Grid container className={classes.gridModal}>
-            <Grid item className={classes.button}>
-              <CancelIcon className={classes.closeButton} onClick={() => setScreencastModal(false)} />
-              <Screencast link={link} />
+            <Grid item>
+              <Box className={classes.modalHead}>
+                <Typography variant="h4" style={{ textDecoration: 'underline' }}>
+                  <b>{modalState.name || ''}</b>
+                </Typography>
+
+                <CancelIcon className={classes.closeButton} onClick={() => setScreencastModal(false)} />
+              </Box>
+              <Screencast link={modalState.link} />
             </Grid>
           </Grid>
         </Modal>
