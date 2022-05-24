@@ -958,7 +958,8 @@
       "currentStructure": "Votre structure de rattachement actuelle est :",
       "noSelectedStructure": "Aucune structure sélectionnée",
       "noCurrentStructure": "Vous n'avez pas de structure de rattachement pour le moment",
-      "chooseAttachementStructure": "Choose your attachement structure"
+      "chooseAttachementStructure": "Choisir votre structure de rattachement",
+      "noOptions": "Ecrire pour chercher des structures (3 lettres minimum)"
     },
     "NotFound": {
       "backButtonLabel": "Retour",

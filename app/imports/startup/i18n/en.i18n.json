@@ -956,7 +956,8 @@
       "currentStructure": "Your current attachement structure is:",
       "noSelectedStructure": "No selected structure",
       "noCurrentStructure": "You have no attached structure for now",
-      "chooseAttachementStructure": "Choose your attachement structure"
+      "chooseAttachementStructure": "Choose your attachement structure",
+      "noOptions": "Type to search for structures (3 letters minimum)"
     },
     "NotFound": {
       "backButtonLabel": "Back",
