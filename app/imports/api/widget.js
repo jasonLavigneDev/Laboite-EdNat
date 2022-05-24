@@ -97,10 +97,9 @@ const styles = `
               border: none;
               border-radius: 0 0 8px 8px;
             }
-      
             .lb_widget-container .lb_widget-header {
               height: 35px;
-              background-color: #000091;
+              background-color: ${process.env.WIDGET_HEADER_COLOR || '#000091'};
               display: flex;
               padding: 5px;
               justify-content: space-between;
