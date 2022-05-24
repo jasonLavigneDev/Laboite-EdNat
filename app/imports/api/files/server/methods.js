@@ -11,6 +11,7 @@ import s3Client from './config';
 import { isActive } from '../../utils';
 import logServer from '../../logging';
 import Services from '../../services/services';
+import { hasAdminRightOnStructure } from '../../structures/utils';
 
 const { minioSSL, minioEndPoint, minioBucket, minioPort } = Meteor.settings.public;
 
@@ -29,7 +30,8 @@ const checkUserAdminRights = (path, userId) => {
   if (path.startsWith('services/')) {
     const serviceID = path.split('/')[1];
     const user = Meteor.users.findOne(userId);
-    if (Roles.userIsInRole(userId, ['adminStructure'], user.structure)) {
+    const adminRightOnStructure = hasAdminRightOnStructure({ userId, structureId: user.structure });
+    if (adminRightOnStructure) {
       // creating new service
       if (serviceID === 'undefined') isStructureAdmin = true;
       else {
