@@ -4,7 +4,7 @@ import { withTracker } from 'meteor/react-meteor-data';
 import { Roles } from 'meteor/alanning:roles';
 import PropTypes from 'prop-types';
 import { useWindowSize } from '../utils/hooks';
-import reducer, { MOBILE_SIZE } from './reducer';
+import reducer, { MOBILE_SIZE, TABLET_SIZE } from './reducer';
 import getLang from '../utils/getLang';
 import Structures, { propTypes as structuresPropTypes } from '../../api/structures/structures';
 
@@ -12,6 +12,7 @@ const initialState = {
   user: Meteor.user(),
   userId: null,
   isMobile: window.innerWidth < MOBILE_SIZE,
+  isTablet: window.innerWidth < TABLET_SIZE && window.innerWidth > MOBILE_SIZE,
   language: getLang().substr(0, 2),
   loggingIn: Accounts.loggingIn(),
   authenticated: false,
