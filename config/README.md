@@ -1,6 +1,8 @@
 # Configuration
 
-Copy `settings-development.json.sample` to `settings-development.json` and update values matching your configuration
+Copy `settings.json.sample` to `settings.[env].json` and update values matching your configuration
+
+Possible [env] : "development" | "test"
 
 ## public:
 

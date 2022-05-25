@@ -2,7 +2,8 @@ Cloner ce dépot
 # Run local laboite app in container :
 
 ```
-cp config/settings.development.json.sample config/settings.development.json
+# [env] can be "development" | "test"
+cp config/settings.json.sample config/settings.[env].json
 
 docker-compose build
 
