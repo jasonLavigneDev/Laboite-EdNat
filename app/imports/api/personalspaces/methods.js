@@ -11,6 +11,7 @@ import Groups from '../groups/groups';
 import Services from '../services/services';
 import logServer from '../logging';
 import UserBookmarks from '../userBookmarks/userBookmarks';
+import DefaultSpaces from '../defaultspaces/defaultspaces';
 
 const addItem = (userId, item) => {
   const currentPersonalSpace = PersonalSpaces.findOne({ userId });
@@ -292,9 +293,65 @@ export const backToDefaultElement = new ValidatedMethod({
   },
 });
 
+export const generateDefaultPersonalSpace = new ValidatedMethod({
+  name: 'personalspaces.generateDefaultPersonalSpace',
+  validate: null,
+
+  run() {
+    // check if active and logged in
+    if (!isActive(this.userId)) {
+      throw new Meteor.Error(
+        'api.personalspaces.generateDefaultPersonalSpace.notPermitted',
+        i18n.__('api.users.notPermitted'),
+      );
+    }
+
+    const user = Meteor.users.findOne({ _id: this.userId });
+    const { structure } = user;
+    const defaultSpace = DefaultSpaces.findOne({ structureId: structure });
+
+    // add all ervices to favorites in user schema
+
+    let servicesAdded = [];
+    if (defaultSpace && defaultSpace.sorted) {
+      defaultSpace.sorted.forEach(({ elements = [] }) => {
+        if (elements) {
+          servicesAdded = [
+            ...servicesAdded,
+            ...elements.filter((item) => item.type === 'service').map((service) => service.element_id),
+          ];
+        }
+      });
+    }
+    Meteor.users.update(this.userId, {
+      $set: { favServices: servicesAdded },
+    });
+
+    // Copy the personal space from the default structure one
+    return PersonalSpaces.update(
+      { userId: this.userId },
+      {
+        $set: {
+          unsorted: [],
+          sorted: defaultSpace.sorted,
+        },
+      },
+    );
+  },
+});
+
 // Get list of all method names on User
 const LISTS_METHODS = _.pluck(
-  [updatePersonalSpace, removeElement, addService, addGroup, addUserBookmark, checkPersonalSpace, backToDefaultElement],
+  [
+    updatePersonalSpace,
+    removeElement,
+    addService,
+    addGroup,
+    addUserBookmark,
+    checkPersonalSpace,
+    backToDefaultElement,
+    generateDefaultPersonalSpace,
+  ],
   'name',
 );
 

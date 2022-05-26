@@ -554,7 +554,8 @@
       "menuAdminOfStructures": "Gestion des sous-structures",
       "menuAdminStructureSettings": "Réglages de structure",
       "menuAdminStructureIntroduction": "Introduction de structure",
-      "menuAdminOfStructureUsersValidation": "Utilisateurs en attente"
+      "menuAdminOfStructureUsersValidation": "Utilisateurs en attente",
+      "menuAdminDefaultSpaces": "Espaces par défaut"
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Votre compte n'a pas été activé",

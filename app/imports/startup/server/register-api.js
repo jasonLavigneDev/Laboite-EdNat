@@ -42,3 +42,5 @@ import '../../api/structures/methods';
 import '../../api/structures/server/publications';
 import '../../api/helps/methods';
 import '../../api/helps/server/publications';
+import '../../api/defaultspaces/methods';
+import '../../api/defaultspaces/server/publications';

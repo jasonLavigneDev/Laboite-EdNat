@@ -554,7 +554,8 @@
       "menuAdminOfStructures": "Sub structures Management",
       "menuAdminStructureSettings": "Structure settings",
       "menuAdminStructureIntroduction": "Structure introduction",
-      "menuAdminOfStructureUsersValidation": "Awaiting users"
+      "menuAdminOfStructureUsersValidation": "Awaiting users",
+      "menuAdminDefaultSpaces": "Default Personal Spaces"
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Your account has not been activated",
@@ -1408,6 +1409,9 @@
     },
     "AdminServicesByStructurePage": {
       "title": "Services management for structure"
+    },
+    "AdminDefaultSpacesPage": {
+      "chooseStructure": "Choose the structure"
     },
     "StructureSelectionPage": {
       "backToProfile": "Back to profile"

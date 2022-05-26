@@ -177,6 +177,12 @@ export default function AdminMenu() {
       chip: usersAwaitingStructureCount,
     },
     {
+      path: '/admin/structurespaces',
+      content: 'menuAdminDefaultSpaces',
+      icon: <RestorePageIcon />,
+      hidden: !isAdminStructure,
+    },
+    {
       path: 'adminDivider2',
       content: 'Divider',
     },

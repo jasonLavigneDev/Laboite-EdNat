@@ -62,7 +62,7 @@ const useStyles = makeStyles()((theme) => ({
   },
 }));
 
-function ServiceDetailsPersSpace({ service, customDrag, isMobile, isSorted, needUpdate }) {
+function ServiceDetailsPersSpace({ service, customDrag, isMobile, isSorted, needUpdate, edition }) {
   const { classes } = useStyles();
   const history = useHistory();
   const favButtonLabel = i18n.__('components.ServiceDetails.favButtonLabelNoFav');
@@ -150,7 +150,7 @@ function ServiceDetailsPersSpace({ service, customDrag, isMobile, isSorted, need
           </CardActionArea>
         </span>
       </Tooltip>
-      {customDrag ? (
+      {customDrag && !edition ? (
         <CardActions className={classes.cardActions}>
           {isSorted ? (
             <Tooltip title={backToDefaultButtonLabel} aria-label={backToDefaultButtonLabel}>
@@ -176,6 +176,11 @@ ServiceDetailsPersSpace.propTypes = {
   isMobile: PropTypes.bool.isRequired,
   isSorted: PropTypes.bool.isRequired,
   needUpdate: PropTypes.func.isRequired,
+  edition: PropTypes.bool,
+};
+
+ServiceDetailsPersSpace.defaultProps = {
+  edition: false,
 };
 
 export default ServiceDetailsPersSpace;
