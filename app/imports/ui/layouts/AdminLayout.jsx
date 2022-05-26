@@ -35,7 +35,6 @@ const AdminNextcloudUrlPage = lazy(() => import('../pages/admin/AdminNextcloudUr
 const AdminSettingsPage = lazy(() => import('../pages/admin/AdminSettingsPage'));
 const AdminSingleServicePage = lazy(() => import('../pages/admin/AdminSingleServicePage'));
 const AdminServicesPage = lazy(() => import('../pages/admin/AdminServicesPage'));
-const AdminStructureUsersPage = lazy(() => import('../pages/structure/AdminStructureUsersPage'));
 const AdminStructureManagementPage = lazy(() => import('../pages/admin/AdminStructuresManagementPage'));
 const AdminServicesByStructurePage = lazy(() => import('../pages/admin/AdminServicesByStructurePage'));
 const AdminIntroductionByStructurePage = lazy(() => import('../pages/admin/AdminIntroductionByStructurePage'));
@@ -177,7 +176,7 @@ function AdminLayout() {
                     <StructureAdminRoute
                       exact
                       path="/admin/structureusers"
-                      component={AdminStructureUsersPage}
+                      component={AdminUsersPage}
                       user={user}
                       loadingUser={loadingUser}
                     />

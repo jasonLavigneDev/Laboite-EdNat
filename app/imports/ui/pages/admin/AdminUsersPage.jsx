@@ -38,7 +38,8 @@ import UserAvatar from '../../components/users/UserAvatar';
 import AdminGroupQuota from '../../components/users/AdminGroupQuota';
 import SearchField from '../../components/system/SearchField';
 import AdminSendNotification from '../../components/users/AdminSendNotification';
-import { getStructure } from '../../../api/structures/hooks';
+import { getStructure, useAdminSelectedStructure, useStructure } from '../../../api/structures/hooks';
+import StructureSelect from '../../components/structures/StructureSelect';
 
 let userData = {};
 const useStyles = makeStyles()((theme) => ({
@@ -79,21 +80,39 @@ const useStyles = makeStyles()((theme) => ({
 
 const ITEM_PER_PAGE = 10;
 
-const AdminUsersPage = () => {
+const AdminUsersPage = ({ match: { path } }) => {
   const [openQuota, setOpenQuota] = useState(false);
   const [openNotif, setOpenNotif] = useState(false);
+  const [verifyDelete, setVerifyDelete] = useState();
   const { classes } = useStyles();
   const [{ isMobile, isTablet }] = useAppContext();
   const [search, setSearch] = useState('');
   const [sortByDate, setSortByDate] = useState(false);
 
+  // for user structure
+  const isStructureSpecific = path === '/admin/structureusers';
+
+  const structure = useStructure();
+
+  const [selectedStructureId, setSelectedStructureId] = useState(structure && structure._id ? structure._id : '');
+  const {
+    loading: structuresLoading,
+    selectedStructure,
+    structures,
+  } = useAdminSelectedStructure({ selectedStructureId, setSelectedStructureId });
+
+  // variables depending on the admin page we're in
+
+  const subscription = isStructureSpecific ? 'users.byStructure' : 'users.admin';
+
   const { changePage, page, items, total } = usePagination(
-    'users.admin',
-    { search, sort: sortByDate ? { lastLogin: -1 } : { lastName: 1 } },
+    subscription,
+    { selectedStructureId, search, sort: sortByDate ? { lastLogin: -1 } : { lastName: 1 } },
     Meteor.users,
     {},
     { sort: sortByDate ? { lastLogin: -1 } : { lastName: 1 } },
     ITEM_PER_PAGE,
+    [selectedStructureId, selectedStructureId != null],
   );
   // track all global admin users
   const { isLoading, admins } = useTracker(() => {
@@ -123,12 +142,11 @@ const AdminUsersPage = () => {
   const resetSearch = () => setSearch('');
   useEffect(() => {
     if (searchRef.current) searchRef.current.value = search;
-  }, [search]);
-  useEffect(() => {
     if (page !== 1) {
       changePage(1);
     }
   }, [search]);
+
   const isAdmin = (user) => admins.includes(user._id);
   const changeAdmin = (user) => {
     const method = isAdmin(user) ? 'users.unsetAdmin' : 'users.setAdmin';
@@ -146,9 +164,9 @@ const AdminUsersPage = () => {
   const isStructureAdmin = (user) => Roles.userIsInRole(user._id, 'adminStructure', user.structure);
   useTracker(() => {
     const structuresIds = [];
-    items.forEach(({ structure }) => {
-      if (structure && structuresIds.indexOf(structuresIds) === -1) {
-        structuresIds.push(structure);
+    items.forEach((item) => {
+      if (item.structure && structuresIds.indexOf(structuresIds) === -1) {
+        structuresIds.push(item.structure);
       }
     });
     Meteor.subscribe('structures.ids', { ids: structuresIds });
@@ -179,109 +197,75 @@ const AdminUsersPage = () => {
         ? `${i18n.__('pages.AdminUsersPage.loginInfo')} : ${user.lastLogin.toLocaleString()}`
         : i18n.__('pages.AdminUsersPage.neverConnected')
     }`;
-  const UserActions = ({ user }) => {
-    const [verifyDelete, setVerifyDelete] = useState(false);
+
+  const generateButtons = (user) => {
+    const structureAdmin = isStructureAdmin(user);
+    const globalAdmin = isAdmin(user);
     const copyUserId = () => {
       navigator.clipboard.writeText(user._id).then(msg.success(i18n.__('pages.AdminUsersPage.successCopyUserId')));
     };
-    return verifyDelete ? (
-      <>
-        <Typography
-          component="span"
-          variant="body2"
-          className={classes.inline}
-          color={user._id === Meteor.userId() ? 'error' : 'textPrimary'}
-        >
-          {user._id === Meteor.userId()
-            ? i18n.__('pages.AdminUsersPage.deleteSelfConfirmation')
-            : i18n.__('pages.AdminUsersPage.deleteUserConfirmation')}
-        </Typography>
-        <Tooltip title={i18n.__('pages.AdminUsersPage.deleteUser')} aria-label="delete">
-          <IconButton edge="end" aria-label="delete" onClick={() => deleteUser(user)} size="large">
-            <CheckIcon />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title={i18n.__('pages.AdminUsersPage.cancelDelete')} aria-label="cancel">
-          <IconButton edge="end" aria-label="cancel" onClick={() => setVerifyDelete(false)} size="large">
-            <ClearIcon />
-          </IconButton>
-        </Tooltip>
-      </>
-    ) : (
-      <>
-        <Tooltip
-          title={
-            isStructureAdmin(user)
-              ? i18n.__('pages.AdminUsersPage.unsetAdminStructure')
-              : i18n.__('pages.AdminUsersPage.setAdminStructure')
-          }
-          aria-label="add"
-        >
-          <IconButton
-            edge="end"
-            aria-label={isStructureAdmin(user) ? 'noadminstructure' : 'adminstructure'}
-            onClick={() => changeAdminStructure(user)}
-            size="large"
-          >
-            {isStructureAdmin(user) ? <PersonAddDisabled /> : <GroupAddIcon />}
-          </IconButton>
-        </Tooltip>
-        <Tooltip
-          title={isAdmin(user) ? i18n.__('pages.AdminUsersPage.unsetAdmin') : i18n.__('pages.AdminUsersPage.setAdmin')}
-          aria-label="add"
-        >
-          <IconButton
-            edge="end"
-            aria-label={isAdmin(user) ? 'noadmin' : 'admin'}
-            onClick={() => changeAdmin(user)}
-            size="large"
-          >
-            {isAdmin(user) ? <ClearIcon /> : <VerifiedUserIcon />}
-          </IconButton>
-        </Tooltip>
-        <Tooltip title={i18n.__('pages.AdminUsersPage.manageUser')} aria-label="add">
-          <IconButton
-            edge="end"
-            aria-label={i18n.__('pages.AdminUsersPage.manageUser')}
-            onClick={() => {
-              userData = user;
-              setOpenQuota(true);
-            }}
-            size="large"
-          >
-            <SettingsApplicationsIcon />
-          </IconButton>
-        </Tooltip>
+    const isDeleting = verifyDelete === user._id;
 
-        <Tooltip title={i18n.__('pages.AdminUsersPage.copyUserId')} aria-label="show">
-          <IconButton edge="end" aria-label="show" onClick={copyUserId} size="large">
-            <VpnKeyIcon />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title={i18n.__('pages.AdminUsersPage.sendNotif')} aria-label="send">
-          <IconButton
-            edge="end"
-            aria-label={i18n.__('pages.AdminUsersPage.sendNotif')}
-            onClick={() => {
-              userData = user;
-              setOpenNotif(true);
-            }}
-            size="large"
-          >
-            <SendIcon />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title={i18n.__('pages.AdminUsersPage.deleteUser')} aria-label="del">
-          <IconButton edge="end" aria-label="delete" onClick={() => setVerifyDelete(true)} size="large">
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      </>
-    );
+    const actionButtons = [
+      {
+        label: i18n.__(`pages.AdminUsersPage.${structureAdmin ? 'un' : ''}setAdminStructure`),
+        onclick: () => changeAdminStructure(user),
+        icon: structureAdmin ? <PersonAddDisabled /> : <GroupAddIcon />,
+        hidden: isDeleting,
+      },
+      {
+        label: i18n.__(`pages.AdminUsersPage.${globalAdmin ? 'un' : ''}setAdmin`),
+        onclick: () => changeAdmin(user),
+        icon: globalAdmin ? <ClearIcon /> : <VerifiedUserIcon />,
+        hidden: isDeleting || isStructureSpecific,
+      },
+      {
+        label: i18n.__('pages.AdminUsersPage.manageUser'),
+        onclick: () => {
+          userData = user;
+          setOpenQuota(true);
+        },
+        icon: <SettingsApplicationsIcon />,
+        hidden: isDeleting || Meteor.settings.public.disabledFeatures.groups,
+      },
+      {
+        label: i18n.__('pages.AdminUsersPage.copyUserId'),
+        onclick: copyUserId,
+        icon: <VpnKeyIcon />,
+        hidden: isDeleting,
+      },
+      {
+        label: i18n.__('pages.AdminUsersPage.sendNotif'),
+        onclick: () => {
+          userData = user;
+          setOpenNotif(true);
+        },
+        icon: <SendIcon />,
+        hidden: isDeleting,
+      },
+      {
+        label: i18n.__('pages.AdminUsersPage.deleteUser'),
+        onclick: () => setVerifyDelete(user._id),
+        icon: <DeleteIcon />,
+        hidden: isDeleting,
+      },
+      {
+        label: i18n.__('pages.AdminUsersPage.deleteUser'),
+        onclick: () => deleteUser(user),
+        icon: <CheckIcon />,
+        hidden: !isDeleting,
+      },
+      {
+        label: i18n.__('pages.AdminUsersPage.cancelDelete'),
+        onclick: () => setVerifyDelete(),
+        icon: <ClearIcon />,
+        hidden: !isDeleting,
+      },
+    ];
+
+    return actionButtons;
   };
-  UserActions.propTypes = {
-    user: PropTypes.objectOf(PropTypes.any).isRequired,
-  };
+
   return (
     <Fade in className={classes.root}>
       <div>
@@ -292,9 +276,24 @@ const AdminUsersPage = () => {
             <Grid container spacing={4}>
               <Grid item md={12}>
                 <Typography variant={isMobile ? 'h6' : 'h4'}>
-                  {`${i18n.__('pages.AdminUsersPage.title')} (${total})`}
+                  {`${i18n.__('pages.AdminUsersPage.title')} ${
+                    (isStructureSpecific && selectedStructure && selectedStructure._id && selectedStructure.name) || ''
+                  } (${total})`}
                 </Typography>
               </Grid>
+              {isStructureSpecific && (
+                <Grid item md={12}>
+                  {!structuresLoading ? (
+                    <StructureSelect
+                      structures={structures}
+                      selectedStructureId={selectedStructureId}
+                      setSelectedStructureId={setSelectedStructureId}
+                    />
+                  ) : (
+                    <Spinner />
+                  )}
+                </Grid>
+              )}
               <Grid item xs={12} sm={12} md={6}>
                 <SearchField
                   updateSearch={updateSearch}
@@ -365,14 +364,33 @@ const AdminUsersPage = () => {
                               >
                                 {userEmail}
                               </Typography>
-                              {` - ${structure ? structure.name : i18n.__('pages.AdminUsersPage.undefined')}`}
+                              {` - ${userStructure ? userStructure.name : i18n.__('pages.AdminUsersPage.undefined')}`}
                             </>
                           }
                         />
-                        <ListItemSecondaryAction
-                          className={isMobile || isTablet ? classes.actionsSmall : classes.actionsBig}
-                        >
-                          <UserActions user={user} />
+                        <ListItemSecondaryAction>
+                          {verifyDelete === user._id && (
+                            <Typography
+                              component="span"
+                              variant="body2"
+                              className={classes.inline}
+                              color={user._id === Meteor.userId() ? 'error' : 'textPrimary'}
+                            >
+                              {user._id === Meteor.userId()
+                                ? i18n.__('pages.AdminUsersPage.deleteSelfConfirmation')
+                                : i18n.__('pages.AdminUsersPage.deleteUserConfirmation')}
+                            </Typography>
+                          )}
+                          {generateButtons(user).map(
+                            (button) =>
+                              !button.hidden && (
+                                <Tooltip key={button.label} title={button.label} aria-label={button.label}>
+                                  <IconButton edge="end" aria-label={button.label} onClick={button.onclick}>
+                                    {button.icon}
+                                  </IconButton>
+                                </Tooltip>
+                              ),
+                          )}
                         </ListItemSecondaryAction>
                       </ListItem>,
                       i < ITEM_PER_PAGE - 1 && i < total - 1 && (
@@ -397,4 +415,7 @@ const AdminUsersPage = () => {
   );
 };
 
+AdminUsersPage.propTypes = {
+  match: PropTypes.shape({ path: PropTypes.string.isRequired }).isRequired,
+};
 export default AdminUsersPage;
