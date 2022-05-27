@@ -295,18 +295,20 @@ export const backToDefaultElement = new ValidatedMethod({
 
 export const generateDefaultPersonalSpace = new ValidatedMethod({
   name: 'personalspaces.generateDefaultPersonalSpace',
-  validate: null,
+  validate: new SimpleSchema({
+    userId: { type: String, regEx: SimpleSchema.RegEx.Id },
+  }).validator(),
 
-  run() {
+  run({ userId }) {
     // check if active and logged in
-    if (!isActive(this.userId)) {
+    if (!isActive(userId)) {
       throw new Meteor.Error(
         'api.personalspaces.generateDefaultPersonalSpace.notPermitted',
         i18n.__('api.users.notPermitted'),
       );
     }
 
-    const user = Meteor.users.findOne({ _id: this.userId });
+    const user = Meteor.users.findOne({ _id: userId });
     const { structure } = user;
     const defaultSpace = DefaultSpaces.findOne({ structureId: structure });
 
@@ -323,17 +325,17 @@ export const generateDefaultPersonalSpace = new ValidatedMethod({
         }
       });
     }
-    Meteor.users.update(this.userId, {
+    Meteor.users.update(userId, {
       $set: { favServices: servicesAdded },
     });
 
     // Copy the personal space from the default structure one
     return PersonalSpaces.update(
-      { userId: this.userId },
+      { userId },
       {
         $set: {
           unsorted: [],
-          sorted: defaultSpace.sorted,
+          sorted: defaultSpace ? defaultSpace.sorted : [],
         },
       },
     );

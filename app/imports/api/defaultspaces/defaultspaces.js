@@ -2,6 +2,7 @@ import { Mongo } from 'meteor/mongo';
 import SimpleSchema from 'simpl-schema';
 import { Tracker } from 'meteor/tracker';
 import PersonalSpaces from '../personalspaces/personalspaces';
+import { getLabel } from '../utils';
 
 const DefaultSpaces = new Mongo.Collection('defaultspaces');
 
@@ -27,6 +28,13 @@ const extensionSchema = new SimpleSchema(
       index: true,
       unique: true,
       min: 1,
+    },
+    updatedAt: {
+      type: Date,
+      label: getLabel('api.defaultspaces.labels.updatedAt'),
+      autoValue() {
+        return new Date();
+      },
     },
   },
   { tracker: Tracker },

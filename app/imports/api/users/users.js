@@ -7,6 +7,7 @@ import { getLabel } from '../utils';
 import checkDomain from '../domains';
 import logServer from '../logging';
 import { getRandomNCloudURL } from '../nextcloud/methods';
+import { generateDefaultPersonalSpace } from '../personalspaces/methods';
 
 const AppRoles = ['candidate', 'member', 'animator', 'admin', 'adminStructure'];
 
@@ -287,6 +288,16 @@ if (Meteor.isServer) {
       Meteor.users.update({ _id: details.user._id }, { $set: { lastLogin: loginDate } });
     }
   });
+
+  Meteor.users.after.update(
+    function afterUpdateUser(userId, userDocument) {
+      const oldStructure = this.previous.structure;
+      if (oldStructure !== userDocument.structure) {
+        generateDefaultPersonalSpace.call({ userId: userDocument._id });
+      }
+    },
+    { fetchPrevious: true },
+  );
 }
 
 Meteor.users.helpers({
