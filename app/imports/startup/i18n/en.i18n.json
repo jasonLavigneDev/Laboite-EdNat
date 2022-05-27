@@ -994,6 +994,7 @@
       "useGallery": "Choose among image gallery",
       "structureMessage": "Check this box to link all imported articles to your current attachment structure.",
       "advancedPersonalPage": "Activate advanced personal page",
+      "advancedPersonalPageWarning": "If you disable the advanced personal page, your page will be reset with the parameters of your structure default page.",
       "languageLabel": "Change language",
       "activateArticles": "Activate articles",
       "authTokenTitle": "Get the Access Token",
@@ -1411,7 +1412,10 @@
       "title": "Services management for structure"
     },
     "AdminDefaultSpacesPage": {
-      "chooseStructure": "Choose the structure"
+      "chooseStructure": "Choose the structure",
+      "isSaving": "Is saving default space",
+      "isSaved": "Default space saved",
+      "applyToEveryone": "Apply this default space"
     },
     "StructureSelectionPage": {
       "backToProfile": "Back to profile"

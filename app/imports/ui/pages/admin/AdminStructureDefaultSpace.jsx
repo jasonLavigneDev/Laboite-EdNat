@@ -6,6 +6,7 @@ import Container from '@material-ui/core/Container';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import Fade from '@material-ui/core/Fade';
 import FormControl from '@material-ui/core/FormControl';
@@ -14,6 +15,7 @@ import Avatar from '@material-ui/core/Avatar';
 import Grid from '@material-ui/core/Grid';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import Divider from '@material-ui/core/Divider';
 import { ReactSortable } from 'react-sortablejs';
 import Card from '@material-ui/core/Card';
 import Spinner from '../../components/system/Spinner';
@@ -24,16 +26,21 @@ import Structures from '../../../api/structures/structures';
 import CustomSelect from '../../components/admin/CustomSelect';
 import PersonalZoneUpdater from '../../components/users/PersonalZoneUpdater';
 import { updateStructureSpace } from '../../../api/defaultspaces/methods';
+import CustomDialog from '../../components/system/CustomDialog';
+import { useBoolean } from '../../utils/hooks';
 
 const useStyles = makeStyles((theme) => ({
-  saveIndicator: {
+  flexCenter: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'flex-start',
     color: theme.palette.text.secondary,
   },
   saveText: {
     marginLeft: 10,
+  },
+  divider: {
+    marginTop: 10,
+    marginBottom: 10,
   },
   listItem: {
     cursor: 'pointer',
@@ -46,6 +53,7 @@ const useStyles = makeStyles((theme) => ({
 const AdminStructureSpace = () => {
   const userStructure = useStructure();
   const classes = useStyles();
+  const [confirmApply, toggleConfirm] = useBoolean(false);
 
   const [selectedStructureId, setSelectedStructureId] = useState();
   const [isSaving, setIsSaving] = useState(false);
@@ -117,6 +125,21 @@ const AdminStructureSpace = () => {
     });
   };
 
+  const applyDefaultSpace = () => {
+    toggleConfirm();
+    Meteor.call(
+      'defaultspaces.applyDefaultSpaceToAllUsers',
+      { structureId: selectedStructureId || userStructure._id },
+      (error) => {
+        if (error) {
+          msg.error(error.reason);
+        } else {
+          msg.success(i18n.__('api.methods.operationSuccessMsg'));
+        }
+      },
+    );
+  };
+
   return (
     <>
       {loading ? (
@@ -137,20 +160,28 @@ const AdminStructureSpace = () => {
             <br />
             <br />
             <Grid container>
+              <Grid item xs={12} md={3} className={classes.flexCenter}>
+                <Button disabled={isSaving} fullWidth onClick={toggleConfirm} variant="contained" color="primary">
+                  {i18n.__('pages.AdminDefaultSpacesPage.applyToEveryone')}
+                </Button>
+              </Grid>
+              <Grid item xs={12} md={9} className={classes.flexCenter}>
+                <ListItem alignItems="center" className={classes.flexCenter}>
+                  {isSaving ? (
+                    <CircularProgress size={30} color="secondary" />
+                  ) : (
+                    <CheckCircleIcon style={{ fontSize: 30 }} />
+                  )}
+                  <ListItemText
+                    className={classes.saveText}
+                    primary={i18n.__(`pages.AdminDefaultSpacesPage.isSav${isSaving ? 'ing' : 'ed'}`)}
+                  />
+                </ListItem>
+              </Grid>
+              <Grid item xs={12} md={12} className={classes.divider}>
+                <Divider />
+              </Grid>
               <Grid item xs={3}>
-                <Grid item xs={12}>
-                  <ListItem alignItems="center" className={classes.saveIndicator}>
-                    {isSaving ? (
-                      <CircularProgress size={30} color="secondary" />
-                    ) : (
-                      <CheckCircleIcon style={{ fontSize: 30 }} />
-                    )}
-                    <ListItemText
-                      className={classes.saveText}
-                      primary={isSaving ? 'Sauvegarde en cours' : 'Espace sauvegardé'}
-                    />
-                  </ListItem>
-                </Grid>
                 <ReactSortable
                   className=""
                   list={servicesList.map(({ _id, title, url }) => ({
@@ -193,6 +224,14 @@ const AdminStructureSpace = () => {
                 )}
               </Grid>
             </Grid>
+            <CustomDialog
+              nativeProps={{ maxWidth: 'xs' }}
+              isOpen={confirmApply}
+              title={i18n.__('pages.AdminDefaultSpacesPage.applyToEveryone')}
+              content={i18n.__('pages.AdminDefaultSpacesPage.applyText')}
+              onCancel={toggleConfirm}
+              onValidate={applyDefaultSpace}
+            />
           </Container>
         </Fade>
       )}

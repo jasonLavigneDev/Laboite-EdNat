@@ -997,6 +997,7 @@
       "useGallery": "Choisir parmi la galerie d'images",
       "structureMessage": "Cocher cette case pour lier tous les articles importés à votre structure de rattachement actuelle.",
       "advancedPersonalPage": "Activer l'espace personnel avancé",
+      "advancedPersonalPageWarning": "Si vous désactivez l'espace avancé, votre espace personnel sera restauré selon celui par défaut de votre structure.",
       "languageLabel": "Choix de la langue",
       "activateArticles": "Activer les publications",
       "authTokenTitle": "Récupérer le token d'accès",
@@ -1424,6 +1425,13 @@
     },
     "AdminStructureSettingsPage": {
       "title": "Paramétrage de la structure"
+    },
+    "AdminDefaultSpacesPage": {
+      "chooseStructure": "Choisissez une structure",
+      "isSaving": "Sauvegarde en cours",
+      "isSaved": "Espace sauvegardé",
+      "applyToEveryone": "Appliquer cet espace",
+      "applyText": "Cela appliquera les changements à l'espace personnel de tous les utilisateurs de votre structure n'ayant pas activé l'espace avancé."
     }
   },
   "layouts": {

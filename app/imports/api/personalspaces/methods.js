@@ -311,10 +311,11 @@ export const generateDefaultPersonalSpace = new ValidatedMethod({
     const user = Meteor.users.findOne({ _id: userId });
     const { structure } = user;
     const defaultSpace = DefaultSpaces.findOne({ structureId: structure });
+    const currentSpace = PersonalSpaces.findOne({ userId }) || {};
+    const { unsorted = [] } = currentSpace || {};
 
-    // add all ervices to favorites in user schema
-
-    let servicesAdded = [];
+    // add all services to favorites in user schema
+    let servicesAdded = [...unsorted];
     if (defaultSpace && defaultSpace.sorted) {
       defaultSpace.sorted.forEach(({ elements = [] }) => {
         if (elements) {
@@ -334,7 +335,6 @@ export const generateDefaultPersonalSpace = new ValidatedMethod({
       { userId },
       {
         $set: {
-          unsorted: [],
           sorted: defaultSpace ? defaultSpace.sorted : [],
         },
       },

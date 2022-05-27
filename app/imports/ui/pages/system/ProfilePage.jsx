@@ -693,6 +693,9 @@ const ProfilePage = () => {
                   }
                   label={i18n.__('pages.ProfilePage.advancedPersonalPage')}
                 />
+                {Meteor.user().advancedPersonalPage && (
+                  <FormHelperText>{i18n.__('pages.ProfilePage.advancedPersonalPageWarning')}</FormHelperText>
+                )}
                 {enableBlog && (
                   <>
                     <br />

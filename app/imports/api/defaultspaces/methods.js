@@ -1,78 +1,13 @@
 import { Meteor } from 'meteor/meteor';
 import { DDPRateLimiter } from 'meteor/ddp-rate-limiter';
-import { Roles } from 'meteor/alanning:roles';
 import { _ } from 'meteor/underscore';
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import i18n from 'meteor/universe:i18n';
 
-import { isActive } from '../utils';
 import DefaultSpaces from './defaultspaces';
-import Services from '../services/services';
-
-const addItem = (structureId, item) => {
-  const currentPersonalSpace = DefaultSpaces.findOne({ structureId });
-  let alreadyExists = false;
-  if (currentPersonalSpace === undefined) {
-    // create personalSpace if not existing
-    DefaultSpaces.insert({ structureId, sorted: [] });
-  } else {
-    // check that item is not already present
-    alreadyExists =
-      DefaultSpaces.findOne({
-        $and: [
-          { structureId },
-          {
-            $or: [{ 'sorted.elements': { $elemMatch: { type: item.type, element_id: item.element_id } } }],
-          },
-        ],
-      }) !== undefined;
-  }
-  if (!alreadyExists) DefaultSpaces.update({ structureId }, { $push: { unsorted: item } });
-};
-
-export const removeElement = new ValidatedMethod({
-  name: 'defaultspaces.removeElement',
-  validate: new SimpleSchema({
-    elementId: { type: String, regEx: SimpleSchema.RegEx.Id },
-    type: String,
-  }).validator(),
-
-  run({ elementId, type }) {
-    // check if active and logged in
-    if (!isActive(this.structureId)) {
-      throw new Meteor.Error('api.defaultspaces.addService.notPermitted', i18n.__('api.users.notPermitted'));
-    }
-    // remove all entries matching item type and element_id
-    DefaultSpaces.update(
-      { structureId: this.structureId },
-      {
-        $pull: {
-          'sorted.$[].elements': { type, element_id: elementId },
-        },
-      },
-    );
-  },
-});
-
-export const addService = new ValidatedMethod({
-  name: 'defaultspaces.addService',
-  validate: new SimpleSchema({
-    serviceId: { type: String, regEx: SimpleSchema.RegEx.Id },
-  }).validator(),
-
-  run({ serviceId }) {
-    // check if active and logged in
-    if (!isActive(this.structureId)) {
-      throw new Meteor.Error('api.defaultspaces.addService.notPermitted', i18n.__('api.users.notPermitted'));
-    }
-    const service = Services.findOne(serviceId);
-    if (service === undefined) {
-      throw new Meteor.Error('api.defaultspaces.addService.unknownService', i18n.__('api.services.unknownService'));
-    }
-    addItem(this.structureId, { type: 'service', element_id: serviceId });
-  },
-});
+import { generateDefaultPersonalSpace } from '../personalspaces/methods';
+import { hasAdminRightOnStructure } from '../structures/utils';
 
 export const updateStructureSpace = new ValidatedMethod({
   name: 'defaultspaces.updateStructureSpace',
@@ -82,7 +17,8 @@ export const updateStructureSpace = new ValidatedMethod({
 
   run({ data }) {
     // check if active and logged in
-    if (!isActive(this.userId) || !Roles.userIsInRole(this.userId, ['admin'])) {
+    const isAdminOfStructure = hasAdminRightOnStructure({ userId: this.userId, structureId: data.structureId });
+    if (!isAdminOfStructure) {
       throw new Meteor.Error('api.defaultspaces.updateStructureSpace.notPermitted', i18n.__('api.users.notPermitted'));
     }
     // console.log(data);
@@ -96,8 +32,29 @@ export const updateStructureSpace = new ValidatedMethod({
   },
 });
 
+export const applyDefaultSpaceToAllUsers = new ValidatedMethod({
+  name: 'defaultspaces.applyDefaultSpaceToAllUsers',
+  validate: new SimpleSchema({
+    structureId: { type: String, regEx: SimpleSchema.RegEx.Id },
+  }).validator({ clean: true }),
+
+  run({ structureId }) {
+    // check if active and logged in
+    const isAdminOfStructure = hasAdminRightOnStructure({ userId: this.userId, structureId });
+    if (!isAdminOfStructure) {
+      throw new Meteor.Error(
+        'api.defaultspaces.applyDefaultSpaceToAllUsers.notPermitted',
+        i18n.__('api.users.notPermitted'),
+      );
+    }
+    const allUsers = Meteor.users.find({ structure: structureId });
+
+    allUsers.forEach((user) => generateDefaultPersonalSpace.call({ userId: user._id }));
+  },
+});
+
 // Get list of all method names on User
-const LISTS_METHODS = _.pluck([updateStructureSpace, removeElement, addService], 'name');
+const LISTS_METHODS = _.pluck([updateStructureSpace, applyDefaultSpaceToAllUsers], 'name');
 
 if (Meteor.isServer) {
   // Only allow 5 list operations per connection per second

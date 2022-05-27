@@ -291,8 +291,12 @@ if (Meteor.isServer) {
 
   Meteor.users.after.update(
     function afterUpdateUser(userId, userDocument) {
-      const oldStructure = this.previous.structure;
-      if (oldStructure !== userDocument.structure) {
+      const previousStructure = this.previous.structure;
+      const isAdvancedPersonalPage = this.previous.advancedPersonalPage;
+      if (
+        previousStructure !== userDocument.structure ||
+        (isAdvancedPersonalPage && !userDocument.advancedPersonalPage)
+      ) {
         generateDefaultPersonalSpace.call({ userId: userDocument._id });
       }
     },
