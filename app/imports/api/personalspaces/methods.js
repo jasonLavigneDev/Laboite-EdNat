@@ -312,7 +312,7 @@ export const generateDefaultPersonalSpace = new ValidatedMethod({
     const { structure } = user;
     const defaultSpace = DefaultSpaces.findOne({ structureId: structure });
     const currentSpace = PersonalSpaces.findOne({ userId }) || {};
-    const { unsorted = [] } = currentSpace || {};
+    const { unsorted = [] } = currentSpace;
 
     // add all services to favorites in user schema
     let servicesAdded = [...unsorted];
@@ -338,6 +338,7 @@ export const generateDefaultPersonalSpace = new ValidatedMethod({
           sorted: defaultSpace ? defaultSpace.sorted : [],
         },
       },
+      { upsert: true },
     );
   },
 });
