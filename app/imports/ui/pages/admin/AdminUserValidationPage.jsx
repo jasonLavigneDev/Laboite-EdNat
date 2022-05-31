@@ -3,124 +3,44 @@ import { Meteor } from 'meteor/meteor';
 import PropTypes from 'prop-types';
 import i18n from 'meteor/universe:i18n';
 import { withTracker } from 'meteor/react-meteor-data';
-import MaterialTable from '@material-table/core';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import Tooltip from '@mui/material/Tooltip';
-import Fade from '@mui/material/Fade';
-import Container from '@mui/material/Container';
-import Spinner from '../../components/system/Spinner';
 import '../../../api/users/users';
-import setMaterialTableLocalization from '../../components/initMaterialTableLocalization';
-import { getStructure } from '../../../api/structures/hooks';
+import AdminUserValidationTable from '../../components/admin/AdminUserValidationTable';
 
 function AdminUserValidationPage({ usersrequest, loading }) {
-  const columns = [
-    {
-      title: i18n.__('pages.AdminUserValidationPage.columnUsername'),
-      field: 'username',
-      render: (rowData) => {
-        return rowData.isActive === undefined ? (
-          <Tooltip title={i18n.__('pages.AdminUserValidationPage.missingData')} aria-label="delete">
-            <span style={{ color: 'red' }}>{rowData.username}</span>
-          </Tooltip>
-        ) : (
-          rowData.username
-        );
-      },
-    },
-    {
-      title: i18n.__('pages.AdminUserValidationPage.columnLastName'),
-      field: 'lastName',
-    },
-    {
-      title: i18n.__('pages.AdminUserValidationPage.columnFirstName'),
-      field: 'firstName',
-    },
-    {
-      title: i18n.__('pages.AdminUserValidationPage.columnEmails'),
-      field: 'emails',
-      render: (rowData) =>
-        rowData.emails
-          ? rowData.emails.map((m) => (
-              <a key={m.address} href={`mailto:${m.address}`} style={{ display: 'block' }}>
-                {m.address}
-              </a>
-            ))
-          : [],
-    },
-    {
-      title: i18n.__('pages.AdminUserValidationPage.columnStructure'),
-      field: 'structure',
-      render: (rowData) => {
-        const struc = getStructure(rowData.structure);
-        if (struc) {
-          return struc.name;
-        }
-        return i18n.__('pages.AdminUsersPage.undefined');
-      },
-    },
-    {
-      title: i18n.__('pages.AdminUserValidationPage.columnCreatedAt'),
-      field: 'createdAt',
-      type: 'datetime',
-    },
-  ];
-
-  const options = {
-    pageSize: 10,
-    pageSizeOptions: [10, 20, 50, 100],
-    paginationType: 'stepped',
-    actionsColumnIndex: 6,
-    addRowPosition: 'first',
-    emptyRowsWhenPaging: false,
-  };
-
   return (
-    <>
-      {loading ? (
-        <Spinner />
-      ) : (
-        <Fade in>
-          <Container>
-            <MaterialTable
-              // other props
-              title={`${i18n.__('pages.AdminUserValidationPage.title')} (${usersrequest.length})`}
-              columns={columns}
-              data={usersrequest.map((row) => ({ ...row, id: row._id }))}
-              options={options}
-              localization={setMaterialTableLocalization('pages.AdminUserValidationPage')}
-              actions={[
-                {
-                  icon: PersonAddIcon,
-                  tooltip: i18n.__('pages.AdminUserValidationPage.actions_tooltip'),
-                  onClick: (event, rowData) => {
-                    Meteor.call('users.setActive', { userId: rowData._id }, (err) => {
-                      if (err) {
-                        msg.error(err.reason);
-                      }
-                    });
-                  },
-                },
-              ]}
-              editable={{
-                onRowDelete: (oldData) =>
-                  new Promise((resolve, reject) => {
-                    Meteor.call('users.removeUser', { userId: oldData._id }, (error, res) => {
-                      if (error) {
-                        msg.error(error.reason);
-                        reject(error);
-                      } else {
-                        msg.success(i18n.__('pages.AdminUsersPage.successDeleteUser'));
-                        resolve(res);
-                      }
-                    });
-                  }),
-              }}
-            />
-          </Container>
-        </Fade>
-      )}
-    </>
+    <AdminUserValidationTable
+      title={`${i18n.__('pages.AdminUserValidationPage.title')} (${usersrequest.length})`}
+      users={usersrequest}
+      loading={loading}
+      actions={[
+        {
+          icon: PersonAddIcon,
+          tooltip: i18n.__('pages.AdminUserValidationPage.actions_tooltip'),
+          onClick: (event, rowData) => {
+            Meteor.call('users.setActive', { userId: rowData._id }, (err) => {
+              if (err) {
+                msg.error(err.reason);
+              }
+            });
+          },
+        },
+      ]}
+      editable={{
+        onRowDelete: (oldData) =>
+          new Promise((resolve, reject) => {
+            Meteor.call('users.removeUser', { userId: oldData._id }, (error, res) => {
+              if (error) {
+                msg.error(error.reason);
+                reject(error);
+              } else {
+                msg.success(i18n.__('pages.AdminUsersPage.successDeleteUser'));
+                resolve(res);
+              }
+            });
+          }),
+      }}
+    />
   );
 }
 

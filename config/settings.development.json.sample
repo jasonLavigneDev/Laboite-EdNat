@@ -12,7 +12,8 @@
       "notificationsTab": false,
       "groups": false,
       "introductionTab": false,
-      "introductionTabStructuresInfos": true
+      "introductionTabStructuresInfos": true,
+      "userStructureValidationMandatory": false
     },
     "ui": {
       "defaultGridViewMode": "compact"

@@ -85,6 +85,10 @@ AppSettings.schema = new SimpleSchema(
       defaultValue: ' ',
       label: getLabel('api.appsettings.labels.textMaintenance'),
     },
+    userStructureValidationMandatory: {
+      type: Boolean,
+      label: getLabel('api.appsettings.label.userStructureValidationMandatory'),
+    },
   },
   { clean: { removeEmptyStrings: false }, tracker: Tracker },
 );
@@ -97,6 +101,7 @@ AppSettings.publicFields = {
   personalData: 1,
   maintenance: 1,
   textMaintenance: 1,
+  userStructureValidationMandatory: 1,
 };
 
 AppSettings.introduction = {

@@ -93,6 +93,28 @@ export const switchMaintenanceStatus = new ValidatedMethod({
   },
 });
 
+export const setUserStructureValidationMandatoryStatus = new ValidatedMethod({
+  name: 'appSettings.setUserStructureValidationMandatoryStatus',
+  validate: new SimpleSchema({ isValidationMandatory: { type: Boolean } }).validator(),
+  run({ isValidationMandatory }) {
+    try {
+      const authorized = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
+      if (!authorized) {
+        throw new Meteor.Error(
+          'api.appsettings.setUserStructureValidationMandatoryStatus.notPermitted',
+          i18n.__('api.users.admineeded'),
+        );
+      }
+      return AppSettings.update(
+        { _id: 'settings' },
+        { $set: { userStructureValidationMandatory: isValidationMandatory } },
+      );
+    } catch (error) {
+      throw new Meteor.Error(error, error);
+    }
+  },
+});
+
 export const updateTextMaintenance = new ValidatedMethod({
   name: 'appSettings.updateTextMaintenance',
   validate: new SimpleSchema({
@@ -172,7 +194,14 @@ export const getAppSettingsLinks = new ValidatedMethod({
 
 // Get list of all method names on User
 const LISTS_METHODS = _.pluck(
-  [updateAppsettings, updateIntroductionLanguage, updateTextMaintenance, switchMaintenanceStatus, getAppSettingsLinks],
+  [
+    updateAppsettings,
+    updateIntroductionLanguage,
+    updateTextMaintenance,
+    switchMaintenanceStatus,
+    getAppSettingsLinks,
+    setUserStructureValidationMandatoryStatus,
+  ],
   'name',
 );
 

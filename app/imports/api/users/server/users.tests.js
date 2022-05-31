@@ -35,17 +35,34 @@ import {
   setArticlesEnable,
   resetAuthToken,
   removeUserFromStructure,
+  acceptAwaitingStructure,
 } from './methods';
 import Groups from '../../groups/groups';
 import PersonalSpaces from '../../personalspaces/personalspaces';
 import Nextcloud from '../../nextcloud/nextcloud';
 import './publications';
 import { getStructureIds } from '../structures';
+import AppSettings from '../../appsettings/appsettings';
 
 let allowedStructures = [];
+const testSettingsId = 'settings';
+const setValidationMandatory = (state) => {
+  AppSettings.update(
+    { _id: testSettingsId },
+    {
+      $set: {
+        userStructureValidationMandatory: state,
+      },
+    },
+  );
+};
+
 describe('users', function () {
   before(function () {
     allowedStructures = getStructureIds();
+    AppSettings.remove({});
+    const appSettings = Factory.create('appsettings');
+    AppSettings.insert({ ...appSettings, _id: testSettingsId });
   });
   describe('publications', function () {
     let userId;
@@ -533,13 +550,57 @@ describe('users', function () {
         );
       });
     });
+
     describe('setStructure', function () {
-      it('users can set their structure', function () {
+      it('users can ask for a structure (validation structure mandatory)', function () {
         const newStructure = allowedStructures[0];
+        setValidationMandatory(true);
+        setStructure._execute({ userId }, { structure: newStructure });
+        const user = Meteor.users.findOne({ _id: userId });
+        assert.equal(user.awaitingStructure, newStructure);
+      });
+
+      it('users loses structure admin role when structure changes (validation structure mandatory)', function () {
+        const newStructure = allowedStructures[0];
+        setValidationMandatory(true);
+        setStructure._execute({ userId }, { structure: newStructure });
+        acceptAwaitingStructure._execute({ userId: adminId }, { targetUserId: userId });
+        const user = Meteor.users.findOne({ _id: userId });
+        assert.equal(user.structure, newStructure);
+        setAdminStructure._execute({ userId: adminId }, { userId });
+        assert.equal(Roles.userIsInRole(userId, 'adminStructure', allowedStructures[0]), true);
+        setStructure._execute({ userId }, { structure: allowedStructures[0] });
+        acceptAwaitingStructure._execute({ userId: adminId }, { targetUserId: userId });
+        assert.equal(Roles.userIsInRole(userId, 'adminStructure', allowedStructures[0]), true);
+        setStructure._execute({ userId }, { structure: allowedStructures[1] });
+        acceptAwaitingStructure._execute({ userId: adminId }, { targetUserId: userId });
+
+        assert.equal(Roles.userIsInRole(userId, 'adminStructure', allowedStructures[1]), false);
+      });
+      it('users can set their structure (validation structure not mandatory)', function () {
+        const newStructure = allowedStructures[0];
+
+        setValidationMandatory(false);
         setStructure._execute({ userId }, { structure: newStructure });
         const user = Meteor.users.findOne({ _id: userId });
         assert.equal(user.structure, newStructure);
       });
+
+      it('users loses structure admin role when structure changes (validation structure not mandatory)', function () {
+        const newStructure = allowedStructures[0];
+
+        setValidationMandatory(false);
+        setStructure._execute({ userId }, { structure: newStructure });
+        const user = Meteor.users.findOne({ _id: userId });
+        assert.equal(user.structure, newStructure);
+        setAdminStructure._execute({ userId: adminId }, { userId });
+        assert.equal(Roles.userIsInRole(userId, 'adminStructure', allowedStructures[0]), true);
+        setStructure._execute({ userId }, { structure: allowedStructures[0] });
+        assert.equal(Roles.userIsInRole(userId, 'adminStructure', allowedStructures[0]), true);
+        setStructure._execute({ userId }, { structure: allowedStructures[1] });
+        assert.equal(Roles.userIsInRole(userId, 'adminStructure', allowedStructures[1]), false);
+      });
+      // }
       it('users can only set their structure to allowed values', function () {
         assert.throws(
           () => {
@@ -559,17 +620,56 @@ describe('users', function () {
           /api.users.setStructure.notLoggedIn/,
         );
       });
-      it('users loses structure admin role when structure changes', function () {
+    });
+    describe('acceptAwaitingStructure', function () {
+      it('admin user can accept awaiting structure of an user', function () {
         const newStructure = allowedStructures[0];
+        setValidationMandatory(true);
         setStructure._execute({ userId }, { structure: newStructure });
+        acceptAwaitingStructure._execute({ userId: adminId }, { targetUserId: userId });
+
         const user = Meteor.users.findOne({ _id: userId });
         assert.equal(user.structure, newStructure);
-        setAdminStructure._execute({ userId: adminId }, { userId });
-        assert.equal(Roles.userIsInRole(userId, 'adminStructure', allowedStructures[0]), true);
-        setStructure._execute({ userId }, { structure: allowedStructures[0] });
-        assert.equal(Roles.userIsInRole(userId, 'adminStructure', allowedStructures[0]), true);
-        setStructure._execute({ userId }, { structure: allowedStructures[1] });
-        assert.equal(Roles.userIsInRole(userId, 'adminStructure', allowedStructures[1]), false);
+      });
+      it('structure admin can accept awaiting structure of an user of same structure', function () {
+        const newStructure = allowedStructures[0];
+        setValidationMandatory(true);
+        setStructure._execute({ userId }, { structure: newStructure });
+        const adminStructureId = Accounts.createUser({
+          email: 'adminStructure@mail.com',
+          username: 'adminStructure@mail.com',
+          password: 'titi',
+          structure: newStructure,
+          firstName: 'adminStructureUserFirstName',
+          lastName: 'adminStructureUserLastName',
+        });
+        Roles.addUsersToRoles(adminStructureId, 'adminStructure', newStructure);
+
+        acceptAwaitingStructure._execute({ userId: adminStructureId }, { targetUserId: userId });
+        const user = Meteor.users.findOne({ _id: userId });
+        assert.equal(user.structure, newStructure);
+      });
+      it('structure admin can not accept awaiting structure of an user with different structure', function () {
+        const newStructure = allowedStructures[0];
+        setValidationMandatory(true);
+        setStructure._execute({ userId }, { structure: newStructure });
+        const adminStructureId = Accounts.createUser({
+          email: 'adminStructure1@mail.com',
+          username: 'adminStructure1@mail.com',
+          password: 'titi',
+          structure: allowedStructures[1],
+          firstName: 'adminStructureUserFirstName2',
+          lastName: 'adminStructureUserLastName2',
+        });
+        Roles.addUsersToRoles(adminStructureId, 'adminStructure', allowedStructures[1]);
+
+        assert.throws(
+          () => {
+            acceptAwaitingStructure._execute({ userId: adminStructureId }, { targetUserId: userId });
+          },
+          Meteor.Error,
+          'api.users.acceptAwaitingStructure.notPermitted',
+        );
       });
     });
     describe('setName', function () {

@@ -44,7 +44,8 @@
         "link_personalData": "Données Personnelles",
         "content_personalData": "Texte des Données Personnelles",
         "maintenance": "Statut de maintenance",
-        "textMaintenance": "Raison de la maintenance"
+        "textMaintenance": "Raison de la maintenance",
+        "userStructureValidationMandatory": "Status de la validation obligatoire d'une structure"
       },
       "migrationLockedText": "La migration de la base de données est bloquée.",
       "updateAppsettings": {
@@ -142,6 +143,7 @@
         "favServices": "Services Favoris",
         "favUserBookmarks": "Marque-pages favoris",
         "structure": "Structure De Rattachement",
+        "awaitingStructure": "Structure en attente de validation",
         "primaryEmail": "Adresse Électronique principale",
         "language": "Langage Préféré",
         "logoutType": "Méthode De Déconnexion",
@@ -198,7 +200,7 @@
         "displayed": "affiché",
         "inactive": "inactif",
         "invisible": "caché",
-        "maintenance" : "maintenance"
+        "maintenance": "maintenance"
       },
       "labels": {
         "id": "Id de Service",
@@ -550,7 +552,9 @@
       "menuAdminBackHome": "Retour à l'espace perso",
       "menuUserStructure": "Gestion des Structures",
       "menuAdminOfStructures": "Gestion des sous-structures",
-      "menuAdminStructureSettings": "Réglages de structure"
+      "menuAdminStructureSettings": "Réglages de structure",
+      "menuAdminStructureIntroduction": "Introduction de structure",
+      "menuAdminOfStructureUsersValidation": "Utilisateurs en attente"
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Votre compte n'a pas été activé",
@@ -560,6 +564,10 @@
       "noStructure": "Vous n'avez pas de structure de rattachement",
       "selectStructure": "Sélectionnez une structure dans votre profil.",
       "editProfileLabel": "Modifier mon profil"
+    },
+    "AwaitingStructureMessage": {
+      "waitingForStructure": "Vous êtes en attente de rattachement d'une structure",
+      "structureName": "La structure demandée est : {$name} "
     },
     "GroupUsersList": {
       "loadingTitle": "Chargement en cours ...",
@@ -833,6 +841,22 @@
     },
     "AdminStructureChangeEmailContact": {
       "label": "Email de contact"
+    },
+    "AdminUserValidationTable": {
+      "columnUsername": "Pseudo",
+      "columnLastName": "Nom",
+      "columnFirstName": "Prénom",
+      "columnEmails": "Emails",
+      "columnStructure": "Structure",
+      "columnCreatedAt": "Date d'inscription",
+      "actions_tooltip": "Valider cet utilisateur",
+      "materialTableLocalization": {
+        "toolbar_searchPlaceholder": "Rechercher un utilisateur",
+        "pagination_labelRowsSelect": "utilisateurs par page",
+        "body_emptyDataSourceMessage": "Aucun utilisateur à valider",
+        "body_deleteTooltip": "Supprimer l'utilisateur",
+        "body_editRow_deleteText": "Souhaitez vous réellement supprimer cet utilisateur ?"
+      }
     }
   },
   "validatejs": {
@@ -985,7 +1009,8 @@
       "noCurrentStructure": "Vous n'avez pas de structure de rattachement pour le moment",
       "chooseAttachementStructure": "Choisir votre structure de rattachement",
       "noOptions": "Ecrire pour chercher des structures (3 lettres minimum)",
-      "onlyActiveUserOption": "Seuls les utilisateurs actifs peuvent définir une structure"
+      "onlyActiveUserOption": "Seuls les utilisateurs actifs peuvent définir une structure",
+      "awaitingForStructure": "Vous êtes en attente de validation pour :"
     },
     "NotFound": {
       "backButtonLabel": "Retour",
@@ -1148,22 +1173,7 @@
       "copyUserId": "Copier l'ID de l'utilisateur"
     },
     "AdminUserValidationPage": {
-      "title": "Utilisateurs en attente de validation",
-      "columnUsername": "Pseudo",
-      "columnLastName": "Nom",
-      "columnFirstName": "Prénom",
-      "columnEmails": "Emails",
-      "columnStructure": "Structure",
-      "columnCreatedAt": "Date d'inscription",
-      "actions_tooltip": "Valider cet utilisateur",
-      "missingData": "Données utilisateur incomplètes",
-      "materialTableLocalization": {
-        "toolbar_searchPlaceholder": "Rechercher un utilisateur",
-        "pagination_labelRowsSelect": "utilisateurs par page",
-        "body_emptyDataSourceMessage": "Aucun utilisateur à valider",
-        "body_deleteTooltip": "Supprimer l'utilisateur",
-        "body_editRow_deleteText": "Souhaitez vous réellement supprimer cet utilisateur ?"
-      }
+      "title": "Utilisateurs en attente de validation"
     },
     "AdminHelpPage": {
       "title": "Gestion de l'aide",
@@ -1188,7 +1198,7 @@
       "categories": "Catégories",
       "open": "Ouvrir",
       "inactive": "Service inactif",
-      "maintenance" : "Service en maintenance",
+      "maintenance": "Service en maintenance",
       "propulsedBy": "Propulsé par"
     },
     "PersonalPage": {
@@ -1387,6 +1397,13 @@
       "neverConnected": "Jamais connecté",
       "undefined": "Non renseigné",
       "sortByLastLogin": "Trier par date de dernière connexion"
+    },
+    "AdminStructureUsersValidationPage": {
+      "title": "Validation des demandeurs de la structure {$structureName}",
+      "successSetStructure": "L'utilisateur a bien été ajouté à la structure",
+      "actions": {
+        "validate": "Valider l'utilisateur"
+      }
     },
     "AdminServicesByStructurePage": {
       "title": "Gestion des services de la structure"

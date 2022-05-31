@@ -44,7 +44,8 @@
         "link_personalData": "Personal Data text page link",
         "content_personalData": "Personal Data text",
         "maintenance": "Maintenance status",
-        "textMaintenance": "Maintenance reason text"
+        "textMaintenance": "Maintenance reason text",
+        "userStructureValidationMandatory": "Structure validation mandatoriness status"
       },
       "migrationLockedText": "Database migration is locked.",
       "updateAppsettings": {
@@ -142,6 +143,7 @@
         "favServices": "Favorite Services",
         "favUserBookmarks": "Favorite Bookmarks",
         "structure": "Attachment Structure",
+        "awaitingStructure": "Waiting for validation structure",
         "primaryEmail": "Primary Email",
         "language": "Preferred Language",
         "logoutType": "Logout Method",
@@ -198,7 +200,7 @@
         "displayed": "displayed",
         "inactive": "inactive",
         "invisible": "invisible",
-        "maintenance" : "maintenance"
+        "maintenance": "maintenance"
       },
       "labels": {
         "id": "Service Id",
@@ -550,7 +552,9 @@
       "menuAdminBackHome": "Back to Personnal Space",
       "menuUserStructure": "Structures Management",
       "menuAdminOfStructures": "Sub structures Management",
-      "menuAdminStructureSettings": "Structure settings"
+      "menuAdminStructureSettings": "Structure settings",
+      "menuAdminStructureIntroduction": "Structure introduction",
+      "menuAdminOfStructureUsersValidation": "Awaiting users"
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Your account has not been activated",
@@ -560,6 +564,10 @@
       "noStructure": "You have not Attachment Structure",
       "selectStructure": "Choose a structure in your profile.",
       "editProfileLabel": "Update my Profile"
+    },
+    "AwaitingStructureMessage": {
+      "waitingForStructure": "You are waiting to be attached to a structure",
+      "structureName": "Asked structure is: {$name} "
     },
     "GroupUsersList": {
       "loadingTitle": "Loading ...",
@@ -830,6 +838,22 @@
     },
     "AdminStructureChangeEmailContact": {
       "label": "Email de contact"
+    },
+    "AdminUserValidationTable": {
+      "columnUsername": "Username",
+      "columnLastName": "LastName",
+      "columnFirstName": "FirstName",
+      "columnEmails": "Mails",
+      "columnStructure": "Structure",
+      "columnCreatedAt": "Registration date",
+      "actions_tooltip": "Validate this user",
+      "materialTableLocalization": {
+        "toolbar_searchPlaceholder": "Find a user",
+        "pagination_labelRowsSelect": "users per page",
+        "body_emptyDataSourceMessage": "No user to validate",
+        "body_deleteTooltip": "Delete user",
+        "body_editRow_deleteText": "Do you really want to remove this user?"
+      }
     }
   },
   "validatejs": {
@@ -982,7 +1006,8 @@
       "noCurrentStructure": "You have no attached structure for now",
       "chooseAttachementStructure": "Choose your attachement structure",
       "noOptions": "Type to search for structures (3 letters minimum)",
-      "onlyActiveUserOption": "Only actives users can select a structure"
+      "onlyActiveUserOption": "Only actives users can select a structure",
+      "awaitingForStructure": "You are awaiting for structure:"
     },
     "NotFound": {
       "backButtonLabel": "Back",
@@ -1145,22 +1170,7 @@
       "copyUserId": "Copy user ID"
     },
     "AdminUserValidationPage": {
-      "title": "User validation",
-      "columnUsername": "Username",
-      "columnLastName": "LastName",
-      "columnFirstName": "FirstName",
-      "columnEmails": "Mails",
-      "columnStructure": "Structure",
-      "columnCreatedAt": "Registration date",
-      "actions_tooltip": "Validate this user",
-      "missingData": "Incomplete user data",
-      "materialTableLocalization": {
-        "toolbar_searchPlaceholder": "Find a user",
-        "pagination_labelRowsSelect": "users per page",
-        "body_emptyDataSourceMessage": "No user to validate",
-        "body_deleteTooltip": "Delete user",
-        "body_editRow_deleteText": "Do you really want to remove this user?"
-      }
+      "title": "User validation"
     },
     "AdminHelpPage": {
       "title": "Helps Management",
@@ -1185,7 +1195,7 @@
       "categories": "Categories",
       "open": "Open",
       "inactive": "Inactive service",
-      "maintenance" : "Service on Maintenance",
+      "maintenance": "Service on Maintenance",
       "propulsedBy": "Propulsed by"
     },
     "PersonalPage": {
@@ -1385,6 +1395,13 @@
       "neverConnected": "Never connected",
       "undefined": "Not defined",
       "sortByLastLogin": "Sort by last login date"
+    },
+    "AdminStructureUsersValidationPage": {
+      "title": "Users structure validation page for {$structureName}",
+      "successSetStructure": "User successfuly added in structure",
+      "actions": {
+        "validate": "Validate user"
+      }
     },
     "AdminServicesByStructurePage": {
       "title": "Services management for structure"

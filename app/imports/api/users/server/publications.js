@@ -7,7 +7,7 @@ import { checkPaginationParams, isActive, getLabel } from '../../utils';
 import Groups from '../../groups/groups';
 import { getStructureIds } from '../structures';
 import logServer from '../../logging';
-import { hasAdminRightOnStructure } from '../../structures/utils';
+import { hasAdminRightOnStructure, hasRightToAcceptAwaitingStructure } from '../../structures/utils';
 
 // publish additional fields for current user
 Meteor.publish('userData', function publishUserData() {
@@ -336,4 +336,24 @@ Meteor.methods({
       return 0;
     }
   },
+});
+
+// publish all users that are awaiting for a given structure
+Meteor.publish('users.awaitingForStructure', function usersAwaitingForStructure({ structureId = null }) {
+  if (
+    !isActive(this.userId) &&
+    !hasRightToAcceptAwaitingStructure({ userId: this.userId, awaitingStructureId: structureId })
+  ) {
+    return this.ready();
+  }
+
+  return Meteor.users.find({ awaitingStructure: structureId });
+});
+
+Meteor.publish('users.awaitingForStructure.count', function usersAwaitingForStructureCounter({ structureId = null }) {
+  if (!isActive(this.userId)) {
+    return this.ready();
+  }
+  Counts.publish(this, 'users.awaitingForStructure.count', Meteor.users.find({ awaitingStructure: structureId }));
+  return [];
 });
