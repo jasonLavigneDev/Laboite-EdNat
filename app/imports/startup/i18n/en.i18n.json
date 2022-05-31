@@ -923,7 +923,10 @@
         "ask": "Do you want to run migration again ?",
         "cancel": "No",
         "confirm": "Yes"
-      }
+      },
+      "userStructureValidationMandatory": "Structure mandatoriness of attachment status",
+      "toggleUserStructureValidationMandatory": "Structure attachment is mandatory",
+      "buttonUserStructureValidationMandatory": "Validate change"
     },
     "SignIn": {
       "back":"Go back",

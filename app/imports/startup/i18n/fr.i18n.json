@@ -45,7 +45,7 @@
         "content_personalData": "Texte des Données Personnelles",
         "maintenance": "Statut de maintenance",
         "textMaintenance": "Raison de la maintenance",
-        "userStructureValidationMandatory": "Status de la validation obligatoire d'une structure"
+        "userStructureValidationMandatory": "Statut de la validation obligatoire d'une structure"
       },
       "migrationLockedText": "La migration de la base de données est bloquée.",
       "updateAppsettings": {
@@ -926,7 +926,10 @@
         "ask": "Voulez vous relancer la migration ?",
         "cancel": "Non",
         "confirm": "Oui"
-      }
+      },
+      "userStructureValidationMandatory": "Statut de la validation obligatoire d'une structure",
+      "toggleUserStructureValidationMandatory": "Le choix d'une structure doit obligatoirement être validé par un administrateur",
+      "buttonUserStructureValidationMandatory": "Valider le changement"
     },
     "SignIn": {
       "back": "Retour",
