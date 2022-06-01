@@ -629,7 +629,7 @@ const ProfilePage = () => {
                   />
                 </FormControl>
                 <FormControl variant="filled" className={classes.formControl} fullWidth>
-                  <Button variant="outlined" onClick={() => history.push('/profileStructureSelection')}>
+                  <Button variant="outlined" onClick={() => history.push('/profilestructureselection')}>
                     {i18n.__('pages.ProfilePage.openStructureSelection')}
                   </Button>
                 </FormControl>

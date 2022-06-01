@@ -127,7 +127,7 @@ function MainLayout({ appsettings, ready }) {
                       <Route exact path="/" component={PersonalPage} />
                       <Route exact path="/profile" component={ProfilePage} />
                       <Route exact path="/contact" component={ContactPage} />
-                      <Route exact path="/profileStructureSelection" component={StructureSelectionPage} />
+                      <Route exact path="/profilestructureselection" component={StructureSelectionPage} />
                       <Route exact path="/services" component={ServicesPage} />
                       <Route exact path="/structure" component={ServicesPage} />
                       <Route exact path="/help" component={HelpPage} />
@@ -167,7 +167,7 @@ function MainLayout({ appsettings, ready }) {
                   ) : (
                     <Switch>
                       <Route exact path="/profile" component={ProfilePage} />
-                      <Route exact path="/profileStructureSelection" component={StructureSelectionPage} />
+                      <Route exact path="/profilestructureselection" component={StructureSelectionPage} />
                       {!disabledFeatures.introductionTab && (
                         <Route exact path="/introduction" component={IntroductionPage} />
                       )}
