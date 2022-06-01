@@ -546,7 +546,7 @@
       "menuAdminBackHome": "Back to Personnal Space",
       "menuUserStructure": "Structures Management",
       "menuAdminOfStructures": "Sub structures Management",
-      "menuAdminOfStructureIntroduction": "Structure introduction"
+      "menuAdminStructureIntroduction": "Structure introduction"
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Your account has not been activated",
