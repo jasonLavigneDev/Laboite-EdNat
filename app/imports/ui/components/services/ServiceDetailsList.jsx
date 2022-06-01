@@ -9,6 +9,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import Badge from '@material-ui/core/Badge';
 import Avatar from '@material-ui/core/Avatar';
+import { useMatomo } from '@datapunt/matomo-tracker-react';
 
 import Tooltip from '@material-ui/core/Tooltip';
 import BlockIcon from '@material-ui/icons/Block';
@@ -69,10 +70,16 @@ export default function ServiceDetails({ service, favAction, noIconMode = false 
   const isDisabled = service.state === 5;
 
   const [{ isMobile }] = useAppContext();
+  const { trackEvent } = useMatomo();
   const favorite = favAction === 'fav';
 
   const isExternal = isUrlExternal(service.url);
   const launchService = () => {
+    trackEvent({
+      category: 'signin-page',
+      action: 'open-service',
+      name: `Ouverture de ${service.title}`, // optional
+    });
     if (isExternal) {
       window.open(service.url, '_blank', 'noreferrer,noopener');
     } else {
