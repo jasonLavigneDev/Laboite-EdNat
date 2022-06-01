@@ -5,7 +5,7 @@ import { Roles } from 'meteor/alanning:roles';
 import i18n from 'meteor/universe:i18n';
 import { _ } from 'meteor/underscore';
 import { getLabel, isActive } from '../utils';
-import Structures from './structures';
+import Structures, { IntroductionStructure } from './structures';
 import { hasAdminRightOnStructure, isAStructureWithSameNameExistWithSameParent } from './utils';
 import Services from '../services/services';
 import Articles from '../articles/articles';
@@ -197,8 +197,59 @@ export const getAllChilds = new ValidatedMethod({
   },
 });
 
+export const updateStructureIntroduction = new ValidatedMethod({
+  name: 'structures.updateIntroduction',
+  validate: new SimpleSchema({
+    structureId: { type: String, regEx: SimpleSchema.RegEx.Id, label: getLabel('api.structures.labels.id') },
+    ...IntroductionStructure,
+  }).validator(),
+  run({ structureId, language, title, content }) {
+    const structure = Structures.findOne({ _id: structureId });
+
+    if (structure === undefined) {
+      throw new Meteor.Error(
+        'api.structures.updateIntroduction.unknownStructure',
+        i18n.__('api.structures.unknownStructure'),
+      );
+    }
+    const isAdminOfStructure = hasAdminRightOnStructure({
+      userId: this.userId,
+      structureId: structure.parentId ? structure.parentId : structureId,
+    });
+    const authorized = isActive(this.userId) && (Roles.userIsInRole(this.userId, 'admin') || isAdminOfStructure);
+
+    if (!authorized) {
+      throw new Meteor.Error('api.structures.updateIntroduction.notPermitted', i18n.__('api.users.notPermitted'));
+    }
+
+    const oldIntroductionArray = [...structure.introduction];
+    let introductionToChange = oldIntroductionArray.find((entry) => entry.language === language);
+    if (!introductionToChange) {
+      throw new Meteor.Error(
+        'api.structures.updateIntroduction.introductionToChangeNotExists',
+        i18n.__('api.users.unknownIntroduction'),
+      );
+    }
+
+    introductionToChange = {
+      ...introductionToChange,
+      title,
+      content,
+    };
+    const newIntroductionArray = oldIntroductionArray.map((entry) => {
+      if (entry.language === language) return introductionToChange;
+      return entry;
+    });
+
+    return Structures.update({ _id: structureId }, { $set: { introduction: newIntroductionArray } });
+  },
+});
+
 // Get list of all method names on Structures
-const LISTS_METHODS = _.pluck([createStructure, updateStructure, removeStructure, getAllChilds], 'name');
+const LISTS_METHODS = _.pluck(
+  [createStructure, updateStructure, removeStructure, getAllChilds, updateStructureIntroduction],
+  'name',
+);
 
 if (Meteor.isServer) {
   // Only allow 5 list operations per connection per second
