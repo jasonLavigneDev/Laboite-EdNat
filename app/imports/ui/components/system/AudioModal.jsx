@@ -223,6 +223,7 @@ const AudioModal = ({ onClose, selectFile, admin }) => {
         onFinish: (url) => {
           setLoading(false);
           selectFile(url);
+          toggleSend();
         },
       },
     });
@@ -272,13 +273,13 @@ const AudioModal = ({ onClose, selectFile, admin }) => {
               {
                 label: 'components.AudioModal.refresh',
                 disabled: !audioBlob || loading || !audioPlayer,
-                onClick: audioPlayer ? null : refreshAudio,
+                onClick: !audioBlob ? null : refreshAudio,
                 icon: <RefreshIcon />,
               },
               {
                 label: 'components.AudioModal.upload',
                 disabled: !audioBlob || loading || !audioPlayer,
-                onClick: audioPlayer ? null : toggleSend,
+                onClick: !audioBlob ? null : toggleSend,
                 icon: <CloudUploadIcon />,
               },
             ].map((item) => (
