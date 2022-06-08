@@ -21,7 +21,6 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import CategoryIcon from '@mui/icons-material/Category';
 import HomeIcon from '@mui/icons-material/Home';
 import HelpIcon from '@mui/icons-material/Help';
-import InfoIcon from '@mui/icons-material/Info';
 import Drawer from '@mui/material/Drawer';
 import Typography from '@mui/material/Typography';
 import Toolbar from '@mui/material/Toolbar';
@@ -140,9 +139,9 @@ export default function AdminMenu() {
       hidden: !isAdminStructure,
     },
     {
-      path: '/admin/structuresintroduction',
-      content: 'menuAdminStructureIntroduction',
-      icon: <InfoIcon />,
+      path: '/admin/structuressettings',
+      content: 'menuAdminStructureSettings',
+      icon: <SettingsIcon />,
       hidden: !isAdminStructure,
     },
     {

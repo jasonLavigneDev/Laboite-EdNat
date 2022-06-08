@@ -112,7 +112,8 @@
           "title": "Titre d'introduction de structure",
           "content": "Contenu d'introduction de structure",
           "language": "Language d'introduction de structure"
-        }
+        },
+        "contactEmail": "Email de contact de la structure"
       }
     },
     "users": {
@@ -548,7 +549,7 @@
       "menuAdminBackHome": "Retour à l'espace perso",
       "menuUserStructure": "Gestion des Structures",
       "menuAdminOfStructures": "Gestion des sous-structures",
-      "menuAdminStructureIntroduction": "Introduction de structure"
+      "menuAdminStructureSettings": "Réglages de structure"
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Votre compte n'a pas été activé",
@@ -828,6 +829,9 @@
         "title": "Titre (facultatif)",
         "content": "Contenu"
       }
+    },
+    "AdminStructureChangeEmailContact": {
+      "label": "Email de contact"
     }
   },
   "validatejs": {
@@ -1382,8 +1386,8 @@
       "informationsOf": "Informations de",
       "titleStructures": "Informations de structures"
     },
-    "AdminIntroductionByStructurePage": {
-      "title": "Texte d'introduction de structure"
+    "AdminStructureSettingsPage": {
+      "title": "Paramétrage de la structure"
     }
   },
   "layouts": {

@@ -198,6 +198,36 @@ export const getAllChilds = new ValidatedMethod({
   },
 });
 
+export const updateStructureContactEmail = new ValidatedMethod({
+  name: 'structures.updateContactEmail',
+  validate: new SimpleSchema({
+    contactEmail: {
+      type: String,
+      regEx: SimpleSchema.RegEx.Email,
+    },
+    structureId: { type: String, regEx: SimpleSchema.RegEx.Id, label: getLabel('api.structures.labels.id') },
+  }).validator(),
+  run({ structureId, contactEmail }) {
+    console.log({ structureId, contactEmail });
+    const structure = Structures.findOne({ _id: structureId });
+
+    if (structure === undefined) {
+      throw new Meteor.Error(
+        'api.structures.updateContactEmail.unknownStructure',
+        i18n.__('api.structures.unknownStructure'),
+      );
+    }
+
+    const authorized = isActive(this.userId) && hasAdminRightOnStructure({ userId: this.userId, structureId });
+
+    if (!authorized) {
+      throw new Meteor.Error('api.structures.updateContactEmail.notPermitted', i18n.__('api.users.notPermitted'));
+    }
+
+    return Structures.update({ _id: structureId }, { $set: { contactEmail } });
+  },
+});
+
 export const updateStructureIntroduction = new ValidatedMethod({
   name: 'structures.updateIntroduction',
   validate: new SimpleSchema({
@@ -248,7 +278,14 @@ export const updateStructureIntroduction = new ValidatedMethod({
 
 // Get list of all method names on Structures
 const LISTS_METHODS = _.pluck(
-  [createStructure, updateStructure, removeStructure, getAllChilds, updateStructureIntroduction],
+  [
+    createStructure,
+    updateStructure,
+    removeStructure,
+    getAllChilds,
+    updateStructureIntroduction,
+    updateStructureContactEmail,
+  ],
   'name',
 );
 

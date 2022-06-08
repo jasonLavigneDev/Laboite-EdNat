@@ -112,7 +112,8 @@
           "title": "Structure introduction title",
           "content": "Structure introduction content",
           "language": "Structure introduction language"
-        }
+        },
+        "contactEmail": "Structure contact email"
       }
     },
     "users": {
@@ -548,7 +549,7 @@
       "menuAdminBackHome": "Back to Personnal Space",
       "menuUserStructure": "Structures Management",
       "menuAdminOfStructures": "Sub structures Management",
-      "menuAdminStructureIntroduction": "Structure introduction"
+      "menuAdminStructureSettings": "Structure settings"
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Your account has not been activated",
@@ -825,6 +826,9 @@
         "title": "Title (optional)",
         "content": "Content"
       }
+    },
+    "AdminStructureChangeEmailContact": {
+      "label": "Email de contact"
     }
   },
   "validatejs": {
@@ -1380,8 +1384,8 @@
       "informationsOf": "Informations of",
       "titleStructures": "Structures informations"
     },
-    "AdminIntroductionByStructurePage": {
-      "title": "Structure's introduction texts"
+    "AdminStructureSettingsPage": {
+      "title": "Structure settings"
     }
   },
   "layouts": {

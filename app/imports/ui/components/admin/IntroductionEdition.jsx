@@ -35,6 +35,9 @@ export const useStyles = makeStyles()((theme) => ({
   formControl: {
     minWidth: '50%',
   },
+  marginTop: {
+    marginTop: theme.spacing(3),
+  },
 }));
 
 export const quillOptions = {
