@@ -11,6 +11,7 @@ import s3Client from './config';
 import { isActive } from '../../utils';
 import logServer from '../../logging';
 import Services from '../../services/services';
+import { hasAdminRightOnStructure } from '../../structures/utils';
 
 const { minioSSL, minioEndPoint, minioBucket, minioPort } = Meteor.settings.public;
 
@@ -18,31 +19,29 @@ const HOST = `http${minioSSL ? 's' : ''}://${minioEndPoint}${minioPort ? `:${min
 
 const checkUserAdminRights = (path, userId) => {
   // check if current user has admin rights
-  const authorized = isActive(userId) && Roles.userIsInRole(userId, 'admin');
-  const isUserPath = path === `users/${userId}`;
-  let isGroupAdmin = false;
-  if (path.includes('groups/')) {
-    const groupID = path.slice(-17);
-    isGroupAdmin = Roles.userIsInRole(userId, ['animator', 'admin'], groupID);
-  }
-  let isStructureAdmin = false;
-  if (path.startsWith('services/')) {
-    const serviceID = path.split('/')[1];
-    const user = Meteor.users.findOne(userId);
-    if (Roles.userIsInRole(userId, ['adminStructure'], user.structure)) {
-      // creating new service
-      if (serviceID === 'undefined') isStructureAdmin = true;
-      else {
-        // editing existing service as adminStructure user
+  const isAdmin = isActive(userId) && Roles.userIsInRole(userId, 'admin');
+  if (!isAdmin) {
+    // check specific permissions if not admin
+    const isUserPath = path === `users/${userId}`;
+    let isGroupAdmin = false;
+    if (path.includes('groups/')) {
+      const groupID = path.slice(-17);
+      isGroupAdmin = Roles.userIsInRole(userId, ['animator', 'admin'], groupID);
+    }
+    let isStructureAdmin = false;
+    if (path.startsWith('services/')) {
+      const serviceID = path.split('/')[1];
+      if (serviceID === 'undefined') {
+        // creating new service (temporary state before service is created)
+        isStructureAdmin = true;
+      } else {
         const service = Services.findOne(serviceID);
-        if (service.structure && service.structure === user.structure) {
-          isStructureAdmin = true;
-        }
+        isStructureAdmin = service.structure && hasAdminRightOnStructure({ userId, structureId: service.structure });
       }
     }
-  }
-  if (!authorized && !isUserPath && !isGroupAdmin && !isStructureAdmin) {
-    throw new Meteor.Error('api.users.notPermitted', i18n.__('api.users.adminNeeded'));
+    if (!isUserPath && !isGroupAdmin && !isStructureAdmin) {
+      throw new Meteor.Error('api.users.notPermitted', i18n.__('api.users.adminNeeded'));
+    }
   }
 };
 

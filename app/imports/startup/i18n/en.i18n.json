@@ -210,7 +210,8 @@
         "logo": "Logo",
         "categories": "Categories",
         "screenshots": "Screenshots",
-        "structure": "Service Structure"
+        "structure": "Service Structure",
+        "url": "URL du service"
       }
     },
     "events": {

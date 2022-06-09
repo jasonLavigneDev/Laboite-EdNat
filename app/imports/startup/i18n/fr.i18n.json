@@ -210,7 +210,8 @@
         "logo": "Logo",
         "categories": "Catégories",
         "screenshots": "Captures d'écran",
-        "structure": "Structure d'exploitation"
+        "structure": "Structure d'exploitation",
+        "url": "URL du service"
       }
     },
     "events": {
@@ -608,7 +609,7 @@
       "noTag": "Aucun groupe trouvé",
       "groupLabel": "Groupe",
       "userLabel": "Groupes",
-      "noUser":"Aucun groupe trouvé",
+      "noUser": "Aucun groupe trouvé",
       "placeholder": "Saisir pour rechercher",
       "clear": "Effacer",
       "loading": "Chargement...",
