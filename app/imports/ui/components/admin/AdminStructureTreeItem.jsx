@@ -12,6 +12,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import { withStyles, alpha, makeStyles } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 import CustomDialog from '../system/CustomDialog';
 
 const StyledTreeItem = withStyles((theme) => ({
@@ -31,6 +32,9 @@ const useStyles = makeStyles(() => ({
   name: {
     alignItems: 'center',
     display: 'flex',
+  },
+  space: {
+    padding: '12px',
   },
 }));
 
@@ -108,14 +112,17 @@ const AdminStructureTreeItem = ({
               {onClickSelectBtn && (
                 <Tooltip title={i18n.__('components.AdminStructureTreeItem.actions.choose')}>
                   <span>
-                    <IconButton
+                    <Button
+                      className={classes.space}
                       onClick={() => {
                         setChoosenStructure(nodes);
                         openConfirm();
                       }}
+                      size="small"
+                      startIcon={<CheckIcon />}
                     >
-                      <CheckIcon />
-                    </IconButton>
+                      <Typography>{i18n.__('components.AdminStructureTreeItem.actions.chooseShort')}</Typography>
+                    </Button>
                   </span>
                 </Tooltip>
               )}
