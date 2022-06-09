@@ -82,6 +82,7 @@
     "toEmail": ""
   },
   "private": {
+    "loginExpirationInDays": 90,
     "fillWithFakeData": false,
     "minioAccess": "",
     "minioSecret": "",
