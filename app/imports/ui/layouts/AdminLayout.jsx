@@ -226,6 +226,13 @@ function AdminLayout() {
                       component={AdminStructureSettingsPage}
                       loadingUser={loadingUser}
                     />
+                    <StructureAdminRoute
+                      userId={userId}
+                      loadingUser={loadingUser}
+                      exact
+                      path="/admin/structurespaces"
+                      component={AdminStructureDefaultSpace}
+                    />
                     <AdminRoute
                       userId={userId}
                       loadingUser={loadingUser}
@@ -239,13 +246,6 @@ function AdminLayout() {
                       exact
                       path="/admin/helps"
                       component={AdminHelpPage}
-                    />
-                    <AdminRoute
-                      userId={userId}
-                      loadingUser={loadingUser}
-                      exact
-                      path="/admin/structurespaces"
-                      component={AdminStructureDefaultSpace}
                     />
                     <Route component={NotFound} />
                   </Switch>
