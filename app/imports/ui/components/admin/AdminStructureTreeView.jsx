@@ -6,7 +6,6 @@ import TreeView from '@material-ui/lab/TreeView';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import AdminStructureTreeItem from './AdminStructureTreeItem';
-import Spinner from '../system/Spinner';
 
 const AdminStructureTreeView = ({
   treeData,
@@ -18,7 +17,6 @@ const AdminStructureTreeView = ({
   setExpandedIds,
   expandedIds,
   selectedId,
-  isStructuresFlatDataLoading,
 }) => {
   return (
     <TreeView
@@ -36,22 +34,18 @@ const AdminStructureTreeView = ({
       }}
       selected={selectedId}
     >
-      {isStructuresFlatDataLoading ? (
-        <Spinner />
-      ) : (
-        treeData.map((nodes) => (
-          <AdminStructureTreeItem
-            key={nodes._id}
-            nodes={nodes}
-            onClickAddBtn={onClickAddBtn}
-            onClickEditBtn={onClickEditBtn}
-            onClickDeleteBtn={onClickDeleteBtn}
-            onClickSelectBtn={onClickSelectBtn}
-            updateParentIdsList={updateParentIdsList}
-            selectedId={selectedId}
-          />
-        ))
-      )}
+      {treeData.map((nodes) => (
+        <AdminStructureTreeItem
+          key={nodes._id}
+          nodes={nodes}
+          onClickAddBtn={onClickAddBtn}
+          onClickEditBtn={onClickEditBtn}
+          onClickDeleteBtn={onClickDeleteBtn}
+          onClickSelectBtn={onClickSelectBtn}
+          updateParentIdsList={updateParentIdsList}
+          selectedId={selectedId}
+        />
+      ))}
     </TreeView>
   );
 };
@@ -73,7 +67,6 @@ AdminStructureTreeView.propTypes = {
   expandedIds: PropTypes.arrayOf(PropTypes.string).isRequired,
   setExpandedIds: PropTypes.func.isRequired,
   selectedId: PropTypes.string.isRequired,
-  isStructuresFlatDataLoading: PropTypes.bool.isRequired,
 };
 
 AdminStructureTreeView.defaultProps = {

@@ -15,6 +15,7 @@ import AdminStructureTreeView from '../admin/AdminStructureTreeView';
 import { getTree } from '../../../api/utils';
 import { useStructure } from '../../../api/structures/hooks';
 import { useAppContext } from '../../contexts/context';
+import Spinner from '../system/Spinner';
 
 const StructureSelectionTree = () => {
   const history = useHistory();
@@ -118,16 +119,19 @@ const StructureSelectionTree = () => {
               />
             </Box>
             <Box style={{ overflowY: 'auto', height: '100%' }}>
-              <AdminStructureTreeView
-                treeData={getTree(filteredStructureFlatData)}
-                onClickSelectBtn={onClickSelectBtn}
-                setExpandedIds={setExpandedIds}
-                updateParentIdsList={updateParentIdsList}
-                expandedIds={expandedIds}
-                onlySelect
-                selectedId={selectedStructure || ''}
-                isStructuresFlatDataLoading={isStructuresFlatDataLoading}
-              />
+              {isStructuresFlatDataLoading ? (
+                <Spinner />
+              ) : (
+                <AdminStructureTreeView
+                  treeData={getTree(filteredStructureFlatData)}
+                  onClickSelectBtn={onClickSelectBtn}
+                  setExpandedIds={setExpandedIds}
+                  updateParentIdsList={updateParentIdsList}
+                  expandedIds={expandedIds}
+                  onlySelect
+                  selectedId={selectedStructure || ''}
+                />
+              )}
             </Box>
           </CardContent>
         </Card>
