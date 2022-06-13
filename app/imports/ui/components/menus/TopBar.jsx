@@ -84,6 +84,13 @@ function TopBar({ publicMenu, root, appsettings, adminApp }) {
     ? SMALL_LOGO
     : LONG_LOGO;
 
+  function isEoleTheme() {
+    if (Meteor.settings.public.theme === 'eole') {
+      return true;
+    }
+    return false;
+  }
+
   const updateGlobalState = (key, value) =>
     dispatch({
       type: 'notificationPage',
@@ -116,7 +123,12 @@ function TopBar({ publicMenu, root, appsettings, adminApp }) {
         <div className={classes.firstBar}>
           {LOGO ? (
             <Link to={root || (publicMenu ? '/public' : '/')} className={classes.imgLogoContainer}>
-              <img src={LOGO} className={classes.imgLogoContainer} alt="Logo" />
+              <img
+                src={LOGO}
+                className={classes.imgLogoContainer}
+                alt="Logo"
+                style={{ padding: isEoleTheme() ? 10 : '' }}
+              />
             </Link>
           ) : (
             <div />
