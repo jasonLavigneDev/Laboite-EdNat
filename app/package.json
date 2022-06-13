@@ -47,6 +47,7 @@
     "html2pdf.js": "^0.10.1",
     "jspdf": "^2.5.1",
     "mail": "^0.2.3",
+    "material-icons": "^1.11.1",
     "meteor-node-stubs": "^1.2.1",
     "mic-recorder-to-mp3": "^2.2.2",
     "minio": "^7.0.26",
