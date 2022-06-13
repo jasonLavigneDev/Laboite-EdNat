@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { useTracker } from 'meteor/react-meteor-data';
 import { _ } from 'meteor/underscore';
 import i18n from 'meteor/universe:i18n';
@@ -15,17 +16,22 @@ import { getTree } from '../../../api/utils';
 import { useStructure } from '../../../api/structures/hooks';
 import { useAppContext } from '../../contexts/context';
 
-const saveStructure = (_id) => {
-  Meteor.call('users.setStructure', { structure: _id }, (error) => {
-    if (error) {
-      msg.error(error.reason);
-    } else {
-      msg.success(i18n.__('api.methods.operationSuccessMsg'));
-    }
-  });
-};
-
 const StructureSelectionTree = () => {
+  const history = useHistory();
+  const goToProfile = () => history.push('/profile');
+  const saveStructure = (_id) => {
+    Meteor.call('users.setStructure', { structure: _id }, (error) => {
+      if (error) {
+        msg.error(error.reason);
+      } else {
+        msg.success(i18n.__('api.methods.operationSuccessMsg'));
+        if (history.location.pathname !== '/profile') {
+          goToProfile();
+        }
+      }
+    });
+  };
+
   const userStructure = useStructure();
   const [{ isMobile }] = useAppContext();
   const [selectedStructure, setSelectedStructure] = useState(userStructure ? userStructure._id : '');

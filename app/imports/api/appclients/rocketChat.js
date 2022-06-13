@@ -635,6 +635,25 @@ if (Meteor.isServer && rcEnabled) {
     }
   });
 
+  Meteor.afterMethod('groups.addGroupMembersToGroup', function kcAddGroupMembersToGroup({ groupId, anotherGroupId }) {
+    if (!this.error) {
+      const group = Groups.findOne({ _id: groupId });
+      const group2 = Groups.findOne({ _id: anotherGroupId });
+
+      if (group2.plugins.rocketChat === true) {
+        const users = Meteor.users.find({ _id: { $in: group.members } });
+        users.forEach((user) => {
+          rcClient.ensureUser(user._id, this.userId).then((rcUser) => {
+            if (rcUser != null) {
+              const { username } = rcUser;
+              rcClient.inviteUser(group2.slug, username, this.userId);
+            }
+          });
+        });
+      }
+    }
+  });
+
   Meteor.afterMethod('users.setMemberOf', function rcSetMemberOf({ userId, groupId }) {
     const group = Groups.findOne({ _id: groupId });
     if (group.plugins.rocketChat === true) {

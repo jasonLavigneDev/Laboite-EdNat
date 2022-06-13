@@ -2,8 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import ViewListIcon from '@material-ui/icons/ViewList';
-import DashboardIcon from '@material-ui/icons/Dashboard';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import ClearIcon from '@material-ui/icons/Clear';
 import ToggleButton from '@material-ui/lab/ToggleButton';
@@ -36,6 +34,7 @@ import Categories from '../../../api/categories/categories';
 import Spinner from '../../components/system/Spinner';
 import { useAppContext } from '../../contexts/context';
 import ServiceDetailsList from '../../components/services/ServiceDetailsList';
+import { useIconStyles, DetaiIconCustom, SimpleIconCustom } from '../../components/system/icons/icons';
 import { useStructure } from '../../../api/structures/hooks';
 
 const useStyles = (isMobile) =>
@@ -140,6 +139,7 @@ export function ServicesPage({ services, categories, ready, structureMode, offli
   const [{ user, loadingUser, isMobile, servicePage }, dispatch] = useAppContext();
   const structure = offline ? null : useStructure();
   const classes = useStyles(isMobile)();
+  const classesIcons = useIconStyles();
   const {
     catList = [],
     search = '',
@@ -195,14 +195,18 @@ export function ServicesPage({ services, categories, ready, structureMode, offli
 
   const toggleButtons = (
     <ToggleButtonGroup value={viewMode} exclusive aria-label={i18n.__('pages.ServicesPage.viewMode')}>
-      <ToggleButton value="card" onClick={changeViewMode} aria-label={i18n.__('pages.ServicesPage.viewCard')}>
-        <Tooltip title={i18n.__('pages.ServicesPage.viewCard')} aria-label={i18n.__('pages.ServicesPage.viewCard')}>
-          <DashboardIcon color="primary" />
+      <ToggleButton value="card" onClick={changeViewMode} aria-label={i18n.__('pages.ServicesPage.viewDetail')}>
+        <Tooltip title={i18n.__('pages.ServicesPage.viewDetail')} aria-label={i18n.__('pages.ServicesPage.viewDetail')}>
+          <span className={classesIcons.size}>
+            <DetaiIconCustom />
+          </span>
         </Tooltip>
       </ToggleButton>
-      <ToggleButton value="list" onClick={changeViewMode} aria-label={i18n.__('pages.ServicesPage.viewList')}>
-        <Tooltip title={i18n.__('pages.ServicesPage.viewList')} aria-label={i18n.__('pages.ServicesPage.viewList')}>
-          <ViewListIcon color="primary" />
+      <ToggleButton value="list" onClick={changeViewMode} aria-label={i18n.__('pages.ServicesPage.viewSimple')}>
+        <Tooltip title={i18n.__('pages.ServicesPage.viewSimple')} aria-label={i18n.__('pages.ServicesPage.viewSimple')}>
+          <span className={classesIcons.size}>
+            <SimpleIconCustom />
+          </span>
         </Tooltip>
       </ToggleButton>
     </ToggleButtonGroup>
@@ -286,7 +290,7 @@ export function ServicesPage({ services, categories, ready, structureMode, offli
                 </Typography>
               ) : viewMode === 'list' && isMobile ? (
                 mapList((service) => (
-                  <Grid className={classes.gridItem} item xs={12} md={6} key={service._id}>
+                  <Grid className={classes.gridItem} item xs={4} md={2} key={service._id}>
                     <ServiceDetailsList service={service} favAction={favAction(service._id)} />
                   </Grid>
                 ))

@@ -67,6 +67,14 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'flex-end',
     alignItems: 'center',
   },
+  actionsSmall: {
+    position: 'relative',
+    marginLeft: 80,
+    marginTop: 10,
+  },
+  actionsBig: {
+    top: '70%',
+  },
 }));
 
 const ITEM_PER_PAGE = 10;
@@ -75,7 +83,7 @@ const AdminUsersPage = () => {
   const [openQuota, setOpenQuota] = useState(false);
   const [openNotif, setOpenNotif] = useState(false);
   const classes = useStyles();
-  const [{ isMobile }] = useAppContext();
+  const [{ isMobile, isTablet }] = useAppContext();
   const [search, setSearch] = useState('');
   const [sortByDate, setSortByDate] = useState(false);
 
@@ -353,7 +361,9 @@ const AdminUsersPage = () => {
                             </>
                           }
                         />
-                        <ListItemSecondaryAction>
+                        <ListItemSecondaryAction
+                          className={isMobile || isTablet ? classes.actionsSmall : classes.actionsBig}
+                        >
                           <UserActions user={user} />
                         </ListItemSecondaryAction>
                       </ListItem>,

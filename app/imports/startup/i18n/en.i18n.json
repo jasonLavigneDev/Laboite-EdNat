@@ -106,7 +106,13 @@
         "name": "Structure's name",
         "parentId": "Direct parent structures Id",
         "childrenIds": "Direct childs structures ids",
-        "ancestorsIds": "Parent's structures ids"
+        "ancestorsIds": "Parent's structures ids",
+        "introduction": {
+          "label": "Structure introduction",
+          "title": "Structure introduction title",
+          "content": "Structure introduction content",
+          "language": "Structure introduction language"
+        }
       }
     },
     "users": {
@@ -204,7 +210,8 @@
         "logo": "Logo",
         "categories": "Categories",
         "screenshots": "Screenshots",
-        "structure": "Service Structure"
+        "structure": "Service Structure",
+        "url": "URL du service"
       }
     },
     "events": {
@@ -521,7 +528,8 @@
       "menuAdminTags": "Tags Management",
       "menuAdminStructureUsers": "Structure Users",
       "menuAdminStructureServices": "Structure Services",
-      "menuAdminBackHome": "Back to Personnal Space"
+      "menuAdminBackHome": "Back to Personnal Space",
+      "menuContact": "Contact"
     },
     "AdminMenu": {
       "title": "Administration",
@@ -538,7 +546,8 @@
       "menuAdminStructureServices": "Structure Services",
       "menuAdminBackHome": "Back to Personnal Space",
       "menuUserStructure": "Structures Management",
-      "menuAdminOfStructures": "Sub structures Management"
+      "menuAdminOfStructures": "Sub structures Management",
+      "menuAdminStructureIntroduction": "Structure introduction"
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Your account has not been activated",
@@ -596,6 +605,7 @@
     "GroupFinder": {
       "addGroup": "Add ",
       "noGroup": "No group found",
+      "noUser": "No group found",
       "groupLabel": "Group",
       "placeholder": "Type to search a group",
       "clear": "Clear",
@@ -790,6 +800,7 @@
     "AdminStructureTreeItem": {
       "actions": {
         "choose": "Choose structure",
+        "chooseShort": "Choose",
         "addStructure": "Add a structure",
         "editStructure": "Edit this structure",
         "deleteStructure": "Remove cette structure",
@@ -807,6 +818,12 @@
     },
     "StructureSelect": {
       "label": "Choose structure"
+    },
+    "AdminStructureIntroductionEdition": {
+      "form": {
+        "title": "Title (optional)",
+        "content": "Content"
+      }
     }
   },
   "validatejs": {
@@ -956,7 +973,8 @@
       "currentStructure": "Your current attachement structure is:",
       "noSelectedStructure": "No selected structure",
       "noCurrentStructure": "You have no attached structure for now",
-      "chooseAttachementStructure": "Choose your attachement structure"
+      "chooseAttachementStructure": "Choose your attachement structure",
+      "noOptions": "Type to search for structures (3 letters minimum)"
     },
     "NotFound": {
       "backButtonLabel": "Back",
@@ -972,8 +990,8 @@
       "tabAllServicesLabel": "All services",
       "emptyFilter": "There is no filter available.",
       "viewMode": "Change view mode",
-      "viewCard": "Card view",
-      "viewList": "List view",
+      "viewDetail": "Detail view",
+      "viewSimple": "Simple view",
       "filter": "Filter",
       "NoStructureServices": "No service defined for your structure",
       "NoServices": "No services defined"
@@ -984,8 +1002,8 @@
       "searchGroup": "Search a group",
       "addGroup": "Add group",
       "viewMode": "Change view mode",
-      "viewCard": "Card view",
-      "viewList": "List view",
+      "viewDetail": "Detail view",
+      "viewSimple": "Simple view",
       "endOfList": "End of the list",
       "filterGroup": "Show only joined groups",
       "noGroup": "There is no group to display."
@@ -1354,7 +1372,13 @@
     },
     "IntroductionPage": {
       "titleAppIntroduction": "General informations",
-      "noContent": "No content for now."
+      "noContent": "No content for now.",
+      "noTitle": "No title for now.",
+      "informationsOf": "Informations of",
+      "titleStructures": "Structures informations"
+    },
+    "AdminIntroductionByStructurePage": {
+      "title": "Structure's introduction texts"
     }
   },
   "layouts": {

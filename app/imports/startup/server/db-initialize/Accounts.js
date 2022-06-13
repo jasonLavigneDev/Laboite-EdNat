@@ -10,11 +10,13 @@ import AppRoles from '../../../api/users/users';
 import { getStructureIds } from '../../../api/users/structures';
 import fakeData from './fakeData.json';
 
+const accountConfig = {
+  loginExpirationInDays: Meteor.settings.private.loginExpirationInDays || 90,
+};
+
 if (Meteor.settings.keycloak) {
   if (Meteor.settings.public.enableKeycloak === true) {
-    Accounts.config({
-      forbidClientAccountCreation: true,
-    });
+    accountConfig.forbidClientAccountCreation = true;
     ServiceConfiguration.configurations.upsert(
       { service: 'keycloak' },
       {
@@ -32,6 +34,9 @@ if (Meteor.settings.keycloak) {
 } else {
   logServer('No Keycloak configuration. Please invoke meteor with a settings file.');
 }
+Accounts.config({
+  ...accountConfig,
+});
 
 /* eslint-disable no-console */
 
