@@ -5,6 +5,7 @@ import i18n from 'meteor/universe:i18n';
 import { withTracker } from 'meteor/react-meteor-data';
 import MaterialTable from '@material-table/core';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
+import Tooltip from '@material-ui/core/Tooltip';
 import Fade from '@material-ui/core/Fade';
 import Container from '@material-ui/core/Container';
 import Spinner from '../../components/system/Spinner';
@@ -17,6 +18,15 @@ function AdminUserValidationPage({ usersrequest, loading }) {
     {
       title: i18n.__('pages.AdminUserValidationPage.columnUsername'),
       field: 'username',
+      render: (rowData) => {
+        return rowData.isActive === undefined ? (
+          <Tooltip title={i18n.__('pages.AdminUserValidationPage.missingData')} aria-label="delete">
+            <span style={{ color: 'red' }}>{rowData.username}</span>
+          </Tooltip>
+        ) : (
+          rowData.username
+        );
+      },
     },
     {
       title: i18n.__('pages.AdminUserValidationPage.columnLastName'),
@@ -121,7 +131,7 @@ export default withTracker(() => {
   const usersrequestHandle = Meteor.subscribe('users.request');
   const structuresHandle = Meteor.subscribe('structures.all');
   const loading = !usersrequestHandle.ready() || !structuresHandle.ready();
-  const usersrequest = Meteor.users.find({ isRequest: true }).fetch();
+  const usersrequest = Meteor.users.find({ isActive: { $ne: true } }).fetch();
   return {
     usersrequest,
     loading,

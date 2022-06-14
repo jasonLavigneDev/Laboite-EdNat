@@ -160,27 +160,29 @@ export const checkPersonalSpace = new ValidatedMethod({
       { fields: { username: 1, favServices: 1, favGroups: 1, favUserBookmarks: 1 } },
     );
     if (currentPersonalSpace === undefined) {
-      logServer(`Regen Personalspace (not found) for ${u.username}...`);
-      const unsorted = [];
-      u.favServices.forEach((s) => {
-        unsorted.push({
-          element_id: s,
-          type: 'service',
+      if (u.favServices && u.favGroups && u.favUserBookmarks) {
+        logServer(`Regen Personalspace (not found) for ${u.username}...`);
+        const unsorted = [];
+        u.favServices.forEach((s) => {
+          unsorted.push({
+            element_id: s,
+            type: 'service',
+          });
         });
-      });
-      u.favGroups.forEach((g) => {
-        unsorted.push({
-          element_id: g,
-          type: 'group',
+        u.favGroups.forEach((g) => {
+          unsorted.push({
+            element_id: g,
+            type: 'group',
+          });
         });
-      });
-      u.favUserBookmarks.forEach((b) => {
-        unsorted.push({
-          element_id: b,
-          type: 'link',
+        u.favUserBookmarks.forEach((b) => {
+          unsorted.push({
+            element_id: b,
+            type: 'link',
+          });
         });
-      });
-      updatePersonalSpace._execute({ userId: this.userId }, { data: { userId: this.userId, unsorted, sorted: [] } });
+        updatePersonalSpace._execute({ userId: this.userId }, { data: { userId: this.userId, unsorted, sorted: [] } });
+      }
       return; // No need to go further
     }
     let changeMade = false;
