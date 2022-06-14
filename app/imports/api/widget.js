@@ -94,7 +94,7 @@ const styles = `
               flex: 1;
               width: 100%;
               border: none;
-              border-radius: 8px;
+              border-radius: 0 0 8px 8px;
             }
       
             .lb_widget-container .lb_widget-header {
