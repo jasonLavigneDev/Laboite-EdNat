@@ -16,7 +16,9 @@ Meteor.methods({
     if (structure === undefined) {
       throw new Meteor.Error('api.smtp.sendContactEmail.unknownStructure', i18n.__('api.structures.unknownStructure'));
     }
-    const object = `[Contact LaBoite] ${firstName} ${lastName} (${structure.name})`;
+
+    const { appName = 'LaBoite' } = Meteor.settings.public;
+    const object = `[Contact ${appName}] ${firstName} ${lastName} (${structure.name})`;
 
     const cleanText = sanitizeHtml(text, {
       allowedTags: ['b', 'i', 'strong', 'em'],
