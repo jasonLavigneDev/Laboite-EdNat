@@ -27,7 +27,7 @@ Meteor.publish('users.request', function usersRequest() {
     return this.ready();
   }
   return Meteor.users.find(
-    { isRequest: true },
+    { isActive: { $ne: true } },
     {
       fields: Meteor.users.adminFields,
     },
@@ -38,7 +38,7 @@ Meteor.publish('users.request.count', function usersRequestCounter() {
   if (!isActive(this.userId) || !Roles.userIsInRole(this.userId, 'admin')) {
     return this.ready();
   }
-  Counts.publish(this, 'users.request.count', Meteor.users.find({ isRequest: true }));
+  Counts.publish(this, 'users.request.count', Meteor.users.find({ isActive: { $ne: true } }));
   return [];
 });
 

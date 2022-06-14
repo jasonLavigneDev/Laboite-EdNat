@@ -1073,6 +1073,7 @@
       "columnStructure": "Structure",
       "columnCreatedAt": "Registration date",
       "actions_tooltip": "Validate this user",
+      "missingData": "Incomplete user data",
       "materialTableLocalization": {
         "toolbar_searchPlaceholder": "Find a user",
         "pagination_labelRowsSelect": "users per page",
