@@ -1,6 +1,10 @@
 import { Email } from 'meteor/email';
 import sanitizeHtml from 'sanitize-html';
 import i18n from 'meteor/universe:i18n';
+import { DDPRateLimiter } from 'meteor/ddp-rate-limiter';
+import { _ } from 'meteor/underscore';
+import SimpleSchema from 'simpl-schema';
+import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import Structures from '../structures/structures';
 import { getTargetMail } from './utils';
 
@@ -8,10 +12,28 @@ Meteor.startup(function startSmtp() {
   process.env.MAIL_URL = Meteor.settings.smtp.url;
 });
 
-Meteor.methods({
-  sendContactEmail(firstName, lastName, email, text, structureId) {
-    check([firstName, lastName, email, text, structureId], [String]);
-
+export const sendContactEmail = new ValidatedMethod({
+  name: 'smtp.sendContactEmail',
+  validate: new SimpleSchema({
+    firstName: {
+      type: String,
+    },
+    lastName: {
+      type: String,
+    },
+    email: {
+      type: String,
+      regEx: SimpleSchema.RegEx.Email,
+    },
+    text: {
+      type: String,
+    },
+    structureId: {
+      type: String,
+      regEx: SimpleSchema.RegEx.Id,
+    },
+  }).validator(),
+  run({ firstName, lastName, email, text, structureId }) {
     const structure = Structures.findOne({ _id: structureId });
     if (structure === undefined) {
       throw new Meteor.Error('api.smtp.sendContactEmail.unknownStructure', i18n.__('api.structures.unknownStructure'));
@@ -51,3 +73,24 @@ ${cleanText}`;
     }
   },
 });
+
+// Get list of all method names on Helps
+const LISTS_METHODS = _.pluck([sendContactEmail], 'name');
+
+if (Meteor.isServer) {
+  // Only allow 5 list operations per connection per second
+  DDPRateLimiter.addRule(
+    {
+      name(name) {
+        return _.contains(LISTS_METHODS, name);
+      },
+
+      // Rate limit per connection ID
+      connectionId() {
+        return true;
+      },
+    },
+    5,
+    1000,
+  );
+}
