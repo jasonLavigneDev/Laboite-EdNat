@@ -24,7 +24,7 @@ export const instance =
           // optional, default value: {}
           // any valid matomo configuration, all below are optional
           // disableCookies: true,
-          // setSecureCookie: true,
+          setCookieSameSite: true,
           // setRequestMethod: 'POST',
         },
       })
