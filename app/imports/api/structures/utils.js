@@ -11,8 +11,22 @@ export const hasAdminRightOnStructure = ({ userId, structureId }) => {
   return isAdmin;
 };
 
-export const isAStructureWithSameNameExistWithSameParent = ({ name, parentId }) => {
+export const isAStructureWithSameNameExistWithSameParent = ({ name, parentId, structureId = undefined }) => {
   const regExp = new RegExp(`^${name}$`, 'i');
-  const structuresWithSameNameOnSameLevel = Structures.find({ name: { $regex: regExp }, parentId });
+  const query = {
+    name: { $regex: regExp },
+    parentId,
+  };
+
+  // structureId will be undefined if we are in a create-structure scenario
+  // so, don't need to use it
+  // otherwise, we need to exclude the concerned structure from the query
+  // that's why we use `$ne` clause/operator
+  if (typeof structureId === 'string') {
+    query._id = { $ne: structureId };
+  }
+  const structuresWithSameNameOnSameLevel = Structures.find({
+    ...query,
+  });
   return structuresWithSameNameOnSameLevel.count() > 0;
 };
