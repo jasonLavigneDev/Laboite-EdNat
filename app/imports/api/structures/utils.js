@@ -12,8 +12,7 @@ export const hasAdminRightOnStructure = ({ userId, structureId }) => {
 };
 
 export const isAStructureWithSameNameExistWithSameParent = ({ name, parentId }) => {
-  const regExp = new RegExp(name, 'i');
+  const regExp = new RegExp(`^${name}$`, 'i');
   const structuresWithSameNameOnSameLevel = Structures.find({ name: { $regex: regExp }, parentId });
-
   return structuresWithSameNameOnSameLevel.count() > 0;
 };
