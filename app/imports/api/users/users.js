@@ -220,11 +220,14 @@ if (Meteor.isServer) {
   Accounts.onLogin((details) => {
     const loginDate = new Date();
     if (details.type === 'keycloak') {
-      // update user informations from keycloak service data
+      // update user informations from existing data and keycloak service data
       const updateInfos = {
+        ...details.user,
         lastLogin: loginDate,
         primaryEmail: details.user.services.keycloak.email,
       };
+      delete updateInfos.services;
+      delete updateInfos.profile;
       if (details.user.services.keycloak.given_name) {
         updateInfos.firstName = details.user.services.keycloak.given_name;
       }
@@ -252,7 +255,9 @@ if (Meteor.isServer) {
           updateInfos.isRequest = true;
         }
       }
-      Meteor.users.update({ _id: details.user._id }, { $set: updateInfos });
+      // make sure that default values are set for this user
+      const cleanedInfo = Meteor.users.simpleSchema().clean(updateInfos);
+      Meteor.users.update({ _id: details.user._id }, { $set: cleanedInfo });
       // Manage primary email change
       if (details.user.primaryEmail !== details.user.services.keycloak.email) {
         updateInfos.email = details.user.services.keycloak.email;
