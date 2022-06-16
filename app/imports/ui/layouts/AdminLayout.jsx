@@ -229,6 +229,7 @@ function AdminLayout() {
                     <StructureAdminRoute
                       userId={userId}
                       loadingUser={loadingUser}
+                      user={user}
                       exact
                       path="/admin/structurespaces"
                       component={AdminStructureDefaultSpace}
