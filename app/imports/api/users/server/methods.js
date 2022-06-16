@@ -193,6 +193,32 @@ export const removeUser = new ValidatedMethod({
   },
 });
 
+export const removeUserFromStructure = new ValidatedMethod({
+  name: 'users.removeUserFromStructure',
+  validate: new SimpleSchema({
+    userId: validateSchema.userId,
+  }).validator(),
+
+  run({ userId }) {
+    const user = Meteor.users.findOne({ _id: userId });
+    // check if current user has structure admin rights or self removal
+    const authorized =
+      isActive(this.userId) &&
+      (hasAdminRightOnStructure({ userId: this.userId, structureId: user.structure }) || userId === this.userId);
+    if (!authorized) {
+      throw new Meteor.Error('api.users.removeUserFromStructure.notPermitted', i18n.__('api.users.notPermitted'));
+    }
+    // check user existence
+    if (user === undefined) {
+      throw new Meteor.Error('api.users.removeUserFromStructure.unknownUser', i18n.__('api.users.unknownUser'));
+    }
+    if (Roles.userIsInRole(this.userId, 'adminStructure', user.structure)) {
+      Roles.removeUsersFromRoles(this.userId, 'adminStructure', user.structure);
+    }
+    Meteor.users.update({ _id: userId }, { $set: { structure: null } });
+  },
+});
+
 export const setUsername = new ValidatedMethod({
   name: 'users.setUsername',
   validate: new SimpleSchema({

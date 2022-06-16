@@ -186,7 +186,7 @@ const AdminUsersPage = ({ match: { path } }) => {
     });
   };
   const deleteUser = (user) => {
-    Meteor.call('users.removeUser', { userId: user._id }, (error) => {
+    Meteor.call(`users.removeUser${isStructureSpecific ? 'FromStructure' : ''}`, { userId: user._id }, (error) => {
       if (error) msg.error(error.reason);
       else msg.success(i18n.__('pages.AdminUsersPage.successDeleteUser'));
     });
