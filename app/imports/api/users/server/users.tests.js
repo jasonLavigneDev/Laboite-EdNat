@@ -34,6 +34,7 @@ import {
   toggleAdvancedPersonalPage,
   setArticlesEnable,
   resetAuthToken,
+  removeUserFromStructure,
 } from './methods';
 import Groups from '../../groups/groups';
 import PersonalSpaces from '../../personalspaces/personalspaces';
@@ -718,6 +719,36 @@ describe('users', function () {
           },
           Meteor.Error,
           /api.users.removeUser.notPermitted/,
+        );
+      });
+    });
+    describe('removeUserFromStructure', function () {
+      it('structure admin can remove an existing user and associated data', function () {
+        // set admin as a structure admin
+        Meteor.users.update({ _id: userId }, { $set: { structure: 'test' } });
+        Meteor.users.update({ _id: adminId }, { $set: { structure: 'test' } });
+        setAdminStructure._execute({ userId: adminId }, { userId: adminId });
+        // check that user data exists before deletion
+        removeUserFromStructure._execute({ userId: adminId }, { userId });
+        const user = Meteor.users.findOne(userId);
+        // check that personalspace, roles and group entries are removed
+        assert.equal(user.structure, null);
+      });
+      it('only structure admin can remove another user from structure', function () {
+        // Throws if non admin user, or logged out user
+        assert.throws(
+          () => {
+            removeUserFromStructure._execute({ userId }, { userId: adminId });
+          },
+          Meteor.Error,
+          /api.users.removeUserFromStructure.notPermitted/,
+        );
+        assert.throws(
+          () => {
+            removeUserFromStructure._execute({}, { userId });
+          },
+          Meteor.Error,
+          /api.users.removeUserFromStructure.notPermitted/,
         );
       });
     });

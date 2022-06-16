@@ -1041,6 +1041,7 @@ const LISTS_METHODS = _.pluck(
     setArticlesEnable,
     setActive,
     removeUser,
+    removeUserFromStructure,
     setAdminOf,
     unsetAdminOf,
     setAdminStructure,
