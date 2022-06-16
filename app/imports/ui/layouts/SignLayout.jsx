@@ -73,6 +73,13 @@ export default function SignLayout() {
   const theme = useTheme();
   const [selectedTab, setTab] = useState('home');
 
+  function isEoleTheme() {
+    if (Meteor.settings.public.theme === 'eole') {
+      return { padding: 100, margin: -100, marginLeft: 5 };
+    }
+    return {};
+  }
+
   const services =
     (offlinePage && isMobile && isIframed && selectedTab === 'apps') || !isIframed || (isIframed && !isMobile);
   const signin = (isIframed && isMobile && selectedTab === 'home') || !isIframed || (isIframed && !isMobile);
@@ -96,7 +103,7 @@ export default function SignLayout() {
             <div className={classes.paper}>
               {theme.logos.LONG_LOGO && (
                 <div className={classes.imgLogo}>
-                  <img src={theme.logos.LONG_LOGO} className={classes.imgLogo} alt="Logo" />
+                  <img src={theme.logos.LONG_LOGO} className={classes.imgLogo} alt="Logo" style={isEoleTheme()} />
                 </div>
               )}
               <Switch>
