@@ -169,14 +169,14 @@ const Contact = ({ structures, loading }) => {
 
         <form onSubmit={handleSubmit} className={classes.form} id="my-form" noValidate>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
+            <Grid container item xs={12} sm={6} spacing={2}>
               <TextField
                 autoComplete="fname"
                 required
                 id="firstName"
                 autoFocus
                 fullWidth
-                disabled={user}
+                disabled={!!user}
                 label={i18n.__('pages.ContactForm.firstNameLabel')}
                 name="firstName"
                 type="text"
@@ -186,13 +186,13 @@ const Contact = ({ structures, loading }) => {
                 variant="outlined"
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item container xs={12} sm={6} spacing={2}>
               <TextField
                 required
                 id="lastName"
                 autoComplete="lname"
                 fullWidth
-                disabled={user}
+                disabled={!!user}
                 label={i18n.__('pages.ContactForm.nameLabel')}
                 name="lastName"
                 type="text"
@@ -202,14 +202,14 @@ const Contact = ({ structures, loading }) => {
                 variant="outlined"
               />
             </Grid>
-            <Grid item xs={12} spacing={2} className={classes.emailForm}>
+            <Grid container item xs={12} spacing={2} className={classes.emailForm}>
               <TextField
                 margin="normal"
                 required
                 id="email"
                 label={i18n.__('pages.ContactForm.emailLabel')}
                 name="email"
-                disabled={user}
+                disabled={!!user}
                 autoComplete="email"
                 fullWidth
                 helperText=""
@@ -220,7 +220,7 @@ const Contact = ({ structures, loading }) => {
                 variant="outlined"
               />
             </Grid>
-            <Grid item xs={12} spacing={2}>
+            <Grid container item xs={12} spacing={2}>
               <FormControl variant="outlined" className={classes.formControl} fullWidth>
                 {user ? (
                   <TextField
@@ -229,7 +229,7 @@ const Contact = ({ structures, loading }) => {
                     id="structure"
                     name="structure"
                     label={i18n.__('pages.ContactForm.structureLabel')}
-                    disabled={user}
+                    disabled={!!user}
                     autoComplete="structure"
                     fullWidth
                     helperText=""
@@ -249,7 +249,7 @@ const Contact = ({ structures, loading }) => {
                       {i18n.__('pages.ContactForm.structureLabel')}
                     </InputLabel>
                     <CustomSelect
-                      disabled={user}
+                      disabled={!!user}
                       value={user ? userStructure : formState.values.structureSelect || ''}
                       error={hasError('structureSelect')}
                       onChange={handleChange}
@@ -263,13 +263,13 @@ const Contact = ({ structures, loading }) => {
                 </FormHelperText>
               </FormControl>
             </Grid>
-            <Grid item xs={12} spacing={2}>
+            <Grid container item xs={12} spacing={2}>
               <TextField
                 name="text"
                 multiline
                 fullWidth
                 rows={10}
-                autoFocus={user}
+                autoFocus={!!user}
                 label={i18n.__('pages.ContactForm.textLabel')}
                 value={formState.values.text || ''}
                 onChange={handleChange}
