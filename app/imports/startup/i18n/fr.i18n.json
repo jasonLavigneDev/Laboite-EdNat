@@ -1146,6 +1146,7 @@
       "columnStructure": "Structure",
       "columnCreatedAt": "Date d'inscription",
       "actions_tooltip": "Valider cet utilisateur",
+      "missingData": "Données utilisateur incomplètes",
       "materialTableLocalization": {
         "toolbar_searchPlaceholder": "Rechercher un utilisateur",
         "pagination_labelRowsSelect": "utilisateurs par page",

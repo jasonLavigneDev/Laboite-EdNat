@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.2.4](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/4.2.3...release/4.2.4) (2022-06-14)
+
+
+### Bug Fixes
+
+* **account:** ensure that default user data exists at login ([5d3243e](https://gitlab.mim-libre.fr/alphabet/laboite/commit/5d3243e96128313f694307dd81dd09b5323766e9))
+* **activation:** don't rely on isRequest to get inactive users ([786ba91](https://gitlab.mim-libre.fr/alphabet/laboite/commit/786ba91fb738b3398694094dcced4eac85a2bfc9))
+
 ## [4.2.3](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/4.2.2...release/4.2.3) (2022-05-24)
 
 
