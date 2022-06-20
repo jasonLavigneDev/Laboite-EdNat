@@ -51,6 +51,18 @@ Accounts.onLoginFailure((details) => {
   msg.error(errMsg);
 });
 
+export const checkAccessAndLogin = async (isIframed) => {
+  if (document.hasStorageAccess && document.requestStorageAccess && isIframed) {
+    const hasAccess = await document.hasStorageAccess();
+    if (!hasAccess) {
+      await document.requestStorageAccess();
+      window.location.reload();
+      return true;
+    }
+  }
+  return false;
+};
+
 function SignIn({ loggingIn, introduction, appsettings, ready }) {
   const [{ isIframed }] = useAppContext();
   const { classes } = useStyles();
@@ -74,20 +86,8 @@ function SignIn({ loggingIn, introduction, appsettings, ready }) {
     window.onbeforeunload = null;
   };
 
-  const checkAccessAndLogin = async () => {
-    if (document.hasStorageAccess && document.requestStorageAccess && isIframed) {
-      const hasAccess = await document.hasStorageAccess();
-      if (!hasAccess) {
-        await document.requestStorageAccess();
-        window.location.reload();
-        return true;
-      }
-    }
-    return false;
-  };
-
   const handleKeycloakAuth = async () => {
-    await checkAccessAndLogin();
+    await checkAccessAndLogin(isIframed);
     let keycloackLoginStyle = 'redirect';
 
     trackEvent({
