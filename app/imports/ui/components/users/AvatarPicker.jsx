@@ -175,14 +175,16 @@ AvatarPicker.defaultProps = {
   profil: '',
   userAvatar: '',
   userFirstName: '',
+  avatar: '',
+  type: 0,
 };
 
 AvatarPicker.propTypes = {
   userAvatar: PropTypes.string,
   userFirstName: PropTypes.string,
   onAssignAvatar: PropTypes.func.isRequired,
-  avatar: PropTypes.string.isRequired,
-  type: PropTypes.number.isRequired,
+  avatar: PropTypes.string,
+  type: PropTypes.number,
   profil: PropTypes.string,
 };
 
