@@ -133,7 +133,10 @@ const GroupsUsersList = (props) => {
       icon: add,
       tooltip: i18n.__('components.GroupUsersList.materialTableLocalization.body_addTooltip'),
       isFreeAction: true,
-      onClick: () => setShowSearch(!showSearch),
+      onClick: () => {
+        setShowSearch(!showSearch);
+        setShowSearchGroup(false);
+      },
     },
   ];
 
@@ -141,7 +144,10 @@ const GroupsUsersList = (props) => {
     icon: GroupAddIcon,
     tooltip: i18n.__('components.GroupUsersList.materialTableLocalization.body_addGroupTooltip'),
     isFreeAction: true,
-    onClick: () => setShowSearchGroup(!showSearchGroup),
+    onClick: () => {
+      setShowSearchGroup(!showSearchGroup);
+      setShowSearch(false);
+    },
   });
 
   if (userRole === 'candidate') {
