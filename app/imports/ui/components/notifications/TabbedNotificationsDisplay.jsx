@@ -60,7 +60,7 @@ const TabbedNotificationsDisplay = () => {
 
   return (
     <Container>
-      <Tabs variant="fullWidth" indicatorColor="primary" value={tab} onChange={(_, index) => setTab(index)}>
+      <Tabs variant="fullWidth" indicatorColor="primary" value={tab} to={tab} onChange={(_, index) => setTab(index)}>
         <Tab
           className={classes.tabs}
           icon={!messagesCounter ? <ForumIcon /> : <Chip size="small" label={messagesCounter} color="secondary" />}
@@ -78,6 +78,7 @@ const TabbedNotificationsDisplay = () => {
           hidden={tab !== i}
           id={`simple-tabpanel-${types[0]}`}
           aria-labelledby={`simple-tab-${types[0]}`}
+          key={types[0]}
         >
           {tab === i && (
             <Box p={3}>

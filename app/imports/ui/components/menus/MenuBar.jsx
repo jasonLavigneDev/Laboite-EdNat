@@ -104,7 +104,7 @@ const MenuBar = ({ mobile }) => {
       path: '/notifications',
       content: 'menuNotifications',
       icon: <NotificationsNoneIcon />,
-      hidden: disabledFeatures.notificationsTab || !isMobile,
+      hidden: !isMobile || !disabledFeatures.notificationsTab,
       chip: notifsCounter,
     },
   ];
@@ -152,6 +152,7 @@ const MenuBar = ({ mobile }) => {
       }}
       action={initIndicator}
       value={currentLink}
+      to={currentLink}
       indicatorColor="secondary"
       textColor="primary"
       aria-label="menu links"
@@ -164,6 +165,7 @@ const MenuBar = ({ mobile }) => {
           {...a11yProps(index)}
           key={link.path}
           value={link.path}
+          to={link.path}
           title={link.tooltip ? i18n.__(`components.MenuBar.${link.tooltip}`) : ''}
           disableFocusRipple={mobile}
           disableRipple={mobile}
