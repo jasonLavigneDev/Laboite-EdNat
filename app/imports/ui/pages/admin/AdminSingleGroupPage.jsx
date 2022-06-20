@@ -308,7 +308,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
           <FormControlLabel
             control={
               <Checkbox
-                checked={plugins[plugin]}
+                checked={plugins[plugin] || false}
                 onChange={(event) => onChangePlugins(event, plugin)}
                 name={plugin}
                 color="primary"
