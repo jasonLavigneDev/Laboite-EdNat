@@ -417,7 +417,14 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
             {params._id ? (
               // user management is not possible when creating a new group
               <>
-                <Tabs value={tabId} onChange={handleChangeTab} indicatorColor="primary" textColor="primary" centered>
+                <Tabs
+                  value={tabId}
+                  to={tabId}
+                  onChange={handleChangeTab}
+                  indicatorColor="primary"
+                  textColor="primary"
+                  centered
+                >
                   {groupData.type === 5 && <Tab label={i18n.__('api.groups.labels.candidates')} />}
                   <Tab label={i18n.__('api.groups.labels.members')} />
                   <Tab label={i18n.__('api.groups.labels.animators')} />
