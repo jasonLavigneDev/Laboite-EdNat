@@ -285,7 +285,7 @@ export const setNcloudUrlAll = new ValidatedMethod({
       throw new Meteor.Error('api.users.setNcloudUrlAll.notPermitted', i18n.__('api.users.adminNeeded'));
     }
 
-    const users = Meteor.users.find({ nclocator: '' }).fetch();
+    const users = Meteor.users.find({ $or: [{ nclocator: { $exists: false } }, { nclocator: '' }] }).fetch();
 
     let cpt = 0;
 
