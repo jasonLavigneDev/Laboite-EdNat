@@ -5,6 +5,8 @@ import i18n from 'meteor/universe:i18n';
 import MaterialTable from '@material-table/core';
 import CheckIcon from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
+import EditIcon from '@material-ui/icons/Edit';
+import AddIcon from '@material-ui/icons/Add';
 import { useHistory } from 'react-router-dom';
 import keyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import Services from '../../../api/services/services';
@@ -93,14 +95,14 @@ const AdminServicesTable = ({ tableTitle, structureMode, urlStruct, urlNew, serv
           },
         },
         {
-          icon: 'edit',
+          icon: EditIcon,
           tooltip: i18n.__('pages.AdminServicesPage.materialTableLocalization.body_editTooltip'),
           onClick: (event, rowData) => {
             history.push(`/admin/${urlStruct}services/${rowData._id}`);
           },
         },
         {
-          icon: 'add',
+          icon: AddIcon,
           tooltip: i18n.__('pages.AdminServicesPage.materialTableLocalization.body_addTooltip'),
           isFreeAction: true,
           onClick: () => history.push(urlNew),
