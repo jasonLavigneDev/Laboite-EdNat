@@ -322,10 +322,11 @@ const AdminUsersPage = () => {
               <Grid item xs={12} sm={12} md={12}>
                 <List className={classes.list} disablePadding>
                   {items.map((user, i) => {
+                    const userEmail = user.emails ? user.emails[0].address : '';
                     const structure = getStructure(user.structure);
 
                     return [
-                      <ListItem alignItems="flex-start" key={`user-${user.emails[0].address}`}>
+                      <ListItem alignItems="flex-start" key={`user-${userEmail}`}>
                         <ListItemAvatar>
                           <UserAvatar
                             customClass={
@@ -355,7 +356,7 @@ const AdminUsersPage = () => {
                                 className={classes.inline}
                                 color="textPrimary"
                               >
-                                {user.emails[0].address}
+                                {userEmail}
                               </Typography>
                               {` - ${structure ? structure.name : i18n.__('pages.AdminUsersPage.undefined')}`}
                             </>
