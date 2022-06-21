@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.2.5](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/4.2.4...release/4.2.5) (2022-06-21)
+
+
+### Bug Fixes
+
+* **admin:** prevent users admin pages crash if user has no email ([0d489c6](https://gitlab.mim-libre.fr/alphabet/laboite/commit/0d489c6564e4eb38a5834325b3521d384e57d246))
+
 ## [4.2.4](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/4.2.3...release/4.2.4) (2022-06-14)
 
 
