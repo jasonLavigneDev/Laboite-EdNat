@@ -96,6 +96,7 @@ export const updateStructure = new ValidatedMethod({
     const structuresWithSameNameOnSameLevel = isAStructureWithSameNameExistWithSameParent({
       name,
       parentId: structure.parentId,
+      structureId: structure._id,
     });
 
     if (structuresWithSameNameOnSameLevel) {
