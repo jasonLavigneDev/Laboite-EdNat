@@ -306,17 +306,22 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
                   </IconButton>
                 </Box>
               </Box>
-              {loading && <Spinner full />}
-              <AdminStructureTreeView
-                treeData={getTree(filteredFlatData, isAdminStructureMode ? user.structure : null)}
-                onClickAddBtn={onClickAddBtn}
-                onClickEditBtn={onClickEditBtn}
-                onClickDeleteBtn={onClickDeleteBtn}
-                setExpandedIds={setExpandedIds}
-                updateParentIdsList={updateParentIdsList}
-                expandedIds={expandedIds}
-                selectedId=""
-              />
+              <Fade in>
+                {loading ? (
+                  <Spinner />
+                ) : (
+                  <AdminStructureTreeView
+                    treeData={getTree(filteredFlatData, isAdminStructureMode ? user.structure : null)}
+                    onClickAddBtn={onClickAddBtn}
+                    onClickEditBtn={onClickEditBtn}
+                    onClickDeleteBtn={onClickDeleteBtn}
+                    setExpandedIds={setExpandedIds}
+                    updateParentIdsList={updateParentIdsList}
+                    expandedIds={expandedIds}
+                    selectedId=""
+                  />
+                )}
+              </Fade>
             </CardContent>
           </Card>
         </Container>

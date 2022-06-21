@@ -9,13 +9,13 @@ import CardContent from '@material-ui/core/CardContent';
 import Box from '@material-ui/core/Box';
 import Fade from '@material-ui/core/Fade';
 import CardHeader from '@material-ui/core/CardHeader';
-import Spinner from '../system/Spinner';
 import Structures from '../../../api/structures/structures';
 import AdminStructureSearchBar from '../admin/AdminStructureSearchBar';
 import AdminStructureTreeView from '../admin/AdminStructureTreeView';
 import { getTree } from '../../../api/utils';
 import { useStructure } from '../../../api/structures/hooks';
 import { useAppContext } from '../../contexts/context';
+import Spinner from '../system/Spinner';
 
 const StructureSelectionTree = () => {
   const history = useHistory();
@@ -118,17 +118,20 @@ const StructureSelectionTree = () => {
                 resetFilter={resetStructureSearchFilter}
               />
             </Box>
-            {isStructuresFlatDataLoading && <Spinner full />}
             <Box style={{ overflowY: 'auto', height: '100%' }}>
-              <AdminStructureTreeView
-                treeData={getTree(filteredStructureFlatData)}
-                onClickSelectBtn={onClickSelectBtn}
-                setExpandedIds={setExpandedIds}
-                updateParentIdsList={updateParentIdsList}
-                expandedIds={expandedIds}
-                onlySelect
-                selectedId={selectedStructure || ''}
-              />
+              {isStructuresFlatDataLoading ? (
+                <Spinner />
+              ) : (
+                <AdminStructureTreeView
+                  treeData={getTree(filteredStructureFlatData)}
+                  onClickSelectBtn={onClickSelectBtn}
+                  setExpandedIds={setExpandedIds}
+                  updateParentIdsList={updateParentIdsList}
+                  expandedIds={expandedIds}
+                  onlySelect
+                  selectedId={selectedStructure || ''}
+                />
+              )}
             </Box>
           </CardContent>
         </Card>
