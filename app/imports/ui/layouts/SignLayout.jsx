@@ -71,7 +71,7 @@ export default function SignLayout() {
   const [{ isMobile, isIframed }] = useAppContext();
   const classes = useStyles();
   const theme = useTheme();
-  const [selectedTab, setTab] = useState('home');
+  const [selectedTab, setTab] = useState('apps');
 
   function isEoleTheme() {
     if (Meteor.settings.public.theme === 'eole') {
@@ -87,7 +87,12 @@ export default function SignLayout() {
 
   return (
     <>
-      <Grid container component="main" className={isMobile ? classes.rootMobile : classes.root}>
+      <Grid
+        justifyContent="center"
+        container
+        component="main"
+        className={isMobile || isIframed ? classes.rootMobile : classes.root}
+      >
         {services && <OfflineServices />}
         {help && <HelpPage />}
         {!offlinePage && (
@@ -120,7 +125,7 @@ export default function SignLayout() {
         )}
       </Grid>
 
-      {isIframed && offlinePage && isMobile ? <OfflineMenu state={[selectedTab, setTab]} /> : <Footer />}
+      {isIframed && offlinePage ? <OfflineMenu state={[selectedTab, setTab]} /> : <Footer />}
     </>
   );
 }

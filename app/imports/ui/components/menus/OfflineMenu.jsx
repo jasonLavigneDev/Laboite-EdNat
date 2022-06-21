@@ -9,6 +9,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import AppsIcon from '@material-ui/icons/Apps';
 import HelpIcon from '@material-ui/icons/Help';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
+import { useAppContext } from '../../contexts/context';
 
 export const links = [
   {
@@ -25,7 +26,7 @@ export const links = [
   },
 ];
 
-const useStyles = () =>
+const useStyles = (isMobile) =>
   makeStyles((theme) => ({
     root: {
       backgroundColor: theme.palette.tertiary.main,
@@ -40,6 +41,8 @@ const useStyles = () =>
     },
     elementTab: {
       textTransform: 'capitalize',
+      paddingLeft: isMobile ? null : 50,
+      paddingRight: isMobile ? null : 50,
       '&:hover': {
         color: theme.palette.text.primary,
         transition: 'all 300ms ease-in-out',
@@ -48,7 +51,7 @@ const useStyles = () =>
     flexContainer: {
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'space-evenly',
+      justifyContent: 'center',
     },
     indicator: {
       top: 0,
@@ -62,8 +65,9 @@ const useStyles = () =>
   }));
 
 const OfflineMenu = ({ state: [selectedTab, setTab] }) => {
+  const [{ isMobile }] = useAppContext();
+  const classes = useStyles(isMobile)();
   const { trackEvent } = useMatomo();
-  const classes = useStyles()();
 
   function a11yProps(index) {
     return {
@@ -93,7 +97,7 @@ const OfflineMenu = ({ state: [selectedTab, setTab] }) => {
         indicatorColor="secondary"
         textColor="primary"
         aria-label="menu links"
-        variant="scrollable"
+        variant={isMobile ? 'fullWidth' : 'standard'}
         scrollButtons="on"
       >
         {links.map((link, index) => (
