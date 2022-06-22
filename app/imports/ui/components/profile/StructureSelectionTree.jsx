@@ -57,7 +57,7 @@ const StructureSelectionTree = () => {
 
     const isStructuresDataHandleLoading = !structuresDataHandle.ready();
 
-    const data = Structures.findFromPublication(subName).fetch();
+    const data = Structures.findFromPublication(subName, {}, { sort: { name: 1 } }).fetch();
 
     setFilteredStructureFlatData(data);
 

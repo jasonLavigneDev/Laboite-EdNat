@@ -8,11 +8,11 @@ import IconButton from '@material-ui/core/IconButton';
 import AddBox from '@material-ui/icons/AddBox';
 import CheckIcon from '@material-ui/icons/Check';
 import DeleteIcon from '@material-ui/icons/DeleteOutline';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import EditIcon from '@material-ui/icons/Edit';
 import { withStyles, alpha, makeStyles } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
 import CustomDialog from '../system/CustomDialog';
 
 const StyledTreeItem = withStyles((theme) => ({
@@ -112,17 +112,14 @@ const AdminStructureTreeItem = ({
               {onClickSelectBtn && (
                 <Tooltip title={i18n.__('components.AdminStructureTreeItem.actions.choose')}>
                   <span>
-                    <Button
-                      className={classes.space}
+                    <IconButton
                       onClick={() => {
                         setChoosenStructure(nodes);
                         openConfirm();
                       }}
-                      size="small"
-                      startIcon={<CheckIcon />}
                     >
-                      <Typography>{i18n.__('components.AdminStructureTreeItem.actions.chooseShort')}</Typography>
-                    </Button>
+                      {selectedId === id ? <CheckCircleOutlineIcon color="primary" /> : <CheckIcon />}
+                    </IconButton>
                   </span>
                 </Tooltip>
               )}
