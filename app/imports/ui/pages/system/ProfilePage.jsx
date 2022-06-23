@@ -578,7 +578,9 @@ const ProfilePage = () => {
               <Grid item className={classes.maxWidth}>
                 <FormControl variant="filled" className={classes.formControl} fullWidth>
                   <Typography>
-                    {selectedStructure && selectedStructure.name ? (
+                    {!user.isActive ? (
+                      <span>{i18n.__('pages.ProfilePage.onlyActiveUserOption')}</span>
+                    ) : selectedStructure && selectedStructure.name ? (
                       <span>
                         {i18n.__('pages.ProfilePage.currentStructure')} <b>{selectedStructure.name}</b>
                       </span>
@@ -620,6 +622,7 @@ const ProfilePage = () => {
                     onInputChange={(event, newInputValue) => {
                       setSearchText(newInputValue);
                     }}
+                    disabled={!user.isActive}
                     getOptionSelected={(opt, val) => opt._id === val._id}
                     style={{ width: 500 }}
                     renderInput={(params) => (
@@ -634,7 +637,11 @@ const ProfilePage = () => {
                   />
                 </FormControl>
                 <FormControl variant="filled" className={classes.formControl} fullWidth>
-                  <Button variant="outlined" onClick={() => history.push('/profilestructureselection')}>
+                  <Button
+                    disabled={!user.isActive}
+                    variant="outlined"
+                    onClick={() => history.push('/profilestructureselection')}
+                  >
                     {i18n.__('pages.ProfilePage.openStructureSelection')}
                   </Button>
                 </FormControl>
