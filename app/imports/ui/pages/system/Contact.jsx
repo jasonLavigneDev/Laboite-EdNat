@@ -126,23 +126,29 @@ const Contact = ({ structures, loading }) => {
     event.preventDefault();
     if (user) {
       if (formState.values.text) {
-        setCaptchaIsValid(true);
-        const { firstName, lastName } = user;
-        const email = user.emails[0].address;
-        const { text } = formState.values;
-        const structureSelect = userStructure;
+        if (!user.isActive && parseInt(formState.values.captcha, 10) !== totalNr) setCaptchaIsValid(false);
+        else {
+          setCaptchaIsValid(true);
+          const { firstName, lastName } = user;
+          const email = user.emails[0].address;
+          const { text } = formState.values;
+          let structureSelect = '';
+          if (userStructure) structureSelect = userStructure;
+          else structureSelect = formState.values.structureSelect;
 
-        Meteor.call('sendContactEmail', firstName, lastName, email, text, structureSelect);
-        setFormSubmit(true);
-        setCounter(5);
-        setTimeout(() => {
-          history.push('/');
-        }, 5000);
+          Meteor.call('sendContactEmail', firstName, lastName, email, text, structureSelect);
+          setFormSubmit(true);
+          setCounter(5);
+          setTimeout(() => {
+            history.push('/');
+          }, 5000);
+        }
       }
     } else if (formState.isValid === true) {
       if (parseInt(formState.values.captcha, 10) === totalNr) {
         setCaptchaIsValid(true);
         const { firstName, lastName, email, text, structureSelect } = formState.values;
+
         Meteor.call('sendContactEmail', firstName, lastName, email, text, structureSelect);
         setFormSubmit(true);
         setCounter(5);
@@ -218,7 +224,7 @@ const Contact = ({ structures, loading }) => {
             </Grid>
             <Grid container item xs={12} spacing={2}>
               <FormControl variant="outlined" className={classes.formControl} fullWidth>
-                {user ? (
+                {user && userStructure ? (
                   <TextField
                     margin="normal"
                     required
@@ -246,7 +252,7 @@ const Contact = ({ structures, loading }) => {
                     </InputLabel>
                     <CustomSelect
                       disabled={!!user}
-                      value={user ? userStructure : formState.values.structureSelect || ''}
+                      value={user && userStructure ? userStructure : formState.values.structureSelect || ''}
                       error={hasError('structureSelect')}
                       onChange={handleChange}
                       labelWidth={labelWidth}
@@ -272,7 +278,7 @@ const Contact = ({ structures, loading }) => {
                 required
                 variant="outlined"
               />
-              {!user ? (
+              {!user || !user.isActive ? (
                 <TextField
                   margin="normal"
                   name="captcha"
@@ -281,7 +287,7 @@ const Contact = ({ structures, loading }) => {
                   fullWidth
                   helperText={i18n.__('pages.ContactForm.captchaInfo')}
                   type="text"
-                  error={!user ? !captchaIsValid : false}
+                  error={!user || !user.isActive ? !captchaIsValid : false}
                   value={formState.values.captcha || ''}
                   onChange={handleChange}
                   variant="outlined"
