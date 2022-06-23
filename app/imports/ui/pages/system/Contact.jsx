@@ -126,22 +126,18 @@ const Contact = ({ structures, loading }) => {
     event.preventDefault();
     if (user) {
       if (formState.values.text) {
-        if (parseInt(formState.values.captcha, 10) === totalNr) {
-          setCaptchaIsValid(true);
-          const { firstName, lastName } = user;
-          const email = user.emails[0].address;
-          const { text } = formState.values;
-          const structureSelect = userStructure;
+        setCaptchaIsValid(true);
+        const { firstName, lastName } = user;
+        const email = user.emails[0].address;
+        const { text } = formState.values;
+        const structureSelect = userStructure;
 
-          Meteor.call('sendContactEmail', firstName, lastName, email, text, structureSelect);
-          setFormSubmit(true);
-          setCounter(5);
-          setTimeout(() => {
-            history.push('/');
-          }, 5000);
-        } else {
-          setCaptchaIsValid(false);
-        }
+        Meteor.call('sendContactEmail', firstName, lastName, email, text, structureSelect);
+        setFormSubmit(true);
+        setCounter(5);
+        setTimeout(() => {
+          history.push('/');
+        }, 5000);
       }
     } else if (formState.isValid === true) {
       if (parseInt(formState.values.captcha, 10) === totalNr) {
@@ -276,19 +272,21 @@ const Contact = ({ structures, loading }) => {
                 required
                 variant="outlined"
               />
-              <TextField
-                margin="normal"
-                name="captcha"
-                required
-                label={`${rndmNr1} + ${rndmNr2}`}
-                fullWidth
-                helperText={i18n.__('pages.ContactForm.captchaInfo')}
-                type="text"
-                error={!captchaIsValid}
-                value={formState.values.captcha || ''}
-                onChange={handleChange}
-                variant="outlined"
-              />
+              {!user ? (
+                <TextField
+                  margin="normal"
+                  name="captcha"
+                  required
+                  label={`${rndmNr1} + ${rndmNr2}`}
+                  fullWidth
+                  helperText={i18n.__('pages.ContactForm.captchaInfo')}
+                  type="text"
+                  error={!user ? !captchaIsValid : false}
+                  value={formState.values.captcha || ''}
+                  onChange={handleChange}
+                  variant="outlined"
+                />
+              ) : null}
             </Grid>
             {!formSubmit ? (
               <Button
