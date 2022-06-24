@@ -215,12 +215,7 @@ const PersonalZone = ({
   return (
     <Accordion className={classes.expansionpanel} expanded={isSorted ? isExpanded : localIsExpanded}>
       <AccordionSummary
-        expandIcon={
-          <ExpandMoreIcon
-            className={classes.cursorPointer}
-            onClick={customDrag && isSorted ? handleClickExpansion(index) : null}
-          />
-        }
+        expandIcon={<ExpandMoreIcon className={classes.cursorPointer} />}
         aria-controls={`zone-${title}-${index}`}
         id={`expand-${index}`}
         onClick={!(customDrag && isSorted) ? handleClickExpansion(index) : null}
