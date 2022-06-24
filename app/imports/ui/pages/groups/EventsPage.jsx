@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Roles } from 'meteor/alanning:roles';
 import PropTypes from 'prop-types';
@@ -189,7 +190,7 @@ const EventsPage = ({ loading, group }) => {
                         />
 
                         <GroupListActions
-                          url={`${i18n.__('pages.Events.seeEvent')} ${event.title}`}
+                          url={`${Meteor.settings.public.services.agendaUrl}/event/${event._id}`}
                           title={`${i18n.__('pages.Events.seeEvent')} ${event.title}`}
                         />
                       </ListItem>,
