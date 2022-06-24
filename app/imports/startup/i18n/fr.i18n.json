@@ -977,7 +977,8 @@
       "noSelectedStructure": "Aucune structure sélectionnée",
       "noCurrentStructure": "Vous n'avez pas de structure de rattachement pour le moment",
       "chooseAttachementStructure": "Choisir votre structure de rattachement",
-      "noOptions": "Ecrire pour chercher des structures (3 lettres minimum)"
+      "noOptions": "Ecrire pour chercher des structures (3 lettres minimum)",
+      "onlyActiveUserOption": "Seuls les utilisateurs actifs peuvent définir une structure"
     },
     "NotFound": {
       "backButtonLabel": "Retour",

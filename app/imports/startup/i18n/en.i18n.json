@@ -974,7 +974,8 @@
       "noSelectedStructure": "No selected structure",
       "noCurrentStructure": "You have no attached structure for now",
       "chooseAttachementStructure": "Choose your attachement structure",
-      "noOptions": "Type to search for structures (3 letters minimum)"
+      "noOptions": "Type to search for structures (3 letters minimum)",
+      "onlyActiveUserOption": "Only actives users can select a structure"
     },
     "NotFound": {
       "backButtonLabel": "Back",
