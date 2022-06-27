@@ -7,7 +7,7 @@ import logServer from '../../../api/logging';
 function createStructure(structure) {
   logServer(`  Creating structure  `);
   logServer(structure);
-  Structures.insert(structure);
+  return Structures.insert(structure);
 }
 
 /** When running app for first time, pass a settings file to set up a default user account. */
@@ -16,8 +16,8 @@ if (Structures.find().count() === 0) {
     logServer('Creating the default structures');
     if (fakeData.defaultStructures !== undefined) {
       fakeData.defaultStructures.forEach((structure) => {
-        createStructure(structure);
-        Roles.createRole(structure._id);
+        const structureId = createStructure(structure);
+        Roles.createRole(structureId);
       });
     }
   } else {
