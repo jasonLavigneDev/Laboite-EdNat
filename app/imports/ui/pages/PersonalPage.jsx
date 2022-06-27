@@ -103,7 +103,7 @@ const useStyles = (isMobile) =>
     zoneButtonEnd: {
       opacity: 0.7,
       textTransform: 'none',
-      // width: '80%',
+      width: '75%',
       cursor: 'pointer',
       '&:hover': {
         opacity: 1,
@@ -125,7 +125,8 @@ const useStyles = (isMobile) =>
       marginBottom: 15,
     },
     screen: {
-      marginTop: 60,
+      marginTop: 30,
+      marginBottom: 40,
     },
   }));
 
