@@ -550,6 +550,7 @@
       "menuAdminBackHome": "Retour à l'espace perso",
       "menuUserStructure": "Gestion des Structures",
       "menuAdminOfStructures": "Gestion des sous-structures",
+      "menuAdminAnalytics": "Analytics",
       "menuAdminStructureSettings": "Réglages de structure"
     },
     "NotValidatedMessage": {
@@ -1403,6 +1404,22 @@
     },
     "AdminStructureSettingsPage": {
       "title": "Paramétrage de la structure"
+    },
+    "AdminAnalytics": {
+      "title": "Données Analytiques",
+      "usersTabs": "Utilisateurs",
+      "actionsTabs": "Actions",
+      "viewsTabs": "Pages vues",
+      "usersTitle": "Utilisateurs connectés en temps réél",
+      "status": "Status",
+      "number": "Nombre",
+      "usersByStructure": "Connectés par structure",
+      "rows": {
+        "usersLogged": "Utilisateurs",
+        "usersNotLogged": "Visiteurs",
+        "usersIdle": "Inactif",
+        "usersActive": "Actif"
+      }
     }
   },
   "layouts": {

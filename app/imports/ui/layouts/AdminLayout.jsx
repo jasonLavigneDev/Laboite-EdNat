@@ -38,6 +38,7 @@ const AdminServicesPage = lazy(() => import('../pages/admin/AdminServicesPage'))
 const AdminStructureManagementPage = lazy(() => import('../pages/admin/AdminStructuresManagementPage'));
 const AdminServicesByStructurePage = lazy(() => import('../pages/admin/AdminServicesByStructurePage'));
 const AdminStructureSettingsPage = lazy(() => import('../pages/admin/AdminStructureSettingsPage'));
+const AdminAnalytics = lazy(() => import('../pages/admin/AdminAnalytics'));
 
 const { disabledFeatures = {} } = Meteor.settings.public;
 
@@ -89,6 +90,13 @@ function AdminLayout() {
                       exact
                       path="/admin/nextcloudurl"
                       component={AdminNextcloudUrlPage}
+                    />
+                    <AdminRoute
+                      userId={userId}
+                      loadingUser={loadingUser}
+                      exact
+                      path="/admin/analytics"
+                      component={AdminAnalytics}
                     />
                     <AdminRoute
                       userId={userId}

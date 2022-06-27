@@ -194,6 +194,38 @@ Meteor.users.schema = new SimpleSchema(
       },
       label: getLabel('api.users.labels.authToken'),
     },
+    status: {
+      type: Object,
+      optional: true,
+    },
+    'status.lastlogin': {
+      type: Object,
+      optional: true,
+    },
+    'status.lastlogin.date': {
+      type: Date,
+      optional: true,
+    },
+    'status.lastlogin.ipAddr': {
+      type: String,
+      optional: true,
+    },
+    'status.userAgent': {
+      type: String,
+      optional: true,
+    },
+    'status.idle': {
+      type: Boolean,
+      optional: true,
+    },
+    'status.lastActivity': {
+      type: Date,
+      optional: true,
+    },
+    'status.online': {
+      type: Boolean,
+      optional: true,
+    },
   },
   { clean: { removeEmptyStrings: false }, tracker: Tracker },
 );
