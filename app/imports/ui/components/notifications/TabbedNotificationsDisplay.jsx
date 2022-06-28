@@ -21,23 +21,26 @@ import { notificationsTabType } from '../../../api/notifications/enums';
 const TabbedNotificationsDisplay = () => {
   const classes = useNotifDisplayStyles();
   const [tab, setTab] = useState(0);
-  const { notifications, messagesCounter, infoCounter } = useTracker(() => {
-    Meteor.subscribe('notifications.self.tabbed', { types: notificationsTabType[tab] });
+  const { notifications, messagesCounter, infoCounter, ready } = useTracker(() => {
+    const notifSub = Meteor.subscribe('notifications.self.tabbed', { types: notificationsTabType[tab] });
     return {
       notifications:
         Notifications.find({ type: { $in: notificationsTabType[tab] } }, { sort: { createdAt: -1 } }).fetch() || [],
       messagesCounter: Counts.get('notifications.self.tabbed.messages'),
       infoCounter: Counts.get('notifications.self.tabbed.infos'),
+      ready: notifSub.ready(),
     };
   });
 
   useEffect(() => {
-    Meteor.call('notifications.markAllTypeNotificationAsRead', { type: notificationsTabType[tab] }, (err) => {
-      if (err) {
-        msg.error(err.reason);
-      }
-    });
-  }, [notifications]);
+    if (notifications?.length >= 1 && ready) {
+      Meteor.call('notifications.markAllTypeNotificationAsRead', { type: notificationsTabType[tab] }, (err) => {
+        if (err) {
+          msg.error(err.reason);
+        }
+      });
+    }
+  }, [notifications, ready]);
 
   const [{ notificationPage }, dispatch] = useAppContext();
   const updateGlobalState = (key, value) =>

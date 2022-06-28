@@ -388,7 +388,8 @@
       "info": "Server information",
       "warning": "Server warning",
       "error": "Server error"
-    }
+    },
+    "rateLimitError": "Error, too many requests. Please slow down. You must wait {$timeToReset} seconds before trying again."
   },
   "components": {
     "AdminGroupDelete": {
