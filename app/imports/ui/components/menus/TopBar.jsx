@@ -5,6 +5,7 @@ import { useTheme } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
 import AppBar from '@mui/material/AppBar';
 import IconButton from '@mui/material/IconButton';
+import InfoIcon from '@mui/icons-material/Info';
 import { withTracker } from 'meteor/react-meteor-data';
 import NotificationsBell from '../notifications/NotificationsBell';
 import MenuBar from './MenuBar';
@@ -65,6 +66,7 @@ const useStyles = makeStyles()((theme, isMobile) => ({
     alignItem: 'center',
     height: 48,
   },
+  centerContainer: { display: 'flex', justifyContent: 'center', flex: 1 },
   maintenanceBar: {
     marginTop: 50,
   },
@@ -112,6 +114,8 @@ function TopBar({ publicMenu, root, appsettings, adminApp }) {
     }
   };
 
+  const handleIntroductionOpen = () => history.push('/introduction');
+
   return (
     <div>
       <AppBar position="fixed" className={classes.root}>
@@ -126,8 +130,14 @@ function TopBar({ publicMenu, root, appsettings, adminApp }) {
               />
             </Link>
           ) : (
-            <div />
+            <>
+              <IconButton onClick={handleIntroductionOpen}>
+                <InfoIcon />
+              </IconButton>
+            </>
           )}
+          <div />
+          <div className={classes.centerContainer}>{!publicMenu && <MainMenu user={user} />}</div>
           <div className={classes.rightContainer}>
             {publicMenu ? null : (
               <>
