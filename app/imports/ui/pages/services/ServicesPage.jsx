@@ -143,7 +143,7 @@ export function ServicesPage({ services, categories, ready, structureMode, offli
     catList = [],
     search = '',
     filterToggle = false,
-    viewMode = 'list', // Possible values : "card" or "list"
+    viewMode = 'card', // Possible values : "card" or "list"
   } = servicePage;
 
   const favs = loadingUser || offline ? [] : user.favServices;
