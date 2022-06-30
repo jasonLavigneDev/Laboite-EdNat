@@ -7,7 +7,7 @@ import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
 import CardContent from '@material-ui/core/CardContent';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import Tooltip from '@material-ui/core/Tooltip';
 import Button from '@material-ui/core/Button';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -133,6 +133,7 @@ function GroupDetails({ group = {}, isShort, member, candidate, admin, animator 
   const { type, avatar } = group;
   const [{ userId }] = useAppContext();
   const [loading, setLoading] = useState(false);
+  const history = useHistory();
 
   const classes = useStyles(group, member || animator, candidate, isShort)();
 
@@ -276,7 +277,10 @@ function GroupDetails({ group = {}, isShort, member, candidate, admin, animator 
               title={i18n.__('components.GroupDetails.manageGroupButtonLabel')}
               aria-label={i18n.__('components.GroupDetails.manageGroupButtonLabel')}
             >
-              <Link to={`/admingroups/${group._id}`} tabIndex={-1}>
+              <Link
+                to={{ pathname: `/admingroups/${group._id}`, state: { prevPath: history.location.pathname } }}
+                tabIndex={-1}
+              >
                 <IconButton color="primary">
                   <EditIcon />
                 </IconButton>
