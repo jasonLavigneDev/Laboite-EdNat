@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import i18n from 'meteor/universe:i18n';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 
@@ -16,6 +17,16 @@ const MsgHandler = () => {
     setOpenError(!!options.message);
   }, [options]);
 
+  const checkErrMsg = (msg) => {
+    // handles translation of some specific server side error messages
+    let finalMsg = msg;
+    if (msg.startsWith('api.rateLimitError')) {
+      const [i18nTag, timeToReset] = msg.split(':');
+      finalMsg = i18n.__(i18nTag, { timeToReset });
+    }
+    return finalMsg;
+  };
+
   global.msg = {
     success: (newMessage, newOptions = defaultOptions) => {
       setOptions({
@@ -27,7 +38,7 @@ const MsgHandler = () => {
     error: (newMessage, newOptions = defaultOptions) => {
       setOptions({
         ...newOptions,
-        message: newMessage,
+        message: checkErrMsg(newMessage),
         severity: 'error',
       });
     },

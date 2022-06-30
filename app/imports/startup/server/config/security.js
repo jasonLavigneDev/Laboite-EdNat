@@ -43,4 +43,5 @@ if (Meteor.isServer) {
     2,
     5000,
   );
+  DDPRateLimiter.setErrorMessage(({ timeToReset }) => `api.rateLimitError:${timeToReset}`);
 }

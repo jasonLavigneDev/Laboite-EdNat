@@ -388,7 +388,8 @@
       "info": "Information serveur",
       "warning": "Avertissement serveur",
       "error": "Erreur serveur"
-    }
+    },
+    "rateLimitError": "Erreur, trop de requêtes. Merci de patienter {$timeToReset} secondes avant de réessayer."
   },
   "components": {
     "AdminGroupDelete": {
