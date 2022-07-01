@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.2.6](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/4.2.5...release/4.2.6) (2022-07-01)
+
+
+### Bug Fixes
+
+* **nextcloud:** disable nextcloud group synchronization ([d1458f9](https://gitlab.mim-libre.fr/alphabet/laboite/commit/d1458f9bc1b62d80e9ff03cc3b666b0b06553721))
+
 ## [4.2.5](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/4.2.4...release/4.2.5) (2022-06-21)
 
 
