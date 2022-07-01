@@ -244,7 +244,7 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
     } else {
       try {
         const { structureId } = params;
-        args = { ...rest, content, structure: structureMode ? structureId : '' };
+        args = { data: { ...rest, content, structure: structureMode ? structureId : '' } };
       } catch (err) {
         msg.error(err.message);
       }
@@ -252,6 +252,8 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
 
     Meteor.call(method, args, (error) => {
       if (error) {
+        console.log(args);
+        console.log(error);
         if (error.error === 'validation-error') {
           msg.error(error.details[0].message);
         } else {

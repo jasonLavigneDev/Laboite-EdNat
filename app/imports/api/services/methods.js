@@ -14,34 +14,37 @@ import { addService, removeElement } from '../personalspaces/methods';
 
 export const createService = new ValidatedMethod({
   name: 'services.createService',
-  validate: Services.schema.omit('slug').validator({ clean: true }),
+  validate: new SimpleSchema({
+    data: Services.schema.omit('slug'),
+  }).validator({ clean: true }),
 
-  run(args) {
+  run({ data }) {
     // admins can create structure services only for their structure if they have adminStructure permissions
     const isStructureAdmin =
-      args.structure && hasAdminRightOnStructure({ userId: this.userId, structureId: args.structure });
+      data.structure && hasAdminRightOnStructure({ userId: this.userId, structureId: data.structure });
     const isAdmin = Roles.userIsInRole(this.userId, 'admin');
     const authorized = isActive(this.userId) && (isAdmin || isStructureAdmin);
     if (!authorized) {
       throw new Meteor.Error('api.services.createService.notPermitted', i18n.__('api.users.adminNeeded'));
     }
-    const sv = Services.findOne({ slug: slugy(args.title), structure: args.structure });
+    const sv = Services.findOne({ slug: slugy(data.title), structure: data.structure });
     if (sv !== undefined) {
       throw new Meteor.Error(
         'api.services.createService.ServiceAlreadyExists',
         i18n.__('api.services.ServiceAlreadyExists'),
       );
     }
-    const serviceId = Services.insert(args);
+    const serviceId = Services.insert(data);
+
     Services.update(serviceId, {
       $set: {
-        logo: args.logo.replace('/undefined/', `/${serviceId}/`),
-        screenshots: args.screenshots.map((screen) => screen.replace('/undefined/', `/${serviceId}/`)),
+        logo: data.logo.replace('/undefined/', `/${serviceId}/`),
+        screenshots: data.screenshots.map((screen) => screen.replace('/undefined/', `/${serviceId}/`)),
       },
     });
 
     if (Meteor.isServer && !Meteor.isTest && Meteor.settings.public.minioEndPoint) {
-      const files = [args.logo, ...args.screenshots];
+      const files = [data.logo, ...data.screenshots];
       try {
         Meteor.call('files.move', {
           sourcePath: 'services/undefined',
