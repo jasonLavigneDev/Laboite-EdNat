@@ -115,7 +115,7 @@ const GroupsUsersList = (props) => {
   };
 
   useEffect(() => {
-    if (ready === true && group) {
+    if (ready === true && group?.name) {
       const usersField = `${userRole}s`;
       const groupUsers = {};
       users.forEach((entry) => {
