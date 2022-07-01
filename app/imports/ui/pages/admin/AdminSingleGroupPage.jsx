@@ -283,7 +283,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
         msg.error(error.reason ? error.reason : error.message);
       } else {
         msg.success(i18n.__('api.methods.operationSuccessMsg'));
-        if (history.location.state.prevPath.includes('groups/')) {
+        if (history.location.state?.prevPath.includes('groups/')) {
           history.push(`/groups/${slug}`);
         } else {
           history.goBack();
