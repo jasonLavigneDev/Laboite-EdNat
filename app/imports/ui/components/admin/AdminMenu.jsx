@@ -68,8 +68,8 @@ export default function AdminMenu() {
   };
   const adminMenu = [
     {
-      path: '/admin/analytics',
-      content: 'menuAdminAnalytics',
+      path: '/admin/connections',
+      content: 'menuAdminConnexion',
       icon: <EqualizerIcon />,
       hidden: !isAdmin,
     },

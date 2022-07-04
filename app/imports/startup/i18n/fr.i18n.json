@@ -1405,17 +1405,15 @@
     "AdminStructureSettingsPage": {
       "title": "Paramétrage de la structure"
     },
-    "AdminAnalytics": {
-      "title": "Données Analytiques",
-      "usersTabs": "Utilisateurs",
-      "actionsTabs": "Actions",
-      "viewsTabs": "Pages vues",
+    "AdminUsersConnections": {
+      "title": "Connexions Utilisateurs",
       "usersTitle": "Utilisateurs connectés en temps réél",
       "status": "Status",
       "number": "Nombre",
       "usersByStructure": "Connectés par structure",
       "rows": {
         "usersLogged": "Utilisateurs",
+        "newAccounts": "Nouveaux comptes",
         "usersNotLogged": "Visiteurs",
         "usersIdle": "Inactif",
         "usersActive": "Actif"

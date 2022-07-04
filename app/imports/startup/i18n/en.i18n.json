@@ -1403,8 +1403,19 @@
     "AdminStructureSettingsPage": {
       "title": "Structure settings"
     },
-    "AdminAnalytics": {
-      "title": "Analytics Data"
+    "AdminUsersConnections": {
+      "title": "Users Connections",
+      "usersTitle": "Real time connected users",
+      "status": "Status",
+      "number": "Number",
+      "usersByStructure": "Connected by structure",
+      "rows": {
+        "usersLogged": "Users",
+        "newAccounts": "New accounts",
+        "usersNotLogged": "Visitors",
+        "usersIdle": "Idle",
+        "usersActive": "Active"
+      }
     }
   },
   "layouts": {

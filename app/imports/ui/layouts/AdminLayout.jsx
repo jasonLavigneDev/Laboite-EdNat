@@ -95,8 +95,8 @@ function AdminLayout() {
                       userId={userId}
                       loadingUser={loadingUser}
                       exact
-                      path="/admin/analytics"
-                      component={AdminAnalytics}
+                      path="/admin/connections"
+                      component={AdminUsersConnections}
                     />
                     <AdminRoute
                       userId={userId}
