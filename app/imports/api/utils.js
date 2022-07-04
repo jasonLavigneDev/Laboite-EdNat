@@ -102,3 +102,78 @@ export function handleResult(resolve, reject) {
     }
   };
 }
+export function mergeDeep(...objects) {
+  const isObject = (obj) => obj && typeof obj === 'object';
+
+  return objects.reduce((prev, obj) => {
+    const newData = prev;
+    Object.keys(obj).forEach((key) => {
+      const pVal = prev[key];
+      const oVal = obj[key];
+
+      if (Array.isArray(pVal) && Array.isArray(oVal)) {
+        newData[key] = pVal.concat(...oVal);
+      } else if (isObject(pVal) && isObject(oVal)) {
+        newData[key] = mergeDeep(pVal, oVal);
+      } else {
+        newData[key] = oVal;
+      }
+    });
+
+    return newData;
+  }, {});
+}
+
+/** - Transform a flat data into a tree data
+ *
+ *  - Aimed to use for structures
+ */
+export const getTree = (
+  flatData,
+  rootKey = null,
+  getParentKey = (node) => node.parentId,
+  getKey = (node) => node._id,
+) => {
+  if (!flatData) {
+    return [];
+  }
+
+  const childrenToParents = {};
+  flatData.forEach((child) => {
+    const parentKey = getParentKey(child);
+
+    if (parentKey in childrenToParents) {
+      childrenToParents[parentKey].push(child);
+    } else {
+      childrenToParents[parentKey] = [child];
+    }
+  });
+
+  if (!(rootKey in childrenToParents)) {
+    return [];
+  }
+
+  const trav = (parent) => {
+    const parentKey = getKey(parent);
+    if (parentKey in childrenToParents) {
+      return {
+        ...parent,
+        children: childrenToParents[parentKey].map((child) => trav(child)),
+      };
+    }
+
+    return { ...parent };
+  };
+
+  const result = childrenToParents[rootKey].map((child) => trav(child));
+
+  return result;
+};
+
+/**
+ * - valid language is like `en` or `fr`
+ *
+ * - default value of language is current i18n one
+ */
+export const getCurrentIntroduction = ({ introduction, language = i18n.getLocale().split('-')[0] }) =>
+  introduction.find((entry) => entry.language === language);

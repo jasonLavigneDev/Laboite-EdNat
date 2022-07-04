@@ -8,9 +8,11 @@ import SignUp from '../pages/system/SignUp';
 import SignIn from '../pages/system/SignIn';
 import Footer from '../components/menus/Footer';
 import Contact from '../pages/system/Contact';
+import HelpPage from '../pages/HelpPage';
 import { useAppContext } from '../contexts/context';
 import OfflineServices from '../components/services/OfflineServices';
 import OfflineMenu from '../components/menus/OfflineMenu';
+import AppVersion from '../components/system/AppVersion';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -52,6 +54,15 @@ const useStyles = makeStyles((theme) => ({
       paddingRight: 0,
     },
   },
+  version: {
+    position: 'absolute',
+    right: 5,
+    bottom: 5,
+    fontSize: 12,
+  },
+  grid: {
+    position: 'relative',
+  },
 }));
 
 const { offlinePage } = Meteor.settings.public;
@@ -60,16 +71,30 @@ export default function SignLayout() {
   const [{ isMobile, isIframed }] = useAppContext();
   const classes = useStyles();
   const theme = useTheme();
-  const [selectedTab, setTab] = useState('home');
+  const [selectedTab, setTab] = useState('apps');
+
+  function isEoleTheme() {
+    if (Meteor.settings.public.theme === 'eole') {
+      return { padding: 100, margin: -100, marginLeft: 5 };
+    }
+    return {};
+  }
 
   const services =
     (offlinePage && isMobile && isIframed && selectedTab === 'apps') || !isIframed || (isIframed && !isMobile);
   const signin = (isIframed && isMobile && selectedTab === 'home') || !isIframed || (isIframed && !isMobile);
+  const help = offlinePage && isIframed && isMobile && selectedTab === 'help';
 
   return (
     <>
-      <Grid container component="main" className={isMobile ? classes.rootMobile : classes.root}>
+      <Grid
+        justifyContent="center"
+        container
+        component="main"
+        className={isMobile || isIframed ? classes.rootMobile : classes.root}
+      >
         {services && <OfflineServices />}
+        {help && <HelpPage />}
         {!offlinePage && (
           <Grid container item xs={false} sm={4} md={7} spacing={4}>
             <Grid item md={12}>
@@ -79,11 +104,13 @@ export default function SignLayout() {
         )}
 
         {signin && (
-          <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6}>
+          <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} className={classes.grid}>
             <div className={classes.paper}>
-              <div className={classes.imgLogo}>
-                <img src={theme.logos.LONG_LOGO} className={classes.imgLogo} alt="Logo" />
-              </div>
+              {theme.logos.LONG_LOGO && (
+                <div className={classes.imgLogo}>
+                  <img src={theme.logos.LONG_LOGO} className={classes.imgLogo} alt="Logo" style={isEoleTheme()} />
+                </div>
+              )}
               <Switch>
                 <Route exact path="/signin" component={SignIn} />
                 <Route exact path="/signup" component={SignUp} />
@@ -91,10 +118,14 @@ export default function SignLayout() {
               </Switch>
               <LanguageSwitcher />
             </div>
+            <div className={classes.version}>
+              <AppVersion />
+            </div>
           </Grid>
         )}
       </Grid>
-      {isIframed && offlinePage && isMobile ? <OfflineMenu state={[selectedTab, setTab]} /> : <Footer />}
+
+      {isIframed && offlinePage ? <OfflineMenu state={[selectedTab, setTab]} /> : <Footer />}
     </>
   );
 }

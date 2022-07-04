@@ -96,11 +96,23 @@
     },
     "structures": {
       "unknownStructure": "La structure n'existe pas.",
+      "hasChildren": "La structure possède des enfants, elle n'est pas supprimable.",
+      "hasServices": "La structure possède au moins un service, elle n'est pas supprimable",
+      "hasUsers": "La structure possède au moins un utilisateur, elle n'est pas supprimable.",
+      "nameAlreadyTaken": "Une structure portant le même nom existe déjà dans le même niveau, sans prendre en compte la casse.",
       "name": "Libellé",
       "labels": {
         "id": "Id de Structure",
         "name": "Nom de la structure",
-        "parent": "Structure Supérieure"
+        "parentId": "Id de la structure parent directe",
+        "childrenIds": "Ids de structures enfants directs",
+        "ancestorsIds": "Ids de structures parents",
+        "introduction": {
+          "label": "Introduction de structure",
+          "title": "Titre d'introduction de structure",
+          "content": "Contenu d'introduction de structure",
+          "language": "Language d'introduction de structure"
+        }
       }
     },
     "users": {
@@ -198,7 +210,8 @@
         "logo": "Logo",
         "categories": "Catégories",
         "screenshots": "Captures d'écran",
-        "structure": "Structure d'exploitation"
+        "structure": "Structure d'exploitation",
+        "url": "URL du service"
       }
     },
     "events": {
@@ -375,7 +388,8 @@
       "info": "Information serveur",
       "warning": "Avertissement serveur",
       "error": "Erreur serveur"
-    }
+    },
+    "rateLimitError": "Erreur, trop de requêtes. Merci de patienter {$timeToReset} secondes avant de réessayer."
   },
   "components": {
     "AdminGroupDelete": {
@@ -412,6 +426,15 @@
     },
     "NotificationsDisplay": {
       "title": "Notifications",
+      "confirm": "Oui",
+      "cancel": "Non",
+      "empty": "Vous n'avez aucune notification.",
+      "removeAll": "Supprimer toutes les notifications",
+      "confirmRemoveAll": "Êtes vous sûr de vouloir supprimer toutes les notifications ?"
+    },
+    "TabbedNotificationsDisplay": {
+      "tabMessages": "Messagerie",
+      "tabSpaces": "Espaces Collaboratifs",
       "confirm": "Oui",
       "cancel": "Non",
       "empty": "Vous n'avez aucune notification.",
@@ -465,10 +488,12 @@
       "menuStructure": "Ma Structure",
       "menuGroupes": "Les Groupes",
       "menuGroupesMobile": "Groupes",
+      "menuNotifications": "Mes Notifications",
       "menuAdminServices": "Gestion des Services",
       "menuAdminUserValidation": "Validation des utilisateurs",
       "tooltipServices": "Services Numériques Partagés",
-      "tooltipStructure": "Ressources de votre structure"
+      "tooltipStructure": "Ressources de votre structure",
+      "menuIntroduction": "Informations"
     },
     "ServiceDetails": {
       "runServiceButtonLabel": "Ouvrir l'application",
@@ -504,7 +529,8 @@
       "menuAdminAppSettings": "Réglages Administrateurs",
       "menuAdminStructureUsers": "Utilisateurs de la structure",
       "menuAdminStructureServices": "Services de la structure",
-      "menuAdminBackHome": "Retour à l'espace perso"
+      "menuAdminBackHome": "Retour à l'espace perso",
+      "menuContact": "Contact"
     },
     "AdminMenu": {
       "title": "Administration",
@@ -520,7 +546,9 @@
       "menuAdminStructureUsers": "Utilisateurs de la structure",
       "menuAdminStructureServices": "Services de la structure",
       "menuAdminBackHome": "Retour à l'espace perso",
-      "menuUserStructure": "Gestion des Structures"
+      "menuUserStructure": "Gestion des Structures",
+      "menuAdminOfStructures": "Gestion des sous-structures",
+      "menuAdminStructureIntroduction": "Introduction de structure"
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Votre compte n'a pas été activé",
@@ -581,6 +609,8 @@
     "GroupFinder": {
       "noTag": "Aucun groupe trouvé",
       "groupLabel": "Groupe",
+      "userLabel": "Groupes",
+      "noUser": "Aucun groupe trouvé",
       "placeholder": "Saisir pour rechercher",
       "clear": "Effacer",
       "loading": "Chargement...",
@@ -757,15 +787,47 @@
       "title_label": "Titre",
       "content_label": "Contenu de la notification",
       "ValidateForm": "Valider",
-      "type_label": "Type de notification",
-      "info_type": "Info"
+      "type_label": "Type de notification"
     },
     "SkipLink": {
       "skipToContent": "Aller au contenu"
     },
     "OfflineMenu": {
       "home": "Accueil",
-      "apps": "Applications"
+      "apps": "Applications",
+      "help": "Aide"
+    },
+    "CustomDialog": {
+      "cancel": "Annuler",
+      "validate": "Valider"
+    },
+    "AdminStructureTreeItem": {
+      "actions": {
+        "choose": "Choisir la structure",
+        "chooseShort": "Choisir",
+        "addStructure": "Ajouter une structure",
+        "editStructure": "Modifier cette structure",
+        "deleteStructure": "Supprimer cette structure",
+        "deleteStructureImpossibleHasChildren": "Cette structure n'est pas supprimable car elle a au moins un enfant.",
+        "deleteStructureConfirm": "Etes-vous sûr de vouloir supprimer cette structure ? Si des articles y sont attachés, ils seront supprimés."
+      },
+      "attachToStructure": "Souhaitez vous être rattaché(e) à cette structure ?"
+    },
+    "AdminStructureTreeView": {
+      "title": "Liste des structures"
+    },
+    "AdminStructureSearchBar": {
+      "filterByName": "Filtrer par nom de structure (à partir de 3 lettres)",
+      "clear": "Effacer"
+    },
+    "StructureSelect": {
+      "label": "Choisir la structure"
+    },
+    "AdminStructureIntroductionEdition": {
+      "form": {
+        "title": "Titre (facultatif)",
+        "content": "Contenu"
+      }
     }
   },
   "validatejs": {
@@ -910,7 +972,14 @@
       "resetAuthToken": "Créer un nouveau Token",
       "noAuthToken": "Aucun token à récupérer",
       "successCopyAuthToken": "Token copié avec succès",
-      "successResetAndCopyAuthToken": "Nouveau Token créé et copié avec succès"
+      "successResetAndCopyAuthToken": "Nouveau Token créé et copié avec succès",
+      "openStructureSelection": "Si vous ne trouvez pas votre structure, cliquez ici pour une vue détaillée",
+      "currentStructure": "Votre structure de rattachement actuelle est :",
+      "noSelectedStructure": "Aucune structure sélectionnée",
+      "noCurrentStructure": "Vous n'avez pas de structure de rattachement pour le moment",
+      "chooseAttachementStructure": "Choisir votre structure de rattachement",
+      "noOptions": "Ecrire pour chercher des structures (3 lettres minimum)",
+      "onlyActiveUserOption": "Seuls les utilisateurs actifs peuvent définir une structure"
     },
     "NotFound": {
       "backButtonLabel": "Retour",
@@ -926,8 +995,8 @@
       "tabAllServicesLabel": "Tous les services",
       "emptyFilter": "Aucun filtre n'est présent.",
       "viewMode": "Changer le mode d'affichage",
-      "viewCard": "Mode cartes",
-      "viewList": "Mode liste",
+      "viewDetail": "Mode détail",
+      "viewSimple": "Mode simple",
       "filter": "Filtrer",
       "NoStructureServices": "Aucun service n'a été déclaré pour votre structure",
       "NoServices": "Aucun service déclaré"
@@ -938,8 +1007,8 @@
       "searchGroup": "Rechercher un groupe",
       "addGroup": "Ajouter un groupe",
       "viewMode": "Changer le mode d'affichage",
-      "viewCard": "Mode cartes",
-      "viewList": "Mode liste",
+      "viewDetail": "Mode détail",
+      "viewSimple": "Mode simple",
       "endOfList": "Fin de la liste",
       "filterGroup": "Afficher uniquement les groupes rejoints",
       "noGroup": "Il n'y a aucun groupe à afficher."
@@ -995,15 +1064,15 @@
     },
     "AdminStructuresManagementPage": {
       "title": "Gestion des structures",
+      "helpText": "Cliquez sur une structure pour dévoiler ses enfants.",
       "columnName": "Nom",
-      "materialTableLocalization": {
-        "toolbar_searchPlaceholder": "Trouver structure",
-        "pagination_labelRowsSelect": "Structures par page",
-        "body_emptyDataSourceMessage": "Aucune structure enregistrée",
-        "body_addTooltip": "Ajouter une structure",
-        "body_editTooltip": "Modifier cette structure",
-        "body_deleteTooltip": "Supprimer cette structure",
-        "body_editRow_deleteText": "Souhaitez vous réellement supprimer cette structure ?"
+      "modal": {
+        "close": "Fermer",
+        "cancel": "Annuler",
+        "submit": "Valider"
+      },
+      "adminStructureMode": {
+        "title": "Gestion des sous-structures"
       }
     },
     "AdminGroupsPage": {
@@ -1258,6 +1327,7 @@
     },
     "PublicArticlePage": {
       "title": "Publications de",
+      "searchArticle": "Chercher une publication",
       "searchText": "Que recherchez-vous ?",
       "goToList": "Voir les auteurs"
     },
@@ -1298,6 +1368,22 @@
       "neverConnected": "Jamais connecté",
       "undefined": "Non renseigné",
       "sortByLastLogin": "Trier par date de dernière connexion"
+    },
+    "AdminServicesByStructurePage": {
+      "title": "Gestion des services de la structure"
+    },
+    "StructureSelectionPage": {
+      "backToProfile": "Retourner au profil"
+    },
+    "IntroductionPage": {
+      "titleAppIntroduction": "Informations générales",
+      "noContent": "Pas de contenu pour le moment",
+      "noTitle": "Pas de titre pour le moment",
+      "informationsOf": "Informations de",
+      "titleStructures": "Informations de structures"
+    },
+    "AdminIntroductionByStructurePage": {
+      "title": "Texte d'introduction de structure"
     }
   },
   "layouts": {

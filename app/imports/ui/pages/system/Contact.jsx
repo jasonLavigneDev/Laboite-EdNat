@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types';
+import { useTracker, withTracker } from 'meteor/react-meteor-data';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
@@ -13,11 +14,11 @@ import i18n from 'meteor/universe:i18n';
 import { useHistory } from 'react-router-dom';
 import validate from 'validate.js';
 import FormHelperText from '@material-ui/core/FormHelperText';
-import { withTracker } from 'meteor/react-meteor-data';
 import CustomSelect from '../../components/admin/CustomSelect';
 import { useFormStateValidator } from './SignIn';
 import Structures from '../../../api/structures/structures';
 import Spinner from '../../components/system/Spinner';
+import { useAppContext } from '../../contexts/context';
 
 validate.options = {
   fullMessages: false,
@@ -72,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
   },
   emailForm: {
-    marginTop: -32,
+    marginTop: -15,
   },
   form: {
     width: '100%', // Fix IE 11 issue.
@@ -89,6 +90,7 @@ const totalNr = rndmNr1 + rndmNr2;
 
 const Contact = ({ structures, loading }) => {
   if (loading) return <Spinner full />;
+  const [{ user }] = useAppContext();
   const history = useHistory();
   const classes = useStyles();
   const [formState, handleChange] = useFormStateValidator(schema);
@@ -96,8 +98,16 @@ const Contact = ({ structures, loading }) => {
   const structureLabel = React.useRef(null);
   const [labelWidth, setLabelWidth] = React.useState(0);
   React.useEffect(() => {
-    setLabelWidth(structureLabel.current.offsetWidth);
+    if (!user) setLabelWidth(structureLabel.current.offsetWidth);
   }, []);
+
+  const userStructure = useTracker(() => {
+    if (user) {
+      const st = Structures.findOne({ _id: user.structure }) || {};
+      return st.name;
+    }
+    return '';
+  }, [user]);
 
   const hasError = (field) => !!(formState.touched[field] && formState.errors[field]);
 
@@ -114,10 +124,31 @@ const Contact = ({ structures, loading }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (formState.isValid === true) {
+    if (user) {
+      if (formState.values.text) {
+        if (!user.isActive && parseInt(formState.values.captcha, 10) !== totalNr) setCaptchaIsValid(false);
+        else {
+          setCaptchaIsValid(true);
+          const { firstName, lastName } = user;
+          const email = user.emails[0].address;
+          const { text } = formState.values;
+          let structureSelect = '';
+          if (userStructure) structureSelect = userStructure;
+          else structureSelect = formState.values.structureSelect;
+
+          Meteor.call('sendContactEmail', firstName, lastName, email, text, structureSelect);
+          setFormSubmit(true);
+          setCounter(5);
+          setTimeout(() => {
+            history.push('/');
+          }, 5000);
+        }
+      }
+    } else if (formState.isValid === true) {
       if (parseInt(formState.values.captcha, 10) === totalNr) {
         setCaptchaIsValid(true);
         const { firstName, lastName, email, text, structureSelect } = formState.values;
+
         Meteor.call('sendContactEmail', firstName, lastName, email, text, structureSelect);
         setFormSubmit(true);
         setCounter(5);
@@ -140,102 +171,128 @@ const Contact = ({ structures, loading }) => {
 
         <form onSubmit={handleSubmit} className={classes.form} id="my-form" noValidate>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
+            <Grid container item xs={12} sm={6} spacing={2}>
               <TextField
                 autoComplete="fname"
                 required
                 id="firstName"
                 autoFocus
                 fullWidth
-                helperText=" "
+                disabled={!!user}
                 label={i18n.__('pages.ContactForm.firstNameLabel')}
                 name="firstName"
                 type="text"
-                value={formState.values.firstName || ''}
+                value={user ? user.firstName : formState.values.firstName || ''}
                 error={hasError('firstName')}
                 onChange={handleChange}
                 variant="outlined"
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item container xs={12} sm={6} spacing={2}>
               <TextField
                 required
                 id="lastName"
                 autoComplete="lname"
                 fullWidth
+                disabled={!!user}
                 label={i18n.__('pages.ContactForm.nameLabel')}
                 name="lastName"
                 type="text"
-                helperText=" "
-                value={formState.values.lastName || ''}
+                value={user ? user.lastName : formState.values.lastName || ''}
                 error={hasError('lastName')}
                 onChange={handleChange}
                 variant="outlined"
               />
             </Grid>
-            <Grid item xs={12} spacing={2} className={classes.emailForm}>
+            <Grid container item xs={12} spacing={2} className={classes.emailForm}>
               <TextField
                 margin="normal"
                 required
                 id="email"
                 label={i18n.__('pages.ContactForm.emailLabel')}
                 name="email"
+                disabled={!!user}
                 autoComplete="email"
                 fullWidth
                 helperText=""
                 type="text"
-                value={formState.values.email || ''}
+                value={user ? (user.emails ? user.emails[0].address : '') : formState.values.email || ''}
                 error={hasError('email')}
                 onChange={handleChange}
                 variant="outlined"
               />
             </Grid>
-            <Grid item xs={12} spacing={2}>
+            <Grid container item xs={12} spacing={2}>
               <FormControl variant="outlined" className={classes.formControl} fullWidth>
-                <InputLabel
-                  ref={structureLabel}
-                  id="structure-label"
-                  className={hasError('structureSelect') ? 'Mui-error' : ''}
-                >
-                  {i18n.__('pages.ContactForm.structureLabel')}
-                </InputLabel>
-                <CustomSelect
-                  value={formState.values.structureSelect || ''}
-                  error={hasError('structureSelect')}
-                  onChange={handleChange}
-                  labelWidth={labelWidth}
-                  options={structures.map((opt) => ({ value: opt.name, label: opt.name }))}
-                />
+                {user && userStructure ? (
+                  <TextField
+                    margin="normal"
+                    required
+                    id="structure"
+                    name="structure"
+                    label={i18n.__('pages.ContactForm.structureLabel')}
+                    disabled={!!user}
+                    autoComplete="structure"
+                    fullWidth
+                    helperText=""
+                    type="text"
+                    value={userStructure}
+                    error={hasError('structureSelect')}
+                    onChange={handleChange}
+                    variant="outlined"
+                  />
+                ) : (
+                  <>
+                    <InputLabel
+                      ref={structureLabel}
+                      id="structure-label"
+                      className={hasError('structureSelect') ? 'Mui-error' : ''}
+                    >
+                      {i18n.__('pages.ContactForm.structureLabel')}
+                    </InputLabel>
+                    <CustomSelect
+                      disabled={!!user}
+                      value={user && userStructure ? userStructure : formState.values.structureSelect || ''}
+                      error={hasError('structureSelect')}
+                      onChange={handleChange}
+                      labelWidth={labelWidth}
+                      options={structures.map((opt) => ({ value: opt.name, label: opt.name }))}
+                    />
+                  </>
+                )}
                 <FormHelperText className={hasError('structureSelect') ? 'Mui-error' : ''}>
                   {hasError('structureSelect')}
                 </FormHelperText>
               </FormControl>
             </Grid>
-            <Grid item xs={12} spacing={2}>
+            <Grid container item xs={12} spacing={2}>
               <TextField
                 name="text"
                 multiline
                 fullWidth
                 rows={10}
+                autoFocus={!!user}
                 label={i18n.__('pages.ContactForm.textLabel')}
                 value={formState.values.text || ''}
                 onChange={handleChange}
                 required
                 variant="outlined"
               />
-              <TextField
-                margin="normal"
-                name="captcha"
-                required
-                label={`${rndmNr1} + ${rndmNr2}`}
-                fullWidth
-                helperText={i18n.__('pages.ContactForm.captchaInfo')}
-                type="text"
-                error={!captchaIsValid}
-                value={formState.values.captcha || ''}
-                onChange={handleChange}
-                variant="outlined"
-              />
+              {!user || !user.isActive ? (
+                <TextField
+                  margin="normal"
+                  name="captcha"
+                  required
+                  label={`${rndmNr1} + ${rndmNr2}`}
+                  fullWidth
+                  helperText={i18n.__('pages.ContactForm.captchaInfo')}
+                  type="text"
+                  error={!user || !user.isActive ? !captchaIsValid : false}
+                  value={formState.values.captcha || ''}
+                  onChange={handleChange}
+                  variant="outlined"
+                />
+              ) : null}
             </Grid>
             {!formSubmit ? (
               <Button
@@ -244,7 +301,7 @@ const Contact = ({ structures, loading }) => {
                 variant="contained"
                 color="primary"
                 className={classes.submit}
-                disabled={!formState.isValid}
+                disabled={user ? !formState.values.text : !formState.isValid}
               >
                 {i18n.__('pages.ContactForm.submitButtonLabel')}
               </Button>

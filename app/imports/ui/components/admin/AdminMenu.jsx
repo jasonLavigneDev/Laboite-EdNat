@@ -21,6 +21,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import CategoryIcon from '@material-ui/icons/Category';
 import HomeIcon from '@material-ui/icons/Home';
 import HelpIcon from '@material-ui/icons/Help';
+import InfoIcon from '@material-ui/icons/Info';
 import Drawer from '@material-ui/core/Drawer';
 import Typography from '@material-ui/core/Typography';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -42,6 +43,7 @@ const useStyles = (isMobile) =>
       },
       '& .MuiDrawer-paper': {
         marginTop: 48,
+        marginBottom: 48,
         width: isMobile ? 65 : 300,
         zIndex: 0,
       },
@@ -139,9 +141,21 @@ export default function AdminMenu() {
       hidden: !isAdminStructure,
     },
     {
+      path: '/admin/structuresintroduction',
+      content: 'menuAdminStructureIntroduction',
+      icon: <InfoIcon />,
+      hidden: !isAdminStructure,
+    },
+    {
       path: '/admin/structureusers',
       content: 'menuAdminStructureUsers',
       icon: <PeopleAltIcon />,
+      hidden: !isAdminStructure,
+    },
+    {
+      path: '/admin/substructures',
+      content: 'menuAdminOfStructures',
+      icon: <BusinessIcon />,
       hidden: !isAdminStructure,
     },
     {

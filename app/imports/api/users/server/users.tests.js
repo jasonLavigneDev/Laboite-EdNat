@@ -9,7 +9,7 @@ import { Meteor } from 'meteor/meteor';
 import { _ } from 'meteor/underscore';
 import { Accounts } from 'meteor/accounts-base';
 import { Roles } from 'meteor/alanning:roles';
-import '../../../../i18n/en.i18n.json';
+import '../../../startup/i18n/en.i18n.json';
 
 import {
   setAdmin,

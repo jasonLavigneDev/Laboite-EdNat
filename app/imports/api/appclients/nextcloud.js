@@ -1,8 +1,10 @@
 import axios from 'axios';
 import { Meteor } from 'meteor/meteor';
 import i18n from 'meteor/universe:i18n';
+import { Roles } from 'meteor/alanning:roles';
 import logServer from '../logging';
 import Groups from '../groups/groups';
+import { isActive } from '../utils';
 
 const nextcloudPlugin = Meteor.settings.public.groupPlugins.nextcloud;
 const { nextcloud } = Meteor.settings;
@@ -378,75 +380,90 @@ if (Meteor.isServer && nextcloudPlugin && nextcloudPlugin.enable) {
   nextClient.checkConfig();
 
   Meteor.afterMethod('groups.createGroup', function nextCreateGroup({ name, plugins }) {
-    if (plugins.nextcloud === true) {
-      // create associated group in Nextcloud
-      nextClient.addGroup(name).then((response) => {
-        if (response === 'ok') {
-          nextClient.addGroupFolder(name, name).then((res) => {
-            if (res === false) logServer(i18n.__('api.nextcloud.addGroupFolderError'), 'error', this.userId);
-          });
-        } else {
-          const msg =
-            response === 'group exists' ? i18n.__('api.nextcloud.groupExists') : i18n.__('api.nextcloud.addGroupError');
-          logServer(i18n.__(msg), 'error', this.userId);
-        }
-      });
+    if (!this.error) {
+      if (plugins.nextcloud === true) {
+        // create associated group in Nextcloud
+        nextClient.addGroup(name).then((response) => {
+          if (response === 'ok') {
+            nextClient.addGroupFolder(name, name).then((res) => {
+              if (res === false) logServer(i18n.__('api.nextcloud.addGroupFolderError'), 'error', this.userId);
+            });
+          } else {
+            const msg =
+              response === 'group exists'
+                ? i18n.__('api.nextcloud.groupExists')
+                : i18n.__('api.nextcloud.addGroupError');
+            logServer(i18n.__(msg), 'error', this.userId);
+          }
+        });
+      }
     }
   });
 
-  Meteor.beforeMethod('groups.removeGroup', function nextRemoveGroup({ groupId }) {
-    const group = Groups.findOne({ _id: groupId });
-    if (group.plugins.nextcloud === true) {
-      // remove group from nextcloud if it exists
-      nextClient.groupExists(group.name).then((resExists) => {
-        if (resExists) {
-          nextClient.removeGroupFolder(group.name).then((response) => {
-            if (response)
-              nextClient.removeGroup(group.name).then((res) => {
-                if (res === false) logServer(i18n.__('api.nextcloud.removeGroupError'), 'error', this.userId);
+  Meteor.afterMethod('groups.removeGroup', function nextRemoveGroup({ groupId }) {
+    if (!this.error) {
+      const groupData = this.result;
+      const isAdmin = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin', groupId);
+      if (isAdmin || this.userId === groupData.owner) {
+        if (groupData.plugins.nextcloud === true) {
+          // remove group from nextcloud if it exists
+          nextClient.groupExists(groupData.name).then((resExists) => {
+            if (resExists) {
+              nextClient.removeGroupFolder(groupData.name).then((response) => {
+                if (response)
+                  nextClient.removeGroup(groupData.name).then((res) => {
+                    if (res === false) logServer(i18n.__('api.nextcloud.removeGroupError'), 'error', this.userId);
+                  });
+                else logServer(i18n.__('api.nextcloud.removeGroupFolderError'), 'error', this.userId);
               });
-            else logServer(i18n.__('api.nextcloud.removeGroupFolderError'), 'error', this.userId);
+            }
           });
         }
-      });
+      }
     }
   });
 
   Meteor.afterMethod('groups.updateGroup', function nextUpdateGroup({ groupId }) {
-    // create nextcloud group if needed
-    const group = Groups.findOne({ _id: groupId });
-    const groupName = group.name;
-    if (group.plugins.nextcloud === true) {
-      nextClient.groupExists(groupName).then((resExists) => {
-        if (resExists === false) {
-          nextClient.addGroup(groupName).then((response) => {
-            if (response === 'ok') {
-              nextClient.addGroupFolder(groupName, groupName).then((res) => {
-                if (res === false) logServer(i18n.__('api.nextcloud.addGroupFolderError'), 'error', this.userId);
-              });
-            } else {
-              const msg =
-                response === 'group exists'
-                  ? i18n.__('api.nextcloud.groupExists')
-                  : i18n.__('api.nextcloud.addGroupError');
-              logServer(msg, 'error', this.userId);
-            }
-          });
-        }
-      });
+    if (!this.error) {
+      // create nextcloud group if needed
+      const group = Groups.findOne({ _id: groupId });
+      const groupName = group.name;
+      if (group.plugins.nextcloud === true) {
+        nextClient.groupExists(groupName).then((resExists) => {
+          if (resExists === false) {
+            nextClient.addGroup(groupName).then((response) => {
+              if (response === 'ok') {
+                nextClient.addGroupFolder(groupName, groupName).then((res) => {
+                  if (res === false) logServer(i18n.__('api.nextcloud.addGroupFolderError'), 'error', this.userId);
+                });
+              } else {
+                const msg =
+                  response === 'group exists'
+                    ? i18n.__('api.nextcloud.groupExists')
+                    : i18n.__('api.nextcloud.addGroupError');
+                logServer(msg, 'error', this.userId);
+              }
+            });
+          }
+        });
+      }
     }
   });
 
   Meteor.afterMethod('users.setActive', function nextAddUser({ userId }) {
-    // create nextcloud user if needed
-    // get nclocator for this user
-    nextClient.addUser(userId);
+    if (!this.error) {
+      // create nextcloud user if needed
+      // get nclocator for this user
+      nextClient.addUser(userId);
+    }
   });
 
   Meteor.afterMethod('users.userUpdated', function rcUserUpdated(params) {
-    const { userId, data } = params;
-    if (data.isActive && data.isActive === true) {
-      nextClient.addUser(userId);
+    if (!this.error) {
+      const { userId, data } = params;
+      if (data.isActive && data.isActive === true) {
+        nextClient.addUser(userId);
+      }
     }
   });
 }

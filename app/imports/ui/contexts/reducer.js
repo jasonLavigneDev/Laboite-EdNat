@@ -1,7 +1,8 @@
 import { Meteor } from 'meteor/meteor';
 import i18n from 'meteor/universe:i18n';
 
-export const MOBILE_SIZE = 768;
+export const MOBILE_SIZE = 600;
+export const TABLET_SIZE = 960;
 
 const reducer = (state, action) => {
   const { type, data = {} } = action;
@@ -56,6 +57,7 @@ const reducer = (state, action) => {
       return {
         ...newState,
         isMobile: width < MOBILE_SIZE,
+        isTablet: width < TABLET_SIZE,
       };
     case 'user':
       return {

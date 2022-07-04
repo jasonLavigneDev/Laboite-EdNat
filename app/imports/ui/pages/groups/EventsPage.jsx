@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Roles } from 'meteor/alanning:roles';
 import PropTypes from 'prop-types';
@@ -14,17 +15,13 @@ import ArrowBack from '@material-ui/icons/ArrowBack';
 import SearchIcon from '@material-ui/icons/Search';
 import ClearIcon from '@material-ui/icons/Clear';
 import EventAvailableIcon from '@material-ui/icons/EventAvailable';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import IconButton from '@material-ui/core/IconButton';
-import Pagination from '@material-ui/lab/Pagination';
 import { useHistory } from 'react-router-dom';
 import { usePagination } from '../../utils/hooks';
 import { useAppContext } from '../../contexts/context';
@@ -32,6 +29,7 @@ import Spinner from '../../components/system/Spinner';
 import Groups from '../../../api/groups/groups';
 
 import EventsAgenda from '../../../api/eventsAgenda/eventsAgenda';
+import { GroupPaginate, GroupListActions } from './common';
 
 export const useEvenstPageStyles = makeStyles((theme) => ({
   root: {
@@ -162,11 +160,13 @@ const EventsPage = ({ loading, group }) => {
                   }}
                 />
               </Grid>
-              {total > ITEM_PER_PAGE && (
-                <Grid item xs={12} sm={12} md={6} lg={6} className={classes.pagination}>
-                  <Pagination count={Math.ceil(total / ITEM_PER_PAGE)} page={page} onChange={handleChangePage} />
-                </Grid>
-              )}
+              <GroupPaginate
+                total={total}
+                nbItems={ITEM_PER_PAGE}
+                cls={classes.pagination}
+                page={page}
+                handler={handleChangePage}
+              />
               {items2.length > 0 ? (
                 <Grid item xs={12} sm={12} md={12}>
                   <List className={classes.list} disablePadding>
@@ -189,23 +189,10 @@ const EventsPage = ({ loading, group }) => {
                           }
                         />
 
-                        <ListItemSecondaryAction>
-                          <Tooltip title={`${i18n.__('pages.Events.seeEvent')} ${event.title}`} aria-label="add">
-                            <IconButton
-                              edge="end"
-                              aria-label="comments"
-                              onClick={() =>
-                                window.open(
-                                  `${Meteor.settings.public.services.agendaUrl}/event/${event._id}`,
-                                  '_blank',
-                                  'noreferrer,noopener',
-                                )
-                              }
-                            >
-                              <ChevronRightIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </ListItemSecondaryAction>
+                        <GroupListActions
+                          url={`${Meteor.settings.public.services.agendaUrl}/event/${event._id}`}
+                          title={`${i18n.__('pages.Events.seeEvent')} ${event.title}`}
+                        />
                       </ListItem>,
                       i < ITEM_PER_PAGE - 1 && i < total - 1 && (
                         <Divider variant="inset" component="li" key={`divider-${event.title}`} />
@@ -218,11 +205,13 @@ const EventsPage = ({ loading, group }) => {
                   <p>{i18n.__('pages.Events.noEvents')}</p>
                 </Grid>
               )}
-              {total > ITEM_PER_PAGE && (
-                <Grid item xs={12} sm={12} md={12} lg={12} className={classes.pagination}>
-                  <Pagination count={Math.ceil(total / ITEM_PER_PAGE)} page={page} onChange={handleChangePage} />
-                </Grid>
-              )}
+              <GroupPaginate
+                total={total}
+                nbItems={ITEM_PER_PAGE}
+                cls={classes.pagination}
+                page={page}
+                handler={handleChangePage}
+              />
             </>
           ) : (
             <p className={classes.ErrorPage}>{i18n.__('pages.EventsPage.noAccess')}</p>

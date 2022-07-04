@@ -2,38 +2,40 @@
 const styles = `
               .lb_widget {
                   position: fixed;
-                  bottom: 5px;
-                  right: 5px;
+                    bottom: 10px;
+                  right: 10px;
                   width: 75px;
                   height: 75px;
                   z-index: 9999;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                          width: 75px;
+                          height: 75px;
+                  border-radius: 50%;
+                  color: white;
+                  border: none;
+                  cursor: pointer;
+                  padding: 0;
+                  margin: 0;
+                  font-size: 25px;
+                  transition: transform 0.1s ease-in-out;
+                  box-shadow: 0px 3px 5px -1px rgb(0 0 0 / 20%), 
+                              0px 6px 10px 0px rgb(0 0 0 / 14%), 
+                              0px 1px 18px 0px rgb(0 0 0 / 12%);
               }
       
-            .lb_widget {
-              display: flex;
-              justify-content: center;
-              align-items: center;
-                      width: 75px;
-                      height: 75px;
-              border-radius: 50%;
-              color: white;
-              border: none;
-              cursor: pointer;
-              padding: 0;
-              margin: 0;
-              font-size: 25px;
-              box-shadow: 0px 3px 5px -1px rgb(0 0 0 / 20%), 
-                          0px 6px 10px 0px rgb(0 0 0 / 14%), 
-                          0px 1px 18px 0px rgb(0 0 0 / 12%);
-                  }
+            .lb_widget.closed:hover {
+              transform: scale(1.2);
+            }
             .lb_widget *, .lb_widget-container * {
               box-sizing: content-box !important;
             }
       
-                  .lb_widget > img {
-                    width: 75px;
-                    height: 75px;
-                  }
+            .lb_widget > img {
+              width: 75px;
+              height: 75px;
+            }
       
             .lb_widget .notifications {
               position: absolute;
@@ -67,6 +69,7 @@ const styles = `
             }
       
             .lb_widget-container.opened {
+              transition: all 0.2s ease-in-out;
               z-index: 9999;
               position: fixed;
               display: flex;
@@ -92,7 +95,7 @@ const styles = `
               flex: 1;
               width: 100%;
               border: none;
-              border-radius: 8px;
+              border-radius: 0 0 8px 8px;
             }
       
             .lb_widget-container .lb_widget-header {
@@ -166,16 +169,13 @@ export const widget = () => `
 {
     // ------------------ VARIABLES WIDGET ------------------
     let notifications = 0;
-    let initX;
-    let initY;
-    let firstX;
-    let firstY;
-    let dragged = false;
     let userLogged = "disconnected"
+    let dragged = false;
+    let touchduration = 200;
     let timer;
-    let touchduration = 200; 
+    let shiftX
+    let shiftY
 
-    
     // ------------------ HEADER WIDGET ------------------
     // Create Header
     const widgetHeader = document.createElement('div');
@@ -192,7 +192,7 @@ export const widget = () => `
     // Create Close Button
     const closeButton = document.createElement('button');
     closeButton.setAttribute('class', 'cross-stand-alone');
-    closeButton.title = 'Fermer ${Meteor.settings.public.appName}';
+    closeButton.title = 'Accéder aux services réservés aux agents de l’Etat';
   
     // Create fullscreen Icon
     const fullscreenButton = document.createElement('button');
@@ -225,7 +225,7 @@ export const widget = () => `
     // Create open button with the robot
     const openButton = document.createElement('button');
     openButton.setAttribute('class', 'lb_widget closed');
-    openButton.title = 'Ouvrir ${Meteor.settings.public.appName}';
+    openButton.title = 'Accéder aux services réservés aux agents de l’Etat';
     openButton.innerHTML = 
         '<img src="${Meteor.absoluteUrl()}images/logos/${theme}/widget/' 
         + userLogged + 
@@ -285,7 +285,10 @@ export const widget = () => `
     const handleUserLogged = (content) => {
       if(content){
         userLogged = "connected"
+        openButton.innerHTML = '<img src="${Meteor.absoluteUrl()}images/logos/${theme}/widget/connected.svg" />';
       } else {
+        openButton.innerHTML = 
+            '<img src="${Meteor.absoluteUrl()}images/logos/${theme}/widget/disconnected.svg" />';
         userLogged = "disconnected"
       }
     }
@@ -306,93 +309,94 @@ export const widget = () => `
     window.addEventListener('message', receiveMessage, false);
   
     // ------------------ DRAGGABLE ROBOT ------------------
-  
-    const dragIt = (e) => {
-      dragged = true
-      const left = initX + e.pageX - firstX + 'px';
-      const top = initY + e.pageY - firstY + 'px';
-      openButton.style.left = left < 0 ? 0 : left;
-      openButton.style.top = top < 0 ? 0 : top;
-    };
-  
-    const swipeIt = (e) => {
-      dragged = true
-      const contact = e.touches;
-      const left = initX + contact[0].pageX - firstX + 'px';
-      const top = initY + contact[0].pageY - firstY + 'px';
-      openButton.style.left = left < 0 ? 0 : left;
-      openButton.style.top = top < 0 ? 0 : top;
-    };
-  
-    openButton.addEventListener(
-      'mousedown',
-      (e) => {
-        e.preventDefault();
-        initX = openButton.offsetLeft;
-        initY = openButton.offsetTop;
-        firstX = e.pageX;
-        firstY = e.pageY;
-  
-        openButton.addEventListener('mousemove', dragIt, false);
-  
-        window.addEventListener(
-          'mouseup',
-          (e) => {
-            openButton.removeEventListener('mousemove', dragIt, false);
-          },
-          false,
-        );
-      },
-      false,
-    );
-  
-    const onlongtouch = () => {
-      openButton.addEventListener('touchmove', swipeIt, false);
-      openButton.setAttribute('class', 'lb_widget closed moving');
-    }; 
 
-    const ontouchend = (e) => {
-      console.log(dragged)
-      e.preventDefault();
+    const moveAt = (clientX, clientY) => {
+      const positionLeft = clientX - shiftX
+      const positionTop = clientY - shiftY
+
+
+      if(positionLeft > (window.innerWidth - 85)) {
+        openButton.style.left = window.innerWidth - 85 + 'px';
+      } else if(positionLeft < 0) {
+        openButton.style.left = '10px';
+      } else {
+        openButton.style.left = positionLeft + 'px';
+      }
+
+      if(positionTop > (window.innerHeight - 85)) {
+        openButton.style.top = window.innerHeight - 85 + 'px';
+      } else if(positionTop < 0) {
+        openButton.style.top = '10px';
+      } else {
+        openButton.style.top = positionTop + 'px';
+      }
+    }
+
+    const onMouseMove = (event) => {
+      const contact = event.touches ? event.touches[0] : null;
+      const ref = contact || event
+      if(dragged){
+        moveAt(ref.clientX, ref.clientY);
+      }
+    }
+
+    const onlongpress = () => {
+      dragged = true
+      openButton.setAttribute('class', 'lb_widget closed moving');
+      document.addEventListener('touchmove', onMouseMove, false);
+      document.addEventListener('mousemove', onMouseMove, false);
       if (timer){
         clearTimeout(timer)
       }
-      if(!dragged){
-        openRizimo()
-      } else {
-        openButton.setAttribute('class', 'lb_widget closed');
-        dragged = false
-      }
-      openButton.removeEventListener('touchmove', swipeIt, false);
-      openButton.removeEventListener(
-        'touchend',
-        ontouchend,
-        false,
-      );
+    }; 
+
+    window.onresize = () => {
+      openButton.style.right = '10px';
+      openButton.style.bottom = '10px';
+      openButton.style.left = null;
+      openButton.style.top = null;
     }
 
-    openButton.addEventListener(
-      'touchstart',
-      (e) => {
-        e.preventDefault();
-        initX = openButton.offsetLeft;
-        initY = openButton.offsetTop;
-        const touch = e.touches;
-        timer = setTimeout(onlongtouch, touchduration); 
-        if(
-          (touch[0].pageX > initX) && (initX + 75 > touch[0].pageX) &&
-          (touch[0].pageY > initY) && (initY + 75 > touch[0].pageY)
-        ) {
-          firstX = touch[0].pageX;
-          firstY = touch[0].pageY;
-  
-          openButton.addEventListener(
-            'touchend',
-            ontouchend,
-            false,
-          );
+    openButton.onmousedown = function(event) {
+      shiftX = event.clientX - openButton.getBoundingClientRect().left;
+      shiftY = event.clientY - openButton.getBoundingClientRect().top;
+
+      timer = setTimeout(onlongpress, touchduration); 
+
+      // drop the openButton, remove unneeded handlers
+      document.onmouseup = function() {
+        if (timer){
+          clearTimeout(timer)
         }
-      },
-      false,
-    );
+        openButton.setAttribute('class', 'lb_widget closed');
+        document.removeEventListener('mousemove', onMouseMove);
+        document.onmouseup = null;
+      };
+    };
+
+    openButton.ontouchstart = function(event) {
+      const touch = event.touches ? event.touches[0]: null;
+      const ref = touch || event
+      shiftX = ref.clientX - openButton.getBoundingClientRect().left;
+      shiftY = ref.clientY - openButton.getBoundingClientRect().top;
+
+      timer = setTimeout(onlongpress, touchduration); 
+
+      // drop the openButton, remove unneeded handlers
+      document.ontouchend = function() {
+        if (timer){
+          clearTimeout(timer)
+        }
+        dragged = false
+        openButton.setAttribute('class', 'lb_widget closed');
+        document.removeEventListener('touchmove', onMouseMove);
+        document.ontouchend = null;
+      };
+    };
+
+    openButton.ondragstart = function () {
+      dragged = true
+      return false;
+    };
+
   }`;

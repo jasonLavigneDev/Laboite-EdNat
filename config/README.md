@@ -43,6 +43,10 @@ Copy `settings-development.json.sample` to `settings-development.json` and updat
 | disabledFeatures                         | object   | {}                                   | add features to disabled                                                                    |
 | disabledFeatures.blog                    | boolean  | false                                | disable all blog                                                                            |
 | disabledFeatures.groups                  | boolean  | false                                | disable all groups                                                                          |
+| disabledFeatures.notificationsTab        | boolean  | false                                | disable notification divided in two tabs                                                    |
+| matomo                                   | object   | null                                 | matomo settings                                                                             |
+| matomo.id                                | string   | null                                 | id of the website                                                                           |
+| matomo.urlBase                           | string   | null                                 | url of the matomo instance                                                                  |
 
 ## keycloak:
 
@@ -79,11 +83,12 @@ Copy `settings-development.json.sample` to `settings-development.json` and updat
 
 ## private:
 
-| Key              | Type     | Default value                              | Description                                      |
-| ---------------- | -------- | ------------------------------------------ | ------------------------------------------------ |
-| fillWithFakeData | boolean  | false                                      | If true, fake datas are generated at start       |
-| minioAccess      | string   | ""                                         | Minio user                                       |
-| minioSecret      | string   | ""                                         | Minio password                                   |
-| apiKeys          | [string] | [""]                                       | API access keys for external services            |
-| BBBSecret        | string   | ""                                         | Big Blue Button Secret                           |
-| whiteDomains     | [string] | ["^ac-[a-z-]_\\.fr", "^[a-z-]_\\.gouv.fr"] | Emails white domains for user account activation |
+| Key                   | Type     | Default value                              | Description                                      |
+| --------------------- | -------- | ------------------------------------------ | ------------------------------------------------ |
+| fillWithFakeData      | boolean  | false                                      | If true, fake datas are generated at start       |
+| minioAccess           | string   | ""                                         | Minio user                                       |
+| minioSecret           | string   | ""                                         | Minio password                                   |
+| apiKeys               | [string] | [""]                                       | API access keys for external services            |
+| BBBSecret             | string   | ""                                         | Big Blue Button Secret                           |
+| whiteDomains          | [string] | ["^ac-[a-z-]_\\.fr", "^[a-z-]_\\.gouv.fr"] | Emails white domains for user account activation |
+| loginExpirationInDays | number   | 90                                         | Number of days for the token session to expire   |

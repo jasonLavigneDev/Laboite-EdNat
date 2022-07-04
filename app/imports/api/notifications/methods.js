@@ -145,6 +145,45 @@ export const markAllNotificationAsRead = new ValidatedMethod({
   },
 });
 
+export const markAllTypeNotificationAsRead = new ValidatedMethod({
+  name: 'notifications.markAllTypeNotificationAsRead',
+  validate: new SimpleSchema({
+    type: Array,
+    'type.$': String,
+  }).validator(),
+  run({ type }) {
+    if (!isActive(this.userId)) {
+      throw new Meteor.Error(
+        'api.notifications.markAllNotificationAsRead.notLoggedIn',
+        i18n.__('api.notifications.mustBeLoggedIn'),
+      );
+    }
+    return Notifications.update(
+      { userId: this.userId, type: { $in: type } },
+      { $set: { read: true } },
+      { multi: true },
+    );
+  },
+});
+
+export const removeAllTypeNotification = new ValidatedMethod({
+  name: 'notifications.removeAllTypeNotification',
+  validate: new SimpleSchema({
+    type: Array,
+    'type.$': String,
+  }).validator(),
+
+  run({ type }) {
+    if (!isActive(this.userId)) {
+      throw new Meteor.Error(
+        'api.notifications.removeAllTypeNotification.notLoggedIn',
+        i18n.__('api.notifications.mustBeLoggedIn'),
+      );
+    }
+    return Notifications.remove({ userId: this.userId, type: { $in: type } });
+  },
+});
+
 // Get list of all method names on User
 const LISTS_METHODS = _.pluck(
   [
@@ -153,7 +192,9 @@ const LISTS_METHODS = _.pluck(
     removeNotification,
     markNotificationAsRead,
     markAllNotificationAsRead,
+    markAllTypeNotificationAsRead,
     removeAllNotification,
+    removeAllTypeNotification,
   ],
   'name',
 );

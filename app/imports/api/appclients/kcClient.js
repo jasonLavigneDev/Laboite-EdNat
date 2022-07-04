@@ -5,6 +5,7 @@ import { Roles } from 'meteor/alanning:roles';
 import logServer from '../logging';
 import Groups from '../groups/groups';
 import AppRoles from '../users/users';
+import { isActive } from '../utils';
 
 const keycloakSettings = Meteor.settings.keycloak;
 
@@ -487,55 +488,89 @@ if (Meteor.isServer && Meteor.settings.public.enableKeycloak) {
   const kcClient = new KeyCloakClient();
 
   Meteor.afterMethod('groups.createGroup', function kcCreateGroup({ name }) {
-    kcClient.addGroup(name, this.userId);
+    if (!this.error) kcClient.addGroup(name, this.userId);
   });
 
   Meteor.afterMethod('groups.updateGroup', function kcUpdateGroup() {
-    const [newData, oldGroup] = this.result;
-    if (newData.name !== oldGroup.name) {
-      kcClient.updateGroup(oldGroup.name, newData.name, this.userId);
+    if (!this.error) {
+      const [newData, oldGroup] = this.result;
+      if (newData.name !== oldGroup.name) {
+        kcClient.updateGroup(oldGroup.name, newData.name, this.userId);
+      }
     }
   });
 
-  Meteor.beforeMethod('groups.removeGroup', function kcRemoveGroup({ groupId }) {
-    const group = Groups.findOne({ _id: groupId });
-    kcClient.removeGroup(group.name, this.userId);
+  Meteor.afterMethod('groups.removeGroup', function kcRemoveGroup({ groupId }) {
+    if (!this.error) {
+      const groupData = this.result;
+      if (groupData) {
+        const isAdmin = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin', groupId);
+        if (isAdmin || this.userId === groupData.owner) kcClient.removeGroup(groupData.name, this.userId);
+      }
+    }
+  });
+
+  Meteor.afterMethod('groups.addGroupMembersToGroup', function kcAddGroupMembersToGroup({ groupId, anotherGroupId }) {
+    if (!this.error) {
+      const group = Groups.findOne({ _id: groupId });
+      const group2 = Groups.findOne({ _id: anotherGroupId });
+
+      const usersGroup = group2.members;
+
+      usersGroup.forEach((user) => {
+        if (!Roles.userIsInRole(user, 'animator', groupId)) {
+          kcClient.setRole(user, group.name, this.userId);
+        }
+      });
+    }
   });
 
   Meteor.afterMethod('users.setAdmin', function kcSetAdmin({ userId }) {
-    kcClient.setAdmin(userId, this.userId);
+    if (!this.error) {
+      kcClient.setAdmin(userId, this.userId);
+    }
   });
 
   Meteor.afterMethod('users.unsetAdmin', function kcUnsetAdmin({ userId }) {
-    kcClient.unsetAdmin(userId, this.userId);
+    if (!this.error) {
+      kcClient.unsetAdmin(userId, this.userId);
+    }
   });
 
   Meteor.afterMethod('users.setAnimatorOf', function kcSetAnimator({ userId, groupId }) {
-    // there is no difference between member and animator roles in keycloak
-    if (!Roles.userIsInRole(userId, 'member', groupId)) {
-      const group = Groups.findOne({ _id: groupId });
-      kcClient.setRole(userId, group.name, this.userId);
+    if (!this.error) {
+      // there is no difference between member and animator roles in keycloak
+      if (!Roles.userIsInRole(userId, 'member', groupId)) {
+        const group = Groups.findOne({ _id: groupId });
+        kcClient.setRole(userId, group.name, this.userId);
+      }
     }
   });
 
   Meteor.afterMethod('users.unsetAnimatorOf', function kcUnsetAnimator({ userId, groupId }) {
-    if (!Roles.userIsInRole(userId, 'member', groupId)) {
-      const group = Groups.findOne({ _id: groupId });
-      kcClient.unsetRole(userId, group.name, this.userId);
+    if (!this.error) {
+      if (!Roles.userIsInRole(userId, 'member', groupId)) {
+        const group = Groups.findOne({ _id: groupId });
+        kcClient.unsetRole(userId, group.name, this.userId);
+      }
     }
   });
 
   Meteor.afterMethod('users.setMemberOf', function kcSetMember({ userId, groupId }) {
-    if (!Roles.userIsInRole(userId, 'animator', groupId)) {
-      const group = Groups.findOne({ _id: groupId });
-      kcClient.setRole(userId, group.name, this.userId);
+    if (!this.error) {
+      if (!Roles.userIsInRole(userId, 'animator', groupId)) {
+        const group = Groups.findOne({ _id: groupId });
+        kcClient.setRole(userId, group.name, this.userId);
+      }
     }
   });
 
   Meteor.afterMethod('users.unsetMemberOf', function kcUnsetMember({ userId, groupId }) {
-    if (!Roles.userIsInRole(userId, 'animator', groupId)) {
-      const group = Groups.findOne({ _id: groupId });
-      kcClient.unsetRole(userId, group.name, this.userId);
+    if (!this.error) {
+      if (!Roles.userIsInRole(userId, 'animator', groupId)) {
+        const group = Groups.findOne({ _id: groupId });
+        kcClient.unsetRole(userId, group.name, this.userId);
+      }
     }
   });
 }

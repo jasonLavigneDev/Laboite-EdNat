@@ -15,8 +15,10 @@ import { updateIntroductionLanguage } from '../../../api/appsettings/methods';
 import Spinner from '../system/Spinner';
 import { CustomToolbarArticle } from '../system/CustomQuill';
 import '../../utils/QuillVideo';
+import { getCurrentIntroduction } from '../../../api/utils';
+import { stripEmptyHtml } from '../../utils/QuillText';
 
-const useStyles = makeStyles((theme) => ({
+export const useStyles = makeStyles((theme) => ({
   root: {
     padding: `0 ${theme.spacing(2)}px 0 ${theme.spacing(2)}px`,
     flex: 1,
@@ -35,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const quillOptions = {
+export const quillOptions = {
   modules: {
     toolbar: {
       container: '#quill-toolbar',
@@ -59,7 +61,7 @@ const IntroductionEdition = ({ data = [] }) => {
 
   useEffect(() => {
     if (data) {
-      const currentData = data.find((entry) => entry.language === language) || {};
+      const currentData = getCurrentIntroduction({ introduction: data }) || {};
       setContent(currentData.content || '');
       setLoading(false);
     }
@@ -67,7 +69,7 @@ const IntroductionEdition = ({ data = [] }) => {
 
   useEffect(() => {
     if (data) {
-      const currentData = data.find((entry) => entry.language === language) || {};
+      const currentData = getCurrentIntroduction({ introduction: data }) || {};
       if (content !== currentData.content) {
         setChanges(true);
       } else {
@@ -84,7 +86,7 @@ const IntroductionEdition = ({ data = [] }) => {
   const onSubmitUpdateData = () => {
     setLoading(true);
 
-    updateIntroductionLanguage.call({ language, content }, (error) => {
+    updateIntroductionLanguage.call({ language, content: stripEmptyHtml(content) }, (error) => {
       setLoading(false);
       if (error) {
         msg.error(error.message);
@@ -95,7 +97,7 @@ const IntroductionEdition = ({ data = [] }) => {
   };
 
   const onCancel = () => {
-    const currentData = data.find((entry) => entry.language === language) || {};
+    const currentData = getCurrentIntroduction({ introduction: data }) || {};
     setContent(currentData.content || '');
   };
 

@@ -9,7 +9,14 @@
     "theme": "laboite",
     "disabledFeatures": {
       "blog": false,
-      "groups": false
+      "notificationsTab": false,
+      "groups": false,
+      "introductionTab": false,
+      "introductionTabStructuresInfos": true
+    },
+    "matomo": {
+      "siteId": 1,
+      "urlBase": "https://URL.fr"
     },
     "laboiteBlogURL": "",
     "enableBBB": false,
@@ -75,6 +82,7 @@
     "toEmail": ""
   },
   "private": {
+    "loginExpirationInDays": 90,
     "fillWithFakeData": false,
     "minioAccess": "",
     "minioSecret": "",

@@ -1,6 +1,6 @@
 /* eslint-disable react/no-this-in-sfc */
 import React, { useState, useEffect } from 'react';
-import { withTracker } from 'meteor/react-meteor-data';
+import { withTracker, useTracker } from 'meteor/react-meteor-data';
 import i18n from 'meteor/universe:i18n';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
@@ -27,14 +27,12 @@ import { useHistory } from 'react-router-dom';
 
 import Categories from '../../../api/categories/categories';
 import Spinner from '../../components/system/Spinner';
-import { createService, updateService } from '../../../api/services/methods';
 import Services from '../../../api/services/services';
 import slugy from '../../utils/slugy';
 import ImageAdminUploader from '../../components/uploader/ImageAdminUploader';
 import { CustomToolbarArticle } from '../../components/system/CustomQuill';
 import '../../utils/QuillVideo';
-import { useAppContext } from '../../contexts/context';
-import { useStructure } from '../../../api/structures/utils';
+import Structures from '../../../api/structures/structures';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -130,7 +128,6 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
   const history = useHistory();
   const classes = useStyles();
   const structureMode = path.startsWith('/admin/structureservices');
-  const [{ user }] = useAppContext();
   const { minioEndPoint, offlinePage } = Meteor.settings.public;
 
   const removeUndefined = () => {
@@ -239,7 +236,7 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
   };
 
   const onSubmitUpdateService = () => {
-    const method = params._id ? updateService : createService;
+    const method = `services.${params._id ? 'update' : 'create'}Service`;
     setLoading(true);
     const { _id, slug, ...rest } = serviceData;
     let args;
@@ -253,16 +250,21 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
         },
       };
     } else {
-      args = {
-        ...rest,
-        content,
-        structure: structureMode ? user.structure : '',
-      };
+      try {
+        const { structureId } = params;
+        args = { ...rest, content, structure: structureMode ? structureId : '' };
+      } catch (err) {
+        msg.error(err.message);
+      }
     }
 
-    method.call(args, (error) => {
+    Meteor.call(method, args, (error) => {
       if (error) {
-        msg.error(error.reason || error.message);
+        if (error.error === 'validation-error') {
+          msg.error(error.details[0].message);
+        } else {
+          msg.error(error.message);
+        }
         setLoading(false);
       } else {
         msg.success(i18n.__('api.methods.operationSuccessMsg'));
@@ -271,7 +273,12 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
     });
   };
 
-  const structure = structureMode ? useStructure() : {};
+  const { structure } = useTracker(() => {
+    const _id = params.structureId ? params.structureId : serviceData.structure;
+    Meteor.subscribe('structures.one', { _id });
+    const data = Structures.findOne(_id);
+    return { structure: data };
+  }, [serviceData, params]);
 
   if (!ready || loading || (!!params._id && !service._id)) {
     return <Spinner full />;
@@ -283,7 +290,7 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
         <Paper className={classes.root}>
           <Typography component="h1">
             {i18n.__(`pages.AdminSingleServicePage.${params._id ? 'edition' : 'creation'}`)}
-            <b> {serviceData.title}</b> {`${structureMode ? `(${structure.name})` : ''}`}
+            <b> {serviceData.title}</b> {`${structureMode && structure != null ? `(${structure.name})` : ''}`}
           </Typography>
           <form noValidate autoComplete="off">
             <TextField

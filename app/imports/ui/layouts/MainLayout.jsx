@@ -31,6 +31,7 @@ const SingleGroupPage = lazy(() => import('../pages/groups/SingleGroupPage'));
 const AddressBook = lazy(() => import('../pages/groups/AddressBook'));
 const EventsPage = lazy(() => import('../pages/groups/EventsPage'));
 const PollPage = lazy(() => import('../pages/groups/PollPage'));
+const ContactPage = lazy(() => import('../pages/system/Contact'));
 const ProfilePage = lazy(() => import('../pages/system/ProfilePage'));
 const ArticlesPage = lazy(() => import('../pages/articles/ArticlesPage'));
 const EditArticlePage = lazy(() => import('../pages/articles/EditArticlePage'));
@@ -38,6 +39,9 @@ const MediaStoragePage = lazy(() => import('../pages/MediaStoragePage'));
 const UserBookmarksPage = lazy(() => import('../pages/users/UserBookmarksPage'));
 const NotificationsDisplay = lazy(() => import('../components/notifications/NotificationsDisplay'));
 const BookmarksPage = lazy(() => import('../pages/groups/BookmarksPage'));
+const StructureSelectionPage = lazy(() => import('../pages/system/StructureSelectionPage'));
+const TabbedNotificationsDisplay = lazy(() => import('../components/notifications/TabbedNotificationsDisplay'));
+const IntroductionPage = lazy(() => import('../pages/IntroductionPage'));
 
 // dynamic imports
 const AdminGroupsPage = lazy(() => import('../pages/admin/AdminGroupsPage'));
@@ -122,9 +126,15 @@ function MainLayout({ appsettings, ready }) {
                     <Switch>
                       <Route exact path="/" component={PersonalPage} />
                       <Route exact path="/profile" component={ProfilePage} />
+                      <Route exact path="/contact" component={ContactPage} />
+                      <Route exact path="/profilestructureselection" component={StructureSelectionPage} />
                       <Route exact path="/services" component={ServicesPage} />
                       <Route exact path="/structure" component={ServicesPage} />
                       <Route exact path="/help" component={HelpPage} />
+
+                      {!disabledFeatures.introductionTab && (
+                        <Route exact path="/introduction" component={IntroductionPage} />
+                      )}
 
                       {!disabledFeatures.blog && <Route exact path="/publications" component={ArticlesPage} />}
                       {!disabledFeatures.blog && <Route exact path="/publications/new" component={EditArticlePage} />}
@@ -150,12 +160,17 @@ function MainLayout({ appsettings, ready }) {
                         <Route exact path="/admingroups/:_id" component={AdminSingleGroupPage} />
                       )}
                       <Route exact path="/medias" component={MediaStoragePage} />
+                      <Route exact path="/notifications" component={TabbedNotificationsDisplay} />
                       <Route exact path="/userBookmarks" component={UserBookmarksPage} />
                       <Route component={NotFound} />
                     </Switch>
                   ) : (
                     <Switch>
                       <Route exact path="/profile" component={ProfilePage} />
+                      <Route exact path="/profilestructureselection" component={StructureSelectionPage} />
+                      {!disabledFeatures.introductionTab && (
+                        <Route exact path="/introduction" component={IntroductionPage} />
+                      )}
                       <Route component={NoStructureSelected} />
                     </Switch>
                   )

@@ -2,8 +2,8 @@
 /* eslint-disable func-names, prefer-arrow-callback */
 
 import { assert } from 'chai';
-import '../../../../i18n/en.i18n.json';
-import '../../../../i18n/fr.i18n.json';
+import '../../../startup/i18n/en.i18n.json';
+import '../../../startup/i18n/fr.i18n.json';
 import getLanguages from '../methods';
 
 describe('languages', function () {

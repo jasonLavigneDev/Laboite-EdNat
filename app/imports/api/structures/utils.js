@@ -1,17 +1,32 @@
-import { useTracker } from 'meteor/react-meteor-data';
+import { Roles } from 'meteor/alanning:roles';
 import Structures from './structures';
-import { useAppContext } from '../../ui/contexts/context';
 
-export const useStructure = (_id) => {
-  const [
-    {
-      user: { structure },
-    },
-  ] = useAppContext();
-  return useTracker(() => {
-    Meteor.subscribe('structures.one', { _id });
-    return Structures.findOne({ _id: _id || structure }) || {};
-  }, [structure]);
+export const hasAdminRightOnStructure = ({ userId, structureId }) => {
+  const ids = [structureId];
+  const structure = Structures.findOne({ _id: structureId }, { fields: { ancestorsIds: 1 } });
+
+  if (structure && structure.ancestorsIds.length > 0) structure.ancestorsIds.forEach((ancestor) => ids.push(ancestor));
+
+  const isAdmin = ids.some((id) => Roles.userIsInRole(userId, 'adminStructure', id));
+  return isAdmin;
 };
 
-export const getStructure = (_id) => Structures.findOne({ _id }) || {};
+export const isAStructureWithSameNameExistWithSameParent = ({ name, parentId, structureId = undefined }) => {
+  const regExp = new RegExp(`^${name}$`, 'i');
+  const query = {
+    name: { $regex: regExp },
+    parentId,
+  };
+
+  // structureId will be undefined if we are in a create-structure scenario
+  // so, don't need to use it
+  // otherwise, we need to exclude the concerned structure from the query
+  // that's why we use `$ne` clause/operator
+  if (typeof structureId === 'string') {
+    query._id = { $ne: structureId };
+  }
+  const structuresWithSameNameOnSameLevel = Structures.find({
+    ...query,
+  });
+  return structuresWithSameNameOnSameLevel.count() > 0;
+};

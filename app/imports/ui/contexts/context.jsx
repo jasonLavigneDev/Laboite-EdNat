@@ -3,15 +3,16 @@ import { Accounts } from 'meteor/accounts-base';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Roles } from 'meteor/alanning:roles';
 import PropTypes from 'prop-types';
-
 import { useWindowSize } from '../utils/hooks';
-import reducer, { MOBILE_SIZE } from './reducer';
+import reducer, { MOBILE_SIZE, TABLET_SIZE } from './reducer';
 import getLang from '../utils/getLang';
+import Structures, { propTypes as structuresPropTypes } from '../../api/structures/structures';
 
 const initialState = {
   user: Meteor.user(),
   userId: null,
   isMobile: window.innerWidth < MOBILE_SIZE,
+  isTablet: window.innerWidth < TABLET_SIZE && window.innerWidth > MOBILE_SIZE,
   language: getLang().substr(0, 2),
   loggingIn: Accounts.loggingIn(),
   authenticated: false,
@@ -25,6 +26,7 @@ const initialState = {
   addressBookPage: {},
   roles: [],
   uploads: [],
+  structure: {},
 };
 
 const logger = (state, action) => {
@@ -48,7 +50,7 @@ const sendStateToIframe = (userId) => {
   );
 };
 
-const Store = ({ children, loggingIn, user, userId, authenticated, roles, loadingUser }) => {
+const Store = ({ children, loggingIn, user, userId, authenticated, roles, loadingUser, structure }) => {
   const [state, dispatch] = useReducer(logger, initialState);
   const { width } = useWindowSize();
 
@@ -66,6 +68,7 @@ const Store = ({ children, loggingIn, user, userId, authenticated, roles, loadin
         userId,
         authenticated,
         roles,
+        structure,
       },
     });
     if (user && user.language && user.language !== state.language) {
@@ -93,6 +96,9 @@ const DynamicStore = withTracker(() => {
   const loggingIn = Meteor.loggingIn();
   const user = Meteor.user();
   const userId = Meteor.userId();
+  const structureHandle = Meteor.subscribe('structures.one');
+  const structure =
+    user && user.structure && user.structure.length ? Structures.findOne({ _id: user.structure }) : undefined;
 
   return {
     loadingUser,
@@ -101,6 +107,8 @@ const DynamicStore = withTracker(() => {
     user,
     userId,
     roles: Roles.getRolesForUser(userId),
+    loadingStructure: !structureHandle.ready(),
+    structure,
   };
 })(Store);
 
@@ -113,6 +121,7 @@ Store.defaultProps = {
   userId: undefined,
   user: {},
   roles: [],
+  structure: undefined,
 };
 
 Store.propTypes = {
@@ -123,4 +132,5 @@ Store.propTypes = {
   user: PropTypes.objectOf(PropTypes.any),
   roles: PropTypes.arrayOf(PropTypes.string),
   children: PropTypes.element.isRequired,
+  structure: structuresPropTypes,
 };

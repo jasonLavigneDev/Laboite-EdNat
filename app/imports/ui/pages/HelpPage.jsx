@@ -6,6 +6,7 @@ import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
+import Box from '@material-ui/core/Box';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import Accordion from '@material-ui/core/Accordion';
@@ -16,12 +17,16 @@ import Button from '@material-ui/core/Button';
 import Modal from '@material-ui/core/Modal';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import CancelIcon from '@material-ui/icons/CancelOutlined';
+import { useMatomo } from '@datapunt/matomo-tracker-react';
 import Screencast from '../components/screencast/Screencast';
 import { useAppContext } from '../contexts/context';
 import Helps from '../../api/helps/helps';
 import { useZoneStyles } from '../components/personalspace/PersonalZone';
 
+const sortCategName = (a, b) => a.localeCompare(b);
+
 function HelpPage() {
+  const { trackEvent } = useMatomo();
   const [openScreencast, setScreencastModal] = useState(false);
   const [{ isMobile }] = useAppContext();
   const helps = useTracker(() => {
@@ -29,8 +34,9 @@ function HelpPage() {
     const helpsData = Helps.find({}, { sort: { title: 1 }, limit: 10000 });
     const categorieData = new Set([]);
     helpsData.forEach(({ category }) => categorieData.add(category));
+    const categoryArray = Array.from(categorieData);
     return subs.ready()
-      ? [...categorieData].map((category) => ({
+      ? [...categoryArray.sort(sortCategName)].map((category) => ({
           name: category,
           items: Helps.find({ category }, { sort: { title: 1 }, limit: 10000 }),
         }))
@@ -65,13 +71,8 @@ function HelpPage() {
       },
     },
     closeButton: {
-      marginRight: '20px',
-      marginTop: '-30px',
       width: '30px',
       height: '30px',
-      position: 'absolute',
-      display: 'flex',
-      justifyContent: 'right',
       cursor: 'pointer',
     },
     button: {
@@ -89,21 +90,44 @@ function HelpPage() {
     modal: {
       display: 'grid',
     },
+    modalHead: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      margin: 20,
+      alignItems: 'center',
+    },
   }));
 
   const classes = useStyles();
   const zoneClasses = useZoneStyles();
-  const [link, setLink] = useState('');
+
+  const [modalState, setModalState] = useState({
+    link: '',
+    name: '',
+  });
 
   const openItem = (item) => {
+    trackEvent({
+      category: 'signin-page',
+      action: 'click-help',
+      name: `Ouvre l'aide ${item.title}`,
+    });
     if (item.type === 5) {
-      setLink(item.content);
+      setModalState({
+        link: item.content,
+        name: item.title,
+      });
+
       setScreencastModal(true);
     } else {
       window.open(item.content);
     }
   };
 
+  // React.useEffect(() => {
+  //   // openItem(helps[0]);
+  //   console.log({ helps });
+  // }, [helps]);
   return (
     <Fade in>
       <Container className={classes.container}>
@@ -161,9 +185,15 @@ function HelpPage() {
         </Grid>
         <Modal open={openScreencast} onClose={() => setScreencastModal(false)}>
           <Grid container className={classes.gridModal}>
-            <Grid item className={classes.button}>
-              <CancelIcon className={classes.closeButton} onClick={() => setScreencastModal(false)} />
-              <Screencast link={link} />
+            <Grid item>
+              <Box className={classes.modalHead}>
+                <Typography variant="h4" style={{ textDecoration: 'underline' }}>
+                  <b>{modalState.name || ''}</b>
+                </Typography>
+
+                <CancelIcon className={classes.closeButton} onClick={() => setScreencastModal(false)} />
+              </Box>
+              <Screencast link={modalState.link} />
             </Grid>
           </Grid>
         </Modal>

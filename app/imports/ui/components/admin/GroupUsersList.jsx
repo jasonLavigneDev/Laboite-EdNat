@@ -4,7 +4,7 @@ import { withTracker } from 'meteor/react-meteor-data';
 import MaterialTable from '@material-table/core';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
-import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import ClearIcon from '@material-ui/icons/Clear';
 import i18n from 'meteor/universe:i18n';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -115,7 +115,7 @@ const GroupsUsersList = (props) => {
   };
 
   useEffect(() => {
-    if (ready === true && group) {
+    if (ready === true && group?.name) {
       const usersField = `${userRole}s`;
       const groupUsers = {};
       users.forEach((entry) => {
@@ -133,18 +133,22 @@ const GroupsUsersList = (props) => {
       icon: add,
       tooltip: i18n.__('components.GroupUsersList.materialTableLocalization.body_addTooltip'),
       isFreeAction: true,
-      onClick: () => setShowSearch(!showSearch),
+      onClick: () => {
+        setShowSearch(!showSearch);
+        setShowSearchGroup(false);
+      },
     },
   ];
-  // fixme: temporarily disable group import function
-  if (false) {
-    actions.push({
-      icon: GroupAddIcon,
-      tooltip: i18n.__('components.GroupUsersList.materialTableLocalization.body_addGroupTooltip'),
-      isFreeAction: true,
-      onClick: () => setShowSearchGroup(!showSearchGroup),
-    });
-  }
+
+  actions.push({
+    icon: GroupAddIcon,
+    tooltip: i18n.__('components.GroupUsersList.materialTableLocalization.body_addGroupTooltip'),
+    isFreeAction: true,
+    onClick: () => {
+      setShowSearchGroup(!showSearchGroup);
+      setShowSearch(false);
+    },
+  });
 
   if (userRole === 'candidate') {
     actions.push({
@@ -179,7 +183,7 @@ const GroupsUsersList = (props) => {
             {i18n.__('components.GroupUsersList.addUserButton')}
           </Button>
           <IconButton onClick={() => setShowSearch(!showSearch)}>
-            <ExpandLessIcon />
+            <ClearIcon />
           </IconButton>
         </div>
       </Collapse>
@@ -197,8 +201,8 @@ const GroupsUsersList = (props) => {
           <Button variant="contained" disabled={!groupAdd} color="primary" onClick={addGroup}>
             {i18n.__('components.GroupUsersList.addGroupButton')}
           </Button>
-          <IconButton onClick={() => setShowSearch(!showSearchGroup)}>
-            <ExpandLessIcon />
+          <IconButton onClick={() => setShowSearchGroup(!showSearchGroup)}>
+            <ClearIcon />
           </IconButton>
         </div>
       </Collapse>
@@ -247,8 +251,8 @@ GroupsUsersList.propTypes = {
 
 export default withTracker(({ groupId, userRole }) => {
   const subUsers = Meteor.subscribe('groups.users', { groupId, role: userRole });
-  const group = Groups.findOne(groupId);
-  const users = Meteor.users.find({}).fetch();
+  const group = Groups.findOne(groupId) || {};
+  const users = Meteor.users.find({}).fetch() || [];
   const ready = subUsers.ready();
   return {
     ready,

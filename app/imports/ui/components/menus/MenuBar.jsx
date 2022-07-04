@@ -2,56 +2,23 @@ import React, { useEffect, useState } from 'react';
 import i18n from 'meteor/universe:i18n';
 import { useLocation, useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
+import { useTracker } from 'meteor/react-meteor-data';
+import { Counts } from 'meteor/tmeasday:publish-counts';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { PropTypes } from 'prop-types';
 import GroupIcon from '@material-ui/icons/Group';
+import Chip from '@material-ui/core/Chip';
 import LibraryBooks from '@material-ui/icons/LibraryBooks';
+import NotificationsNoneIcon from '@material-ui/icons/NotificationsNone';
 import HomeIcon from '@material-ui/icons/Home';
 import BusinessIcon from '@material-ui/icons/Business';
 import AppsIcon from '@material-ui/icons/Apps';
+import InfoIcon from '@material-ui/icons/Info';
 import { useAppContext } from '../../contexts/context';
 import updateDocumentTitle from '../../utils/updateDocumentTitle';
 
 const { disabledFeatures = {} } = Meteor.settings.public;
-
-export const links = [
-  {
-    path: '/',
-    content: 'menuMyspace',
-    contentMobile: 'menuMyspaceMobile',
-    icon: <HomeIcon />,
-    hidden: false,
-  },
-  {
-    path: '/groups',
-    content: 'menuGroupes',
-    contentMobile: 'menuGroupesMobile',
-    icon: <GroupIcon />,
-    hidden: disabledFeatures.groups,
-  },
-  {
-    path: '/services',
-    content: 'menuServices',
-    icon: <AppsIcon />,
-    hidden: false,
-    tooltip: 'tooltipServices',
-  },
-  {
-    path: '/publications',
-    content: 'menuArticles',
-    contentMobile: 'menuArticlesMobile',
-    icon: <LibraryBooks />,
-    hidden: disabledFeatures.blog,
-  },
-  {
-    path: '/structure',
-    content: 'menuStructure',
-    icon: <BusinessIcon />,
-    hidden: false,
-    tooltip: 'tooltipStructure',
-  },
-];
 
 const useStyles = (mobile) =>
   makeStyles((theme) => ({
@@ -83,9 +50,64 @@ const useStyles = (mobile) =>
 
 const MenuBar = ({ mobile }) => {
   const { pathname } = useLocation();
-  const [{ user }] = useAppContext();
+  const [{ user, isMobile }] = useAppContext();
   const history = useHistory();
   const classes = useStyles(mobile)();
+
+  const notifsCounter = useTracker(() => {
+    Meteor.subscribe('notifications.self.counter');
+    return Counts.get('notifications.self.counter');
+  });
+  const links = [
+    {
+      path: '/introduction',
+      content: 'menuIntroduction',
+      icon: <InfoIcon />,
+      hidden: disabledFeatures.introductionTab,
+    },
+    {
+      path: '/',
+      content: 'menuMyspace',
+      contentMobile: 'menuMyspaceMobile',
+      icon: <HomeIcon />,
+      hidden: false,
+    },
+    {
+      path: '/groups',
+      content: 'menuGroupes',
+      contentMobile: 'menuGroupesMobile',
+      icon: <GroupIcon />,
+      hidden: disabledFeatures.groups,
+    },
+    {
+      path: '/services',
+      content: 'menuServices',
+      icon: <AppsIcon />,
+      hidden: false,
+      tooltip: 'tooltipServices',
+    },
+    {
+      path: '/publications',
+      content: 'menuArticles',
+      contentMobile: 'menuArticlesMobile',
+      icon: <LibraryBooks />,
+      hidden: disabledFeatures.blog,
+    },
+    {
+      path: '/structure',
+      content: 'menuStructure',
+      icon: <BusinessIcon />,
+      hidden: false,
+      tooltip: 'tooltipStructure',
+    },
+    {
+      path: '/notifications',
+      content: 'menuNotifications',
+      icon: <NotificationsNoneIcon />,
+      hidden: !isMobile || !disabledFeatures.notificationsTab,
+      chip: notifsCounter,
+    },
+  ];
   const T = i18n.createComponent('components.MenuBar');
   const [currentLink, setCurrentLink] = useState('/');
 
@@ -130,6 +152,7 @@ const MenuBar = ({ mobile }) => {
       }}
       action={initIndicator}
       value={currentLink}
+      to={currentLink}
       indicatorColor="secondary"
       textColor="primary"
       aria-label="menu links"
@@ -142,11 +165,12 @@ const MenuBar = ({ mobile }) => {
           {...a11yProps(index)}
           key={link.path}
           value={link.path}
+          to={link.path}
           title={link.tooltip ? i18n.__(`components.MenuBar.${link.tooltip}`) : ''}
           disableFocusRipple={mobile}
           disableRipple={mobile}
           className={mobile ? classes.mobileTabs : classes.elementTab}
-          icon={mobile ? link.icon : undefined}
+          icon={mobile ? link.chip ? <Chip size="small" label={link.chip} color="secondary" /> : link.icon : undefined}
           label={<T>{link.contentMobile || link.content}</T>}
           onClick={() => handleClick(link)}
         />

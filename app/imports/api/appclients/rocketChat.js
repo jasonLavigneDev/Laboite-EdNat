@@ -156,7 +156,7 @@ class RocketChatClient {
       })
       .catch((error) => {
         logServer(i18n.__('api.rocketChat.groupAddError', { name }), 'error', callerId);
-        logServer(error.response && error.response.data ? error.response.data.error : error, 'error');
+        logServer(error.response && error.response.data ? error.response.data : error, 'error');
         return null;
       });
   }
@@ -191,7 +191,7 @@ class RocketChatClient {
       })
       .catch((error) => {
         logServer(i18n.__('api.rocketChat.groupRenameError', { slug }), 'error', callerId);
-        logServer(error.response && error.response.data ? error.response.data.error : error, 'error');
+        logServer(error.response && error.response.data ? error.response.data : error, 'error');
         return null;
       });
   }
@@ -229,7 +229,7 @@ class RocketChatClient {
       })
       .catch((error) => {
         logServer(i18n.__('api.rocketChat.groupRemoveError', { name }), 'error', callerId);
-        logServer(error.response && error.response.data ? error.response.data.error : error, 'error');
+        logServer(error.response && error.response.data ? error.response.data : error, 'error');
         return null;
       });
   }
@@ -302,7 +302,7 @@ class RocketChatClient {
       )
       .catch((error) => {
         logServer(i18n.__('api.rocketChat.userInviteError', { groupId, username }), 'error', callerId);
-        logServer(error.response && error.response.data ? error.response.data.error : error, 'error');
+        logServer(error.response && error.response.data ? error.response.data : error, 'error');
         return null;
       });
   }
@@ -363,7 +363,7 @@ class RocketChatClient {
           'error',
           callerId,
         );
-        logServer(error.response && error.response.data ? error.response.data.error : error, 'error');
+        logServer(error.response && error.response.data ? error.response.data : error, 'error');
         return null;
       });
   }
@@ -416,7 +416,7 @@ class RocketChatClient {
       )
       .catch((error) => {
         logServer(i18n.__('api.rocketChat.userKickError', { groupId, username }), 'error', callerId);
-        logServer(error.response && error.response.data ? error.response.data.error : error, 'error');
+        logServer(error.response && error.response.data ? error.response.data : error, 'error');
         return null;
       });
   }
@@ -460,7 +460,7 @@ class RocketChatClient {
       })
       .catch((error) => {
         logServer(i18n.__('api.rocketChat.userAddError', { username }), 'error', callerId);
-        logServer(error.response && error.response.data ? error.response.data.error : error, 'error');
+        logServer(error.response && error.response.data ? error.response.data : error, 'error');
         return null;
       });
   }
@@ -511,7 +511,7 @@ class RocketChatClient {
       )
       .catch((error) => {
         logServer(i18n.__('api.rocketChat.updateEmailError', { username, email }), 'error');
-        logServer(error.response && error.response.data ? error.response.data.error : error, 'error');
+        logServer(error.response && error.response.data ? error.response.data : error, 'error');
         return false;
       });
   }
@@ -526,11 +526,13 @@ if (Meteor.isServer && rcEnabled) {
       const { slug } = group;
       rcClient.createGroup(slug, this.userId).then(() => {
         // adds user as channel admin
-        rcClient.ensureUser(this.userId, this.userId).then((user) => {
-          const { username } = user;
-          rcClient
-            .inviteUser(slug, username, this.userId)
-            .then(() => rcClient.setRole(slug, username, 'owner', this.userId));
+        rcClient.ensureUser(this.userId, this.userId).then((rcUser) => {
+          if (rcUser !== null) {
+            const { username } = rcUser;
+            rcClient
+              .inviteUser(slug, username, this.userId)
+              .then(() => rcClient.setRole(slug, username, 'owner', this.userId));
+          }
         });
       });
     }
@@ -561,11 +563,13 @@ if (Meteor.isServer && rcEnabled) {
             if (rcNewGroup === null) {
               rcClient.createGroup(slug, this.userId).then(() => {
                 // adds user as channel admin
-                rcClient.ensureUser(this.userId, this.userId).then((user) => {
-                  const { username } = user;
-                  rcClient
-                    .inviteUser(slug, username, this.userId)
-                    .then(() => rcClient.setRole(slug, username, 'owner', this.userId));
+                rcClient.ensureUser(this.userId, this.userId).then((rcUser) => {
+                  if (rcUser !== null) {
+                    const { username } = rcUser;
+                    rcClient
+                      .inviteUser(slug, username, this.userId)
+                      .then(() => rcClient.setRole(slug, username, 'owner', this.userId));
+                  }
                 });
               });
             }
@@ -592,9 +596,9 @@ if (Meteor.isServer && rcEnabled) {
   Meteor.beforeMethod('users.unsetAdminOf', function rcUnsetAdminOf({ userId, groupId }) {
     const group = Groups.findOne({ _id: groupId });
     if (group.plugins.rocketChat === true) {
-      rcClient.ensureUser(userId, this.userId).then((user) => {
-        if (user !== null) {
-          const { username } = user;
+      rcClient.ensureUser(userId, this.userId).then((rcUser) => {
+        if (rcUser !== null) {
+          const { username } = rcUser;
           rcClient.unsetRole(group.slug, username, 'owner', this.userId).then(() => {
             if (!Roles.userIsInRole(userId, ['member', 'animator'], groupId)) {
               rcClient.kickUser(group.slug, username, this.userId);
@@ -635,6 +639,25 @@ if (Meteor.isServer && rcEnabled) {
     }
   });
 
+  Meteor.afterMethod('groups.addGroupMembersToGroup', function kcAddGroupMembersToGroup({ groupId, anotherGroupId }) {
+    if (!this.error) {
+      const group = Groups.findOne({ _id: groupId });
+      const group2 = Groups.findOne({ _id: anotherGroupId });
+
+      if (group2.plugins.rocketChat === true) {
+        const users = Meteor.users.find({ _id: { $in: group.members } });
+        users.forEach((user) => {
+          rcClient.ensureUser(user._id, this.userId).then((rcUser) => {
+            if (rcUser != null) {
+              const { username } = rcUser;
+              rcClient.inviteUser(group2.slug, username, this.userId);
+            }
+          });
+        });
+      }
+    }
+  });
+
   Meteor.afterMethod('users.setMemberOf', function rcSetMemberOf({ userId, groupId }) {
     const group = Groups.findOne({ _id: groupId });
     if (group.plugins.rocketChat === true) {
@@ -671,7 +694,5 @@ if (Meteor.isServer && rcEnabled) {
         }
       });
     }
-    // console.log('RESULT : ', this.result);
-    // console.log('ERROR: ', this.error);
   });
 }

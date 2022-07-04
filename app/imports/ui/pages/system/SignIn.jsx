@@ -14,12 +14,15 @@ import Fade from '@material-ui/core/Fade';
 import FormGroup from '@material-ui/core/FormGroup';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import { useMatomo } from '@datapunt/matomo-tracker-react';
 
 import Spinner from '../../components/system/Spinner';
-import AppVersion from '../../components/system/AppVersion';
 import AppSettings from '../../../api/appsettings/appsettings';
 
 import Structures from '../../../api/structures/structures';
+import { getCurrentIntroduction } from '../../../api/utils';
+import { usePageTracking } from '../../utils/matomo';
+import { useAppContext } from '../../contexts/context';
 
 validate.options = {
   fullMessages: false,
@@ -104,7 +107,18 @@ export const useFormStateValidator = (formSchema) => {
 };
 
 function SignIn({ loggingIn, introduction, appsettings, ready }) {
+  const [{ isIframed }] = useAppContext();
   const classes = useStyles();
+  const { trackEvent } = useMatomo();
+  usePageTracking({
+    documentTitle: 'Page de connexion',
+    customDimensions: [
+      {
+        id: 'Widget',
+        value: isIframed,
+      },
+    ], // optional
+  });
 
   const [formState, handleChange] = useFormStateValidator(schema);
 
@@ -131,6 +145,11 @@ function SignIn({ loggingIn, introduction, appsettings, ready }) {
   };
 
   const handleKeycloakAuth = () => {
+    trackEvent({
+      category: 'signin-page',
+      action: 'connexion-click',
+      name: 'Connexion avec Keycloak', // optional
+    });
     checkRememberMe();
     Meteor.loginWithKeycloak();
   };
@@ -161,9 +180,6 @@ function SignIn({ loggingIn, introduction, appsettings, ready }) {
       <>
         <Typography variant="h5" color="inherit" paragraph>
           {i18n.__('pages.SignIn.appDescription')}
-        </Typography>
-        <Typography variant="h6" color="inherit" paragraph>
-          <AppVersion />
         </Typography>
         {!ready && !loggingIn && <Spinner />}
         <div dangerouslySetInnerHTML={{ __html: introduction }} />
@@ -257,11 +273,8 @@ export const mainPagesTracker = (settingsSegment = 'all', component) => {
     const subSettings = Meteor.subscribe(`appsettings.${settingsSegment}`);
     const appsettings = AppSettings.findOne() || {};
     const ready = subSettings.ready();
-    // locale may be fr-FR, en-EN, etc...
-    // laboite only manages fr, en, ...
-    const language = i18n.getLocale().split('-')[0];
     const { introduction = [] } = appsettings;
-    const currentEntry = introduction.find((entry) => entry.language === language) || {};
+    const currentEntry = getCurrentIntroduction({ introduction }) || {};
     const defaultContent = introduction.find((entry) => !!entry.content.length);
 
     /**

@@ -4,6 +4,7 @@ import { Meteor } from 'meteor/meteor';
 import i18n from 'meteor/universe:i18n';
 import { Quill } from 'react-quill';
 import '../locales';
+import 'material-icons/iconfont/material-icons.css';
 import App from '../../ui/layouts/App';
 import getLang from '../../ui/utils/getLang';
 import { registerSchemaMessages } from '../../api/utils';

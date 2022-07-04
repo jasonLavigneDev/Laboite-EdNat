@@ -13,6 +13,7 @@ import { Link } from 'react-router-dom';
 const useStyles = makeStyles({
   root: {
     marginTop: 20,
+    height: '72vh',
   },
   actions: {
     display: 'flex',
