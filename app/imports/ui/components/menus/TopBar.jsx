@@ -39,6 +39,7 @@ const useStyles = makeStyles()((theme, isMobile) => ({
     width: '100%',
     borderTop: '1px solid rgba(0, 0, 0, 0.12)',
   },
+  lastBar: { width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'end', alignItems: 'center' },
   imgLogoContainer: {
     height: isMobile ? 30 : 60,
     maxHeight: isMobile ? 30 : 60,
@@ -66,6 +67,7 @@ const useStyles = makeStyles()((theme, isMobile) => ({
     alignItem: 'center',
     height: 48,
   },
+  leftContainer: { display: 'flex', flex: 1 },
   centerContainer: { display: 'flex', justifyContent: 'center', flex: 1 },
   maintenanceBar: {
     marginTop: 50,
@@ -119,7 +121,7 @@ function TopBar({ publicMenu, root, appsettings, adminApp }) {
   return (
     <div>
       <AppBar position="fixed" className={classes.root}>
-        <div className={classes.firstBar}>
+        <div className={isMobile ? classes.firstBar : classes.lastBar}>
           {LOGO ? (
             <Link to={root || (publicMenu ? '/public' : '/')} className={classes.imgLogoContainer}>
               <img
@@ -129,15 +131,17 @@ function TopBar({ publicMenu, root, appsettings, adminApp }) {
                 style={{ padding: isEoleTheme && !isMobile ? 10 : '' }}
               />
             </Link>
-          ) : (
+          ) : isMobile ? (
             <>
               <IconButton onClick={handleIntroductionOpen}>
                 <InfoIcon />
               </IconButton>
             </>
-          )}
+          ) : null}
           <div />
-          <div className={classes.centerContainer}>{!publicMenu && <MainMenu user={user} />}</div>
+          <div className={isMobile ? classes.centerContainer : classes.rightContainer}>
+            {!publicMenu && <MainMenu user={user} />}
+          </div>
           <div className={classes.rightContainer}>
             {publicMenu ? null : (
               <>
