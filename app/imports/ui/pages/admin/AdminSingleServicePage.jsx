@@ -252,8 +252,6 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
 
     Meteor.call(method, args, (error) => {
       if (error) {
-        console.log(args);
-        console.log(error);
         if (error.error === 'validation-error') {
           msg.error(error.details[0].message);
         } else {
