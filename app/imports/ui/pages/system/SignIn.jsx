@@ -15,6 +15,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 
 import Spinner from '../../components/system/Spinner';
+import { useAppContext } from '../../contexts/context';
 import AppSettings from '../../../api/appsettings/appsettings';
 
 import Structures from '../../../api/structures/structures';
