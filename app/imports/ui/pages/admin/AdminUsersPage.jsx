@@ -329,7 +329,7 @@ const AdminUsersPage = ({ match: { path } }) => {
                 <List className={classes.list} disablePadding>
                   {items.map((user, i) => {
                     const userEmail = user.emails ? user.emails[0].address : '';
-                    const structure = getStructure(user.structure);
+                    const userStructure = getStructure(user.structure);
 
                     return [
                       <ListItem alignItems="flex-start" key={`user-${userEmail}`}>
