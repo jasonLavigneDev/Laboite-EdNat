@@ -17,7 +17,7 @@ const SearchField = ({ updateSearch, checkEscape, search, inputRef, resetSearch,
     onKeyDown={checkEscape}
     type="text"
     value={search}
-    variant="filled"
+    variant="outlined"
     placeholder={label}
     inputProps={{
       ref: inputRef,

@@ -487,7 +487,7 @@ const ProfilePage = () => {
                     fullWidth
                     type="text"
                     value={userData.firstName || ''}
-                    variant="filled"
+                    variant="outlined"
                   />
                   <TextField
                     disabled={enableKeycloak}
@@ -502,7 +502,7 @@ const ProfilePage = () => {
                     fullWidth
                     type="text"
                     value={userData.lastName || ''}
-                    variant="filled"
+                    variant="outlined"
                   />
                   <TextField
                     disabled={enableKeycloak}
@@ -517,9 +517,9 @@ const ProfilePage = () => {
                     onChange={onUpdateField}
                     type="text"
                     value={userData.email || ''}
-                    variant="filled"
+                    variant="outlined"
                   />
-                  <FormControl variant="filled" fullWidth disabled={enableKeycloak} margin="normal">
+                  <FormControl variant="outlined" fullWidth disabled={enableKeycloak} margin="normal">
                     <InputLabel error={errors.username !== ''} htmlFor="username" id="username-label">
                       {i18n.__('api.users.labels.username')}
                     </InputLabel>
@@ -560,7 +560,7 @@ const ProfilePage = () => {
               </Grid>
               <Grid item />
               <Grid item className={classes.maxWidth}>
-                <FormControl variant="filled" className={classes.formControl} fullWidth>
+                <FormControl variant="outlined" className={classes.formControl} fullWidth>
                   <Typography>
                     {!user.isActive ? (
                       <span>{i18n.__('pages.ProfilePage.onlyActiveUserOption')}</span>
@@ -624,7 +624,7 @@ const ProfilePage = () => {
                     )}
                   />
                 </FormControl>
-                <FormControl variant="filled" className={classes.formControl} fullWidth>
+                <FormControl variant="outlined" className={classes.formControl} fullWidth>
                   <Button
                     disabled={!user.isActive}
                     variant="outlined"
@@ -636,7 +636,7 @@ const ProfilePage = () => {
               </Grid>
               {enableKeycloak ? (
                 <Grid item>
-                  <FormControl variant="filled" fullWidth>
+                  <FormControl variant="outlined" fullWidth>
                     <InputLabel htmlFor="logoutType" id="logoutType-label">
                       {i18n.__('pages.ProfilePage.logoutType')}
                     </InputLabel>

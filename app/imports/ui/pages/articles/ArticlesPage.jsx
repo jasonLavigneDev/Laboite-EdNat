@@ -34,6 +34,10 @@ const useStyles = makeStyles()((theme) => ({
     minHeight: '100vh',
     flexDirection: 'column',
   },
+  search: {
+    marginBottom: 20,
+    marginLeft: 16,
+  },
   rootMobile: {
     paddingTop: 60,
     marginBottom: -128,
@@ -223,6 +227,7 @@ function ArticlesPage({
           </Grid>
           <Grid container spacing={4}>
             <CollapsingSearch
+              classes={searchToggle ? classes.search : classes.small}
               label={i18n.__(`pages.${i18nCode}.searchText`)}
               updateSearch={updateSearch}
               resetSearch={resetSearch}
