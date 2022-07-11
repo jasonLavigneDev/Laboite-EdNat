@@ -20,6 +20,7 @@ import { getRandomNCloudURL } from '../../nextcloud/methods';
 import Structures from '../../structures/structures';
 import Nextcloud from '../../nextcloud/nextcloud';
 import { hasAdminRightOnStructure } from '../../structures/utils';
+import EventsAgenda from '../../eventsAgenda/eventsAgenda';
 
 if (Meteor.settings.public.enableKeycloak === true) {
   const { whiteDomains } = Meteor.settings.private;
@@ -696,6 +697,12 @@ export const setMemberOf = new ValidatedMethod({
     }
     // update user personalSpace
     favGroup._execute({ userId }, { groupId });
+
+    const insertUser = { email: user.emails[0].address, _id: userId, groupId, status: 1 };
+
+    // update Events
+    EventsAgenda.update({ groups: { $elemMatch: { _id: groupId } } }, { $push: { participants: insertUser } });
+
     // Notify user
     if (this.userId !== userId) createRoleNotification(this.userId, userId, groupId, 'member', true);
   },
