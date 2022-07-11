@@ -212,8 +212,8 @@ export const removeUserFromStructure = new ValidatedMethod({
     if (user === undefined) {
       throw new Meteor.Error('api.users.removeUserFromStructure.unknownUser', i18n.__('api.users.unknownUser'));
     }
-    if (Roles.userIsInRole(this.userId, 'adminStructure', user.structure)) {
-      Roles.removeUsersFromRoles(this.userId, 'adminStructure', user.structure);
+    if (Roles.userIsInRole(userId, 'adminStructure', user.structure)) {
+      Roles.removeUsersFromRoles(userId, 'adminStructure', user.structure);
     }
     Meteor.users.update({ _id: userId }, { $set: { structure: null } });
   },
