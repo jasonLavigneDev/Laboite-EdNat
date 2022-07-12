@@ -133,7 +133,18 @@
           "content": "Contenu d'introduction de structure",
           "language": "Language d'introduction de structure"
         },
-        "contactEmail": "Email de contact de la structure"
+        "contactEmail": "Email de contact de la structure",
+        "asamExtensionsIds": "Ids des extensions d'email"
+      }
+    },
+    "asamextensions": {
+      "labels": {
+        "structureId": "Id de la structure lié à l'extension d'email",
+        "extension": "Extension d'email",
+        "entiteNomCourt": "Nom court de la structure",
+        "entiteNomLong": "Nom long de la structure",
+        "familleNomCourt": "Nom court de la famille de structure",
+        "familleNomLong": "Nom long de la famille de structure"
       }
     },
     "users": {

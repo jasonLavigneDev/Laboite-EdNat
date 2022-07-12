@@ -133,7 +133,18 @@
           "content": "Structure introduction content",
           "language": "Structure introduction language"
         },
-        "contactEmail": "Structure contact email"
+        "contactEmail": "Structure contact email",
+        "asamExtensionsIds": "Related email extensions ids"
+      }
+    },
+    "asamextensions": {
+      "labels": {
+        "structureId": "Related structure id",
+        "extension": "Email extension",
+        "entiteNomCourt": "Short name for structure",
+        "entiteNomLong": "Long name for structure",
+        "familleNomCourt": "Short name for structure's family (category)",
+        "familleNomLong": "Long name for structure's family (category)"
       }
     },
     "users": {
