@@ -41,15 +41,15 @@ Copy `settings-development.json.sample` to `settings-development.json` and updat
 | groupPlugins.PLUGINNAME.groupURL         | string   | ""                                   | [URL]/group/[GROUPSLUG]" "[URL]/apps/files/?dir=/[GROUPNAME]                                |
 | groupPlugins.PLUGINNAME.enableChangeName | boolean  | true                                 | If true, changing the group name for this group plugin is possible                          |
 | services                                 | object   | {}                                   |
-External services urls
+External services urls                                                                      |
 | services.agendaUrl                                | string   | ""                          |
-External url for agenda
+External url for agenda                                                                     |
 | services.sondagesUrl                              | string   | ""                          |
-External url for sondage
+External url for sondage                                                                    |
 | services.mezigUrl                                 | string   | ""                          |
-External url for mezig
+External url for mezig                                                                      |
 | services.blogUrl                                  | string   | ""                          |
-External url for blog
+External url for blog                                                                       |
 | disabledFeatures                         | object   | {}                                   | add features to disabled                                                                    |
 | disabledFeatures.blog                    | boolean  | false                                | disable all blog                                                                            |
 | disabledFeatures.groups                  | boolean  | false                                | disable all groups                                                                          |
