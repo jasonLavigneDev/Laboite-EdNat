@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 
 const cubes = [
   '0.5s',
@@ -30,7 +30,7 @@ const cubes = [
   '0.5s',
 ];
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   wrapper: {
     width: '100%',
     display: 'flex',
@@ -100,7 +100,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Spinner = ({ full = false, message = null }) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   return (
     <div className={`${classes.wrapper} ${full ? classes.mainLoader : ''}`}>
       <div className={classes.loaderWrapper}>

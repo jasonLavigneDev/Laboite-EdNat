@@ -2,7 +2,6 @@ import React, { useEffect, lazy, Suspense } from 'react';
 import { useLocation, Route, Switch } from 'react-router-dom';
 import { useTracker } from 'meteor/react-meteor-data';
 import i18n from 'meteor/universe:i18n';
-import clsx from 'clsx';
 import { Roles } from 'meteor/alanning:roles';
 import Alert from '@mui/material/Alert';
 import AppSettings from '../../api/appsettings/appsettings';
@@ -45,7 +44,7 @@ const { disabledFeatures = {} } = Meteor.settings.public;
 
 function AdminLayout() {
   const [{ userId, user, loadingUser, isMobile }] = useAppContext();
-  const classes = useLayoutStyles(isMobile)();
+  const { classes, cx } = useLayoutStyles(isMobile);
   const location = useLocation();
 
   const isAdmin = Roles.userIsInRole(userId, 'admin');
@@ -71,7 +70,7 @@ function AdminLayout() {
       {loadingUser && ready ? (
         <Spinner full />
       ) : (
-        <main className={clsx(classes.content, classes.flex)} id="main">
+        <main className={cx(classes.content, classes.flex)} id="main">
           <AdminMenu />
           <Suspense fallback={<Spinner />}>
             <div className={classes.container}>

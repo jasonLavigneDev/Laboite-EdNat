@@ -11,26 +11,28 @@ import DeleteIcon from '@mui/icons-material/DeleteOutline';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import EditIcon from '@mui/icons-material/Edit';
 import { alpha } from '@mui/material/styles';
-import withStyles from '@mui/styles/withStyles';
-import makeStyles from '@mui/styles/makeStyles';
+import { withStyles, makeStyles } from 'tss-react/mui';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import CustomDialog from '../system/CustomDialog';
 
-const StyledTreeItem = withStyles((theme) => ({
-  iconContainer: {
-    '& .close': {
-      opacity: 0.3,
+const StyledTreeItem = withStyles(
+  (props) => <TreeItem {...props} />,
+  (theme) => ({
+    iconContainer: {
+      '& .close': {
+        opacity: 0.3,
+      },
     },
-  },
-  group: {
-    marginLeft: 10,
-    paddingLeft: 18,
-    borderLeft: `1px dashed ${alpha(theme.palette.text.primary, 0.4)}`,
-  },
-}))((props) => <TreeItem {...props} />);
+    group: {
+      marginLeft: 10,
+      paddingLeft: 18,
+      borderLeft: `1px dashed ${alpha(theme.palette.text.primary, 0.4)}`,
+    },
+  }),
+);
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   name: {
     alignItems: 'center',
     display: 'flex',
@@ -50,7 +52,7 @@ const AdminStructureTreeItem = ({
   selectedId,
 }) => {
   const { _id: id, name, children, childrenIds } = nodes;
-  const classes = useStyles();
+  const { classes } = useStyles();
   const hasChildren = childrenIds.length > 0;
 
   const [choosenStructure, setChoosenStructure] = useState({});

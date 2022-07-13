@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import i18n from 'meteor/universe:i18n';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import Button from '@mui/material/Button';
 
 const useStyles = (color) =>
-  makeStyles((theme) => ({
+  makeStyles()((theme) => ({
     button: {
       color: theme.palette.tertiary.main,
       backgroundColor: color,
@@ -20,7 +20,9 @@ const useStyles = (color) =>
 const ValidationButton = ({ onAction, text, disabled, icon, onCancel, color }) => {
   const [timesPressed, setTimePressed] = useState(0);
   const [timer, setTimer] = useState(-1);
-  const classes = useStyles(color)();
+  const { classes } = useStyles(color, {
+    props: color,
+  })();
 
   const onPress = () => {
     setTimePressed(timesPressed + 1);

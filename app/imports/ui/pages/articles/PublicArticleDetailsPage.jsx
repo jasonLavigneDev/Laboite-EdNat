@@ -5,7 +5,7 @@ import { withTracker } from 'meteor/react-meteor-data';
 import ArrowBack from '@mui/icons-material/ArrowBack';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
@@ -47,7 +47,7 @@ const modifiedColorSyntax = (context, options) => {
   return colorSyntax(newContext, options);
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   root: {
     paddingTop: 60,
     marginBottom: -64,
@@ -117,7 +117,7 @@ function PublicArticleDetailsPage({
   },
 }) {
   const [{ isMobile }] = useAppContext();
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [user, setUser] = useState({});
   const [counted, setCounted] = useState(false);
   const [landscape, setLandscape] = useState(false);

@@ -12,7 +12,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
@@ -27,7 +27,7 @@ import ServiceDetailsPersSpace from '../services/ServiceDetailsPersSpace';
 import GroupDetailsPersSpace from '../groups/GroupDetailsPersSpace';
 import PersonalLinkDetails from './PersonalLinkDetails';
 
-export const useZoneStyles = makeStyles((theme) => ({
+export const useZoneStyles = makeStyles()((theme) => ({
   expansionpanel: {
     borderRadius: theme.shape.borderRadius,
     marginTop: 30,
@@ -165,7 +165,7 @@ const PersonalZone = ({
   setExpanded,
   needUpdate,
 }) => {
-  const classes = useZoneStyles();
+  const { classes } = useZoneStyles();
   const [{ userId, isMobile }] = useAppContext();
   const [localIsExpanded, setIsExpanded] = useState(isExpanded || true);
 

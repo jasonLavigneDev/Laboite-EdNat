@@ -11,7 +11,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import { Random } from 'meteor/random';
 import ImageResize from 'quill-image-resize-module';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import InputLabel from '@mui/material/InputLabel';
@@ -57,7 +57,7 @@ const { minioEndPoint, minioPort, minioBucket, minioSSL, laboiteBlogURL } = Mete
 
 const HOST = `http${minioSSL ? 's' : ''}://${minioEndPoint}${minioPort ? `:${minioPort}` : ''}/${minioBucket}/`;
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   flex: {
     display: 'flex',
     justifyContent: 'space-between',
@@ -145,7 +145,7 @@ function EditArticlePage({
   history,
 }) {
   const [{ isMobile, language, user }, dispatch] = useAppContext();
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [loading, setLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [quill, setQuill] = useState(null);

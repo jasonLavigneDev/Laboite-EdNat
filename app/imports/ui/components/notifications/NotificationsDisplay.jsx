@@ -19,7 +19,7 @@ import Notification from './Notification';
 import { useNotifDisplayStyles } from './styles';
 
 const NotificationsDisplay = ({ notifications, ready }) => {
-  const classes = useNotifDisplayStyles();
+  const { classes } = useNotifDisplayStyles();
   const [{ notificationPage }, dispatch] = useAppContext();
   const [open, setOpen] = useState(false);
   const [arrowRef, setArrowRef] = React.useState(null);

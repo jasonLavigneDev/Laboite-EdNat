@@ -17,7 +17,7 @@ import { getCurrentIntroduction } from '../../../api/utils';
 import { stripEmptyHtml } from '../../utils/QuillText';
 
 const AdminStructuresIntroductionEdition = ({ /** Can be a state */ structure }) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [content, setContent] = useState('');
   const [title, setTitle] = useState('');
   const [language, setLanguage] = useState(i18n.getLocale().split('-')[0]);

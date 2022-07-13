@@ -2,7 +2,7 @@ import React from 'react';
 import { useTracker } from 'meteor/react-meteor-data';
 import Grid from '@mui/material/Grid';
 import Chip from '@mui/material/Chip';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import Services from '../../../api/services/services';
 import Categories from '../../../api/categories/categories';
 
@@ -10,7 +10,7 @@ import ServiceDetailsList from './ServiceDetailsList';
 import { useAppContext } from '../../contexts/context';
 
 const useStyles = (isMobile) =>
-  makeStyles((theme) => ({
+  makeStyles()((theme) => ({
     categoryItem: {
       flexGrow: 1,
       width: isMobile ? '100%' : null,
@@ -37,7 +37,9 @@ const useStyles = (isMobile) =>
 
 function OfflineServices() {
   const [{ isMobile, isIframed }] = useAppContext();
-  const classes = useStyles(isMobile)();
+  const { classes } = useStyles(isMobile, {
+    props: isMobile,
+  })();
   const data = useTracker(() => {
     const servicesHandle = Meteor.subscribe('services.offline');
     const servicesReady = !servicesHandle.ready();

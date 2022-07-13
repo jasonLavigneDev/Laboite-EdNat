@@ -1,11 +1,11 @@
 import React from 'react';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import Modal from '@mui/material/Modal';
 import PropTypes from 'prop-types';
 import MediaStoragePage from '../../pages/MediaStoragePage';
 
 const useStyles = (isMobile) =>
-  makeStyles((theme) => ({
+  makeStyles()((theme) => ({
     paper: {
       position: 'absolute',
       width: isMobile ? '95%' : '80%',
@@ -20,7 +20,9 @@ const useStyles = (isMobile) =>
   }));
 
 const ImagePicker = ({ onClose, selectFile, isMobile }) => {
-  const classes = useStyles(isMobile)();
+  const { classes } = useStyles(isMobile, {
+    props: isMobile,
+  })();
   return (
     <Modal open onClose={onClose}>
       <div className={classes.paper}>

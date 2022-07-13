@@ -17,6 +17,7 @@
   "dependencies": {
     "@babel/runtime": "^7.17.8",
     "@datapunt/matomo-tracker-react": "^0.5.1",
+    "@emotion/cache": "^11.9.3",
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
     "@material-table/core": "^4.3.38",
@@ -77,6 +78,7 @@
     "simpl-schema": "^1.12.0",
     "slugify": "^1.6.5",
     "sortablejs": "^1.15.0",
+    "tss-react": "^3.7.1",
     "validate.js": "^0.13.1",
     "webrtc-adapter": "^7.7.1",
     "xml2js": "^0.4.23"

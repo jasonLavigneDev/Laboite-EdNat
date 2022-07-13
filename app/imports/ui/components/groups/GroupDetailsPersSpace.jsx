@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
 import { useHistory } from 'react-router-dom';
@@ -17,7 +17,7 @@ import GroupAvatar from './GroupAvatar';
 import GroupBadge from './GroupBadge';
 
 const useStyles = ({ type }, admin, member, candidate) =>
-  makeStyles((theme) => ({
+  makeStyles()((theme) => ({
     card: {
       height: '100%',
       width: '100%',
@@ -95,7 +95,7 @@ function GroupDetailsPersSpace({
 }) {
   const history = useHistory();
   const { type } = group;
-  const classes = useStyles(group, admin, member || animator, candidate)();
+  const { classes } = useStyles(group, admin, member || animator, candidate)();
 
   // const icon = () => {
   //   if (member || animator) {

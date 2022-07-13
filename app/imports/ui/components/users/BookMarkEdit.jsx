@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import i18n from 'meteor/universe:i18n';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardActions from '@mui/material/CardActions';
@@ -15,12 +15,11 @@ import Typography from '@mui/material/Typography';
 import { useAppContext } from '../../contexts/context';
 import COMMON_STYLES from '../../themes/styles';
 
-const useStyles = (isMobile) =>
-  makeStyles(() => ({
-    root: COMMON_STYLES.root,
-    actions: COMMON_STYLES.actions,
-    paper: COMMON_STYLES.paper(isMobile),
-  }));
+const useStyles = makeStyles()((theme, isMobile) => ({
+  root: COMMON_STYLES.root,
+  actions: COMMON_STYLES.actions,
+  paper: COMMON_STYLES.paper(isMobile),
+}));
 
 const BookMarkEdit = ({ data, group, onEdit, open, onClose, method }) => {
   const [{ isMobile }] = useAppContext();
@@ -28,7 +27,7 @@ const BookMarkEdit = ({ data, group, onEdit, open, onClose, method }) => {
   const [tag, setTag] = useState(data.tag);
   const [name, setName] = useState(data.name);
   const [isValid, setIsValid] = useState(false);
-  const classes = useStyles(isMobile)();
+  const { classes } = useStyles(isMobile);
   const args = {
     url,
     name,

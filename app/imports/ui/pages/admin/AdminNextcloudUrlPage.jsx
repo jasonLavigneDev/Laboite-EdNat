@@ -10,21 +10,21 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import add from '@mui/icons-material/Add';
 import Fade from '@mui/material/Fade';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import Spinner from '../../components/system/Spinner';
 import Nextcloud from '../../../api/nextcloud/nextcloud';
 import { removeNextcloudURL } from '../../../api/nextcloud/methods';
 import setMaterialTableLocalization from '../../components/initMaterialTableLocalization';
 import AdminNextCloudUrlEdit from '../../components/admin/AdminNextcloudUrlEdit';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   root: {
     flexGrow: 1,
     marginTop: theme.spacing(3),
   },
 }));
 function AdminNextcloudUrlPage({ loading, nextclouds }) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const ncloudData = {};
   const columns = [
     {

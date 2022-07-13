@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import ReactQuill from 'react-quill'; // ES6
 import 'react-quill/dist/quill.snow.css';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
@@ -17,7 +17,7 @@ import Spinner from '../system/Spinner';
 import { CustomToolbarArticle } from '../system/CustomQuill';
 import '../../utils/QuillVideo';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   root: {
     padding: `0 ${theme.spacing(2)} 0 ${theme.spacing(2)}`,
     flex: 1,
@@ -47,7 +47,7 @@ const quillOptions = {
 };
 
 const LegalComponent = ({ tabkey, data = {} }) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [state, setState] = useObjectState(data);
   const [loading, setLoading] = useState(true);
   const [changes, setChanges] = useState(false);

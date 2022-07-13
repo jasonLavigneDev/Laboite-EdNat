@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import PropTypes from 'prop-types';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
@@ -12,11 +12,11 @@ import notificationSystem from './NotificationSystem';
 import { badgeStyle } from '../groups/GroupBadge';
 import { useAppContext } from '../../contexts/context';
 
-const useStyles = makeStyles((theme) => badgeStyle(theme));
+const useStyles = makeStyles()((theme) => badgeStyle(theme));
 
 const NotificationsBell = ({ nonReadNotifsCount }) => {
   const [{ isIframed }] = useAppContext();
-  const classes = useStyles();
+  const { classes } = useStyles();
   useEffect(() => {
     if (isIframed) {
       window.top.postMessage(

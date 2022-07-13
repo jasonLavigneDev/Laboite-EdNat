@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Card from '@mui/material/Card';
 import i18n from 'meteor/universe:i18n';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import CardActions from '@mui/material/CardActions';
 import CardHeader from '@mui/material/CardHeader';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -18,17 +18,16 @@ import COMMON_STYLES from '../../themes/styles';
 import { createNotification } from '../../../api/notifications/methods';
 import { NOTIFICATIONS_TYPES } from '../../../api/notifications/enums';
 
-const useStyles = (isMobile) =>
-  makeStyles(() => ({
-    root: COMMON_STYLES.root,
-    media: COMMON_STYLES.media,
-    video: COMMON_STYLES.video,
-    actions: COMMON_STYLES.actions,
-    paper: COMMON_STYLES.paper(isMobile, '50%'),
-    iconWrapper: COMMON_STYLES.iconWrapper,
-    groupCountInfo: COMMON_STYLES.groupCountInfo,
-    alert: COMMON_STYLES.alert,
-  }));
+const useStyles = makeStyles()((theme, isMobile) => ({
+  root: COMMON_STYLES.root,
+  media: COMMON_STYLES.media,
+  video: COMMON_STYLES.video,
+  actions: COMMON_STYLES.actions,
+  paper: COMMON_STYLES.paper(isMobile, '50%'),
+  iconWrapper: COMMON_STYLES.iconWrapper,
+  groupCountInfo: COMMON_STYLES.groupCountInfo,
+  alert: COMMON_STYLES.alert,
+}));
 
 const AdminSendNotification = ({ data, open, onClose }) => {
   const [{ isMobile }] = useAppContext();
@@ -38,7 +37,7 @@ const AdminSendNotification = ({ data, open, onClose }) => {
     type: 'info',
     userId: data._id,
   });
-  const classes = useStyles(isMobile)();
+  const { classes } = useStyles(isMobile);
   const sendNotification = () => {
     createNotification.call({ data: notifState }, (error) => {
       if (error) {

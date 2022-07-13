@@ -5,7 +5,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import Container from '@mui/material/Container';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -15,6 +15,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
 import InputLabel from '@mui/material/InputLabel';
+import GlobalStyles from '@mui/material/GlobalStyles';
 import { useHistory } from 'react-router-dom';
 import validate from 'validate.js';
 import i18n from 'meteor/universe:i18n';
@@ -66,12 +67,7 @@ const schema = {
   },
 };
 
-const useStyles = makeStyles((theme) => ({
-  '@global': {
-    body: {
-      backgroundColor: theme.palette.common.white,
-    },
-  },
+const useStyles = makeStyles()((theme) => ({
   paper: {
     marginTop: theme.spacing(4),
     display: 'flex',
@@ -89,7 +85,7 @@ const useStyles = makeStyles((theme) => ({
 
 const SignUp = ({ introduction, ready, structures, loadingStructure }) => {
   const history = useHistory();
-  const classes = useStyles();
+  const { classes, theme } = useStyles();
 
   const [formState, handleChange, setFormState] = useFormStateValidator(schema);
   const [values, setValues] = React.useState({
@@ -151,6 +147,11 @@ const SignUp = ({ introduction, ready, structures, loadingStructure }) => {
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
+      <GlobalStyles
+        styles={{
+          body: { backgroundColor: theme.palette.common.white },
+        }}
+      />
       <div className={classes.paper}>
         <Typography component="h1" variant="h5">
           {i18n.__('pages.SignUp.appDescription')}

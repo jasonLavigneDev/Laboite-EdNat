@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import React from 'react';
 import PropTypes from 'prop-types';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import Card from '@mui/material/Card';
 import Tooltip from '@mui/material/Tooltip';
 import Button from '@mui/material/Button';
@@ -18,7 +18,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import CreateIcon from '@mui/icons-material/Create';
 import Chip from '@mui/material/Chip';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   action: {
     display: 'flex',
     alignItems: 'center',
@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function ArticleDetails({ article, publicPage }) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const history = useHistory();
   let articleURL;
   if (Meteor.settings.public.laboiteBlogURL !== '') {

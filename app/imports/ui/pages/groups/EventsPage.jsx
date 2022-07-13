@@ -16,7 +16,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import ClearIcon from '@mui/icons-material/Clear';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import Typography from '@mui/material/Typography';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import Divider from '@mui/material/Divider';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -31,7 +31,7 @@ import Groups from '../../../api/groups/groups';
 import EventsAgenda from '../../../api/eventsAgenda/eventsAgenda';
 import { GroupPaginate, GroupListActions } from './common';
 
-export const useEvenstPageStyles = makeStyles((theme) => ({
+export const useEvenstPageStyles = makeStyles()((theme) => ({
   root: {
     flexGrow: 1,
     marginTop: theme.spacing(3),
@@ -64,7 +64,7 @@ const ITEM_PER_PAGE = 10;
 const EventsPage = ({ loading, group }) => {
   const [{ userId }] = useAppContext();
   const { slug } = group;
-  const classes = useEvenstPageStyles();
+  const { classes } = useEvenstPageStyles();
   const history = useHistory();
   const [search, setSearch] = useState('');
 

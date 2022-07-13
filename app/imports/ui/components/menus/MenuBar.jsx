@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import i18n from 'meteor/universe:i18n';
 import { useLocation, useHistory } from 'react-router-dom';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import { useTracker } from 'meteor/react-meteor-data';
 import { Counts } from 'meteor/tmeasday:publish-counts';
 import Tabs from '@mui/material/Tabs';
@@ -21,7 +21,7 @@ import updateDocumentTitle from '../../utils/updateDocumentTitle';
 const { disabledFeatures = {} } = Meteor.settings.public;
 
 const useStyles = (mobile) =>
-  makeStyles((theme) => ({
+  makeStyles()((theme) => ({
     tabs: {
       color: theme.palette.text.primary,
     },
@@ -52,7 +52,9 @@ const MenuBar = ({ mobile }) => {
   const { pathname } = useLocation();
   const [{ user, isMobile }] = useAppContext();
   const history = useHistory();
-  const classes = useStyles(mobile)();
+  const { classes } = useStyles(mobile, {
+    props: mobile,
+  })();
 
   const notifsCounter = useTracker(() => {
     Meteor.subscribe('notifications.self.counter');

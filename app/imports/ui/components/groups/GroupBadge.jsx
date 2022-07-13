@@ -1,4 +1,4 @@
-import withStyles from '@mui/styles/withStyles';
+import { withStyles } from 'tss-react/mui';
 import Badge from '@mui/material/Badge';
 
 export const badgeStyle = (theme) => ({
@@ -28,4 +28,4 @@ export const badgeStyle = (theme) => ({
   },
 });
 
-export default withStyles((theme) => badgeStyle(theme))(Badge);
+export default withStyles(Badge, (theme) => badgeStyle(theme));

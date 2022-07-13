@@ -19,7 +19,7 @@ import { useNotifDisplayStyles } from './styles';
 import { notificationsTabType } from '../../../api/notifications/enums';
 
 const TabbedNotificationsDisplay = () => {
-  const classes = useNotifDisplayStyles();
+  const { classes } = useNotifDisplayStyles();
   const [tab, setTab] = useState(0);
   const { notifications, messagesCounter, infoCounter, ready } = useTracker(() => {
     const notifSub = Meteor.subscribe('notifications.self.tabbed', { types: notificationsTabType[tab] });

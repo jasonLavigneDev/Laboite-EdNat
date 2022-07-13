@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useTheme } from '@mui/material/styles';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import AppBar from '@mui/material/AppBar';
 import IconButton from '@mui/material/IconButton';
 import { withTracker } from 'meteor/react-meteor-data';
@@ -15,7 +15,7 @@ import AppSettings from '../../../api/appsettings/appsettings';
 const { disabledFeatures } = Meteor.settings.public;
 
 const useStyles = (isMobile) =>
-  makeStyles((theme) => ({
+  makeStyles()((theme) => ({
     root: {
       backgroundColor: theme.palette.tertiary.main,
       display: 'flex',
@@ -75,7 +75,9 @@ function TopBar({ publicMenu, root, appsettings, adminApp }) {
   const [{ isMobile, user, notificationPage }, dispatch] = useAppContext();
   const history = useHistory();
   const theme = useTheme();
-  const classes = useStyles(isMobile)();
+  const { classes } = useStyles(isMobile, {
+    props: isMobile,
+  })();
   const { SMALL_LOGO, LONG_LOGO, SMALL_LOGO_MAINTENANCE, LONG_LOGO_MAINTENANCE } = theme.logos;
   const LOGO = appsettings.maintenance
     ? isMobile

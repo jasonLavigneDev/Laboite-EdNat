@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data';
 import i18n from 'meteor/universe:i18n';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
@@ -38,7 +38,7 @@ import '../../utils/QuillVideo';
 import AvatarPicker from '../../components/users/AvatarPicker';
 import AdminGroupDelete from '../../components/admin/AdminGroupDelete';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   root: {
     padding: theme.spacing(2),
     marginBottom: theme.spacing(5),
@@ -136,7 +136,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
   const [{ isMobile }] = useAppContext();
   const { groupPlugins } = Meteor.settings.public;
   const history = useHistory();
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const [{ userId }] = useAppContext();
   const isAdmin = Roles.userIsInRole(userId, 'admin', params._id);

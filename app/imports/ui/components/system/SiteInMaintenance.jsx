@@ -1,12 +1,12 @@
 import React from 'react';
 import i18n from 'meteor/universe:i18n';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
 import AppSettings from '../../../api/appsettings/appsettings';
 
-const useStyle = makeStyles((theme) => ({
+const useStyle = makeStyles()((theme) => ({
   title: {
     textAlign: 'center',
   },
@@ -24,7 +24,7 @@ const useStyle = makeStyles((theme) => ({
 }));
 
 const SiteInMaintenance = ({ appsettings, ready }) => {
-  const classes = useStyle();
+  const { classes } = useStyle();
   return (
     <>
       {ready ? (

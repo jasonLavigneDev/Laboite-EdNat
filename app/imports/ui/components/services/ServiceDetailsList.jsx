@@ -1,7 +1,7 @@
 import React from 'react';
 import i18n from 'meteor/universe:i18n';
 import PropTypes from 'prop-types';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import { useHistory } from 'react-router-dom';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
@@ -19,7 +19,7 @@ import FavButton from './FavButton';
 import { isUrlExternal } from '../../utils/utilsFuncs';
 import { useAppContext } from '../../contexts/context';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   action: {
     display: 'flex',
     alignItems: 'center',
@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function ServiceDetails({ service, favAction, noIconMode = false }) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const history = useHistory();
   const isDisabled = service.state === 5;
 

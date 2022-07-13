@@ -13,7 +13,7 @@ import ArrowBack from '@mui/icons-material/ArrowBack';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Typography from '@mui/material/Typography';
 import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
 import Button from '@mui/material/Button';
@@ -30,7 +30,7 @@ import Groups from '../../../api/groups/groups';
 import { getStructure } from '../../../api/structures/hooks';
 import { GroupSearch, GroupPaginate } from './common';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   root: {
     flexGrow: 1,
     marginTop: theme.spacing(3),
@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
 const ITEM_PER_PAGE = 10;
 
 const AddressBook = ({ loading, group, slug }) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const history = useHistory();
   const [{ userId, addressBookPage }, dispatch] = useAppContext();
   const { search = '', searchToggle = false } = addressBookPage;

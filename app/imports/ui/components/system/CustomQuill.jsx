@@ -53,7 +53,7 @@ function CustomToolbarArticle({ withMedia, withWebcam }) {
             unindent: '-1',
             indent: '+1',
           };
-          const classes = {
+          const { classes } = {
             ordered: 'ql-list',
             bullet: 'ql-list',
             unindent: 'ql-indent',

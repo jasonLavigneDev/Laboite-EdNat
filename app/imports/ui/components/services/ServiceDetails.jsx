@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Meteor } from 'meteor/meteor';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -18,7 +18,7 @@ import FavButton from './FavButton';
 import { isUrlExternal } from '../../utils/utilsFuncs';
 import { getServiceInternalUrl } from '../../../api/services/utils';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   cardActions: {
     display: 'flex',
     flexDirection: 'row',
@@ -111,7 +111,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ServiceDetails({ service, favAction, isShort }) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const favorite = favAction === 'fav';
   const isAddressBook = service._id === 'addressbook';
   const isEvents = service._id === 'events';

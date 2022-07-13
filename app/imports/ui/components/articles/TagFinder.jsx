@@ -4,10 +4,10 @@ import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import i18n from 'meteor/universe:i18n';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import InputAdornment from '@mui/material/InputAdornment';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   noRightBorderRadius: {
     borderTopRightRadius: 0,
     borderBottomRightRadius: 0,
@@ -15,7 +15,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 function TagFinder({ tags, onSelected, exclude, opened, resetKey, inputWidth }) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState(tags.filter((tag) => !exclude.includes(tag.name)));
   let existingTags = tags.map((tag) => tag.name.toLowerCase());

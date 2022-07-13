@@ -6,7 +6,7 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import ClearIcon from '@mui/icons-material/Clear';
 import i18n from 'meteor/universe:i18n';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import Button from '@mui/material/Button';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
@@ -17,7 +17,7 @@ import Finder from './Finder';
 import Groups from '../../../api/groups/groups';
 import { useAppContext } from '../../contexts/context';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   adduser: {
     display: 'flex',
     justifyContent: 'flex-end',
@@ -80,7 +80,7 @@ const GroupsUsersList = (props) => {
   const [showSearch, setShowSearch] = useState(false);
   const [showSearchGroup, setShowSearchGroup] = useState(false);
   const [finderId, setFinderId] = useState(new Date().getTime());
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const addUser = () => {
     Meteor.call(addMethods[userRole], { groupId, userId: user._id }, (err) => {

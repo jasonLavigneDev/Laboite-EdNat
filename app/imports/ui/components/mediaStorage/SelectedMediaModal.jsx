@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/media-has-caption */
 import React from 'react';
 import i18n from 'meteor/universe:i18n';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardMedia from '@mui/material/CardMedia';
@@ -28,23 +28,22 @@ const { minioEndPoint, minioPort, minioBucket, minioSSL } = Meteor.settings.publ
 
 const HOST = `http${minioSSL ? 's' : ''}://${minioEndPoint}${minioPort ? `:${minioPort}` : ''}/${minioBucket}/`;
 
-const useStyles = (isMobile) =>
-  makeStyles(() => ({
-    root: COMMON_STYLES.root,
-    media: COMMON_STYLES.media,
-    video: COMMON_STYLES.video,
-    actions: {
-      display: 'flex',
-      justifyContent: 'space-between',
-    },
-    paper: COMMON_STYLES.paper(isMobile, '50%'),
-    iconWrapper: COMMON_STYLES.iconWrapper,
-    alert: COMMON_STYLES.alert,
-  }));
+const useStyles = makeStyles()((theme, isMobile) => ({
+  root: COMMON_STYLES.root,
+  media: COMMON_STYLES.media,
+  video: COMMON_STYLES.video,
+  actions: {
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
+  paper: COMMON_STYLES.paper(isMobile, '50%'),
+  iconWrapper: COMMON_STYLES.iconWrapper,
+  alert: COMMON_STYLES.alert,
+}));
 
 export default function SelectedMediaModal({ file, onClose, onDelete, loading, objectUsed }) {
   const [{ isMobile }] = useAppContext();
-  const classes = useStyles(isMobile)();
+  const { classes } = useStyles(isMobile);
   const fileName = file.name.replace(`users/${Meteor.userId()}/`, '');
   const extension = file.name.split('.').pop();
 

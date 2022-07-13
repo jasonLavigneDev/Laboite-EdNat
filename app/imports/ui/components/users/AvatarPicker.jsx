@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import i18n from 'meteor/universe:i18n';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
@@ -16,7 +16,7 @@ import AvatarCamCapture from './AvatarCamCapture';
 import AvatarEdit from './AvatarEdit';
 import GroupAvatar from '../groups/GroupAvatar';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   root: {
     padding: theme.spacing(2),
     marginTop: theme.spacing(1),
@@ -73,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const AvatarPicker = ({ userAvatar, userFirstName, onAssignAvatar, avatar, type, profil }) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [{ isMobile }] = useAppContext();
   const [imageAvatar, setImageAvatar] = useState('');
   const [openAvatarEdit, setOpenAvatarEdit] = useState(false);

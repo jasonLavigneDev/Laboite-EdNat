@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Random } from 'meteor/random';
 import PropTypes from 'prop-types';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import LaunchIcon from '@mui/icons-material/Launch';
@@ -23,7 +23,7 @@ import i18n from 'meteor/universe:i18n';
 import { useObjectState } from '../../utils/hooks';
 
 const linkColor = 'brown';
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   card: {
     height: '100%',
     width: '100%',
@@ -93,7 +93,7 @@ const useStyles = makeStyles((theme) => ({
 
 function PersonalLinkDetails({ link, globalEdit, isMobile, isSorted, needUpdate }) {
   const { name = '', url = '', tag = '', _id = Random.id(), icon = '' } = link;
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [localEdit, setLocalEdit] = useState(name === '');
   const [state, setState] = useObjectState({ name, url, tag });
   const favButtonLabel = i18n.__('components.PersonalLinkDetails.favButtonLabelNoFav');

@@ -1,6 +1,6 @@
 import React from 'react';
 import i18n from 'meteor/universe:i18n';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import AppBar from '@mui/material/AppBar';
@@ -27,7 +27,7 @@ export const links = [
 ];
 
 const useStyles = (isMobile) =>
-  makeStyles((theme) => ({
+  makeStyles()((theme) => ({
     root: {
       backgroundColor: theme.palette.tertiary.main,
       bottom: 0,
@@ -66,7 +66,9 @@ const useStyles = (isMobile) =>
 
 const OfflineMenu = ({ state: [selectedTab, setTab] }) => {
   const [{ isMobile }] = useAppContext();
-  const classes = useStyles(isMobile)();
+  const { classes } = useStyles(isMobile, {
+    props: isMobile,
+  })();
   const { trackEvent } = useMatomo();
 
   function a11yProps(index) {

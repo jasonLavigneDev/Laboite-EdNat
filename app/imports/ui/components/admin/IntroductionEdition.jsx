@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import ReactQuill from 'react-quill'; // ES6
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import InputLabel from '@mui/material/InputLabel';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
@@ -18,7 +18,7 @@ import '../../utils/QuillVideo';
 import { getCurrentIntroduction } from '../../../api/utils';
 import { stripEmptyHtml } from '../../utils/QuillText';
 
-export const useStyles = makeStyles((theme) => ({
+export const useStyles = makeStyles()((theme) => ({
   root: {
     padding: `0 ${theme.spacing(2)} 0 ${theme.spacing(2)}`,
     flex: 1,
@@ -51,7 +51,7 @@ export const quillOptions = {
 };
 
 const IntroductionEdition = ({ data = [] }) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [content, setContent] = useState('');
   const [language, setLanguage] = useState(i18n._locale);
   const [loading, setLoading] = useState(true);

@@ -6,10 +6,11 @@ import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import Container from '@mui/material/Container';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
+import GlobalStyles from '@mui/material/GlobalStyles';
 import i18n from 'meteor/universe:i18n';
 import { useHistory } from 'react-router-dom';
 import validate from 'validate.js';
@@ -60,12 +61,7 @@ const schema = {
   },
 };
 
-const useStyles = makeStyles((theme) => ({
-  '@global': {
-    body: {
-      backgroundColor: theme.palette.common.white,
-    },
-  },
+const useStyles = makeStyles()((theme) => ({
   paper: {
     marginTop: theme.spacing(4),
     display: 'flex',
@@ -92,7 +88,7 @@ const Contact = ({ structures, loading }) => {
   if (loading) return <Spinner full />;
   const [{ user }] = useAppContext();
   const history = useHistory();
-  const classes = useStyles();
+  const { classes, theme } = useStyles();
   const [formState, handleChange] = useFormStateValidator(schema);
 
   const structureLabel = React.useRef(null);
@@ -164,6 +160,11 @@ const Contact = ({ structures, loading }) => {
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
+      <GlobalStyles
+        styles={{
+          body: { backgroundColor: theme.palette.common.white },
+        }}
+      />
       <div className={classes.paper}>
         <Typography component="h1" variant="h5">
           {i18n.__('pages.ContactForm.appDescription')}

@@ -1,10 +1,10 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useNotifDisplayStyles = makeStyles((theme) => ({
+export const useNotifDisplayStyles = makeStyles()((theme, _params, classes) => ({
   popper: {
     zIndex: 1300,
     marginTop: 20,
-    '&[x-placement*="bottom"] $arrow': {
+    [`&[x-placement*="bottom"] .${classes.arrow}`]: {
       top: 0,
       left: 0,
       marginTop: '-0.9em',

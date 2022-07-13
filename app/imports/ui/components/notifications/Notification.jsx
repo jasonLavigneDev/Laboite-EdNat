@@ -16,11 +16,11 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import Badge from '@mui/material/Badge';
 
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import i18n from 'meteor/universe:i18n';
 import { isUrlExternal } from '../../utils/utilsFuncs';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   inline: {
     display: 'inline',
   },
@@ -49,7 +49,7 @@ const useStyles = makeStyles(() => ({
 
 const Notification = ({ notification, toast }) => {
   const { _id, type, title, content, createdAt, read } = notification;
-  const classes = useStyles();
+  const { classes } = useStyles();
   const history = useHistory();
 
   const handleRemove = (e) => {

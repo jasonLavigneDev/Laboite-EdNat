@@ -26,7 +26,7 @@ import { useEvenstPageStyles } from './EventsPage';
 const ITEM_PER_PAGE = 10;
 
 const PollPage = ({ loading, group, slug }) => {
-  const classes = useEvenstPageStyles();
+  const { classes } = useEvenstPageStyles();
   const history = useHistory();
   const [{ userId, pollPage }, dispatch] = useAppContext();
 

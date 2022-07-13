@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Random } from 'meteor/random';
 import PropTypes from 'prop-types';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Fade from '@mui/material/Fade';
@@ -19,7 +19,7 @@ import Spinner from '../components/system/Spinner';
 
 const { maxMinioDiskPerUser } = Meteor.settings.public;
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   flex: {
     display: 'flex',
     justifyContent: 'space-between',
@@ -49,7 +49,7 @@ const MediaStoragePage = ({ selectFile, modal }) => {
   const [{ isMobile }, dispatch] = useAppContext();
   const [files, setFiles] = useState([]);
   const [selected, setSelected] = useState();
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [loading, setLoading] = useState(false);
   const [objectUsed, setObjectUsed] = useState(null);
 

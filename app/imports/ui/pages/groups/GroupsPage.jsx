@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import Fade from '@mui/material/Fade';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
@@ -28,7 +28,7 @@ import CollapsingSearch from '../../components/system/CollapsingSearch';
 import { useIconStyles, DetaiIconCustom, SimpleIconCustom } from '../../components/system/icons/icons';
 import Spinner from '../../components/system/Spinner';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   small: {
     padding: '5px !important',
     transition: 'all 300ms ease-in-out',
@@ -83,8 +83,8 @@ function GroupsPage() {
   const [{ isMobile, groupPage, userId }, dispatch] = useAppContext();
   const [filterChecked, setFilterChecked] = React.useState(false);
   const history = useHistory();
-  const classes = useStyles();
-  const classesIcons = useIconStyles();
+  const { classes } = useStyles();
+  const { classes: classesIcons } = useIconStyles();
   const {
     search = '',
     searchToggle = false,

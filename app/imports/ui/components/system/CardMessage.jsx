@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import i18n from 'meteor/universe:i18n';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
@@ -10,7 +10,7 @@ import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles()({
   root: {
     marginTop: 20,
     height: '72vh',
@@ -22,7 +22,7 @@ const useStyles = makeStyles({
 });
 
 const CardMessage = ({ title, subtitle, link, linkText }) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   return (
     <Grid className={classes.root} container justifyContent="center">
       <Grid item md={4} xs={11}>

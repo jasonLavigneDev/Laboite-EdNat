@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import React, { useRef, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import Container from '@mui/material/Container';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
@@ -27,7 +27,7 @@ import TopBar from '../../components/menus/TopBar';
 import CollapsingSearch from '../../components/system/CollapsingSearch';
 import Footer from '../../components/menus/Footer';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   root: {
     marginBottom: -64,
     display: 'flex',
@@ -79,7 +79,7 @@ function ArticlesPage({
   },
 }) {
   const [{ isMobile, articlePage }, dispatch] = useAppContext();
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { pathname } = useLocation();
   const publicPage = pathname.indexOf('/publications') !== 0;
   const i18nCode = publicPage ? 'PublicArticlePage' : 'ArticlesPage';

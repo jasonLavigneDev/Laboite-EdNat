@@ -1,13 +1,13 @@
 import React from 'react';
 import Grid from '@mui/material/Grid';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import PropTypes from 'prop-types';
 import { useAppContext } from '../../contexts/context';
 
 export default function Screencast({ link }) {
   const [{ isMobile }] = useAppContext();
 
-  const useStyles = makeStyles({
+  const useStyles = makeStyles()({
     grid: {
       display: 'grid',
       justifyContent: 'center',
@@ -18,7 +18,7 @@ export default function Screencast({ link }) {
       height: isMobile ? '50vmin' : '55vh',
     },
   });
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   return (
     <Grid className={classes.grid}>

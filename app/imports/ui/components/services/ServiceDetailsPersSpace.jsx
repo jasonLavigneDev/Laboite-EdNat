@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Meteor } from 'meteor/meteor';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import { useHistory } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
@@ -19,7 +19,7 @@ import i18n from 'meteor/universe:i18n';
 
 import { isUrlExternal } from '../../utils/utilsFuncs';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   card: {
     height: '100%',
     width: '100%',
@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ServiceDetailsPersSpace({ service, customDrag, isMobile, isSorted, needUpdate }) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const history = useHistory();
   const favButtonLabel = i18n.__('components.ServiceDetails.favButtonLabelNoFav');
   const backToDefaultButtonLabel = i18n.__('components.ServiceDetails.backToDefault');

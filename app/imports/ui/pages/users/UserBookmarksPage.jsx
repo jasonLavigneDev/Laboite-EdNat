@@ -6,7 +6,7 @@ import { withTracker } from 'meteor/react-meteor-data';
 import ArrowBack from '@mui/icons-material/ArrowBack';
 import MaterialTable from '@material-table/core';
 import Grid from '@mui/material/Grid';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import LanguageIcon from '@mui/icons-material/Language';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import StarIcon from '@mui/icons-material/Star';
@@ -22,7 +22,7 @@ import setMaterialTableLocalization from '../../components/initMaterialTableLoca
 import BookMarkEdit from '../../components/users/BookMarkEdit';
 import UserBookmarks from '../../../api/userBookmarks/userBookmarks';
 
-export const useBookmarkPageStyles = makeStyles(() => ({
+export const useBookmarkPageStyles = makeStyles()(() => ({
   ErrorPage: {
     textAlign: 'center',
   },
@@ -79,7 +79,7 @@ export const bookmarkColumns = (classes) => [
 function UserBookmarksPage({ loading, bookmarksList }) {
   const [{ user, userId }] = useAppContext();
   const history = useHistory();
-  const classes = useBookmarkPageStyles();
+  const { classes } = useBookmarkPageStyles();
 
   const columns = bookmarkColumns(classes);
 

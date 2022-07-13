@@ -1,6 +1,6 @@
 import React from 'react';
 import i18n from 'meteor/universe:i18n';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import Menu from '@mui/material/Menu';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
@@ -23,7 +23,7 @@ const LanguageSwitcher = ({ topbar, relative }) => {
     dispatch({ type: 'language', data: { language: lan } });
   };
 
-  const useStyles = makeStyles(() => ({
+  const useStyles = makeStyles()(() => ({
     switcher: {
       color: 'red',
       marginTop: topbar || relative ? null : 60,
@@ -32,7 +32,7 @@ const LanguageSwitcher = ({ topbar, relative }) => {
       height: 15,
     },
   }));
-  const classes = useStyles();
+  const { classes } = useStyles();
   const flag = (
     <img
       alt={`flag for ${i18n.getLanguageNativeName(language)}`}

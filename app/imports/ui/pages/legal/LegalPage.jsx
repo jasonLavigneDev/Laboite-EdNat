@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import { withTracker } from 'meteor/react-meteor-data';
 import i18n from 'meteor/universe:i18n';
 import PropTypes from 'prop-types';
@@ -14,7 +14,7 @@ import Footer, { LEGAL_ROUTES } from '../../components/menus/Footer';
 import { useAppContext } from '../../contexts/context';
 import Spinner from '../../components/system/Spinner';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   container: {
     display: 'flex',
     paddingTop: 60,
@@ -25,7 +25,7 @@ const useStyles = makeStyles(() => ({
 
 const LegalPage = ({ data, dataKey, ready }) => {
   const [{ isMobile }] = useAppContext();
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   useEffect(() => {
     if (data && data.external === true && data.link) {

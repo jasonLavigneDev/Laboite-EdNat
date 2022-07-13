@@ -10,7 +10,7 @@ import Backdrop from '@mui/material/Backdrop';
 import Fade from '@mui/material/Fade';
 import Container from '@mui/material/Container';
 import Modal from '@mui/material/Modal';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -62,7 +62,7 @@ const onDelete = ({ structureId }) => {
   });
 };
 
-const useModalStyles = makeStyles(() => ({
+const useModalStyles = makeStyles()(() => ({
   modal: {
     display: 'flex',
     alignItems: 'center',
@@ -136,7 +136,7 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
   const setEditMode = () => setIsEditMode(true);
   const setCreateMode = () => setIsEditMode(false);
 
-  const modalClasses = useModalStyles();
+  const { classes: modalClasses } = useModalStyles();
 
   const updateParentIdsList = ({ ids }) => {
     const uniqueList = [...new Set([...parentIds, ...ids])];

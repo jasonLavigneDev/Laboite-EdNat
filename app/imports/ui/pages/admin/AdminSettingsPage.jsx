@@ -19,7 +19,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 
 import PropTypes from 'prop-types';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 
 import Spinner from '../../components/system/Spinner';
 import AppSettings from '../../../api/appsettings/appsettings';
@@ -28,7 +28,7 @@ import IntroductionEdition from '../../components/admin/IntroductionEdition';
 import { useAppContext } from '../../contexts/context';
 import { switchMaintenanceStatus, updateTextMaintenance } from '../../../api/appsettings/methods';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   root: {
     padding: theme.spacing(2),
     marginBottom: theme.spacing(5),
@@ -96,7 +96,7 @@ const tabs = [
 const AdminSettingsPage = ({ ready, appsettings }) => {
   const [selected, setSelected] = useState(0);
   const [msgMaintenance, setMsgMaintenance] = useState(appsettings.textMaintenance);
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [loading, setLoading] = useState(true);
   const [{ isMobile }] = useAppContext();
   const [open, setOpen] = useState(false);

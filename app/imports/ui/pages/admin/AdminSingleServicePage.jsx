@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { withTracker, useTracker } from 'meteor/react-meteor-data';
 import i18n from 'meteor/universe:i18n';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
@@ -34,7 +34,7 @@ import { CustomToolbarArticle } from '../../components/system/CustomQuill';
 import '../../utils/QuillVideo';
 import Structures from '../../../api/structures/structures';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   root: {
     padding: theme.spacing(2),
     marginBottom: theme.spacing(5),
@@ -126,7 +126,7 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
   const [loading, setLoading] = useState(!!params._id);
   const [content, setContent] = useState('');
   const history = useHistory();
-  const classes = useStyles();
+  const { classes } = useStyles();
   const structureMode = path.startsWith('/admin/structureservices');
   const { minioEndPoint, offlinePage } = Meteor.settings.public;
 

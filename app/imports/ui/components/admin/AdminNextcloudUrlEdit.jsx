@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import i18n from 'meteor/universe:i18n';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
@@ -16,28 +16,27 @@ import Typography from '@mui/material/Typography';
 import { useAppContext } from '../../contexts/context';
 import COMMON_STYLES from '../../themes/styles';
 
-const useStyles = (isMobile) =>
-  makeStyles((theme) => ({
-    root: COMMON_STYLES.root,
-    media: COMMON_STYLES.media,
-    video: COMMON_STYLES.video,
-    actions: COMMON_STYLES.actions,
-    paper: COMMON_STYLES.paper(isMobile),
-    iconWrapper: COMMON_STYLES.iconWrapper,
-    groupCountInfo: COMMON_STYLES.groupCountInfo,
-    buttonGroup: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      marginTop: theme.spacing(5),
-    },
-    alert: COMMON_STYLES.alert,
-  }));
+const useStyles = makeStyles()((theme, isMobile) => ({
+  root: COMMON_STYLES.root,
+  media: COMMON_STYLES.media,
+  video: COMMON_STYLES.video,
+  actions: COMMON_STYLES.actions,
+  paper: COMMON_STYLES.paper(isMobile),
+  iconWrapper: COMMON_STYLES.iconWrapper,
+  groupCountInfo: COMMON_STYLES.groupCountInfo,
+  buttonGroup: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginTop: theme.spacing(5),
+  },
+  alert: COMMON_STYLES.alert,
+}));
 
 const AdminNextCloudUrlEdit = ({ data, open, onClose }) => {
   const [{ isMobile }] = useAppContext();
   const [url, setUrl] = useState(data.url);
   const active = true;
-  const classes = useStyles(isMobile)();
+  const { classes } = useStyles(isMobile);
   const changeURL = () => {
     Meteor.call(
       'nextcloud.updateURL',

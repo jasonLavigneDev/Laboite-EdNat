@@ -4,7 +4,7 @@ import { Meteor } from 'meteor/meteor';
 import PropTypes from 'prop-types';
 import i18n from 'meteor/universe:i18n';
 import { useHistory, Link } from 'react-router-dom';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
@@ -22,7 +22,7 @@ import { useAppContext } from '../../contexts/context';
 import Categories from '../../../api/categories/categories';
 import { isUrlExternal } from '../../utils/utilsFuncs';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   root: {
     flexGrow: 1,
     marginTop: theme.spacing(3),
@@ -89,7 +89,7 @@ const useStyles = makeStyles((theme) => ({
 
 const SingleServicePage = ({ service = {}, ready, categories = [] }) => {
   const history = useHistory();
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [{ user = {}, isMobile }] = useAppContext();
   const [loading, setLoading] = useState(false);
   const favorite = user.favServices && user.favServices.find((f) => f === service._id);

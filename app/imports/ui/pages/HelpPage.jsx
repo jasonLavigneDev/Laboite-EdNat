@@ -12,7 +12,7 @@ import CardHeader from '@mui/material/CardHeader';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
@@ -43,7 +43,7 @@ function HelpPage() {
       : [];
   });
 
-  const useStyles = makeStyles((theme) => ({
+  const useStyles = makeStyles()((theme) => ({
     card: {
       // margin: 10,
       // height: '18vh',
@@ -98,7 +98,7 @@ function HelpPage() {
     },
   }));
 
-  const classes = useStyles();
+  const { classes } = useStyles();
   const zoneClasses = useZoneStyles();
 
   const [modalState, setModalState] = useState({

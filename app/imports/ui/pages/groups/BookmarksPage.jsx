@@ -29,7 +29,7 @@ function BookmarksPage({ loading, bookmarksList, group }) {
 
   const history = useHistory();
   const [filter, setFilter] = useState(false);
-  const classes = useBookmarkPageStyles();
+  const { classes } = useBookmarkPageStyles();
   const columns = bookmarkColumns(classes);
 
   const [editUrl, setEditUrl] = useState(false);

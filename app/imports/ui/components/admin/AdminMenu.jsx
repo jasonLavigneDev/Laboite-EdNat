@@ -1,5 +1,5 @@
 import React from 'react';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import { useTracker } from 'meteor/react-meteor-data';
 import { Counts } from 'meteor/tmeasday:publish-counts';
 import { Roles } from 'meteor/alanning:roles';
@@ -34,7 +34,7 @@ const { disabledFeatures } = Meteor.settings.public;
 
 // CSS
 const useStyles = (isMobile) =>
-  makeStyles(() => ({
+  makeStyles()(() => ({
     drawer: {
       width: isMobile ? 65 : 300,
       overflowX: 'hidden',
@@ -52,7 +52,9 @@ const useStyles = (isMobile) =>
 
 export default function AdminMenu() {
   const [{ user, isMobile }] = useAppContext();
-  const classes = useStyles(isMobile)();
+  const { classes } = useStyles(isMobile, {
+    props: isMobile,
+  })();
   const { pathname } = useLocation();
   const history = useHistory();
 

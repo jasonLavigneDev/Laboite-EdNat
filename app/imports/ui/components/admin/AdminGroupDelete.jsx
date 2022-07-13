@@ -1,6 +1,6 @@
 import React from 'react';
 import i18n from 'meteor/universe:i18n';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardActions from '@mui/material/CardActions';
@@ -15,24 +15,23 @@ import { useHistory } from 'react-router-dom';
 import { useAppContext } from '../../contexts/context';
 import COMMON_STYLES from '../../themes/styles';
 
-const useStyles = (isMobile) =>
-  makeStyles((theme) => ({
-    root: COMMON_STYLES.root,
-    actions: COMMON_STYLES.actions,
-    paper: COMMON_STYLES.paper(isMobile),
-    groupCountInfo: COMMON_STYLES.groupCountInfo,
-    buttonGroup: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      marginTop: theme.spacing(5),
-    },
-    alert: COMMON_STYLES.alert,
-  }));
+const useStyles = makeStyles()((theme, isMobile) => ({
+  root: COMMON_STYLES.root,
+  actions: COMMON_STYLES.actions,
+  paper: COMMON_STYLES.paper(isMobile),
+  groupCountInfo: COMMON_STYLES.groupCountInfo,
+  buttonGroup: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginTop: theme.spacing(5),
+  },
+  alert: COMMON_STYLES.alert,
+}));
 
 const AdminGroupDelete = ({ group, open, onClose }) => {
   const [{ isMobile }] = useAppContext();
   const history = useHistory();
-  const classes = useStyles(isMobile)();
+  const { classes } = useStyles(isMobile);
   const removeGroup = () => {
     Meteor.call('groups.removeGroup', { groupId: group._id }, (err) => {
       if (err) {

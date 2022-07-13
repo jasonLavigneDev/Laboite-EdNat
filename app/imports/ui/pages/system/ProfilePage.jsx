@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Meteor } from 'meteor/meteor';
 import i18n from 'meteor/universe:i18n';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import { useTracker } from 'meteor/react-meteor-data';
 import { useHistory } from 'react-router-dom';
 import Container from '@mui/material/Container';
@@ -35,7 +35,7 @@ import AvatarPicker from '../../components/users/AvatarPicker';
 import Structures from '../../../api/structures/structures';
 import { getStructure, useStructure } from '../../../api/structures/hooks';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   root: {
     padding: theme.spacing(2),
     marginTop: theme.spacing(1),
@@ -112,7 +112,7 @@ const ProfilePage = () => {
   const [errors, setErrors] = useObjectState(defaultState);
   const [submitted, setSubmitted] = useState(false);
   const [structChecked, setStructChecked] = useState(false);
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { disabledFeatures = {}, enableKeycloak } = Meteor.settings.public;
   const enableBlog = !disabledFeatures.blog;
   const [{ user, loadingUser, isMobile }, dispatch] = useAppContext();

@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/media-has-caption */
 import React, { useState, useEffect } from 'react';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import Dialog from '@mui/material/Dialog';
 import TextField from '@mui/material/TextField';
 import DialogActions from '@mui/material/DialogActions';
@@ -23,7 +23,7 @@ import { useAppContext } from '../../contexts/context';
 import { toBase64, storageToSize } from '../../utils/filesProcess';
 import slugy from '../../utils/slugy';
 
-export const useAudioModalStyles = makeStyles(() => ({
+export const useAudioModalStyles = makeStyles()(() => ({
   content: {
     display: 'flex',
     alignItems: 'center',
@@ -114,7 +114,7 @@ const recorder = new MicRecorder({ bitRate: 128 });
 
 const AudioModal = ({ onClose, selectFile, admin }) => {
   const [, dispatch] = useAppContext();
-  const classes = useAudioModalStyles();
+  const { classes } = useAudioModalStyles();
   const [audioBlob, setBlob] = useState(null);
   const [audioPlayer, setAudioPlayer] = useState(null);
   const [capturing, setCapturing] = useState(false);

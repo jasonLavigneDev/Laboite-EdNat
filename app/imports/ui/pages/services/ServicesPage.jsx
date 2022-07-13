@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import Container from '@mui/material/Container';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -38,7 +38,7 @@ import { useIconStyles, DetaiIconCustom, SimpleIconCustom } from '../../componen
 import { useStructure } from '../../../api/structures/hooks';
 
 const useStyles = (isMobile) =>
-  makeStyles((theme) => ({
+  makeStyles()((theme) => ({
     flex: {
       display: 'flex',
       justifyContent: 'space-between',
@@ -138,8 +138,10 @@ const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={r
 export function ServicesPage({ services, categories, ready, structureMode, offline }) {
   const [{ user, loadingUser, isMobile, servicePage }, dispatch] = useAppContext();
   const structure = offline ? null : useStructure();
-  const classes = useStyles(isMobile)();
-  const classesIcons = useIconStyles();
+  const { classes } = useStyles(isMobile, {
+    props: isMobile,
+  })();
+  const { classes: classesIcons } = useIconStyles();
   const {
     catList = [],
     search = '',

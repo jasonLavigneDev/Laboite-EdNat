@@ -32,7 +32,7 @@ let timer;
 
 const WebcamModal = ({ onClose, selectFile, admin }) => {
   const [, dispatch] = useAppContext();
-  const classes = useAudioModalStyles();
+  const { classes } = useAudioModalStyles();
   const webcamRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const [capturing, setCapturing] = useState(false);

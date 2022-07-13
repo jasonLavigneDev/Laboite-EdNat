@@ -15,7 +15,7 @@ import PersonAddDisabled from '@mui/icons-material/PersonAddDisabled';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Typography from '@mui/material/Typography';
 import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -41,7 +41,7 @@ import AdminSendNotification from '../../components/users/AdminSendNotification'
 import { getStructure } from '../../../api/structures/hooks';
 
 let userData = {};
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   root: {
     flexGrow: 1,
     marginTop: theme.spacing(3),
@@ -82,7 +82,7 @@ const ITEM_PER_PAGE = 10;
 const AdminUsersPage = () => {
   const [openQuota, setOpenQuota] = useState(false);
   const [openNotif, setOpenNotif] = useState(false);
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [{ isMobile, isTablet }] = useAppContext();
   const [search, setSearch] = useState('');
   const [sortByDate, setSortByDate] = useState(false);

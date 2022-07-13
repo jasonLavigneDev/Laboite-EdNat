@@ -14,7 +14,7 @@ const IntroductionAccordion = ({ summary, head = '', body, startExpanded = false
   const [{ isMobile }] = useAppContext();
   const [isExpanded, setIsExpanded] = useState(startExpanded || false);
   const toggleExpand = () => setIsExpanded(!isExpanded);
-  const classes = useStyles(isMobile);
+  const { classes } = useStyles(isMobile);
 
   return (
     <Accordion className={`${classes.expansionpanel} ${classes.cursorPointer}`} expanded={isExpanded}>

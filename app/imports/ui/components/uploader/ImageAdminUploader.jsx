@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import PropTypes from 'prop-types';
 import { Random } from 'meteor/random';
 import { useAppContext } from '../../contexts/context';
 import { toBase64 } from '../../utils/filesProcess';
 import Spinner from '../system/Spinner';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   imageWrapper: {
     position: 'relative',
   },
@@ -29,7 +29,7 @@ const useStyles = makeStyles(() => ({
 const ImageAdminUploader = ({ src, alt, onImageChange, className, name, path, width, height }) => {
   const [{ uploads }, dispatch] = useAppContext();
   const [loading, setLoading] = useState(false);
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { minioEndPoint } = Meteor.settings.public;
 
   const PLACEHOLDER = `https://fakeimg.pl/${width}x${height}/`;
