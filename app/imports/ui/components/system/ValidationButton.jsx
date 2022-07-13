@@ -4,25 +4,22 @@ import i18n from 'meteor/universe:i18n';
 import { makeStyles } from 'tss-react/mui';
 import Button from '@mui/material/Button';
 
-const useStyles = (color) =>
-  makeStyles()((theme) => ({
-    button: {
-      color: theme.palette.tertiary.main,
-      backgroundColor: color,
-      textTransform: 'none',
-      '&:hover': {
-        backgroundColor: theme.palette.tertiary.main,
-        color,
-      },
+const useStyles = makeStyles()((theme, color) => ({
+  button: {
+    color: theme.palette.tertiary.main,
+    backgroundColor: color,
+    textTransform: 'none',
+    '&:hover': {
+      backgroundColor: theme.palette.tertiary.main,
+      color,
     },
-  }));
+  },
+}));
 
 const ValidationButton = ({ onAction, text, disabled, icon, onCancel, color }) => {
   const [timesPressed, setTimePressed] = useState(0);
   const [timer, setTimer] = useState(-1);
-  const { classes } = useStyles(color, {
-    props: color,
-  })();
+  const { classes } = useStyles(color);
 
   const onPress = () => {
     setTimePressed(timesPressed + 1);

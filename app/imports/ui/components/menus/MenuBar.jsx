@@ -20,41 +20,38 @@ import updateDocumentTitle from '../../utils/updateDocumentTitle';
 
 const { disabledFeatures = {} } = Meteor.settings.public;
 
-const useStyles = (mobile) =>
-  makeStyles()((theme) => ({
-    tabs: {
+const useStyles = makeStyles()((theme, mobile) => ({
+  tabs: {
+    color: theme.palette.text.primary,
+  },
+  mobileTabs: {
+    textTransform: 'none',
+  },
+  elementTab: {
+    '&:hover': {
       color: theme.palette.text.primary,
+      transition: 'all 300ms ease-in-out',
     },
-    mobileTabs: {
-      textTransform: 'none',
-    },
-    elementTab: {
-      '&:hover': {
-        color: theme.palette.text.primary,
-        transition: 'all 300ms ease-in-out',
-      },
-    },
-    flexContainer: {
-      display: 'flex',
-      alignItems: 'center',
-    },
-    indicator: {
-      top: mobile ? 0 : null,
-      height: 3,
-      borderTopLeftRadius: mobile ? 0 : theme.shape.borderRadius,
-      borderTopRightRadius: mobile ? 0 : theme.shape.borderRadius,
-      borderBottomLeftRadius: !mobile ? 0 : theme.shape.borderRadius,
-      borderBottomRightRadius: !mobile ? 0 : theme.shape.borderRadius,
-    },
-  }));
+  },
+  flexContainer: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  indicator: {
+    top: mobile ? 0 : null,
+    height: 3,
+    borderTopLeftRadius: mobile ? 0 : theme.shape.borderRadius,
+    borderTopRightRadius: mobile ? 0 : theme.shape.borderRadius,
+    borderBottomLeftRadius: !mobile ? 0 : theme.shape.borderRadius,
+    borderBottomRightRadius: !mobile ? 0 : theme.shape.borderRadius,
+  },
+}));
 
 const MenuBar = ({ mobile }) => {
   const { pathname } = useLocation();
   const [{ user, isMobile }] = useAppContext();
   const history = useHistory();
-  const { classes } = useStyles(mobile, {
-    props: mobile,
-  })();
+  const { classes } = useStyles(mobile);
 
   const notifsCounter = useTracker(() => {
     Meteor.subscribe('notifications.self.counter');

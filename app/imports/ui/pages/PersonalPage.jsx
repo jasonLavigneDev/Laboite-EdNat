@@ -30,105 +30,104 @@ import { useAppContext } from '../contexts/context';
 import UserBookmarks from '../../api/userBookmarks/userBookmarks';
 import CollapsingSearch from '../components/system/CollapsingSearch';
 
-const useStyles = (isMobile) =>
-  makeStyles()((theme) => ({
-    small: {
-      padding: '5px !important',
-      transition: 'all 300ms ease-in-out',
-    },
-    search: {
-      marginBottom: 20,
-      marginLeft: 16,
-    },
+const useStyles = makeStyles()((theme, isMobile) => ({
+  small: {
+    padding: '5px !important',
+    transition: 'all 300ms ease-in-out',
+  },
+  search: {
+    marginBottom: 20,
+    marginLeft: 16,
+  },
 
-    mobileButtonContainer: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      paddingTop: '0 !important',
+  mobileButtonContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: '0 !important',
+  },
+  zoneButtonContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  flex: {
+    display: 'flex',
+    flexDirection: isMobile ? 'column' : 'row',
+    justifyContent: 'space-between',
+    alignItems: isMobile ? 'flex-start' : 'center',
+  },
+  flexGrow: {},
+  cardGrid: {
+    paddingTop: theme.spacing(0),
+    paddingBottom: theme.spacing(2),
+  },
+  chip: {
+    margin: theme.spacing(1),
+  },
+  badge: { position: 'inherit' },
+  modeEdition: { width: 'max-content' },
+  gridItem: {
+    position: 'relative',
+    '&.sortable-ghost': { opacity: 0.3 },
+  },
+  ghost: {
+    opacity: '1 !important',
+  },
+  titleButtons: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  handle: {
+    cursor: 'grab',
+    position: 'absolute',
+    textAlign: 'center',
+    width: 'calc(100% - 32px)',
+    backgroundColor: theme.palette.primary.main,
+    opacity: 0.2,
+    height: 20,
+    borderTopLeftRadius: theme.shape.borderRadius,
+    borderTopRightRadius: theme.shape.borderRadius,
+    '&::after': {
+      content: '""',
+      width: '80%',
+      height: '3px',
+      backgroundColor: 'white',
+      display: 'inline-block',
+      marginBottom: '3px',
+      borderRadius: theme.shape.borderRadius,
     },
-    zoneButtonContainer: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
+  },
+  zoneButtonEnd: {
+    opacity: 0.7,
+    textTransform: 'none',
+    width: '75%',
+    cursor: 'pointer',
+    '&:hover': {
+      opacity: 1,
+      color: theme.palette.primary.main,
+      backgroundColor: theme.palette.tertiary.main,
     },
-    flex: {
-      display: 'flex',
-      flexDirection: isMobile ? 'column' : 'row',
-      justifyContent: 'space-between',
-      alignItems: isMobile ? 'flex-start' : 'center',
-    },
-    flexGrow: {},
-    cardGrid: {
-      paddingTop: theme.spacing(0),
-      paddingBottom: theme.spacing(2),
-    },
-    chip: {
-      margin: theme.spacing(1),
-    },
-    badge: { position: 'inherit' },
-    modeEdition: { width: 'max-content' },
-    gridItem: {
-      position: 'relative',
-      '&.sortable-ghost': { opacity: 0.3 },
-    },
-    ghost: {
-      opacity: '1 !important',
-    },
-    titleButtons: {
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center',
-    },
-    handle: {
-      cursor: 'grab',
-      position: 'absolute',
-      textAlign: 'center',
-      width: 'calc(100% - 32px)',
-      backgroundColor: theme.palette.primary.main,
-      opacity: 0.2,
-      height: 20,
-      borderTopLeftRadius: theme.shape.borderRadius,
-      borderTopRightRadius: theme.shape.borderRadius,
-      '&::after': {
-        content: '""',
-        width: '80%',
-        height: '3px',
-        backgroundColor: 'white',
-        display: 'inline-block',
-        marginBottom: '3px',
-        borderRadius: theme.shape.borderRadius,
-      },
-    },
-    zoneButtonEnd: {
-      opacity: 0.7,
-      textTransform: 'none',
-      width: '75%',
-      cursor: 'pointer',
-      '&:hover': {
-        opacity: 1,
-        color: theme.palette.primary.main,
-        backgroundColor: theme.palette.tertiary.main,
-      },
-    },
-    divider: {
-      marginTop: 20,
-      marginBottom: 20,
-      backgroundColor: '#cbd0ed',
-    },
-    goIcon: {
-      marginLeft: 8,
-      verticalAlign: 'bottom',
-    },
-    castTuto: {
-      marginTop: 30,
-      marginBottom: 15,
-    },
-    screen: {
-      marginTop: 30,
-      marginBottom: 40,
-    },
-  }));
+  },
+  divider: {
+    marginTop: 20,
+    marginBottom: 20,
+    backgroundColor: '#cbd0ed',
+  },
+  goIcon: {
+    marginLeft: 8,
+    verticalAlign: 'bottom',
+  },
+  castTuto: {
+    marginTop: 30,
+    marginBottom: 15,
+  },
+  screen: {
+    marginTop: 30,
+    marginBottom: 40,
+  },
+}));
 
 function PersonalPage({ personalspace, isLoading, allServices, allGroups, allLinks }) {
   const AUTOSAVE_INTERVAL = 3000;
@@ -136,9 +135,7 @@ function PersonalPage({ personalspace, isLoading, allServices, allGroups, allLin
   const [customDrag, setcustomDrag] = useState(false);
   const [search, setSearch] = useState('');
   const [searchToggle, setSearchToggle] = useState(false);
-  const { classes } = useStyles(isMobile, {
-    props: isMobile,
-  })();
+  const { classes } = useStyles(isMobile);
   const inputRef = useRef(null);
 
   const updateSearch = (e) => {

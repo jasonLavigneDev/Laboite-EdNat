@@ -71,7 +71,7 @@ const NotificationsDisplay = ({ notifications, ready }) => {
           onClose={handleNotifsClose}
           anchorEl={document.getElementById('NotificationsBell')}
           placement="bottom-end"
-          modifiers={{ arrow: { enabled: true, element: arrowRef } }}
+          modifiers={[{ arrow: { enabled: true, element: arrowRef } }]}
         >
           <Fade in={notificationPage.notifsOpen}>
             <>

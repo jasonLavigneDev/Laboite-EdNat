@@ -33,28 +33,25 @@ import { useAppContext } from '../../contexts/context';
 const { disabledFeatures } = Meteor.settings.public;
 
 // CSS
-const useStyles = (isMobile) =>
-  makeStyles()(() => ({
-    drawer: {
-      width: isMobile ? 65 : 300,
+const useStyles = makeStyles()((theme, isMobile) => ({
+  drawer: {
+    width: isMobile ? 65 : 300,
+    overflowX: 'hidden',
+    '& *': {
       overflowX: 'hidden',
-      '& *': {
-        overflowX: 'hidden',
-      },
-      '& .MuiDrawer-paper': {
-        marginTop: 48,
-        marginBottom: 48,
-        width: isMobile ? 65 : 300,
-        zIndex: 0,
-      },
     },
-  }));
+    '& .MuiDrawer-paper': {
+      marginTop: 48,
+      marginBottom: 48,
+      width: isMobile ? 65 : 300,
+      zIndex: 0,
+    },
+  },
+}));
 
 export default function AdminMenu() {
   const [{ user, isMobile }] = useAppContext();
-  const { classes } = useStyles(isMobile, {
-    props: isMobile,
-  })();
+  const { classes } = useStyles(isMobile);
   const { pathname } = useLocation();
   const history = useHistory();
 

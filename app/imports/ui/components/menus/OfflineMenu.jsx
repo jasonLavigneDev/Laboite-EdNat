@@ -26,49 +26,46 @@ export const links = [
   },
 ];
 
-const useStyles = (isMobile) =>
-  makeStyles()((theme) => ({
-    root: {
-      backgroundColor: theme.palette.tertiary.main,
-      bottom: 0,
-      top: 'auto',
-    },
-    tabs: {
+const useStyles = makeStyles()((theme, isMobile) => ({
+  root: {
+    backgroundColor: theme.palette.tertiary.main,
+    bottom: 0,
+    top: 'auto',
+  },
+  tabs: {
+    color: theme.palette.text.primary,
+  },
+  mobileTabs: {
+    textTransform: 'none',
+  },
+  elementTab: {
+    textTransform: 'capitalize',
+    paddingLeft: isMobile ? null : 50,
+    paddingRight: isMobile ? null : 50,
+    '&:hover': {
       color: theme.palette.text.primary,
+      transition: 'all 300ms ease-in-out',
     },
-    mobileTabs: {
-      textTransform: 'none',
-    },
-    elementTab: {
-      textTransform: 'capitalize',
-      paddingLeft: isMobile ? null : 50,
-      paddingRight: isMobile ? null : 50,
-      '&:hover': {
-        color: theme.palette.text.primary,
-        transition: 'all 300ms ease-in-out',
-      },
-    },
-    flexContainer: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    indicator: {
-      top: 0,
-      height: 3,
-      color: theme.palette.secondary.primary,
-      borderTopLeftRadius: 0,
-      borderTopRightRadius: 0,
-      borderBottomLeftRadius: 0,
-      borderBottomRightRadius: 0,
-    },
-  }));
+  },
+  flexContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  indicator: {
+    top: 0,
+    height: 3,
+    color: theme.palette.secondary.primary,
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
+  },
+}));
 
 const OfflineMenu = ({ state: [selectedTab, setTab] }) => {
   const [{ isMobile }] = useAppContext();
-  const { classes } = useStyles(isMobile, {
-    props: isMobile,
-  })();
+  const { classes } = useStyles(isMobile);
   const { trackEvent } = useMatomo();
 
   function a11yProps(index) {

@@ -37,110 +37,107 @@ import ServiceDetailsList from '../../components/services/ServiceDetailsList';
 import { useIconStyles, DetaiIconCustom, SimpleIconCustom } from '../../components/system/icons/icons';
 import { useStructure } from '../../../api/structures/hooks';
 
-const useStyles = (isMobile) =>
-  makeStyles()((theme) => ({
-    flex: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
+const useStyles = makeStyles()((theme, isMobile) => ({
+  flex: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  cardGrid: {
+    marginBottom: '0px',
+  },
+  chip: {
+    margin: theme.spacing(1),
+    '&&:hover,&&:focus': {
+      backgroundColor: theme.palette.backgroundFocus.main,
+      color: theme.palette.primary.main,
     },
-    cardGrid: {
-      marginBottom: '0px',
-    },
-    chip: {
-      margin: theme.spacing(1),
-      '&&:hover,&&:focus': {
-        backgroundColor: theme.palette.backgroundFocus.main,
-        color: theme.palette.primary.main,
-      },
-    },
-    smallGrid: {
-      height: 20,
-    },
-    filterTitle: {
-      fontSize: '0.85rem',
-      margin: theme.spacing(1),
-    },
-    badge: {
-      height: 20,
-      display: 'flex',
-      padding: '0 6px',
-      flexWrap: 'wrap',
-      fontSize: '0.75rem',
-      backgroundColor: theme.palette.primary.main,
-      color: `${theme.palette.tertiary.main} !important`,
-      minWidth: 20,
-      borderRadius: 10,
-      marginLeft: isMobile ? 10 : 0,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    invertedBadge: {
-      height: 20,
-      display: 'flex',
-      padding: '0 6px',
-      flexWrap: 'wrap',
-      fontSize: '0.75rem',
-      backgroundColor: theme.palette.tertiary.main,
-      color: `${theme.palette.primary.main} !important`,
-      minWidth: 20,
-      borderRadius: 10,
-      marginLeft: isMobile ? 10 : 0,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    gridItem: {
-      display: 'flex',
-      justifyContent: 'center',
-    },
-    small: {
-      padding: '5px !important',
-      transition: 'all 300ms ease-in-out',
-    },
-    spaceBetween: {
-      display: 'flex',
-      justifyContent: 'space-between',
-    },
-    mobileButtonContainer: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      paddingTop: '0 !important',
-    },
-    categoryFilterMobile: {
-      position: 'absolute',
-      top: 0,
-      bottom: 0,
-      right: 0,
-      left: 0,
-      backgroundColor: theme.palette.tertiary.main,
-      zIndex: theme.zIndex.modal,
-    },
-    categoriesList: {
-      marginTop: 60,
-    },
-    appBarBottom: {
-      bottom: 0,
-      top: 'auto',
-      backgroundColor: theme.palette.tertiary.main,
-    },
-    toolbarBottom: {
-      justifyContent: 'space-between',
-    },
-    emptyMsg: {
-      marginTop: 30,
-      marginBottom: 15,
-    },
-  }));
+  },
+  smallGrid: {
+    height: 20,
+  },
+  filterTitle: {
+    fontSize: '0.85rem',
+    margin: theme.spacing(1),
+  },
+  badge: {
+    height: 20,
+    display: 'flex',
+    padding: '0 6px',
+    flexWrap: 'wrap',
+    fontSize: '0.75rem',
+    backgroundColor: theme.palette.primary.main,
+    color: `${theme.palette.tertiary.main} !important`,
+    minWidth: 20,
+    borderRadius: 10,
+    marginLeft: isMobile ? 10 : 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  invertedBadge: {
+    height: 20,
+    display: 'flex',
+    padding: '0 6px',
+    flexWrap: 'wrap',
+    fontSize: '0.75rem',
+    backgroundColor: theme.palette.tertiary.main,
+    color: `${theme.palette.primary.main} !important`,
+    minWidth: 20,
+    borderRadius: 10,
+    marginLeft: isMobile ? 10 : 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  gridItem: {
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  small: {
+    padding: '5px !important',
+    transition: 'all 300ms ease-in-out',
+  },
+  spaceBetween: {
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
+  mobileButtonContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: '0 !important',
+  },
+  categoryFilterMobile: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    right: 0,
+    left: 0,
+    backgroundColor: theme.palette.tertiary.main,
+    zIndex: theme.zIndex.modal,
+  },
+  categoriesList: {
+    marginTop: 60,
+  },
+  appBarBottom: {
+    bottom: 0,
+    top: 'auto',
+    backgroundColor: theme.palette.tertiary.main,
+  },
+  toolbarBottom: {
+    justifyContent: 'space-between',
+  },
+  emptyMsg: {
+    marginTop: 30,
+    marginBottom: 15,
+  },
+}));
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
 export function ServicesPage({ services, categories, ready, structureMode, offline }) {
   const [{ user, loadingUser, isMobile, servicePage }, dispatch] = useAppContext();
   const structure = offline ? null : useStructure();
-  const { classes } = useStyles(isMobile, {
-    props: isMobile,
-  })();
+  const { classes } = useStyles(isMobile);
   const { classes: classesIcons } = useIconStyles();
   const {
     catList = [],
