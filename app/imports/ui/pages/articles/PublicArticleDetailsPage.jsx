@@ -244,7 +244,7 @@ function PublicArticleDetailsPage({
                   plugins={[chart, codeSyntaxHighlight, tableMergedCell, uml, modifiedColorSyntax]}
                 />
               ) : (
-                <div className={`ql-editor ${classes.content}`} dangerouslySetInnerHTML={{ __html: sanitizeHtml( article.content ) }} />
+                <div className={`ql-editor ${classes.content}`} dangerouslySetInnerHTML={{ __html: sanitizeHtml(article.content) }} />
               )}
             </Grid>
           </Grid>

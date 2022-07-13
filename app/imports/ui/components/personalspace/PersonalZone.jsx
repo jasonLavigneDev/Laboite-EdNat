@@ -255,7 +255,7 @@ const PersonalZone = ({
                 onKeyDown={handleKeyDownTitle(index)}
                 onBlur={handleBlurTitle(index)}
                 role="presentation"
-                dangerouslySetInnerHTML={{ __html: sanitizeHtml( title ) }}
+                dangerouslySetInnerHTML={{ __html: sanitizeHtml(title) }}
               />
             </Badge>
             {customDrag && isSorted && (

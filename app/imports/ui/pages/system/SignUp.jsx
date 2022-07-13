@@ -154,7 +154,7 @@ const SignUp = ({ introduction, ready, structures, loadingStructure }) => {
           {i18n.__('pages.SignUp.appDescription')}
         </Typography>
 
-        {!ready ? <Spinner /> : <div dangerouslySetInnerHTML={{ __html: sanitizeHtml( introduction ) }} />}
+        {!ready ? <Spinner /> : <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(introduction) }} />}
 
         <form onSubmit={handleSignUp} className={classes.form} noValidate>
           <Grid container spacing={2}>

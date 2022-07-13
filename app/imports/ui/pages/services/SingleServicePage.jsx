@@ -207,7 +207,7 @@ const SingleServicePage = ({ service = {}, ready, categories = [] }) => {
             <Typography className={classes.smallTitle} variant="h5">
               Description
             </Typography>
-            <div className={classes.content} dangerouslySetInnerHTML={{ __html: sanitizeHtml( service.content ) }} />
+            <div className={classes.content} dangerouslySetInnerHTML={{ __html: sanitizeHtml(service.content) }} />
           </Grid>
           {Boolean(service.screenshots.length) && (
             <>

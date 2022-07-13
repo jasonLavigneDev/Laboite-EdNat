@@ -176,7 +176,7 @@ function SignIn({ loggingIn, introduction, appsettings, ready }) {
           {i18n.__('pages.SignIn.appDescription')}
         </Typography>
         {!ready && !loggingIn && <Spinner />}
-        <div dangerouslySetInnerHTML={{ __html: sanitizeHtml( introduction ) }} />
+        <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(introduction) }} />
         <form onSubmit={handleSignIn} className={classes.form} noValidate>
           {loggingIn && <Spinner full />}
           {useKeycloak ? (

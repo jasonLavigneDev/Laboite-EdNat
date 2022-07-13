@@ -531,7 +531,7 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
             </Typography>
             <div
               className={openedContent ? classes.openedContent : classes.content}
-              dangerouslySetInnerHTML={{ __html: sanitizeHtml( group.content ) }}
+              dangerouslySetInnerHTML={{ __html: sanitizeHtml(group.content) }}
             />
             <Button
               color="primary"
