@@ -26,6 +26,7 @@ import UserBookmarks from '../../../api/userBookmarks/userBookmarks';
 import ServiceDetailsPersSpace from '../services/ServiceDetailsPersSpace';
 import GroupDetailsPersSpace from '../groups/GroupDetailsPersSpace';
 import PersonalLinkDetails from './PersonalLinkDetails';
+import sanitizeHtml from 'sanitize-html';
 
 export const useZoneStyles = makeStyles()((theme) => ({
   expansionpanel: {
@@ -254,7 +255,7 @@ const PersonalZone = ({
                 onKeyDown={handleKeyDownTitle(index)}
                 onBlur={handleBlurTitle(index)}
                 role="presentation"
-                dangerouslySetInnerHTML={{ __html: title }}
+                dangerouslySetInnerHTML={{ __html: sanitizeHtml( title ) }}
               />
             </Badge>
             {customDrag && isSorted && (

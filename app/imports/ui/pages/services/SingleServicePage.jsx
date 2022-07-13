@@ -21,6 +21,7 @@ import Spinner from '../../components/system/Spinner';
 import { useAppContext } from '../../contexts/context';
 import Categories from '../../../api/categories/categories';
 import { isUrlExternal } from '../../utils/utilsFuncs';
+import sanitizeHtml from 'sanitize-html';
 
 const useStyles = makeStyles()((theme) => ({
   root: {
@@ -206,7 +207,7 @@ const SingleServicePage = ({ service = {}, ready, categories = [] }) => {
             <Typography className={classes.smallTitle} variant="h5">
               Description
             </Typography>
-            <div className={classes.content} dangerouslySetInnerHTML={{ __html: service.content }} />
+            <div className={classes.content} dangerouslySetInnerHTML={{ __html: sanitizeHtml( service.content ) }} />
           </Grid>
           {Boolean(service.screenshots.length) && (
             <>

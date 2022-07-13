@@ -40,6 +40,7 @@ import Polls from '../../../api/polls/polls';
 import EventsAgenda from '../../../api/eventsAgenda/eventsAgenda';
 import Bookmarks from '../../../api/bookmarks/bookmarks';
 import COMMON_STYLES from '../../themes/styles';
+import sanitizeHtml from 'sanitize-html';
 
 const useStyles = makeStyles()((theme, { member, candidate, type }) => ({
   root: {
@@ -530,7 +531,7 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
             </Typography>
             <div
               className={openedContent ? classes.openedContent : classes.content}
-              dangerouslySetInnerHTML={{ __html: group.content }}
+              dangerouslySetInnerHTML={{ __html: sanitizeHtml( group.content ) }}
             />
             <Button
               color="primary"

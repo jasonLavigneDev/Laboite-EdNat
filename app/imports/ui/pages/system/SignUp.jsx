@@ -23,6 +23,7 @@ import PropTypes from 'prop-types';
 import CustomSelect from '../../components/admin/CustomSelect';
 import Spinner from '../../components/system/Spinner';
 import { mainPagesTracker, useFormStateValidator } from './SignIn';
+import sanitizeHtml from 'sanitize-html';
 
 validate.options = {
   fullMessages: false,
@@ -153,7 +154,7 @@ const SignUp = ({ introduction, ready, structures, loadingStructure }) => {
           {i18n.__('pages.SignUp.appDescription')}
         </Typography>
 
-        {!ready ? <Spinner /> : <div dangerouslySetInnerHTML={{ __html: introduction }} />}
+        {!ready ? <Spinner /> : <div dangerouslySetInnerHTML={{ __html: sanitizeHtml( introduction ) }} />}
 
         <form onSubmit={handleSignUp} className={classes.form} noValidate>
           <Grid container spacing={2}>

@@ -31,6 +31,7 @@ import { useAppContext } from '../../contexts/context';
 import TopBar from '../../components/menus/TopBar';
 import Footer from '../../components/menus/Footer';
 // import Tags from '../../../api/tags/tags';
+import sanitizeHtml from 'sanitize-html';
 
 const modifiedColorSyntax = (context, options) => {
   const newContext = { ...context };
@@ -243,7 +244,7 @@ function PublicArticleDetailsPage({
                   plugins={[chart, codeSyntaxHighlight, tableMergedCell, uml, modifiedColorSyntax]}
                 />
               ) : (
-                <div className={`ql-editor ${classes.content}`} dangerouslySetInnerHTML={{ __html: article.content }} />
+                <div className={`ql-editor ${classes.content}`} dangerouslySetInnerHTML={{ __html: sanitizeHtml( article.content ) }} />
               )}
             </Grid>
           </Grid>

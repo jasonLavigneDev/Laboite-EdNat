@@ -23,6 +23,7 @@ import Structures from '../../../api/structures/structures';
 import { getCurrentIntroduction } from '../../../api/utils';
 import { usePageTracking } from '../../utils/matomo';
 import { useAppContext } from '../../contexts/context';
+import sanitizeHtml from 'sanitize-html';
 
 validate.options = {
   fullMessages: false,
@@ -175,7 +176,7 @@ function SignIn({ loggingIn, introduction, appsettings, ready }) {
           {i18n.__('pages.SignIn.appDescription')}
         </Typography>
         {!ready && !loggingIn && <Spinner />}
-        <div dangerouslySetInnerHTML={{ __html: introduction }} />
+        <div dangerouslySetInnerHTML={{ __html: sanitizeHtml( introduction ) }} />
         <form onSubmit={handleSignIn} className={classes.form} noValidate>
           {loggingIn && <Spinner full />}
           {useKeycloak ? (
