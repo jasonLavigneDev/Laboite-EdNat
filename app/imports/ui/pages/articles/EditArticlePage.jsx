@@ -604,7 +604,6 @@ function EditArticlePage({
               <FormControlLabel
                 control={
                   <Checkbox
-                    color="primary"
                     checked={updateStructure}
                     onChange={() => setUpdateStructure(!updateStructure)}
                     inputProps={{ 'aria-label': 'primary checkbox' }}

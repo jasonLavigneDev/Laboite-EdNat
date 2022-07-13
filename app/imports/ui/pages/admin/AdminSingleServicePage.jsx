@@ -399,7 +399,6 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
                 control={
                   <Checkbox
                     name="offline"
-                    color="primary"
                     checked={serviceData.offline || false}
                     onChange={onUpdateField}
                     inputProps={{ 'aria-label': 'primary checkbox' }}

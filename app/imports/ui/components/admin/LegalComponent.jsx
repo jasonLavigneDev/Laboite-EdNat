@@ -109,9 +109,7 @@ const LegalComponent = ({ tabkey, data = {} }) => {
     <form className={classes.root}>
       <Typography variant="h4">{i18n.__(`components.LegalComponent.title_${tabkey}`)}</Typography>
       <FormControlLabel
-        control={
-          <Checkbox checked={state.external || false} onChange={onCheckExternal} name="external" color="primary" />
-        }
+        control={<Checkbox checked={state.external || false} onChange={onCheckExternal} name="external" />}
         label={i18n.__(`components.LegalComponent.external_${tabkey}`)}
       />
       {state.external ? (

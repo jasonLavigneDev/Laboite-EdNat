@@ -190,12 +190,7 @@ const AdminSettingsPage = ({ ready, appsettings }) => {
             <Grid item md={12} className={classes.container}>
               <FormControlLabel
                 control={
-                  <Checkbox
-                    checked={appsettings.maintenance || false}
-                    onChange={onCheckMaintenance}
-                    name="external"
-                    color="primary"
-                  />
+                  <Checkbox checked={appsettings.maintenance || false} onChange={onCheckMaintenance} name="external" />
                 }
                 label={i18n.__(`pages.AdminSettingsPage.toggleMaintenance`)}
               />

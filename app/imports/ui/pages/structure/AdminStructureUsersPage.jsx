@@ -199,7 +199,6 @@ const AdminStructureUsersPage = ({ match: { path } }) => {
                         checked={sortByDate}
                         onChange={() => setSortByDate(!sortByDate)}
                         name="checkSortByDate"
-                        color="primary"
                       />
                     }
                     label={i18n.__('pages.AdminStructureUsersPage.sortByLastLogin')}

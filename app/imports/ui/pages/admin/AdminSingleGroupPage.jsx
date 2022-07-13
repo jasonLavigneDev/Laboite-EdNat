@@ -317,7 +317,6 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
                   checked={plugins[plugin] || false}
                   onChange={(event) => onChangePlugins(event, plugin)}
                   name={plugin}
-                  color="primary"
                   disabled={!!params._id}
                 />
               }

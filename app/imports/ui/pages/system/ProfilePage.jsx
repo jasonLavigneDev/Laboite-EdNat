@@ -593,7 +593,7 @@ const ProfilePage = () => {
                     noOptionsText={i18n.__('pages.ProfilePage.noOptions')}
                     loading={isSearchLoading}
                     getOptionLabel={(option) => option.name}
-                    renderOption={(option) => {
+                    renderOption={(props, option) => {
                       let parent;
                       if (option.parentId) {
                         parent = flatData.find((s) => s._id === option.parentId);
@@ -623,7 +623,7 @@ const ProfilePage = () => {
                       setSearchText(newInputValue);
                     }}
                     disabled={!user.isActive}
-                    getOptionSelected={(opt, val) => opt._id === val._id}
+                    isOptionEqualToValue={(opt, val) => opt._id === val._id}
                     style={{ width: 500 }}
                     renderInput={(params) => (
                       <TextField
@@ -679,7 +679,6 @@ const ProfilePage = () => {
                     <Checkbox
                       id="advancedPersonalPage"
                       name="advancedPersonalPage"
-                      color="primary"
                       checked={userData.advancedPersonalPage}
                       onChange={onCheckOption}
                       inputProps={{ 'aria-label': 'primary checkbox' }}
@@ -695,7 +694,6 @@ const ProfilePage = () => {
                         <Checkbox
                           id="articlesEnable"
                           name="articlesEnable"
-                          color="primary"
                           checked={userData.articlesEnable}
                           onChange={onCheckOption}
                           inputProps={{ 'aria-label': 'primary checkbox' }}
@@ -745,7 +743,6 @@ const ProfilePage = () => {
                   control={
                     <Checkbox
                       disabled={!user.structure}
-                      color="primary"
                       checked={structChecked}
                       onChange={() => setStructChecked(!structChecked)}
                       inputProps={{ 'aria-label': 'primary checkbox' }}

@@ -173,7 +173,6 @@ const PublishersPage = ({ loading, structures }) => {
                         checked={sortByDate}
                         onChange={() => setSortByDate(!sortByDate)}
                         name="checkSortByDate"
-                        color="primary"
                       />
                     }
                     label={i18n.__('pages.PublishersPage.sortByDate')}

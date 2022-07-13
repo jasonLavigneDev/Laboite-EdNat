@@ -43,9 +43,7 @@ function LogoutDialog({ open, onAccept, onClose }) {
         </DialogContentText>
         <FormGroup>
           <FormControlLabel
-            control={
-              <Checkbox checked={dontAsk} onChange={() => setDontAsk(!dontAsk)} name="dontAsk" color="primary" />
-            }
+            control={<Checkbox checked={dontAsk} onChange={() => setDontAsk(!dontAsk)} name="dontAsk" />}
             label={i18n.__('components.LogoutDialog.dontAskAgain')}
           />
         </FormGroup>

@@ -160,14 +160,7 @@ function SignIn({ loggingIn, introduction, appsettings, ready }) {
   const RememberButton = () => (
     <FormGroup>
       <FormControlLabel
-        control={
-          <Checkbox
-            checked={rememberMe}
-            onChange={() => setRememberMe(!rememberMe)}
-            name="rememberMe"
-            color="primary"
-          />
-        }
+        control={<Checkbox checked={rememberMe} onChange={() => setRememberMe(!rememberMe)} name="rememberMe" />}
         label={i18n.__('pages.SignIn.rememberMe')}
       />
     </FormGroup>

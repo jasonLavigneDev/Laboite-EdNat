@@ -78,7 +78,7 @@ function TagFinder({ tags, onSelected, exclude, opened, resetKey, inputWidth }) 
         // Regular option
         return option.name;
       }}
-      renderOption={(option) => option.name}
+      renderOption={(props, option) => option.name}
       noOptionsText={i18n.__('components.TagFinder.noTag')}
       clearText={i18n.__('components.TagFinder.clear')}
       loadingText={i18n.__('components.TagFinder.loading')}
