@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
 import i18n from 'meteor/universe:i18n';
 
-import TreeItem from '@material-ui/lab/TreeItem';
+import TreeItem from '@mui/lab/TreeItem';
 import PropTypes from 'prop-types';
-import Box from '@material-ui/core/Box';
-import IconButton from '@material-ui/core/IconButton';
-import AddBox from '@material-ui/icons/AddBox';
-import CheckIcon from '@material-ui/icons/Check';
-import DeleteIcon from '@material-ui/icons/DeleteOutline';
-import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
-import EditIcon from '@material-ui/icons/Edit';
-import { withStyles, alpha, makeStyles } from '@material-ui/core/styles';
-import Tooltip from '@material-ui/core/Tooltip';
-import Typography from '@material-ui/core/Typography';
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import AddBox from '@mui/icons-material/AddBox';
+import CheckIcon from '@mui/icons-material/Check';
+import DeleteIcon from '@mui/icons-material/DeleteOutline';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import EditIcon from '@mui/icons-material/Edit';
+import { alpha } from '@mui/material/styles';
+import withStyles from '@mui/styles/withStyles';
+import makeStyles from '@mui/styles/makeStyles';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
 import CustomDialog from '../system/CustomDialog';
 
 const StyledTreeItem = withStyles((theme) => ({
@@ -78,7 +80,7 @@ const AdminStructureTreeItem = ({
               {onClickAddBtn && (
                 <Tooltip title={i18n.__('components.AdminStructureTreeItem.actions.addStructure')}>
                   <span>
-                    <IconButton onClick={() => onClickAddBtn(nodes)}>
+                    <IconButton onClick={() => onClickAddBtn(nodes)} size="large">
                       <AddBox />
                     </IconButton>
                   </span>
@@ -87,7 +89,7 @@ const AdminStructureTreeItem = ({
               {onClickEditBtn && (
                 <Tooltip title={i18n.__('components.AdminStructureTreeItem.actions.editStructure')}>
                   <span>
-                    <IconButton onClick={() => onClickEditBtn(nodes)}>
+                    <IconButton onClick={() => onClickEditBtn(nodes)} size="large">
                       <EditIcon />
                     </IconButton>
                   </span>
@@ -103,7 +105,12 @@ const AdminStructureTreeItem = ({
                   )}
                 >
                   <span>
-                    <IconButton disabled={hasChildren} role="button" onClick={() => onClickDeleteBtn(nodes)}>
+                    <IconButton
+                      disabled={hasChildren}
+                      role="button"
+                      onClick={() => onClickDeleteBtn(nodes)}
+                      size="large"
+                    >
                       <DeleteIcon />
                     </IconButton>
                   </span>
@@ -117,6 +124,7 @@ const AdminStructureTreeItem = ({
                         setChoosenStructure(nodes);
                         openConfirm();
                       }}
+                      size="large"
                     >
                       {selectedId === id ? <CheckCircleOutlineIcon color="primary" /> : <CheckIcon />}
                     </IconButton>

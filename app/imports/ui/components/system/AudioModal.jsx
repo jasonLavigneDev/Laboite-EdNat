@@ -1,20 +1,20 @@
 /* eslint-disable jsx-a11y/media-has-caption */
 import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Dialog from '@material-ui/core/Dialog';
-import TextField from '@material-ui/core/TextField';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
+import makeStyles from '@mui/styles/makeStyles';
+import Dialog from '@mui/material/Dialog';
+import TextField from '@mui/material/TextField';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 import { Random } from 'meteor/random';
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
-import StopIcon from '@material-ui/icons/Stop';
-import CloseIcon from '@material-ui/icons/Close';
-import CheckIcon from '@material-ui/icons/Check';
-import RefreshIcon from '@material-ui/icons/Refresh';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
+import StopIcon from '@mui/icons-material/Stop';
+import CloseIcon from '@mui/icons-material/Close';
+import CheckIcon from '@mui/icons-material/Check';
+import RefreshIcon from '@mui/icons-material/Refresh';
 import PropTypes from 'prop-types';
 import MicRecorder from 'mic-recorder-to-mp3';
 import i18n from 'meteor/universe:i18n';
@@ -102,7 +102,7 @@ export const DialogSendActionButtons = ({ changeFileName, fileName, loading, han
 export const SingleTooltipActionButton = ({ label, disabled, onClick, icon }) => (
   <Tooltip title={i18n.__(label)}>
     <span>
-      <IconButton aria-label={i18n.__(label)} disabled={disabled} onClick={onClick}>
+      <IconButton aria-label={i18n.__(label)} disabled={disabled} onClick={onClick} size="large">
         {icon}
       </IconButton>
     </span>
@@ -233,7 +233,7 @@ const AudioModal = ({ onClose, selectFile, admin }) => {
     <Dialog open keepMounted onClose={onClose}>
       <DialogTitle className={classes.title}>
         <div>{i18n.__('components.AudioModal.header')}</div>
-        <IconButton onClick={onClose}>
+        <IconButton onClick={onClose} size="large">
           <CloseIcon />
         </IconButton>
       </DialogTitle>

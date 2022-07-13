@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import Container from '@material-ui/core/Container';
-import Button from '@material-ui/core/Button';
-import { makeStyles } from '@material-ui/core/styles';
+import Container from '@mui/material/Container';
+import Button from '@mui/material/Button';
+import makeStyles from '@mui/styles/makeStyles';
 import i18n from 'meteor/universe:i18n';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import StructureSelectionTree from '../../components/profile/StructureSelectionTree';
 
 const useStyles = makeStyles((theme) => ({

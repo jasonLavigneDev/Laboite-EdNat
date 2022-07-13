@@ -2,22 +2,22 @@ import React, { useState } from 'react';
 import i18n from 'meteor/universe:i18n';
 import { useTracker } from 'meteor/react-meteor-data';
 import { _ } from 'meteor/underscore';
-import CardContent from '@material-ui/core/CardContent';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardActions from '@material-ui/core/CardActions';
-import Card from '@material-ui/core/Card';
-import Backdrop from '@material-ui/core/Backdrop';
-import Fade from '@material-ui/core/Fade';
-import Container from '@material-ui/core/Container';
-import Modal from '@material-ui/core/Modal';
-import { makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import IconButton from '@material-ui/core/IconButton';
-import ClearIcon from '@material-ui/icons/Clear';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-import AddBox from '@material-ui/icons/AddBox';
+import CardContent from '@mui/material/CardContent';
+import CardHeader from '@mui/material/CardHeader';
+import CardActions from '@mui/material/CardActions';
+import Card from '@mui/material/Card';
+import Backdrop from '@mui/material/Backdrop';
+import Fade from '@mui/material/Fade';
+import Container from '@mui/material/Container';
+import Modal from '@mui/material/Modal';
+import makeStyles from '@mui/styles/makeStyles';
+import TextField from '@mui/material/TextField';
+import IconButton from '@mui/material/IconButton';
+import ClearIcon from '@mui/icons-material/Clear';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import AddBox from '@mui/icons-material/AddBox';
 import PropTypes from 'prop-types';
 import Spinner from '../../components/system/Spinner';
 
@@ -226,7 +226,11 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
                     `components.AdminStructureTreeItem.actions.${isEditMode ? 'editStructure' : 'addStructure'}`,
                   )}
                   action={
-                    <IconButton title={i18n.__('pages.AdminStructuresManagementPage.modal.close')} onClick={closeModal}>
+                    <IconButton
+                      title={i18n.__('pages.AdminStructuresManagementPage.modal.close')}
+                      onClick={closeModal}
+                      size="large"
+                    >
                       <ClearIcon />
                     </IconButton>
                   }
@@ -301,6 +305,7 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
                     id="create-structure-btn"
                     onClick={() => onClickAddBtn(isAdminStructureMode ? currentUserStructure : {})}
                     title={i18n.__('components.AdminStructureTreeItem.actions.addStructure')}
+                    size="large"
                   >
                     <AddBox />
                   </IconButton>

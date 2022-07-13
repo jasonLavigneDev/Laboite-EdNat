@@ -1,14 +1,14 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Random } from 'meteor/random';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import Grid from '@material-ui/core/Grid';
-import Fade from '@material-ui/core/Fade';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import RefreshIcon from '@material-ui/icons/Refresh';
-import AddIcon from '@material-ui/icons/Add';
+import makeStyles from '@mui/styles/makeStyles';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
+import Fade from '@mui/material/Fade';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import AddIcon from '@mui/icons-material/Add';
 import i18n from 'meteor/universe:i18n';
 import { useDropzone } from 'react-dropzone';
 import { useAppContext } from '../contexts/context';
@@ -169,10 +169,10 @@ const MediaStoragePage = ({ selectFile, modal }) => {
               <Typography variant={isMobile ? 'h6' : 'h4'} className={classes.flex}>
                 {i18n.__('pages.MediaStoragePage.title')}
                 <div>
-                  <IconButton onClick={updateFilesList}>
+                  <IconButton onClick={updateFilesList} size="large">
                     <RefreshIcon fontSize="large" />
                   </IconButton>
-                  <IconButton onClick={onAddClick}>
+                  <IconButton onClick={onAddClick} size="large">
                     <AddIcon fontSize="large" />
                   </IconButton>
                 </div>

@@ -1,16 +1,16 @@
 import React from 'react';
 import i18n from 'meteor/universe:i18n';
-import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardActions from '@material-ui/core/CardActions';
-import IconButton from '@material-ui/core/IconButton';
-import Button from '@material-ui/core/Button';
-import Modal from '@material-ui/core/Modal';
-import ClearIcon from '@material-ui/icons/Clear';
+import makeStyles from '@mui/styles/makeStyles';
+import Card from '@mui/material/Card';
+import CardHeader from '@mui/material/CardHeader';
+import CardActions from '@mui/material/CardActions';
+import IconButton from '@mui/material/IconButton';
+import Button from '@mui/material/Button';
+import Modal from '@mui/material/Modal';
+import ClearIcon from '@mui/icons-material/Clear';
 import PropTypes from 'prop-types';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
 import { useHistory } from 'react-router-dom';
 import { useAppContext } from '../../contexts/context';
 import COMMON_STYLES from '../../themes/styles';
@@ -54,7 +54,7 @@ const AdminGroupDelete = ({ group, open, onClose }) => {
           <CardHeader
             title={i18n.__('components.AdminGroupDelete.subtitle')}
             action={
-              <IconButton onClick={onClose}>
+              <IconButton onClick={onClose} size="large">
                 <ClearIcon />
               </IconButton>
             }

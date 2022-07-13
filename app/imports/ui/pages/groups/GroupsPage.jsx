@@ -1,20 +1,20 @@
 import React, { useRef, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core/styles';
-import Fade from '@material-ui/core/Fade';
-import Container from '@material-ui/core/Container';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
+import makeStyles from '@mui/styles/makeStyles';
+import Fade from '@mui/material/Fade';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 
-import SearchIcon from '@material-ui/icons/Search';
-import AddIcon from '@material-ui/icons/Add';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import Switch from '@material-ui/core/Switch';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Pagination from '@material-ui/lab/Pagination';
+import SearchIcon from '@mui/icons-material/Search';
+import AddIcon from '@mui/icons-material/Add';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import ToggleButton from '@mui/material/ToggleButton';
+import Switch from '@mui/material/Switch';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Pagination from '@mui/material/Pagination';
 import i18n from 'meteor/universe:i18n';
 import { Roles } from 'meteor/alanning:roles';
 import { useTracker } from 'meteor/react-meteor-data';
@@ -188,12 +188,12 @@ function GroupsPage() {
             <Typography variant={isMobile ? 'h6' : 'h4'} className={classes.flex}>
               {`${i18n.__('pages.GroupsPage.title')} (${total})`}
               <Tooltip title={i18n.__('pages.GroupsPage.searchGroup')}>
-                <IconButton onClick={toggleSearch}>
+                <IconButton onClick={toggleSearch} size="large">
                   <SearchIcon fontSize="large" />
                 </IconButton>
               </Tooltip>
               <Tooltip title={i18n.__('pages.GroupsPage.addGroup')}>
-                <IconButton onClick={goToAddGroup}>
+                <IconButton onClick={goToAddGroup} size="large">
                   <AddIcon fontSize="large" />
                 </IconButton>
               </Tooltip>

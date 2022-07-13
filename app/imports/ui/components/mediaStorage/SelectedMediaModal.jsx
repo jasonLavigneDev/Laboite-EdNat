@@ -1,22 +1,22 @@
 /* eslint-disable jsx-a11y/media-has-caption */
 import React from 'react';
 import i18n from 'meteor/universe:i18n';
-import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardMedia from '@material-ui/core/CardMedia';
-import CardActions from '@material-ui/core/CardActions';
-import IconButton from '@material-ui/core/IconButton';
-import Modal from '@material-ui/core/Modal';
-import Tooltip from '@material-ui/core/Tooltip';
-import DescriptionIcon from '@material-ui/icons/Description';
-import DeleteIcon from '@material-ui/icons/Delete';
-import ClearIcon from '@material-ui/icons/Clear';
-import AssignmentIcon from '@material-ui/icons/Assignment';
-import OpenInNewIcon from '@material-ui/icons/OpenInNew';
+import makeStyles from '@mui/styles/makeStyles';
+import Card from '@mui/material/Card';
+import CardHeader from '@mui/material/CardHeader';
+import CardMedia from '@mui/material/CardMedia';
+import CardActions from '@mui/material/CardActions';
+import IconButton from '@mui/material/IconButton';
+import Modal from '@mui/material/Modal';
+import Tooltip from '@mui/material/Tooltip';
+import DescriptionIcon from '@mui/icons-material/Description';
+import DeleteIcon from '@mui/icons-material/Delete';
+import ClearIcon from '@mui/icons-material/Clear';
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import PropTypes from 'prop-types';
-import Alert from '@material-ui/lab/Alert';
-import AlertTitle from '@material-ui/lab/AlertTitle';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 import { useAppContext } from '../../contexts/context';
 import { storageToSize } from '../../utils/filesProcess';
 import ValidationButton from '../system/ValidationButton';
@@ -112,7 +112,10 @@ export default function SelectedMediaModal({ file, onClose, onDelete, loading, o
                 title={i18n.__('components.SelectedMediaModal.OpenInWindow')}
                 aria-label={i18n.__('components.SelectedMediaModal.OpenInWindow')}
               >
-                <IconButton onClick={() => window.open(`${HOST}${file.name}`, '_blank', 'noreferrer,noopener')}>
+                <IconButton
+                  onClick={() => window.open(`${HOST}${file.name}`, '_blank', 'noreferrer,noopener')}
+                  size="large"
+                >
                   <OpenInNewIcon />
                 </IconButton>
               </Tooltip>
@@ -120,12 +123,12 @@ export default function SelectedMediaModal({ file, onClose, onDelete, loading, o
                 title={i18n.__('components.SelectedMediaModal.copyUrl')}
                 aria-label={i18n.__('components.SelectedMediaModal.copyUrl')}
               >
-                <IconButton onClick={handleCopyURL}>
+                <IconButton onClick={handleCopyURL} size="large">
                   <AssignmentIcon />
                 </IconButton>
               </Tooltip>
             </div>
-            <IconButton onClick={onClose}>
+            <IconButton onClick={onClose} size="large">
               <ClearIcon />
             </IconButton>
           </CardActions>

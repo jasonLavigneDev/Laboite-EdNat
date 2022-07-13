@@ -1,8 +1,8 @@
 import React from 'react';
 import { useTracker } from 'meteor/react-meteor-data';
-import Grid from '@material-ui/core/Grid';
-import Chip from '@material-ui/core/Chip';
-import { makeStyles } from '@material-ui/core/styles';
+import Grid from '@mui/material/Grid';
+import Chip from '@mui/material/Chip';
+import makeStyles from '@mui/styles/makeStyles';
 import Services from '../../../api/services/services';
 import Categories from '../../../api/categories/categories';
 

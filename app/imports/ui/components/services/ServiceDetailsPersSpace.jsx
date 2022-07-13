@@ -1,19 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Meteor } from 'meteor/meteor';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import { useHistory } from 'react-router-dom';
-import Typography from '@material-ui/core/Typography';
-import Card from '@material-ui/core/Card';
-import RemoveIcon from '@material-ui/icons/Remove';
-import Tooltip from '@material-ui/core/Tooltip';
-import Button from '@material-ui/core/Button';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
-import CardHeader from '@material-ui/core/CardHeader';
-import Avatar from '@material-ui/core/Avatar';
-import Zoom from '@material-ui/core/Zoom';
-import PublishIcon from '@material-ui/icons/Publish';
+import Typography from '@mui/material/Typography';
+import Card from '@mui/material/Card';
+import RemoveIcon from '@mui/icons-material/Remove';
+import Tooltip from '@mui/material/Tooltip';
+import Button from '@mui/material/Button';
+import CardActionArea from '@mui/material/CardActionArea';
+import CardActions from '@mui/material/CardActions';
+import CardHeader from '@mui/material/CardHeader';
+import Avatar from '@mui/material/Avatar';
+import Zoom from '@mui/material/Zoom';
+import PublishIcon from '@mui/icons-material/Publish';
 
 import i18n from 'meteor/universe:i18n';
 

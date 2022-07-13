@@ -4,7 +4,7 @@ import { useTracker } from 'meteor/react-meteor-data';
 import i18n from 'meteor/universe:i18n';
 import clsx from 'clsx';
 import { Roles } from 'meteor/alanning:roles';
-import Alert from '@material-ui/lab/Alert';
+import Alert from '@mui/material/Alert';
 import AppSettings from '../../api/appsettings/appsettings';
 
 // components

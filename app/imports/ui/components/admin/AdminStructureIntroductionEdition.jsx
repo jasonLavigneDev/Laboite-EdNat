@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import ReactQuill from 'react-quill'; // ES6
-import FormControl from '@material-ui/core/FormControl';
-import TextField from '@material-ui/core/TextField';
-import InputLabel from '@material-ui/core/InputLabel';
-import Button from '@material-ui/core/Button';
-import Fade from '@material-ui/core/Fade';
-import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import TextField from '@mui/material/TextField';
+import InputLabel from '@mui/material/InputLabel';
+import Button from '@mui/material/Button';
+import Fade from '@mui/material/Fade';
+import MenuItem from '@mui/material/MenuItem';
 import 'react-quill/dist/quill.snow.css';
-import Select from '@material-ui/core/Select';
+import Select from '@mui/material/Select';
 import i18n from 'meteor/universe:i18n';
 import { CustomToolbarArticle } from '../system/CustomQuill';
 import { quillOptions, useStyles } from './IntroductionEdition';

@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import ReactQuill from 'react-quill'; // ES6
 import 'react-quill/dist/quill.snow.css';
-import { makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import InputLabel from '@material-ui/core/InputLabel';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
+import makeStyles from '@mui/styles/makeStyles';
+import TextField from '@mui/material/TextField';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import InputLabel from '@mui/material/InputLabel';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 
 import i18n from 'meteor/universe:i18n';
 import { useObjectState } from '../../utils/hooks';
@@ -19,7 +19,7 @@ import '../../utils/QuillVideo';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    padding: `0 ${theme.spacing(2)}px 0 ${theme.spacing(2)}px`,
+    padding: `0 ${theme.spacing(2)} 0 ${theme.spacing(2)}`,
     flex: 1,
   },
   wysiwyg: {

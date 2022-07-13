@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import TextField from '@material-ui/core/TextField';
-import SearchIcon from '@material-ui/icons/Search';
-import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
+import TextField from '@mui/material/TextField';
+import SearchIcon from '@mui/icons-material/Search';
+import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import i18n from 'meteor/universe:i18n';
-import { makeStyles } from '@material-ui/core/styles';
-import InputAdornment from '@material-ui/core/InputAdornment';
+import makeStyles from '@mui/styles/makeStyles';
+import InputAdornment from '@mui/material/InputAdornment';
 
 const useStyles = makeStyles(() => ({
   noRightBorderRadius: {
@@ -63,7 +63,7 @@ function TagFinder({ tags, onSelected, exclude, opened, resetKey, inputWidth }) 
         }
         return filtered;
       }}
-      getOptionSelected={(option, value) => {
+      isOptionEqualToValue={(option, value) => {
         return option.name.toLowerCase === value.toLowerCase;
       }}
       getOptionLabel={(option) => {

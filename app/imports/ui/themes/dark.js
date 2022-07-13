@@ -1,4 +1,4 @@
-import { createTheme } from '@material-ui/core/styles';
+import { createTheme, adaptV4Theme } from '@mui/material/styles';
 import RIZOMO_DARK from './rizomo/light';
 import LABOITE_DARK from './laboite/light';
 import EOLE_DARK from './eole/dark';
@@ -9,6 +9,6 @@ export const DARK_THEMES = {
   eole: EOLE_DARK,
 };
 
-const darkTheme = createTheme(DARK_THEMES[Meteor.settings.public.theme || 'laboite']);
+const darkTheme = createTheme(adaptV4Theme(DARK_THEMES[Meteor.settings.public.theme || 'laboite']));
 
 export default darkTheme;

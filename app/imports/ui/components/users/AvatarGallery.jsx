@@ -1,16 +1,16 @@
 /* eslint-disable jsx-a11y/media-has-caption */
 import React from 'react';
 import i18n from 'meteor/universe:i18n';
-import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import IconButton from '@material-ui/core/IconButton';
-import ClearIcon from '@material-ui/icons/Clear';
-import Button from '@material-ui/core/Button';
-import CardContent from '@material-ui/core/CardContent';
-import Grid from '@material-ui/core/Grid';
-import Modal from '@material-ui/core/Modal';
-import Typography from '@material-ui/core/Typography';
+import makeStyles from '@mui/styles/makeStyles';
+import Card from '@mui/material/Card';
+import CardHeader from '@mui/material/CardHeader';
+import IconButton from '@mui/material/IconButton';
+import ClearIcon from '@mui/icons-material/Clear';
+import Button from '@mui/material/Button';
+import CardContent from '@mui/material/CardContent';
+import Grid from '@mui/material/Grid';
+import Modal from '@mui/material/Modal';
+import Typography from '@mui/material/Typography';
 
 import PropTypes from 'prop-types';
 import { useAppContext } from '../../contexts/context';
@@ -31,7 +31,7 @@ const useStyles = (isMobile) =>
     image: {
       position: 'relative',
       height: 200,
-      [theme.breakpoints.down('xs')]: {
+      [theme.breakpoints.down('sm')]: {
         width: '100% !important', // Overrides inline-style
         height: 100,
       },
@@ -81,7 +81,7 @@ const useStyles = (isMobile) =>
     },
     imageTitle: {
       position: 'relative',
-      padding: `${theme.spacing(2)}px ${theme.spacing(4)}px ${theme.spacing(1) + 6}px`,
+      padding: `calc(${theme.spacing(2)} ${theme.spacing(4)} ${theme.spacing(1)} + 6px)`,
     },
     imageMarked: {
       height: 3,
@@ -124,7 +124,7 @@ const AvatarGallery = ({ open, onClose, onSendImage, i18nCode }) => {
             title={i18n.__(`components.${i18nCode}.title`)}
             subheader={i18n.__(`components.${i18nCode}.subtitle`)}
             action={
-              <IconButton onClick={onClose}>
+              <IconButton onClick={onClose} size="large">
                 <ClearIcon />
               </IconButton>
             }

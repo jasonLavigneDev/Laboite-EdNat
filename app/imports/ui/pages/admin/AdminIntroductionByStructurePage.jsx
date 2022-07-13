@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import Fade from '@material-ui/core/Fade';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
-import Grid from '@material-ui/core/Grid';
-import FormControl from '@material-ui/core/FormControl';
-import Container from '@material-ui/core/Container';
+import Fade from '@mui/material/Fade';
+import Card from '@mui/material/Card';
+import CardHeader from '@mui/material/CardHeader';
+import CardContent from '@mui/material/CardContent';
+import Grid from '@mui/material/Grid';
+import FormControl from '@mui/material/FormControl';
+import Container from '@mui/material/Container';
 import i18n from 'meteor/universe:i18n';
 import Spinner from '../../components/system/Spinner';
 import { useStructure, useAdminSelectedStructure } from '../../../api/structures/hooks';

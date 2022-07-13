@@ -1,11 +1,11 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import DescriptionIcon from '@material-ui/icons/Description';
-import MusicNoteIcon from '@material-ui/icons/MusicNote';
-import VideocamIcon from '@material-ui/icons/Videocam';
+import Typography from '@mui/material/Typography';
+import makeStyles from '@mui/styles/makeStyles';
+import DescriptionIcon from '@mui/icons-material/Description';
+import MusicNoteIcon from '@mui/icons-material/MusicNote';
+import VideocamIcon from '@mui/icons-material/Videocam';
 import PropTypes from 'prop-types';
 
 const { minioEndPoint, minioPort, minioBucket, minioSSL } = Meteor.settings.public;

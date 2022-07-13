@@ -1,16 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Meteor } from 'meteor/meteor';
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-// import OpenWithIcon from '@material-ui/icons/OpenWith';
+import makeStyles from '@mui/styles/makeStyles';
+import Typography from '@mui/material/Typography';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+// import OpenWithIcon from '@mui/icons-material/OpenWith';
 
-import Tooltip from '@material-ui/core/Tooltip';
-import Button from '@material-ui/core/Button';
-import CardHeader from '@material-ui/core/CardHeader';
+import Tooltip from '@mui/material/Tooltip';
+import Button from '@mui/material/Button';
+import CardHeader from '@mui/material/CardHeader';
 import i18n from 'meteor/universe:i18n';
 import { Link } from 'react-router-dom';
 import FavButton from './FavButton';

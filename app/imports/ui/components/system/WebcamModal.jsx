@@ -1,18 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import IconButton from '@material-ui/core/IconButton';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import Select from '@material-ui/core/Select';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import IconButton from '@mui/material/IconButton';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
 import { Random } from 'meteor/random';
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
-import StopIcon from '@material-ui/icons/Stop';
-import CloseIcon from '@material-ui/icons/Close';
-import RefreshIcon from '@material-ui/icons/Refresh';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
+import StopIcon from '@mui/icons-material/Stop';
+import CloseIcon from '@mui/icons-material/Close';
+import RefreshIcon from '@mui/icons-material/Refresh';
 import PropTypes from 'prop-types';
 import Webcam from 'react-webcam';
 import i18n from 'meteor/universe:i18n';
@@ -219,7 +219,7 @@ const WebcamModal = ({ onClose, selectFile, admin }) => {
     <Dialog open keepMounted onClose={onClose}>
       <DialogTitle className={classes.title}>
         <div>{i18n.__('components.WebcamModal.header')}</div>
-        <IconButton onClick={onClose}>
+        <IconButton onClick={onClose} size="large">
           <CloseIcon />
         </IconButton>
       </DialogTitle>

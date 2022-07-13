@@ -1,23 +1,23 @@
 import { Meteor } from 'meteor/meteor';
 import React, { useRef, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import SearchIcon from '@material-ui/icons/Search';
-import AddIcon from '@material-ui/icons/Add';
-import OpenInNewIcon from '@material-ui/icons/OpenInNew';
-import ShareIcon from '@material-ui/icons/Share';
-import Grid from '@material-ui/core/Grid';
+import makeStyles from '@mui/styles/makeStyles';
+import Container from '@mui/material/Container';
+import SearchIcon from '@mui/icons-material/Search';
+import AddIcon from '@mui/icons-material/Add';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import ShareIcon from '@mui/icons-material/Share';
+import Grid from '@mui/material/Grid';
 import i18n from 'meteor/universe:i18n';
-import Typography from '@material-ui/core/Typography';
-import Fade from '@material-ui/core/Fade';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
-import ArrowBack from '@material-ui/icons/ArrowBack';
+import Typography from '@mui/material/Typography';
+import Fade from '@mui/material/Fade';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
+import ArrowBack from '@mui/icons-material/ArrowBack';
 
 import { Link, useLocation } from 'react-router-dom';
-import Pagination from '@material-ui/lab/Pagination';
+import Pagination from '@mui/material/Pagination';
 import Articles from '../../../api/articles/articles';
 import Spinner from '../../components/system/Spinner';
 import { useAppContext } from '../../contexts/context';
@@ -183,7 +183,7 @@ function ArticlesPage({
                       title={i18n.__(`pages.${i18nCode}.copyOwnPublicPageUrl`)}
                       aria-label={i18n.__(`pages.${i18nCode}.copyOwnPublicPageUrl`)}
                     >
-                      <IconButton onClick={handleCopyURL}>
+                      <IconButton onClick={handleCopyURL} size="large">
                         <ShareIcon fontSize="large" />
                       </IconButton>
                     </Tooltip>
@@ -195,7 +195,7 @@ function ArticlesPage({
                   title={i18n.__(`pages.${i18nCode}.searchArticle`)}
                   aria-label={i18n.__(`pages.${i18nCode}.searchArticle`)}
                 >
-                  <IconButton onClick={toggleSearch}>
+                  <IconButton onClick={toggleSearch} size="large">
                     <SearchIcon fontSize="large" />
                   </IconButton>
                 </Tooltip>

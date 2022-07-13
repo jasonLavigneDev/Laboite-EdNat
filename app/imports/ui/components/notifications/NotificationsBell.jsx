@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import PropTypes from 'prop-types';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import NotificationsNoneIcon from '@material-ui/icons/NotificationsNone';
-import Badge from '@material-ui/core/Badge';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
+import Badge from '@mui/material/Badge';
 import { toast } from 'react-toastify';
 import Notifications from '../../../api/notifications/notifications';
 import Notification from './Notification';

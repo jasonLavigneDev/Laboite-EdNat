@@ -1,23 +1,23 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Meteor } from 'meteor/meteor';
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Card from '@material-ui/core/Card';
-import Grid from '@material-ui/core/Grid';
-import CardContent from '@material-ui/core/CardContent';
-import AccessTimeIcon from '@material-ui/icons/AccessTime';
+import makeStyles from '@mui/styles/makeStyles';
+import Typography from '@mui/material/Typography';
+import Card from '@mui/material/Card';
+import Grid from '@mui/material/Grid';
+import CardContent from '@mui/material/CardContent';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { Link, useHistory } from 'react-router-dom';
-import Tooltip from '@material-ui/core/Tooltip';
-import Button from '@material-ui/core/Button';
-import CardHeader from '@material-ui/core/CardHeader';
-import IconButton from '@material-ui/core/IconButton';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
-import CheckIcon from '@material-ui/icons/Check';
-import WatchLaterIcon from '@material-ui/icons/WatchLater';
-import LockIcon from '@material-ui/icons/Lock';
-import EditIcon from '@material-ui/icons/Edit';
+import Tooltip from '@mui/material/Tooltip';
+import Button from '@mui/material/Button';
+import CardHeader from '@mui/material/CardHeader';
+import IconButton from '@mui/material/IconButton';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
+import CheckIcon from '@mui/icons-material/Check';
+import WatchLaterIcon from '@mui/icons-material/WatchLater';
+import LockIcon from '@mui/icons-material/Lock';
+import EditIcon from '@mui/icons-material/Edit';
 
 import i18n from 'meteor/universe:i18n';
 import GroupAvatar from './GroupAvatar';
@@ -281,7 +281,7 @@ function GroupDetails({ group = {}, isShort, member, candidate, admin, animator 
                 to={{ pathname: `/admingroups/${group._id}`, state: { prevPath: history.location.pathname } }}
                 tabIndex={-1}
               >
-                <IconButton color="primary">
+                <IconButton color="primary" size="large">
                   <EditIcon />
                 </IconButton>
               </Link>

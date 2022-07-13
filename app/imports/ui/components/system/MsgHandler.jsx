@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import i18n from 'meteor/universe:i18n';
-import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert from '@material-ui/lab/Alert';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
 const defaultOptions = {
   duration: 4000, // time before autohide

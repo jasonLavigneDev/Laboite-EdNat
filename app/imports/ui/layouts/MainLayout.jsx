@@ -1,9 +1,9 @@
 import React, { useEffect, lazy, Suspense } from 'react';
 import { useLocation, Route, Switch } from 'react-router-dom';
 import { withTracker } from 'meteor/react-meteor-data';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import i18n from 'meteor/universe:i18n';
-import Alert from '@material-ui/lab/Alert';
+import Alert from '@mui/material/Alert';
 import { Roles } from 'meteor/alanning:roles';
 import PropTypes from 'prop-types';
 import AppSettings from '../../api/appsettings/appsettings';

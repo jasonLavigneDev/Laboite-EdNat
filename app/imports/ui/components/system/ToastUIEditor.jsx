@@ -8,7 +8,7 @@ import '@toast-ui/editor/dist/i18n/fr-fr';
 import { Editor } from '@toast-ui/react-editor';
 import PropTypes from 'prop-types';
 import i18n from 'meteor/universe:i18n';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import chart from '@toast-ui/editor-plugin-chart';
 import uml from '@toast-ui/editor-plugin-uml';
 import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';

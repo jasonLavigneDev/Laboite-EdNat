@@ -1,13 +1,13 @@
 import React from 'react';
 import i18n from 'meteor/universe:i18n';
-import { makeStyles } from '@material-ui/core/styles';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import AppBar from '@material-ui/core/AppBar';
+import makeStyles from '@mui/styles/makeStyles';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import AppBar from '@mui/material/AppBar';
 import { PropTypes } from 'prop-types';
-import HomeIcon from '@material-ui/icons/Home';
-import AppsIcon from '@material-ui/icons/Apps';
-import HelpIcon from '@material-ui/icons/Help';
+import HomeIcon from '@mui/icons-material/Home';
+import AppsIcon from '@mui/icons-material/Apps';
+import HelpIcon from '@mui/icons-material/Help';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 import { useAppContext } from '../../contexts/context';
 
@@ -98,7 +98,8 @@ const OfflineMenu = ({ state: [selectedTab, setTab] }) => {
         textColor="primary"
         aria-label="menu links"
         variant={isMobile ? 'fullWidth' : 'standard'}
-        scrollButtons="on"
+        scrollButtons
+        allowScrollButtonsMobile
       >
         {links.map((link, index) => (
           <Tab

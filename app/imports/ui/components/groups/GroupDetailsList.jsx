@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import Tooltip from '@material-ui/core/Tooltip';
-import CardHeader from '@material-ui/core/CardHeader';
+import makeStyles from '@mui/styles/makeStyles';
+import Card from '@mui/material/Card';
+import Tooltip from '@mui/material/Tooltip';
+import CardHeader from '@mui/material/CardHeader';
 import i18n from 'meteor/universe:i18n';
 import { Link } from 'react-router-dom';
 import GroupAvatar from './GroupAvatar';

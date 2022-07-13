@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import IconButton from '@material-ui/core/IconButton';
+import { useTheme } from '@mui/material/styles';
+import makeStyles from '@mui/styles/makeStyles';
+import AppBar from '@mui/material/AppBar';
+import IconButton from '@mui/material/IconButton';
 import { withTracker } from 'meteor/react-meteor-data';
 import NotificationsBell from '../notifications/NotificationsBell';
 import MenuBar from './MenuBar';
@@ -138,7 +139,7 @@ function TopBar({ publicMenu, root, appsettings, adminApp }) {
               <>
                 <MainMenu user={user} />
                 {!disabledFeatures.notificationsTab && isMobile ? null : (
-                  <IconButton onClick={() => handleNotifsOpen()}>
+                  <IconButton onClick={() => handleNotifsOpen()} size="large">
                     <NotificationsBell />
                   </IconButton>
                 )}

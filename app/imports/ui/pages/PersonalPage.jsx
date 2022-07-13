@@ -3,23 +3,23 @@ import { Meteor } from 'meteor/meteor';
 import { Random } from 'meteor/random';
 import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
+import makeStyles from '@mui/styles/makeStyles';
+import Container from '@mui/material/Container';
 import { Link } from 'react-router-dom';
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 import i18n from 'meteor/universe:i18n';
-import Typography from '@material-ui/core/Typography';
-import Fade from '@material-ui/core/Fade';
-import IconButton from '@material-ui/core/IconButton';
-import Button from '@material-ui/core/Button';
-import Tooltip from '@material-ui/core/Tooltip';
+import Typography from '@mui/material/Typography';
+import Fade from '@mui/material/Fade';
+import IconButton from '@mui/material/IconButton';
+import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
 
-import Switch from '@material-ui/core/Switch';
-import EditIcon from '@material-ui/icons/Edit';
-import LockIcon from '@material-ui/icons/Lock';
-import AddBoxIcon from '@material-ui/icons/AddBox';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import SearchIcon from '@material-ui/icons/Search';
+import Switch from '@mui/material/Switch';
+import EditIcon from '@mui/icons-material/Edit';
+import LockIcon from '@mui/icons-material/Lock';
+import AddBoxIcon from '@mui/icons-material/AddBox';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import SearchIcon from '@mui/icons-material/Search';
 import Groups from '../../api/groups/groups';
 import Services from '../../api/services/services';
 import Spinner from '../components/system/Spinner';
@@ -369,7 +369,7 @@ function PersonalPage({ personalspace, isLoading, allServices, allGroups, allLin
                     <Grid container className={classes.titleButtons}>
                       <Grid item style={{ flexGrow: 1 }}>
                         <Tooltip title={i18n.__('pages.PersonalPage.searchElement')}>
-                          <IconButton onClick={toggleSearch} disabled={customDrag}>
+                          <IconButton onClick={toggleSearch} disabled={customDrag} size="large">
                             <SearchIcon fontSize="large" />
                           </IconButton>
                         </Tooltip>

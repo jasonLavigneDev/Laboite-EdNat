@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import ReactQuill from 'react-quill'; // ES6
-import { makeStyles } from '@material-ui/core/styles';
-import InputLabel from '@material-ui/core/InputLabel';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import FormControl from '@material-ui/core/FormControl';
-import MenuItem from '@material-ui/core/MenuItem';
+import makeStyles from '@mui/styles/makeStyles';
+import InputLabel from '@mui/material/InputLabel';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import FormControl from '@mui/material/FormControl';
+import MenuItem from '@mui/material/MenuItem';
 import 'react-quill/dist/quill.snow.css';
-import Select from '@material-ui/core/Select';
+import Select from '@mui/material/Select';
 
 import i18n from 'meteor/universe:i18n';
 import { updateIntroductionLanguage } from '../../../api/appsettings/methods';
@@ -20,7 +20,7 @@ import { stripEmptyHtml } from '../../utils/QuillText';
 
 export const useStyles = makeStyles((theme) => ({
   root: {
-    padding: `0 ${theme.spacing(2)}px 0 ${theme.spacing(2)}px`,
+    padding: `0 ${theme.spacing(2)} 0 ${theme.spacing(2)}`,
     flex: 1,
   },
   wysiwyg: {

@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import i18n from 'meteor/universe:i18n';
 import { useLocation, useHistory } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import { useTracker } from 'meteor/react-meteor-data';
 import { Counts } from 'meteor/tmeasday:publish-counts';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 import { PropTypes } from 'prop-types';
-import GroupIcon from '@material-ui/icons/Group';
-import Chip from '@material-ui/core/Chip';
-import LibraryBooks from '@material-ui/icons/LibraryBooks';
-import NotificationsNoneIcon from '@material-ui/icons/NotificationsNone';
-import HomeIcon from '@material-ui/icons/Home';
-import BusinessIcon from '@material-ui/icons/Business';
-import AppsIcon from '@material-ui/icons/Apps';
-import InfoIcon from '@material-ui/icons/Info';
+import GroupIcon from '@mui/icons-material/Group';
+import Chip from '@mui/material/Chip';
+import LibraryBooks from '@mui/icons-material/LibraryBooks';
+import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
+import HomeIcon from '@mui/icons-material/Home';
+import BusinessIcon from '@mui/icons-material/Business';
+import AppsIcon from '@mui/icons-material/Apps';
+import InfoIcon from '@mui/icons-material/Info';
 import { useAppContext } from '../../contexts/context';
 import updateDocumentTitle from '../../utils/updateDocumentTitle';
 
@@ -157,8 +157,9 @@ const MenuBar = ({ mobile }) => {
       textColor="primary"
       aria-label="menu links"
       variant={finalLinks.length < 4 && mobile ? '' : 'scrollable'}
-      scrollButtons="on"
+      scrollButtons
       centered={finalLinks.length < 4 && mobile}
+      allowScrollButtonsMobile
     >
       {finalLinks.map((link, index) => (
         <Tab

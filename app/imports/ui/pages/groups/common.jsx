@@ -1,18 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import Tooltip from '@material-ui/core/Tooltip';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import IconButton from '@material-ui/core/IconButton';
-import Grid from '@material-ui/core/Grid';
-import Pagination from '@material-ui/lab/Pagination';
+import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
+import Tooltip from '@mui/material/Tooltip';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import IconButton from '@mui/material/IconButton';
+import Grid from '@mui/material/Grid';
+import Pagination from '@mui/material/Pagination';
 import SearchField from '../../components/system/SearchField';
 
 const GroupListActions = ({ url, title }) => {
   return (
     <ListItemSecondaryAction>
       <Tooltip title={title} aria-label="add">
-        <IconButton edge="end" aria-label="comments" onClick={() => window.open(url, '_blank', 'noreferrer,noopener')}>
+        <IconButton
+          edge="end"
+          aria-label="comments"
+          onClick={() => window.open(url, '_blank', 'noreferrer,noopener')}
+          size="large"
+        >
           <ChevronRightIcon />
         </IconButton>
       </Tooltip>

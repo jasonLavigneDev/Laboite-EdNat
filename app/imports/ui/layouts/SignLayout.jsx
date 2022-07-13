@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
 import { Route, Switch } from 'react-router-dom';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { useTheme } from '@mui/material/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import LanguageSwitcher from '../components/system/LanguageSwitcher';
 import SignUp from '../pages/system/SignUp';
 import SignIn from '../pages/system/SignIn';

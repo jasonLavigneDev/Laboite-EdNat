@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import Alert from '@material-ui/lab/Alert';
-import AlertTitle from '@material-ui/lab/AlertTitle';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 import PropTypes from 'prop-types';
 import { Meteor } from 'meteor/meteor';
-import Typography from '@material-ui/core/Typography';
-import Slide from '@material-ui/core/Slide';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import Typography from '@mui/material/Typography';
+import Slide from '@mui/material/Slide';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import i18n from 'meteor/universe:i18n';
 import { useAppContext } from '../../contexts/context';

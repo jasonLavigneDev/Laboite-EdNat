@@ -1,10 +1,10 @@
 import React from 'react';
 import i18n from 'meteor/universe:i18n';
-import { makeStyles } from '@material-ui/core/styles';
-import Menu from '@material-ui/core/Menu';
-import Button from '@material-ui/core/Button';
-import MenuItem from '@material-ui/core/MenuItem';
-import IconButton from '@material-ui/core/IconButton';
+import makeStyles from '@mui/styles/makeStyles';
+import Menu from '@mui/material/Menu';
+import Button from '@mui/material/Button';
+import MenuItem from '@mui/material/MenuItem';
+import IconButton from '@mui/material/IconButton';
 
 import PropTypes from 'prop-types';
 import { useAppContext } from '../../contexts/context';
@@ -43,7 +43,7 @@ const LanguageSwitcher = ({ topbar, relative }) => {
   return (
     <div className={classes.switcher}>
       {topbar ? (
-        <IconButton aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
+        <IconButton aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick} size="large">
           {flag}
         </IconButton>
       ) : (

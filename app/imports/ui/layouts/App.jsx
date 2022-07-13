@@ -2,8 +2,8 @@ import React, { useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import { Meteor } from 'meteor/meteor';
 import { Helmet } from 'react-helmet';
-import { ThemeProvider, useTheme } from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
+import { ThemeProvider, StyledEngineProvider, useTheme } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
 import { MatomoProvider, useMatomo } from '@datapunt/matomo-tracker-react';
 import ProtectedRoute from '../components/system/ProtectedRoute';
 import PublicRoute from '../components/system/PublicRoute';
@@ -83,12 +83,14 @@ function App() {
 
 export default () => (
   <MatomoProvider value={instance}>
-    <ThemeProvider theme={lightTheme}>
-      <BrowserRouter>
-        <DynamicStore>
-          <App />
-        </DynamicStore>
-      </BrowserRouter>
-    </ThemeProvider>
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={lightTheme}>
+        <BrowserRouter>
+          <DynamicStore>
+            <App />
+          </DynamicStore>
+        </BrowserRouter>
+      </ThemeProvider>
+    </StyledEngineProvider>
   </MatomoProvider>
 );

@@ -1,12 +1,12 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
 import React from 'react';
-import Avatar from '@material-ui/core/Avatar';
-import { makeStyles } from '@material-ui/core/styles';
+import Avatar from '@mui/material/Avatar';
+import makeStyles from '@mui/styles/makeStyles';
 import PropTypes from 'prop-types';
-import PeopleIcon from '@material-ui/icons/People';
-import LockIcon from '@material-ui/icons/Lock';
-import SecurityIcon from '@material-ui/icons/Security';
-import Badge from '@material-ui/core/Badge';
+import PeopleIcon from '@mui/icons-material/People';
+import LockIcon from '@mui/icons-material/Lock';
+import SecurityIcon from '@mui/icons-material/Security';
+import Badge from '@mui/material/Badge';
 import { useAppContext } from '../../contexts/context';
 
 const useStyles = makeStyles((theme) => ({

@@ -4,20 +4,20 @@ import i18n from 'meteor/universe:i18n';
 import { Roles } from 'meteor/alanning:roles';
 import { useTracker } from 'meteor/react-meteor-data';
 import { ReactSortable } from 'react-sortablejs';
-import Accordion from '@material-ui/core/Accordion';
-import AccordionSummary from '@material-ui/core/AccordionSummary';
-import AccordionDetails from '@material-ui/core/AccordionActions';
-import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit';
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
-import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
-import Badge from '@material-ui/core/Badge';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionActions';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import makeStyles from '@mui/styles/makeStyles';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
+import Badge from '@mui/material/Badge';
 
 import { useAppContext } from '../../contexts/context';
 import Services from '../../../api/services/services';
@@ -246,6 +246,7 @@ const PersonalZone = ({
                 onClick={handleSelectTitle(index)}
                 className={classes.zoneButton}
                 title={i18n.__('components.PersonalZone.modifyTitle')}
+                size="large"
               >
                 <EditIcon className={classes.zoneButton} fontSize="small" />
               </IconButton>
@@ -258,6 +259,7 @@ const PersonalZone = ({
                 className={classes.zoneButton}
                 title={i18n.__('components.PersonalZone.upZoneLabel')}
                 disabled={index === 0}
+                size="large"
               >
                 <ArrowUpwardIcon />
               </IconButton>
@@ -266,6 +268,7 @@ const PersonalZone = ({
                 className={classes.zoneButton}
                 title={i18n.__('components.PersonalZone.downZoneLabel')}
                 disabled={lastZone}
+                size="large"
               >
                 <ArrowDownwardIcon />
               </IconButton>
@@ -286,6 +289,7 @@ const PersonalZone = ({
                     onClick={() => delZone(index)}
                     className={classes.zoneButton}
                     disabled={elements.length !== 0}
+                    size="large"
                   >
                     <DeleteIcon />
                   </IconButton>
