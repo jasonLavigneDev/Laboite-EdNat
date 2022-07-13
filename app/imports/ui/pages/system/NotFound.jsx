@@ -7,12 +7,12 @@ import Fade from '@mui/material/Fade';
 export default function NotFound() {
   return (
     <Fade in>
-      <>
+      <div>
         <h2>{i18n.__('pages.NotFound.message')}</h2>
         <p>
           <Link to="/">{i18n.__('pages.NotFound.backButtonLabel')}</Link>
         </p>
-      </>
+      </div>
     </Fade>
   );
 }

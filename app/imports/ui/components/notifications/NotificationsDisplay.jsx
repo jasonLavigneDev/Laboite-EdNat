@@ -74,7 +74,7 @@ const NotificationsDisplay = ({ notifications, ready }) => {
           modifiers={[{ arrow: { enabled: true, element: arrowRef } }]}
         >
           <Fade in={notificationPage.notifsOpen}>
-            <>
+            <div>
               <span className={classes.arrow} ref={setArrowRef} />
               <Paper className={classes.paper}>
                 <ClickAwayListener onClickAway={handleNotifsClose}>
@@ -125,7 +125,7 @@ const NotificationsDisplay = ({ notifications, ready }) => {
                   </div>
                 </ClickAwayListener>
               </Paper>
-            </>
+            </div>
           </Fade>
         </Popper>
       )}

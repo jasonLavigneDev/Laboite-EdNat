@@ -170,7 +170,7 @@ function SignIn({ loggingIn, introduction, appsettings, ready }) {
     <Spinner />
   ) : (
     <Fade in>
-      <>
+      <div>
         <Typography variant="h5" color="inherit" paragraph>
           {i18n.__('pages.SignIn.appDescription')}
         </Typography>
@@ -255,7 +255,7 @@ function SignIn({ loggingIn, introduction, appsettings, ready }) {
             </>
           )}
         </form>
-      </>
+      </div>
     </Fade>
   );
 }
