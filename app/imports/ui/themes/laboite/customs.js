@@ -1,4 +1,3 @@
-import { cardOverrides, carProps } from './components/card';
+import { cardOverrides } from './components/card';
 
-export const overrides = [cardOverrides];
-export const props = [carProps];
+export const components = [cardOverrides];

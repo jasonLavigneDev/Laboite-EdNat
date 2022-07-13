@@ -1,6 +1,6 @@
 import { computeCustoms } from '../utils';
 import COMMONS from './commons';
-import { overrides, props } from './customs';
+import { components } from './customs';
 
 const palette = {
   type: 'dark',
@@ -17,8 +17,7 @@ const palette = {
 
 const LABOITE_DARK = {
   ...COMMONS,
-  props: computeCustoms(palette, props),
-  overrides: computeCustoms(palette, overrides),
+  components: computeCustoms(palette, components),
   palette,
 };
 
