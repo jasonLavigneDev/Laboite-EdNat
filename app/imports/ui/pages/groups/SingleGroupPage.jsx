@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Meteor } from 'meteor/meteor';
 import PropTypes from 'prop-types';
+import sanitizeHtml from 'sanitize-html';
 import i18n from 'meteor/universe:i18n';
 import { Roles } from 'meteor/alanning:roles';
 import { Link, useHistory } from 'react-router-dom';
@@ -40,7 +41,6 @@ import Polls from '../../../api/polls/polls';
 import EventsAgenda from '../../../api/eventsAgenda/eventsAgenda';
 import Bookmarks from '../../../api/bookmarks/bookmarks';
 import COMMON_STYLES from '../../themes/styles';
-import sanitizeHtml from 'sanitize-html';
 
 const useStyles = makeStyles()((theme, { member, candidate, type }) => ({
   root: {

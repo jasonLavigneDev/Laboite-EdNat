@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
+import sanitizeHtml from 'sanitize-html';
 import i18n from 'meteor/universe:i18n';
 import { withTracker } from 'meteor/react-meteor-data';
 import ArrowBack from '@mui/icons-material/ArrowBack';
@@ -31,7 +32,6 @@ import { useAppContext } from '../../contexts/context';
 import TopBar from '../../components/menus/TopBar';
 import Footer from '../../components/menus/Footer';
 // import Tags from '../../../api/tags/tags';
-import sanitizeHtml from 'sanitize-html';
 
 const modifiedColorSyntax = (context, options) => {
   const newContext = { ...context };

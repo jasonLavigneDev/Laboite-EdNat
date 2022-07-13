@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import sanitizeHtml from 'sanitize-html';
 import { makeStyles } from 'tss-react/mui';
 import { withTracker } from 'meteor/react-meteor-data';
 import i18n from 'meteor/universe:i18n';
@@ -13,7 +14,6 @@ import TopBar from '../../components/menus/TopBar';
 import Footer, { LEGAL_ROUTES } from '../../components/menus/Footer';
 import { useAppContext } from '../../contexts/context';
 import Spinner from '../../components/system/Spinner';
-import sanitizeHtml from 'sanitize-html';
 
 const useStyles = makeStyles()(() => ({
   container: {

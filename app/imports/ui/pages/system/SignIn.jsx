@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Meteor } from 'meteor/meteor';
+import sanitizeHtml from 'sanitize-html';
 import { withTracker } from 'meteor/react-meteor-data';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -23,7 +24,6 @@ import Structures from '../../../api/structures/structures';
 import { getCurrentIntroduction } from '../../../api/utils';
 import { usePageTracking } from '../../utils/matomo';
 import { useAppContext } from '../../contexts/context';
-import sanitizeHtml from 'sanitize-html';
 
 validate.options = {
   fullMessages: false,

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Meteor } from 'meteor/meteor';
 import PropTypes from 'prop-types';
+import sanitizeHtml from 'sanitize-html';
 import i18n from 'meteor/universe:i18n';
 import { useHistory, Link } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
@@ -21,7 +22,6 @@ import Spinner from '../../components/system/Spinner';
 import { useAppContext } from '../../contexts/context';
 import Categories from '../../../api/categories/categories';
 import { isUrlExternal } from '../../utils/utilsFuncs';
-import sanitizeHtml from 'sanitize-html';
 
 const useStyles = makeStyles()((theme) => ({
   root: {

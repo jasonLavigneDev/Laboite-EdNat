@@ -1,5 +1,6 @@
 import React, { forwardRef, useState } from 'react';
 import PropTypes from 'prop-types';
+import sanitizeHtml from 'sanitize-html';
 import i18n from 'meteor/universe:i18n';
 import { Roles } from 'meteor/alanning:roles';
 import { useTracker } from 'meteor/react-meteor-data';
@@ -26,7 +27,6 @@ import UserBookmarks from '../../../api/userBookmarks/userBookmarks';
 import ServiceDetailsPersSpace from '../services/ServiceDetailsPersSpace';
 import GroupDetailsPersSpace from '../groups/GroupDetailsPersSpace';
 import PersonalLinkDetails from './PersonalLinkDetails';
-import sanitizeHtml from 'sanitize-html';
 
 export const useZoneStyles = makeStyles()((theme) => ({
   expansionpanel: {

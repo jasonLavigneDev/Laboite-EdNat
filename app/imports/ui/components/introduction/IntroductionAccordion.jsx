@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import sanitizeHtml from 'sanitize-html';
 import Typography from '@mui/material/Typography';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -8,7 +9,6 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Divider from '@mui/material/Divider';
 import { useZoneStyles as useStyles } from '../personalspace/PersonalZone';
 import { useAppContext } from '../../contexts/context';
-import sanitizeHtml from 'sanitize-html';
 
 const IntroductionAccordion = ({ summary, head = '', body, startExpanded = false }) => {
   const [{ isMobile }] = useAppContext();

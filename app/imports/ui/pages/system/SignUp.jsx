@@ -1,4 +1,5 @@
 import React from 'react';
+import sanitizeHtml from 'sanitize-html';
 import { Accounts } from 'meteor/accounts-base';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -23,7 +24,6 @@ import PropTypes from 'prop-types';
 import CustomSelect from '../../components/admin/CustomSelect';
 import Spinner from '../../components/system/Spinner';
 import { mainPagesTracker, useFormStateValidator } from './SignIn';
-import sanitizeHtml from 'sanitize-html';
 
 validate.options = {
   fullMessages: false,
