@@ -13,6 +13,11 @@ const palette = {
     main: '#EFAC61',
     light: '#FFDBA5',
   },
+  grey: {
+    main: '#e0e0e0',
+    light: '#bdbdbd',
+    dark: '#9e9e9e',
+  },
 };
 
 const LABOITE_DARK = {

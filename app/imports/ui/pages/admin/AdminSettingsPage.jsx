@@ -195,31 +195,33 @@ const AdminSettingsPage = ({ ready, appsettings }) => {
                 label={i18n.__(`pages.AdminSettingsPage.toggleMaintenance`)}
               />
             </Grid>
-            <FormControlLabel
-              className={classes.containerForm}
-              control={
-                <div style={{ marginTop: '-20px' }}>
-                  <TextField
-                    onChange={onUpdateField}
-                    value={msgMaintenance}
-                    name="link"
-                    label={i18n.__(`pages.AdminSettingsPage.textMaintenance`)}
-                    variant="outlined"
-                    fullWidth
-                    margin="normal"
-                  />
-                  <Button
-                    size="medium"
-                    disabled={buttonIsActive}
-                    variant="contained"
-                    color="primary"
-                    onClick={onButtonMaintenanceClick}
-                  >
-                    {i18n.__(`pages.AdminSettingsPage.buttonTextMaintenance`)}
-                  </Button>
-                </div>
-              }
-            />
+            <Grid item md={12} className={classes.container}>
+              <FormControlLabel
+                className={classes.containerForm}
+                control={
+                  <div style={{ marginTop: '-20px' }}>
+                    <TextField
+                      onChange={onUpdateField}
+                      value={msgMaintenance}
+                      name="link"
+                      label={i18n.__(`pages.AdminSettingsPage.textMaintenance`)}
+                      variant="outlined"
+                      fullWidth
+                      margin="normal"
+                    />
+                    <Button
+                      size="medium"
+                      disabled={buttonIsActive}
+                      variant="contained"
+                      color="primary"
+                      onClick={onButtonMaintenanceClick}
+                    >
+                      {i18n.__(`pages.AdminSettingsPage.buttonTextMaintenance`)}
+                    </Button>
+                  </div>
+                }
+              />
+            </Grid>
           </Grid>
         </Paper>
         <Dialog

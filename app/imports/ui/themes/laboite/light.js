@@ -25,6 +25,11 @@ const palette = {
   background: {
     default: '#F9F9FD',
   },
+  grey: {
+    main: '#e0e0e0',
+    light: '#bdbdbd',
+    dark: '#9e9e9e',
+  },
 };
 
 const LABOITE_LIGHT = {

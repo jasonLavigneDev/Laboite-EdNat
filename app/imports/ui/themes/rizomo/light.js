@@ -48,6 +48,11 @@ export const palette = {
     light: '#b20400',
     dark: '#9c0400',
   },
+  grey: {
+    main: '#e0e0e0',
+    light: '#bdbdbd',
+    dark: '#9e9e9e',
+  },
 };
 
 const RIZOMO_LIGHT = {

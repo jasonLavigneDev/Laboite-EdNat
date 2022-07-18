@@ -37,7 +37,7 @@ import { getStructure, useStructure } from '../../../api/structures/hooks';
 
 const useStyles = makeStyles()((theme) => ({
   root: {
-    padding: theme.spacing(2),
+    padding: theme.spacing(3),
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(5),
   },
@@ -143,16 +143,6 @@ const ProfilePage = () => {
     return ret;
   }, [searchText && searchText.length > 2]);
 
-  const usernameLabel = React.useRef(null);
-  const [labelUsernameWidth, setLabelUsernameWidth] = React.useState(0);
-  useEffect(() => {
-    setLabelUsernameWidth(usernameLabel.current.offsetWidth);
-  }, []);
-  const logoutTypeLabel = React.useRef(null);
-  const [labelLogoutTypeWidth, setLabelLogoutTypeWidth] = React.useState(0);
-  useEffect(() => {
-    if (enableKeycloak) setLabelLogoutTypeWidth(logoutTypeLabel.current.offsetWidth);
-  }, []);
   const [tempImageLoaded, setTempImageLoaded] = useState(false);
   const { minioEndPoint } = Meteor.settings.public;
 
@@ -530,12 +520,7 @@ const ProfilePage = () => {
                     variant="filled"
                   />
                   <FormControl variant="filled" fullWidth disabled={enableKeycloak} margin="normal">
-                    <InputLabel
-                      error={errors.username !== ''}
-                      htmlFor="username"
-                      id="username-label"
-                      ref={usernameLabel}
-                    >
+                    <InputLabel error={errors.username !== ''} htmlFor="username" id="username-label">
                       {i18n.__('api.users.labels.username')}
                     </InputLabel>
                     <OutlinedInput
@@ -545,7 +530,6 @@ const ProfilePage = () => {
                       error={errors.username !== ''}
                       onChange={onUpdateField}
                       // variant="filled"
-                      labelWidth={labelUsernameWidth}
                       endAdornment={
                         <InputAdornment position="end">
                           <Tooltip
@@ -599,7 +583,7 @@ const ProfilePage = () => {
                         parent = flatData.find((s) => s._id === option.parentId);
                       }
                       return (
-                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column' }} key={option._id}>
                           <div>{option.name}</div>
                           {!!option.parentId && (
                             <div style={{ fontSize: 10, color: 'grey', fontStyle: 'italic' }}>
@@ -649,7 +633,7 @@ const ProfilePage = () => {
               {enableKeycloak ? (
                 <Grid item>
                   <FormControl variant="filled" fullWidth>
-                    <InputLabel htmlFor="logoutType" id="logoutType-label" ref={logoutTypeLabel}>
+                    <InputLabel htmlFor="logoutType" id="logoutType-label">
                       {i18n.__('pages.ProfilePage.logoutType')}
                     </InputLabel>
                     <Select
@@ -658,7 +642,6 @@ const ProfilePage = () => {
                       name="logoutType"
                       value={userData.logoutType}
                       onChange={onUpdateField}
-                      labelWidth={labelLogoutTypeWidth}
                     >
                       {Object.keys(logoutTypeLabels).map((val) => (
                         <MenuItem key={val} value={val}>
@@ -706,7 +689,7 @@ const ProfilePage = () => {
               </Grid>
             </Grid>
             <div className={classes.buttonGroup}>
-              <Button variant="contained" onClick={resetForm}>
+              <Button variant="contained" onClick={resetForm} color="grey">
                 {i18n.__('pages.ProfilePage.reset')}
               </Button>
               <Button variant="contained" disabled={!submitOk} color="primary" onClick={submitUpdateUser}>
@@ -763,7 +746,7 @@ const ProfilePage = () => {
 
           <Grid container>
             <Grid item xs={12} sm={6} md={6} className={classes.buttonWrapper}>
-              <Button variant="contained" onClick={getAuthToken} color="primary">
+              <Button variant="contained" onClick={getAuthToken}>
                 {i18n.__('pages.ProfilePage.getAuthToken')}
               </Button>
             </Grid>

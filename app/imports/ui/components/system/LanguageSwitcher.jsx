@@ -25,7 +25,6 @@ const LanguageSwitcher = ({ topbar, relative }) => {
 
   const useStyles = makeStyles()(() => ({
     switcher: {
-      color: 'red',
       marginTop: topbar || relative ? null : 60,
     },
     flag: {
@@ -43,7 +42,7 @@ const LanguageSwitcher = ({ topbar, relative }) => {
   return (
     <div className={classes.switcher}>
       {topbar ? (
-        <IconButton aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick} size="large">
+        <IconButton aria-controls="simple-menu" color="grey" aria-haspopup="true" onClick={handleClick} size="large">
           {flag}
         </IconButton>
       ) : (
@@ -51,6 +50,7 @@ const LanguageSwitcher = ({ topbar, relative }) => {
           startIcon={flag}
           variant="contained"
           aria-controls="simple-menu"
+          color="grey"
           aria-haspopup="true"
           onClick={handleClick}
         >

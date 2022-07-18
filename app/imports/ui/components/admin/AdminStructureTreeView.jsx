@@ -24,7 +24,7 @@ const AdminStructureTreeView = ({
       defaultCollapseIcon={<ExpandMoreIcon />}
       defaultExpandIcon={<ChevronRightIcon />}
       sx={{
-        height: 110,
+        minHeight: 110,
         flexGrow: 1,
         overflowY: 'auto',
       }}

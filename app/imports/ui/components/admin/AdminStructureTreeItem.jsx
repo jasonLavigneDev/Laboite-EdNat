@@ -16,21 +16,18 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import CustomDialog from '../system/CustomDialog';
 
-const StyledTreeItem = withStyles(
-  (props) => <TreeItem {...props} />,
-  (theme) => ({
-    iconContainer: {
-      '& .close': {
-        opacity: 0.3,
-      },
+const StyledTreeItem = withStyles(TreeItem, (theme) => ({
+  iconContainer: {
+    '& .close': {
+      opacity: 0.3,
     },
-    group: {
-      marginLeft: 10,
-      paddingLeft: 18,
-      borderLeft: `1px dashed ${alpha(theme.palette.text.primary, 0.4)}`,
-    },
-  }),
-);
+  },
+  group: {
+    marginLeft: 10,
+    paddingLeft: 18,
+    borderLeft: `1px dashed ${alpha(theme.palette.text.primary, 0.4)}`,
+  },
+}));
 
 const useStyles = makeStyles()(() => ({
   name: {
@@ -69,8 +66,7 @@ const AdminStructureTreeItem = ({
       <StyledTreeItem
         key={id}
         nodeId={id}
-        onLabelClick={() => hasChildren && updateParentIdsList({ ids: [id] })}
-        onIconClick={() => hasChildren && updateParentIdsList({ ids: [id] })}
+        onClick={() => hasChildren && updateParentIdsList({ ids: [id] })}
         label={
           <Box display="flex">
             <Box flexGrow={1} className={classes.name}>

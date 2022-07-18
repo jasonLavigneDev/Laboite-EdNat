@@ -67,6 +67,7 @@ export const inputOverrides = (palette) => ({
         },
         '& .MuiInputLabel-shrink': {
           transform: `translate(60px,17px) scale(1)`,
+          top: -8,
         },
         '& .MuiInputLabel-shrink:not([id="search-label"])': {
           transform: `translate(0px,-20px) scale(1)`,
