@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { forwardRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import i18n from 'meteor/universe:i18n';
 import { Roles } from 'meteor/alanning:roles';
@@ -93,7 +93,7 @@ export const useZoneStyles = makeStyles()((theme) => ({
     },
   },
   emptyZone: {
-    minHeight: '90px',
+    minHeight: 90,
     border: `2px dashed ${theme.palette.primary.main}`,
     borderRadius: theme.shape.borderRadius,
     margin: 'auto',
@@ -111,7 +111,7 @@ export const useZoneStyles = makeStyles()((theme) => ({
       position: 'absolute',
       content: '"∅"',
       fontFamily: 'monospace',
-      fontSize: '80px',
+      fontSize: '40px',
       marginTop: '6px',
       color: theme.palette.primary.main,
     },
@@ -123,6 +123,7 @@ export const useZoneStyles = makeStyles()((theme) => ({
     },
     '&::after': {
       content: `"${i18n.__('components.PersonalZone.emptyDragZone')}"`,
+      fontSize: '40px',
     },
   },
   title: {
@@ -146,6 +147,21 @@ export const useZoneStyles = makeStyles()((theme) => ({
   },
   buttonZone: {},
 }));
+
+const SortableGrid = forwardRef((props, ref) => (
+  <Grid container spacing={1} ref={ref} className={props.className}>
+    {props.children}
+  </Grid>
+));
+
+SortableGrid.propTypes = {
+  children: PropTypes.any,
+  className: PropTypes.string,
+};
+SortableGrid.defaultProps = {
+  children: null,
+  className: '',
+};
 
 const PersonalZone = ({
   elements,
@@ -301,9 +317,8 @@ const PersonalZone = ({
       </AccordionSummary>
       <AccordionDetails>
         <ReactSortable
-          className={`MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-1 ${
-            elements.length === 0 ? `${classes.emptyZone} ${customDrag ? classes.emptyDragZone : ''}` : ''
-          }`}
+          className={elements.length === 0 ? `${classes.emptyZone} ${customDrag ? classes.emptyDragZone : ''}` : ''}
+          tag={SortableGrid}
           list={elements}
           setList={setList(index)}
           onStart={suspendUpdate}
