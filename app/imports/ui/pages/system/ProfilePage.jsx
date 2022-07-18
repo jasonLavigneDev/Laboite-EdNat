@@ -24,7 +24,6 @@ import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import MailIcon from '@mui/icons-material/Mail';
 import Input from '@mui/material/Input';
-import AutoComplete from '@mui/material/Autocomplete';
 import Spinner from '../../components/system/Spinner';
 import { useAppContext } from '../../contexts/context';
 import LanguageSwitcher from '../../components/system/LanguageSwitcher';
@@ -36,6 +35,7 @@ import Structures from '../../../api/structures/structures';
 import { getStructure, useStructure, useAwaitingStructure } from '../../../api/structures/hooks';
 import AppSettings from '../../../api/appsettings/appsettings';
 import { testMeteorSettingsUrl } from '../../utils/utilsFuncs';
+import StructureSelectAutoComplete from '../../components/structures/StructureSelectAutoComplete';
 
 const useStyles = makeStyles()((theme) => ({
   root: {
@@ -608,9 +608,8 @@ const ProfilePage = () => {
                         {i18n.__('pages.ProfilePage.awaitingForStructure')} <b>{awaitingStructure.name}</b>
                       </Typography>
                     )}
-                  <AutoComplete
-                    options={flatData}
-                    noOptionsText={i18n.__('pages.ProfilePage.noOptions')}
+                  <StructureSelectAutoComplete
+                    flatData={flatData}
                     loading={isSearchLoading}
                     getOptionLabel={(option) => option.name}
                     renderOption={(props, option) => {
@@ -642,7 +641,7 @@ const ProfilePage = () => {
                           },
                         });
                     }}
-                    inputValue={searchText}
+                    searchText={searchText}
                     onInputChange={(event, newInputValue) => {
                       setSearchText(newInputValue);
                     }}
