@@ -701,7 +701,10 @@ export const setMemberOf = new ValidatedMethod({
     const insertUser = { email: user.emails[0].address, _id: userId, groupId, status: 1 };
 
     // update Events
-    EventsAgenda.update({ groups: { $elemMatch: { _id: groupId } } }, { $push: { participants: insertUser } });
+    EventsAgenda.rawCollection().updateMany(
+      { groups: { $elemMatch: { _id: groupId } } },
+      { $push: { participants: insertUser } },
+    );
 
     // Notify user
     if (this.userId !== userId) createRoleNotification(this.userId, userId, groupId, 'member', true);
