@@ -473,7 +473,7 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
             )}
 
             <div className={classes.buttonGroup}>
-              <Button variant="contained" onClick={onCancel}>
+              <Button variant="contained" color="grey" onClick={onCancel}>
                 {i18n.__('pages.AdminSingleServicePage.cancel')}
               </Button>
 

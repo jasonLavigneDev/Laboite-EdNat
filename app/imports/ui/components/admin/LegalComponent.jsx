@@ -131,7 +131,7 @@ const LegalComponent = ({ tabkey, data = {} }) => {
       )}
       {changes && (
         <div className={classes.buttonGroup}>
-          <Button variant="contained" onClick={onCancel} disabled={loading}>
+          <Button variant="contained" color="grey" onClick={onCancel} disabled={loading}>
             {i18n.__('components.LegalComponent.cancel')}
           </Button>
 

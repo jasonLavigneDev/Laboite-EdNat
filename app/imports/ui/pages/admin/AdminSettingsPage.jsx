@@ -247,7 +247,7 @@ const AdminSettingsPage = ({ ready, appsettings }) => {
             <Button onClick={() => switchMaintenance(true)} color="primary" autoFocus>
               {i18n.__('pages.AdminSettingsPage.unlockMigration.confirm')}
             </Button>
-            <Button onClick={() => switchMaintenance()} color="primary">
+            <Button onClick={() => switchMaintenance()} color="secondary">
               {i18n.__('pages.AdminSettingsPage.unlockMigration.cancel')}
             </Button>
           </DialogActions>
