@@ -47,3 +47,5 @@ import '../../api/helps/methods';
 import '../../api/helps/server/publications';
 import '../../api/defaultspaces/methods';
 import '../../api/defaultspaces/server/publications';
+import '../../api/asamextensions/methods';
+import '../../api/asamextensions/server/publications';

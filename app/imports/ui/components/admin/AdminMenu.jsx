@@ -17,6 +17,7 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import RestorePageIcon from '@mui/icons-material/RestorePage';
 import HttpIcon from '@mui/icons-material/Http';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import EmailIcon from '@mui/icons-material/Email';
 import SettingsInputComponentIcon from '@mui/icons-material/SettingsInputComponent';
 import SettingsIcon from '@mui/icons-material/Settings';
 import CategoryIcon from '@mui/icons-material/Category';
@@ -146,6 +147,7 @@ export default function AdminMenu() {
       icon: <SettingsIcon />,
       hidden: !isAdmin,
     },
+    { path: '/admin/asam', content: 'menuAdminAsam', icon: <EmailIcon />, hidden: !isAdmin },
     {
       path: 'adminDivider',
       content: 'Divider',

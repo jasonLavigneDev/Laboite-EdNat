@@ -605,7 +605,8 @@
       "menuAdminStructureSettings": "Structure settings",
       "menuAdminStructureIntroduction": "Structure introduction",
       "menuAdminOfStructureUsersValidation": "Awaiting users",
-      "menuAdminDefaultSpaces": "Default Personal Spaces"
+      "menuAdminDefaultSpaces": "Default Personal Spaces",
+      "menuAdminAsam": "Email extensions Management"
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Your account has not been activated",
@@ -1509,6 +1510,26 @@
     },
     "AdminStructureSettingsPage": {
       "title": "Structure settings"
+    },
+    "AdminAsamExtensionsManagementPage": {
+      "title": "Email extensions management",
+      "materialTableLocalization": {
+        "toolbar_searchPlaceholder": "Search for an extension",
+        "pagination_labelRowsSelect": "extensions by page",
+        "body_emptyDataSourceMessage": "No recorded extension"
+      },
+      "actions": {
+        "assignStructure": "Assign a structure",
+        "unassignStructure": "Unassign the structure"
+      },
+      "noStructure": "Not assigned",
+      "modal": {
+        "title": "Assign a structure to email extension",
+        "close": "Close",
+        "cancel": "Cancel",
+        "submit": "Submit",
+        "noOptions": "Write to filter structures"
+      }
     }
   },
   "layouts": {
