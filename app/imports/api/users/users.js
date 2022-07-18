@@ -9,6 +9,8 @@ import logServer from '../logging';
 import { getRandomNCloudURL } from '../nextcloud/methods';
 import { generateDefaultPersonalSpace } from '../personalspaces/methods';
 import PersonalSpaces from '../personalspaces/personalspaces';
+import AsamExtensions from '../asamextensions/asamextensions';
+import Structures from '../structures/structures';
 
 const AppRoles = ['candidate', 'member', 'animator', 'admin', 'adminStructure'];
 
@@ -214,6 +216,21 @@ if (Meteor.isServer) {
       logServer('Creating new user after Keycloak authentication :');
       logServer(`  Keycloak id: ${user.services.keycloak.id}`);
       logServer(`  email: ${user.services.keycloak.email}`);
+
+      // split the email in two parts
+      const splittedEmail = user.services.keycloak.email.split('@');
+      // remove first part to keep extension
+      splittedEmail.shift();
+      const emailExtension = AsamExtensions.findOne({ extension: splittedEmail.join('') });
+      if (typeof emailExtension !== 'undefined' && typeof emailExtension.structureId === 'string') {
+        const structure = Structures.findOne({ _id: emailExtension.structureId });
+        // If we have a structure, assign it to user and make them directly active
+        if (typeof structure !== 'undefined') {
+          newUser.structure = structure._id;
+          newUser.isActive = true;
+        }
+      }
+
       newUser.emails = [{ address: user.services.keycloak.email, verified: true }];
     }
     if (options.firstName) newUser.firstName = options.firstName;
