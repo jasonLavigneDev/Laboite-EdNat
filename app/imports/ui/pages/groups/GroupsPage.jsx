@@ -29,10 +29,6 @@ import { useIconStyles, DetaiIconCustom, SimpleIconCustom } from '../../componen
 import Spinner from '../../components/system/Spinner';
 
 const useStyles = makeStyles()(() => ({
-  small: {
-    padding: '5px !important',
-    transition: 'all 300ms ease-in-out',
-  },
   flex: {
     display: 'flex',
     justifyContent: 'space-between',
@@ -204,7 +200,6 @@ function GroupsPage() {
         </Grid>
         <Grid container spacing={4}>
           <CollapsingSearch
-            classes={searchToggle ? null : classes.small}
             label={i18n.__('pages.GroupsPage.searchText')}
             updateSearch={updateSearch}
             checkEscape={checkEscape}

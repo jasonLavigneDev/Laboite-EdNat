@@ -143,13 +143,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
   const canDelete = isAdmin || group.owner === userId;
 
   const typeLabel = React.useRef(null);
-  const [labelTypeWidth, setLabelTypeWidth] = React.useState(36);
   const { minioEndPoint } = Meteor.settings.public;
-  useEffect(() => {
-    if (typeLabel.current) {
-      setLabelTypeWidth(typeLabel.current.offsetWidth);
-    }
-  }, []);
 
   useEffect(() => {
     if (params._id && group._id && loading) {
@@ -373,7 +367,6 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
                   </InputLabel>
                   <Select
                     labelId="type-label"
-                    labelWidth={labelTypeWidth}
                     id="type"
                     name="type"
                     value={groupData.type}

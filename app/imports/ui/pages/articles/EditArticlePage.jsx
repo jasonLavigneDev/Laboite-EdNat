@@ -690,7 +690,7 @@ function EditArticlePage({
                 />
               ) : (
                 <>
-                  <CustomToolbarArticle withMedia withWebcam={minioEndPoint} />
+                  <CustomToolbarArticle withMedia withWebcam={!!minioEndPoint} />
                   <ReactQuill {...quillOptions} id="content" value={content} onChange={onUpdateRichText} />
                 </>
               )

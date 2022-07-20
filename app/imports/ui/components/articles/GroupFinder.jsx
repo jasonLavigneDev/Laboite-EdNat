@@ -65,7 +65,6 @@ function GroupFinder({ onSelected, exclude = [], opened }) {
         // Regular option
         return option.name;
       }}
-      renderOption={(props, option) => option.name}
       noOptionsText={i18n.__('components.GroupFinder.noGroup')}
       clearText={i18n.__('components.GroupFinder.clear')}
       loadingText={i18n.__('components.GroupFinder.loading')}

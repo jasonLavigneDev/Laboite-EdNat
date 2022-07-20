@@ -93,10 +93,6 @@ const SignUp = ({ introduction, ready, structures, loadingStructure }) => {
   });
 
   const structureLabel = React.useRef(null);
-  const [labelWidth, setLabelWidth] = React.useState(0);
-  React.useEffect(() => {
-    setLabelWidth(structureLabel.current.offsetWidth);
-  }, []);
 
   const handleBlurEmail = (event) => {
     if (formState.values.userName === undefined || formState.values.userName === '') {
@@ -239,7 +235,6 @@ const SignUp = ({ introduction, ready, structures, loadingStructure }) => {
                   type={values.showPassword ? 'text' : 'password'}
                   value={formState.values.password || ''}
                   error={hasError('password')}
-                  labelWidth={100}
                   onChange={handleChange}
                   endAdornment={
                     <InputAdornment position="end">
@@ -276,7 +271,6 @@ const SignUp = ({ introduction, ready, structures, loadingStructure }) => {
                     value={formState.values.structureSelect || ''}
                     error={hasError('structureSelect')}
                     onChange={handleChange}
-                    labelWidth={labelWidth}
                     options={structures.map((opt) => ({ value: opt._id, label: opt.name }))}
                   />
                 )}

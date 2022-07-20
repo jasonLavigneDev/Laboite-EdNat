@@ -5,7 +5,6 @@ import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionActions';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Grid from '@mui/material/Grid';
 import Divider from '@mui/material/Divider';
 import { useZoneStyles as useStyles } from '../personalspace/PersonalZone';
 import { useAppContext } from '../../contexts/context';
@@ -28,15 +27,13 @@ const IntroductionAccordion = ({ summary, head = '', body, startExpanded = false
         </Typography>
       </AccordionSummary>
       <AccordionDetails style={{ display: 'block' }}>
-        <Grid display="flex">
-          {head && (
-            <>
-              <Typography variant={isMobile ? 'h6' : 'h4'}>{head}</Typography> <Divider />
-            </>
-          )}
+        {head && (
+          <>
+            <Typography variant={isMobile ? 'h6' : 'h4'}>{head}</Typography> <Divider />
+          </>
+        )}
 
-          <div style={{ padding: '10px' }} dangerouslySetInnerHTML={{ __html: body || '' }} />
-        </Grid>
+        <div style={{ padding: '10px' }} dangerouslySetInnerHTML={{ __html: body || '' }} />
       </AccordionDetails>
     </Accordion>
   );

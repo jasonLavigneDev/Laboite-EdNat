@@ -583,7 +583,11 @@ const ProfilePage = () => {
                         parent = flatData.find((s) => s._id === option.parentId);
                       }
                       return (
-                        <div style={{ display: 'flex', flexDirection: 'column' }} key={option._id}>
+                        <div
+                          {...props}
+                          style={{ display: 'flex', flexDirection: 'column', alignItems: 'start' }}
+                          key={option._id}
+                        >
                           <div>{option.name}</div>
                           {!!option.parentId && (
                             <div style={{ fontSize: 10, color: 'grey', fontStyle: 'italic' }}>

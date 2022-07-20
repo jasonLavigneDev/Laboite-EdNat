@@ -50,7 +50,6 @@ const AdminSendNotification = ({ data, open, onClose }) => {
   };
 
   const updateState = (e) => {
-    e.persist();
     setNotifState((state) => ({
       ...state,
       [e.target.name]: e.target.value,

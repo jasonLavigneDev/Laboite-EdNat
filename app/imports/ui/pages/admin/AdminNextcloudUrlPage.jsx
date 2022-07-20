@@ -92,69 +92,71 @@ function AdminNextcloudUrlPage({ loading, nextclouds }) {
 
   return (
     <Fade in className={classes.root}>
-      {loading ? (
-        <Spinner />
-      ) : (
-        <div>
-          <Container style={{ overflowX: 'auto' }}>
-            <MaterialTable
-              // other props
-              title={`${i18n.__('pages.AdminNextcloudUrlPage.title')}`}
-              columns={columns}
-              data={nextclouds.map((row) => ({ ...row, id: row._id }))}
-              options={options}
-              localization={setMaterialTableLocalization('pages.AdminNextcloudUrlPage')}
-              actions={[
-                (rowData) => ({
-                  icon: () => (rowData.active ? <VisibilityOffIcon /> : <VisibilityIcon />),
-                  tooltip: i18n.__('pages.AdminNextcloudUrlPage.materialTableLocalization.body_activeTooltip'),
-                  onClick: () => {
-                    changeURL({ ...rowData, active: !rowData.active });
-                  },
-                }),
-                {
-                  icon: add,
-                  tooltip: i18n.__('pages.AdminNextcloudUrlPage.materialTableLocalization.body_addTooltip'),
-                  isFreeAction: true,
-                  onClick: () => {
-                    OpenURLEditor();
-                  },
-                },
-                {
-                  icon: GroupAddIcon,
-                  tooltip: i18n.__('pages.AdminNextcloudUrlPage.updateAll'),
-                  isFreeAction: true,
-                  onClick: () => {
-                    UpdateAllUsersURL();
-                  },
-                },
-              ]}
-              editable={{
-                onRowDelete: (oldData) =>
-                  new Promise((resolve, reject) => {
-                    removeNextcloudURL.call(
-                      {
-                        url: oldData.url,
-                      },
-                      (err, res) => {
-                        if (err) {
-                          msg.error(err.reason);
-                          reject(err);
-                        } else {
-                          msg.success(i18n.__('api.methods.operationSuccessMsg'));
-                          resolve(res);
-                        }
-                      },
-                    );
+      <div>
+        {loading ? (
+          <Spinner />
+        ) : (
+          <>
+            <Container style={{ overflowX: 'auto' }}>
+              <MaterialTable
+                // other props
+                title={`${i18n.__('pages.AdminNextcloudUrlPage.title')}`}
+                columns={columns}
+                data={nextclouds.map((row) => ({ ...row, id: row._id }))}
+                options={options}
+                localization={setMaterialTableLocalization('pages.AdminNextcloudUrlPage')}
+                actions={[
+                  (rowData) => ({
+                    icon: () => (rowData.active ? <VisibilityOffIcon /> : <VisibilityIcon />),
+                    tooltip: i18n.__('pages.AdminNextcloudUrlPage.materialTableLocalization.body_activeTooltip'),
+                    onClick: () => {
+                      changeURL({ ...rowData, active: !rowData.active });
+                    },
                   }),
-              }}
-            />
-          </Container>
-          {editUrl ? (
-            <AdminNextCloudUrlEdit data={ncloudData} open={editUrl} onClose={() => setEditUrl(false)} />
-          ) : null}
-        </div>
-      )}
+                  {
+                    icon: add,
+                    tooltip: i18n.__('pages.AdminNextcloudUrlPage.materialTableLocalization.body_addTooltip'),
+                    isFreeAction: true,
+                    onClick: () => {
+                      OpenURLEditor();
+                    },
+                  },
+                  {
+                    icon: GroupAddIcon,
+                    tooltip: i18n.__('pages.AdminNextcloudUrlPage.updateAll'),
+                    isFreeAction: true,
+                    onClick: () => {
+                      UpdateAllUsersURL();
+                    },
+                  },
+                ]}
+                editable={{
+                  onRowDelete: (oldData) =>
+                    new Promise((resolve, reject) => {
+                      removeNextcloudURL.call(
+                        {
+                          url: oldData.url,
+                        },
+                        (err, res) => {
+                          if (err) {
+                            msg.error(err.reason);
+                            reject(err);
+                          } else {
+                            msg.success(i18n.__('api.methods.operationSuccessMsg'));
+                            resolve(res);
+                          }
+                        },
+                      );
+                    }),
+                }}
+              />
+            </Container>
+            {editUrl ? (
+              <AdminNextCloudUrlEdit data={ncloudData} open={editUrl} onClose={() => setEditUrl(false)} />
+            ) : null}
+          </>
+        )}
+      </div>
     </Fade>
   );
 }

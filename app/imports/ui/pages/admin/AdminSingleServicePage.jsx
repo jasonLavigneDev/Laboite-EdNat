@@ -155,14 +155,6 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
 
   // useEffect(() => removeUndefined, []); // TO UNDERSTAND :)
 
-  const stateLabel = React.useRef(null);
-  const [labelStateWidth, setLabelStateWidth] = React.useState(36);
-  useEffect(() => {
-    if (stateLabel.current) {
-      setLabelStateWidth(stateLabel.current.offsetWidth);
-    }
-  }, [stateLabel.current]);
-
   useEffect(() => {
     if (params._id && service._id && loading) {
       setLoading(false);
@@ -313,17 +305,10 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
               disabled
             />
             <FormControl variant="outlined" fullWidth margin="normal">
-              <InputLabel htmlFor="state" id="state-label" ref={stateLabel}>
+              <InputLabel htmlFor="state" id="state-label">
                 {i18n.__('pages.AdminSingleServicePage.state')}
               </InputLabel>
-              <Select
-                labelId="state-label"
-                id="state"
-                name="state"
-                value={serviceData.state}
-                onChange={onUpdateField}
-                labelWidth={labelStateWidth}
-              >
+              <Select labelId="state-label" id="state" name="state" value={serviceData.state} onChange={onUpdateField}>
                 {Object.keys(Services.stateLabels).map((val) => (
                   <MenuItem key={val} value={val}>
                     {i18n.__(Services.stateLabels[val])}

@@ -31,10 +31,6 @@ import UserBookmarks from '../../api/userBookmarks/userBookmarks';
 import CollapsingSearch from '../components/system/CollapsingSearch';
 
 const useStyles = makeStyles()((theme, isMobile) => ({
-  small: {
-    padding: '5px !important',
-    transition: 'all 300ms ease-in-out',
-  },
   search: {
     marginBottom: 20,
     marginLeft: 16,
@@ -406,7 +402,7 @@ function PersonalPage({ personalspace, isLoading, allServices, allGroups, allLin
               </Grid>
               <Grid container spacing={4}>
                 <CollapsingSearch
-                  classes={searchToggle ? classes.search : classes.small}
+                  classes={searchToggle ? classes.search : null}
                   label={i18n.__('pages.PersonalPage.searchText')}
                   updateSearch={updateSearch}
                   checkEscape={checkEscape}

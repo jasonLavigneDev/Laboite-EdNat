@@ -222,17 +222,14 @@ function ArticlesPage({
             </Grid>
           </Grid>
           <Grid container spacing={4}>
-            <Grid item xs={12} sm={12} md={6} className={searchToggle ? null : classes.small}>
-              <CollapsingSearch
-                classes={searchToggle ? '' : classes.small}
-                label={i18n.__(`pages.${i18nCode}.searchText`)}
-                updateSearch={updateSearch}
-                resetSearch={resetSearch}
-                searchToggle={searchToggle}
-                search={search}
-                inputRef={inputRef}
-              />
-            </Grid>
+            <CollapsingSearch
+              label={i18n.__(`pages.${i18nCode}.searchText`)}
+              updateSearch={updateSearch}
+              resetSearch={resetSearch}
+              searchToggle={searchToggle}
+              search={search}
+              inputRef={inputRef}
+            />
           </Grid>
 
           {loading ? (

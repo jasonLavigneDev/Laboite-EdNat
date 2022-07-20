@@ -91,12 +91,6 @@ const Contact = ({ structures, loading }) => {
   const { classes, theme } = useStyles();
   const [formState, handleChange] = useFormStateValidator(schema);
 
-  const structureLabel = React.useRef(null);
-  const [labelWidth, setLabelWidth] = React.useState(0);
-  React.useEffect(() => {
-    if (!user) setLabelWidth(structureLabel.current.offsetWidth);
-  }, []);
-
   const userStructure = useTracker(() => {
     if (user) {
       const st = Structures.findOne({ _id: user.structure }) || {};
@@ -244,11 +238,7 @@ const Contact = ({ structures, loading }) => {
                   />
                 ) : (
                   <>
-                    <InputLabel
-                      ref={structureLabel}
-                      id="structure-label"
-                      className={hasError('structureSelect') ? 'Mui-error' : ''}
-                    >
+                    <InputLabel id="structure-label" className={hasError('structureSelect') ? 'Mui-error' : ''}>
                       {i18n.__('pages.ContactForm.structureLabel')}
                     </InputLabel>
                     <CustomSelect
@@ -256,7 +246,6 @@ const Contact = ({ structures, loading }) => {
                       value={user && userStructure ? userStructure : formState.values.structureSelect || ''}
                       error={hasError('structureSelect')}
                       onChange={handleChange}
-                      labelWidth={labelWidth}
                       options={structures.map((opt) => ({ value: opt.name, label: opt.name }))}
                     />
                   </>

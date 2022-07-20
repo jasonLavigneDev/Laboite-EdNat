@@ -17,7 +17,6 @@ const StructureSelect = ({
     <FormControl variant="filled" fullWidth {...formControlProps}>
       <InputLabel id="structure-label">{i18n.__('components.StructureSelect.label')}</InputLabel>
       <CustomSelect
-        labelWidth={100}
         value={selectedStructureId || ''}
         error={false}
         onChange={(e) => {
