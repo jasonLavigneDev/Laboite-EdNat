@@ -108,15 +108,7 @@ const MenuBar = ({ mobile }) => {
     },
   ];
   const T = i18n.createComponent('components.MenuBar');
-  const [currentLink, setCurrentLink] = useState('/');
-
-  useEffect(() => {
-    links.forEach((link) => {
-      if (link.path === pathname || (pathname.search(link.path) > -1 && link.path !== '/')) {
-        setCurrentLink(link.path);
-      }
-    });
-  }, [pathname]);
+  const [currentLink, setCurrentLink] = useState(false);
 
   const finalLinks = links.filter(({ path, hidden }) => {
     if (hidden || (path === '/publications' && !user.articlesEnable)) {
@@ -124,6 +116,19 @@ const MenuBar = ({ mobile }) => {
     }
     return true;
   });
+
+  const updateTabValue = (init) => {
+    if (currentLink || init) {
+      const newLocation = finalLinks.find(
+        ({ path }) => path === pathname || (pathname.search(path) > -1 && path !== '/'),
+      );
+      setCurrentLink(!!newLocation && newLocation.path);
+    }
+  };
+
+  useEffect(() => {
+    updateTabValue();
+  }, [pathname]);
 
   function a11yProps(index) {
     return {
@@ -139,6 +144,7 @@ const MenuBar = ({ mobile }) => {
   const initIndicator = (actions) => {
     if (actions) {
       setTimeout(actions.updateIndicator.bind(actions), 500);
+      setTimeout(() => updateTabValue(true), 500);
     }
   };
 
@@ -151,7 +157,6 @@ const MenuBar = ({ mobile }) => {
       }}
       action={initIndicator}
       value={currentLink}
-      to={currentLink}
       indicatorColor="secondary"
       textColor="primary"
       aria-label="menu links"
