@@ -1,22 +1,22 @@
 import React, { useState } from 'react';
 import { useTracker } from 'meteor/react-meteor-data';
 import i18n from 'meteor/universe:i18n';
-import Fade from '@material-ui/core/Fade';
-import Container from '@material-ui/core/Container';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
-import Card from '@material-ui/core/Card';
-import Box from '@material-ui/core/Box';
-import CardContent from '@material-ui/core/CardContent';
-import CardHeader from '@material-ui/core/CardHeader';
-import Accordion from '@material-ui/core/Accordion';
-import AccordionSummary from '@material-ui/core/AccordionSummary';
-import AccordionDetails from '@material-ui/core/AccordionDetails';
-import { makeStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Modal from '@material-ui/core/Modal';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import CancelIcon from '@material-ui/icons/CancelOutlined';
+import Fade from '@mui/material/Fade';
+import Container from '@mui/material/Container';
+import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Grid';
+import Card from '@mui/material/Card';
+import Box from '@mui/material/Box';
+import CardContent from '@mui/material/CardContent';
+import CardHeader from '@mui/material/CardHeader';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import { makeStyles } from 'tss-react/mui';
+import Button from '@mui/material/Button';
+import Modal from '@mui/material/Modal';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import CancelIcon from '@mui/icons-material/CancelOutlined';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 import Screencast from '../components/screencast/Screencast';
 import { useAppContext } from '../contexts/context';
@@ -43,7 +43,7 @@ function HelpPage() {
       : [];
   });
 
-  const useStyles = makeStyles((theme) => ({
+  const useStyles = makeStyles()((theme) => ({
     card: {
       // margin: 10,
       // height: '18vh',
@@ -52,7 +52,7 @@ function HelpPage() {
       flexDirection: 'column',
     },
     container: {
-      minHeight: 'calc(100vh - 246px)',
+      minHeight: 'calc(100vh - 230px)',
     },
     grid: {
       display: 'flex',
@@ -98,7 +98,7 @@ function HelpPage() {
     },
   }));
 
-  const classes = useStyles();
+  const { classes } = useStyles();
   const zoneClasses = useZoneStyles();
 
   const [modalState, setModalState] = useState({

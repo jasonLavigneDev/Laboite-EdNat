@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
 import { Route, Switch } from 'react-router-dom';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { useTheme } from '@mui/material/styles';
+import { makeStyles } from 'tss-react/mui';
 import LanguageSwitcher from '../components/system/LanguageSwitcher';
 import SignUp from '../pages/system/SignUp';
 import SignIn from '../pages/system/SignIn';
@@ -14,7 +15,7 @@ import OfflineServices from '../components/services/OfflineServices';
 import OfflineMenu from '../components/menus/OfflineMenu';
 import AppVersion from '../components/system/AppVersion';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   root: {
     minHeight: 'calc(100vh - 64px)',
     padding: '16px',
@@ -69,7 +70,7 @@ const { offlinePage } = Meteor.settings.public;
 
 export default function SignLayout() {
   const [{ isMobile, isIframed }] = useAppContext();
-  const classes = useStyles();
+  const { classes } = useStyles();
   const theme = useTheme();
   const [selectedTab, setTab] = useState('apps');
 

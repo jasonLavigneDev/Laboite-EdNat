@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import ReactQuill from 'react-quill'; // ES6
 import 'react-quill/dist/quill.snow.css';
-import { makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import InputLabel from '@material-ui/core/InputLabel';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
+import { makeStyles } from 'tss-react/mui';
+import TextField from '@mui/material/TextField';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import InputLabel from '@mui/material/InputLabel';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 
 import i18n from 'meteor/universe:i18n';
 import { useObjectState } from '../../utils/hooks';
@@ -17,9 +17,9 @@ import Spinner from '../system/Spinner';
 import { CustomToolbarArticle } from '../system/CustomQuill';
 import '../../utils/QuillVideo';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   root: {
-    padding: `0 ${theme.spacing(2)}px 0 ${theme.spacing(2)}px`,
+    padding: `0 ${theme.spacing(2)} 0 ${theme.spacing(2)}`,
     flex: 1,
   },
   wysiwyg: {
@@ -47,7 +47,7 @@ const quillOptions = {
 };
 
 const LegalComponent = ({ tabkey, data = {} }) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [state, setState] = useObjectState(data);
   const [loading, setLoading] = useState(true);
   const [changes, setChanges] = useState(false);
@@ -109,9 +109,7 @@ const LegalComponent = ({ tabkey, data = {} }) => {
     <form className={classes.root}>
       <Typography variant="h4">{i18n.__(`components.LegalComponent.title_${tabkey}`)}</Typography>
       <FormControlLabel
-        control={
-          <Checkbox checked={state.external || false} onChange={onCheckExternal} name="external" color="primary" />
-        }
+        control={<Checkbox checked={state.external || false} onChange={onCheckExternal} name="external" />}
         label={i18n.__(`components.LegalComponent.external_${tabkey}`)}
       />
       {state.external ? (
@@ -133,7 +131,7 @@ const LegalComponent = ({ tabkey, data = {} }) => {
       )}
       {changes && (
         <div className={classes.buttonGroup}>
-          <Button variant="contained" onClick={onCancel} disabled={loading}>
+          <Button variant="contained" color="grey" onClick={onCancel} disabled={loading}>
             {i18n.__('components.LegalComponent.cancel')}
           </Button>
 

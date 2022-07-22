@@ -1,11 +1,11 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import DescriptionIcon from '@material-ui/icons/Description';
-import MusicNoteIcon from '@material-ui/icons/MusicNote';
-import VideocamIcon from '@material-ui/icons/Videocam';
+import Typography from '@mui/material/Typography';
+import { makeStyles } from 'tss-react/mui';
+import DescriptionIcon from '@mui/icons-material/Description';
+import MusicNoteIcon from '@mui/icons-material/MusicNote';
+import VideocamIcon from '@mui/icons-material/Videocam';
 import PropTypes from 'prop-types';
 
 const { minioEndPoint, minioPort, minioBucket, minioSSL } = Meteor.settings.public;
@@ -16,7 +16,7 @@ export const PICTURES_TYPES = Meteor.settings.public.imageFilesTypes;
 export const SOUND_TYPES = Meteor.settings.public.audioFilesTypes;
 export const VIDEO_TYPES = Meteor.settings.public.videoFilesTypes;
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   singleFile: {
     boxShadow: '0px 0px 5px 0px rgba(0,0,0,0.75)',
     borderRadius: theme.shape.borderRadius,
@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const SingleStorageFile = ({ file, onSelect }) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const extension = file.name.split('.').pop();
   const isPicture = !!PICTURES_TYPES.find((ext) => ext === extension);
   const isVideo = !!VIDEO_TYPES.find((ext) => ext === extension);

@@ -1,9 +1,9 @@
 import React from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   root: {},
   toast: {},
   body: {},
@@ -13,7 +13,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 const CustomToast = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   return (
     <ToastContainer

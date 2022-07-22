@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import i18n from 'meteor/universe:i18n';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
 import CustomSelect from '../admin/CustomSelect';
 import { propTypes as structuresPropTypes } from '../../../api/structures/structures';
 
@@ -17,7 +17,6 @@ const StructureSelect = ({
     <FormControl variant="filled" fullWidth {...formControlProps}>
       <InputLabel id="structure-label">{i18n.__('components.StructureSelect.label')}</InputLabel>
       <CustomSelect
-        labelWidth={100}
         value={selectedStructureId || ''}
         error={false}
         onChange={(e) => {

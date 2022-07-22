@@ -1,10 +1,10 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 import i18n from 'meteor/universe:i18n';
-import Typography from '@material-ui/core/Typography';
+import Typography from '@mui/material/Typography';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   skipLink: {
     zIndex: 10000,
     background: theme.palette.primary.main,
@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const SkipLink = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const history = useHistory();
 
   return (

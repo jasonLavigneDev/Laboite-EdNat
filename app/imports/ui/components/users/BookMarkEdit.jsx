@@ -1,26 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import i18n from 'meteor/universe:i18n';
-import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardActions from '@material-ui/core/CardActions';
-import IconButton from '@material-ui/core/IconButton';
-import Button from '@material-ui/core/Button';
-import Modal from '@material-ui/core/Modal';
-import ClearIcon from '@material-ui/icons/Clear';
+import { makeStyles } from 'tss-react/mui';
+import Card from '@mui/material/Card';
+import CardHeader from '@mui/material/CardHeader';
+import CardActions from '@mui/material/CardActions';
+import IconButton from '@mui/material/IconButton';
+import Button from '@mui/material/Button';
+import Modal from '@mui/material/Modal';
+import ClearIcon from '@mui/icons-material/Clear';
 import PropTypes from 'prop-types';
-import CardContent from '@material-ui/core/CardContent';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
+import CardContent from '@mui/material/CardContent';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import { useAppContext } from '../../contexts/context';
 import COMMON_STYLES from '../../themes/styles';
 
-const useStyles = (isMobile) =>
-  makeStyles(() => ({
-    root: COMMON_STYLES.root,
-    actions: COMMON_STYLES.actions,
-    paper: COMMON_STYLES.paper(isMobile),
-  }));
+const useStyles = makeStyles()((theme, isMobile) => ({
+  root: COMMON_STYLES.root,
+  actions: COMMON_STYLES.actions,
+  paper: COMMON_STYLES.paper(isMobile),
+}));
 
 const BookMarkEdit = ({ data, group, onEdit, open, onClose, method }) => {
   const [{ isMobile }] = useAppContext();
@@ -28,7 +27,7 @@ const BookMarkEdit = ({ data, group, onEdit, open, onClose, method }) => {
   const [tag, setTag] = useState(data.tag);
   const [name, setName] = useState(data.name);
   const [isValid, setIsValid] = useState(false);
-  const classes = useStyles(isMobile)();
+  const { classes } = useStyles(isMobile);
   const args = {
     url,
     name,
@@ -93,7 +92,7 @@ const BookMarkEdit = ({ data, group, onEdit, open, onClose, method }) => {
               onEdit ? i18n.__('components.BookMarkEdit.title-edit') : i18n.__('components.BookMarkEdit.title-create')
             }
             action={
-              <IconButton onClick={onClose}>
+              <IconButton onClick={onClose} size="large">
                 <ClearIcon />
               </IconButton>
             }

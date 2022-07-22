@@ -2,18 +2,18 @@ import React, { useRef, useEffect } from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Roles } from 'meteor/alanning:roles';
 import PropTypes from 'prop-types';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import Fade from '@material-ui/core/Fade';
-import Container from '@material-ui/core/Container';
-import Grid from '@material-ui/core/Grid';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import Fade from '@mui/material/Fade';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
 import i18n from 'meteor/universe:i18n';
-import ListItemText from '@material-ui/core/ListItemText';
-import ArrowBack from '@material-ui/icons/ArrowBack';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import Button from '@material-ui/core/Button';
-import PollIcon from '@material-ui/icons/Poll';
+import ListItemText from '@mui/material/ListItemText';
+import ArrowBack from '@mui/icons-material/ArrowBack';
+import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
+import Button from '@mui/material/Button';
+import PollIcon from '@mui/icons-material/Poll';
 import { useHistory } from 'react-router-dom';
 import { usePagination } from '../../utils/hooks';
 import { useAppContext } from '../../contexts/context';
@@ -26,7 +26,7 @@ import { useEvenstPageStyles } from './EventsPage';
 const ITEM_PER_PAGE = 10;
 
 const PollPage = ({ loading, group, slug }) => {
-  const classes = useEvenstPageStyles();
+  const { classes } = useEvenstPageStyles();
   const history = useHistory();
   const [{ userId, pollPage }, dispatch] = useAppContext();
 

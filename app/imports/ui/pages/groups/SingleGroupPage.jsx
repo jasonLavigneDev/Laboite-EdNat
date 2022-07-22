@@ -5,31 +5,31 @@ import PropTypes from 'prop-types';
 import i18n from 'meteor/universe:i18n';
 import { Roles } from 'meteor/alanning:roles';
 import { Link, useHistory } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
-import Fade from '@material-ui/core/Fade';
+import { makeStyles } from 'tss-react/mui';
+import Container from '@mui/material/Container';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Grid';
+import Fade from '@mui/material/Fade';
 
-import ArrowBack from '@material-ui/icons/ArrowBack';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
-import CheckIcon from '@material-ui/icons/Check';
-import WatchLaterIcon from '@material-ui/icons/WatchLater';
-import PeopleIcon from '@material-ui/icons/People';
-import TodayIcon from '@material-ui/icons/Today';
-import PollIcon from '@material-ui/icons/Poll';
-import LockIcon from '@material-ui/icons/Lock';
-import BookmarksIcon from '@material-ui/icons/Bookmarks';
-import ClearIcon from '@material-ui/icons/Clear';
-import EditIcon from '@material-ui/icons/Edit';
-import AddIcon from '@material-ui/icons/Add';
-import RemoveIcon from '@material-ui/icons/Remove';
-import FolderIcon from '@material-ui/icons/Folder';
-import VoiceChatIcon from '@material-ui/icons/VoiceChat';
-import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
-import Tooltip from '@material-ui/core/Tooltip';
+import ArrowBack from '@mui/icons-material/ArrowBack';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
+import CheckIcon from '@mui/icons-material/Check';
+import WatchLaterIcon from '@mui/icons-material/WatchLater';
+import PeopleIcon from '@mui/icons-material/People';
+import TodayIcon from '@mui/icons-material/Today';
+import PollIcon from '@mui/icons-material/Poll';
+import LockIcon from '@mui/icons-material/Lock';
+import BookmarksIcon from '@mui/icons-material/Bookmarks';
+import ClearIcon from '@mui/icons-material/Clear';
+import EditIcon from '@mui/icons-material/Edit';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
+import FolderIcon from '@mui/icons-material/Folder';
+import VoiceChatIcon from '@mui/icons-material/VoiceChat';
+import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
+import Tooltip from '@mui/material/Tooltip';
 import { useAppContext } from '../../contexts/context';
 import Groups from '../../../api/groups/groups';
 import Services from '../../../api/services/services';
@@ -41,122 +41,121 @@ import EventsAgenda from '../../../api/eventsAgenda/eventsAgenda';
 import Bookmarks from '../../../api/bookmarks/bookmarks';
 import COMMON_STYLES from '../../themes/styles';
 
-const useStyles = (member, candidate, type) =>
-  makeStyles((theme) => ({
-    root: {
-      flexGrow: 1,
-      marginTop: theme.spacing(3),
+const useStyles = makeStyles()((theme, { member, candidate, type }) => ({
+  root: {
+    flexGrow: 1,
+    marginTop: theme.spacing(3),
+  },
+  cardGrid: {
+    marginBottom: theme.spacing(1),
+  },
+  flex: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  groupInfos: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: theme.spacing(1),
+  },
+  buttonQuit: {
+    backgroundColor: 'red',
+    '&:hover': {
+      color: 'red',
+      backgroundColor: theme.palette.tertiary.main,
     },
-    cardGrid: {
-      marginBottom: theme.spacing(1),
+  },
+  favoriteButton: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+    paddingTop: theme.spacing(5),
+    paddingBottom: theme.spacing(5),
+    marginBottom: theme.spacing(3),
+  },
+  actionButtons: {
+    flexDirection: 'inherit',
+    alignItems: 'flex-end',
+  },
+  titleContainer: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  icon: {
+    height: 60,
+    width: 60,
+  },
+  title: {
+    marginLeft: theme.spacing(3),
+  },
+  smallTitle: {
+    marginBottom: theme.spacing(1),
+  },
+  openedContent: {
+    textAlign: 'justify',
+    marginBottom: theme.spacing(3),
+    '& p': {
+      marginTop: 0,
+      marginBottom: 0,
     },
-    flex: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
+  },
+  content: {
+    textAlign: 'justify',
+    position: 'relative',
+    marginBottom: theme.spacing(3),
+    maxHeight: 150,
+    overflow: 'hidden',
+    '&::after': {
+      content: '""',
+      position: 'absolute',
+      bottom: 0,
+      height: '20px',
+      left: '0px',
+      right: '0px',
+      background: `linear-gradient(rgba(255,255,255,0), ${theme.palette.background.default})`,
     },
-    groupInfos: {
-      display: 'flex',
-      flexDirection: 'row',
-      gap: theme.spacing(1),
-    },
-    buttonQuit: {
-      backgroundColor: 'red',
-      '&:hover': {
-        color: 'red',
-        backgroundColor: theme.palette.tertiary.main,
-      },
-    },
-    favoriteButton: {
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'space-between',
-      alignItems: 'flex-end',
-      paddingTop: theme.spacing(5),
-      paddingBottom: theme.spacing(5),
-      marginBottom: theme.spacing(3),
-    },
-    actionButtons: {
-      flexDirection: 'inherit',
-      alignItems: 'flex-end',
-    },
-    titleContainer: {
-      display: 'flex',
-      alignItems: 'center',
-    },
-    icon: {
-      height: 60,
-      width: 60,
-    },
-    title: {
-      marginLeft: theme.spacing(3),
-    },
-    smallTitle: {
-      marginBottom: theme.spacing(1),
-    },
-    openedContent: {
-      textAlign: 'justify',
-      marginBottom: theme.spacing(3),
-      '& p': {
-        marginTop: 0,
-        marginBottom: 0,
-      },
-    },
-    content: {
-      textAlign: 'justify',
-      position: 'relative',
-      marginBottom: theme.spacing(3),
-      maxHeight: 150,
-      overflow: 'hidden',
-      '&::after': {
-        content: '""',
-        position: 'absolute',
-        bottom: 0,
-        height: '20px',
-        left: '0px',
-        right: '0px',
-        background: `linear-gradient(rgba(255,255,255,0), ${theme.palette.background.default})`,
-      },
-    },
-    screenshot: {
-      width: '100%',
-    },
-    category: {
-      marginLeft: theme.spacing(1),
-    },
-    membershipText: {
-      textTransform: 'none',
-      color: member ? 'green' : candidate ? theme.palette.secondary.main : theme.palette.tertiary.main,
-    },
-    buttonText: COMMON_STYLES.buttonText({ member, candidate, type, theme }),
-    buttonAdmin: {
-      textTransform: 'none',
-      backgroundColor: theme.palette.primary.main,
-      color: theme.palette.tertiary.main,
-      fontWeight: 'bold',
-      '&:hover': {
-        color: theme.palette.primary.main,
-        backgroundColor: theme.palette.tertiary.main,
-      },
-    },
-    buttonFav: {
+  },
+  screenshot: {
+    width: '100%',
+  },
+  category: {
+    marginLeft: theme.spacing(1),
+  },
+  membershipText: {
+    textTransform: 'none',
+    color: member ? 'green' : candidate ? theme.palette.secondary.main : theme.palette.tertiary.main,
+  },
+  buttonText: COMMON_STYLES.buttonText({ member, candidate, type, theme }),
+  buttonAdmin: {
+    textTransform: 'none',
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.tertiary.main,
+    fontWeight: 'bold',
+    '&:hover': {
       color: theme.palette.primary.main,
       backgroundColor: theme.palette.tertiary.main,
-      '&:hover': {
-        backgroundColor: theme.palette.primary.main,
-        color: theme.palette.tertiary.main,
-      },
     },
-    fab: {},
-    avatar: {
-      backgroundColor: member ? 'green' : type === 0 ? theme.palette.primary.main : theme.palette.secondary.main,
-      height: 100,
-      width: 100,
+  },
+  buttonFav: {
+    color: theme.palette.primary.main,
+    backgroundColor: theme.palette.tertiary.main,
+    '&:hover': {
+      backgroundColor: theme.palette.primary.main,
+      color: theme.palette.tertiary.main,
     },
-    buttonViewMore: {
-      marginLeft: '45%',
-    },
-  }));
+  },
+  fab: {},
+  avatar: {
+    backgroundColor: member ? 'green' : type === 0 ? theme.palette.primary.main : theme.palette.secondary.main,
+    height: 100,
+    width: 100,
+  },
+  buttonViewMore: {
+    marginLeft: '45%',
+  },
+}));
 
 const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks }) => {
   const { type } = group;
@@ -168,7 +167,7 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
   const candidate = Roles.userIsInRole(userId, ['candidate'], group._id);
   const admin = Roles.userIsInRole(userId, ['admin', 'animator'], group._id);
   const favorite = user.favGroups.includes(group._id);
-  const classes = useStyles(member || animator, candidate, type)();
+  const { classes } = useStyles({ member: member || animator, candidate, type });
   const history = useHistory();
   const { groupPlugins, enableBBB } = Meteor.settings.public;
 

@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import IconButton from '@material-ui/core/IconButton';
+import { useTheme } from '@mui/material/styles';
+import { makeStyles } from 'tss-react/mui';
+import AppBar from '@mui/material/AppBar';
+import IconButton from '@mui/material/IconButton';
 import { withTracker } from 'meteor/react-meteor-data';
 import NotificationsBell from '../notifications/NotificationsBell';
 import MenuBar from './MenuBar';
@@ -13,68 +14,67 @@ import AppSettings from '../../../api/appsettings/appsettings';
 
 const { disabledFeatures } = Meteor.settings.public;
 
-const useStyles = (isMobile) =>
-  makeStyles((theme) => ({
-    root: {
-      backgroundColor: theme.palette.tertiary.main,
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'space-between',
-      alignItems: 'flex-start',
-      paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(2),
-      minHeight: 48,
-    },
-    firstBar: {
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      width: '100%',
-    },
-    secondBar: {
-      display: 'flex',
-      justifyContent: 'center',
-      width: '100%',
-      borderTop: '1px solid rgba(0, 0, 0, 0.12)',
-    },
-    imgLogoContainer: {
-      height: isMobile ? 30 : 60,
-      maxHeight: isMobile ? 30 : 60,
-      color: theme.palette.text.primary,
-      display: 'flex',
-      outline: 'none',
-    },
-    imgLogo: {
-      height: isMobile ? 30 : 60,
-      maxHeight: isMobile ? 30 : 60,
-      color: theme.palette.text.primary,
-      display: 'flex',
-      outline: 'none',
-    },
-    grow: {
-      flexGrow: 1,
-    },
-    toolbar: {
-      display: 'flex',
-      justifyContent: 'space-between',
-    },
-    rightContainer: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItem: 'center',
-      height: 48,
-    },
-    maintenanceBar: {
-      marginTop: 50,
-    },
-  }));
+const useStyles = makeStyles()((theme, isMobile) => ({
+  root: {
+    backgroundColor: theme.palette.tertiary.main,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    minHeight: 48,
+  },
+  firstBar: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+  },
+  secondBar: {
+    display: 'flex',
+    justifyContent: 'center',
+    width: '100%',
+    borderTop: '1px solid rgba(0, 0, 0, 0.12)',
+  },
+  imgLogoContainer: {
+    height: isMobile ? 30 : 60,
+    maxHeight: isMobile ? 30 : 60,
+    color: theme.palette.text.primary,
+    display: 'flex',
+    outline: 'none',
+  },
+  imgLogo: {
+    height: isMobile ? 30 : 60,
+    maxHeight: isMobile ? 30 : 60,
+    color: theme.palette.text.primary,
+    display: 'flex',
+    outline: 'none',
+  },
+  grow: {
+    flexGrow: 1,
+  },
+  toolbar: {
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
+  rightContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItem: 'center',
+    height: 48,
+  },
+  maintenanceBar: {
+    marginTop: 50,
+  },
+}));
 
 function TopBar({ publicMenu, root, appsettings, adminApp }) {
   const [{ isMobile, user, notificationPage }, dispatch] = useAppContext();
   const history = useHistory();
   const theme = useTheme();
-  const classes = useStyles(isMobile)();
+  const { classes } = useStyles(isMobile);
   const { SMALL_LOGO, LONG_LOGO, SMALL_LOGO_MAINTENANCE, LONG_LOGO_MAINTENANCE } = theme.logos;
   const LOGO = appsettings.maintenance
     ? isMobile
@@ -138,7 +138,7 @@ function TopBar({ publicMenu, root, appsettings, adminApp }) {
               <>
                 <MainMenu user={user} />
                 {!disabledFeatures.notificationsTab && isMobile ? null : (
-                  <IconButton onClick={() => handleNotifsOpen()}>
+                  <IconButton onClick={() => handleNotifsOpen()} size="large">
                     <NotificationsBell />
                   </IconButton>
                 )}

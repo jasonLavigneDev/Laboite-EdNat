@@ -1,10 +1,10 @@
 import React from 'react';
 import i18n from 'meteor/universe:i18n';
-import { makeStyles } from '@material-ui/core/styles';
-import Menu from '@material-ui/core/Menu';
-import Button from '@material-ui/core/Button';
-import MenuItem from '@material-ui/core/MenuItem';
-import IconButton from '@material-ui/core/IconButton';
+import { makeStyles } from 'tss-react/mui';
+import Menu from '@mui/material/Menu';
+import Button from '@mui/material/Button';
+import MenuItem from '@mui/material/MenuItem';
+import IconButton from '@mui/material/IconButton';
 
 import PropTypes from 'prop-types';
 import { useAppContext } from '../../contexts/context';
@@ -23,16 +23,15 @@ const LanguageSwitcher = ({ topbar, relative }) => {
     dispatch({ type: 'language', data: { language: lan } });
   };
 
-  const useStyles = makeStyles(() => ({
+  const useStyles = makeStyles()(() => ({
     switcher: {
-      color: 'red',
       marginTop: topbar || relative ? null : 60,
     },
     flag: {
       height: 15,
     },
   }));
-  const classes = useStyles();
+  const { classes } = useStyles();
   const flag = (
     <img
       alt={`flag for ${i18n.getLanguageNativeName(language)}`}
@@ -43,7 +42,7 @@ const LanguageSwitcher = ({ topbar, relative }) => {
   return (
     <div className={classes.switcher}>
       {topbar ? (
-        <IconButton aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
+        <IconButton aria-controls="simple-menu" color="grey" aria-haspopup="true" onClick={handleClick} size="large">
           {flag}
         </IconButton>
       ) : (
@@ -51,6 +50,7 @@ const LanguageSwitcher = ({ topbar, relative }) => {
           startIcon={flag}
           variant="contained"
           aria-controls="simple-menu"
+          color="grey"
           aria-haspopup="true"
           onClick={handleClick}
         >

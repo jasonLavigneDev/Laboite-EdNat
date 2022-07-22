@@ -2,24 +2,24 @@
 import React, { useState, useEffect } from 'react';
 import { withTracker, useTracker } from 'meteor/react-meteor-data';
 import i18n from 'meteor/universe:i18n';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import Paper from '@material-ui/core/Paper';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
-import InputLabel from '@material-ui/core/InputLabel';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Chip from '@material-ui/core/Chip';
-import Checkbox from '@material-ui/core/Checkbox';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import IconButton from '@material-ui/core/IconButton';
-import Fade from '@material-ui/core/Fade';
-import Grid from '@material-ui/core/Grid';
-import DeleteIcon from '@material-ui/icons/Delete';
-import AddIcon from '@material-ui/icons/Add';
+import { makeStyles } from 'tss-react/mui';
+import Container from '@mui/material/Container';
+import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Chip from '@mui/material/Chip';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import IconButton from '@mui/material/IconButton';
+import Fade from '@mui/material/Fade';
+import Grid from '@mui/material/Grid';
+import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
 import PropTypes from 'prop-types';
 import ReactQuill from 'react-quill'; // ES6
 import 'react-quill/dist/quill.snow.css'; // ES6
@@ -34,7 +34,7 @@ import { CustomToolbarArticle } from '../../components/system/CustomQuill';
 import '../../utils/QuillVideo';
 import Structures from '../../../api/structures/structures';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   root: {
     padding: theme.spacing(2),
     marginBottom: theme.spacing(5),
@@ -126,7 +126,7 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
   const [loading, setLoading] = useState(!!params._id);
   const [content, setContent] = useState('');
   const history = useHistory();
-  const classes = useStyles();
+  const { classes } = useStyles();
   const structureMode = path.startsWith('/admin/structureservices');
   const { minioEndPoint, offlinePage } = Meteor.settings.public;
 
@@ -154,14 +154,6 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
   };
 
   // useEffect(() => removeUndefined, []); // TO UNDERSTAND :)
-
-  const stateLabel = React.useRef(null);
-  const [labelStateWidth, setLabelStateWidth] = React.useState(36);
-  useEffect(() => {
-    if (stateLabel.current) {
-      setLabelStateWidth(stateLabel.current.offsetWidth);
-    }
-  }, [stateLabel.current]);
 
   useEffect(() => {
     if (params._id && service._id && loading) {
@@ -313,17 +305,10 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
               disabled
             />
             <FormControl variant="outlined" fullWidth margin="normal">
-              <InputLabel htmlFor="state" id="state-label" ref={stateLabel}>
+              <InputLabel htmlFor="state" id="state-label">
                 {i18n.__('pages.AdminSingleServicePage.state')}
               </InputLabel>
-              <Select
-                labelId="state-label"
-                id="state"
-                name="state"
-                value={serviceData.state}
-                onChange={onUpdateField}
-                labelWidth={labelStateWidth}
-              >
+              <Select labelId="state-label" id="state" name="state" value={serviceData.state} onChange={onUpdateField}>
                 {Object.keys(Services.stateLabels).map((val) => (
                   <MenuItem key={val} value={val}>
                     {i18n.__(Services.stateLabels[val])}
@@ -399,7 +384,6 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
                 control={
                   <Checkbox
                     name="offline"
-                    color="primary"
                     checked={serviceData.offline || false}
                     onChange={onUpdateField}
                     inputProps={{ 'aria-label': 'primary checkbox' }}
@@ -440,6 +424,7 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
                   color="primary"
                   aria-label={i18n.__('pages.AdminSingleServicePage.onAddScreenshots')}
                   onClick={onAddScreenshots}
+                  size="large"
                 >
                   <AddIcon />
                 </IconButton>
@@ -460,7 +445,11 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
                         width={900}
                         height={600}
                       />
-                      <IconButton onClick={() => onRemoveScreenshots(screen)} className={classes.screenshotDelete}>
+                      <IconButton
+                        onClick={() => onRemoveScreenshots(screen)}
+                        className={classes.screenshotDelete}
+                        size="large"
+                      >
                         <DeleteIcon />
                       </IconButton>
                     </Grid>
@@ -469,7 +458,7 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
             )}
 
             <div className={classes.buttonGroup}>
-              <Button variant="contained" onClick={onCancel}>
+              <Button variant="contained" color="grey" onClick={onCancel}>
                 {i18n.__('pages.AdminSingleServicePage.cancel')}
               </Button>
 

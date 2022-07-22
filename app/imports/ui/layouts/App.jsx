@@ -2,8 +2,10 @@ import React, { useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import { Meteor } from 'meteor/meteor';
 import { Helmet } from 'react-helmet';
-import { MuiThemeProvider, useTheme } from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
+import { ThemeProvider, useTheme } from '@mui/material/styles';
+import createCache from '@emotion/cache';
+import { CacheProvider } from '@emotion/react';
+import CssBaseline from '@mui/material/CssBaseline';
 import { MatomoProvider, useMatomo } from '@datapunt/matomo-tracker-react';
 import ProtectedRoute from '../components/system/ProtectedRoute';
 import PublicRoute from '../components/system/PublicRoute';
@@ -22,6 +24,11 @@ const ArticlesPage = lazy(() => import('../pages/articles/ArticlesPage'));
 const PublicArticleDetailsPage = lazy(() => import('../pages/articles/PublicArticleDetailsPage'));
 const PublishersPage = lazy(() => import('../pages/articles/PublishersPage'));
 const UploaderNotifier = lazy(() => import('../components/uploader/UploaderNotifier'));
+
+export const muiCache = createCache({
+  key: 'mui',
+  prepend: true,
+});
 
 function Logout() {
   useEffect(() => {
@@ -83,12 +90,14 @@ function App() {
 
 export default () => (
   <MatomoProvider value={instance}>
-    <MuiThemeProvider theme={lightTheme}>
-      <BrowserRouter>
-        <DynamicStore>
-          <App />
-        </DynamicStore>
-      </BrowserRouter>
-    </MuiThemeProvider>
+    <CacheProvider value={muiCache}>
+      <ThemeProvider theme={lightTheme}>
+        <BrowserRouter>
+          <DynamicStore>
+            <App />
+          </DynamicStore>
+        </BrowserRouter>
+      </ThemeProvider>
+    </CacheProvider>
   </MatomoProvider>
 );

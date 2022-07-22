@@ -1,33 +1,33 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import FilterListIcon from '@material-ui/icons/FilterList';
-import ClearIcon from '@material-ui/icons/Clear';
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import RadioButtonUncheckedRoundedIcon from '@material-ui/icons/RadioButtonUncheckedRounded';
-import CheckCircleRoundedIcon from '@material-ui/icons/CheckCircleRounded';
+import { makeStyles } from 'tss-react/mui';
+import Container from '@mui/material/Container';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import ClearIcon from '@mui/icons-material/Clear';
+import ToggleButton from '@mui/material/ToggleButton';
+import RadioButtonUncheckedRoundedIcon from '@mui/icons-material/RadioButtonUncheckedRounded';
+import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 
-import CloseIcon from '@material-ui/icons/Close';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import Grid from '@material-ui/core/Grid';
+import CloseIcon from '@mui/icons-material/Close';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import Grid from '@mui/material/Grid';
 import i18n from 'meteor/universe:i18n';
 import { withTracker } from 'meteor/react-meteor-data';
-import Typography from '@material-ui/core/Typography';
-import Chip from '@material-ui/core/Chip';
-import Fade from '@material-ui/core/Fade';
-import IconButton from '@material-ui/core/IconButton';
-import Button from '@material-ui/core/Button';
-import Slide from '@material-ui/core/Slide';
-import AppBar from '@material-ui/core/AppBar';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import Toolbar from '@material-ui/core/Toolbar';
-import Dialog from '@material-ui/core/Dialog';
-import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import Tooltip from '@material-ui/core/Tooltip';
+import Typography from '@mui/material/Typography';
+import Chip from '@mui/material/Chip';
+import Fade from '@mui/material/Fade';
+import IconButton from '@mui/material/IconButton';
+import Button from '@mui/material/Button';
+import Slide from '@mui/material/Slide';
+import AppBar from '@mui/material/AppBar';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import Toolbar from '@mui/material/Toolbar';
+import Dialog from '@mui/material/Dialog';
+import List from '@mui/material/List';
+import Divider from '@mui/material/Divider';
+import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
+import Tooltip from '@mui/material/Tooltip';
 import ServiceDetails from '../../components/services/ServiceDetails';
 import Services from '../../../api/services/services';
 import Categories from '../../../api/categories/categories';
@@ -37,109 +37,108 @@ import ServiceDetailsList from '../../components/services/ServiceDetailsList';
 import { useIconStyles, DetaiIconCustom, SimpleIconCustom } from '../../components/system/icons/icons';
 import { useStructure } from '../../../api/structures/hooks';
 
-const useStyles = (isMobile) =>
-  makeStyles((theme) => ({
-    flex: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
+const useStyles = makeStyles()((theme, isMobile) => ({
+  flex: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  cardGrid: {
+    marginBottom: '0px',
+  },
+  chip: {
+    margin: theme.spacing(1),
+    '&&:hover,&&:focus': {
+      backgroundColor: theme.palette.backgroundFocus.main,
+      color: theme.palette.primary.main,
     },
-    cardGrid: {
-      marginBottom: '0px',
-    },
-    chip: {
-      margin: theme.spacing(1),
-      '&&:hover,&&:focus': {
-        backgroundColor: theme.palette.backgroundFocus.main,
-        color: theme.palette.primary.main,
-      },
-    },
-    smallGrid: {
-      height: 20,
-    },
-    filterTitle: {
-      fontSize: '0.85rem',
-      margin: theme.spacing(1),
-    },
-    badge: {
-      height: 20,
-      display: 'flex',
-      padding: '0 6px',
-      flexWrap: 'wrap',
-      fontSize: '0.75rem',
-      backgroundColor: theme.palette.primary.main,
-      color: `${theme.palette.tertiary.main} !important`,
-      minWidth: 20,
-      borderRadius: 10,
-      marginLeft: isMobile ? 10 : 0,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    invertedBadge: {
-      height: 20,
-      display: 'flex',
-      padding: '0 6px',
-      flexWrap: 'wrap',
-      fontSize: '0.75rem',
-      backgroundColor: theme.palette.tertiary.main,
-      color: `${theme.palette.primary.main} !important`,
-      minWidth: 20,
-      borderRadius: 10,
-      marginLeft: isMobile ? 10 : 0,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    gridItem: {
-      display: 'flex',
-      justifyContent: 'center',
-    },
-    small: {
-      padding: '5px !important',
-      transition: 'all 300ms ease-in-out',
-    },
-    spaceBetween: {
-      display: 'flex',
-      justifyContent: 'space-between',
-    },
-    mobileButtonContainer: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      paddingTop: '0 !important',
-    },
-    categoryFilterMobile: {
-      position: 'absolute',
-      top: 0,
-      bottom: 0,
-      right: 0,
-      left: 0,
-      backgroundColor: theme.palette.tertiary.main,
-      zIndex: theme.zIndex.modal,
-    },
-    categoriesList: {
-      marginTop: 60,
-    },
-    appBarBottom: {
-      bottom: 0,
-      top: 'auto',
-      backgroundColor: theme.palette.tertiary.main,
-    },
-    toolbarBottom: {
-      justifyContent: 'space-between',
-    },
-    emptyMsg: {
-      marginTop: 30,
-      marginBottom: 15,
-    },
-  }));
+  },
+  smallGrid: {
+    height: 20,
+  },
+  filterTitle: {
+    fontSize: '0.85rem',
+    margin: theme.spacing(1),
+  },
+  badge: {
+    height: 20,
+    display: 'flex',
+    padding: '0 6px',
+    flexWrap: 'wrap',
+    fontSize: '0.75rem !important',
+    backgroundColor: theme.palette.primary.main,
+    color: `${theme.palette.tertiary.main} !important`,
+    minWidth: 20,
+    borderRadius: 10,
+    marginLeft: isMobile ? 10 : 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  invertedBadge: {
+    height: 20,
+    display: 'flex',
+    padding: '0 6px',
+    flexWrap: 'wrap',
+    fontSize: '0.75rem !important',
+    backgroundColor: theme.palette.tertiary.main,
+    color: `${theme.palette.primary.main} !important`,
+    minWidth: 20,
+    borderRadius: 10,
+    marginLeft: isMobile ? 10 : 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  gridItem: {
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  small: {
+    padding: '5px !important',
+    transition: 'all 300ms ease-in-out',
+  },
+  spaceBetween: {
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
+  mobileButtonContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: '0 !important',
+  },
+  categoryFilterMobile: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    right: 0,
+    left: 0,
+    backgroundColor: theme.palette.tertiary.main,
+    zIndex: theme.zIndex.modal,
+  },
+  categoriesList: {
+    marginTop: 60,
+  },
+  appBarBottom: {
+    bottom: 0,
+    top: 'auto',
+    backgroundColor: theme.palette.tertiary.main,
+  },
+  toolbarBottom: {
+    justifyContent: 'space-between',
+  },
+  emptyMsg: {
+    marginTop: 30,
+    marginBottom: 15,
+  },
+}));
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
 export function ServicesPage({ services, categories, ready, structureMode, offline }) {
   const [{ user, loadingUser, isMobile, servicePage }, dispatch] = useAppContext();
   const structure = offline ? null : useStructure();
-  const classes = useStyles(isMobile)();
-  const classesIcons = useIconStyles();
+  const { classes } = useStyles(isMobile);
+  const { classes: classesIcons } = useIconStyles();
   const {
     catList = [],
     search = '',
@@ -312,7 +311,7 @@ export function ServicesPage({ services, categories, ready, structureMode, offli
             <Dialog fullScreen open={filterToggle && isMobile} TransitionComponent={Transition}>
               <AppBar className={classes.appBar}>
                 <Toolbar>
-                  <IconButton edge="start" color="inherit" onClick={toggleFilter} aria-label="close">
+                  <IconButton edge="start" color="inherit" onClick={toggleFilter} aria-label="close" size="large">
                     <CloseIcon />
                   </IconButton>
                   <Typography variant="h6">{i18n.__('pages.ServicesPage.categories')}</Typography>
@@ -329,7 +328,7 @@ export function ServicesPage({ services, categories, ready, structureMode, offli
                     />
 
                     <ListItemSecondaryAction>
-                      <IconButton edge="end" aria-label="add" onClick={() => updateCatList(cat._id)}>
+                      <IconButton edge="end" aria-label="add" onClick={() => updateCatList(cat._id)} size="large">
                         {catList.includes(cat._id) ? (
                           <CheckCircleRoundedIcon fontSize="large" color="primary" />
                         ) : (

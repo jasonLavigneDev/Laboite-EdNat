@@ -4,24 +4,24 @@ import { withTracker } from 'meteor/react-meteor-data';
 import { Roles } from 'meteor/alanning:roles';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import Fade from '@material-ui/core/Fade';
-import Container from '@material-ui/core/Container';
-import Grid from '@material-ui/core/Grid';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import Fade from '@mui/material/Fade';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
 import i18n from 'meteor/universe:i18n';
-import ListItemText from '@material-ui/core/ListItemText';
-import ArrowBack from '@material-ui/icons/ArrowBack';
-import SearchIcon from '@material-ui/icons/Search';
-import ClearIcon from '@material-ui/icons/Clear';
-import EventAvailableIcon from '@material-ui/icons/EventAvailable';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import Divider from '@material-ui/core/Divider';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import IconButton from '@material-ui/core/IconButton';
+import ListItemText from '@mui/material/ListItemText';
+import ArrowBack from '@mui/icons-material/ArrowBack';
+import SearchIcon from '@mui/icons-material/Search';
+import ClearIcon from '@mui/icons-material/Clear';
+import EventAvailableIcon from '@mui/icons-material/EventAvailable';
+import Typography from '@mui/material/Typography';
+import { makeStyles } from 'tss-react/mui';
+import Divider from '@mui/material/Divider';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
 import { useHistory } from 'react-router-dom';
 import { usePagination } from '../../utils/hooks';
 import { useAppContext } from '../../contexts/context';
@@ -31,7 +31,7 @@ import Groups from '../../../api/groups/groups';
 import EventsAgenda from '../../../api/eventsAgenda/eventsAgenda';
 import { GroupPaginate, GroupListActions } from './common';
 
-export const useEvenstPageStyles = makeStyles((theme) => ({
+export const useEvenstPageStyles = makeStyles()((theme) => ({
   root: {
     flexGrow: 1,
     marginTop: theme.spacing(3),
@@ -64,7 +64,7 @@ const ITEM_PER_PAGE = 10;
 const EventsPage = ({ loading, group }) => {
   const [{ userId }] = useAppContext();
   const { slug } = group;
-  const classes = useEvenstPageStyles();
+  const { classes } = useEvenstPageStyles();
   const history = useHistory();
   const [search, setSearch] = useState('');
 
@@ -152,7 +152,7 @@ const EventsPage = ({ loading, group }) => {
                     ),
                     endAdornment: search ? (
                       <InputAdornment position="end">
-                        <IconButton onClick={resetSearch}>
+                        <IconButton onClick={resetSearch} size="large">
                           <ClearIcon />
                         </IconButton>
                       </InputAdornment>

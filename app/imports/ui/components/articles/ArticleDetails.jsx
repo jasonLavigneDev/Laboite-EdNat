@@ -1,24 +1,24 @@
 import { Meteor } from 'meteor/meteor';
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import Tooltip from '@material-ui/core/Tooltip';
-import Button from '@material-ui/core/Button';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
-import CardActionArea from '@material-ui/core/CardActionArea';
+import { makeStyles } from 'tss-react/mui';
+import Card from '@mui/material/Card';
+import Tooltip from '@mui/material/Tooltip';
+import Button from '@mui/material/Button';
+import CardHeader from '@mui/material/CardHeader';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import CardActionArea from '@mui/material/CardActionArea';
 
 import i18n from 'meteor/universe:i18n';
 import { Link, useHistory } from 'react-router-dom';
-import OpenInNewIcon from '@material-ui/icons/OpenInNew';
-import EditIcon from '@material-ui/icons/Edit';
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import CreateIcon from '@material-ui/icons/Create';
-import Chip from '@material-ui/core/Chip';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import EditIcon from '@mui/icons-material/Edit';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import CreateIcon from '@mui/icons-material/Create';
+import Chip from '@mui/material/Chip';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   action: {
     display: 'flex',
     alignItems: 'center',
@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function ArticleDetails({ article, publicPage }) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const history = useHistory();
   let articleURL;
   if (Meteor.settings.public.laboiteBlogURL !== '') {

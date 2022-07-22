@@ -1,23 +1,23 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Meteor } from 'meteor/meteor';
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Card from '@material-ui/core/Card';
-import Grid from '@material-ui/core/Grid';
-import CardContent from '@material-ui/core/CardContent';
-import AccessTimeIcon from '@material-ui/icons/AccessTime';
+import { makeStyles } from 'tss-react/mui';
+import Typography from '@mui/material/Typography';
+import Card from '@mui/material/Card';
+import Grid from '@mui/material/Grid';
+import CardContent from '@mui/material/CardContent';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { Link, useHistory } from 'react-router-dom';
-import Tooltip from '@material-ui/core/Tooltip';
-import Button from '@material-ui/core/Button';
-import CardHeader from '@material-ui/core/CardHeader';
-import IconButton from '@material-ui/core/IconButton';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
-import CheckIcon from '@material-ui/icons/Check';
-import WatchLaterIcon from '@material-ui/icons/WatchLater';
-import LockIcon from '@material-ui/icons/Lock';
-import EditIcon from '@material-ui/icons/Edit';
+import Tooltip from '@mui/material/Tooltip';
+import Button from '@mui/material/Button';
+import CardHeader from '@mui/material/CardHeader';
+import IconButton from '@mui/material/IconButton';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
+import CheckIcon from '@mui/icons-material/Check';
+import WatchLaterIcon from '@mui/icons-material/WatchLater';
+import LockIcon from '@mui/icons-material/Lock';
+import EditIcon from '@mui/icons-material/Edit';
 
 import i18n from 'meteor/universe:i18n';
 import GroupAvatar from './GroupAvatar';
@@ -27,107 +27,106 @@ import Spinner from '../system/Spinner';
 import GroupBadge from './GroupBadge';
 import COMMON_STYLES from '../../themes/styles';
 
-const useStyles = ({ type }, member, candidate, isShort) =>
-  makeStyles((theme) => ({
-    memberInfo: {
-      color: 'green',
-      marginLeft: 5,
-      marginTop: 12,
-      verticalAlign: 'center',
+const useStyles = makeStyles()((theme, { type, member, candidate, isShort }) => ({
+  memberInfo: {
+    color: 'green',
+    marginLeft: 5,
+    marginTop: 12,
+    verticalAlign: 'center',
+  },
+  candidateInfo: {
+    color: theme.palette.secondary.main,
+    marginLeft: 5,
+    marginTop: 12,
+    verticalAlign: 'center',
+  },
+  avatar: {
+    backgroundColor: member ? 'green' : type === 0 ? theme.palette.primary.main : theme.palette.secondary.main,
+    width: theme.spacing(7),
+    height: theme.spacing(7),
+  },
+  cardActions: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 24,
+  },
+  cardActionShort: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignSelf: 'end',
+    width: '100%',
+  },
+  cardHeader: {
+    paddingLeft: 32,
+    paddingRight: 32,
+    paddingBottom: isShort ? 10 : 32,
+    paddingTop: 24,
+    alignItems: 'start',
+  },
+  card: {
+    height: '100%',
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    position: 'relative',
+  },
+  cardMedia: {
+    maxWidth: '50px',
+    objectFit: 'contain',
+    borderRadius: theme.shape.borderRadius,
+  },
+  cardContent: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    flexGrow: 1,
+    backgroundColor: theme.palette.primary.light,
+    paddingLeft: 32,
+    paddingRight: 32,
+    paddingBottom: 32,
+    paddingTop: 24,
+  },
+  cardContentMobile: {
+    flexGrow: 1,
+    paddingLeft: 32,
+    paddingRight: 32,
+    paddingBottom: 32,
+    paddingTop: theme.spacing(1),
+    display: 'flex',
+  },
+  buttonText: COMMON_STYLES.buttonText({ member, candidate, type, theme }),
+  paperChip: {
+    display: 'flex',
+    justifyContent: 'left',
+    flexWrap: 'wrap',
+    marginTop: theme.spacing(2),
+    padding: theme.spacing(1),
+    backgroundColor: 'transparent',
+  },
+  noUnderline: {
+    textDecoration: 'none',
+    outline: 'none',
+    '&:focus, &:hover': {
+      backgroundColor: theme.palette.backgroundFocus.main,
     },
-    candidateInfo: {
-      color: theme.palette.secondary.main,
-      marginLeft: 5,
-      marginTop: 12,
-      verticalAlign: 'center',
+    display: 'flex',
+    flexGrow: 100,
+  },
+  chip: {
+    margin: theme.spacing(0.5),
+  },
+  fab: {
+    textTransform: 'none',
+    color: theme.palette.primary.main,
+    backgroundColor: theme.palette.tertiary.main,
+    '&:hover': {
+      backgroundColor: theme.palette.primary.main,
+      color: theme.palette.tertiary.main,
     },
-    avatar: {
-      backgroundColor: member ? 'green' : type === 0 ? theme.palette.primary.main : theme.palette.secondary.main,
-      width: theme.spacing(7),
-      height: theme.spacing(7),
-    },
-    cardActions: {
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      marginTop: 24,
-    },
-    cardActionShort: {
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignSelf: 'end',
-      width: '100%',
-    },
-    cardHeader: {
-      paddingLeft: 32,
-      paddingRight: 32,
-      paddingBottom: isShort ? 10 : 32,
-      paddingTop: 24,
-      alignItems: 'start',
-    },
-    card: {
-      height: '100%',
-      width: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-      position: 'relative',
-    },
-    cardMedia: {
-      maxWidth: '50px',
-      objectFit: 'contain',
-      borderRadius: theme.shape.borderRadius,
-    },
-    cardContent: {
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'space-between',
-      flexGrow: 1,
-      backgroundColor: theme.palette.primary.light,
-      paddingLeft: 32,
-      paddingRight: 32,
-      paddingBottom: 32,
-      paddingTop: 24,
-    },
-    cardContentMobile: {
-      flexGrow: 1,
-      paddingLeft: 32,
-      paddingRight: 32,
-      paddingBottom: 32,
-      paddingTop: theme.spacing(1),
-      display: 'flex',
-    },
-    buttonText: COMMON_STYLES.buttonText({ member, candidate, type, theme }),
-    paperChip: {
-      display: 'flex',
-      justifyContent: 'left',
-      flexWrap: 'wrap',
-      marginTop: theme.spacing(2),
-      padding: theme.spacing(1),
-      backgroundColor: 'transparent',
-    },
-    noUnderline: {
-      textDecoration: 'none',
-      outline: 'none',
-      '&:focus, &:hover': {
-        backgroundColor: theme.palette.backgroundFocus.main,
-      },
-      display: 'flex',
-      flexGrow: 100,
-    },
-    chip: {
-      margin: theme.spacing(0.5),
-    },
-    fab: {
-      textTransform: 'none',
-      color: theme.palette.primary.main,
-      backgroundColor: theme.palette.tertiary.main,
-      '&:hover': {
-        backgroundColor: theme.palette.primary.main,
-        color: theme.palette.tertiary.main,
-      },
-    },
-  }));
+  },
+}));
 
 function GroupDetails({ group = {}, isShort, member, candidate, admin, animator }) {
   const { type, avatar } = group;
@@ -135,7 +134,7 @@ function GroupDetails({ group = {}, isShort, member, candidate, admin, animator 
   const [loading, setLoading] = useState(false);
   const history = useHistory();
 
-  const classes = useStyles(group, member || animator, candidate, isShort)();
+  const { classes } = useStyles({ group, member: member || animator, candidate, isShort, type });
 
   const handleJoinGroup = () => {
     const method = member ? 'unsetMemberOf' : type === 5 ? 'setCandidateOf' : 'setMemberOf';
@@ -281,7 +280,7 @@ function GroupDetails({ group = {}, isShort, member, candidate, admin, animator 
                 to={{ pathname: `/admingroups/${group._id}`, state: { prevPath: history.location.pathname } }}
                 tabIndex={-1}
               >
-                <IconButton color="primary">
+                <IconButton color="primary" size="large">
                   <EditIcon />
                 </IconButton>
               </Link>

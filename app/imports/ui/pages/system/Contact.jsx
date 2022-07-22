@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
-import Button from '@material-ui/core/Button';
+import Button from '@mui/material/Button';
 import PropTypes from 'prop-types';
 import { useTracker, withTracker } from 'meteor/react-meteor-data';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
+import CssBaseline from '@mui/material/CssBaseline';
+import TextField from '@mui/material/TextField';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import { makeStyles } from 'tss-react/mui';
+import Container from '@mui/material/Container';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import GlobalStyles from '@mui/material/GlobalStyles';
 import i18n from 'meteor/universe:i18n';
 import { useHistory } from 'react-router-dom';
 import validate from 'validate.js';
-import FormHelperText from '@material-ui/core/FormHelperText';
+import FormHelperText from '@mui/material/FormHelperText';
 import CustomSelect from '../../components/admin/CustomSelect';
 import { useFormStateValidator } from './SignIn';
 import Structures from '../../../api/structures/structures';
@@ -60,12 +61,7 @@ const schema = {
   },
 };
 
-const useStyles = makeStyles((theme) => ({
-  '@global': {
-    body: {
-      backgroundColor: theme.palette.common.white,
-    },
-  },
+const useStyles = makeStyles()((theme) => ({
   paper: {
     marginTop: theme.spacing(4),
     display: 'flex',
@@ -92,14 +88,8 @@ const Contact = ({ structures, loading }) => {
   if (loading) return <Spinner full />;
   const [{ user }] = useAppContext();
   const history = useHistory();
-  const classes = useStyles();
+  const { classes, theme } = useStyles();
   const [formState, handleChange] = useFormStateValidator(schema);
-
-  const structureLabel = React.useRef(null);
-  const [labelWidth, setLabelWidth] = React.useState(0);
-  React.useEffect(() => {
-    if (!user) setLabelWidth(structureLabel.current.offsetWidth);
-  }, []);
 
   const userStructure = useTracker(() => {
     if (user) {
@@ -164,6 +154,11 @@ const Contact = ({ structures, loading }) => {
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
+      <GlobalStyles
+        styles={{
+          body: { backgroundColor: theme.palette.common.white },
+        }}
+      />
       <div className={classes.paper}>
         <Typography component="h1" variant="h5">
           {i18n.__('pages.ContactForm.appDescription')}
@@ -243,11 +238,7 @@ const Contact = ({ structures, loading }) => {
                   />
                 ) : (
                   <>
-                    <InputLabel
-                      ref={structureLabel}
-                      id="structure-label"
-                      className={hasError('structureSelect') ? 'Mui-error' : ''}
-                    >
+                    <InputLabel id="structure-label" className={hasError('structureSelect') ? 'Mui-error' : ''}>
                       {i18n.__('pages.ContactForm.structureLabel')}
                     </InputLabel>
                     <CustomSelect
@@ -255,7 +246,6 @@ const Contact = ({ structures, loading }) => {
                       value={user && userStructure ? userStructure : formState.values.structureSelect || ''}
                       error={hasError('structureSelect')}
                       onChange={handleChange}
-                      labelWidth={labelWidth}
                       options={structures.map((opt) => ({ value: opt.name, label: opt.name }))}
                     />
                   </>

@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Meteor } from 'meteor/meteor';
-import TextField from '@material-ui/core/TextField';
-import SearchIcon from '@material-ui/icons/Search';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import TextField from '@mui/material/TextField';
+import SearchIcon from '@mui/icons-material/Search';
+import Autocomplete from '@mui/material/Autocomplete';
+import CircularProgress from '@mui/material/CircularProgress';
 import i18n from 'meteor/universe:i18n';
-import InputAdornment from '@material-ui/core/InputAdornment';
+import InputAdornment from '@mui/material/InputAdornment';
 import debounce from '../../utils/debounce';
 
 function Finder({ onSelected, hidden, exclude, opened, i18nCode, method }) {
@@ -62,7 +62,7 @@ function Finder({ onSelected, hidden, exclude, opened, i18nCode, method }) {
       onClose={() => {
         setOpen(false);
       }}
-      getOptionSelected={
+      isOptionEqualToValue={
         method === 'users.findUsers'
           ? (option, value) => option.username === value.username
           : (option, value) => option.name === value.name

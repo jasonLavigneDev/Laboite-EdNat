@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import i18n from 'meteor/universe:i18n';
-import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
+import { makeStyles } from 'tss-react/mui';
+import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 
-import PublishIcon from '@material-ui/icons/Publish';
-import CameraEnhanceIcon from '@material-ui/icons/CameraEnhance';
-import FaceIcon from '@material-ui/icons/Face';
+import PublishIcon from '@mui/icons-material/Publish';
+import CameraEnhanceIcon from '@mui/icons-material/CameraEnhance';
+import FaceIcon from '@mui/icons-material/Face';
 import { useAppContext } from '../../contexts/context';
 import AvatarGallery from './AvatarGallery';
 import UserAvatar from './UserAvatar';
@@ -16,7 +16,7 @@ import AvatarCamCapture from './AvatarCamCapture';
 import AvatarEdit from './AvatarEdit';
 import GroupAvatar from '../groups/GroupAvatar';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   root: {
     padding: theme.spacing(2),
     marginTop: theme.spacing(1),
@@ -73,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const AvatarPicker = ({ userAvatar, userFirstName, onAssignAvatar, avatar, type, profil }) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [{ isMobile }] = useAppContext();
   const [imageAvatar, setImageAvatar] = useState('');
   const [openAvatarEdit, setOpenAvatarEdit] = useState(false);
@@ -123,20 +123,20 @@ const AvatarPicker = ({ userAvatar, userFirstName, onAssignAvatar, avatar, type,
         <Grid item xs={12} className={classes.buttonWrapper}>
           {!!minioEndPoint && (
             <Tooltip title={i18n.__('pages.ProfilePage.uploadImg')} aria-label={i18n.__('pages.ProfilePage.uploadImg')}>
-              <IconButton tabIndex={-1}>
+              <IconButton tabIndex={-1} size="large">
                 <PublishIcon />
                 <input className={classes.inputFile} type="file" title=" " onChange={uploadAvatarImg} />
               </IconButton>
             </Tooltip>
           )}
           <Tooltip title={i18n.__('pages.ProfilePage.useGallery')} aria-label={i18n.__('pages.ProfilePage.useGallery')}>
-            <IconButton onClick={() => setOpenAvatarGallery(true)}>
+            <IconButton onClick={() => setOpenAvatarGallery(true)} size="large">
               <FaceIcon />
             </IconButton>
           </Tooltip>
           {!!minioEndPoint && (
             <Tooltip title={i18n.__('pages.ProfilePage.useCam')} aria-label={i18n.__('pages.ProfilePage.useCam')}>
-              <IconButton onClick={() => setOpenCamCapture(true)}>
+              <IconButton onClick={() => setOpenCamCapture(true)} size="large">
                 <CameraEnhanceIcon />
               </IconButton>
             </Tooltip>

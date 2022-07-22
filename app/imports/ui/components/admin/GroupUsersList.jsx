@@ -2,22 +2,22 @@ import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
 import MaterialTable from '@material-table/core';
-import GroupAddIcon from '@material-ui/icons/GroupAdd';
-import PersonAddIcon from '@material-ui/icons/PersonAdd';
-import ClearIcon from '@material-ui/icons/Clear';
+import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import ClearIcon from '@mui/icons-material/Clear';
 import i18n from 'meteor/universe:i18n';
-import { makeStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Collapse from '@material-ui/core/Collapse';
-import IconButton from '@material-ui/core/IconButton';
+import { makeStyles } from 'tss-react/mui';
+import Button from '@mui/material/Button';
+import Collapse from '@mui/material/Collapse';
+import IconButton from '@mui/material/IconButton';
 import { Roles } from 'meteor/alanning:roles';
-import add from '@material-ui/icons/Add';
+import add from '@mui/icons-material/Add';
 import setMaterialTableLocalization from '../initMaterialTableLocalization';
 import Finder from './Finder';
 import Groups from '../../../api/groups/groups';
 import { useAppContext } from '../../contexts/context';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   adduser: {
     display: 'flex',
     justifyContent: 'flex-end',
@@ -80,7 +80,7 @@ const GroupsUsersList = (props) => {
   const [showSearch, setShowSearch] = useState(false);
   const [showSearchGroup, setShowSearchGroup] = useState(false);
   const [finderId, setFinderId] = useState(new Date().getTime());
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const addUser = () => {
     Meteor.call(addMethods[userRole], { groupId, userId: user._id }, (err) => {
@@ -182,7 +182,7 @@ const GroupsUsersList = (props) => {
           <Button variant="contained" disabled={!user} color="primary" onClick={addUser}>
             {i18n.__('components.GroupUsersList.addUserButton')}
           </Button>
-          <IconButton onClick={() => setShowSearch(!showSearch)}>
+          <IconButton onClick={() => setShowSearch(!showSearch)} size="large">
             <ClearIcon />
           </IconButton>
         </div>
@@ -201,7 +201,7 @@ const GroupsUsersList = (props) => {
           <Button variant="contained" disabled={!groupAdd} color="primary" onClick={addGroup}>
             {i18n.__('components.GroupUsersList.addGroupButton')}
           </Button>
-          <IconButton onClick={() => setShowSearchGroup(!showSearchGroup)}>
+          <IconButton onClick={() => setShowSearchGroup(!showSearchGroup)} size="large">
             <ClearIcon />
           </IconButton>
         </div>

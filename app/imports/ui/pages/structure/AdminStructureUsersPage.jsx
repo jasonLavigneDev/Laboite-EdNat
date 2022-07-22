@@ -3,26 +3,26 @@ import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Meteor } from 'meteor/meteor';
 import { useTracker } from 'meteor/react-meteor-data';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import Fade from '@material-ui/core/Fade';
-import Container from '@material-ui/core/Container';
-import Grid from '@material-ui/core/Grid';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import Fade from '@mui/material/Fade';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
 import i18n from 'meteor/universe:i18n';
-import ListItemText from '@material-ui/core/ListItemText';
-import ClearIcon from '@material-ui/icons/Clear';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Typography from '@material-ui/core/Typography';
-import GroupAddIcon from '@material-ui/icons/GroupAdd';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import { makeStyles } from '@material-ui/core/styles';
-import Divider from '@material-ui/core/Divider';
-import Tooltip from '@material-ui/core/Tooltip';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
+import ListItemText from '@mui/material/ListItemText';
+import ClearIcon from '@mui/icons-material/Clear';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import Typography from '@mui/material/Typography';
+import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
+import { makeStyles } from 'tss-react/mui';
+import Divider from '@mui/material/Divider';
+import Tooltip from '@mui/material/Tooltip';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 
-import IconButton from '@material-ui/core/IconButton';
-import Pagination from '@material-ui/lab/Pagination';
+import IconButton from '@mui/material/IconButton';
+import Pagination from '@mui/material/Pagination';
 import { Roles } from 'meteor/alanning:roles';
 import { usePagination } from '../../utils/hooks';
 import Spinner from '../../components/system/Spinner';
@@ -32,7 +32,7 @@ import UserAvatar from '../../components/users/UserAvatar';
 import { useStructure, useAdminSelectedStructure } from '../../../api/structures/hooks';
 import StructureSelect from '../../components/structures/StructureSelect';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   root: {
     flexGrow: 1,
     marginTop: theme.spacing(3),
@@ -59,7 +59,7 @@ const ITEM_PER_PAGE = 10;
 const AdminStructureUsersPage = ({ match: { path } }) => {
   const isStructureSpecific = path === '/admin/structureusers';
 
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [{ userId, isMobile }] = useAppContext();
   const [search, setSearch] = useState('');
   const [sortByDate, setSortByDate] = useState(false);
@@ -141,6 +141,7 @@ const AdminStructureUsersPage = ({ match: { path } }) => {
             edge="end"
             aria-label={isStructureAdmin(user) ? 'noadmin' : 'admin'}
             onClick={() => changeStructureAdmin(user)}
+            size="large"
           >
             {isStructureAdmin(user) ? <ClearIcon /> : <GroupAddIcon />}
           </IconButton>
@@ -198,7 +199,6 @@ const AdminStructureUsersPage = ({ match: { path } }) => {
                         checked={sortByDate}
                         onChange={() => setSortByDate(!sortByDate)}
                         name="checkSortByDate"
-                        color="primary"
                       />
                     }
                     label={i18n.__('pages.AdminStructureUsersPage.sortByLastLogin')}
