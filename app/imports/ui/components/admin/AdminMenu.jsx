@@ -14,6 +14,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import EqualizerIcon from '@mui/icons-material/Equalizer';
 import HttpIcon from '@mui/icons-material/Http';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import SettingsInputComponentIcon from '@mui/icons-material/SettingsInputComponent';
