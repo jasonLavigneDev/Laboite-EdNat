@@ -140,9 +140,6 @@ function TopBar({ publicMenu, root, appsettings, adminApp }) {
           ) : null}
           <div />
           <div className={isMobile ? classes.centerContainer : classes.rightContainer}>
-            {!publicMenu && <MainMenu user={user} />}
-          </div>
-          <div className={classes.rightContainer}>
             {publicMenu ? null : (
               <>
                 <MainMenu user={user} />
@@ -154,6 +151,15 @@ function TopBar({ publicMenu, root, appsettings, adminApp }) {
               </>
             )}
           </div>
+          {isMobile && (
+            <div className={classes.rightContainer}>
+              {!disabledFeatures.notificationsTab && !isMobile ? null : (
+                <IconButton onClick={() => handleNotifsOpen()} size="large">
+                  <NotificationsBell />
+                </IconButton>
+              )}
+            </div>
+          )}
         </div>
         {!isMobile && !publicMenu && !adminApp && (
           <div className={classes.secondBar}>
