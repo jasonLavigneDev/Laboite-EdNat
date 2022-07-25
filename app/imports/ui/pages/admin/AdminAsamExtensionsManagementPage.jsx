@@ -50,8 +50,7 @@ const columns = [
 ];
 
 const AdminAsamExtensionsManagementPage = () => {
-  const modalClasses = useModalStyles();
-
+  const { classes: modalClasses } = useModalStyles();
   const data = useTracker(() => {
     Meteor.subscribe('asamextensions.all', { getOnlyNotAffected: false });
     const query = {};
@@ -129,7 +128,7 @@ const AdminAsamExtensionsManagementPage = () => {
   };
   return (
     <Fade in>
-      <>
+      <div>
         <Modal
           open={modalOpen}
           onClose={closeModal}
@@ -218,7 +217,7 @@ const AdminAsamExtensionsManagementPage = () => {
             ]}
           />
         </Container>
-      </>
+      </div>
     </Fade>
   );
 };
