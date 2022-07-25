@@ -208,7 +208,6 @@ export const updateStructureContactEmail = new ValidatedMethod({
     structureId: { type: String, regEx: SimpleSchema.RegEx.Id, label: getLabel('api.structures.labels.id') },
   }).validator(),
   run({ structureId, contactEmail }) {
-    console.log({ structureId, contactEmail });
     const structure = Structures.findOne({ _id: structureId });
 
     if (structure === undefined) {
