@@ -2,8 +2,8 @@ import React from 'react';
 import i18n from 'meteor/universe:i18n';
 import PropTypes from 'prop-types';
 
-import Fade from '@material-ui/core/Fade';
-import Container from '@material-ui/core/Container';
+import Fade from '@mui/material/Fade';
+import Container from '@mui/material/Container';
 import MaterialTable from '@material-table/core';
 import setMaterialTableLocalization from '../initMaterialTableLocalization';
 import Spinner from '../system/Spinner';

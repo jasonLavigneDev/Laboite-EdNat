@@ -2,7 +2,7 @@ import React from 'react';
 import i18n from 'meteor/universe:i18n';
 import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
-import DoneIcon from '@material-ui/icons/Done';
+import DoneIcon from '@mui/icons-material/Done';
 
 import { propTypes as structurePropTypes } from '../../../api/structures/structures';
 import { useAppContext } from '../../contexts/context';
