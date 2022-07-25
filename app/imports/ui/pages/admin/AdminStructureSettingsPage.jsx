@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import Fade from '@material-ui/core/Fade';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
-import FormControl from '@material-ui/core/FormControl';
+import Fade from '@mui/material/Fade';
+import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Grid';
+import FormControl from '@mui/material/FormControl';
 import i18n from 'meteor/universe:i18n';
 import Spinner from '../../components/system/Spinner';
 import { useStructure, useAdminSelectedStructure } from '../../../api/structures/hooks';
@@ -27,7 +27,7 @@ const AdminStructureSettingsPage = () => {
 
   const [{ isMobile }] = useAppContext();
 
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   return (
     <>

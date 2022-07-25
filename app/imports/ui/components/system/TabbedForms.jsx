@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-import Tab from '@material-ui/core/Tab';
-import Tabs from '@material-ui/core/Tabs';
-
-import { makeStyles } from '@material-ui/core/styles';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+import { makeStyles } from 'tss-react/mui';
 import PropTypes from 'prop-types';
 
 import { useAppContext } from '../../contexts/context';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   root: {
     padding: theme.spacing(2),
     marginBottom: theme.spacing(5),
@@ -31,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
 
 const TabbedForms = ({ globalTitle = null, tabs }) => {
   const [selectedTab, setSelectedTab] = useState(0);
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [{ isMobile }] = useAppContext();
 
   const onChangeTab = (e, newTab) => {

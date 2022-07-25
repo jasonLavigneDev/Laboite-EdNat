@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import i18n from 'meteor/universe:i18n';
 
-import InputLabel from '@material-ui/core/InputLabel';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
+import InputLabel from '@mui/material/InputLabel';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 
 import { useStyles } from './IntroductionEdition';
 
 const AdminStructureChangeEmailContact = ({ structure }) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [email, setEmail] = useState(structure.contactEmail || '');
 
   const onEmailSubmit = (e) => {
