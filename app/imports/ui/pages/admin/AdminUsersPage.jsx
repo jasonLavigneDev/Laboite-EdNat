@@ -85,7 +85,7 @@ const AdminUsersPage = ({ match: { path } }) => {
   const [openNotif, setOpenNotif] = useState(false);
   const [verifyDelete, setVerifyDelete] = useState();
   const { classes } = useStyles();
-  const [{ isMobile, isTablet }] = useAppContext();
+  const [{ isMobile }] = useAppContext();
   const [search, setSearch] = useState('');
   const [sortByDate, setSortByDate] = useState(false);
 
