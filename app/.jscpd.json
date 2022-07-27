@@ -3,11 +3,12 @@
   "reporters": ["console"],
   "ignore": [
     "**/node_modules/**",
-    "**/.meteor/**", 
-    "./packages/**", 
-    "./i18n/*.json", 
+    "**/.meteor/**",
+    "./packages/**",
+    "./i18n/*.json",
     "**/*.svg",
     "**.test.js",
+    "*/**/**/themes",
     "*/**/**.tests.jsx",
     "*/**/**.tests.js"
   ],
