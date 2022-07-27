@@ -33,7 +33,7 @@ const IntroductionAccordion = ({ summary, head = '', body, startExpanded = false
             <Typography variant={isMobile ? 'h6' : 'h4'}>{head}</Typography> <Divider />
           </>
         )}
-        <div style={{ padding: '10px' }} dangerouslySetInnerHTML={{ __html: sanitizeHtml( body ) || '' }} />
+        <div style={{ padding: '10px' }} dangerouslySetInnerHTML={{ __html: sanitizeHtml(body) || '' }} />
       </AccordionDetails>
     </Accordion>
   );
