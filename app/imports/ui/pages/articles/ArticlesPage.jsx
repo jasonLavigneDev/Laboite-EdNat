@@ -35,7 +35,6 @@ const useStyles = makeStyles()((theme) => ({
     flexDirection: 'column',
   },
   rootMobile: {
-    paddingTop: 60,
     marginBottom: -128,
     display: 'flex',
     minHeight: '100vh',
@@ -53,6 +52,7 @@ const useStyles = makeStyles()((theme) => ({
   spaceBetween: {
     display: 'flex',
     justifyContent: 'space-between',
+    marginBottom: 10,
   },
   pagination: {
     display: 'flex',

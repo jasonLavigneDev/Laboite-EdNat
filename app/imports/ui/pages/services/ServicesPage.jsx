@@ -104,7 +104,8 @@ const useStyles = makeStyles()((theme, isMobile) => ({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingTop: '0 !important',
+    paddingTop: '10px !important',
+    paddingBottom: 10,
   },
   categoryFilterMobile: {
     position: 'absolute',
@@ -221,11 +222,7 @@ export function ServicesPage({ services, categories, ready, structureMode, offli
       startIcon={<FilterListIcon />}
     >
       {i18n.__('pages.ServicesPage.filter')}{' '}
-      {catList.length ? (
-        <span className={classes.badge}>{catList.length}</span>
-      ) : (
-        i18n.__('pages.ServicesPage.emptyFilter')
-      )}
+      {catList.length ? <span className={classes.badge}>{catList.length}</span> : null}
     </Button>
   );
 
@@ -243,8 +240,6 @@ export function ServicesPage({ services, categories, ready, structureMode, offli
                 </Typography>
                 <div className={classes.spaceBetween}>{!isMobile && toggleButtons}</div>
               </Grid>
-            </Grid>
-            <Grid container spacing={4}>
               {isMobile ? (
                 <Grid item xs={12} sm={12} className={classes.mobileButtonContainer}>
                   {mobileFilterButton}
