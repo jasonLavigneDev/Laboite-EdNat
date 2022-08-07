@@ -223,14 +223,15 @@ Meteor.methods({
   },
 });
 
+// Keep this as pure constant out of the function
+const defaultFieldsToSearch = ['firstName', 'lastName', 'emails.address', 'username', 'structure'];
+
 // build query for all users from group
-const queryUsersAdmin = ({ search }) => {
-  const regex = new RegExp(search, 'i');
-  const fieldsToSearch = ['firstName', 'lastName', 'emails.address', 'username', 'structure'];
+const queryUsersAdmin = ({ search, fieldsToSearch = defaultFieldsToSearch }) => {
+  const regex = new RegExp(search.split(' ').join('|'), 'i');
   const searchQuery = fieldsToSearch.map((field) => ({ [field]: { $regex: regex } }));
-  return {
-    $or: searchQuery,
-  };
+
+  return { $or: searchQuery };
 };
 
 // publish all users from a group
