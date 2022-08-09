@@ -51,15 +51,25 @@ export const filesupload = new ValidatedMethod({
     file: String,
     name: String,
     path: String,
+    fileType: String,
   }).validator(),
-  async run({ file, path, name }) {
+  async run({ file, path, name, fileType }) {
     try {
       checkUserAdminRights(path, this.userId);
       const filePath = `${path}/${name}`;
       const fileArray = file.split(',');
       const [fileData, fileData2] = fileArray;
       const buffer = Buffer.from(fileData2 || fileData, 'base64');
-      const result = await s3Client.putObject(minioBucket, filePath, buffer);
+      const metadata = {};
+
+      // ? Needs this to ensure minio serve the SVG with correct content-type in order to have them displayed properly in HTML
+      // * ISSUE : https://gitlab.mim-libre.fr/alphabet/laboite/-/issues/158
+      if (fileType.includes('svg')) {
+        metadata['Content-Type'] = 'image/svg+xml';
+      }
+
+      const result = await s3Client.putObject(minioBucket, filePath, buffer, metadata);
+
       return result;
     } catch (error) {
       throw new Meteor.Error(error.typeError, error.message);
