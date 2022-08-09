@@ -31,7 +31,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Pagination from '@mui/material/Pagination';
 import { Roles } from 'meteor/alanning:roles';
 import { getStructureIds } from '../../../api/users/structures';
-import { usePagination } from '../../utils/hooks';
+import { usePaginatedMethod, usePagination } from '../../utils/hooks';
 import Spinner from '../../components/system/Spinner';
 import { useAppContext } from '../../contexts/context';
 import UserAvatar from '../../components/users/UserAvatar';
@@ -87,14 +87,15 @@ const AdminUsersPage = () => {
   const [search, setSearch] = useState('');
   const [sortByDate, setSortByDate] = useState(false);
 
-  const { changePage, page, items, total } = usePagination(
-    'users.admin',
-    { search, sort: sortByDate ? { lastLogin: -1 } : { lastName: 1 } },
-    Meteor.users,
-    {},
-    { sort: sortByDate ? { lastLogin: -1 } : { lastName: 1 } },
-    ITEM_PER_PAGE,
-  );
+  const [
+    call,
+    { goToNextPage, goToPreviousPage, page, goToPage, nbPage, total, loading, error, called, data: items = [] },
+  ] = usePaginatedMethod('users.admins');
+
+  useEffect(() => {
+    call(search);
+  }, [call, search]);
+
   // track all global admin users
   const { isLoading, admins } = useTracker(() => {
     const roleshandlers = Meteor.subscribe('roles.admin');
@@ -116,19 +117,23 @@ const AdminUsersPage = () => {
     };
   });
   const handleChangePage = (event, value) => {
-    changePage(value);
+    goToPage(value);
   };
-  const searchRef = useRef();
-  const updateSearch = (e) => setSearch(e.target.value);
-  const resetSearch = () => setSearch('');
-  useEffect(() => {
-    if (searchRef.current) searchRef.current.value = search;
-  }, [search]);
+  //   const searchRef = useRef();
+  const updateSearch = (e) => {
+    // call(e.target.value);
+    setSearch(e.target.value);
+  };
+  const onResetSearch = () => {
+    setSearch('');
+  };
+
   useEffect(() => {
     if (page !== 1) {
-      changePage(1);
+      goToPage(1);
     }
   }, [search]);
+
   const isAdmin = (user) => admins.includes(user._id);
   const changeAdmin = (user) => {
     const method = isAdmin(user) ? 'users.unsetAdmin' : 'users.setAdmin';
@@ -299,8 +304,8 @@ const AdminUsersPage = () => {
                 <SearchField
                   updateSearch={updateSearch}
                   search={search}
-                  inputRef={searchRef}
-                  resetSearch={resetSearch}
+                  //   inputRef={searchRef}
+                  resetSearch={onResetSearch}
                   label={i18n.__('pages.AdminUsersPage.searchText')}
                 />
               </Grid>

@@ -8,6 +8,7 @@ import Groups from '../../groups/groups';
 import { getStructureIds } from '../structures';
 import logServer from '../../logging';
 import { hasAdminRightOnStructure } from '../../structures/utils';
+import { queryUsersAdmin } from './utils';
 
 // publish additional fields for current user
 Meteor.publish('userData', function publishUserData() {
@@ -222,16 +223,6 @@ Meteor.methods({
     }
   },
 });
-
-// build query for all users from group
-const queryUsersAdmin = ({ search }) => {
-  const regex = new RegExp(search, 'i');
-  const fieldsToSearch = ['firstName', 'lastName', 'emails.address', 'username', 'structure'];
-  const searchQuery = fieldsToSearch.map((field) => ({ [field]: { $regex: regex } }));
-  return {
-    $or: searchQuery,
-  };
-};
 
 // publish all users from a group
 FindFromPublication.publish('users.admin', function usersAdmin({ page, itemPerPage, search, ...rest }) {

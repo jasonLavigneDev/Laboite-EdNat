@@ -7,7 +7,7 @@ import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { Roles } from 'meteor/alanning:roles';
 
-import { isActive, getLabel } from '../../utils';
+import { isActive, getLabel, checkPaginationParams } from '../../utils';
 import Groups from '../../groups/groups';
 // initialize Meteor.users customizations
 import AppRoles from '../users';
@@ -20,6 +20,7 @@ import { getRandomNCloudURL } from '../../nextcloud/methods';
 import Structures from '../../structures/structures';
 import Nextcloud from '../../nextcloud/nextcloud';
 import { hasAdminRightOnStructure } from '../../structures/utils';
+import { queryUsersAdmin } from './utils';
 
 if (Meteor.settings.public.enableKeycloak === true) {
   const { whiteDomains } = Meteor.settings.private;
@@ -1055,3 +1056,27 @@ if (Meteor.isServer) {
     1000,
   );
 }
+
+Meteor.methods({
+  'users.admins'({ page = 1, itemPerPage = 10, search = '', ...rest }) {
+    if (!isActive(this.userId) || !Roles.userIsInRole(this.userId, 'admin')) {
+      return this.ready();
+    }
+    checkPaginationParams.validate({ page, itemPerPage, search });
+
+    const query = queryUsersAdmin({ search });
+
+    const data = Meteor.users
+      .find(query, {
+        fields: Meteor.users.adminFields,
+        skip: itemPerPage * (page - 1),
+        limit: itemPerPage,
+        sort: { lastName: 1, firstName: 1 },
+        ...rest,
+      })
+      .fetch();
+    const total = Meteor.users.find(query).count();
+
+    return { data, pageSize: itemPerPage, page, total };
+  },
+});

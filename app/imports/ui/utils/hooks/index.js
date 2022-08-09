@@ -1,52 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useTracker } from 'meteor/react-meteor-data';
-
-export const usePagination = (subName, args = {}, Collection, query = {}, options = {}, itemPerPage, deps = []) => {
-  const [page, setPage] = useState(1);
-  const [total, setTotal] = useState(0);
-  const subscription = useTracker(() =>
-    Meteor.subscribe(
-      subName,
-      { ...args, page, itemPerPage },
-      {
-        onStop: (err) => {
-          if (err) {
-            if (err.error === 'validation-error')
-              err.details.forEach((detail) => console.log(`Subscribe ${subName}: ${detail.message}`));
-            else console.log(`Subscribe ${subName}: ${err.reason || err.message}`);
-          }
-        },
-      },
-    ),
-  );
-  const loading = useTracker(() => !subscription.ready());
-
-  const itemsTrackerDeps = [page, loading, total];
-  if (deps.length > 0) itemsTrackerDeps.push(...deps);
-
-  const items = useTracker(
-    () => Collection.findFromPublication(subName, query, { ...options, limit: itemPerPage }).fetch(),
-    itemsTrackerDeps,
-  );
-
-  useEffect(() => {
-    Meteor.call(`get_${subName}_count`, args, (error, result) => setTotal(result));
-  }, [page, args]);
-
-  const nextPage = () => setPage(page + 1);
-  const previousPage = () => setPage(page - 1);
-  const changePage = (newPage) => setPage(newPage);
-
-  return {
-    page,
-    nextPage,
-    previousPage,
-    changePage,
-    loading,
-    items,
-    total,
-  };
-};
+export * from './hooks.meteor.js';
 
 // easy to manage complex state like in react Class
 export const useObjectState = (initialState) => {
