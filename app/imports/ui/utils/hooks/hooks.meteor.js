@@ -109,8 +109,6 @@ export const usePaginatedMethod = (
   const [nbPage, setNbPage] = useState(0);
   const lastSearchRef = useRef(null);
 
-  console.log('meta', meta);
-
   // Paginated methods should always return { data: any[], total: int, page: int, pageSize: int, nbPage: int}
   const call = useCallback(
     throttle(async (search) => {
