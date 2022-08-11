@@ -225,6 +225,8 @@ Meteor.methods({
 });
 
 // publish all users from a group
+/**
+ * ! Ready for deletion
 FindFromPublication.publish('users.admin', function usersAdmin({ page, itemPerPage, search, ...rest }) {
   if (!isActive(this.userId) || !Roles.userIsInRole(this.userId, 'admin')) {
     return this.ready();
@@ -250,6 +252,8 @@ FindFromPublication.publish('users.admin', function usersAdmin({ page, itemPerPa
     return this.ready();
   }
 });
+*/
+
 // count all users
 Meteor.methods({
   'get_users.admin_count': ({ search }) => {
