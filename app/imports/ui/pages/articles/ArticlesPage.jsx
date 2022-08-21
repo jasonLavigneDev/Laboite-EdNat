@@ -242,7 +242,7 @@ function ArticlesPage({
                 </Grid>
               )}
               {mapList((article) => (
-                <Grid className={classes.gridItem} item key={article._id} md={12}>
+                <Grid className={classes.gridItem} item key={article._id} md={12} xs={12}>
                   <ArticleDetails publicPage={publicPage} article={article} />
                 </Grid>
               ))}

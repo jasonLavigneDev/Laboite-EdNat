@@ -16,7 +16,7 @@ const useStyles = makeStyles()((theme, color) => ({
   },
 }));
 
-const ValidationButton = ({ onAction, text, disabled, icon, onCancel, color }) => {
+const ValidationButton = ({ onAction, text, disabled, icon, onCancel, color, fullWidth }) => {
   const [timesPressed, setTimePressed] = useState(0);
   const [timer, setTimer] = useState(-1);
   const { classes } = useStyles(color);
@@ -61,6 +61,7 @@ const ValidationButton = ({ onAction, text, disabled, icon, onCancel, color }) =
       variant="contained"
       onClick={onPress}
       disabled={disabled}
+      fullWidth={fullWidth}
     >
       {timer === -1 ? text : i18n.__('components.ValidationButton.sure')}
     </Button>
@@ -70,6 +71,7 @@ const ValidationButton = ({ onAction, text, disabled, icon, onCancel, color }) =
 ValidationButton.defaultProps = {
   color: 'primary',
   disabled: false,
+  fullWidth: false,
   onCancel: null,
   icon: null,
 };
@@ -81,6 +83,7 @@ ValidationButton.propTypes = {
   onAction: PropTypes.func.isRequired,
   onCancel: PropTypes.func,
   disabled: PropTypes.bool,
+  fullWidth: PropTypes.bool,
 };
 
 export default ValidationButton;

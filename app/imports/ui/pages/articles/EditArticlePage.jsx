@@ -57,7 +57,7 @@ const { minioEndPoint, minioPort, minioBucket, minioSSL, laboiteBlogURL } = Mete
 
 const HOST = `http${minioSSL ? 's' : ''}://${minioEndPoint}${minioPort ? `:${minioPort}` : ''}/${minioBucket}/`;
 
-const useStyles = makeStyles()((theme) => ({
+const useStyles = makeStyles()((theme, isTablet) => ({
   flex: {
     display: 'flex',
     justifyContent: 'space-between',
@@ -89,9 +89,12 @@ const useStyles = makeStyles()((theme) => ({
     },
   },
   buttonGroup: {
-    display: 'flex',
+    display: isTablet ? 'block' : 'flex',
     justifyContent: 'space-between',
     marginTop: 60,
+    '& .MuiButton-root': {
+      marginTop: 10,
+    },
   },
   tagInputs: {
     marginBottom: theme.spacing(3),
@@ -144,8 +147,8 @@ function EditArticlePage({
   },
   history,
 }) {
-  const [{ isMobile, language, user }, dispatch] = useAppContext();
-  const { classes } = useStyles();
+  const [{ isMobile, language, user, isTablet }, dispatch] = useAppContext();
+  const { classes } = useStyles(isTablet);
   const [loading, setLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [quill, setQuill] = useState(null);
@@ -697,13 +700,14 @@ function EditArticlePage({
             ) : null}
           </div>
           <div className={classes.buttonGroup}>
-            <Button variant="contained" onClick={() => handleOpenDialog(true)}>
+            <Button fullWidth={isTablet} variant="contained" onClick={() => handleOpenDialog(true)}>
               {i18n.__('pages.EditArticlePage.cancel')}
             </Button>
             {!!slug && (
               <ValidationButton
                 color="red"
                 icon={<DeleteIcon />}
+                fullWidth={isTablet}
                 text={i18n.__('pages.EditArticlePage.delete')}
                 onAction={deleteArticle}
               />
@@ -714,13 +718,14 @@ function EditArticlePage({
                 <Button
                   variant="contained"
                   color="secondary"
+                  fullWidth={isTablet}
                   style={{ marginRight: 10 }}
                   onClick={submitUpdateArticleDraft}
                 >
                   {i18n.__('pages.EditArticlePage.save_draf')}
                 </Button>
               )}
-              <Button variant="contained" color="primary" onClick={submitUpdateArticlePublished}>
+              <Button fullWidth={isTablet} variant="contained" color="primary" onClick={submitUpdateArticlePublished}>
                 {slug ? i18n.__('pages.EditArticlePage.update') : i18n.__('pages.EditArticlePage.save')}
                 {slug && article.draft && ` - ${i18n.__('pages.EditArticlePage.save')}`}
               </Button>
