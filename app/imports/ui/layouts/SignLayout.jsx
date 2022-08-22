@@ -81,10 +81,9 @@ export default function SignLayout() {
     return {};
   }
 
-  const services =
-    (offlinePage && isMobile && isIframed && selectedTab === 'apps') || !isIframed || (isIframed && !isMobile);
-  const signin = (isIframed && isMobile && selectedTab === 'home') || !isIframed || (isIframed && !isMobile);
-  const help = offlinePage && isIframed && isMobile && selectedTab === 'help';
+  const services = (offlinePage && isIframed && selectedTab === 'apps') || !isIframed;
+  const signin = (offlinePage && isIframed && selectedTab === 'home') || !isIframed;
+  const help = offlinePage && isIframed && selectedTab === 'help';
 
   return (
     <>
