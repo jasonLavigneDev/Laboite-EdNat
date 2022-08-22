@@ -15,7 +15,7 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Typography from '@mui/material/Typography';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
-import { makeStyles } from 'tss-react/mui';
+import { makeStyles } from '@mui/material/styles';
 import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -32,7 +32,7 @@ import UserAvatar from '../../components/users/UserAvatar';
 import { useStructure, useAdminSelectedStructure } from '../../../api/structures/hooks';
 import StructureSelect from '../../components/structures/StructureSelect';
 
-const useStyles = makeStyles()((theme) => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     marginTop: theme.spacing(3),
@@ -59,7 +59,7 @@ const ITEM_PER_PAGE = 10;
 const AdminStructureUsersPage = ({ match: { path } }) => {
   const isStructureSpecific = path === '/admin/structureusers';
 
-  const { classes } = useStyles();
+  const classes = useStyles();
   const [{ userId, isMobile }] = useAppContext();
   const [search, setSearch] = useState('');
   const [sortByDate, setSortByDate] = useState(false);
@@ -141,7 +141,6 @@ const AdminStructureUsersPage = ({ match: { path } }) => {
             edge="end"
             aria-label={isStructureAdmin(user) ? 'noadmin' : 'admin'}
             onClick={() => changeStructureAdmin(user)}
-            size="large"
           >
             {isStructureAdmin(user) ? <ClearIcon /> : <GroupAddIcon />}
           </IconButton>
@@ -199,6 +198,7 @@ const AdminStructureUsersPage = ({ match: { path } }) => {
                         checked={sortByDate}
                         onChange={() => setSortByDate(!sortByDate)}
                         name="checkSortByDate"
+                        color="primary"
                       />
                     }
                     label={i18n.__('pages.AdminStructureUsersPage.sortByLastLogin')}
