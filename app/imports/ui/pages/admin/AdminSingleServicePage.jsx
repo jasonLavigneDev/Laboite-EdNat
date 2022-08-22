@@ -244,7 +244,7 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
     } else {
       try {
         const { structureId } = params;
-        args = { ...rest, content, structure: structureMode ? structureId : '' };
+        args = { data: { ...rest, content, structure: structureMode ? structureId : '' } };
       } catch (err) {
         msg.error(err.message);
       }

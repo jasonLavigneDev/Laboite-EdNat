@@ -202,23 +202,25 @@ describe('services', function () {
       // add service to userId favorites
       Meteor.users.update({ _id: userId }, { $set: { favServices: [serviceId, structureServiceId] } });
       chatData = {
-        title: 'Chat sur un nuage de liconre',
-        description: "Chevaucher un dragon rose à pois. C'est en fait une fée pour piéger Peter Pan",
-        url: 'https://chat.licorne.ovh',
-        logo: 'https://rocket.chat/images/default/logo--dark.svg',
-        categories: [],
-        team: 'Dijon',
-        usage: 'Discuter en Troubadour',
-        screenshots: [],
-        content: "<div>c'est un service de fou</div>",
-        state: 0,
-        structure: '',
+        data: {
+          title: 'Chat sur un nuage de liconre',
+          description: "Chevaucher un dragon rose à pois. C'est en fait une fée pour piéger Peter Pan",
+          url: 'https://chat.licorne.ovh',
+          logo: 'https://rocket.chat/images/default/logo--dark.svg',
+          categories: [],
+          team: 'Dijon',
+          usage: 'Discuter en Troubadour',
+          screenshots: [],
+          content: "<div>c'est un service de fou</div>",
+          state: 0,
+          structure: '',
+        },
       };
     });
     describe('createService', function () {
       it('does create a service with admin user', function () {
         createService._execute({ userId: adminId }, chatData);
-        const service = Services.findOne({ title: chatData.title });
+        const service = Services.findOne({ title: chatData.data.title });
         assert.typeOf(service, 'object');
       });
       it("does not create a service if you're not admin", function () {
@@ -239,27 +241,27 @@ describe('services', function () {
         );
       });
       it('does create a structure specific service with adminStructure user', function () {
-        createService._execute({ userId: adminStructureId }, { ...chatData, structure: 'maStructure' });
-        const service = Services.findOne({ title: chatData.title });
+        createService._execute({ userId: adminStructureId }, { data: { ...chatData.data, structure: 'maStructure' } });
+        const service = Services.findOne({ title: chatData.data.title });
         assert.typeOf(service, 'object');
       });
       it('does create a structure specific service with adminStructure user', function () {
-        createService._execute({ userId: adminId }, { ...chatData, structure: 'uneStructure' });
-        const service = Services.findOne({ title: chatData.title });
+        createService._execute({ userId: adminId }, { data: { ...chatData.data, structure: 'uneStructure' } });
+        const service = Services.findOne({ title: chatData.data.title });
         assert.typeOf(service, 'object');
       });
       it("does not create a structure specific service if you're not adminStructure or admin", function () {
         // Throws if non admin user, or logged out user, tries to create a service
         assert.throws(
           () => {
-            createService._execute({ userId }, { ...chatData, structure: 'maStructure' });
+            createService._execute({ userId }, { data: { ...chatData.data, structure: 'maStructure' } });
           },
           Meteor.Error,
           /api.services.createService.notPermitted/,
         );
         assert.throws(
           () => {
-            createService._execute({}, { ...chatData, structure: 'maStructure' });
+            createService._execute({}, { data: { ...chatData.data, structure: 'maStructure' } });
           },
           Meteor.Error,
           /api.services.createService.notPermitted/,
@@ -269,7 +271,10 @@ describe('services', function () {
         // Throws if non admin user, or logged out user, tries to create a service
         assert.throws(
           () => {
-            createService._execute({ userId: adminStructureId }, { ...chatData, structure: 'autreStructure' });
+            createService._execute(
+              { userId: adminStructureId },
+              { data: { ...chatData.data, structure: 'autreStructure' } },
+            );
           },
           Meteor.Error,
           /api.services.createService.notPermitted/,
