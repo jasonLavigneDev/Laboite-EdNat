@@ -13,7 +13,7 @@ Les thèmes permettent d'appliquer un ton cohérent dans toute l'application. Ce
 
 ## Création d'un thème
 
-Pour créer un nouveau thème, il faut aller dans le dossier `thème` qui est dans `app/imports/ui/themes`.
+Pour créer un nouveau thème, il faut aller dans le dossier `theme` qui est dans `app/imports/ui/themes`.
 
 Une fois dans ce dossier le but est de créer un dossier avec le nom du nouveau thème.
 Dans ce nouveau dossier un certains nombre de fichiers sont nécessaires :
@@ -85,7 +85,11 @@ Le fichier `commons.js` permet de définir les propriétés qui seront commune �
 
 Le dossier `components` permets de définir des propriété spécifique à des composants. Pour ce faire, il suffit d'exporter les nouvelles propriétés comme suit :
 
-`export const newComponentName = () => ({ MuiProps: { prop: value, }, });`
+```jsx
+export const newComponentName = () => ({
+  MuiProps: { prop: value },
+});
+```
 
 ## Utilisation du thème
 
@@ -105,15 +109,27 @@ Voici quelques conseils et avertissement concernant MUI.
 
 Cette fonctionnalité s'utilise dans les fichiers composants .jsx ou .js. Pour ce faire il suffit de déclarer une constante comme suit :
 
-`const useStyles = makeStyles(() => ({ nomClasse: { prop: value, prop2: value, prop3: value, } }))`
+```jsx
+const useStyles = makeStyles(() => ({
+  nomClasse: {
+    prop: value,
+    prop2: value,
+    prop3: value,
+  },
+}));
+```
 
 Une fois cette constante déclarée, nous avons pour habitude d'utiliser la notation suivante pour utiliser les classes précédemment déclarées:
 
-`const classes = useStyles();`
+```jsx
+const classes = useStyles();
+```
 
 Il suffit ensuite d'utiliser les classes déclarées dans une balise HTML dans l'attribut `className` avec la notation suivante :
 
-`className={classes.nomClasse}`
+```jsx
+className={classes.nomClasse}
+```
 
 ### Overrides dynamique
 
@@ -123,7 +139,9 @@ Il est toujours possible de ré-écrire les propriétés d'un composant MUI. Il 
 
 Pour l'exemple, on va prendre un Input MUI.
 
-`sx={{ '& .MuiInput-classMuiConcernee': { propMui: value, } }}`
+```jsx
+  sx={{ '& .MuiInput-classMuiConcernee': { propMui: value, } }}
+```
 
 Il est possible de trouver la classe MUI concernée via la console du navigateur. Si jamais il est impossible de la trouvée de cette manière il est possible de se référer à la doc [MUI](https://mui.com/)
 
@@ -131,6 +149,16 @@ Il est possible de trouver la classe MUI concernée via la console du navigateur
 
 Les breakpoints servent à définir des médias queries qui seront utilisées dans le thème. En effet, ces derniers se définissent dans le fichier `light.js` ou `dark.js`. Nous les avons définis ainsi dans les projets :
 
-`breakpoints: { values: { xs: 600, // down for mobile version / up for tablets sm: 768, // up for landscape tablet/tablet md: 1000, // up for small laptops/desktops lg: 1200, // up for laptops and desktops xl: 1600, // up for extra large desktops }, },`
+```jsx
+breakpoints: {
+  values: {
+    xs: 600, // down for mobile version / up for tablets
+    sm: 768, // up for landscape tablet/tablet
+    md: 1000, // up for small laptops/desktops
+    lg: 1200, // up for laptops and desktops
+    xl: 1600, // up for extra large desktops
+  },
+},
+```
 
 Pour plus d'informations sur les breakpoints, vous pouvez vous référer à la [documentation MUI](https://mui.com/customization/breakpoints/#default-breakpoints).
