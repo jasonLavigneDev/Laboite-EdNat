@@ -4,14 +4,12 @@
       "email": "admin@ac-dijon.fr",
       "password": "changeme",
       "role": "admin",
-      "structure": "EviKfwAnFtcjEWFdz",
       "firstName": "Jean",
       "lastName": "Dupont"
     },
     {
       "email": "eole@ac-dijon.fr",
       "password": "changeme",
-      "structure": "EviKfwAnFtcjEWFdz",
       "firstName": "Guy",
       "lastName": "Durand"
     }
