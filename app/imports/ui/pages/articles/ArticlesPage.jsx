@@ -39,7 +39,6 @@ const useStyles = makeStyles()((theme) => ({
     marginLeft: 16,
   },
   rootMobile: {
-    paddingTop: 60,
     marginBottom: -128,
     display: 'flex',
     minHeight: '100vh',
@@ -57,6 +56,7 @@ const useStyles = makeStyles()((theme) => ({
   spaceBetween: {
     display: 'flex',
     justifyContent: 'space-between',
+    marginBottom: 10,
   },
   pagination: {
     display: 'flex',
@@ -247,7 +247,7 @@ function ArticlesPage({
                 </Grid>
               )}
               {mapList((article) => (
-                <Grid className={classes.gridItem} item key={article._id} md={12}>
+                <Grid className={classes.gridItem} item key={article._id} md={12} xs={12}>
                   <ArticleDetails publicPage={publicPage} article={article} />
                 </Grid>
               ))}
