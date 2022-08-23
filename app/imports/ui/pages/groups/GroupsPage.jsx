@@ -36,6 +36,7 @@ const useStyles = makeStyles()(() => ({
   },
   cardGrid: {
     marginBottom: '0px',
+    marginTop: '10px',
   },
   mobileButtonContainer: {
     display: 'flex',

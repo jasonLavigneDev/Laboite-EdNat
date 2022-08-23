@@ -45,6 +45,7 @@ const useStyles = makeStyles()((theme, isMobile) => ({
   },
   cardGrid: {
     marginBottom: '0px',
+    marginTop: '10px',
   },
   chip: {
     margin: theme.spacing(1),
