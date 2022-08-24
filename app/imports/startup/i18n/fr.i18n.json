@@ -196,7 +196,8 @@
       "states": {
         "displayed": "affiché",
         "inactive": "inactif",
-        "invisible": "caché"
+        "invisible": "caché",
+        "maintenance" : "maintenance"
       },
       "labels": {
         "id": "Id de Service",
