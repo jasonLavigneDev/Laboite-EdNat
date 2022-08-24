@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Meteor } from 'meteor/meteor';
 import { makeStyles } from 'tss-react/mui';
 import Container from '@mui/material/Container';
 import FilterListIcon from '@mui/icons-material/FilterList';
@@ -36,6 +37,7 @@ import { useAppContext } from '../../contexts/context';
 import ServiceDetailsList from '../../components/services/ServiceDetailsList';
 import { useIconStyles, DetaiIconCustom, SimpleIconCustom } from '../../components/system/icons/icons';
 import { useStructure } from '../../../api/structures/hooks';
+import { GRID_VIEW_MODE } from '../../utils/ui';
 
 const useStyles = makeStyles()((theme, isMobile) => ({
   flex: {
@@ -140,11 +142,18 @@ export function ServicesPage({ services, categories, ready, structureMode, offli
   const structure = offline ? null : useStructure();
   const { classes } = useStyles(isMobile);
   const { classes: classesIcons } = useIconStyles();
+
+  const {
+    public: {
+      ui: { defaultGridViewMode },
+    },
+  } = Meteor.settings;
+
   const {
     catList = [],
     search = '',
     filterToggle = false,
-    viewMode = 'card', // Possible values : "card" or "list"
+    viewMode = GRID_VIEW_MODE[defaultGridViewMode],
   } = servicePage;
 
   const favs = loadingUser || offline ? [] : user.favServices;
@@ -288,7 +297,7 @@ export function ServicesPage({ services, categories, ready, structureMode, offli
                 <Typography className={classes.emptyMsg}>
                   {i18n.__(`pages.ServicesPage.${structureMode ? 'NoStructureServices' : 'NoServices'}`)}
                 </Typography>
-              ) : viewMode === 'list' && isMobile ? (
+              ) : viewMode === GRID_VIEW_MODE.compact && isMobile ? (
                 mapList((service) => (
                   <Grid className={classes.gridItem} item xs={4} md={2} key={service._id}>
                     <ServiceDetailsList service={service} favAction={favAction(service._id)} />
@@ -303,7 +312,7 @@ export function ServicesPage({ services, categories, ready, structureMode, offli
                       updateCategories={updateCatList}
                       catList={catList}
                       categories={categories}
-                      isShort={!isMobile && viewMode === 'list'}
+                      isShort={!isMobile && viewMode === GRID_VIEW_MODE.compact}
                     />
                   </Grid>
                 ))
