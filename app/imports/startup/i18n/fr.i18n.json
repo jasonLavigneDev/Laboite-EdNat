@@ -196,7 +196,8 @@
       "states": {
         "displayed": "affiché",
         "inactive": "inactif",
-        "invisible": "caché"
+        "invisible": "caché",
+        "maintenance" : "maintenance"
       },
       "labels": {
         "id": "Id de Service",
@@ -1180,6 +1181,7 @@
       "categories": "Catégories",
       "open": "Ouvrir",
       "inactive": "Service inactif",
+      "maintenance" : "Service en maintenance",
       "propulsedBy": "Propulsé par"
     },
     "PersonalPage": {

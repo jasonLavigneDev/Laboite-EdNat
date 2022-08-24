@@ -142,6 +142,12 @@ function ServiceDetails({ service, favAction, isShort }) {
     </Button>
   );
 
+  const maintenanceButton = (
+    <Button size="large" disabled className={classes.buttonText} variant="contained">
+      {i18n.__('pages.SingleServicePage.maintenance')}
+    </Button>
+  );
+
   return (
     <Card className={classes.card}>
       {/* <CardHeader
@@ -203,7 +209,13 @@ function ServiceDetails({ service, favAction, isShort }) {
           })}
         </Paper> */}
           <div className={isShort ? classes.cardActionShort : classes.cardActions}>
-            {service.state === 5 ? inactiveButton : isExternal ? openButton : linkButton}
+            {service.state === 5
+              ? inactiveButton
+              : service.state === 15
+              ? maintenanceButton
+              : isExternal
+              ? openButton
+              : linkButton}
 
             {!!favAction && <FavButton classesArray={[classes.fab]} service={service} favorite={favorite} />}
           </div>
