@@ -162,6 +162,13 @@ const SingleServicePage = ({ service = {}, ready, categories = [] }) => {
       {i18n.__('pages.SingleServicePage.inactive')}
     </Button>
   );
+
+  const maintenanceButton = (
+    <Button size="large" disabled className={classes.buttonText} variant="contained">
+      {i18n.__('pages.SingleServicePage.maintenance')}
+    </Button>
+  );
+
   return (
     <Fade in>
       <Container className={classes.root}>
@@ -186,7 +193,13 @@ const SingleServicePage = ({ service = {}, ready, categories = [] }) => {
           </Grid>
           <Grid item xs={12} sm={12} md={6} className={classes.favoriteButton}>
             {!isMobile && favButton}
-            {service.state === 5 ? inactiveButton : isExternal ? openButton : linkButton}
+            {service.state === 5
+              ? inactiveButton
+              : service.state === 15
+              ? maintenanceButton
+              : isExternal
+              ? openButton
+              : linkButton}
           </Grid>
           <Grid item xs={12} sm={12} md={12} className={classes.cardGrid}>
             <Typography className={classes.smallTitle} variant="h5">

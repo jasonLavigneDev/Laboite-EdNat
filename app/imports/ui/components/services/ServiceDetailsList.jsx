@@ -67,7 +67,7 @@ const useStyles = makeStyles()((theme) => ({
 export default function ServiceDetails({ service, favAction, noIconMode = false }) {
   const { classes } = useStyles();
   const history = useHistory();
-  const isDisabled = service.state === 5;
+  const isDisabled = service.state === 5 || service.state === 15;
 
   const [{ isMobile }] = useAppContext();
   const { trackEvent } = useMatomo();
@@ -88,7 +88,8 @@ export default function ServiceDetails({ service, favAction, noIconMode = false 
   };
 
   const handleLaunchService = () => {
-    if (isDisabled) msg.error(i18n.__('pages.SingleServicePage.inactive'));
+    if (service.state === 5) msg.error(i18n.__('pages.SingleServicePage.inactive'));
+    else if (service.state === 15) msg.error(i18n.__('pages.SingleServicePage.maintenance'));
     else launchService();
   };
 
@@ -100,10 +101,16 @@ export default function ServiceDetails({ service, favAction, noIconMode = false 
             overlap="circular"
             anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
             badgeContent={
-              isDisabled && (
+              service.state === 5 ? (
                 <Tooltip title={i18n.__('pages.SingleServicePage.inactive')}>
                   <BlockIcon color="error" />
                 </Tooltip>
+              ) : service.state === 15 ? (
+                <Tooltip title={i18n.__('pages.SingleServicePage.maintenance')}>
+                  <BlockIcon color="error" />
+                </Tooltip>
+              ) : (
+                ''
               )
             }
           >

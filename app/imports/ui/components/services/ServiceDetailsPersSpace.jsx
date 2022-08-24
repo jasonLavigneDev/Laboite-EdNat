@@ -114,7 +114,7 @@ function ServiceDetailsPersSpace({ service, customDrag, isMobile, isSorted, need
         <span className={classes.span}>
           <CardActionArea
             className={classes.actionarea}
-            disabled={service.state === 5 || customDrag}
+            disabled={service.state === 5 || service.state === 15 || customDrag}
             onClick={handleClick}
           >
             <CardHeader
@@ -122,7 +122,9 @@ function ServiceDetailsPersSpace({ service, customDrag, isMobile, isSorted, need
               avatar={<Avatar aria-label="recipe" className={classes.avatar} alt={service.title} src={service.logo} />}
               title={
                 <Typography
-                  className={service.state === 5 ? classes.serviceNameDiasbled : classes.serviceName}
+                  className={
+                    service.state === 5 || service.state === 15 ? classes.serviceNameDiasbled : classes.serviceName
+                  }
                   gutterBottom
                   noWrap={!isMobile}
                   variant="h6"
@@ -135,6 +137,10 @@ function ServiceDetailsPersSpace({ service, customDrag, isMobile, isSorted, need
                 service.state === 5 ? (
                   <Typography variant="body2" color="textSecondary" component="p">
                     {i18n.__('pages.SingleServicePage.inactive')}
+                  </Typography>
+                ) : service.state === 15 ? (
+                  <Typography variant="body2" color="textSecondary" component="p">
+                    {i18n.__('pages.SingleServicePage.maintenance')}
                   </Typography>
                 ) : (
                   ''

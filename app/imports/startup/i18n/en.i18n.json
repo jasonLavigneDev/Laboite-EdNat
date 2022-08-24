@@ -1178,6 +1178,7 @@
       "categories": "Categories",
       "open": "Open",
       "inactive": "Inactive service",
+      "maintenance" : "Service on Maintenance",
       "propulsedBy": "Propulsed by"
     },
     "PersonalPage": {
