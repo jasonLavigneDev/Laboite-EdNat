@@ -101,6 +101,10 @@ Articles.schema = new SimpleSchema(
       type: SimpleSchema.Integer,
       defaultValue: 0,
     },
+    licence: {
+      type: String,
+      defaultValue: '',
+    },
   },
   { clean: { removeEmptyStrings: false }, tracker: Tracker },
 );
@@ -119,6 +123,7 @@ Articles.publicFields = {
   visits: 1,
   tags: 1,
   structure: 1,
+  licence: 1,
 };
 
 Articles.attachSchema(Articles.schema);
