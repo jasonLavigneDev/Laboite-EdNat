@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTracker } from 'meteor/react-meteor-data';
+import validate from 'validate.js';
 
 export const usePagination = (subName, args = {}, Collection, query = {}, options = {}, itemPerPage, deps = []) => {
   const [page, setPage] = useState(1);
@@ -109,4 +110,48 @@ export const useWindowSize = () => {
   }, []); // Empty array ensures that effect is only run on mount and unmount
 
   return windowSize;
+};
+
+validate.options = {
+  fullMessages: false,
+};
+
+export const useFormStateValidator = (formSchema) => {
+  const [formState, setFormState] = useState({
+    isValid: false,
+    values: {},
+    touched: {},
+    errors: {},
+  });
+  useEffect(() => {
+    const errors = validate(formState.values, formSchema);
+
+    setFormState(() => ({
+      ...formState,
+      isValid: !errors,
+      errors: errors || {},
+    }));
+  }, [formState.values]);
+
+  const handleChange = (event) => {
+    const isSyntheticBaseEvent = event.constructor.name === 'SyntheticBaseEvent';
+
+    // Check is is synthetic base event to persist it, since it does not exist on `PointerEvent`
+    // https://reactjs.org/docs/events.html
+    if (isSyntheticBaseEvent) event.persist();
+
+    setFormState(() => ({
+      ...formState,
+      values: {
+        ...formState.values,
+        [event.target.name]: event.target.type === 'checkbox' ? event.target.checked : event.target.value,
+      },
+      touched: {
+        ...formState.touched,
+        [event.target.name]: true,
+      },
+    }));
+  };
+
+  return [formState, handleChange, setFormState];
 };

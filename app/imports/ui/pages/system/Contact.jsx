@@ -13,17 +13,12 @@ import InputLabel from '@mui/material/InputLabel';
 import GlobalStyles from '@mui/material/GlobalStyles';
 import i18n from 'meteor/universe:i18n';
 import { useHistory } from 'react-router-dom';
-import validate from 'validate.js';
 import FormHelperText from '@mui/material/FormHelperText';
 import CustomSelect from '../../components/admin/CustomSelect';
-import { useFormStateValidator } from './SignIn';
 import Structures from '../../../api/structures/structures';
 import Spinner from '../../components/system/Spinner';
 import { useAppContext } from '../../contexts/context';
-
-validate.options = {
-  fullMessages: false,
-};
+import { useFormStateValidator } from '../../utils/hooks';
 
 const schema = {
   firstName: {
@@ -248,7 +243,7 @@ const Contact = ({ structures, loading }) => {
                   </>
                 )}
                 <FormHelperText className={hasError('structureSelect') ? 'Mui-error' : ''}>
-                  {hasError('structureSelect')}
+                  {hasError('structureSelect') ? i18n.__(formState.errors.structureSelect[0]) : null}
                 </FormHelperText>
               </FormControl>
             </Grid>

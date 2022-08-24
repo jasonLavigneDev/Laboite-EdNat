@@ -22,7 +22,8 @@ import i18n from 'meteor/universe:i18n';
 import PropTypes from 'prop-types';
 import CustomSelect from '../../components/admin/CustomSelect';
 import Spinner from '../../components/system/Spinner';
-import { mainPagesTracker, useFormStateValidator } from './SignIn';
+import { mainPagesTracker } from './SignIn';
+import { useFormStateValidator } from '../../utils/hooks';
 
 validate.options = {
   fullMessages: false,
