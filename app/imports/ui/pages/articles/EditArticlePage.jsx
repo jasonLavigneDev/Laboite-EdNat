@@ -627,7 +627,7 @@ function EditArticlePage({
           </FormControl>
           <Paper className={classes.licencePaper}>
             {i18n.__('pages.EditArticlePage.licenceInfo')}{' '}
-            <a href="https://creativecommons.org/licenses/" style={{ color: 'blue' }}>
+            <a href="https://creativecommons.org/licenses/" target="_blank" style={{ color: 'blue' }} rel="noreferrer">
               https://creativecommons.org/licenses/
             </a>
           </Paper>
