@@ -500,3 +500,18 @@ Migrations.add({
     Structures.rawCollection().updateMany({}, { $unset: { introduction: 1 } }, { multi: true });
   },
 });
+
+Migrations.add({
+  version: 26,
+  name: 'Add licence to articles',
+  up: () => {
+    Articles.find({})
+      .fetch()
+      .forEach((article) => {
+        Articles.update({ _id: article._id }, { $set: { licence: '' } });
+      });
+  },
+  down: () => {
+    Articles.rawCollection().updateMany({}, { $unset: { licence: 1 } }, { multi: true });
+  },
+});

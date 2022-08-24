@@ -1323,6 +1323,15 @@
         "mainText": "Souhaitez-vous réellement fermer cette page ? Toutes les modifications non enregistrées seront perdues.",
         "confirm": "Confirmer",
         "cancel": "Annuler"
+      },
+      "licenceInfo": "Pour plus d'informations sur les licences, consultez la documentation sur le site Creative Commons: ",
+      "Licences": {
+        "CC_BY": "Attribution",
+        "CC_BY-SA": "Attribution - Partage dans les Mêmes Conditions",
+        "CC_BY-ND": "Attribution - Pas de Modification",
+        "CC_BY-NC": "Attribution - Pas d’Utilisation Commerciale",
+        "CC_BY-NC-SA": "Attribution - Pas d’Utilisation Commerciale - Partage dans les Mêmes Conditions",
+        "CC_BY-NC-ND": "Pas d’Utilisation Commerciale - Pas de Modification"
       }
     },
     "PublicArticlePage": {

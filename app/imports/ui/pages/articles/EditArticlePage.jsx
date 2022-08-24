@@ -4,12 +4,16 @@ import { Meteor } from 'meteor/meteor';
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import i18n from 'meteor/universe:i18n';
+import Paper from '@mui/material/Paper';
 import ReactQuill, { Quill } from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { withTracker } from 'meteor/react-meteor-data';
+import FormControl from '@mui/material/FormControl';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import { Random } from 'meteor/random';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 import ImageResize from 'quill-image-resize-module';
 import { makeStyles } from 'tss-react/mui';
 import TextField from '@mui/material/TextField';
@@ -126,6 +130,11 @@ const useStyles = makeStyles()((theme, isTablet) => ({
   structure: {
     marginBottom: '0px',
   },
+  licencePaper: {
+    padding: theme.spacing(1.5),
+    marginTop: 5,
+    marginBottom: 10,
+  },
 }));
 
 const emptyArticle = {
@@ -133,6 +142,7 @@ const emptyArticle = {
   slug: '',
   content: '',
   description: '',
+  licence: '',
   tags: [],
 };
 
@@ -163,6 +173,15 @@ function EditArticlePage({
   const [updateStructure, setUpdateStructure] = useState(false);
   const [open, setOpen] = useState(false);
   const [showUpdateStructure, setShowUpdateStructure] = useState(false);
+
+  const licences = [
+    ['CC BY', i18n.__('pages.EditArticlePage.Licences.CC_BY')],
+    ['CC BY-SA', i18n.__('pages.EditArticlePage.Licences.CC_BY-SA')],
+    ['CC BY-ND', i18n.__('pages.EditArticlePage.Licences.CC_BY-ND')],
+    ['CC BY-NC', i18n.__('pages.EditArticlePage.Licences.CC_BY-NC')],
+    ['CC BY-NC-SA', i18n.__('pages.EditArticlePage.Licences.CC_BY-NC-SA')],
+    ['CC BY-NC-ND', i18n.__('pages.EditArticlePage.Licences.CC_BY-NC-ND')],
+  ];
 
   const quillOptionsMaker = (options) => ({
     modules: {
@@ -537,6 +556,10 @@ function EditArticlePage({
     setData({ markdown: bool });
   };
 
+  const handleLicence = (event) => {
+    setData({ licence: event.target.value });
+  };
+
   if (!ready || (slug && !article._id && !data._id) || loading) {
     return <Spinner />;
   }
@@ -583,6 +606,32 @@ function EditArticlePage({
               ),
             }}
           />
+          <FormControl fullWidth>
+            <InputLabel id="licence-selector-label">Licence</InputLabel>
+            <Select
+              labelId="licence-selector-label"
+              id="licence-selector"
+              name="licence"
+              variant="outlined"
+              label="licence"
+              fullWidth
+              value={data.licence}
+              onChange={handleLicence}
+            >
+              {licences.map((lic) => (
+                <MenuItem value={lic[0]} key={lic[1]}>
+                  {lic[1]}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <Paper className={classes.licencePaper}>
+            {i18n.__('pages.EditArticlePage.licenceInfo')}{' '}
+            <a href="https://creativecommons.org/licenses/" target="_blank" style={{ color: 'blue' }} rel="noreferrer">
+              https://creativecommons.org/licenses/
+            </a>
+          </Paper>
+
           <TextField
             onChange={onUpdateField}
             value={data.description}
