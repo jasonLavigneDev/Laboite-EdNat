@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.3.1](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/4.3.0...release/4.3.1) (2022-08-26)
+
+
+### Bug Fixes
+
+* **animation:** replace url video from dijon.beta to podeduc ([d0a9d7b](https://gitlab.mim-libre.fr/alphabet/laboite/commit/d0a9d7b15dd72ef5b10890c8a42921cb50b684d9))
+
 # [4.3.0](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/4.2.6...release/4.3.0) (2022-07-04)
 
 
