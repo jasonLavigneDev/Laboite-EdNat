@@ -84,12 +84,7 @@ function TopBar({ publicMenu, root, appsettings, adminApp }) {
     ? SMALL_LOGO
     : LONG_LOGO;
 
-  function isEoleTheme() {
-    if (Meteor.settings.public.theme === 'eole') {
-      return true;
-    }
-    return false;
-  }
+  const isEoleTheme = Meteor.settings.public.theme === 'eole';
 
   const updateGlobalState = (key, value) =>
     dispatch({
@@ -127,7 +122,7 @@ function TopBar({ publicMenu, root, appsettings, adminApp }) {
                 src={LOGO}
                 className={classes.imgLogoContainer}
                 alt="Logo"
-                style={{ padding: isEoleTheme() ? 10 : '' }}
+                style={{ padding: isEoleTheme && !isMobile ? 10 : '' }}
               />
             </Link>
           ) : (
