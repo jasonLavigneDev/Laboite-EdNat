@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { makeStyles } from 'tss-react/mui';
 import { withTracker } from 'meteor/react-meteor-data';
-import { Link as RouterLink } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+
 import i18n from 'meteor/universe:i18n';
 import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
@@ -19,7 +20,7 @@ import Spinner from '../../components/system/Spinner';
 
 const useStyles = makeStyles()(() => ({
   container: {
-    paddingTop: 60,
+    paddingTop: 80,
     paddingBottom: 60,
     minHeight: 'calc(100vh - 64px)',
   },
@@ -28,6 +29,7 @@ const useStyles = makeStyles()(() => ({
 const LegalPage = ({ data, dataKey, ready }) => {
   const [{ isMobile }] = useAppContext();
   const { classes } = useStyles();
+  const history = useHistory();
 
   useEffect(() => {
     if (data && data.external === true && data.link) {
@@ -41,9 +43,9 @@ const LegalPage = ({ data, dataKey, ready }) => {
       <Fade in>
         <Container className={classes.container}>
           {!ready && <Spinner full />}
-          <Grid container spacing={4}>
+          <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Button startIcon={<ArrowBackIcon />} variant="outlined" color="primary" component={RouterLink} to="/">
+              <Button startIcon={<ArrowBackIcon />} variant="outlined" color="primary" onClick={history.goBack}>
                 {i18n.__('pages.SignIn.back')}
               </Button>
             </Grid>
