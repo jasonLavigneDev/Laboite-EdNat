@@ -1,13 +1,14 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import i18n from 'meteor/universe:i18n';
+
 import { useTracker } from 'meteor/react-meteor-data';
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import Fade from '@mui/material/Fade';
 import { Counts } from 'meteor/tmeasday:publish-counts';
-import { makeStyles } from '@mui/material/styles';
+import { makeStyles } from 'tss-react/mui';
 import Grid from '@mui/material/Grid';
 
 import Table from '@mui/material/Table';
@@ -19,7 +20,7 @@ import TableRow from '@mui/material/TableRow';
 import { useAppContext } from '../../contexts/context';
 import Structures from '../../../api/structures/structures';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   root: {
     padding: theme.spacing(2),
     marginBottom: theme.spacing(5),
@@ -45,9 +46,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const AdminUsersConnections = () => {
-  const classes = useStyles();
   const [{ isMobile }] = useAppContext();
-
+  const { classes } = useStyles();
   const {
     logged,
     notLogged,
@@ -155,5 +155,4 @@ const AdminUsersConnections = () => {
     </Fade>
   );
 };
-
 export default AdminUsersConnections;
