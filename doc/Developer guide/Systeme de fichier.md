@@ -66,6 +66,6 @@ L'architecture du projet se décompense tel que;
 │   └── tests # Dossier des tests à la base, mais il n'est pas utilisé. Les tests sont chargés de par leur noms `*.test[s].js` 
 ├── config # Fichier de configuration (sera appelée dansle package.json pour enrichir `Meteor.settings`)
 └── doc # Les difféntes documentation générale
-````
+```
 
 
