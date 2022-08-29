@@ -152,7 +152,7 @@ const Contact = ({ structures, loading }) => {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="md">
       <CssBaseline />
       <GlobalStyles
         styles={{
@@ -165,8 +165,8 @@ const Contact = ({ structures, loading }) => {
         </Typography>
 
         <form onSubmit={handleSubmit} className={classes.form} id="my-form" noValidate>
-          <Grid container spacing={2}>
-            <Grid container item xs={12} sm={6} spacing={2}>
+          <Grid container spacing={4}>
+            <Grid container item xs={12} sm={6}>
               <TextField
                 autoComplete="fname"
                 required
@@ -183,7 +183,7 @@ const Contact = ({ structures, loading }) => {
                 variant="outlined"
               />
             </Grid>
-            <Grid item container xs={12} sm={6} spacing={2}>
+            <Grid item container xs={12} sm={6}>
               <TextField
                 required
                 id="lastName"
@@ -199,7 +199,7 @@ const Contact = ({ structures, loading }) => {
                 variant="outlined"
               />
             </Grid>
-            <Grid container item xs={12} spacing={2} className={classes.emailForm}>
+            <Grid container item xs={12} className={classes.emailForm}>
               <TextField
                 margin="normal"
                 required
@@ -217,7 +217,7 @@ const Contact = ({ structures, loading }) => {
                 variant="outlined"
               />
             </Grid>
-            <Grid container item xs={12} spacing={2}>
+            <Grid container item xs={12}>
               <FormControl variant="outlined" className={classes.formControl} fullWidth>
                 {user && userStructure ? (
                   <TextField
@@ -255,7 +255,7 @@ const Contact = ({ structures, loading }) => {
                 </FormHelperText>
               </FormControl>
             </Grid>
-            <Grid container item xs={12} spacing={2}>
+            <Grid container item xs={12}>
               <TextField
                 name="text"
                 multiline
@@ -284,27 +284,29 @@ const Contact = ({ structures, loading }) => {
                 />
               ) : null}
             </Grid>
-            {!formSubmit ? (
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-                className={classes.submit}
-                disabled={user ? !formState.values.text : !formState.isValid}
-              >
-                {i18n.__('pages.ContactForm.submitButtonLabel')}
+            <Grid container item xs={12}>
+              {!formSubmit ? (
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  className={classes.submit}
+                  disabled={user ? !formState.values.text : !formState.isValid}
+                >
+                  {i18n.__('pages.ContactForm.submitButtonLabel')}
+                </Button>
+              ) : (
+                <p>
+                  {i18n.__('pages.ContactForm.redirectMsg')}
+                  <br />
+                  {counter} {i18n.__('pages.ContactForm.redirectTime')}
+                </p>
+              )}
+              <Button fullWidth variant="contained" className={classes.submit} onClick={() => history.push('/')}>
+                {i18n.__('pages.ContactForm.cancel')}
               </Button>
-            ) : (
-              <p>
-                {i18n.__('pages.ContactForm.redirectMsg')}
-                <br />
-                {counter} {i18n.__('pages.ContactForm.redirectTime')}
-              </p>
-            )}
-            <Button fullWidth variant="contained" className={classes.submit} onClick={() => history.push('/')}>
-              {i18n.__('pages.ContactForm.cancel')}
-            </Button>
+            </Grid>
           </Grid>
         </form>
       </div>
