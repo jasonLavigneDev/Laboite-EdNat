@@ -204,14 +204,22 @@ export function ServicesPage({ services, categories, ready, structureMode, offli
 
   const toggleButtons = (
     <ToggleButtonGroup value={viewMode} exclusive aria-label={i18n.__('pages.ServicesPage.viewMode')}>
-      <ToggleButton value="card" onClick={changeViewMode} aria-label={i18n.__('pages.ServicesPage.viewDetail')}>
+      <ToggleButton
+        value={GRID_VIEW_MODE.detail}
+        onClick={changeViewMode}
+        aria-label={i18n.__('pages.ServicesPage.viewDetail')}
+      >
         <Tooltip title={i18n.__('pages.ServicesPage.viewDetail')} aria-label={i18n.__('pages.ServicesPage.viewDetail')}>
           <span className={classesIcons.size}>
             <DetaiIconCustom />
           </span>
         </Tooltip>
       </ToggleButton>
-      <ToggleButton value="list" onClick={changeViewMode} aria-label={i18n.__('pages.ServicesPage.viewSimple')}>
+      <ToggleButton
+        value={GRID_VIEW_MODE.compact}
+        onClick={changeViewMode}
+        aria-label={i18n.__('pages.ServicesPage.viewSimple')}
+      >
         <Tooltip title={i18n.__('pages.ServicesPage.viewSimple')} aria-label={i18n.__('pages.ServicesPage.viewSimple')}>
           <span className={classesIcons.size}>
             <SimpleIconCustom />
