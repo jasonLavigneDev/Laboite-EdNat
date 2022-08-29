@@ -1317,6 +1317,7 @@
       "selectTag": "Add",
       "save_draf": "Save Draft",
       "draft": "Draft",
+      "license": "License",
       "createTag": "Create",
       "CloseEditArticle": {
         "title": "Discard changes",
@@ -1324,7 +1325,7 @@
         "confirm": "Confirm",
         "cancel": "Cancel"
       },
-      "licenceInfo": "For more information about licences, check the documentation on the Creative Commons website: ",
+      "licenceInfo": "For more information about licenses, check the documentation on the Creative Commons website: ",
       "Licences": {
         "CC_BY": "Attribution",
         "CC_BY-SA": "Attribution-ShareAlike",

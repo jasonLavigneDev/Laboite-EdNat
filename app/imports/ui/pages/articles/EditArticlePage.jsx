@@ -607,7 +607,7 @@ function EditArticlePage({
             }}
           />
           <FormControl fullWidth>
-            <InputLabel id="licence-selector-label">Licence</InputLabel>
+            <InputLabel id="licence-selector-label">{i18n.__('pages.EditArticlePage.license')}</InputLabel>
             <Select
               labelId="licence-selector-label"
               id="licence-selector"
