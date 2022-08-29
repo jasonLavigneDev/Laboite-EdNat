@@ -1,8 +1,11 @@
 import React, { useEffect } from 'react';
 import { makeStyles } from 'tss-react/mui';
 import { withTracker } from 'meteor/react-meteor-data';
+import { Link as RouterLink } from 'react-router-dom';
 import i18n from 'meteor/universe:i18n';
 import PropTypes from 'prop-types';
+import Button from '@mui/material/Button';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Fade from '@mui/material/Fade';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
@@ -16,7 +19,6 @@ import Spinner from '../../components/system/Spinner';
 
 const useStyles = makeStyles()(() => ({
   container: {
-    display: 'flex',
     paddingTop: 60,
     paddingBottom: 60,
     minHeight: 'calc(100vh - 64px)',
@@ -40,7 +42,12 @@ const LegalPage = ({ data, dataKey, ready }) => {
         <Container className={classes.container}>
           {!ready && <Spinner full />}
           <Grid container spacing={4}>
-            <Grid item xs={12} className={isMobile ? null : classes.title}>
+            <Grid item xs={12}>
+              <Button startIcon={<ArrowBackIcon />} variant="outlined" color="primary" component={RouterLink} to="/">
+                {i18n.__('pages.SignIn.back')}
+              </Button>
+            </Grid>
+            <Grid item xs={12}>
               <Typography variant={isMobile ? 'h5' : 'h3'}>{i18n.__(`pages.LegalPage.${dataKey}`)}</Typography>
             </Grid>
             <Grid item xs={12}>

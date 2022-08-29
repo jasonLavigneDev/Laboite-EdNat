@@ -901,6 +901,7 @@
       }
     },
     "SignIn": {
+      "back": "Retour",
       "appDescription": "Les services numériques partagés des agents de l&apos;Éducation nationale",
       "appVersion": "Version Test Alpha 0.1",
       "emailLabel": "Identifiant ou Courriel",

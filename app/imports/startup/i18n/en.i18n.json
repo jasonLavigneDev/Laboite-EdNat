@@ -898,6 +898,7 @@
       }
     },
     "SignIn": {
+      "back":"Go back",
       "appDescription": "Digital services shared by National Education agents",
       "appVersion": "Test Alpha 0.1 Version",
       "emailLabel": "Username or Email",
