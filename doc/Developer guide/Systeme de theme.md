@@ -107,12 +107,16 @@ Voici quelques conseils et avertissement concernant MUI.
 
 > Il faut éviter d'utiliser cette fonctionnalité. Il faut prioriser les style dans les composants comme vu dans la partie [Components](#Components)
 
-Cette fonctionnalité s'utilise dans les fichiers composants .jsx ou .js. Pour ce faire il suffit de déclarer une constante comme suit :
+Cette fonctionnalité s'utilise dans les fichiers composants .jsx ou .js. `MakeStyle` se base sur la librairie [tss-react](https://www.tss-react.dev/). La documentation de `tss-react` devient donc la référence pour la partie makeStyle.
+
+Pour ce faire il suffit de déclarer une constante comme suit :
 
 ```jsx
-const useStyles = makeStyles(() => ({
+import { makeStyles } from "tss-react/mui";
+
+const useStyles = makeStyles()((theme) => ({
   nomClasse: {
-    prop: value,
+    prop: theme.attribut.attribut,
     prop2: value,
     prop3: value,
   },
