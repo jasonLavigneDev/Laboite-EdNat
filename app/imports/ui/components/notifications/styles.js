@@ -69,7 +69,6 @@ export const useNotifDisplayStyles = makeStyles()((theme, _params, classes) => (
       display: 'block',
       width: 0,
       height: 0,
-      borderStyle: 'solid',
     },
   },
 }));
