@@ -13,17 +13,12 @@ import InputLabel from '@mui/material/InputLabel';
 import GlobalStyles from '@mui/material/GlobalStyles';
 import i18n from 'meteor/universe:i18n';
 import { useHistory } from 'react-router-dom';
-import validate from 'validate.js';
 import FormHelperText from '@mui/material/FormHelperText';
 import CustomSelect from '../../components/admin/CustomSelect';
-import { useFormStateValidator } from './SignIn';
 import Structures from '../../../api/structures/structures';
 import Spinner from '../../components/system/Spinner';
 import { useAppContext } from '../../contexts/context';
-
-validate.options = {
-  fullMessages: false,
-};
+import { useFormStateValidator } from '../../utils/hooks';
 
 const schema = {
   firstName: {
@@ -94,9 +89,9 @@ const Contact = ({ structures, loading }) => {
   const userStructure = useTracker(() => {
     if (user) {
       const st = Structures.findOne({ _id: user.structure }) || {};
-      return st.name;
+      return st;
     }
-    return '';
+    return null;
   }, [user]);
 
   const hasError = (field) => !!(formState.touched[field] && formState.errors[field]);
@@ -122,11 +117,9 @@ const Contact = ({ structures, loading }) => {
           const { firstName, lastName } = user;
           const email = user.emails[0].address;
           const { text } = formState.values;
-          let structureSelect = '';
-          if (userStructure) structureSelect = userStructure;
-          else structureSelect = formState.values.structureSelect;
+          const { _id: structureId } = userStructure;
 
-          Meteor.call('sendContactEmail', firstName, lastName, email, text, structureSelect);
+          Meteor.call('smtp.sendContactEmail', { firstName, lastName, email, text, structureId });
           setFormSubmit(true);
           setCounter(5);
           setTimeout(() => {
@@ -137,9 +130,8 @@ const Contact = ({ structures, loading }) => {
     } else if (formState.isValid === true) {
       if (parseInt(formState.values.captcha, 10) === totalNr) {
         setCaptchaIsValid(true);
-        const { firstName, lastName, email, text, structureSelect } = formState.values;
-
-        Meteor.call('sendContactEmail', firstName, lastName, email, text, structureSelect);
+        const { firstName, lastName, email, text, structureSelect: structureId } = formState.values;
+        Meteor.call('smtp.sendContactEmail', { firstName, lastName, email, text, structureId });
         setFormSubmit(true);
         setCounter(5);
         setTimeout(() => {
@@ -231,7 +223,7 @@ const Contact = ({ structures, loading }) => {
                     fullWidth
                     helperText=""
                     type="text"
-                    value={userStructure}
+                    value={userStructure && userStructure._id ? userStructure.name : ''}
                     error={hasError('structureSelect')}
                     onChange={handleChange}
                     variant="outlined"
@@ -243,15 +235,15 @@ const Contact = ({ structures, loading }) => {
                     </InputLabel>
                     <CustomSelect
                       disabled={!!user}
-                      value={user && userStructure ? userStructure : formState.values.structureSelect || ''}
+                      value={(user && userStructure._id ? userStructure._id : formState.values.structureSelect) || ''}
                       error={hasError('structureSelect')}
                       onChange={handleChange}
-                      options={structures.map((opt) => ({ value: opt.name, label: opt.name }))}
+                      options={structures.map((opt) => ({ value: opt._id, label: opt.name }))}
                     />
                   </>
                 )}
                 <FormHelperText className={hasError('structureSelect') ? 'Mui-error' : ''}>
-                  {hasError('structureSelect')}
+                  {hasError('structureSelect') ? i18n.__(formState.errors.structureSelect[0]) : null}
                 </FormHelperText>
               </FormControl>
             </Grid>

@@ -9,8 +9,6 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import Tab from '@mui/material/Tab';
-import Tabs from '@mui/material/Tabs';
 import Grid from '@mui/material/Grid';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -25,6 +23,8 @@ import Spinner from '../../components/system/Spinner';
 import AppSettings from '../../../api/appsettings/appsettings';
 import LegalComponent from '../../components/admin/LegalComponent';
 import IntroductionEdition from '../../components/admin/IntroductionEdition';
+import TabbedForms from '../../components/system/TabbedForms';
+
 import { useAppContext } from '../../contexts/context';
 import { switchMaintenanceStatus, updateTextMaintenance } from '../../../api/appsettings/methods';
 
@@ -32,19 +32,6 @@ const useStyles = makeStyles()((theme) => ({
   root: {
     padding: theme.spacing(2),
     marginBottom: theme.spacing(5),
-  },
-  wysiwyg: {
-    marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(3),
-  },
-
-  buttonGroup: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    marginTop: theme.spacing(5),
-  },
-  buttonText: {
-    marginLeft: 10,
   },
   container: {
     flexGrow: 1,
@@ -54,14 +41,6 @@ const useStyles = makeStyles()((theme) => ({
     padding: 25,
     display: 'block',
     width: '100%',
-  },
-  tab: {
-    '& > span': {
-      alignItems: 'end',
-    },
-  },
-  tabs: {
-    borderRight: `1px solid ${theme.palette.divider}`,
   },
 }));
 
@@ -94,16 +73,11 @@ const tabs = [
 ];
 
 const AdminSettingsPage = ({ ready, appsettings }) => {
-  const [selected, setSelected] = useState(0);
   const [msgMaintenance, setMsgMaintenance] = useState(appsettings.textMaintenance);
   const { classes } = useStyles();
   const [loading, setLoading] = useState(true);
   const [{ isMobile }] = useAppContext();
   const [open, setOpen] = useState(false);
-
-  const onChangeTab = (e, newTab) => {
-    setSelected(newTab);
-  };
 
   if (loading && !ready && !appsettings) {
     return <Spinner full />;
@@ -164,24 +138,7 @@ const AdminSettingsPage = ({ ready, appsettings }) => {
   return (
     <Fade in>
       <Container>
-        <Paper className={classes.root}>
-          <Grid container spacing={4}>
-            <Grid item md={12}>
-              <Typography variant={isMobile ? 'h6' : 'h4'}>{i18n.__('pages.AdminSettingsPage.edition')}</Typography>
-            </Grid>
-            <Grid item md={12} className={classes.container}>
-              <Tabs orientation="vertical" value={selected} onChange={onChangeTab} className={classes.tabs}>
-                {tabs.map(({ title, key }, index) => (
-                  <Tab className={classes.tab} label={title} id={index} key={key} />
-                ))}
-              </Tabs>
-              {tabs.map(({ key, Element }, i) => {
-                if (selected !== i) return null;
-                return <Element key={key} tabkey={key} data={appsettings[key]} />;
-              })}
-            </Grid>
-          </Grid>
-        </Paper>
+        <TabbedForms tabs={tabs} globalTitle={i18n.__('pages.AdminSettingsPage.edition')} />
         <Paper className={classes.root}>
           <Grid container spacing={4}>
             <Grid item md={12}>

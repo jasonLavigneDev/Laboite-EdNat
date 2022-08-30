@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data';
 import Button from '@mui/material/Button';
@@ -23,6 +23,7 @@ import Structures from '../../../api/structures/structures';
 import { getCurrentIntroduction } from '../../../api/utils';
 import { usePageTracking } from '../../utils/matomo';
 import { useAppContext } from '../../contexts/context';
+import { useFormStateValidator } from '../../utils/hooks';
 
 validate.options = {
   fullMessages: false,
@@ -69,42 +70,6 @@ if (Meteor.settings.public.enableKeycloak === true) {
     msg.error(errMsg);
   });
 }
-
-export const useFormStateValidator = (formSchema) => {
-  const [formState, setFormState] = useState({
-    isValid: false,
-    values: {},
-    touched: {},
-    errors: {},
-  });
-  useEffect(() => {
-    const errors = validate(formState.values, formSchema);
-
-    setFormState(() => ({
-      ...formState,
-      isValid: !errors,
-      errors: errors || {},
-    }));
-  }, [formState.values]);
-
-  const handleChange = (event) => {
-    event.persist();
-
-    setFormState(() => ({
-      ...formState,
-      values: {
-        ...formState.values,
-        [event.target.name]: event.target.type === 'checkbox' ? event.target.checked : event.target.value,
-      },
-      touched: {
-        ...formState.touched,
-        [event.target.name]: true,
-      },
-    }));
-  };
-
-  return [formState, handleChange, setFormState];
-};
 
 function SignIn({ loggingIn, introduction, appsettings, ready }) {
   const [{ isIframed }] = useAppContext();
