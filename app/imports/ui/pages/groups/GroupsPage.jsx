@@ -1,4 +1,5 @@
 import React, { useRef, useEffect } from 'react';
+import { Meteor } from 'meteor/meteor';
 import { useHistory } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 import Fade from '@mui/material/Fade';
@@ -27,6 +28,7 @@ import GroupDetailsList from '../../components/groups/GroupDetailsList';
 import CollapsingSearch from '../../components/system/CollapsingSearch';
 import { useIconStyles, DetaiIconCustom, SimpleIconCustom } from '../../components/system/icons/icons';
 import Spinner from '../../components/system/Spinner';
+import { GRID_VIEW_MODE } from '../../utils/ui';
 
 const useStyles = makeStyles()(() => ({
   flex: {
@@ -36,6 +38,7 @@ const useStyles = makeStyles()(() => ({
   },
   cardGrid: {
     marginBottom: '0px',
+    marginTop: '10px',
   },
   mobileButtonContainer: {
     display: 'flex',
@@ -81,11 +84,14 @@ function GroupsPage() {
   const history = useHistory();
   const { classes } = useStyles();
   const { classes: classesIcons } = useIconStyles();
+
   const {
-    search = '',
-    searchToggle = false,
-    viewMode = 'list', // Possible values : "card" or "list"
-  } = groupPage;
+    public: {
+      ui: { defaultGridViewMode },
+    },
+  } = Meteor.settings;
+
+  const { search = '', searchToggle = false, viewMode = GRID_VIEW_MODE[defaultGridViewMode] } = groupPage;
   const { changePage, page, items, total, loading } = !filterChecked
     ? usePagination('groups.all', { search }, Groups, {}, { sort: { name: 1 } }, ITEM_PER_PAGE)
     : usePagination('groups.memberOf', { search, userId }, Groups, {}, { sort: { name: 1 } }, ITEM_PER_PAGE);
@@ -151,14 +157,22 @@ function GroupsPage() {
 
   const toggleButtons = (
     <ToggleButtonGroup value={viewMode} exclusive aria-label={i18n.__('pages.GroupsPage.viewMode')}>
-      <ToggleButton value="card" onClick={changeViewMode} aria-label={i18n.__('pages.GroupsPage.viewDetail')}>
+      <ToggleButton
+        value={GRID_VIEW_MODE.detail}
+        onClick={changeViewMode}
+        aria-label={i18n.__('pages.GroupsPage.viewDetail')}
+      >
         <Tooltip title={i18n.__('pages.GroupsPage.viewDetail')}>
           <span className={classesIcons.size}>
             <DetaiIconCustom />
           </span>
         </Tooltip>
       </ToggleButton>
-      <ToggleButton value="list" onClick={changeViewMode} aria-label={i18n.__('pages.GroupsPage.viewSimple')}>
+      <ToggleButton
+        value={GRID_VIEW_MODE.compact}
+        onClick={changeViewMode}
+        aria-label={i18n.__('pages.GroupsPage.viewSimple')}
+      >
         <Tooltip title={i18n.__('pages.GroupsPage.viewSimple')}>
           <span className={classesIcons.size}>
             <SimpleIconCustom />
@@ -225,7 +239,7 @@ function GroupsPage() {
                 <Pagination count={Math.ceil(total / ITEM_PER_PAGE)} page={page} onChange={handleChangePage} />
               </Grid>
             )}
-            {isMobile && viewMode === 'list'
+            {isMobile && viewMode === GRID_VIEW_MODE.compact
               ? mapList((group) => (
                   <Grid className={classes.gridItem} item key={group._id} xs={12} sm={12} md={6} lg={4}>
                     <GroupDetailsList
@@ -243,7 +257,7 @@ function GroupsPage() {
                     <GroupDetails
                       key={group.name}
                       group={group}
-                      isShort={!isMobile && viewMode === 'list'}
+                      isShort={!isMobile && viewMode === GRID_VIEW_MODE.compact}
                       candidate={candidateGroups.includes(group._id)}
                       member={memberGroups.includes(group._id)}
                       animator={animatorGroups.includes(group._id)}

@@ -44,6 +44,7 @@ Copy `settings-development.json.sample` to `settings-development.json` and updat
 | disabledFeatures.blog                    | boolean  | false                                | disable all blog                                                                            |
 | disabledFeatures.groups                  | boolean  | false                                | disable all groups                                                                          |
 | disabledFeatures.notificationsTab        | boolean  | false                                | disable notification divided in two tabs                                                    |
+| ui.defaultGridViewMode | string | list | "compact" or "detail" for view mod in groups or service page |
 | matomo                                   | object   | null                                 | matomo settings                                                                             |
 | matomo.id                                | string   | null                                 | id of the website                                                                           |
 | matomo.urlBase                           | string   | null                                 | url of the matomo instance                                                                  |
