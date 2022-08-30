@@ -39,7 +39,6 @@ const useStyles = makeStyles()((theme, isMobile) => ({
     width: '100%',
     borderTop: '1px solid rgba(0, 0, 0, 0.12)',
   },
-  lastBar: { width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'end', alignItems: 'center' },
   imgLogoContainer: {
     height: isMobile ? 30 : 60,
     maxHeight: isMobile ? 30 : 60,
@@ -121,7 +120,7 @@ function TopBar({ publicMenu, root, appsettings, adminApp }) {
   return (
     <div>
       <AppBar position="fixed" className={classes.root}>
-        <div className={isMobile ? classes.firstBar : classes.lastBar}>
+        <div className={classes.firstBar}>
           {LOGO ? (
             <Link to={root || (publicMenu ? '/public' : '/')} className={classes.imgLogoContainer}>
               <img
@@ -139,27 +138,38 @@ function TopBar({ publicMenu, root, appsettings, adminApp }) {
             </>
           ) : null}
           <div />
-          <div className={isMobile ? classes.centerContainer : classes.rightContainer}>
+          <div
+            className={
+              isMobile
+                ? disabledFeatures.notificationsTab
+                  ? classes.centerContainer
+                  : classes.rightContainer
+                : classes.rightContainer
+            }
+          >
             {publicMenu ? null : (
               <>
                 <MainMenu user={user} />
-                {!disabledFeatures.notificationsTab && isMobile ? null : (
-                  <IconButton onClick={() => handleNotifsOpen()} size="large">
-                    <NotificationsBell />
-                  </IconButton>
+                {!isMobile && (
+                  <div>
+                    {!disabledFeatures.notificationsTab ? null : (
+                      <IconButton onClick={() => handleNotifsOpen()} size="large">
+                        <NotificationsBell />
+                      </IconButton>
+                    )}
+                  </div>
                 )}
               </>
             )}
           </div>
-          {isMobile && (
-            <div className={classes.rightContainer}>
-              {!disabledFeatures.notificationsTab && !isMobile ? null : (
+          {isMobile &&
+            (!disabledFeatures.notificationsTab ? null : (
+              <div className={classes.rightContainer}>
                 <IconButton onClick={() => handleNotifsOpen()} size="large">
                   <NotificationsBell />
                 </IconButton>
-              )}
-            </div>
-          )}
+              </div>
+            ))}
         </div>
         {!isMobile && !publicMenu && !adminApp && (
           <div className={classes.secondBar}>
