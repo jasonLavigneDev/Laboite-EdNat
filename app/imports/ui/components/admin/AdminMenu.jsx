@@ -40,7 +40,6 @@ const useStyles = makeStyles()((theme, isMobile) => ({
       overflowX: 'hidden',
     },
     '& .MuiDrawer-paper': {
-      marginTop: 48,
       marginBottom: 48,
       width: isMobile ? 65 : 300,
       zIndex: 0,
