@@ -45,7 +45,7 @@ const LegalPage = ({ data, dataKey, ready }) => {
           {!ready && <Spinner full />}
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Button startIcon={<ArrowBackIcon />} variant="outlined" color="primary" onClick={history.goBack}>
+              <Button startIcon={<ArrowBackIcon />} color="primary" onClick={history.goBack}>
                 {i18n.__('pages.SignIn.back')}
               </Button>
             </Grid>
