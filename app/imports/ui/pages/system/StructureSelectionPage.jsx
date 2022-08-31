@@ -21,7 +21,6 @@ const StructureSelectionPage = () => {
       <Button
         startIcon={<ArrowBackIcon />}
         className={classes.button}
-        variant="contained"
         color="primary"
         component={RouterLink}
         to="/profile"
