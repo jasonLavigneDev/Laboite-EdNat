@@ -1017,7 +1017,9 @@
       "viewSimple": "Mode simple",
       "endOfList": "Fin de la liste",
       "filterGroup": "Afficher uniquement les groupes rejoints",
-      "noGroup": "Il n'y a aucun groupe à afficher."
+      "noGroup": "Il n'y a aucun groupe à afficher.",
+      "addEvent": "Ajouer un nouvel événement",
+      "addPoll": "Ajouter un nouveau sondage"
     },
     "AdminHome": {
       "title": "Interface d'administration",

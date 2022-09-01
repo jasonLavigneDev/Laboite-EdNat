@@ -4,6 +4,7 @@ import { withTracker } from 'meteor/react-meteor-data';
 import { Roles } from 'meteor/alanning:roles';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import AddIcon from '@mui/icons-material/Add';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Fade from '@mui/material/Fade';
@@ -133,7 +134,7 @@ const EventsPage = ({ loading, group }) => {
             <Spinner />
           ) : userInGroup || group.type === 0 ? (
             <>
-              <Grid item xs={12} sm={12} md={6}>
+              <Grid item xs={12} sm={12} md={6} style={{ display: 'flex' }}>
                 <TextField
                   margin="normal"
                   id="search"
@@ -159,6 +160,16 @@ const EventsPage = ({ loading, group }) => {
                     ) : null,
                   }}
                 />
+                <IconButton
+                  onClick={() =>
+                    window.open(`${Meteor.settings.public.services.agendaUrl}/add-event?groupId=${group._id}`, '_blank')
+                  }
+                  size="large"
+                  title={i18n.__('pages.GroupsPage.addEvent')}
+                  style={{ paddingLeft: '20px', paddingRight: '20px' }}
+                >
+                  <AddIcon fontSize="large" />
+                </IconButton>
               </Grid>
               <GroupPaginate
                 total={total}
