@@ -1,8 +1,8 @@
 import React from 'react';
 import i18n from 'meteor/universe:i18n';
-import Fade from '@material-ui/core/Fade';
-import Container from '@material-ui/core/Container';
-import Divider from '@material-ui/core/Divider';
+import Fade from '@mui/material/Fade';
+import Container from '@mui/material/Container';
+import Divider from '@mui/material/Divider';
 import Spinner from '../components/system/Spinner';
 import IntroductionAccordion from '../components/introduction/IntroductionAccordion';
 import { useCurrentIntroduction } from '../../api/appsettings/hooks';

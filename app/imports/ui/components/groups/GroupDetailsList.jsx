@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import Tooltip from '@material-ui/core/Tooltip';
-import CardHeader from '@material-ui/core/CardHeader';
+import { makeStyles } from 'tss-react/mui';
+import Card from '@mui/material/Card';
+import Tooltip from '@mui/material/Tooltip';
+import CardHeader from '@mui/material/CardHeader';
 import i18n from 'meteor/universe:i18n';
 import { Link } from 'react-router-dom';
 import GroupAvatar from './GroupAvatar';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   noUnderline: {
     textDecoration: 'none',
     outline: 'none',
@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
 // eslint-disable-next-line no-unused-vars
 const GroupDetailsList = ({ group, member, candidate, animator, admin }) => {
   const { type, avatar } = group;
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const groupType = animator
     ? i18n.__('components.GroupDetails.groupAnimator')

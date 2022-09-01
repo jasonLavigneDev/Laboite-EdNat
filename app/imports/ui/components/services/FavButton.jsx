@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import { Meteor } from 'meteor/meteor';
 import i18n from 'meteor/universe:i18n';
 
-import AddIcon from '@material-ui/icons/Add';
-import RemoveIcon from '@material-ui/icons/Remove';
-import Tooltip from '@material-ui/core/Tooltip';
-import IconButton from '@material-ui/core/IconButton';
-import Button from '@material-ui/core/Button';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
+import Tooltip from '@mui/material/Tooltip';
+import IconButton from '@mui/material/IconButton';
+import Button from '@mui/material/Button';
 
 const FavButton = ({ service, favorite, classesArray = [], isIcon = false }) => {
   const handleFavorite = (e) => {
@@ -45,7 +45,7 @@ const FavButton = ({ service, favorite, classesArray = [], isIcon = false }) => 
   return (
     <Tooltip title={favButtonLabel} aria-label={favButtonLabel}>
       {isIcon ? (
-        <IconButton {...buttonProps}>
+        <IconButton {...buttonProps} size="large">
           <FavIcon />
         </IconButton>
       ) : (

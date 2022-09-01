@@ -4,14 +4,14 @@ import { useTracker } from 'meteor/react-meteor-data';
 import { Counts } from 'meteor/tmeasday:publish-counts';
 import { Roles } from 'meteor/alanning:roles';
 import { useHistory, useLocation } from 'react-router-dom';
-import Chip from '@material-ui/core/Chip';
-import { makeStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import Divider from '@material-ui/core/Divider';
+import Chip from '@mui/material/Chip';
+import { makeStyles } from 'tss-react/mui';
+import Button from '@mui/material/Button';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Divider from '@mui/material/Divider';
 
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PropTypes from 'prop-types';
 import AppVersion from '../system/AppVersion';
 import LogoutDialog from '../system/LogoutDialog';
@@ -20,7 +20,7 @@ import updateDocumentTitle from '../../utils/updateDocumentTitle';
 
 const { disabledFeatures = {} } = Meteor.settings.public;
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   avatar: {
     marginLeft: theme.spacing(1),
   },
@@ -70,7 +70,7 @@ export const userGroups = [
 ];
 
 const MainMenu = ({ user = {} }) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const [openLogout, setOpenLogout] = useState(false);
   const history = useHistory();
@@ -150,7 +150,7 @@ const MainMenu = ({ user = {} }) => {
         keepMounted
         open={Boolean(anchorEl)}
         onClose={handleClose}
-        getContentAnchorEl={null}
+        // getContentAnchorEl={null}
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'center',

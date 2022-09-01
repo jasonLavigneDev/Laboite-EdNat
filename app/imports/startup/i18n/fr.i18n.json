@@ -112,7 +112,8 @@
           "title": "Titre d'introduction de structure",
           "content": "Contenu d'introduction de structure",
           "language": "Language d'introduction de structure"
-        }
+        },
+        "contactEmail": "Email de contact de la structure"
       }
     },
     "users": {
@@ -196,7 +197,8 @@
       "states": {
         "displayed": "affiché",
         "inactive": "inactif",
-        "invisible": "caché"
+        "invisible": "caché",
+        "maintenance" : "maintenance"
       },
       "labels": {
         "id": "Id de Service",
@@ -548,7 +550,7 @@
       "menuAdminBackHome": "Retour à l'espace perso",
       "menuUserStructure": "Gestion des Structures",
       "menuAdminOfStructures": "Gestion des sous-structures",
-      "menuAdminStructureIntroduction": "Introduction de structure"
+      "menuAdminStructureSettings": "Réglages de structure"
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Votre compte n'a pas été activé",
@@ -828,6 +830,9 @@
         "title": "Titre (facultatif)",
         "content": "Contenu"
       }
+    },
+    "AdminStructureChangeEmailContact": {
+      "label": "Email de contact"
     }
   },
   "validatejs": {
@@ -900,6 +905,7 @@
       }
     },
     "SignIn": {
+      "back": "Retour",
       "appDescription": "Les services numériques partagés des agents de l&apos;Éducation nationale",
       "appVersion": "Version Test Alpha 0.1",
       "emailLabel": "Identifiant ou Courriel",
@@ -1011,7 +1017,9 @@
       "viewSimple": "Mode simple",
       "endOfList": "Fin de la liste",
       "filterGroup": "Afficher uniquement les groupes rejoints",
-      "noGroup": "Il n'y a aucun groupe à afficher."
+      "noGroup": "Il n'y a aucun groupe à afficher.",
+      "addEvent": "Ajouer un nouvel événement",
+      "addPoll": "Ajouter un nouveau sondage"
     },
     "AdminHome": {
       "title": "Interface d'administration",
@@ -1180,6 +1188,7 @@
       "categories": "Catégories",
       "open": "Ouvrir",
       "inactive": "Service inactif",
+      "maintenance" : "Service en maintenance",
       "propulsedBy": "Propulsé par"
     },
     "PersonalPage": {
@@ -1317,12 +1326,22 @@
       "selectTag": "Ajouter",
       "save_draf": "Enregistrer le brouillon",
       "draft": "Brouillon",
+      "license": "Licence",
       "createTag": "Créer",
       "CloseEditArticle": {
         "title": "Annuler les modifications",
         "mainText": "Souhaitez-vous réellement fermer cette page ? Toutes les modifications non enregistrées seront perdues.",
         "confirm": "Confirmer",
         "cancel": "Annuler"
+      },
+      "licenceInfo": "Pour plus d'informations sur les licences, consultez la documentation sur le site Creative Commons: ",
+      "Licences": {
+        "CC_BY": "Attribution",
+        "CC_BY-SA": "Attribution - Partage dans les Mêmes Conditions",
+        "CC_BY-ND": "Attribution - Pas de Modification",
+        "CC_BY-NC": "Attribution - Pas d’Utilisation Commerciale",
+        "CC_BY-NC-SA": "Attribution - Pas d’Utilisation Commerciale - Partage dans les Mêmes Conditions",
+        "CC_BY-NC-ND": "Pas d’Utilisation Commerciale - Pas de Modification"
       }
     },
     "PublicArticlePage": {
@@ -1382,8 +1401,8 @@
       "informationsOf": "Informations de",
       "titleStructures": "Informations de structures"
     },
-    "AdminIntroductionByStructurePage": {
-      "title": "Texte d'introduction de structure"
+    "AdminStructureSettingsPage": {
+      "title": "Paramétrage de la structure"
     }
   },
   "layouts": {

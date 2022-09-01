@@ -1,85 +1,84 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Card from '@material-ui/core/Card';
+import { makeStyles } from 'tss-react/mui';
+import Typography from '@mui/material/Typography';
+import Card from '@mui/material/Card';
 import { useHistory } from 'react-router-dom';
-import Tooltip from '@material-ui/core/Tooltip';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
-import CardHeader from '@material-ui/core/CardHeader';
-import Button from '@material-ui/core/Button';
-import Zoom from '@material-ui/core/Zoom';
-import PublishIcon from '@material-ui/icons/Publish';
+import Tooltip from '@mui/material/Tooltip';
+import CardActionArea from '@mui/material/CardActionArea';
+import CardActions from '@mui/material/CardActions';
+import CardHeader from '@mui/material/CardHeader';
+import Button from '@mui/material/Button';
+import Zoom from '@mui/material/Zoom';
+import PublishIcon from '@mui/icons-material/Publish';
 
 import i18n from 'meteor/universe:i18n';
 import GroupAvatar from './GroupAvatar';
 import GroupBadge from './GroupBadge';
 
-const useStyles = ({ type }, admin, member, candidate) =>
-  makeStyles((theme) => ({
-    card: {
-      height: '100%',
-      width: '100%',
-      display: 'flex',
-      flexDirection: 'column',
+const useStyles = makeStyles()((theme, { type, admin, member, candidate }) => ({
+  card: {
+    height: '100%',
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  cardHeaderContent: {
+    display: 'grid',
+  },
+  actionarea: {
+    textDecoration: 'none',
+    outline: 'none',
+    '&:hover': {
+      backgroundColor: theme.palette.backgroundFocus.main,
     },
-    cardHeaderContent: {
-      display: 'grid',
+    flexGrow: 100,
+  },
+  cardActions: {
+    justifyContent: 'space-between',
+    paddingTop: 0,
+    paddingBottom: 10,
+  },
+  cardActionsUnique: {
+    justifyContent: 'end',
+    paddingTop: 0,
+    paddingBottom: 10,
+  },
+  span: {
+    display: 'flex',
+    flex: '1 0 auto',
+  },
+  avatar: {
+    backgroundColor: member ? 'green' : type === 0 ? theme.palette.primary.main : theme.palette.secondary.main,
+    width: theme.spacing(5),
+    height: theme.spacing(5),
+    margin: 'auto',
+  },
+  buttonText: {
+    textTransform: 'none',
+    color: member
+      ? 'green'
+      : candidate
+      ? theme.palette.secondary.main
+      : admin
+      ? theme.palette.primary.main
+      : theme.palette.text.disabled,
+    fontWeight: 'bold',
+  },
+  serviceName: {
+    color: theme.palette.primary.main,
+  },
+  fab: {
+    textTransform: 'none',
+    color: theme.palette.primary.main,
+    borderColor: theme.palette.primary.main,
+    backgroundColor: theme.palette.tertiary.main,
+    '&:hover': {
+      backgroundColor: theme.palette.primary.main,
+      color: theme.palette.tertiary.main,
     },
-    actionarea: {
-      textDecoration: 'none',
-      outline: 'none',
-      '&:hover': {
-        backgroundColor: theme.palette.backgroundFocus.main,
-      },
-      flexGrow: 100,
-    },
-    cardActions: {
-      justifyContent: 'space-between',
-      paddingTop: 0,
-      paddingBottom: 10,
-    },
-    cardActionsUnique: {
-      justifyContent: 'end',
-      paddingTop: 0,
-      paddingBottom: 10,
-    },
-    span: {
-      display: 'flex',
-      flex: '1 0 auto',
-    },
-    avatar: {
-      backgroundColor: member ? 'green' : type === 0 ? theme.palette.primary.main : theme.palette.secondary.main,
-      width: theme.spacing(5),
-      height: theme.spacing(5),
-      margin: 'auto',
-    },
-    buttonText: {
-      textTransform: 'none',
-      color: member
-        ? 'green'
-        : candidate
-        ? theme.palette.secondary.main
-        : admin
-        ? theme.palette.primary.main
-        : theme.palette.text.disabled,
-      fontWeight: 'bold',
-    },
-    serviceName: {
-      color: theme.palette.primary.main,
-    },
-    fab: {
-      textTransform: 'none',
-      color: theme.palette.primary.main,
-      borderColor: theme.palette.primary.main,
-      backgroundColor: theme.palette.tertiary.main,
-      '&:hover': {
-        backgroundColor: theme.palette.primary.main,
-        color: theme.palette.tertiary.main,
-      },
-    },
-  }));
+  },
+}));
 
 function GroupDetailsPersSpace({
   group = {},
@@ -95,7 +94,7 @@ function GroupDetailsPersSpace({
 }) {
   const history = useHistory();
   const { type } = group;
-  const classes = useStyles(group, admin, member || animator, candidate)();
+  const { classes } = useStyles({ group, admin, member: member || animator, candidate, type });
 
   // const icon = () => {
   //   if (member || animator) {

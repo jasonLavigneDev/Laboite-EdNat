@@ -1,28 +1,24 @@
 import React, { useState } from 'react';
-import Button from '@material-ui/core/Button';
+import Button from '@mui/material/Button';
 import PropTypes from 'prop-types';
 import { useTracker, withTracker } from 'meteor/react-meteor-data';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
+import CssBaseline from '@mui/material/CssBaseline';
+import TextField from '@mui/material/TextField';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import { makeStyles } from 'tss-react/mui';
+import Container from '@mui/material/Container';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import GlobalStyles from '@mui/material/GlobalStyles';
 import i18n from 'meteor/universe:i18n';
 import { useHistory } from 'react-router-dom';
-import validate from 'validate.js';
-import FormHelperText from '@material-ui/core/FormHelperText';
+import FormHelperText from '@mui/material/FormHelperText';
 import CustomSelect from '../../components/admin/CustomSelect';
-import { useFormStateValidator } from './SignIn';
 import Structures from '../../../api/structures/structures';
 import Spinner from '../../components/system/Spinner';
 import { useAppContext } from '../../contexts/context';
-
-validate.options = {
-  fullMessages: false,
-};
+import { useFormStateValidator } from '../../utils/hooks';
 
 const schema = {
   firstName: {
@@ -60,12 +56,7 @@ const schema = {
   },
 };
 
-const useStyles = makeStyles((theme) => ({
-  '@global': {
-    body: {
-      backgroundColor: theme.palette.common.white,
-    },
-  },
+const useStyles = makeStyles()((theme) => ({
   paper: {
     marginTop: theme.spacing(4),
     display: 'flex',
@@ -92,21 +83,15 @@ const Contact = ({ structures, loading }) => {
   if (loading) return <Spinner full />;
   const [{ user }] = useAppContext();
   const history = useHistory();
-  const classes = useStyles();
+  const { classes, theme } = useStyles();
   const [formState, handleChange] = useFormStateValidator(schema);
-
-  const structureLabel = React.useRef(null);
-  const [labelWidth, setLabelWidth] = React.useState(0);
-  React.useEffect(() => {
-    if (!user) setLabelWidth(structureLabel.current.offsetWidth);
-  }, []);
 
   const userStructure = useTracker(() => {
     if (user) {
       const st = Structures.findOne({ _id: user.structure }) || {};
-      return st.name;
+      return st;
     }
-    return '';
+    return null;
   }, [user]);
 
   const hasError = (field) => !!(formState.touched[field] && formState.errors[field]);
@@ -132,11 +117,9 @@ const Contact = ({ structures, loading }) => {
           const { firstName, lastName } = user;
           const email = user.emails[0].address;
           const { text } = formState.values;
-          let structureSelect = '';
-          if (userStructure) structureSelect = userStructure;
-          else structureSelect = formState.values.structureSelect;
+          const { _id: structureId } = userStructure;
 
-          Meteor.call('sendContactEmail', firstName, lastName, email, text, structureSelect);
+          Meteor.call('smtp.sendContactEmail', { firstName, lastName, email, text, structureId });
           setFormSubmit(true);
           setCounter(5);
           setTimeout(() => {
@@ -147,9 +130,8 @@ const Contact = ({ structures, loading }) => {
     } else if (formState.isValid === true) {
       if (parseInt(formState.values.captcha, 10) === totalNr) {
         setCaptchaIsValid(true);
-        const { firstName, lastName, email, text, structureSelect } = formState.values;
-
-        Meteor.call('sendContactEmail', firstName, lastName, email, text, structureSelect);
+        const { firstName, lastName, email, text, structureSelect: structureId } = formState.values;
+        Meteor.call('smtp.sendContactEmail', { firstName, lastName, email, text, structureId });
         setFormSubmit(true);
         setCounter(5);
         setTimeout(() => {
@@ -162,16 +144,21 @@ const Contact = ({ structures, loading }) => {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="md">
       <CssBaseline />
+      <GlobalStyles
+        styles={{
+          body: { backgroundColor: theme.palette.common.white },
+        }}
+      />
       <div className={classes.paper}>
         <Typography component="h1" variant="h5">
           {i18n.__('pages.ContactForm.appDescription')}
         </Typography>
 
         <form onSubmit={handleSubmit} className={classes.form} id="my-form" noValidate>
-          <Grid container spacing={2}>
-            <Grid container item xs={12} sm={6} spacing={2}>
+          <Grid container spacing={4}>
+            <Grid container item xs={12} sm={6}>
               <TextField
                 autoComplete="fname"
                 required
@@ -188,7 +175,7 @@ const Contact = ({ structures, loading }) => {
                 variant="outlined"
               />
             </Grid>
-            <Grid item container xs={12} sm={6} spacing={2}>
+            <Grid item container xs={12} sm={6}>
               <TextField
                 required
                 id="lastName"
@@ -204,7 +191,7 @@ const Contact = ({ structures, loading }) => {
                 variant="outlined"
               />
             </Grid>
-            <Grid container item xs={12} spacing={2} className={classes.emailForm}>
+            <Grid container item xs={12} className={classes.emailForm}>
               <TextField
                 margin="normal"
                 required
@@ -222,7 +209,7 @@ const Contact = ({ structures, loading }) => {
                 variant="outlined"
               />
             </Grid>
-            <Grid container item xs={12} spacing={2}>
+            <Grid container item xs={12}>
               <FormControl variant="outlined" className={classes.formControl} fullWidth>
                 {user && userStructure ? (
                   <TextField
@@ -236,36 +223,31 @@ const Contact = ({ structures, loading }) => {
                     fullWidth
                     helperText=""
                     type="text"
-                    value={userStructure}
+                    value={userStructure && userStructure._id ? userStructure.name : ''}
                     error={hasError('structureSelect')}
                     onChange={handleChange}
                     variant="outlined"
                   />
                 ) : (
                   <>
-                    <InputLabel
-                      ref={structureLabel}
-                      id="structure-label"
-                      className={hasError('structureSelect') ? 'Mui-error' : ''}
-                    >
+                    <InputLabel id="structure-label" className={hasError('structureSelect') ? 'Mui-error' : ''}>
                       {i18n.__('pages.ContactForm.structureLabel')}
                     </InputLabel>
                     <CustomSelect
                       disabled={!!user}
-                      value={user && userStructure ? userStructure : formState.values.structureSelect || ''}
+                      value={(user && userStructure._id ? userStructure._id : formState.values.structureSelect) || ''}
                       error={hasError('structureSelect')}
                       onChange={handleChange}
-                      labelWidth={labelWidth}
-                      options={structures.map((opt) => ({ value: opt.name, label: opt.name }))}
+                      options={structures.map((opt) => ({ value: opt._id, label: opt.name }))}
                     />
                   </>
                 )}
                 <FormHelperText className={hasError('structureSelect') ? 'Mui-error' : ''}>
-                  {hasError('structureSelect')}
+                  {hasError('structureSelect') ? i18n.__(formState.errors.structureSelect[0]) : null}
                 </FormHelperText>
               </FormControl>
             </Grid>
-            <Grid container item xs={12} spacing={2}>
+            <Grid container item xs={12}>
               <TextField
                 name="text"
                 multiline
@@ -294,27 +276,29 @@ const Contact = ({ structures, loading }) => {
                 />
               ) : null}
             </Grid>
-            {!formSubmit ? (
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-                className={classes.submit}
-                disabled={user ? !formState.values.text : !formState.isValid}
-              >
-                {i18n.__('pages.ContactForm.submitButtonLabel')}
+            <Grid container item xs={12}>
+              {!formSubmit ? (
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  className={classes.submit}
+                  disabled={user ? !formState.values.text : !formState.isValid}
+                >
+                  {i18n.__('pages.ContactForm.submitButtonLabel')}
+                </Button>
+              ) : (
+                <p>
+                  {i18n.__('pages.ContactForm.redirectMsg')}
+                  <br />
+                  {counter} {i18n.__('pages.ContactForm.redirectTime')}
+                </p>
+              )}
+              <Button fullWidth variant="contained" className={classes.submit} onClick={() => history.push('/')}>
+                {i18n.__('pages.ContactForm.cancel')}
               </Button>
-            ) : (
-              <p>
-                {i18n.__('pages.ContactForm.redirectMsg')}
-                <br />
-                {counter} {i18n.__('pages.ContactForm.redirectTime')}
-              </p>
-            )}
-            <Button fullWidth variant="contained" className={classes.submit} onClick={() => history.push('/')}>
-              {i18n.__('pages.ContactForm.cancel')}
-            </Button>
+            </Grid>
           </Grid>
         </form>
       </div>

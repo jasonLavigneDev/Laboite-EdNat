@@ -1,12 +1,16 @@
 import React, { useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 import { withTracker } from 'meteor/react-meteor-data';
+import { useHistory } from 'react-router-dom';
+
 import i18n from 'meteor/universe:i18n';
 import PropTypes from 'prop-types';
-import Fade from '@material-ui/core/Fade';
-import Container from '@material-ui/core/Container';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
+import Button from '@mui/material/Button';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import Fade from '@mui/material/Fade';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 
 import AppSettings from '../../../api/appsettings/appsettings';
 import TopBar from '../../components/menus/TopBar';
@@ -14,10 +18,9 @@ import Footer, { LEGAL_ROUTES } from '../../components/menus/Footer';
 import { useAppContext } from '../../contexts/context';
 import Spinner from '../../components/system/Spinner';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   container: {
-    display: 'flex',
-    paddingTop: 60,
+    paddingTop: 80,
     paddingBottom: 60,
     minHeight: 'calc(100vh - 64px)',
   },
@@ -25,7 +28,8 @@ const useStyles = makeStyles(() => ({
 
 const LegalPage = ({ data, dataKey, ready }) => {
   const [{ isMobile }] = useAppContext();
-  const classes = useStyles();
+  const { classes } = useStyles();
+  const history = useHistory();
 
   useEffect(() => {
     if (data && data.external === true && data.link) {
@@ -39,8 +43,13 @@ const LegalPage = ({ data, dataKey, ready }) => {
       <Fade in>
         <Container className={classes.container}>
           {!ready && <Spinner full />}
-          <Grid container spacing={4}>
-            <Grid item xs={12} className={isMobile ? null : classes.title}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Button startIcon={<ArrowBackIcon />} color="primary" onClick={history.goBack}>
+                {i18n.__('pages.SignIn.back')}
+              </Button>
+            </Grid>
+            <Grid item xs={12}>
               <Typography variant={isMobile ? 'h5' : 'h3'}>{i18n.__(`pages.LegalPage.${dataKey}`)}</Typography>
             </Grid>
             <Grid item xs={12}>

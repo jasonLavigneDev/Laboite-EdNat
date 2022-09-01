@@ -1,23 +1,23 @@
 import { Meteor } from 'meteor/meteor';
 import React, { useRef, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import SearchIcon from '@material-ui/icons/Search';
-import AddIcon from '@material-ui/icons/Add';
-import OpenInNewIcon from '@material-ui/icons/OpenInNew';
-import ShareIcon from '@material-ui/icons/Share';
-import Grid from '@material-ui/core/Grid';
+import { makeStyles } from 'tss-react/mui';
+import Container from '@mui/material/Container';
+import SearchIcon from '@mui/icons-material/Search';
+import AddIcon from '@mui/icons-material/Add';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import ShareIcon from '@mui/icons-material/Share';
+import Grid from '@mui/material/Grid';
 import i18n from 'meteor/universe:i18n';
-import Typography from '@material-ui/core/Typography';
-import Fade from '@material-ui/core/Fade';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
-import ArrowBack from '@material-ui/icons/ArrowBack';
+import Typography from '@mui/material/Typography';
+import Fade from '@mui/material/Fade';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
+import ArrowBack from '@mui/icons-material/ArrowBack';
 
 import { Link, useLocation } from 'react-router-dom';
-import Pagination from '@material-ui/lab/Pagination';
+import Pagination from '@mui/material/Pagination';
 import Articles from '../../../api/articles/articles';
 import Spinner from '../../components/system/Spinner';
 import { useAppContext } from '../../contexts/context';
@@ -27,15 +27,18 @@ import TopBar from '../../components/menus/TopBar';
 import CollapsingSearch from '../../components/system/CollapsingSearch';
 import Footer from '../../components/menus/Footer';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   root: {
     marginBottom: -64,
     display: 'flex',
     minHeight: '100vh',
     flexDirection: 'column',
   },
+  search: {
+    marginBottom: 20,
+    marginLeft: 16,
+  },
   rootMobile: {
-    paddingTop: 60,
     marginBottom: -128,
     display: 'flex',
     minHeight: '100vh',
@@ -53,6 +56,7 @@ const useStyles = makeStyles((theme) => ({
   spaceBetween: {
     display: 'flex',
     justifyContent: 'space-between',
+    marginBottom: 10,
   },
   pagination: {
     display: 'flex',
@@ -79,7 +83,7 @@ function ArticlesPage({
   },
 }) {
   const [{ isMobile, articlePage }, dispatch] = useAppContext();
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { pathname } = useLocation();
   const publicPage = pathname.indexOf('/publications') !== 0;
   const i18nCode = publicPage ? 'PublicArticlePage' : 'ArticlesPage';
@@ -183,7 +187,7 @@ function ArticlesPage({
                       title={i18n.__(`pages.${i18nCode}.copyOwnPublicPageUrl`)}
                       aria-label={i18n.__(`pages.${i18nCode}.copyOwnPublicPageUrl`)}
                     >
-                      <IconButton onClick={handleCopyURL}>
+                      <IconButton onClick={handleCopyURL} size="large">
                         <ShareIcon fontSize="large" />
                       </IconButton>
                     </Tooltip>
@@ -195,7 +199,7 @@ function ArticlesPage({
                   title={i18n.__(`pages.${i18nCode}.searchArticle`)}
                   aria-label={i18n.__(`pages.${i18nCode}.searchArticle`)}
                 >
-                  <IconButton onClick={toggleSearch}>
+                  <IconButton onClick={toggleSearch} size="large">
                     <SearchIcon fontSize="large" />
                   </IconButton>
                 </Tooltip>
@@ -222,17 +226,15 @@ function ArticlesPage({
             </Grid>
           </Grid>
           <Grid container spacing={4}>
-            <Grid item xs={12} sm={12} md={6} className={searchToggle ? null : classes.small}>
-              <CollapsingSearch
-                classes={searchToggle ? '' : classes.small}
-                label={i18n.__(`pages.${i18nCode}.searchText`)}
-                updateSearch={updateSearch}
-                resetSearch={resetSearch}
-                searchToggle={searchToggle}
-                search={search}
-                inputRef={inputRef}
-              />
-            </Grid>
+            <CollapsingSearch
+              classes={searchToggle ? classes.search : classes.small}
+              label={i18n.__(`pages.${i18nCode}.searchText`)}
+              updateSearch={updateSearch}
+              resetSearch={resetSearch}
+              searchToggle={searchToggle}
+              search={search}
+              inputRef={inputRef}
+            />
           </Grid>
 
           {loading ? (
@@ -245,7 +247,7 @@ function ArticlesPage({
                 </Grid>
               )}
               {mapList((article) => (
-                <Grid className={classes.gridItem} item key={article._id} md={12}>
+                <Grid className={classes.gridItem} item key={article._id} md={12} xs={12}>
                   <ArticleDetails publicPage={publicPage} article={article} />
                 </Grid>
               ))}

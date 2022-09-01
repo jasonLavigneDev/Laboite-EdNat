@@ -1,29 +1,29 @@
 import React, { useState } from 'react';
 import { Random } from 'meteor/random';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import LaunchIcon from '@material-ui/icons/Launch';
-import EditIcon from '@material-ui/icons/Edit';
-import SaveIcon from '@material-ui/icons/Save';
-import RemoveIcon from '@material-ui/icons/Remove';
-import PublishIcon from '@material-ui/icons/Publish';
-import Avatar from '@material-ui/core/Avatar';
-import Tooltip from '@material-ui/core/Tooltip';
-import IconButton from '@material-ui/core/IconButton';
-import TextField from '@material-ui/core/TextField';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
-import Typography from '@material-ui/core/Typography';
-import CardHeader from '@material-ui/core/CardHeader';
-import Zoom from '@material-ui/core/Zoom';
-import Button from '@material-ui/core/Button';
+import { makeStyles } from 'tss-react/mui';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import LaunchIcon from '@mui/icons-material/Launch';
+import EditIcon from '@mui/icons-material/Edit';
+import SaveIcon from '@mui/icons-material/Save';
+import RemoveIcon from '@mui/icons-material/Remove';
+import PublishIcon from '@mui/icons-material/Publish';
+import Avatar from '@mui/material/Avatar';
+import Tooltip from '@mui/material/Tooltip';
+import IconButton from '@mui/material/IconButton';
+import TextField from '@mui/material/TextField';
+import CardActionArea from '@mui/material/CardActionArea';
+import CardActions from '@mui/material/CardActions';
+import Typography from '@mui/material/Typography';
+import CardHeader from '@mui/material/CardHeader';
+import Zoom from '@mui/material/Zoom';
+import Button from '@mui/material/Button';
 import i18n from 'meteor/universe:i18n';
 import { useObjectState } from '../../utils/hooks';
 
 const linkColor = 'brown';
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   card: {
     height: '100%',
     width: '100%',
@@ -93,7 +93,7 @@ const useStyles = makeStyles((theme) => ({
 
 function PersonalLinkDetails({ link, globalEdit, isMobile, isSorted, needUpdate }) {
   const { name = '', url = '', tag = '', _id = Random.id(), icon = '' } = link;
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [localEdit, setLocalEdit] = useState(name === '');
   const [state, setState] = useObjectState({ name, url, tag });
   const favButtonLabel = i18n.__('components.PersonalLinkDetails.favButtonLabelNoFav');
@@ -213,7 +213,7 @@ function PersonalLinkDetails({ link, globalEdit, isMobile, isSorted, needUpdate 
             title={i18n.__(`components.PersonalLinkDetails.${localEdit ? 'saveLink' : 'modifyLink'}`)}
             aria-label={i18n.__(`components.PersonalLinkDetails.${localEdit ? 'saveLink' : 'modifyLink'}`)}
           >
-            <IconButton className={classes.zoneButton} color="primary" onClick={handleLocalEdit}>
+            <IconButton className={classes.zoneButton} color="primary" onClick={handleLocalEdit} size="large">
               {localEdit ? <SaveIcon /> : <EditIcon />}
             </IconButton>
           </Tooltip>

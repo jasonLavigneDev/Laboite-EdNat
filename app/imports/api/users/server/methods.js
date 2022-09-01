@@ -20,6 +20,7 @@ import { getRandomNCloudURL } from '../../nextcloud/methods';
 import Structures from '../../structures/structures';
 import Nextcloud from '../../nextcloud/nextcloud';
 import { hasAdminRightOnStructure } from '../../structures/utils';
+import EventsAgenda from '../../eventsAgenda/eventsAgenda';
 
 if (Meteor.settings.public.enableKeycloak === true) {
   const { whiteDomains } = Meteor.settings.private;
@@ -190,6 +191,32 @@ export const removeUser = new ValidatedMethod({
       Nextcloud.update({ url: user.nclocator }, { $set: { count: element.count } });
     }
     Meteor.users.remove({ _id: userId });
+  },
+});
+
+export const removeUserFromStructure = new ValidatedMethod({
+  name: 'users.removeUserFromStructure',
+  validate: new SimpleSchema({
+    userId: validateSchema.userId,
+  }).validator(),
+
+  run({ userId }) {
+    const user = Meteor.users.findOne({ _id: userId });
+    // check if current user has structure admin rights or self removal
+    const authorized =
+      isActive(this.userId) &&
+      (hasAdminRightOnStructure({ userId: this.userId, structureId: user.structure }) || userId === this.userId);
+    if (!authorized) {
+      throw new Meteor.Error('api.users.removeUserFromStructure.notPermitted', i18n.__('api.users.notPermitted'));
+    }
+    // check user existence
+    if (user === undefined) {
+      throw new Meteor.Error('api.users.removeUserFromStructure.unknownUser', i18n.__('api.users.unknownUser'));
+    }
+    if (Roles.userIsInRole(userId, 'adminStructure', user.structure)) {
+      Roles.removeUsersFromRoles(userId, 'adminStructure', user.structure);
+    }
+    Meteor.users.update({ _id: userId }, { $set: { structure: null } });
   },
 });
 
@@ -696,6 +723,15 @@ export const setMemberOf = new ValidatedMethod({
     }
     // update user personalSpace
     favGroup._execute({ userId }, { groupId });
+
+    const insertUser = { email: user.emails[0].address, _id: userId, groupId, status: 1 };
+
+    // update Events
+    EventsAgenda.rawCollection().updateMany(
+      { groups: { $elemMatch: { _id: groupId } } },
+      { $push: { participants: insertUser } },
+    );
+
     // Notify user
     if (this.userId !== userId) createRoleNotification(this.userId, userId, groupId, 'member', true);
   },
@@ -1015,6 +1051,7 @@ const LISTS_METHODS = _.pluck(
     setArticlesEnable,
     setActive,
     removeUser,
+    removeUserFromStructure,
     setAdminOf,
     unsetAdminOf,
     setAdminStructure,

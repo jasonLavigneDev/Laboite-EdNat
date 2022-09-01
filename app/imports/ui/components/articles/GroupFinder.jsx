@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import TextField from '@material-ui/core/TextField';
-import SearchIcon from '@material-ui/icons/Search';
-import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
+import TextField from '@mui/material/TextField';
+import SearchIcon from '@mui/icons-material/Search';
+import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import i18n from 'meteor/universe:i18n';
-import InputAdornment from '@material-ui/core/InputAdornment';
+import InputAdornment from '@mui/material/InputAdornment';
 import { useTracker } from 'meteor/react-meteor-data';
 import Groups from '../../../api/groups/groups';
 
@@ -50,7 +50,7 @@ function GroupFinder({ onSelected, exclude = [], opened }) {
         }
         return filtered;
       }}
-      getOptionSelected={(option, value) => {
+      isOptionEqualToValue={(option, value) => {
         return option.name.toLowerCase === value.toLowerCase;
       }}
       getOptionLabel={(option) => {
@@ -65,7 +65,6 @@ function GroupFinder({ onSelected, exclude = [], opened }) {
         // Regular option
         return option.name;
       }}
-      renderOption={(option) => option.name}
       noOptionsText={i18n.__('components.GroupFinder.noGroup')}
       clearText={i18n.__('components.GroupFinder.clear')}
       loadingText={i18n.__('components.GroupFinder.loading')}

@@ -1,6 +1,6 @@
 import React, { forwardRef } from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 
 const defaultSize = 24;
 
@@ -13,7 +13,7 @@ const defaultPropTypes = {
 
 const pxSize = (size) => `${size}px`;
 
-export const useIconStyles = makeStyles((theme) => ({
+export const useIconStyles = makeStyles()((theme) => ({
   svg: {
     fill: theme.palette.primary.main,
   },
@@ -24,7 +24,7 @@ export const useIconStyles = makeStyles((theme) => ({
 }));
 
 export const DetaiIconCustom = forwardRef(({ size = defaultSize }, ref) => {
-  const classes = useIconStyles();
+  const { classes } = useIconStyles();
   const viewBox = `0 0 ${size} ${size}`;
 
   return (
@@ -48,7 +48,7 @@ DetaiIconCustom.propTypes = { ...propTypes };
 DetaiIconCustom.defaultProps = { ...defaultPropTypes };
 
 export const SimpleIconCustom = forwardRef(({ size = defaultSize }, ref) => {
-  const classes = useIconStyles();
+  const { classes } = useIconStyles();
   const viewBox = `0 0 ${size} ${size}`;
 
   return (

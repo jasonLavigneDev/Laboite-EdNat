@@ -4,30 +4,34 @@ import { Meteor } from 'meteor/meteor';
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import i18n from 'meteor/universe:i18n';
+import Paper from '@mui/material/Paper';
 import ReactQuill, { Quill } from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { withTracker } from 'meteor/react-meteor-data';
-import DeleteIcon from '@material-ui/icons/Delete';
-import AssignmentIcon from '@material-ui/icons/Assignment';
+import FormControl from '@mui/material/FormControl';
+import DeleteIcon from '@mui/icons-material/Delete';
+import AssignmentIcon from '@mui/icons-material/Assignment';
 import { Random } from 'meteor/random';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 import ImageResize from 'quill-image-resize-module';
-import { makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
-import InputLabel from '@material-ui/core/InputLabel';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import Container from '@material-ui/core/Container';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import IconButton from '@material-ui/core/IconButton';
-import Chip from '@material-ui/core/Chip';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
+import { makeStyles } from 'tss-react/mui';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import InputLabel from '@mui/material/InputLabel';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
+import Chip from '@mui/material/Chip';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 import Articles from '../../../api/articles/articles';
 import Spinner from '../../components/system/Spinner';
 import { useAppContext } from '../../contexts/context';
@@ -57,7 +61,7 @@ const { minioEndPoint, minioPort, minioBucket, minioSSL, laboiteBlogURL } = Mete
 
 const HOST = `http${minioSSL ? 's' : ''}://${minioEndPoint}${minioPort ? `:${minioPort}` : ''}/${minioBucket}/`;
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme, isTablet) => ({
   flex: {
     display: 'flex',
     justifyContent: 'space-between',
@@ -89,9 +93,12 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   buttonGroup: {
-    display: 'flex',
+    display: isTablet ? 'block' : 'flex',
     justifyContent: 'space-between',
     marginTop: 60,
+    '& .MuiButton-root': {
+      marginTop: 10,
+    },
   },
   tagInputs: {
     marginBottom: theme.spacing(3),
@@ -123,6 +130,11 @@ const useStyles = makeStyles((theme) => ({
   structure: {
     marginBottom: '0px',
   },
+  licencePaper: {
+    padding: theme.spacing(1.5),
+    marginTop: 5,
+    marginBottom: 10,
+  },
 }));
 
 const emptyArticle = {
@@ -130,6 +142,7 @@ const emptyArticle = {
   slug: '',
   content: '',
   description: '',
+  licence: '',
   tags: [],
 };
 
@@ -144,8 +157,8 @@ function EditArticlePage({
   },
   history,
 }) {
-  const [{ isMobile, language, user }, dispatch] = useAppContext();
-  const classes = useStyles();
+  const [{ isMobile, language, user, isTablet }, dispatch] = useAppContext();
+  const { classes } = useStyles(isTablet);
   const [loading, setLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [quill, setQuill] = useState(null);
@@ -160,6 +173,15 @@ function EditArticlePage({
   const [updateStructure, setUpdateStructure] = useState(false);
   const [open, setOpen] = useState(false);
   const [showUpdateStructure, setShowUpdateStructure] = useState(false);
+
+  const licences = [
+    ['CC BY', i18n.__('pages.EditArticlePage.Licences.CC_BY')],
+    ['CC BY-SA', i18n.__('pages.EditArticlePage.Licences.CC_BY-SA')],
+    ['CC BY-ND', i18n.__('pages.EditArticlePage.Licences.CC_BY-ND')],
+    ['CC BY-NC', i18n.__('pages.EditArticlePage.Licences.CC_BY-NC')],
+    ['CC BY-NC-SA', i18n.__('pages.EditArticlePage.Licences.CC_BY-NC-SA')],
+    ['CC BY-NC-ND', i18n.__('pages.EditArticlePage.Licences.CC_BY-NC-ND')],
+  ];
 
   const quillOptionsMaker = (options) => ({
     modules: {
@@ -534,6 +556,10 @@ function EditArticlePage({
     setData({ markdown: bool });
   };
 
+  const handleLicence = (event) => {
+    setData({ licence: event.target.value });
+  };
+
   if (!ready || (slug && !article._id && !data._id) || loading) {
     return <Spinner />;
   }
@@ -572,6 +598,7 @@ function EditArticlePage({
                     title={i18n.__('pages.EditArticlePage.copyPublicURL')}
                     aria-label={i18n.__('pages.EditArticlePage.copyPublicURL')}
                     onClick={handleCopyURL}
+                    size="large"
                   >
                     <AssignmentIcon />
                   </IconButton>
@@ -579,6 +606,32 @@ function EditArticlePage({
               ),
             }}
           />
+          <FormControl fullWidth>
+            <InputLabel id="licence-selector-label">{i18n.__('pages.EditArticlePage.license')}</InputLabel>
+            <Select
+              labelId="licence-selector-label"
+              id="licence-selector"
+              name="licence"
+              variant="outlined"
+              label="licence"
+              fullWidth
+              value={data.licence}
+              onChange={handleLicence}
+            >
+              {licences.map((lic) => (
+                <MenuItem value={lic[0]} key={lic[1]}>
+                  {lic[1]}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <Paper className={classes.licencePaper}>
+            {i18n.__('pages.EditArticlePage.licenceInfo')}{' '}
+            <a href="https://creativecommons.org/licenses/" target="_blank" style={{ color: 'blue' }} rel="noreferrer">
+              https://creativecommons.org/licenses/
+            </a>
+          </Paper>
+
           <TextField
             onChange={onUpdateField}
             value={data.description}
@@ -603,7 +656,6 @@ function EditArticlePage({
               <FormControlLabel
                 control={
                   <Checkbox
-                    color="primary"
                     checked={updateStructure}
                     onChange={() => setUpdateStructure(!updateStructure)}
                     inputProps={{ 'aria-label': 'primary checkbox' }}
@@ -690,20 +742,21 @@ function EditArticlePage({
                 />
               ) : (
                 <>
-                  <CustomToolbarArticle withMedia withWebcam={minioEndPoint} />
+                  <CustomToolbarArticle withMedia withWebcam={!!minioEndPoint} />
                   <ReactQuill {...quillOptions} id="content" value={content} onChange={onUpdateRichText} />
                 </>
               )
             ) : null}
           </div>
           <div className={classes.buttonGroup}>
-            <Button variant="contained" onClick={() => handleOpenDialog(true)}>
+            <Button fullWidth={isTablet} variant="contained" onClick={() => handleOpenDialog(true)}>
               {i18n.__('pages.EditArticlePage.cancel')}
             </Button>
             {!!slug && (
               <ValidationButton
                 color="red"
                 icon={<DeleteIcon />}
+                fullWidth={isTablet}
                 text={i18n.__('pages.EditArticlePage.delete')}
                 onAction={deleteArticle}
               />
@@ -714,13 +767,14 @@ function EditArticlePage({
                 <Button
                   variant="contained"
                   color="secondary"
+                  fullWidth={isTablet}
                   style={{ marginRight: 10 }}
                   onClick={submitUpdateArticleDraft}
                 >
                   {i18n.__('pages.EditArticlePage.save_draf')}
                 </Button>
               )}
-              <Button variant="contained" color="primary" onClick={submitUpdateArticlePublished}>
+              <Button fullWidth={isTablet} variant="contained" color="primary" onClick={submitUpdateArticlePublished}>
                 {slug ? i18n.__('pages.EditArticlePage.update') : i18n.__('pages.EditArticlePage.save')}
                 {slug && article.draft && ` - ${i18n.__('pages.EditArticlePage.save')}`}
               </Button>

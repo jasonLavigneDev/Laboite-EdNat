@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import i18n from 'meteor/universe:i18n';
-import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert from '@material-ui/lab/Alert';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
 const defaultOptions = {
   duration: 4000, // time before autohide
   hideOnClick: false, // if true, alert doesn't autohide
 };
-
-const Alert = (props) => <MuiAlert elevation={6} variant="filled" {...props} />;
 
 const MsgHandler = () => {
   const [options, setOptions] = useState(defaultOptions);
@@ -74,7 +72,7 @@ const MsgHandler = () => {
       autoHideDuration={options.hideOnClick ? null : options.duration}
       onClose={handleMsgClose}
     >
-      <Alert onClose={handleMsgClose} severity={options.severity}>
+      <Alert elevation={6} variant="filled" onClose={handleMsgClose} severity={options.severity}>
         {options.message}
       </Alert>
     </Snackbar>

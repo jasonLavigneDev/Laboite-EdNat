@@ -1,5 +1,5 @@
-import { withStyles } from '@material-ui/core/styles';
-import Badge from '@material-ui/core/Badge';
+import { withStyles } from 'tss-react/mui';
+import Badge from '@mui/material/Badge';
 
 export const badgeStyle = (theme) => ({
   badge: {
@@ -28,4 +28,4 @@ export const badgeStyle = (theme) => ({
   },
 });
 
-export default withStyles((theme) => badgeStyle(theme))(Badge);
+export default withStyles(Badge, (theme) => badgeStyle(theme));

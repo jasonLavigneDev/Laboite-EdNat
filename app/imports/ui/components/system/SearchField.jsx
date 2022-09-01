@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import TextField from '@material-ui/core/TextField';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import ClearIcon from '@material-ui/icons/Clear';
-import SearchIcon from '@material-ui/icons/Search';
-import IconButton from '@material-ui/core/IconButton';
+import TextField from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
+import ClearIcon from '@mui/icons-material/Clear';
+import SearchIcon from '@mui/icons-material/Search';
+import IconButton from '@mui/material/IconButton';
 
 const SearchField = ({ updateSearch, checkEscape, search, inputRef, resetSearch, label }) => (
   <TextField
@@ -17,7 +17,7 @@ const SearchField = ({ updateSearch, checkEscape, search, inputRef, resetSearch,
     onKeyDown={checkEscape}
     type="text"
     value={search}
-    variant="filled"
+    variant="outlined"
     placeholder={label}
     inputProps={{
       ref: inputRef,
@@ -31,7 +31,7 @@ const SearchField = ({ updateSearch, checkEscape, search, inputRef, resetSearch,
       ),
       endAdornment: search ? (
         <InputAdornment position="end">
-          <IconButton onClick={resetSearch}>
+          <IconButton onClick={resetSearch} size="large">
             <ClearIcon />
           </IconButton>
         </InputAdornment>

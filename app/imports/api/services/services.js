@@ -55,7 +55,7 @@ Services.schema = new SimpleSchema(
     },
     state: {
       type: SimpleSchema.Integer,
-      allowedValues: [0, 5, 10], // 0 displayed, 5 inactive, 10 invisible
+      allowedValues: [0, 5, 10, 15], // 0 displayed, 5 inactive, 10 invisible, 15 maintenance
       label: getLabel('api.services.labels.state'),
     },
     categories: { type: Array, defaultValue: [], label: getLabel('api.services.labels.categories') },
@@ -81,6 +81,7 @@ Services.stateLabels = {
   0: 'api.services.states.displayed',
   5: 'api.services.states.inactive',
   10: 'api.services.states.invisible',
+  15: 'api.services.states.maintenance',
 };
 
 Services.publicFields = {

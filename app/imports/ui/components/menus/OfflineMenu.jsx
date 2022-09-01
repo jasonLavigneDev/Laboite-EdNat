@@ -1,13 +1,13 @@
 import React from 'react';
 import i18n from 'meteor/universe:i18n';
-import { makeStyles } from '@material-ui/core/styles';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import AppBar from '@material-ui/core/AppBar';
+import { makeStyles } from 'tss-react/mui';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import AppBar from '@mui/material/AppBar';
 import { PropTypes } from 'prop-types';
-import HomeIcon from '@material-ui/icons/Home';
-import AppsIcon from '@material-ui/icons/Apps';
-import HelpIcon from '@material-ui/icons/Help';
+import HomeIcon from '@mui/icons-material/Home';
+import AppsIcon from '@mui/icons-material/Apps';
+import HelpIcon from '@mui/icons-material/Help';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 import { useAppContext } from '../../contexts/context';
 
@@ -26,47 +26,46 @@ export const links = [
   },
 ];
 
-const useStyles = (isMobile) =>
-  makeStyles((theme) => ({
-    root: {
-      backgroundColor: theme.palette.tertiary.main,
-      bottom: 0,
-      top: 'auto',
-    },
-    tabs: {
+const useStyles = makeStyles()((theme, isMobile) => ({
+  root: {
+    backgroundColor: theme.palette.tertiary.main,
+    bottom: 0,
+    top: 'auto',
+  },
+  tabs: {
+    color: theme.palette.text.primary,
+  },
+  mobileTabs: {
+    textTransform: 'none',
+  },
+  elementTab: {
+    textTransform: 'capitalize',
+    paddingLeft: isMobile ? null : 50,
+    paddingRight: isMobile ? null : 50,
+    '&:hover': {
       color: theme.palette.text.primary,
+      transition: 'all 300ms ease-in-out',
     },
-    mobileTabs: {
-      textTransform: 'none',
-    },
-    elementTab: {
-      textTransform: 'capitalize',
-      paddingLeft: isMobile ? null : 50,
-      paddingRight: isMobile ? null : 50,
-      '&:hover': {
-        color: theme.palette.text.primary,
-        transition: 'all 300ms ease-in-out',
-      },
-    },
-    flexContainer: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    indicator: {
-      top: 0,
-      height: 3,
-      color: theme.palette.secondary.primary,
-      borderTopLeftRadius: 0,
-      borderTopRightRadius: 0,
-      borderBottomLeftRadius: 0,
-      borderBottomRightRadius: 0,
-    },
-  }));
+  },
+  flexContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  indicator: {
+    top: 0,
+    height: 3,
+    color: theme.palette.secondary.primary,
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
+  },
+}));
 
 const OfflineMenu = ({ state: [selectedTab, setTab] }) => {
   const [{ isMobile }] = useAppContext();
-  const classes = useStyles(isMobile)();
+  const { classes } = useStyles(isMobile);
   const { trackEvent } = useMatomo();
 
   function a11yProps(index) {
@@ -98,7 +97,8 @@ const OfflineMenu = ({ state: [selectedTab, setTab] }) => {
         textColor="primary"
         aria-label="menu links"
         variant={isMobile ? 'fullWidth' : 'standard'}
-        scrollButtons="on"
+        scrollButtons
+        allowScrollButtonsMobile
       >
         {links.map((link, index) => (
           <Tab

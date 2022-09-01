@@ -1,98 +1,97 @@
 /* eslint-disable jsx-a11y/media-has-caption */
 import React from 'react';
 import i18n from 'meteor/universe:i18n';
-import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import IconButton from '@material-ui/core/IconButton';
-import ClearIcon from '@material-ui/icons/Clear';
-import Button from '@material-ui/core/Button';
-import CardContent from '@material-ui/core/CardContent';
-import Grid from '@material-ui/core/Grid';
-import Modal from '@material-ui/core/Modal';
-import Typography from '@material-ui/core/Typography';
+import { makeStyles } from 'tss-react/mui';
+import Card from '@mui/material/Card';
+import CardHeader from '@mui/material/CardHeader';
+import IconButton from '@mui/material/IconButton';
+import ClearIcon from '@mui/icons-material/Clear';
+import Button from '@mui/material/Button';
+import CardContent from '@mui/material/CardContent';
+import Grid from '@mui/material/Grid';
+import Modal from '@mui/material/Modal';
+import Typography from '@mui/material/Typography';
 
 import PropTypes from 'prop-types';
 import { useAppContext } from '../../contexts/context';
 import COMMON_STYLES from '../../themes/styles';
 
-const useStyles = (isMobile) =>
-  makeStyles((theme) => ({
-    root: COMMON_STYLES.root,
-    media: COMMON_STYLES.media,
-    video: COMMON_STYLES.video,
-    actions: {
-      display: 'flex',
-      justifyContent: 'space-between',
+const useStyles = makeStyles()((theme, isMobile, classes) => ({
+  root: COMMON_STYLES.root,
+  media: COMMON_STYLES.media,
+  video: COMMON_STYLES.video,
+  actions: {
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
+  paper: COMMON_STYLES.paper(isMobile, '50%'),
+  iconWrapper: COMMON_STYLES.iconWrapper,
+  alert: COMMON_STYLES.alert,
+  image: {
+    position: 'relative',
+    height: 200,
+    [theme.breakpoints.down('sm')]: {
+      width: '100% !important', // Overrides inline-style
+      height: 100,
     },
-    paper: COMMON_STYLES.paper(isMobile, '50%'),
-    iconWrapper: COMMON_STYLES.iconWrapper,
-    alert: COMMON_STYLES.alert,
-    image: {
-      position: 'relative',
-      height: 200,
-      [theme.breakpoints.down('xs')]: {
-        width: '100% !important', // Overrides inline-style
-        height: 100,
+    [`&:hover, &.${classes.focusVisible}`]: {
+      zIndex: 1,
+      [`& .${classes.imageBackdrop}`]: {
+        opacity: 0.15,
       },
-      '&:hover, &$focusVisible': {
-        zIndex: 1,
-        '& $imageBackdrop': {
-          opacity: 0.15,
-        },
-        '& $imageMarked': {
-          opacity: 0,
-        },
-        '& $imageTitle': {
-          border: '4px solid currentColor',
-        },
+      [`& .${classes.imageMarked}`]: {
+        opacity: 0,
+      },
+      [`& .${classes.imageTitle}`]: {
+        border: '4px solid currentColor',
       },
     },
-    focusVisible: {},
-    imageButton: {
-      position: 'absolute',
-      left: 0,
-      right: 0,
-      top: 0,
-      bottom: 0,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      color: theme.palette.common.white,
-    },
-    imageSrc: {
-      position: 'absolute',
-      left: 0,
-      right: 0,
-      top: 0,
-      bottom: 0,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center 40%',
-    },
-    imageBackdrop: {
-      position: 'absolute',
-      left: 0,
-      right: 0,
-      top: 0,
-      bottom: 0,
-      backgroundColor: theme.palette.common.black,
-      opacity: 0.4,
-      transition: theme.transitions.create('opacity'),
-    },
-    imageTitle: {
-      position: 'relative',
-      padding: `${theme.spacing(2)}px ${theme.spacing(4)}px ${theme.spacing(1) + 6}px`,
-    },
-    imageMarked: {
-      height: 3,
-      width: 18,
-      backgroundColor: theme.palette.common.white,
-      position: 'absolute',
-      bottom: -2,
-      left: 'calc(50% - 9px)',
-      transition: theme.transitions.create('opacity'),
-    },
-  }));
+  },
+  focusVisible: {},
+  imageButton: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: theme.palette.common.white,
+  },
+  imageSrc: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center 40%',
+  },
+  imageBackdrop: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    backgroundColor: theme.palette.common.black,
+    opacity: 0.4,
+    transition: theme.transitions.create('opacity'),
+  },
+  imageTitle: {
+    position: 'relative',
+    padding: `calc(${theme.spacing(2)} ${theme.spacing(4)} ${theme.spacing(1)} + 6px)`,
+  },
+  imageMarked: {
+    height: 3,
+    width: 18,
+    backgroundColor: theme.palette.common.white,
+    position: 'absolute',
+    bottom: -2,
+    left: 'calc(50% - 9px)',
+    transition: theme.transitions.create('opacity'),
+  },
+}));
 
 const paths = {
   UserAvatarGallery: '/images/avatars/avatar-',
@@ -101,7 +100,7 @@ const paths = {
 
 const AvatarGallery = ({ open, onClose, onSendImage, i18nCode }) => {
   const [{ isMobile }] = useAppContext();
-  const classes = useStyles(isMobile)();
+  const { classes } = useStyles(isMobile);
 
   const avImages = () => {
     const images = [];
@@ -124,7 +123,7 @@ const AvatarGallery = ({ open, onClose, onSendImage, i18nCode }) => {
             title={i18n.__(`components.${i18nCode}.title`)}
             subheader={i18n.__(`components.${i18nCode}.subtitle`)}
             action={
-              <IconButton onClick={onClose}>
+              <IconButton onClick={onClose} size="large">
                 <ClearIcon />
               </IconButton>
             }

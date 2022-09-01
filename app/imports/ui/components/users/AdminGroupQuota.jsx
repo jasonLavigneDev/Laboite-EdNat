@@ -1,36 +1,35 @@
 import React, { useState } from 'react';
-import Card from '@material-ui/core/Card';
+import Card from '@mui/material/Card';
 import i18n from 'meteor/universe:i18n';
-import { makeStyles } from '@material-ui/core/styles';
-import CardActions from '@material-ui/core/CardActions';
-import CardHeader from '@material-ui/core/CardHeader';
-import ClearIcon from '@material-ui/icons/Clear';
-import IconButton from '@material-ui/core/IconButton';
-import Modal from '@material-ui/core/Modal';
+import { makeStyles } from 'tss-react/mui';
+import CardActions from '@mui/material/CardActions';
+import CardHeader from '@mui/material/CardHeader';
+import ClearIcon from '@mui/icons-material/Clear';
+import IconButton from '@mui/material/IconButton';
+import Modal from '@mui/material/Modal';
 import PropTypes from 'prop-types';
-import Button from '@material-ui/core/Button';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
+import Button from '@mui/material/Button';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
 import { useAppContext } from '../../contexts/context';
 import COMMON_STYLES from '../../themes/styles';
 
-const useStyles = (isMobile) =>
-  makeStyles(() => ({
-    root: COMMON_STYLES.root,
-    media: COMMON_STYLES.media,
-    video: COMMON_STYLES.video,
-    actions: COMMON_STYLES.actions,
-    paper: COMMON_STYLES.paper(isMobile, '50%'),
-    iconWrapper: COMMON_STYLES.iconWrapper,
-    groupCountInfo: COMMON_STYLES.groupCountInfo,
-    alert: COMMON_STYLES.alert,
-  }));
+const useStyles = makeStyles()((theme, isMobile) => ({
+  root: COMMON_STYLES.root,
+  media: COMMON_STYLES.media,
+  video: COMMON_STYLES.video,
+  actions: COMMON_STYLES.actions,
+  paper: COMMON_STYLES.paper(isMobile, '50%'),
+  iconWrapper: COMMON_STYLES.iconWrapper,
+  groupCountInfo: COMMON_STYLES.groupCountInfo,
+  alert: COMMON_STYLES.alert,
+}));
 
 const AdminGroupQuota = ({ data, open, onClose }) => {
   const [{ isMobile }] = useAppContext();
   const [quota, setQuota] = useState(data.groupQuota);
-  const classes = useStyles(isMobile)();
+  const { classes } = useStyles(isMobile);
   const changeQuota = () => {
     const quotaInt = parseInt(quota, 10);
     Meteor.call(
@@ -61,7 +60,7 @@ const AdminGroupQuota = ({ data, open, onClose }) => {
           <CardHeader
             title={i18n.__('components.AdminGroupQuota.subtitle') + data.username}
             action={
-              <IconButton onClick={onClose}>
+              <IconButton onClick={onClose} size="large">
                 <ClearIcon />
               </IconButton>
             }

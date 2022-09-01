@@ -2,18 +2,18 @@ import React, { useState } from 'react';
 import { Meteor } from 'meteor/meteor';
 import PropTypes from 'prop-types';
 import i18n from 'meteor/universe:i18n';
-import Switch from '@material-ui/core/Switch';
+import Switch from '@mui/material/Switch';
 import { withTracker } from 'meteor/react-meteor-data';
-import ArrowBack from '@material-ui/icons/ArrowBack';
+import ArrowBack from '@mui/icons-material/ArrowBack';
 import MaterialTable from '@material-table/core';
-import Grid from '@material-ui/core/Grid';
-import Container from '@material-ui/core/Container';
+import Grid from '@mui/material/Grid';
+import Container from '@mui/material/Container';
 import { Roles } from 'meteor/alanning:roles';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Tooltip from '@material-ui/core/Tooltip';
-import add from '@material-ui/icons/Add';
-import Button from '@material-ui/core/Button';
-import Fade from '@material-ui/core/Fade';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Tooltip from '@mui/material/Tooltip';
+import add from '@mui/icons-material/Add';
+import Button from '@mui/material/Button';
+import Fade from '@mui/material/Fade';
 import { useHistory } from 'react-router-dom';
 import Spinner from '../../components/system/Spinner';
 import { useAppContext } from '../../contexts/context';
@@ -29,7 +29,7 @@ function BookmarksPage({ loading, bookmarksList, group }) {
 
   const history = useHistory();
   const [filter, setFilter] = useState(false);
-  const classes = useBookmarkPageStyles();
+  const { classes } = useBookmarkPageStyles();
   const columns = bookmarkColumns(classes);
 
   const [editUrl, setEditUrl] = useState(false);

@@ -1,9 +1,9 @@
 import COMMONS from './commons';
-import { overrides, props } from './customs';
+import { components } from './customs';
 import { computeCustoms } from '../utils';
 
 export const palette = {
-  type: 'light',
+  mode: 'light',
   primary: {
     main: '#000091',
     light: '#E5E5F4',
@@ -48,11 +48,15 @@ export const palette = {
     light: '#b20400',
     dark: '#9c0400',
   },
+  grey: {
+    main: '#e0e0e0',
+    light: '#bdbdbd',
+    dark: '#9e9e9e',
+  },
 };
 
 const RIZOMO_LIGHT = {
-  props: computeCustoms(palette, props),
-  overrides: computeCustoms(palette, overrides),
+  components: computeCustoms(palette, components),
   palette,
   ...COMMONS,
 };

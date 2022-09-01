@@ -2,9 +2,8 @@ import React, { useEffect, lazy, Suspense } from 'react';
 import { useLocation, Route, Switch } from 'react-router-dom';
 import { useTracker } from 'meteor/react-meteor-data';
 import i18n from 'meteor/universe:i18n';
-import clsx from 'clsx';
 import { Roles } from 'meteor/alanning:roles';
-import Alert from '@material-ui/lab/Alert';
+import Alert from '@mui/material/Alert';
 import AppSettings from '../../api/appsettings/appsettings';
 
 // components
@@ -36,16 +35,15 @@ const AdminNextcloudUrlPage = lazy(() => import('../pages/admin/AdminNextcloudUr
 const AdminSettingsPage = lazy(() => import('../pages/admin/AdminSettingsPage'));
 const AdminSingleServicePage = lazy(() => import('../pages/admin/AdminSingleServicePage'));
 const AdminServicesPage = lazy(() => import('../pages/admin/AdminServicesPage'));
-const AdminStructureUsersPage = lazy(() => import('../pages/structure/AdminStructureUsersPage'));
 const AdminStructureManagementPage = lazy(() => import('../pages/admin/AdminStructuresManagementPage'));
 const AdminServicesByStructurePage = lazy(() => import('../pages/admin/AdminServicesByStructurePage'));
-const AdminIntroductionByStructurePage = lazy(() => import('../pages/admin/AdminIntroductionByStructurePage'));
+const AdminStructureSettingsPage = lazy(() => import('../pages/admin/AdminStructureSettingsPage'));
 
 const { disabledFeatures = {} } = Meteor.settings.public;
 
 function AdminLayout() {
   const [{ userId, user, loadingUser, isMobile }] = useAppContext();
-  const classes = useLayoutStyles(isMobile)();
+  const { classes, cx } = useLayoutStyles(isMobile);
   const location = useLocation();
 
   const isAdmin = Roles.userIsInRole(userId, 'admin');
@@ -71,7 +69,7 @@ function AdminLayout() {
       {loadingUser && ready ? (
         <Spinner full />
       ) : (
-        <main className={clsx(classes.content, classes.flex)} id="main">
+        <main className={cx(classes.content, classes.flex)} id="main">
           <AdminMenu />
           <Suspense fallback={<Spinner />}>
             <div className={classes.container}>
@@ -178,7 +176,7 @@ function AdminLayout() {
                     <StructureAdminRoute
                       exact
                       path="/admin/structureusers"
-                      component={AdminStructureUsersPage}
+                      component={AdminUsersPage}
                       user={user}
                       loadingUser={loadingUser}
                     />
@@ -212,9 +210,9 @@ function AdminLayout() {
                     />
                     <StructureAdminRoute
                       exact
-                      path="/admin/structuresintroduction"
+                      path="/admin/structuressettings"
                       user={user}
-                      component={AdminIntroductionByStructurePage}
+                      component={AdminStructureSettingsPage}
                       loadingUser={loadingUser}
                     />
                     <AdminRoute
