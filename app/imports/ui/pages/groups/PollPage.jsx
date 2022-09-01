@@ -2,7 +2,6 @@ import React, { useRef, useEffect } from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Roles } from 'meteor/alanning:roles';
 import PropTypes from 'prop-types';
-import Tooltip from '@mui/material/Tooltip';
 import AddIcon from '@mui/icons-material/Add';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -124,19 +123,19 @@ const PollPage = ({ loading, group, slug }) => {
                     ) : null,
                   }}
                 />
-                <Tooltip title={i18n.__('pages.GroupsPage.addPoll')}>
-                  <IconButton
-                    onClick={() =>
-                      window.open(
-                        `${Meteor.settings.public.services.sondagesUrl}/poll/new/1?groupId=${group._id}`,
-                        '_blank',
-                      )
-                    }
-                    size="large"
-                  >
-                    <AddIcon fontSize="large" />
-                  </IconButton>
-                </Tooltip>
+                <IconButton
+                  onClick={() =>
+                    window.open(
+                      `${Meteor.settings.public.services.sondagesUrl}/poll/new/1?groupId=${group._id}`,
+                      '_blank',
+                    )
+                  }
+                  size="large"
+                  title={i18n.__('pages.GroupsPage.addPoll')}
+                  style={{ paddingLeft: '20px', paddingRight: '20px' }}
+                >
+                  <AddIcon fontSize="large" />
+                </IconButton>
               </Grid>
               <GroupPaginate
                 total={total}

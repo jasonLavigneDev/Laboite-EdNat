@@ -4,7 +4,6 @@ import { withTracker } from 'meteor/react-meteor-data';
 import { Roles } from 'meteor/alanning:roles';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import Tooltip from '@mui/material/Tooltip';
 import AddIcon from '@mui/icons-material/Add';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -161,19 +160,16 @@ const EventsPage = ({ loading, group }) => {
                     ) : null,
                   }}
                 />
-                <Tooltip title={i18n.__('pages.GroupsPage.addEvent')}>
-                  <IconButton
-                    onClick={() =>
-                      window.open(
-                        `${Meteor.settings.public.services.agendaUrl}/add-event?groupId=${group._id}`,
-                        '_blank',
-                      )
-                    }
-                    size="large"
-                  >
-                    <AddIcon fontSize="large" />
-                  </IconButton>
-                </Tooltip>
+                <IconButton
+                  onClick={() =>
+                    window.open(`${Meteor.settings.public.services.agendaUrl}/add-event?groupId=${group._id}`, '_blank')
+                  }
+                  size="large"
+                  title={i18n.__('pages.GroupsPage.addEvent')}
+                  style={{ paddingLeft: '20px', paddingRight: '20px' }}
+                >
+                  <AddIcon fontSize="large" />
+                </IconButton>
               </Grid>
               <GroupPaginate
                 total={total}
