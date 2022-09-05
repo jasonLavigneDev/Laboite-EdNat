@@ -1,4 +1,4 @@
-import React, { lazy, useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Meteor } from 'meteor/meteor';
 import { Random } from 'meteor/random';
 import PropTypes from 'prop-types';
@@ -29,7 +29,7 @@ import { useAppContext } from '../contexts/context';
 import UserBookmarks from '../../api/userBookmarks/userBookmarks';
 import CollapsingSearch from '../components/system/CollapsingSearch';
 
-const Animation = lazy(() => import('../components/screencast/Animation'));
+import Animation from '../components/screencast/Animation';
 
 const useStyles = makeStyles()((theme, isMobile) => ({
   search: {
@@ -415,7 +415,7 @@ function PersonalPage({ personalspace, isLoading, allServices, allGroups, allLin
               </Grid>
               {localPS.unsorted.length === 0 && localPS.sorted.length === 0 ? (
                 <Grid>
-                  <Animation />
+                  <Animation notReady={notReady} />
                   <div className={classes.screen}>
                     <Link to="/services">
                       {i18n.__('pages.PersonalPage.noFavYet')}
