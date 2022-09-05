@@ -69,8 +69,7 @@ cache-dependencies:
     # This job update dependencies
     policy: pull-push
   script:
-    - meteor npm ci && meteor npm install
-
+    - meteor npm install
 
 ###############################################################################
 # `test` stage: `meteor-lint`, `meteor-tests`
