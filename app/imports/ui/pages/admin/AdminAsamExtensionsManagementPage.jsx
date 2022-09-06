@@ -4,7 +4,6 @@ import { useTracker } from 'meteor/react-meteor-data';
 import i18n from 'meteor/universe:i18n';
 import MaterialTable from '@material-table/core';
 import EditIcon from '@mui/icons-material/Edit';
-import Backdrop from '@mui/material/Backdrop';
 import Fade from '@mui/material/Fade';
 import Container from '@mui/material/Container';
 import CardContent from '@mui/material/CardContent';
@@ -134,7 +133,6 @@ const AdminAsamExtensionsManagementPage = () => {
           onClose={closeModal}
           className={modalClasses.modal}
           closeAfterTransition
-          BackdropComponent={Backdrop}
           BackdropProps={{
             timeout: 500,
           }}

@@ -19,13 +19,17 @@ const StructureSelectAutoComplete = ({
       noOptionsText={noOptionsText}
       loading={loading}
       getOptionLabel={(option) => option.name}
-      renderOption={(option) => {
+      renderOption={(props, option) => {
         let parent;
         if (option.parentId) {
           parent = flatData.find((s) => s._id === option.parentId);
         }
         return (
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <div
+            key={option.id}
+            {...props}
+            style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}
+          >
             <div>{option.name}</div>
             {!!option.parentId && (
               <div style={{ fontSize: 10, color: 'grey', fontStyle: 'italic' }}>{parent ? parent.name : ''}</div>
@@ -37,7 +41,7 @@ const StructureSelectAutoComplete = ({
       inputValue={searchText}
       onInputChange={onInputChange}
       disabled={disabled}
-      getOptionSelected={(opt, val) => opt._id === val._id}
+      // getOptionSelected={(opt, val) => opt._id === val._id}
       style={{ width: 500 }}
       renderInput={renderInput}
       {...rest}
