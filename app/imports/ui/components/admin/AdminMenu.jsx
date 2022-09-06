@@ -70,7 +70,7 @@ export default function AdminMenu() {
   const adminMenu = [
     {
       path: '/admin/connections',
-      content: 'menuAdminConnexion',
+      content: 'menuAdminUsersConnections',
       icon: <EqualizerIcon />,
       hidden: !isAdmin,
     },

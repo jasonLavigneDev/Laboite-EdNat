@@ -550,7 +550,7 @@
       "menuAdminBackHome": "Retour à l'espace perso",
       "menuUserStructure": "Gestion des Structures",
       "menuAdminOfStructures": "Gestion des sous-structures",
-      "menuAdminAnalytics": "Analytics",
+      "menuAdminUsersConnections": "Analytics",
       "menuAdminStructureSettings": "Réglages de structure"
     },
     "NotValidatedMessage": {

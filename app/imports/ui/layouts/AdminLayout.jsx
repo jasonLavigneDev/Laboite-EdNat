@@ -38,7 +38,7 @@ const AdminServicesPage = lazy(() => import('../pages/admin/AdminServicesPage'))
 const AdminStructureManagementPage = lazy(() => import('../pages/admin/AdminStructuresManagementPage'));
 const AdminServicesByStructurePage = lazy(() => import('../pages/admin/AdminServicesByStructurePage'));
 const AdminStructureSettingsPage = lazy(() => import('../pages/admin/AdminStructureSettingsPage'));
-const AdminAnalytics = lazy(() => import('../pages/admin/AdminAnalytics'));
+const AdminUsersConnections = lazy(() => import('../pages/admin/AdminUsersConnections'));
 
 const { disabledFeatures = {} } = Meteor.settings.public;
 
