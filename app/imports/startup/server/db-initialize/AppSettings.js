@@ -8,8 +8,6 @@ Meteor.startup(() => {
       language,
       content: `<p>Welcome (${language})</p>`,
     }));
-    const isUserStructureValidationMandatory =
-      Meteor.settings?.public?.disabledFeatures.userStructureValidationMandatory === false;
 
     AppSettings.insert({
       _id: 'settings',
@@ -34,7 +32,7 @@ Meteor.startup(() => {
         link: '',
         content: '',
       },
-      userStructureValidationMandatory: isUserStructureValidationMandatory,
+      userStructureValidationMandatory: false,
     });
   }
 });
