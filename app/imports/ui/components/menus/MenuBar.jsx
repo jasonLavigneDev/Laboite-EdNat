@@ -103,7 +103,7 @@ const MenuBar = ({ mobile }) => {
       path: '/notifications',
       content: 'menuNotifications',
       icon: <NotificationsNoneIcon />,
-      hidden: !isMobile || !disabledFeatures.notificationsTab,
+      hidden: !isMobile || (!disabledFeatures.notificationsTab && !isMobile),
       chip: notifsCounter,
     },
   ];

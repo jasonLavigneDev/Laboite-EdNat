@@ -133,7 +133,7 @@ function TopBar({ publicMenu, root, appsettings, adminApp }) {
               <>
                 <MainMenu user={user} />
                 {!disabledFeatures.notificationsTab && isMobile ? null : (
-                  <IconButton onClick={() => handleNotifsOpen()} size="large">
+                  <IconButton onClick={handleNotifsOpen} size="large">
                     <NotificationsBell />
                   </IconButton>
                 )}
