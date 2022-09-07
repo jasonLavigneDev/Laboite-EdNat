@@ -7,7 +7,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Button from '@mui/material/Button';
-import { makeStyles } from '@mui/material/styles';
+import { makeStyles } from 'tss-react/mui';
 import Fade from '@mui/material/Fade';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
@@ -29,7 +29,7 @@ import { updateStructureSpace } from '../../../api/defaultspaces/methods';
 import CustomDialog from '../../components/system/CustomDialog';
 import { useBoolean } from '../../utils/hooks';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   flexCenter: {
     display: 'flex',
     alignItems: 'center',
@@ -48,11 +48,21 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: 'lightgray',
     },
   },
+  listItemInactive: {
+    filter: 'grayscale(1)',
+    opacity: '40%',
+  },
+  inactiveText: {
+    position: 'absolute',
+    bottom: 0,
+    right: 5,
+    fontSize: 12,
+  },
 }));
 
 const AdminStructureSpace = () => {
   const userStructure = useStructure();
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [confirmApply, toggleConfirm] = useBoolean(false);
 
   const [selectedStructureId, setSelectedStructureId] = useState();
@@ -197,13 +207,21 @@ const AdminStructureSpace = () => {
                   sort={false}
                 >
                   {servicesList.map((service) => (
-                    <Grid item xs={12} key={`link_${service._id}`}>
+                    <Grid
+                      item
+                      xs={12}
+                      key={`link_${service._id}`}
+                      className={service.state !== 0 && classes.listItemInactive}
+                    >
                       <Card className={classes.listItem}>
                         <ListItem alignItems="flex-start">
                           <ListItemAvatar>
                             <Avatar alt={service.title} src={service.logo} />
                           </ListItemAvatar>
                           <ListItemText primary={service.title} secondary={service.usage} />
+                          {service.state !== 0 && (
+                            <div className={classes.inactiveText}>{i18n.__(Services.stateLabels[service.state])}</div>
+                          )}
                         </ListItem>
                       </Card>
                     </Grid>

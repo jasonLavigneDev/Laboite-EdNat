@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Meteor } from 'meteor/meteor';
 import { Random } from 'meteor/random';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@mui/material/styles';
+import { makeStyles } from 'tss-react/mui';
 import Container from '@mui/material/Container';
 import { Link } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
@@ -29,7 +29,7 @@ import UserBookmarks from '../../../api/userBookmarks/userBookmarks';
 import CollapsingSearch from '../system/CollapsingSearch';
 
 const useStyles = (isMobile) =>
-  makeStyles((theme) => ({
+  makeStyles()((theme) => ({
     small: {
       padding: '5px !important',
       transition: 'all 300ms ease-in-out',
@@ -142,7 +142,7 @@ function PersonalZoneUpdater({
   const [customDrag, setcustomDrag] = useState(false || edition);
   const [search, setSearch] = useState('');
   const [searchToggle, setSearchToggle] = useState(false);
-  const classes = useStyles(isMobile)();
+  const { classes } = useStyles(isMobile)();
   const inputRef = useRef(null);
 
   const updateSearch = (e) => {

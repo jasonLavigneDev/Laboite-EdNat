@@ -1202,6 +1202,7 @@
       "screenshots": "Captures d'écran",
       "categories": "Catégories",
       "open": "Ouvrir",
+      "hidden": "Service caché",
       "inactive": "Service inactif",
       "maintenance": "Service en maintenance",
       "propulsedBy": "Propulsé par"

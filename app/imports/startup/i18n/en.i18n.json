@@ -1199,6 +1199,7 @@
       "screenshots": "Screenshots",
       "categories": "Categories",
       "open": "Open",
+      "hidden": "Hidden service",
       "inactive": "Inactive service",
       "maintenance": "Service on Maintenance",
       "propulsedBy": "Propulsed by"
