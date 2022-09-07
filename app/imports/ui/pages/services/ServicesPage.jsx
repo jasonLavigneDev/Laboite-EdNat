@@ -121,6 +121,7 @@ const useStyles = makeStyles()((theme, isMobile) => ({
   },
   categoriesList: {
     marginTop: 60,
+    paddingBottom: 60,
   },
   appBarBottom: {
     bottom: 0,
