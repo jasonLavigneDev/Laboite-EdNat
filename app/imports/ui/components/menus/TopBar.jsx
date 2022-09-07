@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useTheme } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
@@ -66,8 +66,7 @@ const useStyles = makeStyles()((theme, isMobile) => ({
     alignItem: 'center',
     height: 48,
   },
-  leftContainer: { display: 'flex', flex: 1 },
-  centerContainer: { display: 'flex', justifyContent: 'center', flex: 1 },
+  leftContainer: { display: 'flex', flex: 1, alignItems: 'center' },
   maintenanceBar: {
     marginTop: 50,
   },
@@ -76,6 +75,7 @@ const useStyles = makeStyles()((theme, isMobile) => ({
 function TopBar({ publicMenu, root, appsettings, adminApp }) {
   const [{ isMobile, user, notificationPage }, dispatch] = useAppContext();
   const history = useHistory();
+  const location = useLocation();
   const theme = useTheme();
   const { classes } = useStyles(isMobile);
   const { SMALL_LOGO, LONG_LOGO, SMALL_LOGO_MAINTENANCE, LONG_LOGO_MAINTENANCE } = theme.logos;
@@ -115,61 +115,44 @@ function TopBar({ publicMenu, root, appsettings, adminApp }) {
     }
   };
 
-  const handleIntroductionOpen = () => history.push('/introduction');
-
   return (
     <div>
       <AppBar position="fixed" className={classes.root}>
         <div className={classes.firstBar}>
-          {LOGO ? (
-            <Link to={root || (publicMenu ? '/public' : '/')} className={classes.imgLogoContainer}>
-              <img
-                src={LOGO}
-                className={classes.imgLogoContainer}
-                alt="Logo"
-                style={{ padding: isEoleTheme && !isMobile ? 10 : '' }}
-              />
-            </Link>
-          ) : isMobile ? (
-            <>
-              <IconButton onClick={handleIntroductionOpen}>
-                <InfoIcon />
-              </IconButton>
-            </>
-          ) : null}
-          <div />
-          <div
-            className={
-              isMobile
-                ? disabledFeatures.notificationsTab
-                  ? classes.centerContainer
-                  : classes.rightContainer
-                : classes.rightContainer
-            }
-          >
+          <div className={classes.leftContainer}>
+            {LOGO ? (
+              <Link to={root || (publicMenu ? '/public' : '/')} className={classes.imgLogoContainer}>
+                <img
+                  src={LOGO}
+                  className={classes.imgLogoContainer}
+                  alt="Logo"
+                  style={{ padding: isEoleTheme && !isMobile ? 10 : '' }}
+                />
+              </Link>
+            ) : (
+              <div />
+            )}
+            {isMobile && (
+              <Link to="/introduction">
+                <IconButton color={location.pathname === '/introduction' ? 'primary' : 'default'}>
+                  <InfoIcon />
+                </IconButton>
+              </Link>
+            )}
+          </div>
+
+          <div className={classes.rightContainer}>
             {publicMenu ? null : (
               <>
                 <MainMenu user={user} />
-                {!isMobile && (
-                  <div>
-                    {!disabledFeatures.notificationsTab ? null : (
-                      <IconButton onClick={() => handleNotifsOpen()} size="large">
-                        <NotificationsBell />
-                      </IconButton>
-                    )}
-                  </div>
+                {!disabledFeatures.notificationsTab && isMobile ? null : (
+                  <IconButton onClick={() => handleNotifsOpen()} size="large">
+                    <NotificationsBell />
+                  </IconButton>
                 )}
               </>
             )}
           </div>
-          {isMobile &&
-            (!disabledFeatures.notificationsTab ? null : (
-              <div className={classes.rightContainer}>
-                <IconButton onClick={() => handleNotifsOpen()} size="large">
-                  <NotificationsBell />
-                </IconButton>
-              </div>
-            ))}
         </div>
         {!isMobile && !publicMenu && !adminApp && (
           <div className={classes.secondBar}>
