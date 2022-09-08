@@ -1,9 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Grid from '@mui/material/Grid';
 import { makeStyles } from 'tss-react/mui';
 import { useAppContext } from '../../contexts/context';
 
-export default function Animation() {
+export default function Animation({ notReady }) {
+  if (notReady) return null;
   const [{ isMobile }] = useAppContext();
 
   const useStyles = makeStyles()({
@@ -23,14 +25,18 @@ export default function Animation() {
 
   return (
     <Grid className={classes.grid}>
-      <iframe
-        className={classes.iframe}
-        title="screencast_frame"
-        sandbox="allow-same-origin allow-scripts allow-popups"
-        // eslint-disable-next-line max-len
-        src="https://podeduc.apps.education.fr/media/videos/0ae723528c10898605f3c4fbc97f2a84b0647030813b2c8330db76cdced9c5ab/2959/360p.mp4"
-        allowFullScreen
-      />
+      {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+      <video controls className={classes.iframe}>
+        <source
+          // eslint-disable-next-line max-len
+          src="https://podeduc.apps.education.fr/media/videos/0ae723528c10898605f3c4fbc97f2a84b0647030813b2c8330db76cdced9c5ab/2959/360p.mp4"
+          type="video/webm"
+        />
+      </video>
     </Grid>
   );
 }
+
+Animation.propTypes = {
+  notReady: PropTypes.bool.isRequired,
+};
