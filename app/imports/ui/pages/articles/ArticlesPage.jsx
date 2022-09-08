@@ -237,7 +237,7 @@ function ArticlesPage({
             />
           </Grid>
 
-          {loading ? (
+          {loading && total !== 0 ? (
             <Spinner />
           ) : (
             <Grid container spacing={isMobile ? 2 : 4}>
