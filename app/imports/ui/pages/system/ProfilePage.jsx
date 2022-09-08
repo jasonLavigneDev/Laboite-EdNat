@@ -529,7 +529,7 @@ const ProfilePage = () => {
                       value={userData.username}
                       error={errors.username !== ''}
                       onChange={onUpdateField}
-                      // variant="filled"
+                      label={i18n.__('api.users.labels.username')}
                       endAdornment={
                         <InputAdornment position="end">
                           <Tooltip
