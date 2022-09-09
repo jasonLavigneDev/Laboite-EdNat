@@ -1,5 +1,6 @@
 import React, { forwardRef, useState } from 'react';
 import PropTypes from 'prop-types';
+import sanitizeHtml from 'sanitize-html';
 import i18n from 'meteor/universe:i18n';
 import { Roles } from 'meteor/alanning:roles';
 import { useTracker } from 'meteor/react-meteor-data';
@@ -254,7 +255,7 @@ const PersonalZone = ({
                 onKeyDown={handleKeyDownTitle(index)}
                 onBlur={handleBlurTitle(index)}
                 role="presentation"
-                dangerouslySetInnerHTML={{ __html: title }}
+                dangerouslySetInnerHTML={{ __html: sanitizeHtml(title) }}
               />
             </Badge>
             {customDrag && isSorted && (

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Meteor } from 'meteor/meteor';
 import PropTypes from 'prop-types';
+import sanitizeHtml from 'sanitize-html';
 import i18n from 'meteor/universe:i18n';
 import { Roles } from 'meteor/alanning:roles';
 import { Link, useHistory } from 'react-router-dom';
@@ -530,7 +531,7 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
             </Typography>
             <div
               className={openedContent ? classes.openedContent : classes.content}
-              dangerouslySetInnerHTML={{ __html: group.content }}
+              dangerouslySetInnerHTML={{ __html: sanitizeHtml(group.content) }}
             />
             <Button
               color="primary"

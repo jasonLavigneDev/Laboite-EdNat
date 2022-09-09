@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import sanitizeHtml from 'sanitize-html';
 import Typography from '@mui/material/Typography';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -32,8 +33,7 @@ const IntroductionAccordion = ({ summary, head = '', body, startExpanded = false
             <Typography variant={isMobile ? 'h6' : 'h4'}>{head}</Typography> <Divider />
           </>
         )}
-
-        <div style={{ padding: '10px' }} dangerouslySetInnerHTML={{ __html: body || '' }} />
+        <div style={{ padding: '10px' }} dangerouslySetInnerHTML={{ __html: sanitizeHtml(body) || '' }} />
       </AccordionDetails>
     </Accordion>
   );
