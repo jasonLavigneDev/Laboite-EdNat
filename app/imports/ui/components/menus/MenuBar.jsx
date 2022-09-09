@@ -2,15 +2,12 @@ import React, { useEffect, useState } from 'react';
 import i18n from 'meteor/universe:i18n';
 import { useLocation, useHistory } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
-import { useTracker } from 'meteor/react-meteor-data';
-import { Counts } from 'meteor/tmeasday:publish-counts';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { PropTypes } from 'prop-types';
 import GroupIcon from '@mui/icons-material/Group';
 import Chip from '@mui/material/Chip';
 import LibraryBooks from '@mui/icons-material/LibraryBooks';
-import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import HomeIcon from '@mui/icons-material/Home';
 import BusinessIcon from '@mui/icons-material/Business';
 import AppsIcon from '@mui/icons-material/Apps';
@@ -49,14 +46,10 @@ const useStyles = makeStyles()((theme, mobile) => ({
 
 const MenuBar = ({ mobile }) => {
   const { pathname } = useLocation();
-  const [{ user, isMobile }] = useAppContext();
+  const [{ user }] = useAppContext();
   const history = useHistory();
   const { classes } = useStyles(mobile);
 
-  const notifsCounter = useTracker(() => {
-    Meteor.subscribe('notifications.self.counter');
-    return Counts.get('notifications.self.counter');
-  });
   const links = [
     {
       path: '/introduction',
@@ -98,13 +91,6 @@ const MenuBar = ({ mobile }) => {
       icon: <BusinessIcon />,
       hidden: false,
       tooltip: 'tooltipStructure',
-    },
-    {
-      path: '/notifications',
-      content: 'menuNotifications',
-      icon: <NotificationsNoneIcon />,
-      hidden: !isMobile || !disabledFeatures.notificationsTab,
-      chip: notifsCounter,
     },
   ];
   const T = i18n.createComponent('components.MenuBar');
