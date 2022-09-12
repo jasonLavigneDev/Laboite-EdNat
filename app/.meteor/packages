@@ -46,3 +46,5 @@ eoleteam:accounts-keycloak
 mexar:mdt
 random@1.2.1
 server-render@0.4.1
+montiapm:agent
+montiapm:profiler

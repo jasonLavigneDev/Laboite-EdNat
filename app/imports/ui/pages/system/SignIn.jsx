@@ -21,7 +21,6 @@ import AppSettings from '../../../api/appsettings/appsettings';
 import Structures from '../../../api/structures/structures';
 import { getCurrentIntroduction } from '../../../api/utils';
 import { usePageTracking } from '../../utils/matomo';
-import { useAppContext } from '../../contexts/context';
 
 validate.options = {
   fullMessages: false,
