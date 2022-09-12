@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.3.3](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/4.3.2...release/4.3.3) (2022-09-12)
+
+
+### Bug Fixes
+
+* **lib:** backport react-meteor-data to version 2.4.0 ([91e0fc0](https://gitlab.mim-libre.fr/alphabet/laboite/commit/91e0fc05b0ca7f30649cc07045aa1135a85790da))
+
 ## [4.3.2](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/4.3.1...release/4.3.2) (2022-09-09)
 
 
