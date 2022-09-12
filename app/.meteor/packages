@@ -47,3 +47,5 @@ mexar:mdt
 random@1.2.1
 server-render@0.4.1
 logging
+montiapm:agent
+montiapm:profiler
