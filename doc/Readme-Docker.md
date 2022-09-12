@@ -9,7 +9,7 @@ docker-compose build
 ./run.sh
 ```
 
-Browse to localhost url with user 'eole@ac-dijon.fr' and password 'changeme'.
+Browse to 'localhost' URL with user 'eole@ac-dijon.fr' and password 'changeme'.
 
 
 # Run laboite with the dev image from [docker-hub](https://hub.docker.com/repository/docker/eoleteam/laboite) :

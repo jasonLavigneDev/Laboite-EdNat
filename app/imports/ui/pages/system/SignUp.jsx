@@ -1,4 +1,5 @@
 import React from 'react';
+import sanitizeHtml from 'sanitize-html';
 import { Accounts } from 'meteor/accounts-base';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -154,7 +155,7 @@ const SignUp = ({ introduction, ready, structures, loadingStructure }) => {
           {i18n.__('pages.SignUp.appDescription')}
         </Typography>
 
-        {!ready ? <Spinner /> : <div dangerouslySetInnerHTML={{ __html: introduction }} />}
+        {!ready ? <Spinner /> : <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(introduction) }} />}
 
         <form onSubmit={handleSignUp} className={classes.form} noValidate>
           <Grid container spacing={2}>

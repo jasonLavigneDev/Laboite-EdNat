@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Meteor } from 'meteor/meteor';
 import PropTypes from 'prop-types';
+import sanitizeHtml from 'sanitize-html';
 import i18n from 'meteor/universe:i18n';
 import { useHistory, Link } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
@@ -219,7 +220,7 @@ const SingleServicePage = ({ service = {}, ready, categories = [] }) => {
             <Typography className={classes.smallTitle} variant="h5">
               Description
             </Typography>
-            <div className={classes.content} dangerouslySetInnerHTML={{ __html: service.content }} />
+            <div className={classes.content} dangerouslySetInnerHTML={{ __html: sanitizeHtml(service.content) }} />
           </Grid>
           {Boolean(service.screenshots.length) && (
             <>

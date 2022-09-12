@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Meteor } from 'meteor/meteor';
+import sanitizeHtml from 'sanitize-html';
 import { withTracker } from 'meteor/react-meteor-data';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -140,7 +141,7 @@ function SignIn({ loggingIn, introduction, appsettings, ready }) {
           {i18n.__('pages.SignIn.appDescription')}
         </Typography>
         {!ready && !loggingIn && <Spinner />}
-        <div dangerouslySetInnerHTML={{ __html: introduction }} />
+        <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(introduction) }} />
         <form onSubmit={handleSignIn} className={classes.form} noValidate>
           {loggingIn && <Spinner full />}
           {useKeycloak ? (

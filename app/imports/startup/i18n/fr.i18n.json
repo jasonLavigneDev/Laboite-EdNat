@@ -127,7 +127,7 @@
       "logWhiteDomains": "Les utilisateurs correspondant à ces domaines seront activés à leur connexion: {$domains}",
       "labels": {
         "id": "Id Utilisateur",
-        "username": "Pseudonyme",
+        "username": "Nom d'utilisateur",
         "firstName": "Prénom",
         "lastName": "Nom",
         "emails": "Adresse Électronique",

@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import sanitizeHtml from 'sanitize-html';
 import { makeStyles } from 'tss-react/mui';
 import { withTracker } from 'meteor/react-meteor-data';
 import { useHistory } from 'react-router-dom';
@@ -53,7 +54,7 @@ const LegalPage = ({ data, dataKey, ready }) => {
               <Typography variant={isMobile ? 'h5' : 'h3'}>{i18n.__(`pages.LegalPage.${dataKey}`)}</Typography>
             </Grid>
             <Grid item xs={12}>
-              <Typography className={classes.text} dangerouslySetInnerHTML={{ __html: data.content }} />
+              <Typography className={classes.text} dangerouslySetInnerHTML={{ __html: sanitizeHtml(data.content) }} />
             </Grid>
           </Grid>
         </Container>

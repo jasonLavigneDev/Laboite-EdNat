@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
+import sanitizeHtml from 'sanitize-html';
 import i18n from 'meteor/universe:i18n';
 import { withTracker } from 'meteor/react-meteor-data';
 import ArrowBack from '@mui/icons-material/ArrowBack';
@@ -243,7 +244,10 @@ function PublicArticleDetailsPage({
                   plugins={[chart, codeSyntaxHighlight, tableMergedCell, uml, modifiedColorSyntax]}
                 />
               ) : (
-                <div className={`ql-editor ${classes.content}`} dangerouslySetInnerHTML={{ __html: article.content }} />
+                <div
+                  className={`ql-editor ${classes.content}`}
+                  dangerouslySetInnerHTML={{ __html: sanitizeHtml(article.content) }}
+                />
               )}
             </Grid>
           </Grid>
