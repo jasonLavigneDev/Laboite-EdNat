@@ -8,6 +8,7 @@ import checkDomain from '../domains';
 import logServer from '../logging';
 import { getRandomNCloudURL } from '../nextcloud/methods';
 import { generateDefaultPersonalSpace } from '../personalspaces/methods';
+import PersonalSpaces from '../personalspaces/personalspaces';
 
 const AppRoles = ['candidate', 'member', 'animator', 'admin', 'adminStructure'];
 
@@ -284,6 +285,12 @@ if (Meteor.isServer) {
       Meteor.call('users.userUpdated', { userId: details.user._id, data: updateInfos }, (err) => {
         if (err) console.log(err);
       });
+
+      // check if user has a personnal space generated from structure
+      const pSpace = PersonalSpaces.findOne({ userId: details.user._id });
+      if (details.user.structure && !pSpace) {
+        generateDefaultPersonalSpace.call({ userId: details.user._id });
+      }
     } else {
       Meteor.users.update({ _id: details.user._id }, { $set: { lastLogin: loginDate } });
     }
