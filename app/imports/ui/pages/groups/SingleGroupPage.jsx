@@ -158,7 +158,7 @@ const useStyles = makeStyles()((theme, { member, candidate, type }) => ({
   },
 }));
 
-const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks }) => {
+const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks, totalUserInThisGroup }) => {
   const { type } = group;
   const [{ userId, user }] = useAppContext();
   const [loading, setLoading] = useState(false);
@@ -472,7 +472,7 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
                     _id: 'addressbook',
                     usage: i18n.__('pages.SingleGroupPage.addressBookUsage'),
                     logo: <PeopleIcon className={classes.icon} color="primary" fontSize="large" />,
-                    title: i18n.__('pages.SingleGroupPage.addressBook'),
+                    title: `${i18n.__('pages.SingleGroupPage.addressBook')} (${totalUserInThisGroup})`,
                     url: `/groups/${group.slug}/addressbook`,
                   }}
                   isShort
@@ -561,10 +561,12 @@ export default withTracker(
     const polls = Polls.find({}).count();
     const bookmarks = Bookmarks.find({}).count();
     const events = EventsAgenda.find({}).count();
+    const groupWithAdminFields = Meteor.subscribe('groups.single.admin', { slug });
+    const totalUserInThisGroup = new Set([group.members, group.animators, group.admins].flat()).size;
     const subServices = Meteor.subscribe('services.group', { ids: group.applications });
     const services =
       Services.findFromPublication('services.group', { state: { $ne: 10 } }, { sort: { name: 1 } }).fetch() || [];
-    const ready = subGroup.ready() && subServices.ready();
+    const ready = subGroup.ready() && subServices.ready() && groupWithAdminFields.ready();
     return {
       group,
       ready,
@@ -572,6 +574,7 @@ export default withTracker(
       polls,
       bookmarks,
       events,
+      totalUserInThisGroup,
     };
   },
 )(SingleGroupPage);
@@ -582,6 +585,7 @@ SingleGroupPage.defaultProps = {
   polls: undefined,
   bookmarks: undefined,
   events: undefined,
+  totalUserInThisGroup: 0,
 };
 
 SingleGroupPage.propTypes = {
@@ -591,4 +595,5 @@ SingleGroupPage.propTypes = {
   polls: PropTypes.number,
   bookmarks: PropTypes.number,
   events: PropTypes.number,
+  totalUserInThisGroup: PropTypes.number,
 };

@@ -12,6 +12,11 @@ import Polls from '../../polls/polls';
 import EventsAgenda from '../../eventsAgenda/eventsAgenda';
 import Bookmarks from '../../bookmarks/bookmarks';
 
+// publish one group with admin fields based on its slug
+Meteor.publish('groups.single.admin', function groupSingleAdminFields({ slug }) {
+  return Groups.find({ slug }, { fields: Groups.adminFields });
+});
+
 // publish groups that user is admin/animator of
 publishComposite('groups.adminof', function groupsAdminOf() {
   if (!isActive(this.userId)) {
