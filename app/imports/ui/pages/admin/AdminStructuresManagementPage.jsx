@@ -149,14 +149,10 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
    * It is the parentStructure when you are in create mode
    * It is the want-to-update one when you are in edit mode
    */
-  const [selectedStructure, setSelectedStructure] = useObjectState({
-    name: '',
-    id: '',
-    _id: '',
-    childrenIds: [],
-    ancestorsIds: [],
-    parentId: null,
-  });
+
+  const initialStructure = { name: '', id: '', _id: '', childrenIds: [], ancestorsIds: [], parentId: null };
+
+  const [selectedStructure, setSelectedStructure] = useObjectState(initialStructure);
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -173,6 +169,7 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
       });
     }
 
+    setSelectedStructure(initialStructure);
     closeModal();
   };
 
@@ -202,6 +199,7 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
       parentId: selectedStructure.parentId,
     });
     setIsOpenDeleteConfirm(false);
+    setSelectedStructure(initialStructure);
   };
 
   return (
