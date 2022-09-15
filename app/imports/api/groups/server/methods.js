@@ -7,6 +7,15 @@ import { isActive, getLabel } from '../../utils';
 import Groups from '../groups';
 import { favGroup } from '../methods';
 
+Meteor.methods({
+  'groups.single.admin': ({ slug }) => {
+    check(slug, String);
+    const group = Groups.find({ slug }, { fields: Groups.adminFields, limit: 1 }).fetch();
+    const { members, animators, admins } = group[0];
+    return new Set([members, animators, admins].flat()).size;
+  },
+});
+
 export const addGroupMembersToGroup = new ValidatedMethod({
   name: 'groups.addGroupMembersToGroup',
   validate: new SimpleSchema({

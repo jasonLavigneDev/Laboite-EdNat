@@ -162,6 +162,7 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
   const { type } = group;
   const [{ userId, user }] = useAppContext();
   const [loading, setLoading] = useState(false);
+  const [countUser, setCountUser] = useState(0);
   const [openedContent, toggleOpenedContent] = useState(false);
   const animator = Roles.userIsInRole(userId, 'animator', group._id);
   const member = Roles.userIsInRole(userId, 'member', group._id);
@@ -330,6 +331,16 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
     return null;
   };
 
+  const totalUserInThisGroup = (slug) => {
+    Meteor.call('groups.single.admin', { slug }, (err, res) => {
+      if (err) {
+        msg.error(err.reason);
+      }
+      setCountUser(res);
+    });
+    return countUser;
+  };
+
   return (
     <Fade in>
       <Container className={classes.root}>
@@ -472,7 +483,7 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
                     _id: 'addressbook',
                     usage: i18n.__('pages.SingleGroupPage.addressBookUsage'),
                     logo: <PeopleIcon className={classes.icon} color="primary" fontSize="large" />,
-                    title: i18n.__('pages.SingleGroupPage.addressBook'),
+                    title: `${i18n.__('pages.SingleGroupPage.addressBook')} (${totalUserInThisGroup(group.slug)})`,
                     url: `/groups/${group.slug}/addressbook`,
                   }}
                   isShort
@@ -565,6 +576,7 @@ export default withTracker(
     const services =
       Services.findFromPublication('services.group', { state: { $ne: 10 } }, { sort: { name: 1 } }).fetch() || [];
     const ready = subGroup.ready() && subServices.ready();
+
     return {
       group,
       ready,
