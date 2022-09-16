@@ -27,6 +27,8 @@ import {
   findUsers,
   findUser,
   removeUser,
+  setAdminOf,
+  setAnimatorOf,
   setMemberOf,
   setKeycloakId,
   setAvatar,
@@ -62,6 +64,7 @@ describe('users', function () {
       Meteor.users.remove({});
       Meteor.roles.remove({});
       Roles.createRole('admin');
+      Roles.createRole('animator');
       Roles.createRole('member');
       Roles.createRole('adminStructure');
       _.times(3, () => {
@@ -251,21 +254,55 @@ describe('users', function () {
     });
     describe('users.group', function () {
       it('sends all users from a public group', function (done) {
+        setAdminOf._execute({ userId }, { userId, groupId: group._id });
+        setAnimatorOf._execute({ userId }, { userId: otherUserId, groupId: group._id });
         const collector = new PublicationCollector({ userId: otherUserId });
-        collector.collect('users.group', { page: 1, itemPerPage: 5, slug: group.slug, search: '' }, (collections) => {
-          assert.equal(collections.users.length, 2);
-          assert.equal(
-            collections.users.filter((user) => [firstName, 'BobLeFilou'].includes(user.firstName)).length,
-            2,
-          );
-          done();
-        });
+        collector.collect(
+          'users.group',
+          { page: 1, itemPerPage: 5, slug: group.slug, search: '', userType: 'all' },
+          (collections) => {
+            assert.equal(collections.users.length, 2);
+            assert.equal(
+              collections.users.filter((user) => [firstName, 'BobLeFilou'].includes(user.firstName)).length,
+              2,
+            );
+            done();
+          },
+        );
+      });
+      it('sends all admins from a public group', function (done) {
+        setAdminOf._execute({ userId }, { userId, groupId: group._id });
+        setAnimatorOf._execute({ userId }, { userId: otherUserId, groupId: group._id });
+        const collector = new PublicationCollector({ userId: otherUserId });
+        collector.collect(
+          'users.group',
+          { page: 1, itemPerPage: 5, slug: group.slug, search: '', userType: 'admins' },
+          (collections) => {
+            assert.equal(collections.users.length, 1);
+            assert.equal(collections.users[0].emails[0].address, 'user@ac-test.fr');
+            done();
+          },
+        );
+      });
+      it('sends all animators from a public group', function (done) {
+        setAdminOf._execute({ userId }, { userId, groupId: group._id });
+        setAnimatorOf._execute({ userId }, { userId: otherUserId, groupId: group._id });
+        const collector = new PublicationCollector({ userId: otherUserId });
+        collector.collect(
+          'users.group',
+          { page: 1, itemPerPage: 5, slug: group.slug, search: '', userType: 'animators' },
+          (collections) => {
+            assert.equal(collections.users.length, 1);
+            assert.equal(collections.users[0].firstName, 'BobLeFilou');
+            done();
+          },
+        );
       });
       it('sends all users from a public group with filter', function (done) {
         const collector = new PublicationCollector({ userId: otherUserId });
         collector.collect(
           'users.group',
-          { page: 1, itemPerPage: 5, slug: group.slug, search: 'BobLeFilou' },
+          { page: 1, itemPerPage: 5, slug: group.slug, search: 'BobLeFilou', userType: 'all' },
           (collections) => {
             assert.equal(collections.users.length, 1);
             assert.equal(collections.users[0].firstName, 'BobLeFilou');
@@ -275,29 +312,41 @@ describe('users', function () {
       });
       it('does send users from a public group when not member', function (done) {
         const collector = new PublicationCollector({ userId });
-        collector.collect('users.group', { page: 1, itemPerPage: 5, slug: group4.slug, search: '' }, (collections) => {
-          assert.equal(collections.users.length, 1);
-          assert.equal(collections.users[0].firstName, 'BobLeFilou');
-          done();
-        });
+        collector.collect(
+          'users.group',
+          { page: 1, itemPerPage: 5, slug: group4.slug, search: '', userType: 'all' },
+          (collections) => {
+            assert.equal(collections.users.length, 1);
+            assert.equal(collections.users[0].firstName, 'BobLeFilou');
+            done();
+          },
+        );
       });
       it('does not send users from a protected group when not member', function (done) {
         const collector = new PublicationCollector({ userId });
-        collector.collect('users.group', { page: 1, itemPerPage: 5, slug: group3.slug, search: '' }, (collections) => {
-          assert.equal(collections.user, undefined);
-          done();
-        });
+        collector.collect(
+          'users.group',
+          { page: 1, itemPerPage: 5, slug: group3.slug, search: '', userType: 'all' },
+          (collections) => {
+            assert.equal(collections.user, undefined);
+            done();
+          },
+        );
       });
       it('does send users from a protected group when member', function (done) {
         const collector = new PublicationCollector({ userId });
-        collector.collect('users.group', { page: 1, itemPerPage: 5, slug: group2.slug, search: '' }, (collections) => {
-          assert.equal(collections.users.length, 2);
-          assert.equal(
-            collections.users.filter((user) => [firstName, 'BobLeFilou'].includes(user.firstName)).length,
-            2,
-          );
-          done();
-        });
+        collector.collect(
+          'users.group',
+          { page: 1, itemPerPage: 5, slug: group2.slug, search: '', userType: 'all' },
+          (collections) => {
+            assert.equal(collections.users.length, 2);
+            assert.equal(
+              collections.users.filter((user) => [firstName, 'BobLeFilou'].includes(user.firstName)).length,
+              2,
+            );
+            done();
+          },
+        );
       });
     });
     describe('users.publishers', function () {

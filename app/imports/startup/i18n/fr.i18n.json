@@ -186,6 +186,7 @@
         "members": "Membres",
         "animators": "Animateurs",
         "admins": "Administrateurs",
+        "all": "Tous",
         "applications": "ID de l'application",
         "nextcloud": "Créer le groupe dans Nextcloud",
         "plugins": "Services liés gérant les groupes"
@@ -198,7 +199,7 @@
         "displayed": "affiché",
         "inactive": "inactif",
         "invisible": "caché",
-        "maintenance" : "maintenance"
+        "maintenance": "maintenance"
       },
       "labels": {
         "id": "Id de Service",
@@ -1188,7 +1189,7 @@
       "categories": "Catégories",
       "open": "Ouvrir",
       "inactive": "Service inactif",
-      "maintenance" : "Service en maintenance",
+      "maintenance": "Service en maintenance",
       "propulsedBy": "Propulsé par"
     },
     "PersonalPage": {
@@ -1279,7 +1280,8 @@
       "back": "Retour au groupe",
       "searchText": "Quel utilisateur cherchez-vous ?",
       "noAccess": "Vous n'avez pas accès à l'annuaire de ce groupe.",
-      "noUsers": "Il n'y a aucun utilisateur trouvé pour ce groupe."
+      "noUsers": "Il n'y a aucun utilisateur trouvé pour ce groupe.",
+      "userType": "Type d'utilisateurs"
     },
     "Events": {
       "seeEvent": "Voir l'événement",

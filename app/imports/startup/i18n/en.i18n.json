@@ -186,6 +186,7 @@
         "members": "Members",
         "animators": "Animators",
         "admins": "Admins",
+        "all": "All",
         "applications": "Applications ID",
         "nextcloud": "Create groupe in Nextcloud",
         "plugins": "Related services managing groups"
@@ -198,7 +199,7 @@
         "displayed": "displayed",
         "inactive": "inactive",
         "invisible": "invisible",
-        "maintenance" : "maintenance"
+        "maintenance": "maintenance"
       },
       "labels": {
         "id": "Service Id",
@@ -902,7 +903,7 @@
       }
     },
     "SignIn": {
-      "back":"Go back",
+      "back": "Go back",
       "appDescription": "Digital services shared by National Education agents",
       "appVersion": "Test Alpha 0.1 Version",
       "emailLabel": "Username or Email",
@@ -1185,7 +1186,7 @@
       "categories": "Categories",
       "open": "Open",
       "inactive": "Inactive service",
-      "maintenance" : "Service on Maintenance",
+      "maintenance": "Service on Maintenance",
       "propulsedBy": "Propulsed by"
     },
     "PersonalPage": {
@@ -1277,7 +1278,8 @@
       "back": "Back to the group",
       "searchText": "Which user are you looking for ?",
       "noAccess": "You don't have access to address book of this group",
-      "noUsers": "No user found for this group"
+      "noUsers": "No user found for this group",
+      "userType": "Users type"
     },
     "Events": {
       "seeEvent": "See event",
