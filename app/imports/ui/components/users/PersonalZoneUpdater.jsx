@@ -194,7 +194,14 @@ function PersonalZoneUpdater({
   };
 
   const filterService = (element) => {
-    return element.type === 'service';
+    if (element.type === 'service') {
+      const service = Services.findOne({ _id: element.element_id });
+      if (service.state !== 10) {
+        // 10 = service hide //
+        return true;
+      }
+    }
+    return false;
   };
   // focus on search input when it appears
   useEffect(() => {
