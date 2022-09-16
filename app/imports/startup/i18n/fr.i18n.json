@@ -47,7 +47,9 @@
         "content_personalData": "Texte des Données Personnelles",
         "maintenance": "Statut de maintenance",
         "textMaintenance": "Raison de la maintenance",
-        "userStructureValidationMandatory": "Statut de la validation obligatoire d'une structure"
+        "personalSpace": "Espace Personnel",
+        "external_personalSpace": "Utiliser un lien externe pour la page Espace Personnel",
+        "link_personalSpace": "Lien vers la video de la page Espace Personnel"
       },
       "migrationLockedText": "La migration de la base de données est bloquée.",
       "updateAppsettings": {
@@ -503,7 +505,11 @@
       "content_personalData": "Texte des Données Personnelles",
       "changesNotSaved": "Changements non sauvegardés",
       "update": "Mettre à jour",
-      "cancel": "Annuler"
+      "cancel": "Annuler",
+      "title_personalSpace": "Espace personnel",
+      "content_personalSpace": "Texte de l'espace personnel",
+      "external_personalSpace": "Utiliser un lien externe pour la page Espace Personnel",
+      "link_personalSpace": "Lien vers la video de la page Espace Personnel"
     },
     "AdminNextCloudUrlEdit": {
       "subtitle": "Ajout et édition d'URL Nextcloud",
@@ -962,6 +968,7 @@
       "globalInfo": "Informations générales",
       "accessibility": "Accessibilité",
       "personalData": "Données Personnelles",
+      "personalSpace": "Intro de l'espace perso",
       "maintenance": "Options de maintenance",
       "toggleMaintenance": "Mettre le site en maintenance",
       "errorMongo": "Une erreur MongoDB est survenue lors de la migration.",
@@ -1281,7 +1288,7 @@
       "welcome": "Bienvenue sur votre espace personnel",
       "searchText": "Besoin de retrouver un service, groupe ou lien personnel ?",
       "searchElement": "Chercher un élément",
-      "noFavYet": "Ajoutez ici des éléments depuis l'onglet Applications",
+      "noFavYet": "Ajoutez des Applications",
       "unsorted": "À trier",
       "unsortedFav": "Mes Favoris",
       "unsortedGroup": "Mes groupes",

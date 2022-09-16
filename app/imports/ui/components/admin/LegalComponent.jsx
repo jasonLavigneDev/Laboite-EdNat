@@ -86,7 +86,6 @@ const LegalComponent = ({ tabkey, data = {} }) => {
 
   const onSubmitUpdateData = () => {
     setLoading(true);
-
     updateAppsettings.call({ ...state, key: tabkey }, (error) => {
       setLoading(false);
       if (error) {

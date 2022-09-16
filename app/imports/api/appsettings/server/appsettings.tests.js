@@ -62,6 +62,11 @@ describe('appsettings', function () {
           content: 'pdata_content',
         },
         userStructureValidationMandatory: false,
+        personalSpace: {
+          external: false,
+          link: 'pSpaceData_link',
+          content: 'pSpaceData_content',
+        },
       };
       AppSettings.insert(appsettinit);
     });
@@ -205,6 +210,11 @@ describe('appsettings', function () {
           content: 'pdata_content',
         },
         userStructureValidationMandatory: false,
+        personalSpace: {
+          external: false,
+          link: 'pSpaceData_link',
+          content: 'pSpaceData_content',
+        },
       };
       AppSettings.insert(appsettinit);
 
