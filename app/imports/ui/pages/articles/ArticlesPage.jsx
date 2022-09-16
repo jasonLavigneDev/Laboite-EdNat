@@ -154,7 +154,10 @@ function ArticlesPage({
   const handleCopyURL = () => {
     let myPublicPublicationURL;
     if (Meteor.settings.public.laboiteBlogURL) {
-      myPublicPublicationURL = `${blogPage}authors/${Meteor.userId()}`;
+      myPublicPublicationURL = `${blogPage}/authors/${Meteor.userId()}`;
+      if (blogPage.charAt(blogPage.length - 1) === '/') {
+        myPublicPublicationURL = `${blogPage}authors/${Meteor.userId()}`;
+      }
     } else {
       myPublicPublicationURL = `${blogPage}${Meteor.userId()}`;
     }
@@ -237,7 +240,7 @@ function ArticlesPage({
             />
           </Grid>
 
-          {loading ? (
+          {loading && total !== 0 ? (
             <Spinner />
           ) : (
             <Grid container spacing={isMobile ? 2 : 4}>
