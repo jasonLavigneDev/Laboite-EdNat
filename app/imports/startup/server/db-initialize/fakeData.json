@@ -4,14 +4,12 @@
       "email": "admin@ac-dijon.fr",
       "password": "changeme",
       "role": "admin",
-      "structure": "EviKfwAnFtcjEWFdz",
       "firstName": "Jean",
       "lastName": "Dupont"
     },
     {
       "email": "eole@ac-dijon.fr",
       "password": "changeme",
-      "structure": "EviKfwAnFtcjEWFdz",
       "firstName": "Guy",
       "lastName": "Durand"
     }
@@ -256,147 +254,126 @@
   ],
   "defaultStructures": [
     {
-      "_id": "EviKfwznFZcjEWFdz",
       "name": "Ministère Education",
       "parentId": null,
       "childrenIds": [],
       "ancestorsIds": []
     },
     {
-      "_id": "EviKfwAnFZcrEWFdz",
       "name": "Éducation",
       "parentId": null,
       "childrenIds": [],
       "ancestorsIds": []
     },
     {
-      "_id": "EviKfwgnFZcjEWFdz",
       "name": "Auvergne-Rhône-Alpes",
       "parentId": null,
       "childrenIds": [],
       "ancestorsIds": []
     },
     {
-      "_id": "EviKdwAnFZcjEWFdz",
       "name": "Bourgogne-Franche-Comté",
       "parentId": null,
       "childrenIds": [],
       "ancestorsIds": []
     },
     {
-      "_id": "EviKfwqdFZcjEWFdz",
       "name": "Bretagne",
       "parentId": null,
       "childrenIds": [],
       "ancestorsIds": []
     },
     {
-      "_id": "EviKfwAnFtcjEWFdz",
       "name": "Centre-Val de Loire",
       "parentId": null,
       "childrenIds": [],
       "ancestorsIds": []
     },
     {
-      "_id": "EbiKfwAnFZcjEWFdz",
       "name": "Corse",
       "parentId": null,
       "childrenIds": [],
       "ancestorsIds": []
     },
     {
-      "_id": "EviKfwAnFrcjEWFdz",
       "name": "Grand Est",
       "parentId": null,
       "childrenIds": [],
       "ancestorsIds": []
     },
     {
-      "_id": "EviKfwAnFZcjEWFdm",
       "name": "Guadeloupe",
       "parentId": null,
       "childrenIds": [],
       "ancestorsIds": []
     },
     {
-      "_id": "EviKfwAnFZcjlWFdz",
       "name": "Guyane",
       "parentId": null,
       "childrenIds": [],
       "ancestorsIds": []
     },
     {
-      "_id": "EviKfoioFZcjEWFdz",
       "name": "Hauts-de-France",
       "parentId": null,
       "childrenIds": [],
       "ancestorsIds": []
     },
     {
-      "_id": "EviKfwAnFZcjuWFdz",
       "name": "Île-de-France",
       "parentId": null,
       "childrenIds": [],
       "ancestorsIds": []
     },
     {
-      "_id": "EviKfdsnFZcjEWFdz",
       "name": "Martinique",
       "parentId": null,
       "childrenIds": [],
       "ancestorsIds": []
     },
     {
-      "_id": "EviKfwAnFZcjEazdz",
       "name": "Normandie",
       "parentId": null,
       "childrenIds": [],
       "ancestorsIds": []
     },
     {
-      "_id": "EviKfwAnFZcjEWFde",
       "name": "Nouvelle-Aquitaine",
       "parentId": null,
       "childrenIds": [],
       "ancestorsIds": []
     },
     {
-      "_id": "EviKfwAnFZcjEWFdc",
       "name": "Occitanie",
       "parentId": null,
       "childrenIds": [],
       "ancestorsIds": []
     },
     {
-      "_id": "EviKfwAnFZcjEWsqz",
       "name": "Pays de la Loire",
       "parentId": null,
       "childrenIds": [],
       "ancestorsIds": []
     },
     {
-      "_id": "EvijfwAnFZcjEWFdz",
       "name": "Provence-Alpes-Côte d'Azur",
       "parentId": null,
       "childrenIds": [],
       "ancestorsIds": []
     },
     {
-      "_id": "EviKfwAnfbcjEWFdz",
       "name": "La Réunion",
       "parentId": null,
       "childrenIds": [],
       "ancestorsIds": []
     },
     {
-      "_id": "EviKfwAnzfcjEWFdz",
       "name": "Collectivité",
       "parentId": null,
       "childrenIds": [],
       "ancestorsIds": []
     },
     {
-      "_id": "EviKfwAnFZcxEWFdz",
       "name": "Autre",
       "parentId": null,
       "childrenIds": [],

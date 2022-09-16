@@ -2,25 +2,25 @@ import React, { useEffect, useRef } from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Roles } from 'meteor/alanning:roles';
 import PropTypes from 'prop-types';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import Fade from '@material-ui/core/Fade';
-import Container from '@material-ui/core/Container';
-import Grid from '@material-ui/core/Grid';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import Fade from '@mui/material/Fade';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
 import i18n from 'meteor/universe:i18n';
-import ListItemText from '@material-ui/core/ListItemText';
-import ArrowBack from '@material-ui/icons/ArrowBack';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Typography from '@material-ui/core/Typography';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import { makeStyles } from '@material-ui/core/styles';
-import Divider from '@material-ui/core/Divider';
-import Tooltip from '@material-ui/core/Tooltip';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import LanguageIcon from '@material-ui/icons/Language';
-import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
-import SendIcon from '@material-ui/icons/Send';
+import ListItemText from '@mui/material/ListItemText';
+import ArrowBack from '@mui/icons-material/ArrowBack';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import Typography from '@mui/material/Typography';
+import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
+import { makeStyles } from 'tss-react/mui';
+import Divider from '@mui/material/Divider';
+import Tooltip from '@mui/material/Tooltip';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import LanguageIcon from '@mui/icons-material/Language';
+import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
+import SendIcon from '@mui/icons-material/Send';
 import { useHistory } from 'react-router-dom';
 import { useAppContext } from '../../contexts/context';
 import { usePagination } from '../../utils/hooks';
@@ -30,7 +30,7 @@ import Groups from '../../../api/groups/groups';
 import { getStructure } from '../../../api/structures/hooks';
 import { GroupSearch, GroupPaginate } from './common';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   root: {
     flexGrow: 1,
     marginTop: theme.spacing(3),
@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
 const ITEM_PER_PAGE = 10;
 
 const AddressBook = ({ loading, group, slug }) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const history = useHistory();
   const [{ userId, addressBookPage }, dispatch] = useAppContext();
   const { search = '', searchToggle = false } = addressBookPage;
@@ -174,6 +174,7 @@ const AddressBook = ({ loading, group, slug }) => {
                                       '_blank',
                                     )
                                   }
+                                  size="large"
                                 >
                                   <LanguageIcon />
                                 </IconButton>
@@ -188,6 +189,7 @@ const AddressBook = ({ loading, group, slug }) => {
                                   edge="end"
                                   aria-label="comments"
                                   onClick={() => window.open(`${authorBlogPage}${user._id}`, '_blank')}
+                                  size="large"
                                 >
                                   <LibraryBooksIcon />
                                 </IconButton>
@@ -197,7 +199,12 @@ const AddressBook = ({ loading, group, slug }) => {
                               title={`${i18n.__('pages.AddressBook.sendEmail')} ${user.firstName}`}
                               aria-label="add"
                             >
-                              <IconButton edge="end" aria-label="comments" href={`mailto:${user.emails[0].address}`}>
+                              <IconButton
+                                edge="end"
+                                aria-label="comments"
+                                href={`mailto:${user.emails[0].address}`}
+                                size="large"
+                              >
                                 <SendIcon />
                               </IconButton>
                             </Tooltip>

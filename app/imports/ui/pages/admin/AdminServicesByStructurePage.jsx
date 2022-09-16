@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Meteor } from 'meteor/meteor';
 import { useTracker } from 'meteor/react-meteor-data';
-import Fade from '@material-ui/core/Fade';
-import Grid from '@material-ui/core/Grid';
-import Container from '@material-ui/core/Container';
-import Typography from '@material-ui/core/Typography';
+import Fade from '@mui/material/Fade';
+import Grid from '@mui/material/Grid';
+import Container from '@mui/material/Container';
+import Typography from '@mui/material/Typography';
 import i18n from 'meteor/universe:i18n';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 import Spinner from '../../components/system/Spinner';
 import Services from '../../../api/services/services';
 import StructureSelect from '../../components/structures/StructureSelect';
@@ -14,7 +14,7 @@ import { useStructure, useAdminSelectedStructure } from '../../../api/structures
 import AdminServicesTable from '../../components/admin/AdminServicesTable';
 import { useAppContext } from '../../contexts/context';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   root: {
     flexGrow: 1,
     marginTop: theme.spacing(3),
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
 
 const AdminServicesByStructurePage = () => {
   const [{ isMobile }] = useAppContext();
-  const classes = useStyles();
+  const { classes } = useStyles();
   const userStructure = useStructure();
 
   const [selectedStructureId, setSelectedStructureId] = useState(

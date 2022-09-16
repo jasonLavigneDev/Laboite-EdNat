@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
+import { keyframes } from 'tss-react';
 
 const cubes = [
   '0.5s',
@@ -30,7 +31,7 @@ const cubes = [
   '0.5s',
 ];
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   wrapper: {
     width: '100%',
     display: 'flex',
@@ -40,7 +41,14 @@ const useStyles = makeStyles((theme) => ({
     height: '100%',
     backgroundColor: 'rgba(255, 255, 255, 0.75)',
     zIndex: 10,
-    animation: '$fade-in 0.5s ease-in-out',
+    animation: `${keyframes`
+    0% {
+      opacity: 0%;
+    }
+    100% {
+      opacity: 100%;
+    }
+    `} 0.5s ease-in-out`,
   },
   mainLoader: {
     position: 'fixed',
@@ -73,34 +81,24 @@ const useStyles = makeStyles((theme) => ({
     width: '20%',
     height: '20%',
     float: 'left',
-    animation: '$sk-grid 1.5s infinite ease-in-out',
     backgroundImage: `url("${theme.logos.SMALL_LOGO}")`,
     backgroundRepeat: 'no-repeat',
     backgroundAttachment: 'inherit',
     backgroundSize: 60,
-  },
-  '@keyframes sk-grid': {
-    '0%': {},
-    '70%': {},
-    '100%': {
-      transform: 'scale3D(1, 1, 1)',
-    },
-    '50%': {
-      transform: 'scale3D(0.1, 0.1, 1)',
-    },
-  },
-  '@keyframes fade-in': {
-    '0%': {
-      opacity: '0%',
-    },
-    '100%': {
-      opacity: '100%',
-    },
+    animation: `${keyframes`
+    0%, 70% {}
+    100% {
+      transform: scale3D(1, 1, 1);
+    }
+    50% {
+      transform: scale3D(0.1, 0.1, 1);
+    }
+    `} 1.5s infinite ease-in-out`,
   },
 }));
 
 const Spinner = ({ full = false, message = null }) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   return (
     <div className={`${classes.wrapper} ${full ? classes.mainLoader : ''}`}>
       <div className={classes.loaderWrapper}>

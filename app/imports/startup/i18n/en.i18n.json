@@ -112,7 +112,8 @@
           "title": "Structure introduction title",
           "content": "Structure introduction content",
           "language": "Structure introduction language"
-        }
+        },
+        "contactEmail": "Structure contact email"
       }
     },
     "users": {
@@ -196,7 +197,8 @@
       "states": {
         "displayed": "displayed",
         "inactive": "inactive",
-        "invisible": "invisible"
+        "invisible": "invisible",
+        "maintenance" : "maintenance"
       },
       "labels": {
         "id": "Service Id",
@@ -548,7 +550,7 @@
       "menuAdminBackHome": "Back to Personnal Space",
       "menuUserStructure": "Structures Management",
       "menuAdminOfStructures": "Sub structures Management",
-      "menuAdminStructureIntroduction": "Structure introduction"
+      "menuAdminStructureSettings": "Structure settings"
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Your account has not been activated",
@@ -825,6 +827,9 @@
         "title": "Title (optional)",
         "content": "Content"
       }
+    },
+    "AdminStructureChangeEmailContact": {
+      "label": "Email de contact"
     }
   },
   "validatejs": {
@@ -897,6 +902,7 @@
       }
     },
     "SignIn": {
+      "back":"Go back",
       "appDescription": "Digital services shared by National Education agents",
       "appVersion": "Test Alpha 0.1 Version",
       "emailLabel": "Username or Email",
@@ -1008,7 +1014,9 @@
       "viewSimple": "Simple view",
       "endOfList": "End of the list",
       "filterGroup": "Show only joined groups",
-      "noGroup": "There is no group to display."
+      "noGroup": "There is no group to display.",
+      "addEvent": "Add new event",
+      "addPoll": "Add new poll"
     },
     "AdminHome": {
       "title": "Administration Page",
@@ -1177,6 +1185,7 @@
       "categories": "Categories",
       "open": "Open",
       "inactive": "Inactive service",
+      "maintenance" : "Service on Maintenance",
       "propulsedBy": "Propulsed by"
     },
     "PersonalPage": {
@@ -1315,12 +1324,22 @@
       "selectTag": "Add",
       "save_draf": "Save Draft",
       "draft": "Draft",
+      "license": "License",
       "createTag": "Create",
       "CloseEditArticle": {
         "title": "Discard changes",
         "mainText": "Do you really want to close this page ? Any unsaved changes will be lost.",
         "confirm": "Confirm",
         "cancel": "Cancel"
+      },
+      "licenceInfo": "For more information about licenses, check the documentation on the Creative Commons website: ",
+      "Licences": {
+        "CC_BY": "Attribution",
+        "CC_BY-SA": "Attribution-ShareAlike",
+        "CC_BY-ND": "Attribution-NoDerivatives",
+        "CC_BY-NC": "Attribution-NonCommercial",
+        "CC_BY-NC-SA": "Attribution-NonCommercial-ShareAlike",
+        "CC_BY-NC-ND": "Attribution-NonCommercial-NoDerivatives"
       }
     },
     "PublicArticlePage": {
@@ -1380,8 +1399,8 @@
       "informationsOf": "Informations of",
       "titleStructures": "Structures informations"
     },
-    "AdminIntroductionByStructurePage": {
-      "title": "Structure's introduction texts"
+    "AdminStructureSettingsPage": {
+      "title": "Structure settings"
     }
   },
   "layouts": {

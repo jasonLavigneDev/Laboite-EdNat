@@ -1,20 +1,21 @@
 import React, { useRef, useEffect } from 'react';
+import { Meteor } from 'meteor/meteor';
 import { useHistory } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core/styles';
-import Fade from '@material-ui/core/Fade';
-import Container from '@material-ui/core/Container';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
+import { makeStyles } from 'tss-react/mui';
+import Fade from '@mui/material/Fade';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 
-import SearchIcon from '@material-ui/icons/Search';
-import AddIcon from '@material-ui/icons/Add';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import Switch from '@material-ui/core/Switch';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Pagination from '@material-ui/lab/Pagination';
+import SearchIcon from '@mui/icons-material/Search';
+import AddIcon from '@mui/icons-material/Add';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import ToggleButton from '@mui/material/ToggleButton';
+import Switch from '@mui/material/Switch';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Pagination from '@mui/material/Pagination';
 import i18n from 'meteor/universe:i18n';
 import { Roles } from 'meteor/alanning:roles';
 import { useTracker } from 'meteor/react-meteor-data';
@@ -27,12 +28,9 @@ import GroupDetailsList from '../../components/groups/GroupDetailsList';
 import CollapsingSearch from '../../components/system/CollapsingSearch';
 import { useIconStyles, DetaiIconCustom, SimpleIconCustom } from '../../components/system/icons/icons';
 import Spinner from '../../components/system/Spinner';
+import { GRID_VIEW_MODE } from '../../utils/ui';
 
-const useStyles = makeStyles(() => ({
-  small: {
-    padding: '5px !important',
-    transition: 'all 300ms ease-in-out',
-  },
+const useStyles = makeStyles()(() => ({
   flex: {
     display: 'flex',
     justifyContent: 'space-between',
@@ -40,6 +38,7 @@ const useStyles = makeStyles(() => ({
   },
   cardGrid: {
     marginBottom: '0px',
+    marginTop: '10px',
   },
   mobileButtonContainer: {
     display: 'flex',
@@ -83,13 +82,16 @@ function GroupsPage() {
   const [{ isMobile, groupPage, userId }, dispatch] = useAppContext();
   const [filterChecked, setFilterChecked] = React.useState(false);
   const history = useHistory();
-  const classes = useStyles();
-  const classesIcons = useIconStyles();
+  const { classes } = useStyles();
+  const { classes: classesIcons } = useIconStyles();
+
   const {
-    search = '',
-    searchToggle = false,
-    viewMode = 'list', // Possible values : "card" or "list"
-  } = groupPage;
+    public: {
+      ui: { defaultGridViewMode },
+    },
+  } = Meteor.settings;
+
+  const { search = '', searchToggle = false, viewMode = GRID_VIEW_MODE[defaultGridViewMode] } = groupPage;
   const { changePage, page, items, total, loading } = !filterChecked
     ? usePagination('groups.all', { search }, Groups, {}, { sort: { name: 1 } }, ITEM_PER_PAGE)
     : usePagination('groups.memberOf', { search, userId }, Groups, {}, { sort: { name: 1 } }, ITEM_PER_PAGE);
@@ -155,14 +157,22 @@ function GroupsPage() {
 
   const toggleButtons = (
     <ToggleButtonGroup value={viewMode} exclusive aria-label={i18n.__('pages.GroupsPage.viewMode')}>
-      <ToggleButton value="card" onClick={changeViewMode} aria-label={i18n.__('pages.GroupsPage.viewDetail')}>
+      <ToggleButton
+        value={GRID_VIEW_MODE.detail}
+        onClick={changeViewMode}
+        aria-label={i18n.__('pages.GroupsPage.viewDetail')}
+      >
         <Tooltip title={i18n.__('pages.GroupsPage.viewDetail')}>
           <span className={classesIcons.size}>
             <DetaiIconCustom />
           </span>
         </Tooltip>
       </ToggleButton>
-      <ToggleButton value="list" onClick={changeViewMode} aria-label={i18n.__('pages.GroupsPage.viewSimple')}>
+      <ToggleButton
+        value={GRID_VIEW_MODE.compact}
+        onClick={changeViewMode}
+        aria-label={i18n.__('pages.GroupsPage.viewSimple')}
+      >
         <Tooltip title={i18n.__('pages.GroupsPage.viewSimple')}>
           <span className={classesIcons.size}>
             <SimpleIconCustom />
@@ -188,12 +198,12 @@ function GroupsPage() {
             <Typography variant={isMobile ? 'h6' : 'h4'} className={classes.flex}>
               {`${i18n.__('pages.GroupsPage.title')} (${total})`}
               <Tooltip title={i18n.__('pages.GroupsPage.searchGroup')}>
-                <IconButton onClick={toggleSearch}>
+                <IconButton onClick={toggleSearch} size="large">
                   <SearchIcon fontSize="large" />
                 </IconButton>
               </Tooltip>
               <Tooltip title={i18n.__('pages.GroupsPage.addGroup')}>
-                <IconButton onClick={goToAddGroup}>
+                <IconButton onClick={goToAddGroup} size="large">
                   <AddIcon fontSize="large" />
                 </IconButton>
               </Tooltip>
@@ -204,7 +214,6 @@ function GroupsPage() {
         </Grid>
         <Grid container spacing={4}>
           <CollapsingSearch
-            classes={searchToggle ? null : classes.small}
             label={i18n.__('pages.GroupsPage.searchText')}
             updateSearch={updateSearch}
             checkEscape={checkEscape}
@@ -230,7 +239,7 @@ function GroupsPage() {
                 <Pagination count={Math.ceil(total / ITEM_PER_PAGE)} page={page} onChange={handleChangePage} />
               </Grid>
             )}
-            {isMobile && viewMode === 'list'
+            {isMobile && viewMode === GRID_VIEW_MODE.compact
               ? mapList((group) => (
                   <Grid className={classes.gridItem} item key={group._id} xs={12} sm={12} md={6} lg={4}>
                     <GroupDetailsList
@@ -248,7 +257,7 @@ function GroupsPage() {
                     <GroupDetails
                       key={group.name}
                       group={group}
-                      isShort={!isMobile && viewMode === 'list'}
+                      isShort={!isMobile && viewMode === GRID_VIEW_MODE.compact}
                       candidate={candidateGroups.includes(group._id)}
                       member={memberGroups.includes(group._id)}
                       animator={animatorGroups.includes(group._id)}

@@ -1,19 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Meteor } from 'meteor/meteor';
+import sanitizeHtml from 'sanitize-html';
 import { withTracker } from 'meteor/react-meteor-data';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import { makeStyles } from 'tss-react/mui';
 import validate from 'validate.js';
 import i18n from 'meteor/universe:i18n';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import Fade from '@material-ui/core/Fade';
-import FormGroup from '@material-ui/core/FormGroup';
-import Checkbox from '@material-ui/core/Checkbox';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Fade from '@mui/material/Fade';
+import FormGroup from '@mui/material/FormGroup';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 
 import Spinner from '../../components/system/Spinner';
@@ -23,6 +24,7 @@ import Structures from '../../../api/structures/structures';
 import { getCurrentIntroduction } from '../../../api/utils';
 import { usePageTracking } from '../../utils/matomo';
 import { useAppContext } from '../../contexts/context';
+import { useFormStateValidator } from '../../utils/hooks';
 
 validate.options = {
   fullMessages: false,
@@ -43,7 +45,7 @@ const schema = {
   },
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   form: {
     width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(1),
@@ -70,45 +72,9 @@ if (Meteor.settings.public.enableKeycloak === true) {
   });
 }
 
-export const useFormStateValidator = (formSchema) => {
-  const [formState, setFormState] = useState({
-    isValid: false,
-    values: {},
-    touched: {},
-    errors: {},
-  });
-  useEffect(() => {
-    const errors = validate(formState.values, formSchema);
-
-    setFormState(() => ({
-      ...formState,
-      isValid: !errors,
-      errors: errors || {},
-    }));
-  }, [formState.values]);
-
-  const handleChange = (event) => {
-    event.persist();
-
-    setFormState(() => ({
-      ...formState,
-      values: {
-        ...formState.values,
-        [event.target.name]: event.target.type === 'checkbox' ? event.target.checked : event.target.value,
-      },
-      touched: {
-        ...formState.touched,
-        [event.target.name]: true,
-      },
-    }));
-  };
-
-  return [formState, handleChange, setFormState];
-};
-
 function SignIn({ loggingIn, introduction, appsettings, ready }) {
   const [{ isIframed }] = useAppContext();
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { trackEvent } = useMatomo();
   usePageTracking({
     documentTitle: 'Page de connexion',
@@ -160,14 +126,7 @@ function SignIn({ loggingIn, introduction, appsettings, ready }) {
   const RememberButton = () => (
     <FormGroup>
       <FormControlLabel
-        control={
-          <Checkbox
-            checked={rememberMe}
-            onChange={() => setRememberMe(!rememberMe)}
-            name="rememberMe"
-            color="primary"
-          />
-        }
+        control={<Checkbox checked={rememberMe} onChange={() => setRememberMe(!rememberMe)} name="rememberMe" />}
         label={i18n.__('pages.SignIn.rememberMe')}
       />
     </FormGroup>
@@ -177,12 +136,12 @@ function SignIn({ loggingIn, introduction, appsettings, ready }) {
     <Spinner />
   ) : (
     <Fade in>
-      <>
+      <div>
         <Typography variant="h5" color="inherit" paragraph>
           {i18n.__('pages.SignIn.appDescription')}
         </Typography>
         {!ready && !loggingIn && <Spinner />}
-        <div dangerouslySetInnerHTML={{ __html: introduction }} />
+        <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(introduction) }} />
         <form onSubmit={handleSignIn} className={classes.form} noValidate>
           {loggingIn && <Spinner full />}
           {useKeycloak ? (
@@ -262,7 +221,7 @@ function SignIn({ loggingIn, introduction, appsettings, ready }) {
             </>
           )}
         </form>
-      </>
+      </div>
     </Fade>
   );
 }

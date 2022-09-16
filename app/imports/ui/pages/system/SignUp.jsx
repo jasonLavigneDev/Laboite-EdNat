@@ -1,27 +1,30 @@
 import React from 'react';
+import sanitizeHtml from 'sanitize-html';
 import { Accounts } from 'meteor/accounts-base';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import IconButton from '@material-ui/core/IconButton';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
-import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import InputLabel from '@material-ui/core/InputLabel';
+import Button from '@mui/material/Button';
+import CssBaseline from '@mui/material/CssBaseline';
+import TextField from '@mui/material/TextField';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import { makeStyles } from 'tss-react/mui';
+import Container from '@mui/material/Container';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import FormControl from '@mui/material/FormControl';
+import FormHelperText from '@mui/material/FormHelperText';
+import InputLabel from '@mui/material/InputLabel';
+import GlobalStyles from '@mui/material/GlobalStyles';
 import { useHistory } from 'react-router-dom';
 import validate from 'validate.js';
 import i18n from 'meteor/universe:i18n';
 import PropTypes from 'prop-types';
 import CustomSelect from '../../components/admin/CustomSelect';
 import Spinner from '../../components/system/Spinner';
-import { mainPagesTracker, useFormStateValidator } from './SignIn';
+import { mainPagesTracker } from './SignIn';
+import { useFormStateValidator } from '../../utils/hooks';
 
 validate.options = {
   fullMessages: false,
@@ -66,12 +69,7 @@ const schema = {
   },
 };
 
-const useStyles = makeStyles((theme) => ({
-  '@global': {
-    body: {
-      backgroundColor: theme.palette.common.white,
-    },
-  },
+const useStyles = makeStyles()((theme) => ({
   paper: {
     marginTop: theme.spacing(4),
     display: 'flex',
@@ -89,7 +87,7 @@ const useStyles = makeStyles((theme) => ({
 
 const SignUp = ({ introduction, ready, structures, loadingStructure }) => {
   const history = useHistory();
-  const classes = useStyles();
+  const { classes, theme } = useStyles();
 
   const [formState, handleChange, setFormState] = useFormStateValidator(schema);
   const [values, setValues] = React.useState({
@@ -97,10 +95,6 @@ const SignUp = ({ introduction, ready, structures, loadingStructure }) => {
   });
 
   const structureLabel = React.useRef(null);
-  const [labelWidth, setLabelWidth] = React.useState(0);
-  React.useEffect(() => {
-    setLabelWidth(structureLabel.current.offsetWidth);
-  }, []);
 
   const handleBlurEmail = (event) => {
     if (formState.values.userName === undefined || formState.values.userName === '') {
@@ -151,12 +145,17 @@ const SignUp = ({ introduction, ready, structures, loadingStructure }) => {
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
+      <GlobalStyles
+        styles={{
+          body: { backgroundColor: theme.palette.common.white },
+        }}
+      />
       <div className={classes.paper}>
         <Typography component="h1" variant="h5">
           {i18n.__('pages.SignUp.appDescription')}
         </Typography>
 
-        {!ready ? <Spinner /> : <div dangerouslySetInnerHTML={{ __html: introduction }} />}
+        {!ready ? <Spinner /> : <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(introduction) }} />}
 
         <form onSubmit={handleSignUp} className={classes.form} noValidate>
           <Grid container spacing={2}>
@@ -238,7 +237,6 @@ const SignUp = ({ introduction, ready, structures, loadingStructure }) => {
                   type={values.showPassword ? 'text' : 'password'}
                   value={formState.values.password || ''}
                   error={hasError('password')}
-                  labelWidth={100}
                   onChange={handleChange}
                   endAdornment={
                     <InputAdornment position="end">
@@ -247,6 +245,7 @@ const SignUp = ({ introduction, ready, structures, loadingStructure }) => {
                         aria-label={i18n.__('pages.SignUp.pwdButtonLabel')}
                         onClick={handleClickShowPassword}
                         onMouseDown={handleMouseDownPassword}
+                        size="large"
                       >
                         {values.showPassword ? <Visibility /> : <VisibilityOff />}
                       </IconButton>
@@ -274,7 +273,6 @@ const SignUp = ({ introduction, ready, structures, loadingStructure }) => {
                     value={formState.values.structureSelect || ''}
                     error={hasError('structureSelect')}
                     onChange={handleChange}
-                    labelWidth={labelWidth}
                     options={structures.map((opt) => ({ value: opt._id, label: opt.name }))}
                   />
                 )}

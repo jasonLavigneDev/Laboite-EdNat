@@ -2,31 +2,37 @@ import React, { useRef, useEffect } from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Roles } from 'meteor/alanning:roles';
 import PropTypes from 'prop-types';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import Fade from '@material-ui/core/Fade';
-import Container from '@material-ui/core/Container';
-import Grid from '@material-ui/core/Grid';
+import AddIcon from '@mui/icons-material/Add';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import Fade from '@mui/material/Fade';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
 import i18n from 'meteor/universe:i18n';
-import ListItemText from '@material-ui/core/ListItemText';
-import ArrowBack from '@material-ui/icons/ArrowBack';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import Button from '@material-ui/core/Button';
-import PollIcon from '@material-ui/icons/Poll';
+import ListItemText from '@mui/material/ListItemText';
+import ArrowBack from '@mui/icons-material/ArrowBack';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import TextField from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
+import ClearIcon from '@mui/icons-material/Clear';
+import SearchIcon from '@mui/icons-material/Search';
+import Divider from '@mui/material/Divider';
+import Button from '@mui/material/Button';
+import PollIcon from '@mui/icons-material/Poll';
 import { useHistory } from 'react-router-dom';
 import { usePagination } from '../../utils/hooks';
 import { useAppContext } from '../../contexts/context';
 import Groups from '../../../api/groups/groups';
 import Polls from '../../../api/polls/polls';
 import Spinner from '../../components/system/Spinner';
-import { GroupSearch, GroupPaginate, GroupListActions } from './common';
+import { GroupPaginate, GroupListActions } from './common';
 import { useEvenstPageStyles } from './EventsPage';
 
 const ITEM_PER_PAGE = 10;
 
 const PollPage = ({ loading, group, slug }) => {
-  const classes = useEvenstPageStyles();
+  const { classes } = useEvenstPageStyles();
   const history = useHistory();
   const [{ userId, pollPage }, dispatch] = useAppContext();
 
@@ -91,12 +97,46 @@ const PollPage = ({ loading, group, slug }) => {
             <Spinner />
           ) : userInGroup || group.type === 0 ? (
             <>
-              <GroupSearch
-                update={updateSearch}
-                reset={resetSearch}
-                search={search}
-                label={i18n.__('pages.Polls.searchText')}
-              />
+              <Grid item xs={12} sm={12} md={6} style={{ display: 'flex' }}>
+                <TextField
+                  margin="normal"
+                  id="search"
+                  label={i18n.__('pages.Polls.searchText')}
+                  name="search"
+                  fullWidth
+                  onChange={updateSearch}
+                  type="text"
+                  value={search}
+                  variant="outlined"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon />
+                      </InputAdornment>
+                    ),
+                    endAdornment: search ? (
+                      <InputAdornment position="end">
+                        <IconButton onClick={resetSearch} size="large">
+                          <ClearIcon />
+                        </IconButton>
+                      </InputAdornment>
+                    ) : null,
+                  }}
+                />
+                <IconButton
+                  onClick={() =>
+                    window.open(
+                      `${Meteor.settings.public.services.sondagesUrl}/poll/new/1?groupId=${group._id}`,
+                      '_blank',
+                    )
+                  }
+                  size="large"
+                  title={i18n.__('pages.GroupsPage.addPoll')}
+                  style={{ paddingLeft: '20px', paddingRight: '20px' }}
+                >
+                  <AddIcon fontSize="large" />
+                </IconButton>
+              </Grid>
               <GroupPaginate
                 total={total}
                 nbItems={ITEM_PER_PAGE}

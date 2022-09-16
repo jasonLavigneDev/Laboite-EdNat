@@ -1,6 +1,6 @@
-import { createTheme } from '@material-ui/core/styles';
-import RIZOMO_DARK from './rizomo/light';
-import LABOITE_DARK from './laboite/light';
+import { createTheme } from '@mui/material/styles';
+import RIZOMO_DARK from './rizomo/dark';
+import LABOITE_DARK from './laboite/dark';
 import EOLE_DARK from './eole/dark';
 
 export const DARK_THEMES = {

@@ -1,25 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Meteor } from 'meteor/meteor';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 import { useHistory } from 'react-router-dom';
-import Typography from '@material-ui/core/Typography';
-import Card from '@material-ui/core/Card';
-import RemoveIcon from '@material-ui/icons/Remove';
-import Tooltip from '@material-ui/core/Tooltip';
-import Button from '@material-ui/core/Button';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
-import CardHeader from '@material-ui/core/CardHeader';
-import Avatar from '@material-ui/core/Avatar';
-import Zoom from '@material-ui/core/Zoom';
-import PublishIcon from '@material-ui/icons/Publish';
+import Typography from '@mui/material/Typography';
+import Card from '@mui/material/Card';
+import RemoveIcon from '@mui/icons-material/Remove';
+import Tooltip from '@mui/material/Tooltip';
+import Button from '@mui/material/Button';
+import CardActionArea from '@mui/material/CardActionArea';
+import CardActions from '@mui/material/CardActions';
+import CardHeader from '@mui/material/CardHeader';
+import Avatar from '@mui/material/Avatar';
+import Zoom from '@mui/material/Zoom';
+import PublishIcon from '@mui/icons-material/Publish';
 
 import i18n from 'meteor/universe:i18n';
 
 import { isUrlExternal } from '../../utils/utilsFuncs';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   card: {
     height: '100%',
     width: '100%',
@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ServiceDetailsPersSpace({ service, customDrag, isMobile, isSorted, needUpdate }) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const history = useHistory();
   const favButtonLabel = i18n.__('components.ServiceDetails.favButtonLabelNoFav');
   const backToDefaultButtonLabel = i18n.__('components.ServiceDetails.backToDefault');
@@ -114,7 +114,7 @@ function ServiceDetailsPersSpace({ service, customDrag, isMobile, isSorted, need
         <span className={classes.span}>
           <CardActionArea
             className={classes.actionarea}
-            disabled={service.state === 5 || customDrag}
+            disabled={service.state === 5 || service.state === 15 || customDrag}
             onClick={handleClick}
           >
             <CardHeader
@@ -122,7 +122,9 @@ function ServiceDetailsPersSpace({ service, customDrag, isMobile, isSorted, need
               avatar={<Avatar aria-label="recipe" className={classes.avatar} alt={service.title} src={service.logo} />}
               title={
                 <Typography
-                  className={service.state === 5 ? classes.serviceNameDiasbled : classes.serviceName}
+                  className={
+                    service.state === 5 || service.state === 15 ? classes.serviceNameDiasbled : classes.serviceName
+                  }
                   gutterBottom
                   noWrap={!isMobile}
                   variant="h6"
@@ -135,6 +137,10 @@ function ServiceDetailsPersSpace({ service, customDrag, isMobile, isSorted, need
                 service.state === 5 ? (
                   <Typography variant="body2" color="textSecondary" component="p">
                     {i18n.__('pages.SingleServicePage.inactive')}
+                  </Typography>
+                ) : service.state === 15 ? (
+                  <Typography variant="body2" color="textSecondary" component="p">
+                    {i18n.__('pages.SingleServicePage.maintenance')}
                   </Typography>
                 ) : (
                   ''

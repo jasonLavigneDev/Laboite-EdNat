@@ -1,14 +1,14 @@
 import { Meteor } from 'meteor/meteor';
 import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Toolbar from '@material-ui/core/Toolbar';
+import { makeStyles } from 'tss-react/mui';
+import Toolbar from '@mui/material/Toolbar';
 import { Link } from 'react-router-dom';
-import AppBar from '@material-ui/core/AppBar';
+import AppBar from '@mui/material/AppBar';
 import i18n from 'meteor/universe:i18n';
 import { useAppContext } from '../../contexts/context';
 import { getAppSettingsLinks } from '../../../api/appsettings/methods';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   root: {
     display: 'flex',
     justifyContent: 'space-between',
@@ -47,7 +47,7 @@ export const LEGAL_ROUTES = {
 };
 
 const Footer = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [settingsData, setSettingsData] = useState([]);
   const [{ isMobile }] = useAppContext();
   const externalBlog = Meteor.settings.public.laboiteBlogURL;

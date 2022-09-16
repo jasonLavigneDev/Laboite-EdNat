@@ -3,23 +3,23 @@ import React, { useState, useEffect } from 'react';
 import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data';
 import i18n from 'meteor/universe:i18n';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import Paper from '@material-ui/core/Paper';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
-import InputLabel from '@material-ui/core/InputLabel';
-import Fade from '@material-ui/core/Fade';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Grid from '@material-ui/core/Grid';
+import { makeStyles } from 'tss-react/mui';
+import Container from '@mui/material/Container';
+import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import InputLabel from '@mui/material/InputLabel';
+import Fade from '@mui/material/Fade';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Grid from '@mui/material/Grid';
 
 import PropTypes from 'prop-types';
 import slugify from 'slugify';
@@ -38,7 +38,7 @@ import '../../utils/QuillVideo';
 import AvatarPicker from '../../components/users/AvatarPicker';
 import AdminGroupDelete from '../../components/admin/AdminGroupDelete';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   root: {
     padding: theme.spacing(2),
     marginBottom: theme.spacing(5),
@@ -136,20 +136,14 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
   const [{ isMobile }] = useAppContext();
   const { groupPlugins } = Meteor.settings.public;
   const history = useHistory();
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const [{ userId }] = useAppContext();
   const isAdmin = Roles.userIsInRole(userId, 'admin', params._id);
   const canDelete = isAdmin || group.owner === userId;
 
   const typeLabel = React.useRef(null);
-  const [labelTypeWidth, setLabelTypeWidth] = React.useState(36);
   const { minioEndPoint } = Meteor.settings.public;
-  useEffect(() => {
-    if (typeLabel.current) {
-      setLabelTypeWidth(typeLabel.current.offsetWidth);
-    }
-  }, []);
 
   useEffect(() => {
     if (params._id && group._id && loading) {
@@ -317,7 +311,6 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
                   checked={plugins[plugin] || false}
                   onChange={(event) => onChangePlugins(event, plugin)}
                   name={plugin}
-                  color="primary"
                   disabled={!!params._id}
                 />
               }
@@ -374,7 +367,6 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
                   </InputLabel>
                   <Select
                     labelId="type-label"
-                    labelWidth={labelTypeWidth}
                     id="type"
                     name="type"
                     value={groupData.type}

@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import TextField from '@material-ui/core/TextField';
-import SearchIcon from '@material-ui/icons/Search';
-import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
+import TextField from '@mui/material/TextField';
+import SearchIcon from '@mui/icons-material/Search';
+import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import i18n from 'meteor/universe:i18n';
-import { makeStyles } from '@material-ui/core/styles';
-import InputAdornment from '@material-ui/core/InputAdornment';
+import { makeStyles } from 'tss-react/mui';
+import InputAdornment from '@mui/material/InputAdornment';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   noRightBorderRadius: {
     borderTopRightRadius: 0,
     borderBottomRightRadius: 0,
@@ -15,7 +15,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 function TagFinder({ tags, onSelected, exclude, opened, resetKey, inputWidth }) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState(tags.filter((tag) => !exclude.includes(tag.name)));
   let existingTags = tags.map((tag) => tag.name.toLowerCase());
@@ -63,7 +63,7 @@ function TagFinder({ tags, onSelected, exclude, opened, resetKey, inputWidth }) 
         }
         return filtered;
       }}
-      getOptionSelected={(option, value) => {
+      isOptionEqualToValue={(option, value) => {
         return option.name.toLowerCase === value.toLowerCase;
       }}
       getOptionLabel={(option) => {
@@ -78,7 +78,6 @@ function TagFinder({ tags, onSelected, exclude, opened, resetKey, inputWidth }) 
         // Regular option
         return option.name;
       }}
-      renderOption={(option) => option.name}
       noOptionsText={i18n.__('components.TagFinder.noTag')}
       clearText={i18n.__('components.TagFinder.clear')}
       loadingText={i18n.__('components.TagFinder.loading')}

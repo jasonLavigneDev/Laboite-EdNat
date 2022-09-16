@@ -1,16 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import i18n from 'meteor/universe:i18n';
-import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
+import { makeStyles } from 'tss-react/mui';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardActions from '@mui/material/CardActions';
+import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles()({
   root: {
     marginTop: 20,
     height: '72vh',
@@ -22,7 +22,7 @@ const useStyles = makeStyles({
 });
 
 const CardMessage = ({ title, subtitle, link, linkText }) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   return (
     <Grid className={classes.root} container justifyContent="center">
       <Grid item md={4} xs={11}>

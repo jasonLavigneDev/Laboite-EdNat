@@ -2,42 +2,41 @@
 import React, { useRef, useState } from 'react';
 import i18n from 'meteor/universe:i18n';
 import AvatarEditor from 'react-avatar-editor';
-import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardActions from '@material-ui/core/CardActions';
-import IconButton from '@material-ui/core/IconButton';
-import ClearIcon from '@material-ui/icons/Clear';
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
-import Modal from '@material-ui/core/Modal';
-import Slider from '@material-ui/core/Slider';
-import Tooltip from '@material-ui/core/Tooltip';
-import Typography from '@material-ui/core/Typography';
-import RotateLeftIcon from '@material-ui/icons/RotateLeft';
-import RotateRightIcon from '@material-ui/icons/RotateRight';
+import { makeStyles } from 'tss-react/mui';
+import Card from '@mui/material/Card';
+import CardHeader from '@mui/material/CardHeader';
+import CardActions from '@mui/material/CardActions';
+import IconButton from '@mui/material/IconButton';
+import ClearIcon from '@mui/icons-material/Clear';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
+import Modal from '@mui/material/Modal';
+import Slider from '@mui/material/Slider';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
+import RotateLeftIcon from '@mui/icons-material/RotateLeft';
+import RotateRightIcon from '@mui/icons-material/RotateRight';
 import PropTypes from 'prop-types';
 import { useAppContext } from '../../contexts/context';
 import COMMON_STYLES from '../../themes/styles';
 
-const useStyles = (isMobile) =>
-  makeStyles(() => ({
-    root: COMMON_STYLES.root,
-    media: COMMON_STYLES.media,
-    video: COMMON_STYLES.video,
-    actions: COMMON_STYLES.actions,
-    paper: COMMON_STYLES.paper(isMobile, '50%'),
-    iconWrapper: {
-      display: 'flex',
-      justifyContent: 'space-evenly',
-      alignItems: 'center',
-    },
-    alert: COMMON_STYLES.alert,
-  }));
+const useStyles = makeStyles()((theme, isMobile) => ({
+  root: COMMON_STYLES.root,
+  media: COMMON_STYLES.media,
+  video: COMMON_STYLES.video,
+  actions: COMMON_STYLES.actions,
+  paper: COMMON_STYLES.paper(isMobile, '50%'),
+  iconWrapper: {
+    display: 'flex',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+  },
+  alert: COMMON_STYLES.alert,
+}));
 
 const AvatarEdit = ({ open, avatar, onClose, onSendImage }) => {
   const [{ isMobile }] = useAppContext();
-  const classes = useStyles(isMobile)();
+  const { classes } = useStyles(isMobile);
   const [scale, setScale] = useState(1);
   const [rotate, setRotate] = useState(0);
 
@@ -68,7 +67,7 @@ const AvatarEdit = ({ open, avatar, onClose, onSendImage }) => {
             title={i18n.__('components.AvatarEdit.title')}
             subheader={i18n.__('components.AvatarEdit.subtitle')}
             action={
-              <IconButton onClick={onClose}>
+              <IconButton onClick={onClose} size="large">
                 <ClearIcon />
               </IconButton>
             }
@@ -117,7 +116,7 @@ const AvatarEdit = ({ open, avatar, onClose, onSendImage }) => {
                 aria-label={i18n.__('components.AvatarEdit.turnLeft')}
                 placement="top"
               >
-                <IconButton onClick={() => onRotate(-1)}>
+                <IconButton onClick={() => onRotate(-1)} size="large">
                   <RotateLeftIcon />
                 </IconButton>
               </Tooltip>
@@ -126,7 +125,7 @@ const AvatarEdit = ({ open, avatar, onClose, onSendImage }) => {
                 aria-label={i18n.__('components.AvatarEdit.turnRight')}
                 placement="top"
               >
-                <IconButton onClick={() => onRotate(1)}>
+                <IconButton onClick={() => onRotate(1)} size="large">
                   <RotateRightIcon />
                 </IconButton>
               </Tooltip>

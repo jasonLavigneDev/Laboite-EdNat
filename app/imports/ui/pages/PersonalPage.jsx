@@ -3,132 +3,128 @@ import { Meteor } from 'meteor/meteor';
 import { Random } from 'meteor/random';
 import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
+import { makeStyles } from 'tss-react/mui';
+import Container from '@mui/material/Container';
 import { Link } from 'react-router-dom';
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 import i18n from 'meteor/universe:i18n';
-import Typography from '@material-ui/core/Typography';
-import Fade from '@material-ui/core/Fade';
-import IconButton from '@material-ui/core/IconButton';
-import Button from '@material-ui/core/Button';
-import Tooltip from '@material-ui/core/Tooltip';
+import Typography from '@mui/material/Typography';
+import Fade from '@mui/material/Fade';
+import IconButton from '@mui/material/IconButton';
+import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
 
-import Switch from '@material-ui/core/Switch';
-import EditIcon from '@material-ui/icons/Edit';
-import LockIcon from '@material-ui/icons/Lock';
-import AddBoxIcon from '@material-ui/icons/AddBox';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import SearchIcon from '@material-ui/icons/Search';
+import Switch from '@mui/material/Switch';
+import EditIcon from '@mui/icons-material/Edit';
+import LockIcon from '@mui/icons-material/Lock';
+import AddBoxIcon from '@mui/icons-material/AddBox';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import SearchIcon from '@mui/icons-material/Search';
 import Groups from '../../api/groups/groups';
 import Services from '../../api/services/services';
 import Spinner from '../components/system/Spinner';
 import PersonalSpaces from '../../api/personalspaces/personalspaces';
 import PersonalZone from '../components/personalspace/PersonalZone';
-import Animation from '../components/screencast/Animation';
 import { useAppContext } from '../contexts/context';
 import UserBookmarks from '../../api/userBookmarks/userBookmarks';
 import CollapsingSearch from '../components/system/CollapsingSearch';
 
-const useStyles = (isMobile) =>
-  makeStyles((theme) => ({
-    small: {
-      padding: '5px !important',
-      transition: 'all 300ms ease-in-out',
-    },
-    search: {
-      marginBottom: 20,
-      marginLeft: 16,
-    },
+import Animation from '../components/screencast/Animation';
 
-    mobileButtonContainer: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      paddingTop: '0 !important',
+const useStyles = makeStyles()((theme, isMobile) => ({
+  search: {
+    marginBottom: 20,
+    marginLeft: 16,
+  },
+
+  mobileButtonContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: '0 !important',
+  },
+  zoneButtonContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  flex: {
+    display: 'flex',
+    flexDirection: isMobile ? 'column' : 'row',
+    justifyContent: 'space-between',
+    alignItems: isMobile ? 'flex-start' : 'center',
+  },
+  flexGrow: {},
+  cardGrid: {
+    paddingTop: theme.spacing(0),
+    paddingBottom: theme.spacing(2),
+  },
+  chip: {
+    margin: theme.spacing(1),
+  },
+  badge: { position: 'inherit' },
+  modeEdition: { width: 'max-content' },
+  gridItem: {
+    position: 'relative',
+    '&.sortable-ghost': { opacity: 0.3 },
+  },
+  ghost: {
+    opacity: '1 !important',
+  },
+  titleButtons: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  handle: {
+    cursor: 'grab',
+    position: 'absolute',
+    textAlign: 'center',
+    width: 'calc(100% - 32px)',
+    backgroundColor: theme.palette.primary.main,
+    opacity: 0.2,
+    height: 20,
+    borderTopLeftRadius: theme.shape.borderRadius,
+    borderTopRightRadius: theme.shape.borderRadius,
+    '&::after': {
+      content: '""',
+      width: '80%',
+      height: '3px',
+      backgroundColor: 'white',
+      display: 'inline-block',
+      marginBottom: '3px',
+      borderRadius: theme.shape.borderRadius,
     },
-    zoneButtonContainer: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
+  },
+  zoneButtonEnd: {
+    opacity: 0.7,
+    textTransform: 'none',
+    width: '75%',
+    cursor: 'pointer',
+    '&:hover': {
+      opacity: 1,
+      color: theme.palette.primary.main,
+      backgroundColor: theme.palette.tertiary.main,
     },
-    flex: {
-      display: 'flex',
-      flexDirection: isMobile ? 'column' : 'row',
-      justifyContent: 'space-between',
-      alignItems: isMobile ? 'flex-start' : 'center',
-    },
-    flexGrow: {},
-    cardGrid: {
-      paddingTop: theme.spacing(0),
-      paddingBottom: theme.spacing(2),
-    },
-    chip: {
-      margin: theme.spacing(1),
-    },
-    badge: { position: 'inherit' },
-    modeEdition: { width: 'max-content' },
-    gridItem: {
-      position: 'relative',
-      '&.sortable-ghost': { opacity: 0.3 },
-    },
-    ghost: {
-      opacity: '1 !important',
-    },
-    titleButtons: {
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center',
-    },
-    handle: {
-      cursor: 'grab',
-      position: 'absolute',
-      textAlign: 'center',
-      width: 'calc(100% - 32px)',
-      backgroundColor: theme.palette.primary.main,
-      opacity: 0.2,
-      height: 20,
-      borderTopLeftRadius: theme.shape.borderRadius,
-      borderTopRightRadius: theme.shape.borderRadius,
-      '&::after': {
-        content: '""',
-        width: '80%',
-        height: '3px',
-        backgroundColor: 'white',
-        display: 'inline-block',
-        marginBottom: '3px',
-        borderRadius: theme.shape.borderRadius,
-      },
-    },
-    zoneButtonEnd: {
-      opacity: 0.7,
-      textTransform: 'none',
-      width: '75%',
-      cursor: 'pointer',
-      '&:hover': {
-        opacity: 1,
-        color: theme.palette.primary.main,
-        backgroundColor: theme.palette.tertiary.main,
-      },
-    },
-    divider: {
-      marginTop: 20,
-      marginBottom: 20,
-      backgroundColor: '#cbd0ed',
-    },
-    goIcon: {
-      marginLeft: 8,
-      verticalAlign: 'bottom',
-    },
-    castTuto: {
-      marginTop: 30,
-      marginBottom: 15,
-    },
-    screen: {
-      marginTop: 30,
-      marginBottom: 40,
-    },
-  }));
+  },
+  divider: {
+    marginTop: 20,
+    marginBottom: 20,
+    backgroundColor: '#cbd0ed',
+  },
+  goIcon: {
+    marginLeft: 8,
+    verticalAlign: 'bottom',
+  },
+  castTuto: {
+    marginTop: 30,
+    marginBottom: 15,
+  },
+  screen: {
+    marginTop: 30,
+    marginBottom: 40,
+  },
+}));
 
 function PersonalPage({ personalspace, isLoading, allServices, allGroups, allLinks }) {
   const AUTOSAVE_INTERVAL = 3000;
@@ -136,7 +132,7 @@ function PersonalPage({ personalspace, isLoading, allServices, allGroups, allLin
   const [customDrag, setcustomDrag] = useState(false);
   const [search, setSearch] = useState('');
   const [searchToggle, setSearchToggle] = useState(false);
-  const classes = useStyles(isMobile)();
+  const { classes } = useStyles(isMobile);
   const inputRef = useRef(null);
 
   const updateSearch = (e) => {
@@ -369,7 +365,7 @@ function PersonalPage({ personalspace, isLoading, allServices, allGroups, allLin
                     <Grid container className={classes.titleButtons}>
                       <Grid item style={{ flexGrow: 1 }}>
                         <Tooltip title={i18n.__('pages.PersonalPage.searchElement')}>
-                          <IconButton onClick={toggleSearch} disabled={customDrag}>
+                          <IconButton onClick={toggleSearch} disabled={customDrag} size="large">
                             <SearchIcon fontSize="large" />
                           </IconButton>
                         </Tooltip>
@@ -407,7 +403,7 @@ function PersonalPage({ personalspace, isLoading, allServices, allGroups, allLin
               </Grid>
               <Grid container spacing={4}>
                 <CollapsingSearch
-                  classes={searchToggle ? classes.search : classes.small}
+                  classes={searchToggle ? classes.search : null}
                   label={i18n.__('pages.PersonalPage.searchText')}
                   updateSearch={updateSearch}
                   checkEscape={checkEscape}
@@ -419,7 +415,7 @@ function PersonalPage({ personalspace, isLoading, allServices, allGroups, allLin
               </Grid>
               {localPS.unsorted.length === 0 && localPS.sorted.length === 0 ? (
                 <Grid>
-                  <Animation />
+                  <Animation notReady={notReady} />
                   <div className={classes.screen}>
                     <Link to="/services">
                       {i18n.__('pages.PersonalPage.noFavYet')}

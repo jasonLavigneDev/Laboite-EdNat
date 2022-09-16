@@ -1,30 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { Meteor } from 'meteor/meteor';
 import i18n from 'meteor/universe:i18n';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 import { useTracker } from 'meteor/react-meteor-data';
 import { useHistory } from 'react-router-dom';
-import Container from '@material-ui/core/Container';
-import Paper from '@material-ui/core/Paper';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
-import InputLabel from '@material-ui/core/InputLabel';
-import Fade from '@material-ui/core/Fade';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import Grid from '@material-ui/core/Grid';
-import Tooltip from '@material-ui/core/Tooltip';
-import Checkbox from '@material-ui/core/Checkbox';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import MailIcon from '@material-ui/icons/Mail';
-import Input from '@material-ui/core/Input';
-import AutoComplete from '@material-ui/lab/Autocomplete';
+import Container from '@mui/material/Container';
+import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import InputLabel from '@mui/material/InputLabel';
+import Fade from '@mui/material/Fade';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import FormHelperText from '@mui/material/FormHelperText';
+import Grid from '@mui/material/Grid';
+import Tooltip from '@mui/material/Tooltip';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import MailIcon from '@mui/icons-material/Mail';
+import Input from '@mui/material/Input';
+import AutoComplete from '@mui/material/Autocomplete';
 import Spinner from '../../components/system/Spinner';
 import { useAppContext } from '../../contexts/context';
 import LanguageSwitcher from '../../components/system/LanguageSwitcher';
@@ -35,9 +35,9 @@ import AvatarPicker from '../../components/users/AvatarPicker';
 import Structures from '../../../api/structures/structures';
 import { getStructure, useStructure } from '../../../api/structures/hooks';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   root: {
-    padding: theme.spacing(2),
+    padding: theme.spacing(3),
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(5),
   },
@@ -112,7 +112,7 @@ const ProfilePage = () => {
   const [errors, setErrors] = useObjectState(defaultState);
   const [submitted, setSubmitted] = useState(false);
   const [structChecked, setStructChecked] = useState(false);
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { disabledFeatures = {}, enableKeycloak } = Meteor.settings.public;
   const enableBlog = !disabledFeatures.blog;
   const [{ user, loadingUser, isMobile }, dispatch] = useAppContext();
@@ -143,16 +143,6 @@ const ProfilePage = () => {
     return ret;
   }, [searchText && searchText.length > 2]);
 
-  const usernameLabel = React.useRef(null);
-  const [labelUsernameWidth, setLabelUsernameWidth] = React.useState(0);
-  useEffect(() => {
-    setLabelUsernameWidth(usernameLabel.current.offsetWidth);
-  }, []);
-  const logoutTypeLabel = React.useRef(null);
-  const [labelLogoutTypeWidth, setLabelLogoutTypeWidth] = React.useState(0);
-  useEffect(() => {
-    if (enableKeycloak) setLabelLogoutTypeWidth(logoutTypeLabel.current.offsetWidth);
-  }, []);
   const [tempImageLoaded, setTempImageLoaded] = useState(false);
   const { minioEndPoint } = Meteor.settings.public;
 
@@ -497,7 +487,7 @@ const ProfilePage = () => {
                     fullWidth
                     type="text"
                     value={userData.firstName || ''}
-                    variant="filled"
+                    variant="outlined"
                   />
                   <TextField
                     disabled={enableKeycloak}
@@ -512,7 +502,7 @@ const ProfilePage = () => {
                     fullWidth
                     type="text"
                     value={userData.lastName || ''}
-                    variant="filled"
+                    variant="outlined"
                   />
                   <TextField
                     disabled={enableKeycloak}
@@ -527,15 +517,10 @@ const ProfilePage = () => {
                     onChange={onUpdateField}
                     type="text"
                     value={userData.email || ''}
-                    variant="filled"
+                    variant="outlined"
                   />
-                  <FormControl variant="filled" fullWidth disabled={enableKeycloak} margin="normal">
-                    <InputLabel
-                      error={errors.username !== ''}
-                      htmlFor="username"
-                      id="username-label"
-                      ref={usernameLabel}
-                    >
+                  <FormControl variant="outlined" fullWidth disabled={enableKeycloak} margin="normal">
+                    <InputLabel error={errors.username !== ''} htmlFor="username" id="username-label">
                       {i18n.__('api.users.labels.username')}
                     </InputLabel>
                     <OutlinedInput
@@ -544,8 +529,7 @@ const ProfilePage = () => {
                       value={userData.username}
                       error={errors.username !== ''}
                       onChange={onUpdateField}
-                      // variant="filled"
-                      labelWidth={labelUsernameWidth}
+                      label={i18n.__('api.users.labels.username')}
                       endAdornment={
                         <InputAdornment position="end">
                           <Tooltip
@@ -553,7 +537,7 @@ const ProfilePage = () => {
                             aria-label={i18n.__('pages.ProfilePage.useEmail')}
                           >
                             <span>
-                              <IconButton onClick={useEmail} disabled={enableKeycloak}>
+                              <IconButton onClick={useEmail} disabled={enableKeycloak} size="large">
                                 <MailIcon />
                               </IconButton>
                             </span>
@@ -576,7 +560,7 @@ const ProfilePage = () => {
               </Grid>
               <Grid item />
               <Grid item className={classes.maxWidth}>
-                <FormControl variant="filled" className={classes.formControl} fullWidth>
+                <FormControl variant="outlined" className={classes.formControl} fullWidth>
                   <Typography>
                     {!user.isActive ? (
                       <span>{i18n.__('pages.ProfilePage.onlyActiveUserOption')}</span>
@@ -593,13 +577,17 @@ const ProfilePage = () => {
                     noOptionsText={i18n.__('pages.ProfilePage.noOptions')}
                     loading={isSearchLoading}
                     getOptionLabel={(option) => option.name}
-                    renderOption={(option) => {
+                    renderOption={(props, option) => {
                       let parent;
                       if (option.parentId) {
                         parent = flatData.find((s) => s._id === option.parentId);
                       }
                       return (
-                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                        <div
+                          {...props}
+                          style={{ display: 'flex', flexDirection: 'column', alignItems: 'start' }}
+                          key={option._id}
+                        >
                           <div>{option.name}</div>
                           {!!option.parentId && (
                             <div style={{ fontSize: 10, color: 'grey', fontStyle: 'italic' }}>
@@ -623,7 +611,7 @@ const ProfilePage = () => {
                       setSearchText(newInputValue);
                     }}
                     disabled={!user.isActive}
-                    getOptionSelected={(opt, val) => opt._id === val._id}
+                    isOptionEqualToValue={(opt, val) => opt._id === val._id}
                     style={{ width: 500 }}
                     renderInput={(params) => (
                       <TextField
@@ -636,7 +624,7 @@ const ProfilePage = () => {
                     )}
                   />
                 </FormControl>
-                <FormControl variant="filled" className={classes.formControl} fullWidth>
+                <FormControl variant="outlined" className={classes.formControl} fullWidth>
                   <Button
                     disabled={!user.isActive}
                     variant="outlined"
@@ -648,8 +636,8 @@ const ProfilePage = () => {
               </Grid>
               {enableKeycloak ? (
                 <Grid item>
-                  <FormControl variant="filled" fullWidth>
-                    <InputLabel htmlFor="logoutType" id="logoutType-label" ref={logoutTypeLabel}>
+                  <FormControl variant="outlined" fullWidth>
+                    <InputLabel htmlFor="logoutType" id="logoutType-label">
                       {i18n.__('pages.ProfilePage.logoutType')}
                     </InputLabel>
                     <Select
@@ -658,7 +646,6 @@ const ProfilePage = () => {
                       name="logoutType"
                       value={userData.logoutType}
                       onChange={onUpdateField}
-                      labelWidth={labelLogoutTypeWidth}
                     >
                       {Object.keys(logoutTypeLabels).map((val) => (
                         <MenuItem key={val} value={val}>
@@ -679,7 +666,6 @@ const ProfilePage = () => {
                     <Checkbox
                       id="advancedPersonalPage"
                       name="advancedPersonalPage"
-                      color="primary"
                       checked={userData.advancedPersonalPage}
                       onChange={onCheckOption}
                       inputProps={{ 'aria-label': 'primary checkbox' }}
@@ -695,7 +681,6 @@ const ProfilePage = () => {
                         <Checkbox
                           id="articlesEnable"
                           name="articlesEnable"
-                          color="primary"
                           checked={userData.articlesEnable}
                           onChange={onCheckOption}
                           inputProps={{ 'aria-label': 'primary checkbox' }}
@@ -708,7 +693,7 @@ const ProfilePage = () => {
               </Grid>
             </Grid>
             <div className={classes.buttonGroup}>
-              <Button variant="contained" onClick={resetForm}>
+              <Button variant="contained" onClick={resetForm} color="grey">
                 {i18n.__('pages.ProfilePage.reset')}
               </Button>
               <Button variant="contained" disabled={!submitOk} color="primary" onClick={submitUpdateUser}>
@@ -745,7 +730,6 @@ const ProfilePage = () => {
                   control={
                     <Checkbox
                       disabled={!user.structure}
-                      color="primary"
                       checked={structChecked}
                       onChange={() => setStructChecked(!structChecked)}
                       inputProps={{ 'aria-label': 'primary checkbox' }}
@@ -766,7 +750,7 @@ const ProfilePage = () => {
 
           <Grid container>
             <Grid item xs={12} sm={6} md={6} className={classes.buttonWrapper}>
-              <Button variant="contained" onClick={getAuthToken} color="primary">
+              <Button variant="contained" onClick={getAuthToken}>
                 {i18n.__('pages.ProfilePage.getAuthToken')}
               </Button>
             </Grid>

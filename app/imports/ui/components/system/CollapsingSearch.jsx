@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Collapse from '@material-ui/core/Collapse';
-import Grid from '@material-ui/core/Grid';
+import Collapse from '@mui/material/Collapse';
+import Grid from '@mui/material/Grid';
 import SearchField from './SearchField';
 
 const CollapsingSearch = ({

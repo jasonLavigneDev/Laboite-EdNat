@@ -2,27 +2,28 @@ import React, { useState } from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Meteor } from 'meteor/meteor';
 import PropTypes from 'prop-types';
+import sanitizeHtml from 'sanitize-html';
 import i18n from 'meteor/universe:i18n';
 import { useHistory, Link } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
-import Chip from '@material-ui/core/Chip';
-import Tooltip from '@material-ui/core/Tooltip';
-import Fade from '@material-ui/core/Fade';
+import { makeStyles } from 'tss-react/mui';
+import Container from '@mui/material/Container';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Grid';
+import Chip from '@mui/material/Chip';
+import Tooltip from '@mui/material/Tooltip';
+import Fade from '@mui/material/Fade';
 
-import AddIcon from '@material-ui/icons/Add';
-import RemoveIcon from '@material-ui/icons/Remove';
-import ArrowBack from '@material-ui/icons/ArrowBack';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
+import ArrowBack from '@mui/icons-material/ArrowBack';
 import Services from '../../../api/services/services';
 import Spinner from '../../components/system/Spinner';
 import { useAppContext } from '../../contexts/context';
 import Categories from '../../../api/categories/categories';
 import { isUrlExternal } from '../../utils/utilsFuncs';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   root: {
     flexGrow: 1,
     marginTop: theme.spacing(3),
@@ -89,7 +90,7 @@ const useStyles = makeStyles((theme) => ({
 
 const SingleServicePage = ({ service = {}, ready, categories = [] }) => {
   const history = useHistory();
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [{ user = {}, isMobile }] = useAppContext();
   const [loading, setLoading] = useState(false);
   const favorite = user.favServices && user.favServices.find((f) => f === service._id);
@@ -162,6 +163,13 @@ const SingleServicePage = ({ service = {}, ready, categories = [] }) => {
       {i18n.__('pages.SingleServicePage.inactive')}
     </Button>
   );
+
+  const maintenanceButton = (
+    <Button size="large" disabled className={classes.buttonText} variant="contained">
+      {i18n.__('pages.SingleServicePage.maintenance')}
+    </Button>
+  );
+
   return (
     <Fade in>
       <Container className={classes.root}>
@@ -186,7 +194,13 @@ const SingleServicePage = ({ service = {}, ready, categories = [] }) => {
           </Grid>
           <Grid item xs={12} sm={12} md={6} className={classes.favoriteButton}>
             {!isMobile && favButton}
-            {service.state === 5 ? inactiveButton : isExternal ? openButton : linkButton}
+            {service.state === 5
+              ? inactiveButton
+              : service.state === 15
+              ? maintenanceButton
+              : isExternal
+              ? openButton
+              : linkButton}
           </Grid>
           <Grid item xs={12} sm={12} md={12} className={classes.cardGrid}>
             <Typography className={classes.smallTitle} variant="h5">
@@ -206,7 +220,7 @@ const SingleServicePage = ({ service = {}, ready, categories = [] }) => {
             <Typography className={classes.smallTitle} variant="h5">
               Description
             </Typography>
-            <div className={classes.content} dangerouslySetInnerHTML={{ __html: service.content }} />
+            <div className={classes.content} dangerouslySetInnerHTML={{ __html: sanitizeHtml(service.content) }} />
           </Grid>
           {Boolean(service.screenshots.length) && (
             <>

@@ -1,31 +1,30 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 import { useTracker } from 'meteor/react-meteor-data';
 import { Counts } from 'meteor/tmeasday:publish-counts';
 import { Roles } from 'meteor/alanning:roles';
 import i18n from 'meteor/universe:i18n';
-import Chip from '@material-ui/core/Chip';
-import Box from '@material-ui/core/Box';
-import List from '@material-ui/core/List';
-import PeopleAltIcon from '@material-ui/icons/People';
-import GroupWorkIcon from '@material-ui/icons/GroupWork';
-import BusinessIcon from '@material-ui/icons/Business';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import PersonAddIcon from '@material-ui/icons/PersonAdd';
-import HttpIcon from '@material-ui/icons/Http';
-import LocalOfferIcon from '@material-ui/icons/LocalOffer';
-import SettingsInputComponentIcon from '@material-ui/icons/SettingsInputComponent';
-import SettingsIcon from '@material-ui/icons/Settings';
-import CategoryIcon from '@material-ui/icons/Category';
-import HomeIcon from '@material-ui/icons/Home';
-import HelpIcon from '@material-ui/icons/Help';
-import InfoIcon from '@material-ui/icons/Info';
-import Drawer from '@material-ui/core/Drawer';
-import Typography from '@material-ui/core/Typography';
-import Toolbar from '@material-ui/core/Toolbar';
-import Divider from '@material-ui/core/Divider';
+import Chip from '@mui/material/Chip';
+import Box from '@mui/material/Box';
+import List from '@mui/material/List';
+import PeopleAltIcon from '@mui/icons-material/People';
+import GroupWorkIcon from '@mui/icons-material/GroupWork';
+import BusinessIcon from '@mui/icons-material/Business';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import HttpIcon from '@mui/icons-material/Http';
+import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import SettingsInputComponentIcon from '@mui/icons-material/SettingsInputComponent';
+import SettingsIcon from '@mui/icons-material/Settings';
+import CategoryIcon from '@mui/icons-material/Category';
+import HomeIcon from '@mui/icons-material/Home';
+import HelpIcon from '@mui/icons-material/Help';
+import Drawer from '@mui/material/Drawer';
+import Typography from '@mui/material/Typography';
+import Toolbar from '@mui/material/Toolbar';
+import Divider from '@mui/material/Divider';
 import { useHistory, useLocation } from 'react-router-dom';
 import updateDocumentTitle from '../../utils/updateDocumentTitle';
 import { useAppContext } from '../../contexts/context';
@@ -33,26 +32,25 @@ import { useAppContext } from '../../contexts/context';
 const { disabledFeatures } = Meteor.settings.public;
 
 // CSS
-const useStyles = (isMobile) =>
-  makeStyles(() => ({
-    drawer: {
-      width: isMobile ? 65 : 300,
+const useStyles = makeStyles()((theme, isMobile) => ({
+  drawer: {
+    width: isMobile ? 65 : 300,
+    overflowX: 'hidden',
+    '& *': {
       overflowX: 'hidden',
-      '& *': {
-        overflowX: 'hidden',
-      },
-      '& .MuiDrawer-paper': {
-        marginTop: 48,
-        marginBottom: 48,
-        width: isMobile ? 65 : 300,
-        zIndex: 0,
-      },
     },
-  }));
+    '& .MuiDrawer-paper': {
+      paddingTop: 48,
+      paddingBottom: 48,
+      width: isMobile ? 65 : 300,
+      zIndex: 0,
+    },
+  },
+}));
 
 export default function AdminMenu() {
   const [{ user, isMobile }] = useAppContext();
-  const classes = useStyles(isMobile)();
+  const { classes } = useStyles(isMobile);
   const { pathname } = useLocation();
   const history = useHistory();
 
@@ -141,9 +139,9 @@ export default function AdminMenu() {
       hidden: !isAdminStructure,
     },
     {
-      path: '/admin/structuresintroduction',
-      content: 'menuAdminStructureIntroduction',
-      icon: <InfoIcon />,
+      path: '/admin/structuressettings',
+      content: 'menuAdminStructureSettings',
+      icon: <SettingsIcon />,
       hidden: !isAdminStructure,
     },
     {

@@ -1,19 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
+import sanitizeHtml from 'sanitize-html';
 import i18n from 'meteor/universe:i18n';
 import { withTracker } from 'meteor/react-meteor-data';
-import ArrowBack from '@material-ui/icons/ArrowBack';
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Container from '@material-ui/core/Container';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import Fade from '@material-ui/core/Fade';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
-import Chip from '@material-ui/core/Chip';
+import ArrowBack from '@mui/icons-material/ArrowBack';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import { makeStyles } from 'tss-react/mui';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
+import Fade from '@mui/material/Fade';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
+import Chip from '@mui/material/Chip';
 import html2pdf from 'html2pdf.js';
 import 'react-quill/dist/quill.snow.css';
 import 'codemirror/lib/codemirror.css'; // Editor's Dependency Style
@@ -47,7 +48,7 @@ const modifiedColorSyntax = (context, options) => {
   return colorSyntax(newContext, options);
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   root: {
     paddingTop: 60,
     marginBottom: -64,
@@ -117,7 +118,7 @@ function PublicArticleDetailsPage({
   },
 }) {
   const [{ isMobile }] = useAppContext();
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [user, setUser] = useState({});
   const [counted, setCounted] = useState(false);
   const [landscape, setLandscape] = useState(false);
@@ -243,7 +244,10 @@ function PublicArticleDetailsPage({
                   plugins={[chart, codeSyntaxHighlight, tableMergedCell, uml, modifiedColorSyntax]}
                 />
               ) : (
-                <div className={`ql-editor ${classes.content}`} dangerouslySetInnerHTML={{ __html: article.content }} />
+                <div
+                  className={`ql-editor ${classes.content}`}
+                  dangerouslySetInnerHTML={{ __html: sanitizeHtml(article.content) }}
+                />
               )}
             </Grid>
           </Grid>

@@ -1,9 +1,9 @@
 import React, { useEffect, lazy, Suspense } from 'react';
 import { useLocation, Route, Switch } from 'react-router-dom';
 import { withTracker } from 'meteor/react-meteor-data';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 import i18n from 'meteor/universe:i18n';
-import Alert from '@material-ui/lab/Alert';
+import Alert from '@mui/material/Alert';
 import { Roles } from 'meteor/alanning:roles';
 import PropTypes from 'prop-types';
 import AppSettings from '../../api/appsettings/appsettings';
@@ -48,50 +48,51 @@ const AdminGroupsPage = lazy(() => import('../pages/admin/AdminGroupsPage'));
 const AdminSingleGroupPage = lazy(() => import('../pages/admin/AdminSingleGroupPage'));
 
 // CSS
-export const useLayoutStyles = (isMobile) =>
-  makeStyles((theme) => ({
-    root: {
-      display: 'flex',
-      position: 'relative',
-    },
-    container: {
-      width: `calc(100% - ${isMobile ? 65 : 300}px)`,
-      position: 'relative',
-      minHeight: '50vh',
-    },
-    content: {
-      position: 'relative',
-      minHeight: '50vh',
-      flexGrow: 1,
-      padding: isMobile ? null : theme.spacing(3),
-      transition: theme.transitions.create('margin', {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-      }),
-      overflow: 'hidden',
-      marginTop: !isMobile && theme.shape.headerHeight ? theme.shape.headerHeight : 60,
-      marginBottom: isMobile ? 100 : 50,
-    },
-    flex: {
-      display: 'flex',
-      flexGrow: 1,
-    },
-    contentShift: {
-      transition: theme.transitions.create('margin', {
-        easing: theme.transitions.easing.easeOut,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
-      marginLeft: 0,
-    },
-    alertMaintenance: {
-      marginTop: isMobile ? 0 : -10,
-      marginBottom: 30,
-    },
-  }));
+export const useLayoutStyles = makeStyles()((theme, isMobile) => ({
+  root: {
+    display: 'flex',
+    position: 'relative',
+  },
+  container: {
+    width: `calc(100% - ${isMobile ? 65 : 300}px)`,
+    position: 'relative',
+    minHeight: '50vh',
+  },
+  content: {
+    position: 'relative',
+    minHeight: '50vh',
+    flexGrow: 1,
+    padding: isMobile ? null : theme.spacing(3),
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    overflow: 'hidden',
+    marginTop: !isMobile && theme.shape.headerHeight ? theme.shape.headerHeight : 60,
+    marginBottom: isMobile ? 100 : 50,
+  },
+  flex: {
+    display: 'flex',
+    flexGrow: 1,
+  },
+  contentShift: {
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+    marginLeft: 0,
+  },
+  alertMaintenance: {
+    marginTop: isMobile ? 0 : -10,
+    marginBottom: 30,
+  },
+}));
 
 function MainLayout({ appsettings, ready }) {
   const [{ userId, user, loadingUser, isMobile }] = useAppContext();
-  const classes = useLayoutStyles(isMobile)();
+  const { classes } = useLayoutStyles(isMobile, {
+    props: isMobile,
+  });
   const location = useLocation();
   const { disabledFeatures = {} } = Meteor.settings.public;
 

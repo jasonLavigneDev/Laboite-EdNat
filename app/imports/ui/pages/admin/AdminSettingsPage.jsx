@@ -1,50 +1,37 @@
 import React, { useEffect, useState } from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 import i18n from 'meteor/universe:i18n';
-import Container from '@material-ui/core/Container';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-import Fade from '@material-ui/core/Fade';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Tab from '@material-ui/core/Tab';
-import Tabs from '@material-ui/core/Tabs';
-import Grid from '@material-ui/core/Grid';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
+import Container from '@mui/material/Container';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
+import Fade from '@mui/material/Fade';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Grid from '@mui/material/Grid';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
 
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 
 import Spinner from '../../components/system/Spinner';
 import AppSettings from '../../../api/appsettings/appsettings';
 import LegalComponent from '../../components/admin/LegalComponent';
 import IntroductionEdition from '../../components/admin/IntroductionEdition';
+import TabbedForms from '../../components/system/TabbedForms';
+
 import { useAppContext } from '../../contexts/context';
 import { switchMaintenanceStatus, updateTextMaintenance } from '../../../api/appsettings/methods';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   root: {
     padding: theme.spacing(2),
     marginBottom: theme.spacing(5),
-  },
-  wysiwyg: {
-    marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(3),
-  },
-
-  buttonGroup: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    marginTop: theme.spacing(5),
-  },
-  buttonText: {
-    marginLeft: 10,
   },
   container: {
     flexGrow: 1,
@@ -54,14 +41,6 @@ const useStyles = makeStyles((theme) => ({
     padding: 25,
     display: 'block',
     width: '100%',
-  },
-  tab: {
-    '& > span': {
-      alignItems: 'end',
-    },
-  },
-  tabs: {
-    borderRight: `1px solid ${theme.palette.divider}`,
   },
 }));
 
@@ -94,16 +73,11 @@ const tabs = [
 ];
 
 const AdminSettingsPage = ({ ready, appsettings }) => {
-  const [selected, setSelected] = useState(0);
   const [msgMaintenance, setMsgMaintenance] = useState(appsettings.textMaintenance);
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [loading, setLoading] = useState(true);
   const [{ isMobile }] = useAppContext();
   const [open, setOpen] = useState(false);
-
-  const onChangeTab = (e, newTab) => {
-    setSelected(newTab);
-  };
 
   if (loading && !ready && !appsettings) {
     return <Spinner full />;
@@ -164,24 +138,7 @@ const AdminSettingsPage = ({ ready, appsettings }) => {
   return (
     <Fade in>
       <Container>
-        <Paper className={classes.root}>
-          <Grid container spacing={4}>
-            <Grid item md={12}>
-              <Typography variant={isMobile ? 'h6' : 'h4'}>{i18n.__('pages.AdminSettingsPage.edition')}</Typography>
-            </Grid>
-            <Grid item md={12} className={classes.container}>
-              <Tabs orientation="vertical" value={selected} onChange={onChangeTab} className={classes.tabs}>
-                {tabs.map(({ title, key }, index) => (
-                  <Tab className={classes.tab} label={title} id={index} key={key} />
-                ))}
-              </Tabs>
-              {tabs.map(({ key, Element }, i) => {
-                if (selected !== i) return null;
-                return <Element key={key} tabkey={key} data={appsettings[key]} />;
-              })}
-            </Grid>
-          </Grid>
-        </Paper>
+        <TabbedForms tabs={tabs} globalTitle={i18n.__('pages.AdminSettingsPage.edition')} />
         <Paper className={classes.root}>
           <Grid container spacing={4}>
             <Grid item md={12}>
@@ -190,41 +147,38 @@ const AdminSettingsPage = ({ ready, appsettings }) => {
             <Grid item md={12} className={classes.container}>
               <FormControlLabel
                 control={
-                  <Checkbox
-                    checked={appsettings.maintenance || false}
-                    onChange={onCheckMaintenance}
-                    name="external"
-                    color="primary"
-                  />
+                  <Checkbox checked={appsettings.maintenance || false} onChange={onCheckMaintenance} name="external" />
                 }
                 label={i18n.__(`pages.AdminSettingsPage.toggleMaintenance`)}
               />
             </Grid>
-            <FormControlLabel
-              className={classes.containerForm}
-              control={
-                <div style={{ marginTop: '-20px' }}>
-                  <TextField
-                    onChange={onUpdateField}
-                    value={msgMaintenance}
-                    name="link"
-                    label={i18n.__(`pages.AdminSettingsPage.textMaintenance`)}
-                    variant="outlined"
-                    fullWidth
-                    margin="normal"
-                  />
-                  <Button
-                    size="medium"
-                    disabled={buttonIsActive}
-                    variant="contained"
-                    color="primary"
-                    onClick={onButtonMaintenanceClick}
-                  >
-                    {i18n.__(`pages.AdminSettingsPage.buttonTextMaintenance`)}
-                  </Button>
-                </div>
-              }
-            />
+            <Grid item md={12} className={classes.container}>
+              <FormControlLabel
+                className={classes.containerForm}
+                control={
+                  <div style={{ marginTop: '-20px' }}>
+                    <TextField
+                      onChange={onUpdateField}
+                      value={msgMaintenance}
+                      name="link"
+                      label={i18n.__(`pages.AdminSettingsPage.textMaintenance`)}
+                      variant="outlined"
+                      fullWidth
+                      margin="normal"
+                    />
+                    <Button
+                      size="medium"
+                      disabled={buttonIsActive}
+                      variant="contained"
+                      color="primary"
+                      onClick={onButtonMaintenanceClick}
+                    >
+                      {i18n.__(`pages.AdminSettingsPage.buttonTextMaintenance`)}
+                    </Button>
+                  </div>
+                }
+              />
+            </Grid>
           </Grid>
         </Paper>
         <Dialog
@@ -250,7 +204,7 @@ const AdminSettingsPage = ({ ready, appsettings }) => {
             <Button onClick={() => switchMaintenance(true)} color="primary" autoFocus>
               {i18n.__('pages.AdminSettingsPage.unlockMigration.confirm')}
             </Button>
-            <Button onClick={() => switchMaintenance()} color="primary">
+            <Button onClick={() => switchMaintenance()} color="secondary">
               {i18n.__('pages.AdminSettingsPage.unlockMigration.cancel')}
             </Button>
           </DialogActions>

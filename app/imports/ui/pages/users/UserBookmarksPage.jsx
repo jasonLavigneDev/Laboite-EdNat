@@ -3,17 +3,17 @@ import { Meteor } from 'meteor/meteor';
 import PropTypes from 'prop-types';
 import i18n from 'meteor/universe:i18n';
 import { withTracker } from 'meteor/react-meteor-data';
-import ArrowBack from '@material-ui/icons/ArrowBack';
+import ArrowBack from '@mui/icons-material/ArrowBack';
 import MaterialTable from '@material-table/core';
-import Grid from '@material-ui/core/Grid';
-import { makeStyles } from '@material-ui/core/styles';
-import LanguageIcon from '@material-ui/icons/Language';
-import StarBorderIcon from '@material-ui/icons/StarBorder';
-import StarIcon from '@material-ui/icons/Star';
-import Container from '@material-ui/core/Container';
+import Grid from '@mui/material/Grid';
+import { makeStyles } from 'tss-react/mui';
+import LanguageIcon from '@mui/icons-material/Language';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
+import StarIcon from '@mui/icons-material/Star';
+import Container from '@mui/material/Container';
 import { Roles } from 'meteor/alanning:roles';
-import add from '@material-ui/icons/Add';
-import Button from '@material-ui/core/Button';
+import add from '@mui/icons-material/Add';
+import Button from '@mui/material/Button';
 import { useHistory } from 'react-router-dom';
 import Spinner from '../../components/system/Spinner';
 import { useAppContext } from '../../contexts/context';
@@ -22,7 +22,7 @@ import setMaterialTableLocalization from '../../components/initMaterialTableLoca
 import BookMarkEdit from '../../components/users/BookMarkEdit';
 import UserBookmarks from '../../../api/userBookmarks/userBookmarks';
 
-export const useBookmarkPageStyles = makeStyles(() => ({
+export const useBookmarkPageStyles = makeStyles()(() => ({
   ErrorPage: {
     textAlign: 'center',
   },
@@ -79,7 +79,7 @@ export const bookmarkColumns = (classes) => [
 function UserBookmarksPage({ loading, bookmarksList }) {
   const [{ user, userId }] = useAppContext();
   const history = useHistory();
-  const classes = useBookmarkPageStyles();
+  const { classes } = useBookmarkPageStyles();
 
   const columns = bookmarkColumns(classes);
 

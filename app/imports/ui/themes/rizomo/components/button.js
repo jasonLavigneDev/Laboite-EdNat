@@ -1,9 +1,11 @@
 export const buttonOverrides = () => ({
   MuiButton: {
-    root: {
-      boxShadow: 'none !important',
-      '&.MuiButton-contained': {
-        border: '1px solid',
+    styleOverrides: {
+      root: {
+        boxShadow: 'none !important',
+        '&.MuiButton-contained': {
+          border: '1px solid',
+        },
       },
     },
   },

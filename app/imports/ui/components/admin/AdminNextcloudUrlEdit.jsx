@@ -1,43 +1,42 @@
 import React, { useState } from 'react';
 import i18n from 'meteor/universe:i18n';
-import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardActions from '@material-ui/core/CardActions';
-import IconButton from '@material-ui/core/IconButton';
-import Button from '@material-ui/core/Button';
-import Modal from '@material-ui/core/Modal';
-import ClearIcon from '@material-ui/icons/Clear';
+import { makeStyles } from 'tss-react/mui';
+import Grid from '@mui/material/Grid';
+import Card from '@mui/material/Card';
+import CardHeader from '@mui/material/CardHeader';
+import CardActions from '@mui/material/CardActions';
+import IconButton from '@mui/material/IconButton';
+import Button from '@mui/material/Button';
+import Modal from '@mui/material/Modal';
+import ClearIcon from '@mui/icons-material/Clear';
 import PropTypes from 'prop-types';
-import CardContent from '@material-ui/core/CardContent';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
+import CardContent from '@mui/material/CardContent';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import { useAppContext } from '../../contexts/context';
 import COMMON_STYLES from '../../themes/styles';
 
-const useStyles = (isMobile) =>
-  makeStyles((theme) => ({
-    root: COMMON_STYLES.root,
-    media: COMMON_STYLES.media,
-    video: COMMON_STYLES.video,
-    actions: COMMON_STYLES.actions,
-    paper: COMMON_STYLES.paper(isMobile),
-    iconWrapper: COMMON_STYLES.iconWrapper,
-    groupCountInfo: COMMON_STYLES.groupCountInfo,
-    buttonGroup: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      marginTop: theme.spacing(5),
-    },
-    alert: COMMON_STYLES.alert,
-  }));
+const useStyles = makeStyles()((theme, isMobile) => ({
+  root: COMMON_STYLES.root,
+  media: COMMON_STYLES.media,
+  video: COMMON_STYLES.video,
+  actions: COMMON_STYLES.actions,
+  paper: COMMON_STYLES.paper(isMobile),
+  iconWrapper: COMMON_STYLES.iconWrapper,
+  groupCountInfo: COMMON_STYLES.groupCountInfo,
+  buttonGroup: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginTop: theme.spacing(5),
+  },
+  alert: COMMON_STYLES.alert,
+}));
 
 const AdminNextCloudUrlEdit = ({ data, open, onClose }) => {
   const [{ isMobile }] = useAppContext();
   const [url, setUrl] = useState(data.url);
   const active = true;
-  const classes = useStyles(isMobile)();
+  const { classes } = useStyles(isMobile);
   const changeURL = () => {
     Meteor.call(
       'nextcloud.updateURL',
@@ -67,7 +66,7 @@ const AdminNextCloudUrlEdit = ({ data, open, onClose }) => {
           <CardHeader
             title={i18n.__('components.AdminNextCloudUrlEdit.subtitle')}
             action={
-              <IconButton onClick={onClose}>
+              <IconButton onClick={onClose} size="large">
                 <ClearIcon />
               </IconButton>
             }

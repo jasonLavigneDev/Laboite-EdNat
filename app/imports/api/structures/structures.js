@@ -86,6 +86,13 @@ Structures.schema = new SimpleSchema(
     'introduction.$': {
       type: IntroductionSchema,
     },
+    contactEmail: {
+      type: String,
+      label: getLabel('api.structures.labels.contactEmail'),
+      optional: true,
+      defaultValue: null,
+      regEx: SimpleSchema.RegEx.Email,
+    },
   },
   {
     tracker: Tracker,
@@ -99,6 +106,7 @@ Structures.publicFields = {
   childrenIds: 1,
   ancestorsIds: 1,
   introduction: 1,
+  contactEmail: 1,
 };
 
 Structures.attachSchema(Structures.schema);

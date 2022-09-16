@@ -8,7 +8,7 @@ import '@toast-ui/editor/dist/i18n/fr-fr';
 import { Editor } from '@toast-ui/react-editor';
 import PropTypes from 'prop-types';
 import i18n from 'meteor/universe:i18n';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 import chart from '@toast-ui/editor-plugin-chart';
 import uml from '@toast-ui/editor-plugin-uml';
 import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
@@ -17,7 +17,7 @@ import tableMergedCell from '@toast-ui/editor-plugin-table-merged-cell';
 
 const SupportedLanguages = ['fr', 'fr-FR', 'en', 'en-US'];
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   hideMediaButton: {
     '& .image-toast, .webcam-toast, .audio-toast': {
       display: 'none',
@@ -88,7 +88,7 @@ const webcamIcon = `
 `;
 const ToastUIEditor = ({ value, onChange, handlers, toastRef, language }) => {
   const [isMarked, setMarked] = useState(true);
-  const classes = useStyles();
+  const { classes } = useStyles();
   // checks that requested language support is available (see imports above)
   const lang = SupportedLanguages.includes(language) ? language : 'en';
   useEffect(() => {

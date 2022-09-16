@@ -1,34 +1,33 @@
 import React, { useState } from 'react';
-import Card from '@material-ui/core/Card';
+import Card from '@mui/material/Card';
 import i18n from 'meteor/universe:i18n';
-import { makeStyles } from '@material-ui/core/styles';
-import CardActions from '@material-ui/core/CardActions';
-import CardHeader from '@material-ui/core/CardHeader';
-import ClearIcon from '@material-ui/icons/Clear';
-import IconButton from '@material-ui/core/IconButton';
-import Modal from '@material-ui/core/Modal';
+import { makeStyles } from 'tss-react/mui';
+import CardActions from '@mui/material/CardActions';
+import CardHeader from '@mui/material/CardHeader';
+import ClearIcon from '@mui/icons-material/Clear';
+import IconButton from '@mui/material/IconButton';
+import Modal from '@mui/material/Modal';
 import PropTypes from 'prop-types';
-import Button from '@material-ui/core/Button';
-import CardContent from '@material-ui/core/CardContent';
-import TextField from '@material-ui/core/TextField';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
+import Button from '@mui/material/Button';
+import CardContent from '@mui/material/CardContent';
+import TextField from '@mui/material/TextField';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 import { useAppContext } from '../../contexts/context';
 import COMMON_STYLES from '../../themes/styles';
 import { createNotification } from '../../../api/notifications/methods';
 import { NOTIFICATIONS_TYPES } from '../../../api/notifications/enums';
 
-const useStyles = (isMobile) =>
-  makeStyles(() => ({
-    root: COMMON_STYLES.root,
-    media: COMMON_STYLES.media,
-    video: COMMON_STYLES.video,
-    actions: COMMON_STYLES.actions,
-    paper: COMMON_STYLES.paper(isMobile, '50%'),
-    iconWrapper: COMMON_STYLES.iconWrapper,
-    groupCountInfo: COMMON_STYLES.groupCountInfo,
-    alert: COMMON_STYLES.alert,
-  }));
+const useStyles = makeStyles()((theme, isMobile) => ({
+  root: COMMON_STYLES.root,
+  media: COMMON_STYLES.media,
+  video: COMMON_STYLES.video,
+  actions: COMMON_STYLES.actions,
+  paper: COMMON_STYLES.paper(isMobile, '50%'),
+  iconWrapper: COMMON_STYLES.iconWrapper,
+  groupCountInfo: COMMON_STYLES.groupCountInfo,
+  alert: COMMON_STYLES.alert,
+}));
 
 const AdminSendNotification = ({ data, open, onClose }) => {
   const [{ isMobile }] = useAppContext();
@@ -38,7 +37,7 @@ const AdminSendNotification = ({ data, open, onClose }) => {
     type: 'info',
     userId: data._id,
   });
-  const classes = useStyles(isMobile)();
+  const { classes } = useStyles(isMobile);
   const sendNotification = () => {
     createNotification.call({ data: notifState }, (error) => {
       if (error) {
@@ -51,7 +50,6 @@ const AdminSendNotification = ({ data, open, onClose }) => {
   };
 
   const updateState = (e) => {
-    e.persist();
     setNotifState((state) => ({
       ...state,
       [e.target.name]: e.target.value,
@@ -65,7 +63,7 @@ const AdminSendNotification = ({ data, open, onClose }) => {
           <CardHeader
             title={i18n.__('components.AdminSendNotification.subtitle') + data.username}
             action={
-              <IconButton onClick={onClose}>
+              <IconButton onClick={onClose} size="large">
                 <ClearIcon />
               </IconButton>
             }

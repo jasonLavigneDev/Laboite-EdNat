@@ -1,25 +1,25 @@
 import React from 'react';
 import i18n from 'meteor/universe:i18n';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 import { useHistory } from 'react-router-dom';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardMedia from '@material-ui/core/CardMedia';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import Badge from '@material-ui/core/Badge';
-import Avatar from '@material-ui/core/Avatar';
+import Card from '@mui/material/Card';
+import CardHeader from '@mui/material/CardHeader';
+import CardMedia from '@mui/material/CardMedia';
+import CardActionArea from '@mui/material/CardActionArea';
+import Badge from '@mui/material/Badge';
+import Avatar from '@mui/material/Avatar';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 
-import Tooltip from '@material-ui/core/Tooltip';
-import BlockIcon from '@material-ui/icons/Block';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
+import Tooltip from '@mui/material/Tooltip';
+import BlockIcon from '@mui/icons-material/Block';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
 import FavButton from './FavButton';
 import { isUrlExternal } from '../../utils/utilsFuncs';
 import { useAppContext } from '../../contexts/context';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   action: {
     display: 'flex',
     alignItems: 'center',
@@ -65,9 +65,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function ServiceDetails({ service, favAction, noIconMode = false }) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const history = useHistory();
-  const isDisabled = service.state === 5;
+  const isDisabled = service.state === 5 || service.state === 15;
 
   const [{ isMobile }] = useAppContext();
   const { trackEvent } = useMatomo();
@@ -88,7 +88,8 @@ export default function ServiceDetails({ service, favAction, noIconMode = false 
   };
 
   const handleLaunchService = () => {
-    if (isDisabled) msg.error(i18n.__('pages.SingleServicePage.inactive'));
+    if (service.state === 5) msg.error(i18n.__('pages.SingleServicePage.inactive'));
+    else if (service.state === 15) msg.error(i18n.__('pages.SingleServicePage.maintenance'));
     else launchService();
   };
 
@@ -100,10 +101,16 @@ export default function ServiceDetails({ service, favAction, noIconMode = false 
             overlap="circular"
             anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
             badgeContent={
-              isDisabled && (
+              service.state === 5 ? (
                 <Tooltip title={i18n.__('pages.SingleServicePage.inactive')}>
                   <BlockIcon color="error" />
                 </Tooltip>
+              ) : service.state === 15 ? (
+                <Tooltip title={i18n.__('pages.SingleServicePage.maintenance')}>
+                  <BlockIcon color="error" />
+                </Tooltip>
+              ) : (
+                ''
               )
             }
           >
