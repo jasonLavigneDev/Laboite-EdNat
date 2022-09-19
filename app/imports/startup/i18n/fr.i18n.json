@@ -198,7 +198,7 @@
         "displayed": "affiché",
         "inactive": "inactif",
         "invisible": "caché",
-        "maintenance" : "maintenance"
+        "maintenance": "maintenance"
       },
       "labels": {
         "id": "Id de Service",
@@ -1188,7 +1188,7 @@
       "categories": "Catégories",
       "open": "Ouvrir",
       "inactive": "Service inactif",
-      "maintenance" : "Service en maintenance",
+      "maintenance": "Service en maintenance",
       "propulsedBy": "Propulsé par"
     },
     "PersonalPage": {
@@ -1219,7 +1219,7 @@
       "slug": "Slug",
       "state": "État",
       "team": "Equipe",
-      "usage": "Utilisation de l'application",
+      "usage": "Utilisation du service",
       "logo": "Logo du service",
       "description": "Courte description",
       "url": "URL du service",

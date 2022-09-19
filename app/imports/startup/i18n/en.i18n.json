@@ -198,7 +198,7 @@
         "displayed": "displayed",
         "inactive": "inactive",
         "invisible": "invisible",
-        "maintenance" : "maintenance"
+        "maintenance": "maintenance"
       },
       "labels": {
         "id": "Service Id",
@@ -902,7 +902,7 @@
       }
     },
     "SignIn": {
-      "back":"Go back",
+      "back": "Go back",
       "appDescription": "Digital services shared by National Education agents",
       "appVersion": "Test Alpha 0.1 Version",
       "emailLabel": "Username or Email",
@@ -1185,7 +1185,7 @@
       "categories": "Categories",
       "open": "Open",
       "inactive": "Inactive service",
-      "maintenance" : "Service on Maintenance",
+      "maintenance": "Service on Maintenance",
       "propulsedBy": "Propulsed by"
     },
     "PersonalPage": {
@@ -1216,11 +1216,11 @@
       "slug": "Slug",
       "state": "State",
       "team": "Team",
-      "usage": "App usage",
-      "logo": "Logo of the application",
+      "usage": "Service usage",
+      "logo": "Service logo",
       "description": "Short description",
-      "url": "URL of the service",
-      "content": "Long description of the app",
+      "url": "Service URL",
+      "content": "Long description",
       "categories": "Categories",
       "screenshots": "Screenshots",
       "addScreenshots": "Add a screenshot",
