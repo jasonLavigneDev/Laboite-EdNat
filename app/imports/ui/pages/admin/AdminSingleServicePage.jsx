@@ -310,11 +310,11 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
               </InputLabel>
               <Select
                 labelId="state-label"
-                label={i18n.__('pages.AdminSingleServicePage.state')}
                 id="state"
                 name="state"
                 value={serviceData.state}
                 onChange={onUpdateField}
+                label={i18n.__('pages.AdminSingleServicePage.state')}
               >
                 {Object.keys(Services.stateLabels).map((val) => (
                   <MenuItem key={val} value={val}>
