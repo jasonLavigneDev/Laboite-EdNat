@@ -683,7 +683,7 @@ describe('groups', function () {
     });
     describe('total count of group members', function () {
       it('does count all members of group', function () {
-        const myGroupId = Factory.create('group', { owner: userId, slug: 'toto' })._id;
+        const myGroupId = Factory.create('group', { owner: userId, name: 'toto' })._id;
 
         setAdminOf._execute({ userId: adminId }, { userId: adminId, groupId: myGroupId });
         setAdminOf._execute({ userId: adminId }, { userId: otherUserId, groupId: myGroupId });
@@ -693,6 +693,8 @@ describe('groups', function () {
         setMemberOf._execute({ userId: adminId }, { userId: adminId, groupId: myGroupId });
         setMemberOf._execute({ userId: adminId }, { userId: otherUserId, groupId: myGroupId });
         setMemberOf._execute({ userId: adminId }, { userId, groupId: myGroupId });
+
+        assert.equal(Groups.findOne(myGroupId).slug, 'toto');
 
         assert.equal(countMembersOfGroup._execute({}, { slug: 'toto' }), 3);
       });
