@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Meteor } from 'meteor/meteor';
 import PropTypes from 'prop-types';
@@ -40,6 +40,7 @@ import GroupAvatar from '../../components/groups/GroupAvatar';
 import Polls from '../../../api/polls/polls';
 import EventsAgenda from '../../../api/eventsAgenda/eventsAgenda';
 import Bookmarks from '../../../api/bookmarks/bookmarks';
+import { countMembersOfGroup } from '../../../api/groups/methods';
 import COMMON_STYLES from '../../themes/styles';
 
 const useStyles = makeStyles()((theme, { member, candidate, type }) => ({
@@ -331,15 +332,16 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
     return null;
   };
 
-  const totalUserInThisGroup = (slug) => {
-    Meteor.call('groups.single.admin', { slug }, (err, res) => {
+  useEffect(() => {
+    const { slug } = group;
+    countMembersOfGroup.call({ slug }, (err, res) => {
       if (err) {
-        msg.error(err.reason);
+        setCountUser(0);
+      } else {
+        setCountUser(res);
       }
-      setCountUser(res);
     });
-    return countUser;
-  };
+  }, [group]);
 
   return (
     <Fade in>
@@ -483,9 +485,7 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
                     _id: 'addressbook',
                     usage: i18n.__('pages.SingleGroupPage.addressBookUsage'),
                     logo: <PeopleIcon className={classes.icon} color="primary" fontSize="large" />,
-                    title: `${i18n.__('pages.SingleGroupPage.addressBook')} (${
-                      group.slug ? totalUserInThisGroup(group.slug) : ''
-                    })`,
+                    title: `${i18n.__('pages.SingleGroupPage.addressBook')} (${countUser})`,
                     url: `/groups/${group.slug}/addressbook`,
                   }}
                   isShort
