@@ -483,7 +483,9 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
                     _id: 'addressbook',
                     usage: i18n.__('pages.SingleGroupPage.addressBookUsage'),
                     logo: <PeopleIcon className={classes.icon} color="primary" fontSize="large" />,
-                    title: `${i18n.__('pages.SingleGroupPage.addressBook')} (${totalUserInThisGroup(group.slug)})`,
+                    title: `${i18n.__('pages.SingleGroupPage.addressBook')} (${
+                      group.slug ? totalUserInThisGroup(group.slug) : ''
+                    })`,
                     url: `/groups/${group.slug}/addressbook`,
                   }}
                   isShort
