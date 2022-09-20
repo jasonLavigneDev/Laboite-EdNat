@@ -343,11 +343,21 @@ export const setStructure = new ValidatedMethod({
       if (Roles.userIsInRole(this.userId, 'adminStructure', user.structure)) {
         Roles.removeUsersFromRoles(this.userId, 'adminStructure', user.structure);
       }
-    } // will throw error if username already taken
-    Meteor.users.update(
-      { _id: this.userId },
-      { $set: { [isAuthorizedToSetStructureDirectly ? 'structure' : 'awaitingStructure']: structure } },
-    );
+      if (user.structure) {
+        const oldStructure = Structures.findOne({ _id: structure });
+        if (oldStructure) {
+          if (oldStructure.groupId) {
+            Meteor.call('users.unsetMemberOf', { userId: this.userId, groupId: oldStructure.groupId });
+          }
+        }
+      }
+    }
+    // will throw error if username already taken
+    Meteor.users.update({ _id: this.userId }, { $set: { structure } });
+    if (structureToFind.groupId) {
+      // TODO: Ajouter au groupe de structures parents
+      Meteor.call('users.setMemberOf', { userId: this.userId, groupId: structureToFind.groupId });
+    }
   },
 });
 
@@ -753,7 +763,7 @@ export const setMemberOf = new ValidatedMethod({
     }
     // check if current user has sufficient rights on group
     let authorized = false;
-    if (group.type === 0) {
+    if (group.type === 0 || group.type === 15) {
       // open group, users cand set themselve as member
       authorized = userId === this.userId || Roles.userIsInRole(this.userId, ['admin', 'animator'], groupId);
     } else {

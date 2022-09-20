@@ -70,7 +70,7 @@ Groups.schema = new SimpleSchema(
     },
     type: {
       type: SimpleSchema.Integer,
-      allowedValues: [0, 5, 10], // 0 Ouvert, 5 Modéré, 10 Fermé
+      allowedValues: [0, 5, 10, 15], // 0 Ouvert, 5 Modéré, 10 Fermé, 15: Automatique
       label: getLabel('api.groups.labels.type'),
     },
     avatar: {

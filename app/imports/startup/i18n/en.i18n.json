@@ -124,6 +124,7 @@
         "parentId": "Direct parent structures Id",
         "childrenIds": "Direct childs structures ids",
         "ancestorsIds": "Parent's structures ids",
+        "groupId": "Associated group's id",
         "introduction": {
           "label": "Structure introduction",
           "title": "Structure introduction title",
