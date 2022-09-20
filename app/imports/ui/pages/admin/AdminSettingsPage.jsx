@@ -44,45 +44,40 @@ const useStyles = makeStyles()((theme) => ({
   },
 }));
 
+const tabs = [
+  {
+    key: 'introduction',
+    title: i18n.__('pages.AdminSettingsPage.introduction'),
+    Element: IntroductionEdition,
+  },
+  {
+    key: 'legal',
+    title: i18n.__('pages.AdminSettingsPage.legal'),
+    Element: LegalComponent,
+  },
+  {
+    key: 'personalData',
+    title: i18n.__('pages.AdminSettingsPage.personalData'),
+    Element: LegalComponent,
+  },
+  {
+    key: 'accessibility',
+    title: i18n.__('pages.AdminSettingsPage.accessibility'),
+    Element: LegalComponent,
+  },
+  {
+    key: 'gcu',
+    title: i18n.__('pages.AdminSettingsPage.gcu'),
+    Element: LegalComponent,
+  },
+];
+
 const AdminSettingsPage = ({ ready, appsettings }) => {
   const [msgMaintenance, setMsgMaintenance] = useState(appsettings.textMaintenance);
   const { classes } = useStyles();
   const [loading, setLoading] = useState(true);
   const [{ isMobile }] = useAppContext();
   const [open, setOpen] = useState(false);
-
-  const tabs = [
-    {
-      key: 'introduction',
-      title: i18n.__('pages.AdminSettingsPage.introduction'),
-      Element: IntroductionEdition,
-      ElementProps: { data: appsettings.introduction || [] },
-    },
-    {
-      key: 'legal',
-      title: i18n.__('pages.AdminSettingsPage.legal'),
-      Element: LegalComponent,
-      ElementProps: { data: appsettings.legal || [] },
-    },
-    {
-      key: 'personalData',
-      title: i18n.__('pages.AdminSettingsPage.personalData'),
-      Element: LegalComponent,
-      ElementProps: { data: appsettings.personalData || [] },
-    },
-    {
-      key: 'accessibility',
-      title: i18n.__('pages.AdminSettingsPage.accessibility'),
-      Element: LegalComponent,
-      ElementProps: { data: appsettings.accessibility || [] },
-    },
-    {
-      key: 'gcu',
-      title: i18n.__('pages.AdminSettingsPage.gcu'),
-      Element: LegalComponent,
-      ElementProps: { data: appsettings.gcu || [] },
-    },
-  ];
 
   if (loading && !ready && !appsettings) {
     return <Spinner full />;
