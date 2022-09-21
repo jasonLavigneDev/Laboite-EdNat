@@ -343,20 +343,49 @@ export const setStructure = new ValidatedMethod({
       if (Roles.userIsInRole(this.userId, 'adminStructure', user.structure)) {
         Roles.removeUsersFromRoles(this.userId, 'adminStructure', user.structure);
       }
+
+      console.log('start remove');
+      // Remove user from groups of old structure and ancestors
       if (user.structure) {
-        const oldStructure = Structures.findOne({ _id: structure });
+        const oldStructure = Structures.findOne({ _id: user.structure });
         if (oldStructure) {
+          const ancestors = Structures.find({ _id: { $in: oldStructure.ancestorsIds } }).fetch();
           if (oldStructure.groupId) {
             Meteor.call('users.unsetMemberOf', { userId: this.userId, groupId: oldStructure.groupId });
+          }
+          if (ancestors) {
+            ancestors.forEach((st) => {
+              if (st.groupId) {
+                const gr = Groups.findOne({ _id: st.groupId });
+                if (gr) {
+                  Meteor.call('users.unsetMemberOf', { userId: this.userId, groupId: gr._id });
+                }
+              }
+            });
           }
         }
       }
     }
-    // will throw error if username already taken
+    console.log('end remove');
+    // Add user to group of new structure and groups of ancestors structures
     Meteor.users.update({ _id: this.userId }, { $set: { structure } });
     if (structureToFind.groupId) {
-      // TODO: Ajouter au groupe de structures parents
       Meteor.call('users.setMemberOf', { userId: this.userId, groupId: structureToFind.groupId });
+    }
+    console.log('add to actual');
+    const ancestors = Structures.find({ _id: { $in: structureToFind.ancestorsIds } }).fetch();
+    if (ancestors) {
+      ancestors.forEach((st) => {
+        console.log(`structure: ${st.groupId} ${st.name}`);
+        if (st.groupId) {
+          const gr = Groups.findOne({ _id: st.groupId });
+          if (gr) {
+            console.log('groupe: ', `${gr._id}(${gr.name})`);
+            Meteor.call('users.setMemberOf', { userId: this.userId, groupId: gr._id });
+          }
+        }
+      });
+      console.log('end');
     }
   },
 });
