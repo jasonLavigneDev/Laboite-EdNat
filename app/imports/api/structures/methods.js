@@ -74,8 +74,9 @@ export const createStructure = new ValidatedMethod({
     });
 
     const structure = Structures.findOne({ _id: structureId });
+
     if (structure) {
-      const group = Groups.findOne({ name });
+      const group = Groups.findOne({ name: strucName });
       if (group) {
         structure.groupId = group._id;
         Structures.update({ _id: structureId }, { $set: { groupId: group._id } });
