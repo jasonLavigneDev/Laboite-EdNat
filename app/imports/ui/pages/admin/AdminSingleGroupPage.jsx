@@ -237,10 +237,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
   };
 
   const typeIsInvalid = () => {
-    if (!isAutomaticGroup) {
-      if (groupData.type === 15) return true;
-    }
-    return false;
+    return !isAutomaticGroup && groupData.type === 15;
   };
 
   const submitUpdateGroup = () => {
