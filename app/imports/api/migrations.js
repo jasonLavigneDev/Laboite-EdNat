@@ -602,7 +602,7 @@ Migrations.add({
               });
             }
 
-            if (Roles.userIsInRole(user._id, 'adminstructure', user.structure)) {
+            if (Roles.userIsInRole(user._id, 'adminStructure', user.structure)) {
               Roles.addUsersToRoles(user._id, 'admin', structure.groupId);
             }
           }
@@ -628,7 +628,7 @@ Migrations.add({
                   });
                 }
 
-                if (Roles.userIsInRole(user._id, 'adminstructure', user.structure)) {
+                if (Roles.userIsInRole(user._id, 'adminStructure', user.structure)) {
                   Roles.addUsersToRoles(user._id, 'admin', struc.groupId);
                 }
               }

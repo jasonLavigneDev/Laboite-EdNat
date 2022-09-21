@@ -133,6 +133,7 @@ function GroupDetails({ group = {}, isShort, member, candidate, admin, animator 
   const [{ userId }] = useAppContext();
   const [loading, setLoading] = useState(false);
   const history = useHistory();
+  const isAutomaticGroup = group.type === 15;
 
   const { classes } = useStyles({ group, member: member || animator, candidate, isShort, type });
 
@@ -171,7 +172,10 @@ function GroupDetails({ group = {}, isShort, member, candidate, admin, animator 
     if (type === 5) {
       return i18n.__('components.GroupDetails.askToJoinModerateGroupButtonLabel');
     }
-    return i18n.__('components.GroupDetails.joinPublicGroupButtonLabel');
+    if (type !== 15) {
+      return i18n.__('components.GroupDetails.joinPublicGroupButtonLabel');
+    }
+    return null;
   };
 
   const infoText = () => {
@@ -259,7 +263,7 @@ function GroupDetails({ group = {}, isShort, member, candidate, admin, animator 
       <CardContent className={isShort ? classes.cardContentMobile : classes.cardContent}>
         {!isShort && <Typography variant="body1">{group.description}</Typography>}
         <div className={isShort ? classes.cardActionShort : classes.cardActions}>
-          {!member && !animator && !candidate ? (
+          {!member && !animator && !candidate && !isAutomaticGroup ? (
             <Button
               startIcon={icon()}
               className={classes.buttonText}

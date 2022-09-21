@@ -287,7 +287,10 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
     if (type === 5) {
       return i18n.__('components.GroupDetails.askToJoinModerateGroupButtonLabel');
     }
-    return i18n.__('components.GroupDetails.joinPublicGroupButtonLabel');
+    if (type !== 15) {
+      return i18n.__('components.GroupDetails.joinPublicGroupButtonLabel');
+    }
+    return null;
   };
 
   const goBack = () => {
