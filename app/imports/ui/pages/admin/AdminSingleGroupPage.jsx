@@ -233,7 +233,14 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
   };
 
   const nameIsInvalid = () => {
-    return groupData.name.toLowerCase().includes('[struc]');
+    return !isAutomaticGroup && groupData.name.toLowerCase().includes('[struc]');
+  };
+
+  const typeIsInvalid = () => {
+    if (!isAutomaticGroup) {
+      if (groupData.type === 15) return true;
+    }
+    return false;
   };
 
   const submitUpdateGroup = () => {
@@ -465,7 +472,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
                 variant="contained"
                 color="primary"
                 onClick={submitUpdateGroup}
-                disabled={nameIsInvalid()}
+                disabled={nameIsInvalid() || typeIsInvalid()}
                 className={classes.button}
               >
                 {params._id ? i18n.__('pages.AdminSingleGroupPage.update') : i18n.__('pages.AdminSingleGroupPage.save')}
