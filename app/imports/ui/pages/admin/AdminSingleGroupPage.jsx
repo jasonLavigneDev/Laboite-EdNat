@@ -261,7 +261,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
     const method = params._id ? updateGroup : createGroup;
     setLoading(true);
     const { _id, slug, avatar, ...rest } = groupData;
-    if (rest.name.toLowerCase().includes('[struc]')) {
+    if (!isAutomaticGroup && rest.name.toLowerCase().includes('[struc]')) {
       msg.error(i18n.__('pages.AdminSingleGroupPage.invalidName'));
       history.goBack();
     } else {

@@ -258,7 +258,7 @@ export const updateGroup = new ValidatedMethod({
     },
     'data.type': {
       type: SimpleSchema.Integer,
-      allowedValues: [0, 5, 10],
+      allowedValues: [0, 5, 10, 15],
       optional: true,
       label: getLabel('api.groups.labels.type'),
     },
