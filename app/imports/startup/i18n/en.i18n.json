@@ -297,6 +297,7 @@
     },
     "methods": {
       "operationSuccessMsg": "Operation succeeded.",
+      "operationRefused": "You can't delete this type of group",
       "labels": {
         "page": "Page",
         "pageSize": "Page Size",

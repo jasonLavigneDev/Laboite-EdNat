@@ -101,20 +101,25 @@ function AdminGroupsPage({ groups, loading, user }) {
             editable={{
               onRowDelete: (oldData) =>
                 new Promise((resolve, reject) => {
-                  removeGroup.call(
-                    {
-                      groupId: oldData._id,
-                    },
-                    (err, res) => {
-                      if (err) {
-                        msg.error(err.reason);
-                        reject(err);
-                      } else {
-                        msg.success(i18n.__('api.methods.operationSuccessMsg'));
-                        resolve(res);
-                      }
-                    },
-                  );
+                  if (oldData.type !== 15) {
+                    removeGroup.call(
+                      {
+                        groupId: oldData._id,
+                      },
+                      (err, res) => {
+                        if (err) {
+                          msg.error(err.reason);
+                          reject(err);
+                        } else {
+                          msg.success(i18n.__('api.methods.operationSuccessMsg'));
+                          resolve(res);
+                        }
+                      },
+                    );
+                  } else {
+                    msg.error(i18n.__('api.methods.operationRefused'));
+                    reject();
+                  }
                 }),
             }}
           />

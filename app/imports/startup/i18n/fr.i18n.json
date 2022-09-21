@@ -297,6 +297,7 @@
     },
     "methods": {
       "operationSuccessMsg": "Opération réalisée avec succès.",
+      "operationRefused": "Vous ne pouvez pas supprimer ce type de groupe",
       "labels": {
         "page": "Page",
         "pageSize": "Taille de Page",

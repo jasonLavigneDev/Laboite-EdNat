@@ -67,7 +67,7 @@ export const createStructure = new ValidatedMethod({
     Meteor.call('groups.createGroup', {
       name: strucName,
       type: 15,
-      description: 'test',
+      description: '',
       content: '',
       avatar: '',
       plugins: {},
