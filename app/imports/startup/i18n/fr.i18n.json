@@ -1331,7 +1331,8 @@
       "save": "Sauvegarder",
       "update": "Mettre à jour",
       "cancel": "Annuler",
-      "groupRemoved": "Groupe supprimé"
+      "groupRemoved": "Groupe supprimé",
+      "invalidName": "Nom invalide"
     },
     "SingleGroupPage": {
       "backToList": "Retour à la liste",

@@ -62,7 +62,16 @@ export const createStructure = new ValidatedMethod({
       }
     }
 
-    Meteor.call('groups.createGroup', { name, type: 15, description: 'test', content: '', avatar: '', plugins: {} });
+    const strucName = `[STRUC] ${name}`;
+
+    Meteor.call('groups.createGroup', {
+      name: strucName,
+      type: 15,
+      description: 'test',
+      content: '',
+      avatar: '',
+      plugins: {},
+    });
 
     const structure = Structures.findOne({ _id: structureId });
     if (structure) {

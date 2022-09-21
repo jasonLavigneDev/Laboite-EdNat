@@ -231,6 +231,11 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
     setTempImageLoaded(false);
     history.goBack();
   };
+
+  const nameIsInvalid = () => {
+    return groupData.name.toLowerCase().includes('[struc]');
+  };
+
   const submitUpdateGroup = () => {
     if (groupData.avatar !== group.avatar) {
       if (tempImageLoaded && minioEndPoint) {
@@ -252,39 +257,44 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
     const method = params._id ? updateGroup : createGroup;
     setLoading(true);
     const { _id, slug, avatar, ...rest } = groupData;
-    let args;
+    if (rest.name.toLowerCase().includes('[struc]')) {
+      msg.error(i18n.__('pages.AdminSingleGroupPage.invalidName'));
+      history.goBack();
+    } else {
+      let args;
 
-    if (params._id) {
-      args = {
-        groupId: params._id,
-        data: {
+      if (params._id) {
+        args = {
+          groupId: params._id,
+          data: {
+            ...rest,
+            content,
+            plugins,
+            avatar: avatar.replace('groupAvatar_TEMP.png', 'groupAvatar.png'),
+          },
+        };
+      } else {
+        args = {
           ...rest,
           content,
           plugins,
-          avatar: avatar.replace('groupAvatar_TEMP.png', 'groupAvatar.png'),
-        },
-      };
-    } else {
-      args = {
-        ...rest,
-        content,
-        plugins,
-        avatar,
-      };
-    }
-    method.call(args, (error) => {
-      setLoading(false);
-      if (error) {
-        msg.error(error.reason ? error.reason : error.message);
-      } else {
-        msg.success(i18n.__('api.methods.operationSuccessMsg'));
-        if (history.location.state?.prevPath.includes('groups/')) {
-          history.push(`/groups/${slug}`);
-        } else {
-          history.goBack();
-        }
+          avatar,
+        };
       }
-    });
+      method.call(args, (error) => {
+        setLoading(false);
+        if (error) {
+          msg.error(error.reason ? error.reason : error.message);
+        } else {
+          msg.success(i18n.__('api.methods.operationSuccessMsg'));
+          if (history.location.state?.prevPath.includes('groups/')) {
+            history.push(`/groups/${slug}`);
+          } else {
+            history.goBack();
+          }
+        }
+      });
+    }
   };
 
   if (!ready || loading || (!!params._id && !group._id)) {
@@ -349,7 +359,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
                   variant="outlined"
                   fullWidth
                   margin="normal"
-                  disabled={(!isAdmin && !!params._id) || !groupEnableChangeName}
+                  disabled={(!isAdmin && !!params._id) || !groupEnableChangeName || isAutomaticGroup}
                 />
                 <TextField
                   onChange={onUpdateField}
@@ -451,7 +461,13 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
                   {i18n.__('pages.AdminSingleGroupPage.delete')}
                 </Button>
               ) : null}
-              <Button variant="contained" color="primary" onClick={submitUpdateGroup} className={classes.button}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={submitUpdateGroup}
+                disabled={nameIsInvalid()}
+                className={classes.button}
+              >
                 {params._id ? i18n.__('pages.AdminSingleGroupPage.update') : i18n.__('pages.AdminSingleGroupPage.save')}
               </Button>
             </div>

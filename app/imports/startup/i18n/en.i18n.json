@@ -1314,7 +1314,8 @@
       "save": "Save",
       "update": "Update",
       "cancel": "Cancel",
-      "groupRemoved": "Group deleted"
+      "groupRemoved": "Group deleted",
+      "invalidName": "Nom invalide"
     },
     "SingleGroupPage": {
       "backToList": "Back to the list",
