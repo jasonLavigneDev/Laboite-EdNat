@@ -135,7 +135,7 @@ publishComposite('groups.users', function groupDetails({ groupId, role = 'member
 const queryAllGroups = ({ search }) => {
   const regex = new RegExp(search, 'i');
   return {
-    type: { $ne: 10 },
+    type: { $nin: [10, 15] },
     $or: [
       {
         name: { $regex: regex },

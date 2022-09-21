@@ -158,6 +158,7 @@ Groups.typeLabels = {
   0: 'api.groups.types.open',
   5: 'api.groups.types.moderated',
   10: 'api.groups.types.private',
+  15: 'api.groups.types.automatic',
 };
 
 Groups.publicFields = {

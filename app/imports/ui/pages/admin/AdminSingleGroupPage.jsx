@@ -130,6 +130,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
   const [loading, setLoading] = useState(!!params._id);
   const [tabId, setTabId] = React.useState(0);
   const [content, setContent] = useState('');
+  const isAutomaticGroup = group.type === 15;
   const [openRemoveModal, setOpenRemoveModal] = useState(false);
 
   const [plugins, setPlugins] = useState({}); // { nextcloud: false, rocketChat: true}
@@ -140,7 +141,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
 
   const [{ userId }] = useAppContext();
   const isAdmin = Roles.userIsInRole(userId, 'admin', params._id);
-  const canDelete = isAdmin || group.owner === userId;
+  const canDelete = (isAdmin || group.owner === userId) && !isAutomaticGroup;
 
   const typeLabel = React.useRef(null);
   const { minioEndPoint } = Meteor.settings.public;
@@ -372,7 +373,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
                     name="type"
                     value={groupData.type}
                     onChange={onUpdateField}
-                    disabled={!isAdmin && !!params._id}
+                    disabled={(!isAdmin && !!params._id) || isAutomaticGroup}
                   >
                     {Object.keys(Groups.typeLabels).map((val) => (
                       <MenuItem key={val} value={val}>

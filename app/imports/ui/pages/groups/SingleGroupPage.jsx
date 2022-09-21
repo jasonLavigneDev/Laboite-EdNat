@@ -166,6 +166,7 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
   const [countUser, setCountUser] = useState(0);
   const [openedContent, toggleOpenedContent] = useState(false);
   const animator = Roles.userIsInRole(userId, 'animator', group._id);
+  const isAutomaticGroup = group.type === 15;
   const member = Roles.userIsInRole(userId, 'member', group._id);
   const candidate = Roles.userIsInRole(userId, ['candidate'], group._id);
   const admin = Roles.userIsInRole(userId, ['admin', 'animator'], group._id);
@@ -375,31 +376,33 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
             <Grid container className={classes.actionButtons} spacing={1}>
               {type !== 10 || admin || member || animator ? (
                 <Grid item>
-                  {animator || member || candidate ? (
-                    <Button
-                      className={classes.buttonQuit}
-                      startIcon={<ClearIcon />}
-                      color="primary"
-                      variant="contained"
-                      onClick={handleJoinGroup}
-                    >
-                      {i18n.__(
-                        `pages.SingleGroupPage.${
-                          animator ? 'stopAnimating' : member ? 'leaveGroup' : 'cancelCandidate'
-                        }`,
-                      )}
-                    </Button>
-                  ) : (
-                    <Button
-                      startIcon={icon()}
-                      className={classes.buttonText}
-                      size="large"
-                      variant="contained"
-                      onClick={handleJoinGroup}
-                    >
-                      {buttonText()}
-                    </Button>
-                  )}
+                  {!isAutomaticGroup ? (
+                    animator || member || candidate ? (
+                      <Button
+                        className={classes.buttonQuit}
+                        startIcon={<ClearIcon />}
+                        color="primary"
+                        variant="contained"
+                        onClick={handleJoinGroup}
+                      >
+                        {i18n.__(
+                          `pages.SingleGroupPage.${
+                            animator ? 'stopAnimating' : member ? 'leaveGroup' : 'cancelCandidate'
+                          }`,
+                        )}
+                      </Button>
+                    ) : (
+                      <Button
+                        startIcon={icon()}
+                        className={classes.buttonText}
+                        size="large"
+                        variant="contained"
+                        onClick={handleJoinGroup}
+                      >
+                        {buttonText()}
+                      </Button>
+                    )
+                  ) : null}
                 </Grid>
               ) : null}
               {admin && (

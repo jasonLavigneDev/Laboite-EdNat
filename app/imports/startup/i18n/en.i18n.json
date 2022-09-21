@@ -188,7 +188,8 @@
       "types": {
         "open": "open",
         "moderated": "moderated",
-        "private": "private"
+        "private": "private",
+        "automatic": "automatique"
       },
       "labels": {
         "id": "Group Id",
@@ -677,7 +678,8 @@
       "groupJoined": "You are now a member of this group",
       "candidateSent": "The admin will be notified of your request",
       "alreadyCandidate": "You already sent a requet to the group",
-      "candidateCancel": "Your request has been canceled"
+      "candidateCancel": "Your request has been canceled",
+      "automaticGroup": "Automatic group"
     },
     "GroupDetailsPersSpace": {
       "groupCandidate": "Candidate",

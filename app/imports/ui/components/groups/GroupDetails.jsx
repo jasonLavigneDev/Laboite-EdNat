@@ -209,6 +209,8 @@ function GroupDetails({ group = {}, isShort, member, candidate, admin, animator 
     groupType = i18n.__('components.GroupDetails.publicGroup');
   } else if (type === 10) {
     groupType = i18n.__('components.GroupDetails.closedGroup');
+  } else if (type === 15) {
+    groupType = i18n.__('components.GroupDetails.automaticGroup');
   }
 
   return (
