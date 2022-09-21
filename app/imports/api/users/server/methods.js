@@ -344,7 +344,6 @@ export const setStructure = new ValidatedMethod({
         Roles.removeUsersFromRoles(this.userId, 'adminStructure', user.structure);
       }
 
-      console.log('start remove');
       // Remove user from groups of old structure and ancestors
       if (user.structure) {
         const oldStructure = Structures.findOne({ _id: user.structure });
@@ -358,6 +357,9 @@ export const setStructure = new ValidatedMethod({
               if (st.groupId) {
                 const gr = Groups.findOne({ _id: st.groupId });
                 if (gr) {
+                  if (Roles.userIsInRole(this.userId, 'admin', gr._id)) {
+                    Roles.removeUsersFromRoles(this.userId, 'admin', gr._id);
+                  }
                   Meteor.call('users.unsetMemberOf', { userId: this.userId, groupId: gr._id });
                 }
               }
@@ -366,26 +368,23 @@ export const setStructure = new ValidatedMethod({
         }
       }
     }
-    console.log('end remove');
+
     // Add user to group of new structure and groups of ancestors structures
     Meteor.users.update({ _id: this.userId }, { $set: { structure } });
     if (structureToFind.groupId) {
       Meteor.call('users.setMemberOf', { userId: this.userId, groupId: structureToFind.groupId });
     }
-    console.log('add to actual');
+
     const ancestors = Structures.find({ _id: { $in: structureToFind.ancestorsIds } }).fetch();
     if (ancestors) {
       ancestors.forEach((st) => {
-        console.log(`structure: ${st.groupId} ${st.name}`);
         if (st.groupId) {
           const gr = Groups.findOne({ _id: st.groupId });
           if (gr) {
-            console.log('groupe: ', `${gr._id}(${gr.name})`);
             Meteor.call('users.setMemberOf', { userId: this.userId, groupId: gr._id });
           }
         }
       });
-      console.log('end');
     }
   },
 });
@@ -518,6 +517,17 @@ export const setAdminStructure = new ValidatedMethod({
     }
     // add role to user collection
     Roles.addUsersToRoles(userId, 'adminStructure', user.structure);
+
+    // Add admin role of structure group
+    const structure = Structures.findOne({ _id: user.structure });
+    if (structure) {
+      if (structure.groupId) {
+        const group = Groups.findOne({ _id: structure.groupId });
+        if (group) {
+          Roles.addUsersToRoles(userId, 'admin', group._id);
+        }
+      }
+    }
   },
 });
 
@@ -630,6 +640,19 @@ export const unsetAdminStructure = new ValidatedMethod({
 
     // remove role from user collection
     Roles.removeUsersFromRoles(userId, 'adminStructure', user.structure);
+
+    // remove admin role of structure group
+    const structure = Structures.findOne({ _id: user.structure });
+    if (structure) {
+      if (structure.groupId) {
+        const group = Groups.findOne({ _id: structure.groupId });
+        if (group) {
+          if (Roles.userIsInRole(this.userId, 'admin', group._id)) {
+            Roles.removeUsersFromRoles(userId, 'admin', group._id);
+          }
+        }
+      }
+    }
   },
 });
 
