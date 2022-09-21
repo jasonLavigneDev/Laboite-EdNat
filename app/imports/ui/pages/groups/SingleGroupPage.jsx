@@ -249,7 +249,9 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
   const showFavorite = admin && !candidate && !member && !animator;
 
   const groupType = i18n.__(
-    `components.GroupDetails.${type === 0 ? 'publicGroup' : type === 10 ? 'closedGroup' : 'moderateGroup'}`,
+    `components.GroupDetails.${
+      type === 0 ? 'publicGroup' : type === 10 ? 'closedGroup' : type === 15 ? 'automaticGroup' : 'moderateGroup'
+    }`,
   );
 
   const icon = () => {
