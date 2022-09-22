@@ -55,7 +55,7 @@ const MenuBar = ({ mobile }) => {
       path: '/introduction',
       content: 'menuIntroduction',
       icon: <InfoIcon />,
-      hidden: disabledFeatures.introductionTab || isMobile,
+      hidden: disabledFeatures.introductionTab || mobile,
     },
     {
       path: '/',
