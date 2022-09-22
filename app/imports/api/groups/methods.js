@@ -119,7 +119,7 @@ export const findGroups = new ValidatedMethod({
   },
 });
 
-function _createGroup({ name, type, content, description, avatar, plugins, userId }) {
+export function _createGroup({ name, type, content, description, avatar, plugins, userId }) {
   try {
     const user = Meteor.users.findOne(userId);
     if (user.groupCount < user.groupQuota) {
@@ -139,10 +139,12 @@ function _createGroup({ name, type, content, description, avatar, plugins, userI
 
       favGroup._execute({ userId }, { groupId });
 
-      user.groupCount += 1;
-      Meteor.users.update(userId, {
-        $set: { groupCount: user.groupCount },
-      });
+      if (type !== 15) {
+        user.groupCount += 1;
+        Meteor.users.update(userId, {
+          $set: { groupCount: user.groupCount },
+        });
+      }
 
       // move group temp avatar from user minio to group minio and update avatar link
       if (avatar !== '' && avatar.includes('groupAvatar.png')) {
@@ -190,26 +192,22 @@ export const createGroup = new ValidatedMethod({
   },
 });
 
-export const removeGroup = new ValidatedMethod({
-  name: 'groups.removeGroup',
-  validate: new SimpleSchema({
-    groupId: { type: String, regEx: SimpleSchema.RegEx.Id, label: getLabel('api.groups.labels.id') },
-  }).validator(),
+// eslint-disable-next-line react/prop-types
+export function _removeGroup({ groupId, userId }) {
+  // check group existence
+  const group = Groups.findOne({ _id: groupId });
+  if (group === undefined) {
+    throw new Meteor.Error('api.groups.removeGroup.unknownGroup', i18n.__('api.groups.unknownGroup'));
+  }
+  // check if current user has admin rights on group (or global admin)
+  // FIXME : allow only for owner or for all admins ?
+  const isAdmin = isActive(userId) && Roles.userIsInRole(userId, 'admin', groupId);
+  const authorized = isAdmin || userId === group.owner;
+  if (!authorized) {
+    throw new Meteor.Error('api.groups.removeGroup.notPermitted', i18n.__('api.groups.adminGroupNeeded'));
+  }
 
-  run({ groupId }) {
-    // check group existence
-    const group = Groups.findOne({ _id: groupId });
-    if (group === undefined) {
-      throw new Meteor.Error('api.groups.removeGroup.unknownGroup', i18n.__('api.groups.unknownGroup'));
-    }
-    // check if current user has admin rights on group (or global admin)
-    // FIXME : allow only for owner or for all admins ?
-    const isAdmin = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin', groupId);
-    const authorized = isAdmin || this.userId === group.owner;
-    if (!authorized) {
-      throw new Meteor.Error('api.groups.removeGroup.notPermitted', i18n.__('api.groups.adminGroupNeeded'));
-    }
-
+  if (group.type !== 15) {
     // Update group quota for owner
     const owner = Meteor.users.findOne({ _id: group.owner });
     if (owner !== undefined) {
@@ -221,13 +219,24 @@ export const removeGroup = new ValidatedMethod({
         $set: { groupCount: owner.groupCount },
       });
     }
+  }
 
-    // remove all roles set on this group
-    Roles.removeScope(groupId);
-    Groups.remove(groupId);
-    // remove from users favorite groups
-    Meteor.users.update({ favGroups: { $all: [groupId] } }, { $pull: { favGroups: groupId } }, { multi: true });
-    return null;
+  // remove all roles set on this group
+  Roles.removeScope(groupId);
+  Groups.remove(groupId);
+  // remove from users favorite groups
+  Meteor.users.update({ favGroups: { $all: [groupId] } }, { $pull: { favGroups: groupId } }, { multi: true });
+  return null;
+}
+
+export const removeGroup = new ValidatedMethod({
+  name: 'groups.removeGroup',
+  validate: new SimpleSchema({
+    groupId: { type: String, regEx: SimpleSchema.RegEx.Id, label: getLabel('api.groups.labels.id') },
+  }).validator(),
+
+  run({ groupId }) {
+    return _removeGroup({ groupId, userId: this.userId });
   },
 });
 

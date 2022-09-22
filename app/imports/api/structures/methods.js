@@ -10,6 +10,7 @@ import { hasAdminRightOnStructure, isAStructureWithSameNameExistWithSameParent }
 import Services from '../services/services';
 import Articles from '../articles/articles';
 import Groups from '../groups/groups';
+import { _createGroup, _removeGroup } from '../groups/methods';
 
 export const createStructure = new ValidatedMethod({
   name: 'structures.createStructure',
@@ -64,16 +65,15 @@ export const createStructure = new ValidatedMethod({
 
     const strucName = `[STRUC] ${name}`;
 
-    if (!Meteor.isTest) {
-      Meteor.call('groups.createGroup', {
-        name: strucName,
-        type: 15,
-        description: 'groupe structure',
-        content: '',
-        avatar: '',
-        plugins: {},
-      });
-    }
+    _createGroup({
+      name: strucName,
+      type: 15,
+      description: 'groupe structure',
+      content: '',
+      avatar: '',
+      plugins: {},
+      userId: this.userId,
+    });
 
     const structure = Structures.findOne({ _id: structureId });
 
@@ -129,8 +129,8 @@ export const updateStructure = new ValidatedMethod({
 
     const group = Groups.findOne({ _id: structure.groupId });
     if (group) {
-      group.name = name;
-      Groups.update({ _id: group._id }, { $set: { name } });
+      group.name = `[STRUC] ${name}`;
+      Groups.update({ _id: group._id }, { $set: { name: `[STRUC] ${name}` } });
     }
     return Structures.update({ _id: structureId }, { $set: { name } });
   },
@@ -199,7 +199,7 @@ export const removeStructure = new ValidatedMethod({
 
     const group = Groups.findOne({ _id: structure.groupId });
     if (group) {
-      Meteor.call('groups.removeGroup', { groupId: group._id });
+      _removeGroup({ groupId: group._id, userId: this.userId });
     }
     return Structures.remove(structureId);
   },
