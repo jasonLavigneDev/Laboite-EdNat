@@ -64,14 +64,16 @@ export const createStructure = new ValidatedMethod({
 
     const strucName = `[STRUC] ${name}`;
 
-    Meteor.call('groups.createGroup', {
-      name: strucName,
-      type: 15,
-      description: 'groupe structure',
-      content: '',
-      avatar: '',
-      plugins: {},
-    });
+    if (!Meteor.isTest) {
+      Meteor.call('groups.createGroup', {
+        name: strucName,
+        type: 15,
+        description: 'groupe structure',
+        content: '',
+        avatar: '',
+        plugins: {},
+      });
+    }
 
     const structure = Structures.findOne({ _id: structureId });
 
