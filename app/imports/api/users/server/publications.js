@@ -228,7 +228,7 @@ const defaultFieldsToSearch = ['firstName', 'lastName', 'emails.address', 'usern
 
 // build query for all users from group
 const queryUsersAdmin = ({ search, fieldsToSearch = defaultFieldsToSearch }) => {
-  const regex = new RegExp(search.split(' ').join('|'), 'i');
+  const regex = new RegExp(search.split(' ').filter(Boolean).join('|'), 'i');
   const searchQuery = fieldsToSearch.map((field) => ({ [field]: { $regex: regex } }));
 
   return { $or: searchQuery };
