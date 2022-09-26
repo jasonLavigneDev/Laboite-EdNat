@@ -235,7 +235,7 @@ const AdminSettingsPage = ({ ready, appsettings }) => {
             <FormControlLabel
               className={classes.containerForm}
               control={
-                <div style={{ marginTop: '-20px' }}>
+                <div style={{ marginTop: '-20px', marginLeft: '25px' }}>
                   <Button
                     size="medium"
                     variant="contained"

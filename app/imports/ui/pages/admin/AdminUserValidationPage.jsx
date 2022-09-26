@@ -16,7 +16,7 @@ function AdminUserValidationPage({ usersrequest, loading }) {
       actions={[
         {
           icon: PersonAddIcon,
-          tooltip: i18n.__('pages.AdminUserValidationPage.actions_tooltip'),
+          tooltip: i18n.__('components.AdminUserValidationTable.actions_tooltip'),
           onClick: (event, rowData) => {
             Meteor.call('users.setActive', { userId: rowData._id }, (err) => {
               if (err) {

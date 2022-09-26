@@ -13,7 +13,6 @@
       "groups": false,
       "introductionTab": false,
       "introductionTabStructuresInfos": true,
-      "userStructureValidationMandatory": false
     },
     "ui": {
       "defaultGridViewMode": "compact"

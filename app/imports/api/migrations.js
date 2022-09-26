@@ -522,8 +522,11 @@ Migrations.add({
   up: () => {
     // Add awaitingStructure prop to manage structure application validation
     Meteor.users.rawCollection().updateMany({}, { $set: { awaitingStructure: null } });
+    // set initial value in appsettings (userStructureValidationMandatory)
+    AppSettings.update({}, { $set: { userStructureValidationMandatory: false } });
   },
   down: () => {
     Meteor.users.rawCollection().updateMany({}, { $unset: { awaitingStructure: 1 } });
+    AppSettings.rawCollection().updateMany({}, { $unset: { userStructureValidationMandatory: 1 } });
   },
 });
