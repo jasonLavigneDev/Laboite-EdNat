@@ -63,7 +63,7 @@ export const createStructure = new ValidatedMethod({
       }
     }
 
-    const strucName = `[STRUC] ${name}`;
+    const strucName = `${structureId}_${name}`;
 
     _createGroup({
       name: strucName,
@@ -129,8 +129,8 @@ export const updateStructure = new ValidatedMethod({
 
     const group = Groups.findOne({ _id: structure.groupId });
     if (group) {
-      group.name = `[STRUC] ${name}`;
-      Groups.update({ _id: group._id }, { $set: { name: `[STRUC] ${name}` } });
+      group.name = `${structure._id}_${name}`;
+      Groups.update({ _id: group._id }, { $set: { name: `${structure._id}_${name}` } });
     }
     return Structures.update({ _id: structureId }, { $set: { name } });
   },

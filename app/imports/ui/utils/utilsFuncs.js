@@ -24,3 +24,12 @@ export const testMeteorSettingsUrl = (settingsUrl, withSlash = false) => {
   }
   return url;
 };
+
+export const getGroupName = (group) => {
+  if (group.type !== 15) return group.name;
+
+  return `[STRUC] ${group.name.split('_', 2)[1]}`;
+};
+
+// delete when there is more than one function in this file
+export const tempFunction = (args) => console.log(args);

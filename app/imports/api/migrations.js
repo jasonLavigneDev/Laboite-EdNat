@@ -550,7 +550,7 @@ Migrations.add({
     Structures.find({})
       .fetch()
       .forEach((structure) => {
-        const strucName = `[STRUC] ${structure.name}`;
+        const strucName = `${structure._id}_${structure.name}`;
         let adminId = '';
         Meteor.users
           .find({})

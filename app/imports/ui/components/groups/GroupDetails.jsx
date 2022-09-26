@@ -26,6 +26,7 @@ import { useAppContext } from '../../contexts/context';
 import Spinner from '../system/Spinner';
 import GroupBadge from './GroupBadge';
 import COMMON_STYLES from '../../themes/styles';
+import { getGroupName } from '../../utils/utilsFuncs';
 
 const useStyles = makeStyles()((theme, { type, member, candidate, isShort }) => ({
   memberInfo: {
@@ -241,7 +242,7 @@ function GroupDetails({ group = {}, isShort, member, candidate, admin, animator 
                 <GroupAvatar type={type} avatar={avatar} />
               )
             }
-            title={group.name}
+            title={getGroupName(group)}
             titleTypographyProps={{
               variant: 'h6',
               color: 'primary',

@@ -42,6 +42,7 @@ import EventsAgenda from '../../../api/eventsAgenda/eventsAgenda';
 import Bookmarks from '../../../api/bookmarks/bookmarks';
 import { countMembersOfGroup } from '../../../api/groups/methods';
 import COMMON_STYLES from '../../themes/styles';
+import { getGroupName } from '../../utils/utilsFuncs';
 
 const useStyles = makeStyles()((theme, { member, candidate, type }) => ({
   root: {
@@ -314,7 +315,7 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
   const openGroupFolder = (plugin) => {
     const resourceURL = groupPlugins[plugin].groupURL
       .replace('[URL]', groupPlugins[plugin].URL)
-      .replace('[GROUPNAME]', encodeURIComponent(group.name))
+      .replace('[GROUPNAME]', encodeURIComponent(getGroupName(group)))
       .replace('[GROUPSLUG]', group.slug);
     window.open(resourceURL, '_blank');
   };
@@ -363,7 +364,7 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
             <div className={classes.titleContainer}>
               <GroupAvatar type={type || 0} avatar={group.avatar} />
               <div className={classes.title}>
-                <Typography variant="h5">{group.name}</Typography>
+                <Typography variant="h5">{getGroupName(group)}</Typography>
                 <div className={classes.groupInfos}>
                   <Typography color={type === 0 ? 'primary' : 'secondary'} variant="h6">
                     {groupType}

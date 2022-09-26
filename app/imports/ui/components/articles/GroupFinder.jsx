@@ -7,6 +7,7 @@ import i18n from 'meteor/universe:i18n';
 import InputAdornment from '@mui/material/InputAdornment';
 import { useTracker } from 'meteor/react-meteor-data';
 import Groups from '../../../api/groups/groups';
+import { getGroupName } from '../../utils/utilsFuncs';
 
 function GroupFinder({ onSelected, exclude = [], opened }) {
   const options = useTracker(() => {
@@ -14,7 +15,7 @@ function GroupFinder({ onSelected, exclude = [], opened }) {
     return Groups.find({ _id: { $nin: exclude } }).fetch();
   });
   const [open, setOpen] = useState(false);
-  const existingTags = options.map((group) => group.name.toLowerCase());
+  const existingTags = options.map((group) => getGroupName(group).toLowerCase());
 
   React.useEffect(() => {
     setOpen(opened);

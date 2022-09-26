@@ -113,7 +113,7 @@ describe('structures', function () {
         const structure = Structures.findOne({ _id });
         assert.typeOf(structure, 'object');
 
-        const group = Groups.findOne({ name: `[STRUC] ${structureName}WithAdminUser` });
+        const group = Groups.findOne({ name: `${_id}_${structureName}WithAdminUser` });
         assert.typeOf(group, 'object');
         assert.equal(group._id, structure.groupId);
       });
@@ -131,7 +131,7 @@ describe('structures', function () {
         const structure = Structures.findOne({ _id });
         assert.typeOf(structure, 'object');
 
-        const group = Groups.findOne({ name: `[STRUC] ${structureName}WithStructureAdminUser` });
+        const group = Groups.findOne({ name: `${_id}_${structureName}WithStructureAdminUser` });
         assert.typeOf(group, 'object');
         assert.equal(group._id, structure.groupId);
       });
@@ -240,7 +240,7 @@ describe('structures', function () {
 
         const groupEdited = Groups.findOne({ _id: groupId });
         assert.typeOf(groupEdited, 'object');
-        assert.equal(groupEdited.name, `[STRUC] StructureWithNewName`);
+        assert.equal(groupEdited.name, `${_id}_StructureWithNewName`);
       });
     });
 

@@ -29,6 +29,7 @@ import CollapsingSearch from '../../components/system/CollapsingSearch';
 import { useIconStyles, DetaiIconCustom, SimpleIconCustom } from '../../components/system/icons/icons';
 import Spinner from '../../components/system/Spinner';
 import { GRID_VIEW_MODE } from '../../utils/ui';
+import { getGroupName } from '../../utils/utilsFuncs';
 
 const useStyles = makeStyles()(() => ({
   flex: {
@@ -144,7 +145,7 @@ function GroupsPage() {
   const goToAddGroup = () => history.push('/admingroups/new');
 
   const filterGroups = (group) => {
-    let searchText = group.name + group.description + group.digest || '';
+    let searchText = getGroupName(group) + group.description + group.digest || '';
     searchText = searchText.toLowerCase();
     if (!search) return true;
     return searchText.indexOf(search.toLowerCase()) > -1;
@@ -239,7 +240,7 @@ function GroupsPage() {
               ? mapList((group) => (
                   <Grid className={classes.gridItem} item key={group._id} xs={12} sm={12} md={6} lg={4}>
                     <GroupDetailsList
-                      key={group.name}
+                      key={getGroupName(group)}
                       group={group}
                       candidate={candidateGroups.includes(group._id)}
                       member={memberGroups.includes(group._id)}
@@ -251,7 +252,7 @@ function GroupsPage() {
               : mapList((group) => (
                   <Grid className={classes.gridItem} item key={group._id} xs={12} sm={12} md={6} lg={4}>
                     <GroupDetails
-                      key={group.name}
+                      key={getGroupName(group)}
                       group={group}
                       isShort={!isMobile && viewMode === GRID_VIEW_MODE.compact}
                       candidate={candidateGroups.includes(group._id)}

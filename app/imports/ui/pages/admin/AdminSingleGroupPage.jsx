@@ -37,6 +37,7 @@ import { CustomToolbarArticle } from '../../components/system/CustomQuill';
 import '../../utils/QuillVideo';
 import AvatarPicker from '../../components/users/AvatarPicker';
 import AdminGroupDelete from '../../components/admin/AdminGroupDelete';
+import { getGroupName } from '../../utils/utilsFuncs';
 
 const useStyles = makeStyles()((theme) => ({
   root: {
@@ -348,7 +349,8 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
         <Paper className={classes.root}>
           <Grid item xs={12} sm={12} md={12} className={classes.flex}>
             <Typography component="h1" style={{ width: '100%' }}>
-              {i18n.__(`pages.AdminSingleGroupPage.${params._id ? 'edition' : 'creation'}`)} <b>{groupData.name}</b>
+              {i18n.__(`pages.AdminSingleGroupPage.${params._id ? 'edition' : 'creation'}`)}{' '}
+              <b>{getGroupName(group)}</b>
             </Typography>
           </Grid>
 
