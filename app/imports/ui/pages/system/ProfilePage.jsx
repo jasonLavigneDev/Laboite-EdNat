@@ -642,6 +642,7 @@ const ProfilePage = () => {
                     </InputLabel>
                     <Select
                       labelId="logoutType-label"
+                      label={i18n.__('pages.ProfilePage.logoutType')}
                       id="logoutType"
                       name="logoutType"
                       value={userData.logoutType}
