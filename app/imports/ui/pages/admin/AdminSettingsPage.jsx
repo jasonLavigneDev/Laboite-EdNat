@@ -26,7 +26,11 @@ import IntroductionEdition from '../../components/admin/IntroductionEdition';
 import TabbedForms from '../../components/system/TabbedForms';
 
 import { useAppContext } from '../../contexts/context';
-import { switchMaintenanceStatus, updateTextMaintenance } from '../../../api/appsettings/methods';
+import {
+  switchMaintenanceStatus,
+  updateTextMaintenance,
+  setUserStructureValidationMandatoryStatus,
+} from '../../../api/appsettings/methods';
 
 const useStyles = makeStyles()((theme) => ({
   root: {
@@ -75,6 +79,9 @@ const tabs = [
 const AdminSettingsPage = ({ ready, appsettings }) => {
   const [msgMaintenance, setMsgMaintenance] = useState(appsettings.textMaintenance);
   const { classes } = useStyles();
+  const [userStructureValidationMandatory, setUserStructureValidationMandatory] = useState(
+    appsettings.userStructureValidationMandatory,
+  );
   const [loading, setLoading] = useState(true);
   const [{ isMobile }] = useAppContext();
   const [open, setOpen] = useState(false);
@@ -85,6 +92,8 @@ const AdminSettingsPage = ({ ready, appsettings }) => {
 
   useEffect(() => {
     if (appsettings.textMaintenance !== msgMaintenance) setMsgMaintenance(appsettings.textMaintenance);
+    if (appsettings.userStructureValidationMandatory !== userStructureValidationMandatory)
+      setUserStructureValidationMandatory(appsettings.userStructureValidationMandatory);
   }, [appsettings]);
 
   const switchMaintenance = (unlockMigration = false) => {
@@ -97,6 +106,26 @@ const AdminSettingsPage = ({ ready, appsettings }) => {
         msg.error(error.message);
       }
     });
+  };
+
+  const onSetUserStructureValidationMandatoryStatus = () => {
+    setLoading(true);
+    setUserStructureValidationMandatoryStatus.call(
+      { isValidationMandatory: userStructureValidationMandatory },
+      (error) => {
+        setLoading(false);
+        if (error) {
+          console.log(error);
+          msg.error(error.message);
+        } else {
+          msg.success(i18n.__('api.methods.operationSuccessMsg'));
+        }
+      },
+    );
+  };
+
+  const onCheckUserStructureValidationMandatory = (e) => {
+    setUserStructureValidationMandatory(e.target.checked);
   };
 
   const onCheckMaintenance = () => {
@@ -135,6 +164,8 @@ const AdminSettingsPage = ({ ready, appsettings }) => {
     msgMaintenance === appsettings.textMaintenance
   );
 
+  const isUserStructureValidationMandatoryButtonActive =
+    userStructureValidationMandatory !== appsettings.userStructureValidationMandatory;
   return (
     <Fade in>
       <Container>
@@ -179,6 +210,44 @@ const AdminSettingsPage = ({ ready, appsettings }) => {
                 }
               />
             </Grid>
+          </Grid>
+        </Paper>
+        <Paper className={classes.root}>
+          <Grid container spacing={4}>
+            <Grid item md={12}>
+              <Typography variant={isMobile ? 'h6' : 'h4'}>
+                {i18n.__('pages.AdminSettingsPage.userStructureValidationMandatory')}
+              </Typography>
+            </Grid>
+            <Grid item md={12} className={classes.container}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={userStructureValidationMandatory}
+                    onChange={onCheckUserStructureValidationMandatory}
+                    name="external"
+                    color="primary"
+                  />
+                }
+                label={i18n.__(`pages.AdminSettingsPage.toggleUserStructureValidationMandatory`)}
+              />
+            </Grid>
+            <FormControlLabel
+              className={classes.containerForm}
+              control={
+                <div style={{ marginTop: '-20px', marginLeft: '25px' }}>
+                  <Button
+                    size="medium"
+                    variant="contained"
+                    color="primary"
+                    disabled={!isUserStructureValidationMandatoryButtonActive}
+                    onClick={onSetUserStructureValidationMandatoryStatus}
+                  >
+                    {i18n.__(`pages.AdminSettingsPage.buttonUserStructureValidationMandatory`)}
+                  </Button>
+                </div>
+              }
+            />
           </Grid>
         </Paper>
         <Dialog

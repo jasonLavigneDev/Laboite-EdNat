@@ -48,3 +48,12 @@ Meteor.publish('appsettings.textMaintenance', () => {
   const { textMaintenance } = AppSettings;
   return AppSettings.find({ _id: 'settings' }, { fields: textMaintenance, sort: { _id: 1 }, limit: 1 });
 });
+
+// publish userStructureValidationMandatory settings
+Meteor.publish('appsettings.userStructureValidationMandatory', () => {
+  const { userStructureValidationMandatory } = AppSettings;
+  return AppSettings.find(
+    { _id: 'settings' },
+    { fields: userStructureValidationMandatory, sort: { _id: 1 }, limit: 1 },
+  );
+});

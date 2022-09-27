@@ -1,4 +1,6 @@
+// import { Meteor } from 'meteor/meteor';
 import { Roles } from 'meteor/alanning:roles';
+import AppSettings from '../appsettings/appsettings';
 import Structures from './structures';
 
 export const hasAdminRightOnStructure = ({ userId, structureId }) => {
@@ -29,4 +31,24 @@ export const isAStructureWithSameNameExistWithSameParent = ({ name, parentId, st
     ...query,
   });
   return structuresWithSameNameOnSameLevel.count() > 0;
+};
+
+/** either app level admin or just structure level admin (direct) */
+export const hasRightToAcceptAwaitingStructure = ({ userId, awaitingStructureId }) => {
+  const isAdminStructure = Roles.userIsInRole(userId, 'adminStructure', awaitingStructureId);
+  const isAppAdmin = Roles.userIsInRole(userId, 'admin');
+  return isAdminStructure || isAppAdmin;
+};
+
+export const hasRightToSetStructureDirectly = ({ userId }) => {
+  const appSettings = AppSettings.findOne({ _id: 'settings' });
+  const { userStructureValidationMandatory: isUserStructureValidationMandatory } = appSettings;
+
+  if (!isUserStructureValidationMandatory) {
+    return true;
+  }
+
+  const isAppAdmin = Roles.userIsInRole(userId, 'admin');
+
+  return isAppAdmin;
 };

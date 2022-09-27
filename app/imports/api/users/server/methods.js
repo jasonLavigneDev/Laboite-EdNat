@@ -19,8 +19,12 @@ import logServer from '../../logging';
 import { getRandomNCloudURL } from '../../nextcloud/methods';
 import Structures from '../../structures/structures';
 import Nextcloud from '../../nextcloud/nextcloud';
-import { hasAdminRightOnStructure } from '../../structures/utils';
 import EventsAgenda from '../../eventsAgenda/eventsAgenda';
+import {
+  hasAdminRightOnStructure,
+  hasRightToAcceptAwaitingStructure,
+  hasRightToSetStructureDirectly,
+} from '../../structures/utils';
 
 if (Meteor.settings.public.enableKeycloak === true) {
   const { whiteDomains } = Meteor.settings.private;
@@ -260,6 +264,49 @@ export const checkUsername = new ValidatedMethod({
   },
 });
 
+export const acceptAwaitingStructure = new ValidatedMethod({
+  name: 'users.acceptAwaitingStructure',
+  validate: new SimpleSchema({
+    targetUserId: { type: SimpleSchema.RegEx.Id, label: getLabel('api.users.labels.id') },
+  }).validator(),
+  run({ targetUserId }) {
+    // check that user is logged in
+    if (!this.userId) {
+      throw new Meteor.Error('api.users.acceptAwaitingStructure.notLoggedIn', i18n.__('api.users.mustBeLoggedIn'));
+    }
+
+    const targetUser = Meteor.users.findOne({ _id: targetUserId });
+    const { awaitingStructure } = targetUser;
+    const structure = Structures.findOne({ _id: awaitingStructure });
+
+    if (structure === undefined) {
+      throw new Meteor.Error(
+        'api.users.acceptAwaitingStructure.unknownStructure',
+        i18n.__('api.structures.unknownStructure'),
+      );
+    }
+    // only direct admin of structure can validate awaiting structure application
+    const authorized = hasRightToAcceptAwaitingStructure({
+      userId: this.userId,
+      awaitingStructureId: awaitingStructure,
+    });
+
+    if (!authorized) {
+      throw new Meteor.Error('api.users.acceptAwaitingStructure.notPermitted', i18n.__('api.users.notPermitted'));
+    }
+
+    Meteor.users.update(
+      { _id: targetUserId },
+      {
+        $set: {
+          structure: awaitingStructure,
+          awaitingStructure: null,
+        },
+      },
+    );
+  },
+});
+
 export const setStructure = new ValidatedMethod({
   name: 'users.setStructure',
   validate: new SimpleSchema({
@@ -285,15 +332,22 @@ export const setStructure = new ValidatedMethod({
     if (!structureToFind) {
       throw new Meteor.Error(`${structure} is not an allowed value`, i18n.__('SimpleSchema.notAllowed', structure));
     }
+
+    const isAuthorizedToSetStructureDirectly = hasRightToSetStructureDirectly({
+      userId: this.userId,
+    });
+
     // check if user has structure admin role and remove it only if new structure and old structure are different
     const user = Meteor.users.findOne({ _id: this.userId });
-    if (user.structure !== structure) {
+    if (user.structure !== structure && isAuthorizedToSetStructureDirectly) {
       if (Roles.userIsInRole(this.userId, 'adminStructure', user.structure)) {
         Roles.removeUsersFromRoles(this.userId, 'adminStructure', user.structure);
       }
-    }
-    // will throw error if username already taken
-    Meteor.users.update({ _id: this.userId }, { $set: { structure } });
+    } // will throw error if username already taken
+    Meteor.users.update(
+      { _id: this.userId },
+      { $set: { [isAuthorizedToSetStructureDirectly ? 'structure' : 'awaitingStructure']: structure } },
+    );
   },
 });
 
@@ -1048,6 +1102,7 @@ const LISTS_METHODS = _.pluck(
     setUsername,
     setName,
     setStructure,
+    acceptAwaitingStructure,
     setArticlesEnable,
     setActive,
     removeUser,

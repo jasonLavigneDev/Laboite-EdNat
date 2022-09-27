@@ -8,6 +8,7 @@ Meteor.startup(() => {
       language,
       content: `<p>Welcome (${language})</p>`,
     }));
+
     AppSettings.insert({
       _id: 'settings',
       introduction,
@@ -31,6 +32,7 @@ Meteor.startup(() => {
         link: '',
         content: '',
       },
+      userStructureValidationMandatory: false,
     });
   }
 });

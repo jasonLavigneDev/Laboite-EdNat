@@ -21,6 +21,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import CategoryIcon from '@mui/icons-material/Category';
 import HomeIcon from '@mui/icons-material/Home';
 import HelpIcon from '@mui/icons-material/Help';
+import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import Drawer from '@mui/material/Drawer';
 import Typography from '@mui/material/Typography';
 import Toolbar from '@mui/material/Toolbar';
@@ -28,6 +29,7 @@ import Divider from '@mui/material/Divider';
 import { useHistory, useLocation } from 'react-router-dom';
 import updateDocumentTitle from '../../utils/updateDocumentTitle';
 import { useAppContext } from '../../contexts/context';
+import AppSettings from '../../../api/appsettings/appsettings';
 
 const { disabledFeatures } = Meteor.settings.public;
 
@@ -59,8 +61,19 @@ export default function AdminMenu() {
     return Counts.get('users.request.count');
   });
 
+  const usersAwaitingStructureCount = useTracker(() => {
+    Meteor.subscribe('users.awaitingForStructure.count', { structureId: user.structure });
+    return Counts.get('users.awaitingForStructure.count');
+  });
+
   const isAdmin = Roles.userIsInRole(user._id, 'admin');
   const isAdminStructure = Roles.userIsInRole(user._id, 'adminStructure', user.structure);
+
+  const { isUserStructureValidationMandatory } = useTracker(() => {
+    Meteor.subscribe('appsettings.userStructureValidationMandatory');
+    const appSettings = AppSettings.findOne({ _id: 'settings' }, { fields: { userStructureValidationMandatory: 1 } });
+    return { isUserStructureValidationMandatory: appSettings?.userStructureValidationMandatory };
+  });
 
   const handleMenuClick = (item) => {
     updateDocumentTitle(i18n.__(`components.MainMenu.${item.content}`));
@@ -155,6 +168,13 @@ export default function AdminMenu() {
       content: 'menuAdminOfStructures',
       icon: <BusinessIcon />,
       hidden: !isAdminStructure,
+    },
+    {
+      path: '/admin/structureusersvalidation',
+      content: 'menuAdminOfStructureUsersValidation',
+      icon: <GroupAddIcon />,
+      hidden: !isUserStructureValidationMandatory || !isAdminStructure,
+      chip: usersAwaitingStructureCount,
     },
     {
       path: 'adminDivider2',
