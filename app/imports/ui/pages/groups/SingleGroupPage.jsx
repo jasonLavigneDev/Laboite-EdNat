@@ -315,7 +315,7 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
   const openGroupFolder = (plugin) => {
     const resourceURL = groupPlugins[plugin].groupURL
       .replace('[URL]', groupPlugins[plugin].URL)
-      .replace('[GROUPNAME]', encodeURIComponent(getGroupName(group)))
+      .replace('[GROUPNAME]', encodeURIComponent(group.name))
       .replace('[GROUPSLUG]', group.slug);
     window.open(resourceURL, '_blank');
   };

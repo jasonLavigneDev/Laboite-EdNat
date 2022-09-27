@@ -240,7 +240,7 @@ function GroupsPage() {
               ? mapList((group) => (
                   <Grid className={classes.gridItem} item key={group._id} xs={12} sm={12} md={6} lg={4}>
                     <GroupDetailsList
-                      key={getGroupName(group)}
+                      key={group.name}
                       group={group}
                       candidate={candidateGroups.includes(group._id)}
                       member={memberGroups.includes(group._id)}
@@ -252,7 +252,7 @@ function GroupsPage() {
               : mapList((group) => (
                   <Grid className={classes.gridItem} item key={group._id} xs={12} sm={12} md={6} lg={4}>
                     <GroupDetails
-                      key={getGroupName(group)}
+                      key={group.name}
                       group={group}
                       isShort={!isMobile && viewMode === GRID_VIEW_MODE.compact}
                       candidate={candidateGroups.includes(group._id)}

@@ -28,7 +28,7 @@ export const testMeteorSettingsUrl = (settingsUrl, withSlash = false) => {
 export const getGroupName = (group) => {
   if (group.type !== 15) return group.name;
 
-  return `[STRUC] ${group.name.split('_', 2)[1]}`;
+  return `[STRUC] ${group.name.slice(group.name.indexOf('_') + 1, group.name.length)}`;
 };
 
 // delete when there is more than one function in this file

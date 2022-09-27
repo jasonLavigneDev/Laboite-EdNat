@@ -358,7 +358,7 @@ export const setStructure = new ValidatedMethod({
                 const gr = Groups.findOne({ _id: st.groupId });
                 if (gr) {
                   if (Roles.userIsInRole(this.userId, 'admin', gr._id)) {
-                    Roles.removeUsersFromRoles(this.userId, 'admin', gr._id);
+                    Meteor.call('users.unsetAdminOf', { userId: this.userId, groupId: gr._id });
                   }
                   Meteor.call('users.unsetMemberOf', { userId: this.userId, groupId: gr._id });
                 }
@@ -524,7 +524,7 @@ export const setAdminStructure = new ValidatedMethod({
       if (structure.groupId) {
         const group = Groups.findOne({ _id: structure.groupId });
         if (group) {
-          Roles.addUsersToRoles(userId, 'admin', group._id);
+          Meteor.call('users.setAdminOf', { userId: this.userId, groupId: group._id });
         }
       }
     }
@@ -648,7 +648,7 @@ export const unsetAdminStructure = new ValidatedMethod({
         const group = Groups.findOne({ _id: structure.groupId });
         if (group) {
           if (Roles.userIsInRole(this.userId, 'admin', group._id)) {
-            Roles.removeUsersFromRoles(userId, 'admin', group._id);
+            Meteor.call('users.unsetAdminOf', { userId: this.userId, groupId: group._id });
           }
         }
       }
