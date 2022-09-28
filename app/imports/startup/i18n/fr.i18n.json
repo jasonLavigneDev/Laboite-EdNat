@@ -55,7 +55,8 @@
         "notPermitted": "Vous n'avez pas les droits suffisants."
       },
       "switchMaintenanceStatus": {
-        "notPermitted": "Vous n'avez pas les droits suffisants."
+        "notPermitted": "Vous n'avez pas les droits suffisants.",
+        "errorMongo": "Erreur MongoDB"
       },
       "updateTextMaintenance": {
         "notPermitted": "Vous n'avez pas les droits suffisants."
@@ -534,6 +535,8 @@
       "menuAdminStructureUsers": "Utilisateurs de la structure",
       "menuAdminStructureServices": "Services de la structure",
       "menuAdminBackHome": "Retour à l'espace perso",
+      "menuUserStructure": "Gestion des Structures",
+      "menuAdminHelpPage": "Gestion de la page d'aide",
       "menuContact": "Contact"
     },
     "AdminMenu": {
@@ -917,6 +920,7 @@
       "personalData": "Données Personnelles",
       "maintenance": "Options de maintenance",
       "toggleMaintenance": "Mettre le site en maintenance",
+      "errorMongo": "Une erreur MongoDB est survenue lors de la migration. Consultez la console pour plus d'informations",
       "textMaintenance": "Raison de la maintenance",
       "buttonTextMaintenance": "Valider le message",
       "unlockMigration": {
