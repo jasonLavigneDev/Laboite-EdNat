@@ -613,7 +613,7 @@ function EditArticlePage({
               id="licence-selector"
               name="licence"
               variant="outlined"
-              label="licence"
+              label={i18n.__('pages.EditArticlePage.license')}
               fullWidth
               value={data.licence}
               onChange={handleLicence}

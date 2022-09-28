@@ -83,6 +83,7 @@ const AdminStructuresIntroductionEdition = ({ /** Can be a state */ structure })
         <InputLabel id="language-selector-label">{i18n.__('components.IntroductionEdition.language')}</InputLabel>
         <Select
           labelId="language-selector-label"
+          label={i18n.__('components.IntroductionEdition.language')}
           id="language-selector"
           value={language}
           onChange={handleLanguageChange}

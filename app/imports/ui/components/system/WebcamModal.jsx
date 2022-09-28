@@ -272,8 +272,14 @@ const WebcamModal = ({ onClose, selectFile, admin }) => {
               <SingleTooltipActionButton {...item} key={item.label} />
             ))}
             <FormControl>
-              <InputLabel>{i18n.__('components.WebcamModal.quality')}</InputLabel>
-              <Select value={quality} onChange={changeQuality} disabled={loading}>
+              <InputLabel id="webcam-quality-label">{i18n.__('components.WebcamModal.quality')}</InputLabel>
+              <Select
+                value={quality}
+                labelId="webcam-quality-label"
+                label={i18n.__('components.WebcamModal.quality')}
+                onChange={changeQuality}
+                disabled={loading}
+              >
                 <option value={100000}>{i18n.__('components.WebcamModal.low')}</option>
                 <option value={500000}>{i18n.__('components.WebcamModal.medium')}</option>
                 <option value="infinity">{i18n.__('components.WebcamModal.high')}</option>

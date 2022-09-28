@@ -12,6 +12,8 @@ import Button from '@mui/material/Button';
 import CardContent from '@mui/material/CardContent';
 import TextField from '@mui/material/TextField';
 import Select from '@mui/material/Select';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import { useAppContext } from '../../contexts/context';
 import COMMON_STYLES from '../../themes/styles';
@@ -88,19 +90,23 @@ const AdminSendNotification = ({ data, open, onClose }) => {
               fullWidth
               margin="normal"
             />
-            <Select
-              label={i18n.__('components.AdminSendNotification.type_label')}
-              name="type"
-              fullWidth
-              value={notifState.type}
-              onChange={updateState}
-            >
-              {Object.values(NOTIFICATIONS_TYPES).map((type) => (
-                <MenuItem value={type} key={type}>
-                  {type}
-                </MenuItem>
-              ))}
-            </Select>
+            <FormControl fullWidth>
+              <InputLabel id="type-select-label">{i18n.__('components.AdminSendNotification.type_label')}</InputLabel>
+              <Select
+                labelId="type-select-label"
+                label={i18n.__('components.AdminSendNotification.type_label')}
+                name="type"
+                fullWidth
+                value={notifState.type}
+                onChange={updateState}
+              >
+                {Object.values(NOTIFICATIONS_TYPES).map((type) => (
+                  <MenuItem value={type} key={type}>
+                    {type}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </CardContent>
           <CardActions className={classes.actions}>
             <Button onClick={onClose}>{i18n.__('components.AdminSendNotification.cancel')}</Button>
