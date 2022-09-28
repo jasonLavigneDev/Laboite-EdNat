@@ -88,10 +88,7 @@ export const switchMaintenanceStatus = new ValidatedMethod({
       }
       return AppSettings.update({ _id: 'settings' }, { $set: { maintenance: newValue } });
     } catch (error) {
-      throw new Meteor.Error(
-        'api.appsettings.switchMaintenanceStatus.errorMongo',
-        i18n.__('pages.AdminSettingsPage.errorMongo'),
-      );
+      throw new Meteor.Error(error, error);
     }
   },
 });
