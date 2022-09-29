@@ -916,7 +916,7 @@
       "accessibility": "Accessibility",
       "personalData": "Personal Data",
       "maintenance": "Maintenance options",
-      "errorMongo": "A MongoDB error has occured while migrating. Please check terminal for more informations.",
+      "errorMongo": "A MongoDB error has occured while migrating.",
       "toggleMaintenance": "Put the site in maintenance",
       "textMaintenance": "Maintenance reason",
       "buttonTextMaintenance": "Validate message",

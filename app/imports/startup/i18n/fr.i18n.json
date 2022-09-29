@@ -920,7 +920,7 @@
       "personalData": "Données Personnelles",
       "maintenance": "Options de maintenance",
       "toggleMaintenance": "Mettre le site en maintenance",
-      "errorMongo": "Une erreur MongoDB est survenue lors de la migration. Consultez la console pour plus d'informations",
+      "errorMongo": "Une erreur MongoDB est survenue lors de la migration.",
       "textMaintenance": "Raison de la maintenance",
       "buttonTextMaintenance": "Valider le message",
       "unlockMigration": {
