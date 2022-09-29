@@ -26,7 +26,7 @@ Groups.schema = new SimpleSchema(
       index: true,
       unique: true,
       min: 1,
-      max: 60,
+      max: 90,
       label: getLabel('api.groups.labels.name'),
     },
     slug: {
