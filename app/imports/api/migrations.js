@@ -8,7 +8,8 @@ import Structures, { defaultIntroduction } from './structures/structures';
 import Tags from './tags/tags';
 import logServer from './logging';
 import AppSettings from './appsettings/appsettings';
-import { addGroup, removeElement } from './personalspaces/methods';
+import { addItem } from './personalspaces/methods';
+import PersonalSpaces from './personalspaces/personalspaces';
 
 Migrations.add({
   version: 1,
@@ -604,7 +605,8 @@ Migrations.add({
             }
 
             Roles.addUsersToRoles(user._id, 'member', structure.groupId);
-            addGroup._execute({ userId: user._id }, { groupId: structure.groupId });
+
+            addItem(user._id, { type: 'group', element_id: structure.groupId });
 
             if (Roles.userIsInRole(user._id, 'adminStructure', user.structure)) {
               Roles.addUsersToRoles(user._id, 'admin', structure.groupId);
@@ -631,8 +633,8 @@ Migrations.add({
                     $push: { favGroups: struc.groupId },
                   });
                 }
-                Roles.addUsersToRoles(user._id, 'member', structure.groupId);
-                addGroup._execute({ userId: user._id }, { groupId: struc.groupId });
+                Roles.addUsersToRoles(user._id, 'member', struc.groupId);
+                addItem(user._id, { type: 'group', element_id: struc.groupId });
 
                 if (Roles.userIsInRole(user._id, 'adminStructure', user.structure)) {
                   Roles.addUsersToRoles(user._id, 'admin', struc.groupId);
@@ -658,7 +660,15 @@ Migrations.add({
                 },
               );
 
-              removeElement._execute({ userId: user._id }, { type: 'group', elementId: structure.groupId });
+              PersonalSpaces.update(
+                { userId: user._id },
+                {
+                  $pull: {
+                    unsorted: { type: 'group', element_id: structure.groupId },
+                    'sorted.$[].elements': { type: 'group', element_id: structure.groupId },
+                  },
+                },
+              );
 
               if (Roles.userIsInRole(user._id, 'member', structure.groupId))
                 Roles.removeUsersFromRoles(user._id, 'member', structure.groupId);
@@ -680,10 +690,18 @@ Migrations.add({
                     },
                   );
 
-                  removeElement._execute({ userId: user._id }, { type: 'group', elementId: struc.groupId });
+                  PersonalSpaces.update(
+                    { userId: user._id },
+                    {
+                      $pull: {
+                        unsorted: { type: 'group', element_id: struc.groupId },
+                        'sorted.$[].elements': { type: 'group', element_id: struc.groupId },
+                      },
+                    },
+                  );
 
-                  if (Roles.userIsInRole(user._id, 'member', structure.groupId))
-                    Roles.removeUsersFromRoles(user._id, 'member', structure.groupId);
+                  if (Roles.userIsInRole(user._id, 'member', struc.groupId))
+                    Roles.removeUsersFromRoles(user._id, 'member', struc.groupId);
                   if (Roles.userIsInRole(user._id, 'admin', struc.groupId)) {
                     Roles.removeUsersFromRoles(user._id, 'admin', struc.groupId);
                   }

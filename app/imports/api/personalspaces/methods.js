@@ -13,7 +13,7 @@ import logServer from '../logging';
 import UserBookmarks from '../userBookmarks/userBookmarks';
 import DefaultSpaces from '../defaultspaces/defaultspaces';
 
-const addItem = (userId, item) => {
+export const addItem = (userId, item) => {
   const currentPersonalSpace = PersonalSpaces.findOne({ userId });
   let alreadyExists = false;
   if (currentPersonalSpace === undefined) {
