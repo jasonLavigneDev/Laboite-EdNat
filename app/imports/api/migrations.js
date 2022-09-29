@@ -8,6 +8,7 @@ import Structures, { defaultIntroduction } from './structures/structures';
 import Tags from './tags/tags';
 import logServer from './logging';
 import AppSettings from './appsettings/appsettings';
+import { addGroup, removeElement } from './personalspaces/methods';
 
 Migrations.add({
   version: 1,
@@ -547,11 +548,11 @@ Migrations.add({
   version: 29,
   name: 'Add automatic group for structures',
   up: () => {
+    let adminId = '';
     Structures.find({})
       .fetch()
       .forEach((structure) => {
         const strucName = `${structure._id}_${structure.name}`;
-        let adminId = '';
         Meteor.users
           .find({})
           .fetch()
@@ -602,6 +603,9 @@ Migrations.add({
               });
             }
 
+            Roles.addUsersToRoles(user._id, 'member', structure.groupId);
+            addGroup._execute({ userId: user._id }, { groupId: structure.groupId });
+
             if (Roles.userIsInRole(user._id, 'adminStructure', user.structure)) {
               Roles.addUsersToRoles(user._id, 'admin', structure.groupId);
             }
@@ -627,6 +631,8 @@ Migrations.add({
                     $push: { favGroups: struc.groupId },
                   });
                 }
+                Roles.addUsersToRoles(user._id, 'member', structure.groupId);
+                addGroup._execute({ userId: user._id }, { groupId: struc.groupId });
 
                 if (Roles.userIsInRole(user._id, 'adminStructure', user.structure)) {
                   Roles.addUsersToRoles(user._id, 'admin', struc.groupId);
@@ -652,6 +658,10 @@ Migrations.add({
                 },
               );
 
+              removeElement._execute({ userId: user._id }, { type: 'group', elementId: structure.groupId });
+
+              if (Roles.userIsInRole(user._id, 'member', structure.groupId))
+                Roles.removeUsersFromRoles(user._id, 'member', structure.groupId);
               if (Roles.userIsInRole(user._id, 'admin', structure.groupId)) {
                 Roles.removeUsersFromRoles(user._id, 'admin', structure.groupId);
               }
@@ -670,6 +680,10 @@ Migrations.add({
                     },
                   );
 
+                  removeElement._execute({ userId: user._id }, { type: 'group', elementId: struc.groupId });
+
+                  if (Roles.userIsInRole(user._id, 'member', structure.groupId))
+                    Roles.removeUsersFromRoles(user._id, 'member', structure.groupId);
                   if (Roles.userIsInRole(user._id, 'admin', struc.groupId)) {
                     Roles.removeUsersFromRoles(user._id, 'admin', struc.groupId);
                   }
