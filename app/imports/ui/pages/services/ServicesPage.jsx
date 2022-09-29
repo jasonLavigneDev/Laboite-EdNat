@@ -30,11 +30,13 @@ import Divider from '@mui/material/Divider';
 import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
 import Tooltip from '@mui/material/Tooltip';
 import ServiceDetails from '../../components/services/ServiceDetails';
+import ServiceDetailsList from '../../components/services/ServiceDetailsList';
 import Services from '../../../api/services/services';
 import Categories from '../../../api/categories/categories';
+import BusinessReGrouping from '../../../api/businessReGrouping/businessReGrouping';
 import Spinner from '../../components/system/Spinner';
 import { useAppContext } from '../../contexts/context';
-import ServiceDetailsList from '../../components/services/ServiceDetailsList';
+import ServiceDetailsListZone from '../../components/services/ServiceDetailsListZone';
 import { useIconStyles, DetaiIconCustom, SimpleIconCustom } from '../../components/system/icons/icons';
 import { useStructure } from '../../../api/structures/hooks';
 import { GRID_VIEW_MODE } from '../../utils/ui';
@@ -139,7 +141,7 @@ const useStyles = makeStyles()((theme, isMobile) => ({
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
-export function ServicesPage({ services, categories, ready, structureMode, offline }) {
+export function ServicesPage({ services, categories, businessRegroupings, ready, structureMode, offline }) {
   const [{ user, loadingUser, isMobile, servicePage }, dispatch] = useAppContext();
   const structure = offline ? null : useStructure();
   const { classes } = useStyles(isMobile);
@@ -148,9 +150,9 @@ export function ServicesPage({ services, categories, ready, structureMode, offli
   const {
     public: {
       ui: { defaultGridViewMode },
+      ui: { isBusinessRegroupingMode },
     },
   } = Meteor.settings;
-
   const {
     catList = [],
     search = '',
@@ -202,6 +204,19 @@ export function ServicesPage({ services, categories, ready, structureMode, offli
   };
 
   const mapList = (func) => services.filter((service) => filterServices(service)).map(func);
+  const servicesByBusinessRegrouping = (businessRegrouping) => {
+    return services.filter(
+      (service) =>
+        filterServices(service) &&
+        service.businessReGrouping &&
+        service.businessReGrouping.includes(businessRegrouping._id),
+    );
+  };
+
+  const servicesWithoutBusinessRegrouping = () => {
+    return services.filter((service) => filterServices(service) && service.businessReGrouping.length === 0);
+  };
+
   const favAction = (id) => (favs.indexOf(id) === -1 ? 'fav' : 'unfav');
 
   const toggleButtons = (
@@ -301,13 +316,14 @@ export function ServicesPage({ services, categories, ready, structureMode, offli
                 <Typography className={classes.emptyMsg}>
                   {i18n.__(`pages.ServicesPage.${structureMode ? 'NoStructureServices' : 'NoServices'}`)}
                 </Typography>
-              ) : viewMode === GRID_VIEW_MODE.compact && isMobile ? (
+              ) : !isBusinessRegroupingMode && viewMode === GRID_VIEW_MODE.compact && isMobile ? (
                 mapList((service) => (
                   <Grid className={classes.gridItem} item xs={4} md={2} key={service._id}>
                     <ServiceDetailsList service={service} favAction={favAction(service._id)} />
                   </Grid>
                 ))
               ) : (
+                !isBusinessRegroupingMode &&
                 mapList((service) => (
                   <Grid className={classes.gridItem} item key={service._id} xs={12} sm={12} md={6} lg={4}>
                     <ServiceDetails
@@ -321,6 +337,37 @@ export function ServicesPage({ services, categories, ready, structureMode, offli
                   </Grid>
                 ))
               )}
+            </Grid>
+            <Grid item xs={12} sm={12} md={12}>
+              {services.length > 0 && isBusinessRegroupingMode && servicesWithoutBusinessRegrouping().length > 0 && (
+                <ServiceDetailsListZone
+                  key="BusinessRegroupingZone"
+                  services={servicesWithoutBusinessRegrouping()}
+                  index={0}
+                  title={i18n.__('pages.ServicesPage.ServicesWithoutBusinessRegrouping')}
+                  favAction={favAction}
+                  isShort={!isMobile && viewMode === GRID_VIEW_MODE.compact}
+                  isSorted
+                  isExpandedZone
+                />
+              )}
+              {services.length > 0 &&
+                isBusinessRegroupingMode &&
+                businessRegroupings.map(
+                  (businessRegrouping, i) =>
+                    servicesByBusinessRegrouping(businessRegrouping).length > 0 && (
+                      <ServiceDetailsListZone
+                        key="BusinessRegroupingZone"
+                        services={servicesByBusinessRegrouping(businessRegrouping)}
+                        index={i}
+                        title={businessRegrouping.name}
+                        favAction={favAction}
+                        isShort={!isMobile && viewMode === GRID_VIEW_MODE.compact}
+                        isSorted
+                        isExpandedZone={false}
+                      />
+                    ),
+                )}
             </Grid>
             <Dialog fullScreen open={filterToggle && isMobile} TransitionComponent={Transition}>
               <AppBar className={classes.appBar}>
@@ -387,6 +434,7 @@ export function ServicesPage({ services, categories, ready, structureMode, offli
 ServicesPage.propTypes = {
   services: PropTypes.arrayOf(PropTypes.object).isRequired,
   categories: PropTypes.arrayOf(PropTypes.object).isRequired,
+  businessRegroupings: PropTypes.arrayOf(PropTypes.object).isRequired,
   ready: PropTypes.bool.isRequired,
   structureMode: PropTypes.bool.isRequired,
   offline: PropTypes.bool,
@@ -422,10 +470,15 @@ export default withTracker(({ match: { path } }) => {
     ...cat,
     count: Services.find({ state: { $ne: 10 }, categories: { $in: [cat._id] } }).count(),
   }));
-  const ready = servicesHandle.ready() && categoriesHandle.ready();
+
+  const businessRegroupingsHandle = Meteor.subscribe('businessReGrouping.all');
+  const businessRegroupings = BusinessReGrouping.find({}).fetch();
+
+  const ready = servicesHandle.ready() && categoriesHandle.ready() && businessRegroupingsHandle.ready();
   return {
     services,
     categories,
+    businessRegroupings,
     ready,
     structureMode,
   };

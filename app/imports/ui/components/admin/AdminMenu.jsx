@@ -147,6 +147,12 @@ export default function AdminMenu() {
       content: 'Divider',
     },
     {
+      path: '/admin/businessRegrouping',
+      content: 'menuAdminBusinessRegrouping',
+      icon: <CategoryIcon />,
+      hidden: !isAdminStructure,
+    },
+    {
       path: '/admin/structureservices',
       content: 'menuAdminStructureServices',
       icon: <SettingsInputComponentIcon />,

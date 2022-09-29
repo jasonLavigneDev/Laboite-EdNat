@@ -21,6 +21,7 @@ import './db-initialize/Structures';
 import './db-initialize/Accounts';
 import './db-initialize/Services';
 import './db-initialize/Categories';
+import './db-initialize/BusinessRegrouping';
 import './db-initialize/Groups';
 import './db-initialize/Tags';
 import './db-initialize/Articles';

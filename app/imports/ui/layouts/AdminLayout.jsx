@@ -36,6 +36,7 @@ const AdminSettingsPage = lazy(() => import('../pages/admin/AdminSettingsPage'))
 const AdminSingleServicePage = lazy(() => import('../pages/admin/AdminSingleServicePage'));
 const AdminServicesPage = lazy(() => import('../pages/admin/AdminServicesPage'));
 const AdminStructureManagementPage = lazy(() => import('../pages/admin/AdminStructuresManagementPage'));
+const AdminBusinessReGroupingPage = lazy(() => import('../pages/admin/AdminBusinessRegroupingPage'));
 const AdminServicesByStructurePage = lazy(() => import('../pages/admin/AdminServicesByStructurePage'));
 const AdminStructureSettingsPage = lazy(() => import('../pages/admin/AdminStructureSettingsPage'));
 const AdminStructureUsersValidationPage = lazy(() => import('../pages/admin/AdminStructureUsersValidationPage'));
@@ -181,6 +182,13 @@ function AdminLayout() {
                       component={AdminUsersPage}
                       user={user}
                       loadingUser={loadingUser}
+                    />
+                    <AdminRoute
+                      userId={userId}
+                      loadingUser={loadingUser}
+                      exact
+                      path="/admin/businessReGrouping"
+                      component={AdminBusinessReGroupingPage}
                     />
                     <StructureAdminRoute
                       exact

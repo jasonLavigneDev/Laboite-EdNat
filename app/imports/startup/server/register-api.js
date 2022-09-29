@@ -17,6 +17,8 @@ import '../../api/services/server/methods';
 import '../../api/services/server/publications';
 import '../../api/categories/methods';
 import '../../api/categories/server/publications';
+import '../../api/businessReGrouping/methods';
+import '../../api/businessReGrouping/server/publications';
 import '../../api/tags/methods';
 import '../../api/tags/server/publications';
 import '../../api/languages/methods';

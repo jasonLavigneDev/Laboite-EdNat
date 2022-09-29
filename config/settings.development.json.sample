@@ -15,7 +15,8 @@
       "introductionTabStructuresInfos": true,
     },
     "ui": {
-      "defaultGridViewMode": "compact"
+      "defaultGridViewMode": "compact",
+      "isBusinessRegroupingMode": false
     },
     "matomo": {
       "siteId": 1,

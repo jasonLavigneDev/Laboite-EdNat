@@ -26,6 +26,7 @@ import 'react-quill/dist/quill.snow.css'; // ES6
 import { useHistory } from 'react-router-dom';
 
 import Categories from '../../../api/categories/categories';
+import BusinessReGrouping from '../../../api/businessReGrouping/businessReGrouping';
 import Spinner from '../../components/system/Spinner';
 import Services from '../../../api/services/services';
 import slugy from '../../utils/slugy';
@@ -106,6 +107,7 @@ const defaultState = {
   url: '',
   logo: '',
   categories: [],
+  businessReGrouping: [],
   screenshots: [],
   state: Number(Object.keys(Services.stateLabels)[0]),
 };
@@ -121,14 +123,18 @@ const quillOptions = {
   },
 };
 
-const AdminSingleServicePage = ({ categories, service, ready, match: { path, params } }) => {
+const AdminSingleServicePage = ({ categories, businessReGrouping, service, ready, match: { path, params } }) => {
   const [serviceData, setServiceData] = useState({ ...defaultState });
   const [loading, setLoading] = useState(!!params._id);
   const [content, setContent] = useState('');
   const history = useHistory();
   const { classes } = useStyles();
   const structureMode = path.startsWith('/admin/structureservices');
-  const { minioEndPoint, offlinePage } = Meteor.settings.public;
+  const {
+    minioEndPoint,
+    offlinePage,
+    ui: { isBusinessRegroupingMode },
+  } = Meteor.settings.public;
 
   const removeUndefined = () => {
     let args;
@@ -189,6 +195,18 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
   };
 
   const onUpdateRichText = (html) => setContent(html);
+
+  const onUpdateBusinessReGrouping = (businessReGroupingId) => {
+    // regroupement métier par service est exclusive
+    const newBusinessReGrouping = [businessReGroupingId];
+    // const index = newBusinessReGrouping.findIndex((c) => c === businessReGroupingId);
+    // if (index > -1) {
+    //   newBusinessReGrouping.splice(index, 1);
+    // } else {
+    //   newBusinessReGrouping.push(businessReGroupingId);
+    // }
+    setServiceData({ ...serviceData, businessReGrouping: newBusinessReGrouping });
+  };
 
   const onUpdateCategories = (categId) => {
     const newCategories = [...serviceData.categories];
@@ -385,7 +403,6 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
               fullWidth
               margin="normal"
             />
-
             {offlinePage && !structureMode && (
               <FormControlLabel
                 control={
@@ -404,7 +421,6 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
               <CustomToolbarArticle />
               <ReactQuill id="content" value={content} onChange={onUpdateRichText} modules={quillOptions} />
             </div>
-
             <InputLabel id="categories-label">{i18n.__('pages.AdminSingleServicePage.categories')}</InputLabel>
             <div className={classes.chipWrapper}>
               {categories.map((categ) => {
@@ -422,7 +438,31 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
                 );
               })}
             </div>
-
+            {isBusinessRegroupingMode && (
+              <InputLabel id="businessReGrouping-label">
+                {i18n.__('pages.AdminSingleServicePage.businessReGrouping')}
+              </InputLabel>
+            )}
+            {isBusinessRegroupingMode && (
+              <div className={classes.chipWrapper}>
+                {businessReGrouping.map((businessRegroup) => {
+                  const isActive =
+                    serviceData.businessReGrouping &&
+                    Boolean(serviceData.businessReGrouping.find((rg) => rg === businessRegroup._id));
+                  return (
+                    <Chip
+                      key={businessRegroup._id}
+                      label={businessRegroup.name}
+                      color={isActive ? 'primary' : 'default'}
+                      variant={isActive ? 'outlined' : 'default'}
+                      className={isActive ? classes.activeChip : classes.chip}
+                      style={{ backgroudColor: businessRegroup.color }}
+                      onClick={() => onUpdateBusinessReGrouping(businessRegroup._id)}
+                    />
+                  );
+                })}
+              </div>
+            )}
             {minioEndPoint && (
               <InputLabel>
                 {i18n.__('pages.AdminSingleServicePage.screenshots')} (
@@ -463,7 +503,6 @@ const AdminSingleServicePage = ({ categories, service, ready, match: { path, par
                   ))}
               </Grid>
             )}
-
             <div className={classes.buttonGroup}>
               <Button variant="contained" color="grey" onClick={onCancel}>
                 {i18n.__('pages.AdminSingleServicePage.cancel')}
@@ -490,18 +529,21 @@ export default withTracker(
   }) => {
     const subCategories = Meteor.subscribe('categories.all');
     const categories = Categories.find({}).fetch();
+    const subBusinessReGrouping = Meteor.subscribe('businessReGrouping.all');
+    const businessReGrouping = BusinessReGrouping.find({}).fetch();
     let service = {};
     let ready = false;
     if (_id) {
       const subService = Meteor.subscribe('services.one.admin', { _id });
       service = Services.findOneFromPublication('services.one.admin', { _id });
-      ready = subCategories.ready() && subService.ready();
+      ready = subCategories.ready() && subBusinessReGrouping.ready() && subService.ready();
     } else {
-      ready = subCategories.ready();
+      ready = subCategories.ready() && subBusinessReGrouping.ready();
     }
     return {
       service,
       categories,
+      businessReGrouping,
       ready,
     };
   },
@@ -514,6 +556,7 @@ AdminSingleServicePage.defaultProps = {
 AdminSingleServicePage.propTypes = {
   match: PropTypes.objectOf(PropTypes.any).isRequired,
   categories: PropTypes.arrayOf(PropTypes.any).isRequired,
+  businessReGrouping: PropTypes.arrayOf(PropTypes.any).isRequired,
   service: PropTypes.objectOf(PropTypes.any),
   ready: PropTypes.bool.isRequired,
 };
