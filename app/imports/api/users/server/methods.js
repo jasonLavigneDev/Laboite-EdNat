@@ -854,7 +854,7 @@ export const setAdminStructure = new ValidatedMethod({
       if (structure.groupId) {
         const group = Groups.findOne({ _id: structure.groupId });
         if (group) {
-          setAdminOf._execute({ userId: this.userId }, { userId: this.userId, groupId: group._id });
+          setAdminOf._execute({ userId: this.userId }, { userId, groupId: group._id });
         }
       }
     }
@@ -978,7 +978,7 @@ export const unsetAdminStructure = new ValidatedMethod({
         const group = Groups.findOne({ _id: structure.groupId });
         if (group) {
           if (Roles.userIsInRole(this.userId, 'admin', group._id)) {
-            unsetAdminOf._execute({ userId: this.userId }, { userId: this.userId, groupId: group._id });
+            unsetAdminOf._execute({ userId: this.userId }, { userId, groupId: group._id });
           }
         }
       }
