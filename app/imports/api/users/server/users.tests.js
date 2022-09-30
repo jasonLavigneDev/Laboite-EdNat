@@ -66,8 +66,10 @@ const initStructures = (userId) => {
   Meteor.users.update({ _id: userId }, { $set: { isActive: true } });
   Groups.remove({});
   Structures.remove({});
+  let cpt = 0;
   _.times(4, () => {
-    createStructure._execute({ userId }, { name: faker.company.companyName() });
+    createStructure._execute({ userId }, { name: `${faker.company.companyName()}_${cpt}` });
+    cpt += 1;
   });
   Roles.removeUsersFromRoles(userId, 'admin');
   Meteor.users.update({ _id: userId }, { $set: { isActive: false } });
@@ -730,7 +732,10 @@ describe('users', function () {
           firstName: 'adminStructureUserFirstName',
           lastName: 'adminStructureUserLastName',
         });
+        Meteor.users.update({ _id: adminStructureId }, { $set: { isActive: true } });
+        const struc = Structures.findOne({ _id: newStructure });
         Roles.addUsersToRoles(adminStructureId, 'adminStructure', newStructure);
+        Roles.addUsersToRoles(adminStructureId, 'admin', struc.groupId);
 
         acceptAwaitingStructure._execute({ userId: adminStructureId }, { targetUserId: userId });
         const user = Meteor.users.findOne({ _id: userId });

@@ -580,6 +580,49 @@ export const unsetCandidateOf = new ValidatedMethod({
   },
 });
 
+export function RemoveUserFromGroupsOfOldStructure(currentUserId, user) {
+  if (user.structure) {
+    const oldStructure = Structures.findOne({ _id: user.structure });
+    if (oldStructure) {
+      const ancestors = Structures.find({ _id: { $in: oldStructure.ancestorsIds } }).fetch();
+      if (oldStructure.groupId) {
+        unsetMemberOf._execute({ userId: currentUserId }, { userId: user._id, groupId: oldStructure.groupId });
+      }
+      if (ancestors) {
+        ancestors.forEach((st) => {
+          if (st.groupId) {
+            const gr = Groups.findOne({ _id: st.groupId });
+            if (gr) {
+              if (Roles.userIsInRole(currentUserId, 'admin', gr._id)) {
+                unsetAdminOf._execute({ userId: currentUserId }, { userId: user._id, groupId: gr._id });
+              }
+              unsetMemberOf._execute({ userId: currentUserId }, { userId: user._id, groupId: gr._id });
+            }
+          }
+        });
+      }
+    }
+  }
+}
+
+export function AddUserToGroupOfStructure(currentUserId, user, structure) {
+  if (structure.groupId) {
+    setMemberOf._execute({ userId: currentUserId }, { userId: user._id, groupId: structure.groupId });
+  }
+
+  const ancestors = Structures.find({ _id: { $in: structure.ancestorsIds } }).fetch();
+  if (ancestors) {
+    ancestors.forEach((st) => {
+      if (st.groupId) {
+        const gr = Groups.findOne({ _id: st.groupId });
+        if (gr) {
+          setMemberOf._execute({ userId: currentUserId }, { userId: user._id, groupId: gr._id });
+        }
+      }
+    });
+  }
+}
+
 export const acceptAwaitingStructure = new ValidatedMethod({
   name: 'users.acceptAwaitingStructure',
   validate: new SimpleSchema({
@@ -611,6 +654,8 @@ export const acceptAwaitingStructure = new ValidatedMethod({
       throw new Meteor.Error('api.users.acceptAwaitingStructure.notPermitted', i18n.__('api.users.notPermitted'));
     }
 
+    RemoveUserFromGroupsOfOldStructure(this.userId, targetUser);
+
     Meteor.users.update(
       { _id: targetUserId },
       {
@@ -620,6 +665,8 @@ export const acceptAwaitingStructure = new ValidatedMethod({
         },
       },
     );
+
+    AddUserToGroupOfStructure(this.userId, targetUser, structure);
   },
 });
 
@@ -660,48 +707,15 @@ export const setStructure = new ValidatedMethod({
         Roles.removeUsersFromRoles(this.userId, 'adminStructure', user.structure);
       }
 
-      // Remove user from groups of old structure and ancestors
-      if (user.structure) {
-        const oldStructure = Structures.findOne({ _id: user.structure });
-        if (oldStructure) {
-          const ancestors = Structures.find({ _id: { $in: oldStructure.ancestorsIds } }).fetch();
-          if (oldStructure.groupId) {
-            unsetMemberOf._execute({ userId: this.userId }, { userId: this.userId, groupId: oldStructure.groupId });
-          }
-          if (ancestors) {
-            ancestors.forEach((st) => {
-              if (st.groupId) {
-                const gr = Groups.findOne({ _id: st.groupId });
-                if (gr) {
-                  if (Roles.userIsInRole(this.userId, 'admin', gr._id)) {
-                    unsetAdminOf._execute({ userId: this.userId }, { userId: this.userId, groupId: gr._id });
-                  }
-                  unsetMemberOf._execute({ userId: this.userId }, { userId: this.userId, groupId: gr._id });
-                }
-              }
-            });
-          }
-        }
-      }
+      RemoveUserFromGroupsOfOldStructure(this.userId, user);
     }
 
-    // Add user to group of new structure and groups of ancestors structures
-    Meteor.users.update({ _id: this.userId }, { $set: { structure } });
-    if (structureToFind.groupId) {
-      setMemberOf._execute({ userId: this.userId }, { userId: this.userId, groupId: structureToFind.groupId });
-    }
+    Meteor.users.update(
+      { _id: user._id },
+      { $set: { [isAuthorizedToSetStructureDirectly ? 'structure' : 'awaitingStructure']: structure } },
+    );
 
-    const ancestors = Structures.find({ _id: { $in: structureToFind.ancestorsIds } }).fetch();
-    if (ancestors) {
-      ancestors.forEach((st) => {
-        if (st.groupId) {
-          const gr = Groups.findOne({ _id: st.groupId });
-          if (gr) {
-            setMemberOf._execute({ userId: this.userId }, { userId: this.userId, groupId: gr._id });
-          }
-        }
-      });
-    }
+    if (isAuthorizedToSetStructureDirectly) AddUserToGroupOfStructure(this.userId, user, structureToFind);
   },
 });
 
