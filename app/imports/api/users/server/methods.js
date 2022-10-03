@@ -586,7 +586,7 @@ export function RemoveUserFromGroupsOfOldStructure(currentUserId, user) {
     if (oldStructure) {
       const ancestors = Structures.find({ _id: { $in: oldStructure.ancestorsIds } }).fetch();
       if (oldStructure.groupId) {
-        if (Roles.userIsInRole(currentUserId, 'admin', oldStructure.groupId)) {
+        if (Roles.userIsInRole(currentUserId, 'adminStructure', oldStructure._id)) {
           unsetAdminOf._execute({ userId: currentUserId }, { userId: user._id, groupId: oldStructure.groupId });
         }
         unsetMemberOf._execute({ userId: currentUserId }, { userId: user._id, groupId: oldStructure.groupId });
@@ -596,7 +596,7 @@ export function RemoveUserFromGroupsOfOldStructure(currentUserId, user) {
           if (st.groupId) {
             const gr = Groups.findOne({ _id: st.groupId });
             if (gr) {
-              if (Roles.userIsInRole(currentUserId, 'admin', gr._id)) {
+              if (Roles.userIsInRole(currentUserId, 'adminStructure', st._id)) {
                 unsetAdminOf._execute({ userId: currentUserId }, { userId: user._id, groupId: gr._id });
               }
               unsetMemberOf._execute({ userId: currentUserId }, { userId: user._id, groupId: gr._id });
