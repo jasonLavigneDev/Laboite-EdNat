@@ -85,11 +85,7 @@ function GroupsPage() {
   const { classes } = useStyles();
   const { classes: classesIcons } = useIconStyles();
 
-  const {
-    public: {
-      ui: { defaultGridViewMode },
-    },
-  } = Meteor.settings;
+  const { defaultGridViewMode = '' } = Meteor.settings.public?.ui || {};
 
   const { search = '', searchToggle = false, viewMode = GRID_VIEW_MODE[defaultGridViewMode] } = groupPage;
   const { changePage, page, items, total, loading } = !filterChecked
