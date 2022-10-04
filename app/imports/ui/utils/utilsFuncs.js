@@ -7,5 +7,20 @@ export const isUrlExternal = (url) => {
   return false;
 };
 
-// delete when there is more than one function in this file
-export const tempFunction = (args) => console.log(args);
+// Test if the url from Meteor settings end by /
+// if no, add it
+// withSlash is a boolean to decide if you want a slash at the end of the url
+export const testMeteorSettingsUrl = (settingsUrl, withSlash = false) => {
+  const url = settingsUrl;
+  if (withSlash) {
+    if (settingsUrl.charAt(settingsUrl.length - 1) !== '/') {
+      return `${url}/`;
+    }
+    return url;
+  }
+  if (settingsUrl.charAt(settingsUrl.length - 1) === '/') {
+    // delete last slash
+    return url.replace(/.$/, '');
+  }
+  return url;
+};

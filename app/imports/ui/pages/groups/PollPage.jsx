@@ -28,6 +28,7 @@ import Polls from '../../../api/polls/polls';
 import Spinner from '../../components/system/Spinner';
 import { GroupPaginate, GroupListActions } from './common';
 import { useEvenstPageStyles } from './EventsPage';
+import { testMeteorSettingsUrl } from '../../utils/utilsFuncs';
 
 const ITEM_PER_PAGE = 10;
 
@@ -127,7 +128,9 @@ const PollPage = ({ loading, group, slug }) => {
                   <IconButton
                     onClick={() =>
                       window.open(
-                        `${Meteor.settings.public.services.sondagesUrl}/poll/new/1?groupId=${group._id}`,
+                        `${testMeteorSettingsUrl(Meteor.settings.public.services.sondagesUrl)}/poll/new/1?groupId=${
+                          group._id
+                        }`,
                         '_blank',
                       )
                     }
@@ -169,7 +172,9 @@ const PollPage = ({ loading, group, slug }) => {
                         />
 
                         <GroupListActions
-                          url={`${Meteor.settings.public.services.sondagesUrl}/poll/answer/${poll._id}?autologin`}
+                          url={`${testMeteorSettingsUrl(Meteor.settings.public.services.sondagesUrl)}/poll/answer/${
+                            poll._id
+                          }?autologin`}
                           title={`${i18n.__('pages.Polls.seePoll')} ${poll.title}`}
                         />
                       </ListItem>,

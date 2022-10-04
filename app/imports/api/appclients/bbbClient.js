@@ -6,12 +6,13 @@ import crypto from 'crypto';
 import { parseStringPromise } from 'xml2js';
 import logServer from '../logging';
 import Groups from '../groups/groups';
+import { testMeteorSettingsUrl } from '../../ui/utils/utilsFuncs';
 
 const bbbEnabled = Meteor.settings.public.enableBBB;
 
 class BigBlueButtonClient {
   constructor() {
-    this.bbbURL = Meteor.settings.public.BBBUrl;
+    this.bbbURL = testMeteorSettingsUrl(Meteor.settings.public.BBBUrl);
     this.bbbSecret = Meteor.settings.private.BBBSecret;
   }
 
