@@ -1177,7 +1177,9 @@
       "manageUser": "Manager user",
       "sendNotif": "Send notification",
       "successCopyUserId": "User ID copied with success",
-      "copyUserId": "Copy user ID"
+      "copyUserId": "Copy user ID",
+      "userType": "Users type",
+      "all": "all"
     },
     "AdminUserValidationPage": {
       "title": "User validation"

@@ -29,6 +29,10 @@ import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Pagination from '@mui/material/Pagination';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
 import { Roles } from 'meteor/alanning:roles';
 import { getStructureIds } from '../../../api/users/structures';
 import { usePagination } from '../../utils/hooks';
@@ -53,6 +57,9 @@ const useStyles = makeStyles()((theme) => ({
   },
   inline: {
     display: 'inline',
+  },
+  typeselect: {
+    minWidth: '280px',
   },
   avatar: {
     backgroundColor: theme.palette.primary.main,
@@ -88,6 +95,8 @@ const AdminUsersPage = ({ match: { path } }) => {
   const [{ isMobile }] = useAppContext();
   const [search, setSearch] = useState('');
   const [sortByDate, setSortByDate] = useState(false);
+  const [userType, setUserType] = useState('all');
+  const userTypes = ['all', 'adminStructure', 'admin'];
 
   // for user structure
   const isStructureSpecific = path === '/admin/structureusers';
@@ -107,7 +116,7 @@ const AdminUsersPage = ({ match: { path } }) => {
 
   const { changePage, page, items, total } = usePagination(
     subscription,
-    { selectedStructureId, search, sort: sortByDate ? { lastLogin: -1 } : { lastName: 1 } },
+    { selectedStructureId, search, userType, sort: sortByDate ? { lastLogin: -1 } : { lastName: 1 } },
     Meteor.users,
     {},
     { sort: sortByDate ? { lastLogin: -1 } : { lastName: 1 } },
@@ -136,6 +145,9 @@ const AdminUsersPage = ({ match: { path } }) => {
   });
   const handleChangePage = (event, value) => {
     changePage(value);
+  };
+  const handleUserType = (evt) => {
+    setUserType(evt.target.value);
   };
   const searchRef = useRef();
   const updateSearch = (e) => setSearch(e.target.value);
@@ -299,6 +311,25 @@ const AdminUsersPage = ({ match: { path } }) => {
                 </Grid>
               )}
               <Grid item xs={12} sm={12} md={6}>
+                <FormControl>
+                  <InputLabel id="usertype-selector-label">{i18n.__('pages.AdminUsersPage.userType')}</InputLabel>
+                  <Select
+                    className={classes.typeselect}
+                    labelId="usertype-selector-label"
+                    id="usertype-selector"
+                    name="usertype"
+                    variant="outlined"
+                    label={i18n.__('pages.AdminUsersPage.userType')}
+                    value={userType}
+                    onChange={handleUserType}
+                  >
+                    {userTypes.map((usertype) => (
+                      <MenuItem value={usertype} key={`select_${usertype}`}>
+                        {i18n.__(`pages.AdminUsersPage.${usertype}`)}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
                 <SearchField
                   updateSearch={updateSearch}
                   search={search}
