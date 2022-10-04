@@ -43,6 +43,7 @@ export const createNotification = new ValidatedMethod({
 
   run({ data }) {
     const authorized = true; // TODO isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
+
     if (!authorized) {
       throw new Meteor.Error('api.notifications.createNotification.notPermitted', i18n.__('api.users.adminNeeded'));
     }

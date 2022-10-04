@@ -591,7 +591,9 @@
         "body_editTooltip": "Modify this user",
         "body_deleteTooltip": "Remove this user",
         "body_editRow_deleteText": "Do you really want to remove this user?",
-        "body_addGroupTooltip": "Add members of another group"
+        "body_addGroupTooltip": "Add members of another group",
+        "body_sendGroupNotifTooltip": "Send a notification to all",
+        "body_sendMemberNotifTooltip": "Send a notif to this member"
       }
     },
     "UserFinder": {
@@ -793,8 +795,17 @@
       "cancel": "Cancel",
       "title_label": "Title",
       "content_label": "Notification content",
-      "ValidateForm": "Validate",
-      "type_label": "Notification type"
+      "ValidateForm": "Validate"
+    },
+    "SendGroupNotification": {
+      "title": "Send notification to all"
+    },
+    "NotificationModalForm": {
+      "title_label": "Title",
+      "content_label": "Notification content",
+      "type_label": "Notification type",
+      "cancel": "Cancel",
+      "ValidateForm": "Validate"
     },
     "SkipLink": {
       "skipToContent": "Skip to content"
@@ -929,7 +940,7 @@
       "buttonUserStructureValidationMandatory": "Validate change"
     },
     "SignIn": {
-      "back":"Go back",
+      "back": "Go back",
       "appDescription": "Digital services shared by National Education agents",
       "appVersion": "Test Alpha 0.1 Version",
       "emailLabel": "Username or Email",
