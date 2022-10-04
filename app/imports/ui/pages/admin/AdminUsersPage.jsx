@@ -20,7 +20,7 @@ import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import SendIcon from '@mui/icons-material/Send';
+import AddAlertIcon from '@mui/icons-material/AddAlert';
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
 
 import IconButton from '@mui/material/IconButton';
@@ -240,7 +240,7 @@ const AdminUsersPage = ({ match: { path } }) => {
           userData = user;
           setOpenNotif(true);
         },
-        icon: <SendIcon />,
+        icon: <AddAlertIcon />,
         hidden: isDeleting,
       },
       {

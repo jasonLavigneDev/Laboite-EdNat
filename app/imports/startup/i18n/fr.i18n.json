@@ -806,7 +806,6 @@
     "NotificationModalForm": {
       "title_label": "Titre",
       "content_label": "Contenu de la notification",
-      "type_label": "Type de notification",
       "ValidateForm": "Valider",
       "cancel": "Annuler"
     },
