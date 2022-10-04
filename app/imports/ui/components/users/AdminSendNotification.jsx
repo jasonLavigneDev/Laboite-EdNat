@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { createNotification } from '../../../api/notifications/methods';
 import NotificationModalForm from '../notifications/NotificationModalForm';
 
-const AdminSendNotification = ({ data, open, onClose, allowTypeList }) => {
+const AdminSendNotification = ({ data, open, onClose }) => {
   const handleSubmit = (notif) => {
     createNotification.call({ data: { ...notif, userId: data._id } }, (error) => {
       if (error) {
@@ -23,7 +23,6 @@ const AdminSendNotification = ({ data, open, onClose, allowTypeList }) => {
         <NotificationModalForm
           formTitle={i18n.__('components.AdminSendNotification.title') + data.username}
           onClose={onClose}
-          allowTypeList={allowTypeList}
           submit={handleSubmit}
         />
       </>
@@ -31,15 +30,10 @@ const AdminSendNotification = ({ data, open, onClose, allowTypeList }) => {
   );
 };
 
-AdminSendNotification.defaultProps = {
-  allowTypeList: true,
-};
-
 AdminSendNotification.propTypes = {
   data: PropTypes.objectOf(PropTypes.any).isRequired,
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  allowTypeList: PropTypes.bool,
 };
 
 export default AdminSendNotification;

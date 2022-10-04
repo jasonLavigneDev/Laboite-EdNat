@@ -267,12 +267,7 @@ const GroupsUsersList = (props) => {
         }}
       />
       {openNotif && (
-        <AdminSendNotification
-          data={userDataToSendNotif}
-          open={openNotif}
-          onClose={() => setOpenNotif(false)}
-          allowTypeList={false}
-        />
+        <AdminSendNotification data={userDataToSendNotif} open={openNotif} onClose={() => setOpenNotif(false)} />
       )}
       {openGroupNotif && (
         <SendGroupNotification groupId={groupId} open={openGroupNotif} onClose={() => setOpenGroupNotif(false)} />

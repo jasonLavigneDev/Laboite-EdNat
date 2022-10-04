@@ -10,13 +10,8 @@ import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
 import CardContent from '@mui/material/CardContent';
 import TextField from '@mui/material/TextField';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
 import { useAppContext } from '../../contexts/context';
 import COMMON_STYLES from '../../themes/styles';
-import { NOTIFICATIONS_TYPES } from '../../../api/notifications/enums';
 
 const useStyles = makeStyles()((theme, isMobile) => ({
   root: COMMON_STYLES.root,
@@ -29,7 +24,7 @@ const useStyles = makeStyles()((theme, isMobile) => ({
   alert: COMMON_STYLES.alert,
 }));
 
-const NotificationModalForm = ({ formTitle, onClose, allowTypeList, submit }) => {
+const NotificationModalForm = ({ formTitle, onClose, submit }) => {
   const [{ isMobile }] = useAppContext();
   const [notifState, setNotifState] = useState({
     title: '',
@@ -76,24 +71,6 @@ const NotificationModalForm = ({ formTitle, onClose, allowTypeList, submit }) =>
             fullWidth
             margin="normal"
           />
-          {allowTypeList && (
-            <FormControl fullWidth>
-              <InputLabel id="type-select-label">{i18n.__('components.NotificationModalForm.type_label')}</InputLabel>
-              <Select
-                label={i18n.__('components.NotificationModalForm.type_label')}
-                name="type"
-                fullWidth
-                value={notifState.type}
-                onChange={updateState}
-              >
-                {Object.values(NOTIFICATIONS_TYPES).map((type) => (
-                  <MenuItem value={type} key={type}>
-                    {type}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          )}
         </CardContent>
         <CardActions className={classes.actions}>
           <Button onClick={onClose}>{i18n.__('components.NotificationModalForm.cancel')}</Button>
@@ -106,14 +83,9 @@ const NotificationModalForm = ({ formTitle, onClose, allowTypeList, submit }) =>
   );
 };
 
-NotificationModalForm.defaultProps = {
-  allowTypeList: true,
-};
-
 NotificationModalForm.propTypes = {
   formTitle: PropTypes.string.isRequired,
   onClose: PropTypes.func.isRequired,
-  allowTypeList: PropTypes.bool,
   submit: PropTypes.func.isRequired,
 };
 

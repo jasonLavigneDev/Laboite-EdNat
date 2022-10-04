@@ -28,7 +28,6 @@ const SendGroupNotification = ({ groupId, open, onClose }) => {
         <NotificationModalForm
           formTitle={i18n.__('components.SendGroupNotification.title')}
           onClose={onClose}
-          allowTypeList={false}
           submit={handleSubmit}
         />
       </>

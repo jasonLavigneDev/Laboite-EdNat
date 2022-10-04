@@ -803,7 +803,6 @@
     "NotificationModalForm": {
       "title_label": "Title",
       "content_label": "Notification content",
-      "type_label": "Notification type",
       "cancel": "Cancel",
       "ValidateForm": "Validate"
     },
