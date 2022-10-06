@@ -1,37 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Meteor } from 'meteor/meteor';
 import PropTypes from 'prop-types';
 import i18n from 'meteor/universe:i18n';
+import { makeStyles } from 'tss-react/mui';
 import { withTracker } from 'meteor/react-meteor-data';
 import MaterialTable from '@material-table/core';
 import Container from '@mui/material/Container';
 import Fade from '@mui/material/Fade';
+import Grid from '@mui/material/Grid';
 import Spinner from '../../components/system/Spinner';
+import StructureSelect from '../../components/structures/StructureSelect';
 import {
   createBusinessReGrouping,
   updateBusinessReGrouping,
   removeBusinessReGrouping,
 } from '../../../api/businessReGrouping/methods';
+import { useStructure, useAdminSelectedStructure } from '../../../api/structures/hooks';
 import setMaterialTableLocalization from '../../components/initMaterialTableLocalization';
 import BusinessReGrouping from '../../../api/businessReGrouping/businessReGrouping';
 import { handleResult } from '../../../api/utils';
 
-const onRowAdd = ({ name }) =>
-  new Promise((resolve, reject) => {
-    createBusinessReGrouping.call({ name }, handleResult(resolve, reject));
-  });
-const onRowUpdate = (newData, oldData) =>
-  new Promise((resolve, reject) => {
-    updateBusinessReGrouping.call(
-      {
-        businessReGroupingId: oldData._id,
-        data: {
-          name: newData.name,
-        },
-      },
-      handleResult(resolve, reject),
-    );
-  });
+const useStyles = makeStyles()((theme) => ({
+  marginTop: {
+    marginTop: theme.spacing(3),
+  },
+}));
 
 const onRowDelete = (oldData) =>
   new Promise((resolve, reject) => {
@@ -39,6 +32,12 @@ const onRowDelete = (oldData) =>
   });
 
 const AdminBusinessReGroupingPage = ({ businessReGrouping, loading }) => {
+  const userStructure = useStructure();
+  const { classes } = useStyles();
+  const [selectedStructureId, setSelectedStructureId] = useState(
+    userStructure && userStructure._id ? userStructure._id : '',
+  );
+  const { structures } = useAdminSelectedStructure({ selectedStructureId, setSelectedStructureId });
   const columns = [
     {
       name: i18n.__('pages.AdminBusinessReGroupingPage.columnName'),
@@ -56,6 +55,34 @@ const AdminBusinessReGroupingPage = ({ businessReGrouping, loading }) => {
     emptyRowsWhenPaging: false,
   };
 
+  const businessRegroupingByStructure = (selectedStructure) => {
+    return businessReGrouping.filter((b) => b.structure === selectedStructure);
+  };
+
+  // const memorizedBusinessRegroupingByStructure = useMemo(
+  //   () => businessRegroupingByStructure(selectedStructureId),
+  //   [selectedStructureId],
+  // );
+
+  const onRowUpdate = (newData, oldData) =>
+    new Promise((resolve, reject) => {
+      updateBusinessReGrouping.call(
+        {
+          businessReGroupingId: oldData._id,
+          data: {
+            name: newData.name,
+            structure: selectedStructureId,
+          },
+        },
+        handleResult(resolve, reject),
+      );
+    });
+
+  const onRowAdd = ({ name }) =>
+    new Promise((resolve, reject) => {
+      createBusinessReGrouping.call({ name, structure: selectedStructureId }, handleResult(resolve, reject));
+    });
+
   return (
     <>
       {loading ? (
@@ -63,19 +90,30 @@ const AdminBusinessReGroupingPage = ({ businessReGrouping, loading }) => {
       ) : (
         <Fade in>
           <Container style={{ overflowX: 'auto' }}>
-            <MaterialTable
-              // other props
-              title={`${i18n.__('pages.AdminBusinessReGroupingPage.title')} (${businessReGrouping.length})`}
-              columns={columns}
-              data={businessReGrouping.map((row) => ({ ...row, id: row._id }))}
-              options={options}
-              localization={setMaterialTableLocalization('pages.AdminBusinessReGroupingPage')}
-              editable={{
-                onRowAdd,
-                onRowDelete,
-                onRowUpdate,
-              }}
-            />
+            <Grid container spacing={12}>
+              <Grid item md={12} className={classes.marginTop}>
+                <StructureSelect
+                  structures={structures}
+                  selectedStructureId={selectedStructureId}
+                  setSelectedStructureId={setSelectedStructureId}
+                />
+              </Grid>
+              <Grid item md={12} className={classes.marginTop}>
+                <MaterialTable
+                  // other props
+                  title={`${i18n.__('pages.AdminBusinessReGroupingPage.title')} (${businessReGrouping.length})`}
+                  columns={columns}
+                  data={businessRegroupingByStructure(selectedStructureId).map((row) => ({ ...row, id: row._id }))}
+                  options={options}
+                  localization={setMaterialTableLocalization('pages.AdminBusinessReGroupingPage')}
+                  editable={{
+                    onRowAdd,
+                    onRowDelete,
+                    onRowUpdate,
+                  }}
+                />
+              </Grid>
+            </Grid>
           </Container>
         </Fade>
       )}

@@ -27,12 +27,19 @@ BusinessReGrouping.schema = new SimpleSchema(
       min: 1,
       label: getLabel('api.businessReGrouping.labels.name'),
     },
+    structure: {
+      type: SimpleSchema.RegEx.Id,
+      index: true,
+      label: getLabel('api.businessReGrouping.labels.structure'),
+      defaultValue: '',
+    },
   },
   { tracker: Tracker },
 );
 
 BusinessReGrouping.publicFields = {
   name: 1,
+  structure: 1,
 };
 
 BusinessReGrouping.attachSchema(BusinessReGrouping.schema);

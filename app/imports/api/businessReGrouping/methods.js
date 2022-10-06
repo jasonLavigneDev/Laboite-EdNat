@@ -12,15 +12,17 @@ import Services from '../services/services';
 
 export const createBusinessReGrouping = new ValidatedMethod({
   name: 'BusinessReGrouping.createBusinessReGrouping',
+  structure: 'BusinessReGrouping.createBusinessReGrouping',
   validate: new SimpleSchema({
     name: { type: String, min: 1, label: getLabel('api.businessReGrouping.labels.name') },
+    structure: { type: String, min: 1, label: getLabel('api.businessReGrouping.labels.structure') },
   }).validator(),
 
-  run({ name }) {
+  run({ name, structure }) {
     const authorized = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
 
-    const cat = BusinessReGrouping.findOne({ name });
-    if (cat !== undefined) {
+    const businessRegr = BusinessReGrouping.findOne({ name });
+    if (businessRegr !== undefined) {
       throw new Meteor.Error(
         'api.businessReGrouping.createBusinessReGrouping.alreadyExists',
         i18n.__('api.businessReGrouping.createBusinessReGrouping.nameAlreadyUse'),
@@ -34,6 +36,7 @@ export const createBusinessReGrouping = new ValidatedMethod({
     }
     BusinessReGrouping.insert({
       name,
+      structure,
     });
   },
 });
@@ -81,6 +84,7 @@ export const updateBusinessReGrouping = new ValidatedMethod({
     },
     data: Object,
     'data.name': { type: String, min: 1, label: getLabel('api.businessReGrouping.labels.name') },
+    'data.structure': { type: String, min: 1, label: getLabel('api.businessReGrouping.labels.structure') },
   }).validator(),
 
   run({ businessReGroupingId, data }) {

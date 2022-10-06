@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Meteor } from 'meteor/meteor';
 import { makeStyles } from 'tss-react/mui';
@@ -217,6 +217,8 @@ export function ServicesPage({ services, categories, businessRegroupings, ready,
     return services.filter((service) => filterServices(service) && service.businessReGrouping.length === 0);
   };
 
+  const memorizedServicesWithoutBusinessRegrouping = useMemo(() => servicesWithoutBusinessRegrouping(), [services]);
+
   const favAction = (id) => (favs.indexOf(id) === -1 ? 'fav' : 'unfav');
 
   const toggleButtons = (
@@ -316,14 +318,14 @@ export function ServicesPage({ services, categories, businessRegroupings, ready,
                 <Typography className={classes.emptyMsg}>
                   {i18n.__(`pages.ServicesPage.${structureMode ? 'NoStructureServices' : 'NoServices'}`)}
                 </Typography>
-              ) : !isBusinessRegroupingMode && viewMode === GRID_VIEW_MODE.compact && isMobile ? (
+              ) : (!isBusinessRegroupingMode || !structureMode) && viewMode === GRID_VIEW_MODE.compact && isMobile ? (
                 mapList((service) => (
                   <Grid className={classes.gridItem} item xs={4} md={2} key={service._id}>
                     <ServiceDetailsList service={service} favAction={favAction(service._id)} />
                   </Grid>
                 ))
               ) : (
-                !isBusinessRegroupingMode &&
+                (!isBusinessRegroupingMode || !structureMode) &&
                 mapList((service) => (
                   <Grid className={classes.gridItem} item key={service._id} xs={12} sm={12} md={6} lg={4}>
                     <ServiceDetails
@@ -339,25 +341,29 @@ export function ServicesPage({ services, categories, businessRegroupings, ready,
               )}
             </Grid>
             <Grid item xs={12} sm={12} md={12}>
-              {services.length > 0 && isBusinessRegroupingMode && servicesWithoutBusinessRegrouping().length > 0 && (
-                <ServiceDetailsListZone
-                  key="BusinessRegroupingZone"
-                  services={servicesWithoutBusinessRegrouping()}
-                  index={0}
-                  title={i18n.__('pages.ServicesPage.ServicesWithoutBusinessRegrouping')}
-                  favAction={favAction}
-                  isShort={!isMobile && viewMode === GRID_VIEW_MODE.compact}
-                  isSorted
-                  isExpandedZone
-                />
-              )}
               {services.length > 0 &&
                 isBusinessRegroupingMode &&
+                structureMode &&
+                memorizedServicesWithoutBusinessRegrouping.length > 0 && (
+                  <ServiceDetailsListZone
+                    key="BusinessWithoutRegroupingZone"
+                    services={memorizedServicesWithoutBusinessRegrouping}
+                    index={0}
+                    title={i18n.__('pages.ServicesPage.ServicesWithoutBusinessRegrouping')}
+                    favAction={favAction}
+                    isShort={!isMobile && viewMode === GRID_VIEW_MODE.compact}
+                    isSorted
+                    isExpandedZone
+                  />
+                )}
+              {services.length > 0 &&
+                isBusinessRegroupingMode &&
+                structureMode &&
                 businessRegroupings.map(
                   (businessRegrouping, i) =>
                     servicesByBusinessRegrouping(businessRegrouping).length > 0 && (
                       <ServiceDetailsListZone
-                        key="BusinessRegroupingZone"
+                        key={`BusinessRegroupingZone${i + 1}`}
                         services={servicesByBusinessRegrouping(businessRegrouping)}
                         index={i}
                         title={businessRegrouping.name}

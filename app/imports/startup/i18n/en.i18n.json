@@ -79,7 +79,8 @@
       "unknownBusinessReGrouping": "Business regrouping does not exist.",
       "labels": {
         "id": "Business regrouping Id",
-        "name": "Name"
+        "name": "Name",
+        "structure": "Service Structure"
       },
       "createCategorie": {
         "alreadyExists": "This business regrouping already exists.",
@@ -1109,6 +1110,7 @@
     "AdminCategoriesPage": {
       "title": "Categories Management",
       "columnName": "Name",
+      "structure": "structure",
       "materialTableLocalization": {
         "toolbar_searchPlaceholder": "Find a category",
         "pagination_labelRowsSelect": "Categories par page",

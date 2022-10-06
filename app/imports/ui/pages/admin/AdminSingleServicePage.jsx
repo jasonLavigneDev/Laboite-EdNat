@@ -198,13 +198,13 @@ const AdminSingleServicePage = ({ categories, businessReGrouping, service, ready
 
   const onUpdateBusinessReGrouping = (businessReGroupingId) => {
     // regroupement métier par service est exclusive
-    const newBusinessReGrouping = [businessReGroupingId];
-    // const index = newBusinessReGrouping.findIndex((c) => c === businessReGroupingId);
-    // if (index > -1) {
-    //   newBusinessReGrouping.splice(index, 1);
-    // } else {
-    //   newBusinessReGrouping.push(businessReGroupingId);
-    // }
+    let newBusinessReGrouping = [...serviceData.businessReGrouping];
+    const index = newBusinessReGrouping.findIndex((c) => c === businessReGroupingId);
+    if (index > -1) {
+      newBusinessReGrouping.splice(index, 1);
+    } else {
+      newBusinessReGrouping = [businessReGroupingId];
+    }
     setServiceData({ ...serviceData, businessReGrouping: newBusinessReGrouping });
   };
 
@@ -438,12 +438,12 @@ const AdminSingleServicePage = ({ categories, businessReGrouping, service, ready
                 );
               })}
             </div>
-            {isBusinessRegroupingMode && (
+            {structureMode && isBusinessRegroupingMode && businessReGrouping.length > 0 && (
               <InputLabel id="businessReGrouping-label">
                 {i18n.__('pages.AdminSingleServicePage.businessReGrouping')}
               </InputLabel>
             )}
-            {isBusinessRegroupingMode && (
+            {structureMode && isBusinessRegroupingMode && (
               <div className={classes.chipWrapper}>
                 {businessReGrouping.map((businessRegroup) => {
                   const isActive =
@@ -524,13 +524,14 @@ const AdminSingleServicePage = ({ categories, businessReGrouping, service, ready
 export default withTracker(
   ({
     match: {
-      params: { _id },
+      params: { _id, structureId },
     },
   }) => {
     const subCategories = Meteor.subscribe('categories.all');
     const categories = Categories.find({}).fetch();
     const subBusinessReGrouping = Meteor.subscribe('businessReGrouping.all');
-    const businessReGrouping = BusinessReGrouping.find({}).fetch();
+
+    let businessReGrouping = BusinessReGrouping.find({}).fetch();
     let service = {};
     let ready = false;
     if (_id) {
@@ -540,6 +541,19 @@ export default withTracker(
     } else {
       ready = subCategories.ready() && subBusinessReGrouping.ready();
     }
+
+    if (structureId) {
+      const subStructure = Meteor.subscribe('structures.all', { _id: structureId });
+      const structureWithAllChildren = Structures.find({
+        $or: [{ ancestorsIds: structureId }, { _id: structureId }],
+      }).fetch();
+
+      businessReGrouping = businessReGrouping.filter((businessRegr) =>
+        structureWithAllChildren.map((s) => s._id).includes(businessRegr.structure),
+      );
+      ready = ready && subStructure.ready();
+    }
+
     return {
       service,
       categories,

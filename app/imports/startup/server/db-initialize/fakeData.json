@@ -206,16 +206,7 @@
       "name": "Communication"
     }
   ],
-  "defaultBusinessRegrouping": [
-    {
-      "_id": "EviKXTAnFZcjEWFRZ",
-      "name": "Finance"
-    },
-    {
-      "_id": "HZAQJXymMXXrYBybT",
-      "name": "Resource humaine"
-    }
-  ],
+
   "defaultTags": [
     {
       "_id": "EviKfwAnFZcjEWFdz",

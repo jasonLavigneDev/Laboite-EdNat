@@ -5,4 +5,5 @@ import BusinessReGrouping from '../businessReGrouping';
 
 Factory.define('businessReGrouping', BusinessReGrouping, {
   name: () => Random.id(),
+  structure: () => Random.id(),
 });

@@ -90,10 +90,12 @@ describe('businessReGrouping', function () {
       Meteor.users.update({}, { $set: { isActive: true } }, { multi: true });
       businessReGroupingId = Factory.create('businessReGrouping')._id;
       chatData = {
-        name: 'application',
+        name: 'businessReGroupingName',
+        structure: 'businessReGroupingStructure',
       };
       chatData2 = {
-        name: 'application2',
+        name: 'businessReGroupingName2',
+        structure: 'businessReGroupingStructure2',
       };
     });
     describe('createBusinessReGrouping', function () {
@@ -166,6 +168,7 @@ describe('businessReGrouping', function () {
       it('does update a business reGrouping with admin user', function () {
         const data = {
           name: 'businessReGrouping',
+          structure: 'businessReGroupingStructure',
         };
         updateBusinessReGrouping._execute({ userId: adminId }, { businessReGroupingId, data });
         const businessReGrouping = BusinessReGrouping.findOne(businessReGroupingId);
@@ -177,7 +180,7 @@ describe('businessReGrouping', function () {
           () => {
             updateBusinessReGrouping._execute(
               { userId },
-              { businessReGroupingId, data: { name: 'businessReGrouping' } },
+              { businessReGroupingId, data: { name: 'businessReGrouping', structure: 'businessReGroupingStructure' } },
             );
           },
           Meteor.Error,
@@ -185,7 +188,10 @@ describe('businessReGrouping', function () {
         );
         assert.throws(
           () => {
-            updateBusinessReGrouping._execute({}, { businessReGroupingId, data: { name: 'businessReGrouping' } });
+            updateBusinessReGrouping._execute(
+              {},
+              { businessReGroupingId, data: { name: 'businessReGrouping', structure: 'businessReGroupingStructure' } },
+            );
           },
           Meteor.Error,
           /api.businessReGrouping.updateBusinessReGrouping.notPermitted/,

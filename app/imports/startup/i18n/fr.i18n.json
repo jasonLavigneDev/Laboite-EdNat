@@ -79,7 +79,8 @@
       "unknownBusinessReGrouping": "Le regroupement metier n'existe pas.",
       "labels": {
         "id": "Id d'un regroupement metier",
-        "name": "Nom"
+        "name": "Nom",
+        "structure": "Structure d'exploitation"
       },
       "createBusinessReGrouping": {
         "alreadyExists": "Le regroupement metier existe déjà",
@@ -1113,6 +1114,7 @@
     "AdminCategoriesPage": {
       "title": "Gestion des Catégories",
       "columnName": "Nom",
+      "structure": "structure",
       "materialTableLocalization": {
         "toolbar_searchPlaceholder": "Rechercher une catégorie",
         "pagination_labelRowsSelect": "Catégories par page",
