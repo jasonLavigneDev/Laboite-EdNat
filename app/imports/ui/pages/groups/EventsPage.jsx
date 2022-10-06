@@ -160,16 +160,21 @@ const EventsPage = ({ loading, group }) => {
                     ) : null,
                   }}
                 />
-                <IconButton
-                  onClick={() =>
-                    window.open(`${Meteor.settings.public.services.agendaUrl}/add-event?groupId=${group._id}`, '_blank')
-                  }
-                  size="large"
-                  title={i18n.__('pages.GroupsPage.addEvent')}
-                  style={{ paddingLeft: '20px', paddingRight: '20px' }}
-                >
-                  <AddIcon fontSize="large" />
-                </IconButton>
+                {userInGroup && (
+                  <IconButton
+                    onClick={() =>
+                      window.open(
+                        `${Meteor.settings.public.services.agendaUrl}/add-event?groupId=${group._id}`,
+                        '_blank',
+                      )
+                    }
+                    size="large"
+                    title={i18n.__('pages.GroupsPage.addEvent')}
+                    style={{ paddingLeft: '20px', paddingRight: '20px' }}
+                  >
+                    <AddIcon fontSize="large" />
+                  </IconButton>
+                )}
               </Grid>
               <GroupPaginate
                 total={total}

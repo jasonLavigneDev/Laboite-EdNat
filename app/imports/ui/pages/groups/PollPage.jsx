@@ -123,19 +123,21 @@ const PollPage = ({ loading, group, slug }) => {
                     ) : null,
                   }}
                 />
-                <IconButton
-                  onClick={() =>
-                    window.open(
-                      `${Meteor.settings.public.services.sondagesUrl}/poll/new/1?groupId=${group._id}`,
-                      '_blank',
-                    )
-                  }
-                  size="large"
-                  title={i18n.__('pages.GroupsPage.addPoll')}
-                  style={{ paddingLeft: '20px', paddingRight: '20px' }}
-                >
-                  <AddIcon fontSize="large" />
-                </IconButton>
+                {userInGroup && (
+                  <IconButton
+                    onClick={() =>
+                      window.open(
+                        `${Meteor.settings.public.services.sondagesUrl}/poll/new/1?groupId=${group._id}`,
+                        '_blank',
+                      )
+                    }
+                    size="large"
+                    title={i18n.__('pages.GroupsPage.addPoll')}
+                    style={{ paddingLeft: '20px', paddingRight: '20px' }}
+                  >
+                    <AddIcon fontSize="large" />
+                  </IconButton>
+                )}
               </Grid>
               <GroupPaginate
                 total={total}
