@@ -97,6 +97,8 @@ const AdminUsersPage = ({ match: { path } }) => {
   const [sortByDate, setSortByDate] = useState(false);
   const [userType, setUserType] = useState('all');
   const userTypes = ['all', 'adminStructure', 'admin'];
+  // forceReload is used to force publication reload when removing a role
+  let forceReload = new Date();
 
   // for user structure
   const isStructureSpecific = path === '/admin/structureusers';
@@ -116,7 +118,7 @@ const AdminUsersPage = ({ match: { path } }) => {
 
   const { changePage, page, items, total } = usePagination(
     subscription,
-    { selectedStructureId, search, userType, sort: sortByDate ? { lastLogin: -1 } : { lastName: 1 } },
+    { selectedStructureId, search, userType, forceReload, sort: sortByDate ? { lastLogin: -1 } : { lastName: 1 } },
     Meteor.users,
     {},
     { sort: sortByDate ? { lastLogin: -1 } : { lastName: 1 } },
@@ -169,6 +171,7 @@ const AdminUsersPage = ({ match: { path } }) => {
     Meteor.call(method, { userId: user._id }, (error) => {
       if (error) msg.error(error.reason);
       else {
+        forceReload = new Date();
         msg.success(
           method === 'users.unsetAdmin'
             ? i18n.__('pages.AdminUsersPage.successUnsetAdmin')
@@ -193,6 +196,7 @@ const AdminUsersPage = ({ match: { path } }) => {
     Meteor.call(method, { userId: user._id }, (error) => {
       if (error) msg.error(error.reason);
       else {
+        forceReload = new Date();
         msg.success(
           method === 'users.unsetAdminStructure'
             ? i18n.__('pages.AdminUsersPage.successUnsetAdminStructure')

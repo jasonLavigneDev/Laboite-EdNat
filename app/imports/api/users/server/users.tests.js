@@ -157,7 +157,7 @@ describe('users', function () {
         const collector = new PublicationCollector({ userId });
         collector.collect(
           'users.byStructure',
-          { page: 1, itemPerPage: 5, search: '', userType: 'all' },
+          { page: 1, itemPerPage: 5, search: '', userType: 'all', forceReload: null },
           (collections) => {
             assert.equal(collections.users, undefined);
             done();
@@ -171,7 +171,7 @@ describe('users', function () {
         const collector = new PublicationCollector({ userId });
         collector.collect(
           'users.byStructure',
-          { page: 1, itemPerPage: 5, search: '', userType: 'all' },
+          { page: 1, itemPerPage: 5, search: '', userType: 'all', forceReload: null },
           (collections) => {
             assert.equal(collections.users.length, 2);
             done();
@@ -398,27 +398,35 @@ describe('users', function () {
       it('sends all users including admin restricted fields', function (done) {
         Roles.addUsersToRoles(userId, 'admin');
         const collector = new PublicationCollector({ userId });
-        collector.collect('users.admin', { page: 1, itemPerPage: 5, search: '', userType: 'all' }, (collections) => {
-          assert.equal(collections.users.length, 5);
-          const user = collections.users[0];
-          assert.property(user, 'createdAt');
-          done();
-        });
+        collector.collect(
+          'users.admin',
+          { page: 1, itemPerPage: 5, search: '', userType: 'all', forceReload: null },
+          (collections) => {
+            assert.equal(collections.users.length, 5);
+            const user = collections.users[0];
+            assert.property(user, 'createdAt');
+            done();
+          },
+        );
       });
       it('sends a specific page of users including admin restricted fields', function (done) {
         Roles.addUsersToRoles(userId, 'admin');
         const collector = new PublicationCollector({ userId });
-        collector.collect('users.admin', { page: 2, itemPerPage: 3, search: '', userType: 'all' }, (collections) => {
-          assert.equal(collections.users.length, 2);
-          done();
-        });
+        collector.collect(
+          'users.admin',
+          { page: 2, itemPerPage: 3, search: '', userType: 'all', forceReload: null },
+          (collections) => {
+            assert.equal(collections.users.length, 2);
+            done();
+          },
+        );
       });
       it('sends all users including admin restricted fields matching a filter', function (done) {
         Roles.addUsersToRoles(userId, 'admin');
         const collector = new PublicationCollector({ userId });
         collector.collect(
           'users.admin',
-          { page: 1, itemPerPage: 5, search: 'user@ac-test.fr', userType: 'all' },
+          { page: 1, itemPerPage: 5, search: 'user@ac-test.fr', userType: 'all', forceReload: null },
           (collections) => {
             assert.equal(collections.users.length, 1);
             assert.equal(collections.users[0].emails[0].address, 'user@ac-test.fr');
