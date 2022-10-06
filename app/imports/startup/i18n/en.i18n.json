@@ -1179,7 +1179,8 @@
       "successCopyUserId": "User ID copied with success",
       "copyUserId": "Copy user ID",
       "userType": "Users type",
-      "all": "all"
+      "all": "all",
+      "noResult": "No result"
     },
     "AdminUserValidationPage": {
       "title": "User validation"

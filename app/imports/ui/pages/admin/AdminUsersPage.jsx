@@ -431,6 +431,7 @@ const AdminUsersPage = ({ match: { path } }) => {
                     ];
                   })}
                 </List>
+                {total === 0 && <Typography variant="body">{i18n.__('pages.AdminUsersPage.noResult')}</Typography>}
               </Grid>
               {total > ITEM_PER_PAGE && (
                 <Grid item xs={12} sm={12} md={12} lg={12} className={classes.pagination}>
