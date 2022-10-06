@@ -34,7 +34,6 @@ import Select from '@mui/material/Select';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import { Roles } from 'meteor/alanning:roles';
-import { getStructureIds } from '../../../api/users/structures';
 import { usePagination } from '../../utils/hooks';
 import Spinner from '../../components/system/Spinner';
 import { useAppContext } from '../../contexts/context';
@@ -134,15 +133,9 @@ const AdminUsersPage = ({ match: { path } }) => {
       .map((assignment) => assignment.user._id);
 
     const roleshandlers2 = Meteor.subscribe('roles.adminStructureAll');
-    const adminsIds2 = Meteor.roleAssignment
-      .find({ scope: { $in: getStructureIds() }, 'role._id': 'adminStructure' })
-      .fetch()
-      .map((assignment) => assignment.user._id);
-
     return {
       isLoading: !roleshandlers.ready() && !roleshandlers2.ready(),
       admins: adminsIds,
-      adminStructure: adminsIds2,
     };
   });
   const handleChangePage = (event, value) => {
