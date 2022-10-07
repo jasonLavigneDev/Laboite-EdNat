@@ -14,6 +14,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import RestorePageIcon from '@mui/icons-material/RestorePage';
 import HttpIcon from '@mui/icons-material/Http';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import SettingsInputComponentIcon from '@mui/icons-material/SettingsInputComponent';
@@ -175,6 +176,12 @@ export default function AdminMenu() {
       icon: <GroupAddIcon />,
       hidden: !isUserStructureValidationMandatory || !isAdminStructure,
       chip: usersAwaitingStructureCount,
+    },
+    {
+      path: '/admin/structurespaces',
+      content: 'menuAdminDefaultSpaces',
+      icon: <RestorePageIcon />,
+      hidden: !isAdminStructure,
     },
     {
       path: 'adminDivider2',

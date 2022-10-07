@@ -554,7 +554,8 @@
       "menuAdminOfStructures": "Gestion des sous-structures",
       "menuAdminStructureSettings": "Réglages de structure",
       "menuAdminStructureIntroduction": "Introduction de structure",
-      "menuAdminOfStructureUsersValidation": "Utilisateurs en attente"
+      "menuAdminOfStructureUsersValidation": "Utilisateurs en attente",
+      "menuAdminDefaultSpaces": "Espaces par défaut"
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Votre compte n'a pas été activé",
@@ -996,6 +997,7 @@
       "useGallery": "Choisir parmi la galerie d'images",
       "structureMessage": "Cocher cette case pour lier tous les articles importés à votre structure de rattachement actuelle.",
       "advancedPersonalPage": "Activer l'espace personnel avancé",
+      "advancedPersonalPageWarning": "Si vous désactivez l'espace avancé, votre espace personnel sera restauré selon celui par défaut de votre structure.",
       "languageLabel": "Choix de la langue",
       "activateArticles": "Activer les publications",
       "authTokenTitle": "Récupérer le token d'accès",
@@ -1200,6 +1202,7 @@
       "screenshots": "Captures d'écran",
       "categories": "Catégories",
       "open": "Ouvrir",
+      "hidden": "Service caché",
       "inactive": "Service inactif",
       "maintenance": "Service en maintenance",
       "propulsedBy": "Propulsé par"
@@ -1423,6 +1426,13 @@
     },
     "AdminStructureSettingsPage": {
       "title": "Paramétrage de la structure"
+    },
+    "AdminDefaultSpacesPage": {
+      "chooseStructure": "Choisissez une structure",
+      "isSaving": "Sauvegarde en cours",
+      "isSaved": "Espace sauvegardé",
+      "applyToEveryone": "Appliquer cet espace",
+      "applyText": "Cela appliquera les changements à l'espace personnel de tous les utilisateurs de votre structure n'ayant pas activé l'espace avancé."
     }
   },
   "layouts": {
