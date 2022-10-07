@@ -610,6 +610,12 @@ Migrations.add({
 
             if (Roles.userIsInRole(user._id, 'adminStructure', user.structure)) {
               Roles.addUsersToRoles(user._id, 'admin', structure.groupId);
+              Groups.update(
+                { _id: structure.groupId },
+                {
+                  $push: { admins: user._id },
+                },
+              );
             }
           }
 
@@ -638,6 +644,12 @@ Migrations.add({
 
                 if (Roles.userIsInRole(user._id, 'adminStructure', user.structure)) {
                   Roles.addUsersToRoles(user._id, 'admin', struc.groupId);
+                  Groups.update(
+                    { _id: struc.groupId },
+                    {
+                      $push: { admins: user._id },
+                    },
+                  );
                 }
               }
             });
