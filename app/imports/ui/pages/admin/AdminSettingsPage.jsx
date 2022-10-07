@@ -48,7 +48,7 @@ const useStyles = makeStyles()((theme) => ({
   },
 }));
 
-const AdminSettingsPage = ({ ready, appsettings }) => {
+const AdminSettingsPage = ({ appsettings }) => {
   const [msgMaintenance, setMsgMaintenance] = useState(appsettings.textMaintenance);
   const { classes } = useStyles();
   const [userStructureValidationMandatory, setUserStructureValidationMandatory] = useState(
@@ -57,49 +57,6 @@ const AdminSettingsPage = ({ ready, appsettings }) => {
   const [loading, setLoading] = useState(true);
   const [{ isMobile }] = useAppContext();
   const [open, setOpen] = useState(false);
-
-  const tabs = [
-    {
-      key: 'introduction',
-      title: i18n.__('pages.AdminSettingsPage.introduction'),
-      Element: InfoEditionComponent,
-      ElementProps: { data: appsettings.introduction || [] },
-    },
-    {
-      key: 'globalInfo',
-      title: i18n.__('pages.AdminSettingsPage.globalInfo'),
-      Element: InfoEditionComponent,
-      ElementProps: { data: appsettings.globalInfo || [] },
-    },
-    {
-      key: 'legal',
-      title: i18n.__('pages.AdminSettingsPage.legal'),
-      Element: LegalComponent,
-      ElementProps: { data: appsettings.legal || [] },
-    },
-    {
-      key: 'personalData',
-      title: i18n.__('pages.AdminSettingsPage.personalData'),
-      Element: LegalComponent,
-      ElementProps: { data: appsettings.personalData || [] },
-    },
-    {
-      key: 'accessibility',
-      title: i18n.__('pages.AdminSettingsPage.accessibility'),
-      Element: LegalComponent,
-      ElementProps: { data: appsettings.accessibility || [] },
-    },
-    {
-      key: 'gcu',
-      title: i18n.__('pages.AdminSettingsPage.gcu'),
-      Element: LegalComponent,
-      ElementProps: { data: appsettings.gcu || [] },
-    },
-  ];
-
-  if (loading && !ready && !appsettings) {
-    return <Spinner full />;
-  }
 
   useEffect(() => {
     if (appsettings.textMaintenance !== msgMaintenance) setMsgMaintenance(appsettings.textMaintenance);
@@ -125,6 +82,7 @@ const AdminSettingsPage = ({ ready, appsettings }) => {
       (error) => {
         setLoading(false);
         if (error) {
+          // console.log(error);
           msg.error(error.message);
         } else {
           msg.success(i18n.__('api.methods.operationSuccessMsg'));
@@ -175,7 +133,50 @@ const AdminSettingsPage = ({ ready, appsettings }) => {
 
   const isUserStructureValidationMandatoryButtonActive =
     userStructureValidationMandatory !== appsettings.userStructureValidationMandatory;
-  return (
+
+  const tabs = [
+    {
+      key: 'introduction',
+      title: i18n.__('pages.AdminSettingsPage.introduction'),
+      Element: InfoEditionComponent,
+      ElementProps: { introduction: appsettings.introduction },
+    },
+    {
+      key: 'legal',
+      title: i18n.__('pages.AdminSettingsPage.legal'),
+      Element: LegalComponent,
+      ElementProps: { legal: appsettings.legal },
+    },
+    {
+      key: 'personalData',
+      title: i18n.__('pages.AdminSettingsPage.personalData'),
+      Element: LegalComponent,
+      ElementProps: { personalData: appsettings.personalData },
+    },
+    {
+      key: 'accessibility',
+      title: i18n.__('pages.AdminSettingsPage.accessibility'),
+      Element: LegalComponent,
+      ElementProps: { accessibility: appsettings.accessibility },
+    },
+    {
+      key: 'gcu',
+      title: i18n.__('pages.AdminSettingsPage.gcu'),
+      Element: LegalComponent,
+      ElementProps: { gcu: appsettings.gcu },
+    },
+    {
+      key: 'personalSpace',
+      title: i18n.__('pages.AdminSettingsPage.personalSpace'),
+      Element: LegalComponent,
+      ElementProps: { personalSpace: appsettings.personalSpace },
+      hideExternal: false,
+    },
+  ];
+
+  return loading && !appsettings ? (
+    <Spinner full />
+  ) : (
     <Fade in>
       <Container>
         <TabbedForms tabs={tabs} globalTitle={i18n.__('pages.AdminSettingsPage.edition')} />
@@ -293,12 +294,10 @@ const AdminSettingsPage = ({ ready, appsettings }) => {
 };
 
 export default withTracker(() => {
-  const subSettings = Meteor.subscribe('appsettings.all');
+  // const subSettings = Meteor.subscribe('appsettings.all');
   const appsettings = AppSettings.findOne();
-  const ready = subSettings.ready();
   return {
     appsettings,
-    ready,
   };
 })(AdminSettingsPage);
 
@@ -308,5 +307,4 @@ AdminSettingsPage.defaultProps = {
 
 AdminSettingsPage.propTypes = {
   appsettings: PropTypes.objectOf(PropTypes.any),
-  ready: PropTypes.bool.isRequired,
 };
