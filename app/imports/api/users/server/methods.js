@@ -596,9 +596,6 @@ export function RemoveUserFromGroupsOfOldStructure(currentUserId, user) {
           if (st.groupId) {
             const gr = Groups.findOne({ _id: st.groupId });
             if (gr) {
-              if (Roles.userIsInRole(currentUserId, 'adminStructure', st._id)) {
-                unsetAdminOf._execute({ userId: currentUserId }, { userId: user._id, groupId: gr._id });
-              }
               unsetMemberOf._execute({ userId: currentUserId }, { userId: user._id, groupId: gr._id });
             }
           }

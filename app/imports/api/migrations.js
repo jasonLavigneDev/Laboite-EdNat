@@ -641,16 +641,6 @@ Migrations.add({
                 }
                 Roles.addUsersToRoles(user._id, 'member', struc.groupId);
                 addItem(user._id, { type: 'group', element_id: struc.groupId });
-
-                if (Roles.userIsInRole(user._id, 'adminStructure', user.structure)) {
-                  Roles.addUsersToRoles(user._id, 'admin', struc.groupId);
-                  Groups.update(
-                    { _id: struc.groupId },
-                    {
-                      $push: { admins: user._id },
-                    },
-                  );
-                }
               }
             });
         }
