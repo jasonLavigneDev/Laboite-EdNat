@@ -64,7 +64,7 @@ const IntroductionEdition = ({ data = [] }) => {
 
   useEffect(() => {
     if (data) {
-      const currentData = getCurrentIntroduction({ introduction: data }) || {};
+      const currentData = getCurrentIntroduction({ introduction: data, language }) || {};
       setContent(currentData.content || '');
       setLoading(false);
     }
@@ -72,7 +72,7 @@ const IntroductionEdition = ({ data = [] }) => {
 
   useEffect(() => {
     if (data) {
-      const currentData = getCurrentIntroduction({ introduction: data }) || {};
+      const currentData = getCurrentIntroduction({ introduction: data, language }) || {};
       if (content !== currentData.content) {
         setChanges(true);
       } else {
@@ -100,7 +100,7 @@ const IntroductionEdition = ({ data = [] }) => {
   };
 
   const onCancel = () => {
-    const currentData = getCurrentIntroduction({ introduction: data }) || {};
+    const currentData = getCurrentIntroduction({ introduction: data, language }) || {};
     setContent(currentData.content || '');
   };
 
@@ -118,7 +118,13 @@ const IntroductionEdition = ({ data = [] }) => {
 
       <FormControl className={classes.formControl}>
         <InputLabel id="language-selector-label">{i18n.__('components.IntroductionEdition.language')}</InputLabel>
-        <Select labelId="language-selector-label" id="language-selector" value={language} onChange={handleChange}>
+        <Select
+          labelId="language-selector-label"
+          id="language-selector"
+          label={i18n.__('components.IntroductionEdition.language')}
+          value={language}
+          onChange={handleChange}
+        >
           {translations.map((tra) => (
             <MenuItem value={tra} key={`components.IntroductionEdition.language_${tra}`}>
               {i18n.__(`components.IntroductionEdition.language_${tra}`)}
