@@ -4,7 +4,7 @@ import { Meteor } from 'meteor/meteor';
 import PropTypes from 'prop-types';
 import sanitizeHtml from 'sanitize-html';
 import i18n from 'meteor/universe:i18n';
-import { useHistory, Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
@@ -21,7 +21,7 @@ import Services from '../../../api/services/services';
 import Spinner from '../../components/system/Spinner';
 import { useAppContext } from '../../contexts/context';
 import Categories from '../../../api/categories/categories';
-import { isUrlExternal } from '../../utils/utilsFuncs';
+import DisplayButton from '../../components/services/DisplayButton';
 
 const useStyles = makeStyles()((theme) => ({
   root: {
@@ -75,15 +75,6 @@ const useStyles = makeStyles()((theme) => ({
   },
   category: {
     marginLeft: theme.spacing(1),
-  },
-  openButton: {
-    textTransform: 'none',
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.tertiary.main,
-    '&:hover': {
-      color: theme.palette.primary.main,
-      backgroundColor: theme.palette.tertiary.main,
-    },
   },
   fab: {},
 }));
@@ -139,37 +130,6 @@ const SingleServicePage = ({ service = {}, ready, categories = [] }) => {
     </Tooltip>
   );
 
-  const isExternal = isUrlExternal(service.url);
-  const openButton = (
-    <Button
-      size="large"
-      color="primary"
-      className={classes.buttonText}
-      variant="contained"
-      onClick={() => window.open(service.url, '_blank', 'noreferrer,noopener')}
-    >
-      {i18n.__('components.ServiceDetails.runServiceButtonLabel')}
-    </Button>
-  );
-  const linkButton = (
-    <Link to={service.url.replace(Meteor.absoluteUrl(), '/')} tabIndex={-1}>
-      <Button size="large" color="primary" className={classes.buttonText} variant="contained">
-        {i18n.__('components.ServiceDetails.runServiceButtonLabel')}
-      </Button>
-    </Link>
-  );
-  const inactiveButton = (
-    <Button size="large" disabled className={classes.buttonText} variant="contained">
-      {i18n.__('pages.SingleServicePage.inactive')}
-    </Button>
-  );
-
-  const maintenanceButton = (
-    <Button size="large" disabled className={classes.buttonText} variant="contained">
-      {i18n.__('pages.SingleServicePage.maintenance')}
-    </Button>
-  );
-
   return (
     <Fade in>
       <Container className={classes.root}>
@@ -194,13 +154,7 @@ const SingleServicePage = ({ service = {}, ready, categories = [] }) => {
           </Grid>
           <Grid item xs={12} sm={12} md={6} className={classes.favoriteButton}>
             {!isMobile && favButton}
-            {service.state === 5
-              ? inactiveButton
-              : service.state === 15
-              ? maintenanceButton
-              : isExternal
-              ? openButton
-              : linkButton}
+            <DisplayButton service={service} />
           </Grid>
           <Grid item xs={12} sm={12} md={12} className={classes.cardGrid}>
             <Typography className={classes.smallTitle} variant="h5">

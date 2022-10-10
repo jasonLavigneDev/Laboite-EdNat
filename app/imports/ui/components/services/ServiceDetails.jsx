@@ -1,22 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Meteor } from 'meteor/meteor';
 import { makeStyles } from 'tss-react/mui';
 import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-// import OpenWithIcon from '@mui/icons-material/OpenWith';
 
 import Tooltip from '@mui/material/Tooltip';
-import Button from '@mui/material/Button';
 import CardHeader from '@mui/material/CardHeader';
 import i18n from 'meteor/universe:i18n';
 import { Link } from 'react-router-dom';
 import FavButton from './FavButton';
 
-import { isUrlExternal } from '../../utils/utilsFuncs';
 import { getServiceInternalUrl } from '../../../api/services/utils';
+import DisplayButton from './DisplayButton';
 
 const useStyles = makeStyles()((theme) => ({
   cardActions: {
@@ -69,16 +66,6 @@ const useStyles = makeStyles()((theme) => ({
     display: 'flex',
     marginTop: 10,
   },
-  buttonText: {
-    textTransform: 'none',
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.tertiary.main,
-    fontWeight: 'bold',
-    '&:hover': {
-      color: theme.palette.primary.main,
-      backgroundColor: theme.palette.tertiary.main,
-    },
-  },
   paperChip: {
     display: 'flex',
     justifyContent: 'left',
@@ -117,36 +104,6 @@ function ServiceDetails({ service, favAction, isShort }) {
   const isEvents = service._id === 'events';
   const isPoll = service._id === 'polls';
   const isBookmark = service._id === 'bookmarks';
-
-  const isExternal = isUrlExternal(service.url);
-  const openButton = (
-    <Button
-      size="large"
-      className={classes.buttonText}
-      variant="contained"
-      onClick={() => window.open(service.url, '_blank', 'noreferrer,noopener')}
-    >
-      {i18n.__('components.ServiceDetails.runServiceButtonLabel')}
-    </Button>
-  );
-  const linkButton = (
-    <Link to={service.url.replace(Meteor.absoluteUrl(), '/')} tabIndex={-1}>
-      <Button size="large" className={classes.buttonText} variant="contained">
-        {i18n.__('components.ServiceDetails.runServiceButtonLabel')}
-      </Button>
-    </Link>
-  );
-  const inactiveButton = (
-    <Button size="large" disabled className={classes.buttonText} variant="contained">
-      {i18n.__('pages.SingleServicePage.inactive')}
-    </Button>
-  );
-
-  const maintenanceButton = (
-    <Button size="large" disabled className={classes.buttonText} variant="contained">
-      {i18n.__('pages.SingleServicePage.maintenance')}
-    </Button>
-  );
 
   return (
     <Card className={classes.card}>
@@ -209,14 +166,7 @@ function ServiceDetails({ service, favAction, isShort }) {
           })}
         </Paper> */}
           <div className={isShort ? classes.cardActionShort : classes.cardActions}>
-            {service.state === 5
-              ? inactiveButton
-              : service.state === 15
-              ? maintenanceButton
-              : isExternal
-              ? openButton
-              : linkButton}
-
+            <DisplayButton service={service} />
             {!!favAction && <FavButton classesArray={[classes.fab]} service={service} favorite={favorite} />}
           </div>
         </CardContent>
