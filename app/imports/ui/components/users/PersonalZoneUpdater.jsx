@@ -6,12 +6,14 @@ import { makeStyles } from 'tss-react/mui';
 import Container from '@mui/material/Container';
 import { Link } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
 import i18n from 'meteor/universe:i18n';
 import Typography from '@mui/material/Typography';
 import Fade from '@mui/material/Fade';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
+import Divider from '@mui/material/Divider';
 
 import Switch from '@mui/material/Switch';
 import EditIcon from '@mui/icons-material/Edit';
@@ -123,8 +125,8 @@ const useStyles = (isMobile) =>
       marginBottom: 15,
     },
     screen: {
-      marginTop: 30,
-      marginBottom: 40,
+      display: 'flex',
+      justifyContent: 'flex-end',
     },
   }));
 
@@ -134,6 +136,7 @@ function PersonalZoneUpdater({
   allServices,
   allGroups,
   allLinks,
+  appSettingsValues,
   edition,
   handleEditionData,
 }) {
@@ -372,7 +375,7 @@ function PersonalZoneUpdater({
   };
 
   const notReady = isLoading || loadingUser;
-
+  const { personalSpace = {} } = appSettingsValues;
   return (
     <>
       {notReady ? (
@@ -442,15 +445,28 @@ function PersonalZoneUpdater({
                   inputRef={inputRef}
                 />
               </Grid>
+            </Grid>
+            <Grid container spacing={4}>
               {!edition && localPS.unsorted.length === 0 && localPS.sorted.length === 0 ? (
-                <Grid>
-                  <Animation />
-                  <div className={classes.screen}>
-                    <Link to="/services">
-                      {i18n.__('pages.PersonalPage.noFavYet')}
-                      <NavigateNextIcon className={classes.goIcon} />
-                    </Link>
-                  </div>
+                <Grid item md={12} xs={12}>
+                  <Paper className={classes.expansionpanel}>
+                    {personalSpace?.content?.length > 0 && !personalSpace?.external && (
+                      <div
+                        style={{ padding: '10px' }}
+                        dangerouslySetInnerHTML={{ __html: personalSpace?.content || '' }}
+                      />
+                    )}
+                    {personalSpace?.external && personalSpace?.link && <Animation videoLink={personalSpace?.link} />}
+                    <Divider />
+                    <div className={classes.screen}>
+                      <Link to="/services">
+                        <Button variant="contained" color="primary">
+                          {i18n.__('pages.PersonalPage.noFavYet')}
+                          <NavigateNextIcon className={classes.goIcon} />
+                        </Button>
+                      </Link>
+                    </div>
+                  </Paper>
                 </Grid>
               ) : null}
             </Grid>
@@ -564,6 +580,7 @@ PersonalZoneUpdater.propTypes = {
   allServices: PropTypes.arrayOf(PropTypes.object).isRequired,
   allGroups: PropTypes.arrayOf(PropTypes.object).isRequired,
   allLinks: PropTypes.arrayOf(PropTypes.object).isRequired,
+  appSettingsValues: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 PersonalZoneUpdater.defaultProps = {
