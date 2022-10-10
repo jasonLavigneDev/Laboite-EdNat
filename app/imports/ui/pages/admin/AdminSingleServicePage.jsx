@@ -290,11 +290,27 @@ const AdminSingleServicePage = ({ categories, businessReGrouping, service, ready
     return { structure: data };
   }, [serviceData, params]);
 
-  if (!ready || loading || (!!params._id && !service._id)) {
-    return <Spinner full />;
-  }
+  const businessReGroupingByStructure = (currStructure) => {
+    if (currStructure === undefined) {
+      return [];
+    }
 
-  return (
+    const structureWithAllAncestorsId = currStructure.ancestorsIds;
+    structureWithAllAncestorsId.push(currStructure._id);
+    return params.structureId
+      ? businessReGrouping
+      : businessReGrouping.filter((businessRegr) => structureWithAllAncestorsId.includes(businessRegr.structure));
+  };
+
+  // const memoizedBusinessReGroupingByStructure = useMemo(() => businessReGroupingByStructure(structure), [structure]);
+
+  // if (!ready || loading || (!!params._id && !service._id)) {
+  //   return <Spinner full />;
+  // }
+
+  return !ready || loading || (!!params._id && !service._id) ? (
+    <Spinner full />
+  ) : (
     <Fade in>
       <Container>
         <Paper className={classes.root}>
@@ -445,7 +461,7 @@ const AdminSingleServicePage = ({ categories, businessReGrouping, service, ready
             )}
             {structureMode && isBusinessRegroupingMode && (
               <div className={classes.chipWrapper}>
-                {businessReGrouping.map((businessRegroup) => {
+                {businessReGroupingByStructure(structure).map((businessRegroup) => {
                   const isActive =
                     serviceData.businessReGrouping &&
                     Boolean(serviceData.businessReGrouping.find((rg) => rg === businessRegroup._id));
@@ -544,12 +560,22 @@ export default withTracker(
 
     if (structureId) {
       const subStructure = Meteor.subscribe('structures.all', { _id: structureId });
-      const structureWithAllChildren = Structures.find({
-        $or: [{ ancestorsIds: structureId }, { _id: structureId }],
-      }).fetch();
+      // const structureWithAllChildren = Structures.find({
+      //   $or: [{ ancestorsIds: structureId }, { _id: structureId }],
+      // }).fetch();  ==> faut plutôt faire l'inverse, il ne faut pas voir les regroupements métiers des sous-structures
+      const currStructure = Structures.find({ _id: structureId }).fetch();
+      let structureWithAllAncestorsId = [];
+      if (currStructure.length > 0) {
+        structureWithAllAncestorsId = currStructure[0].ancestorsIds;
+        structureWithAllAncestorsId.push(structureId);
+      }
+
+      // businessReGrouping = businessReGrouping.filter((businessRegr) =>
+      //   structureWithAllChildren.map((s) => s._id).includes(businessRegr.structure),
+      // );
 
       businessReGrouping = businessReGrouping.filter((businessRegr) =>
-        structureWithAllChildren.map((s) => s._id).includes(businessRegr.structure),
+        structureWithAllAncestorsId.includes(businessRegr.structure),
       );
       ready = ready && subStructure.ready();
     }
