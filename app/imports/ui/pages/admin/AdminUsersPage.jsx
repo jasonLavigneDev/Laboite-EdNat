@@ -140,8 +140,12 @@ const AdminUsersPage = ({ match: { path } }) => {
   const searchRef = useRef();
   const updateSearch = (e) => setSearch(e.target.value);
   const resetSearch = () => setSearch('');
+
   useEffect(() => {
-    if (searchRef.current) searchRef.current.value = search;
+    if (searchRef.current) {
+      searchRef.current.value = search;
+    }
+
     if (page !== 1) {
       changePage(1);
     }
