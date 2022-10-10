@@ -103,9 +103,14 @@ Meteor.publish(null, function publishRoles() {
 });
 
 // build query for all users from group
-const queryUsersFromGroup = ({ group, search }) => {
-  const { admins, members, animators } = group;
-  const ids = [...admins, ...members, ...animators];
+const queryUsersFromGroup = ({ group, search, userType }) => {
+  let ids = [];
+  if (userType === 'all') {
+    const { admins, members, animators } = group;
+    ids = [...admins, ...members, ...animators];
+  } else {
+    ids = group[userType];
+  }
   const regex = new RegExp(search, 'i');
   const fieldsToSearch = ['firstName', 'lastName', 'emails.address', 'username'];
   const searchQuery = fieldsToSearch.map((field) => ({ [field]: { $regex: regex } }));
@@ -117,10 +122,10 @@ const queryUsersFromGroup = ({ group, search }) => {
 
 Meteor.methods({
   // count all users from a group
-  'get_users.group_count': function getGroupAllUsersCount({ search, slug }) {
+  'get_users.group_count': function getGroupAllUsersCount({ search, slug, userType }) {
     try {
       const group = Groups.findOne({ slug });
-      const query = queryUsersFromGroup({ group, search });
+      const query = queryUsersFromGroup({ group, search, userType });
 
       return Meteor.users.find(query).count();
     } catch (error) {
@@ -130,44 +135,51 @@ Meteor.methods({
 });
 
 // publish all users from a group
-FindFromPublication.publish('users.group', function usersFromGroup({ page, itemPerPage, search, slug, ...rest }) {
-  if (!isActive(this.userId)) {
-    return this.ready();
-  }
-  try {
-    new SimpleSchema({
-      slug: {
-        type: String,
-        label: getLabel('api.groups.labels.slug'),
-      },
-    })
-      .extend(checkPaginationParams)
-      .validate({ page, itemPerPage, slug, search });
-  } catch (err) {
-    logServer(`publish users.group: ${err}`);
-    this.error(err);
-  }
-  const group = Groups.findOne({ slug });
-  // for protected/private groups, publish users only for allowed users
-  if (group.type !== 0 && !Roles.userIsInRole(this.userId, ['admin', 'animator', 'member'], group._id)) {
-    return this.ready();
-  }
+FindFromPublication.publish(
+  'users.group',
+  function usersFromGroup({ page, itemPerPage, search, slug, userType, ...rest }) {
+    if (!isActive(this.userId)) {
+      return this.ready();
+    }
+    try {
+      new SimpleSchema({
+        slug: {
+          type: String,
+          label: getLabel('api.groups.labels.slug'),
+        },
+        userType: {
+          type: String,
+          allowedValues: ['members', 'candidates', 'animators', 'admins', 'all'],
+        },
+      })
+        .extend(checkPaginationParams)
+        .validate({ page, itemPerPage, slug, search, userType });
+    } catch (err) {
+      logServer(`publish users.group: ${err}`);
+      this.error(err);
+    }
+    const group = Groups.findOne({ slug });
+    // for protected/private groups, publish users only for allowed users
+    if (group.type !== 0 && !Roles.userIsInRole(this.userId, ['admin', 'animator', 'member'], group._id)) {
+      return this.ready();
+    }
 
-  try {
-    const query = queryUsersFromGroup({ group, search });
+    try {
+      const query = queryUsersFromGroup({ group, search, userType });
 
-    const data = Meteor.users.find(query, {
-      fields: Meteor.users.publicFields,
-      skip: itemPerPage * (page - 1),
-      limit: itemPerPage,
-      sort: { lastName: 1 },
-      ...rest,
-    });
-    return data;
-  } catch (error) {
-    return this.ready();
-  }
-});
+      const data = Meteor.users.find(query, {
+        fields: Meteor.users.publicFields,
+        skip: itemPerPage * (page - 1),
+        limit: itemPerPage,
+        sort: { lastName: 1 },
+        ...rest,
+      });
+      return data;
+    } catch (error) {
+      return this.ready();
+    }
+  },
+);
 
 // build query for all users who published articles
 const queryUsersPublishers = ({ search }) => {

@@ -188,6 +188,7 @@
         "members": "Members",
         "animators": "Animators",
         "admins": "Admins",
+        "all": "All",
         "applications": "Applications ID",
         "nextcloud": "Create groupe in Nextcloud",
         "plugins": "Related services managing groups"
@@ -1293,7 +1294,8 @@
       "back": "Back to the group",
       "searchText": "Which user are you looking for ?",
       "noAccess": "You don't have access to address book of this group",
-      "noUsers": "No user found for this group"
+      "noUsers": "No user found for this group",
+      "userType": "Users type"
     },
     "Events": {
       "seeEvent": "See event",
