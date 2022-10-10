@@ -107,8 +107,7 @@ const AdminSettingsPage = ({ ready, appsettings }) => {
     switchMaintenanceStatus.call({ unlockMigration }, (error) => {
       setLoading(false);
       if (error) {
-        console.log(error);
-        msg.error(error.message);
+        msg.error(i18n.__('pages.AdminSettingsPage.errorMongo'));
       }
     });
   };
@@ -120,7 +119,6 @@ const AdminSettingsPage = ({ ready, appsettings }) => {
       (error) => {
         setLoading(false);
         if (error) {
-          console.log(error);
           msg.error(error.message);
         } else {
           msg.success(i18n.__('api.methods.operationSuccessMsg'));

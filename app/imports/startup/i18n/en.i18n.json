@@ -55,7 +55,8 @@
         "notPermitted": "You don't have sufficient rights."
       },
       "switchMaintenanceStatus": {
-        "notPermitted": "You don't have sufficient rights."
+        "notPermitted": "You don't have sufficient rights.",
+        "errorMongo": "Erreur MongoDB"
       },
       "updateTextMaintenance": {
         "notPermitted": "You don't have sufficient rights."
@@ -534,6 +535,8 @@
       "menuAdminTags": "Tags Management",
       "menuAdminStructureUsers": "Structure Users",
       "menuAdminStructureServices": "Structure Services",
+      "menuUserStructure": "Structures Management",
+      "menuAdminHelpPage": "Help page management",
       "menuAdminBackHome": "Back to Personnal Space",
       "menuContact": "Contact"
     },
@@ -915,6 +918,7 @@
       "accessibility": "Accessibility",
       "personalData": "Personal Data",
       "maintenance": "Maintenance options",
+      "errorMongo": "A MongoDB error has occured while migrating.",
       "toggleMaintenance": "Put the site in maintenance",
       "textMaintenance": "Maintenance reason",
       "buttonTextMaintenance": "Validate message",
