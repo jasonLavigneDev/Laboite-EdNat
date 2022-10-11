@@ -4,6 +4,7 @@ import { useTracker } from 'meteor/react-meteor-data';
 import i18n from 'meteor/universe:i18n';
 import MaterialTable from '@material-table/core';
 import EditIcon from '@mui/icons-material/Edit';
+import AddIcon from '@mui/icons-material/Add';
 import Fade from '@mui/material/Fade';
 import Container from '@mui/material/Container';
 import CardContent from '@mui/material/CardContent';
@@ -13,9 +14,10 @@ import IconButton from '@mui/material/IconButton';
 import CardActions from '@mui/material/CardActions';
 import Card from '@mui/material/Card';
 import ClearIcon from '@mui/icons-material/Clear';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Modal from '@mui/material/Modal';
+import Button from '@mui/material//Button';
+import TextField from '@mui/material//TextField';
+import Modal from '@mui/material//Modal';
+import PropTypes from 'prop-types';
 import { getStructure } from '../../../api/structures/hooks';
 import AsamExtensions from '../../../api/asamextensions/asamextensions';
 import StructureSelectAutoComplete from '../../components/structures/StructureSelectAutoComplete';
@@ -48,6 +50,90 @@ const columns = [
   },
 ];
 
+const ExtensionMail = ({ updateCurrentextension }) => {
+  // const [state, setState] = useObjectState({});
+  const [extension, setExtension] = useState('');
+  const [entityShortName, setEntityShortName] = useState('');
+  const [entityLongName, setEntityLongName] = useState('');
+  const [famillyShortName, setFamillyShortName] = useState('');
+  const [famillyLongName, setFamillyLongName] = useState('');
+  const onUpdateField = (event) => {
+    switch (event.target.name) {
+      case 'extension':
+        setExtension(event.target.value);
+        break;
+      case 'entityShortName':
+        setEntityShortName(event.target.value);
+        break;
+      case 'entityLongName':
+        setEntityLongName(event.target.value);
+        break;
+      case 'famillyShortName':
+        setFamillyShortName(event.target.value);
+        break;
+      case 'famillyLongName':
+        setFamillyLongName(event.target.value);
+        break;
+      default:
+        break;
+    }
+    updateCurrentextension({ extension, entityShortName, entityLongName, famillyShortName, famillyLongName });
+  };
+  return (
+    <Card>
+      <CardContent>
+        <TextField
+          onChange={onUpdateField}
+          fullWidth
+          name="extension"
+          label={i18n.__('pages.AdminAsamExtensionsManagementPage.modal.mailExtension')}
+          placeholder={i18n.__('pages.AdminAsamExtensionsManagementPage.modal.mailExtension')}
+        />
+      </CardContent>
+      <CardContent>
+        <TextField
+          onChange={onUpdateField}
+          fullWidth
+          name="entityShortName"
+          label={i18n.__('pages.AdminAsamExtensionsManagementPage.modal.entityShortName')}
+          placeholder={i18n.__('pages.AdminAsamExtensionsManagementPage.modal.entityShortName')}
+        />
+      </CardContent>
+      <CardContent>
+        <TextField
+          onChange={onUpdateField}
+          fullWidth
+          name="entityLongName"
+          label={i18n.__('pages.AdminAsamExtensionsManagementPage.modal.entityLongName')}
+          placeholder={i18n.__('pages.AdminAsamExtensionsManagementPage.modal.entityLongName')}
+        />
+      </CardContent>
+      <CardContent>
+        <TextField
+          onChange={onUpdateField}
+          fullWidth
+          name="famillyShortName"
+          label={i18n.__('pages.AdminAsamExtensionsManagementPage.modal.famillyShortName')}
+          placeholder={i18n.__('pages.AdminAsamExtensionsManagementPage.modal.famillyShortName')}
+        />
+      </CardContent>
+      <CardContent>
+        <TextField
+          onChange={onUpdateField}
+          fullWidth
+          name="famillyLongName"
+          label={i18n.__('pages.AdminAsamExtensionsManagementPage.modal.famillyLongName')}
+          placeholder={i18n.__('pages.AdminAsamExtensionsManagementPage.modal.famillyLongName')}
+        />
+      </CardContent>
+    </Card>
+  );
+};
+
+ExtensionMail.propTypes = {
+  updateCurrentextension: PropTypes.func.isRequired,
+};
+
 const AdminAsamExtensionsManagementPage = () => {
   const { classes: modalClasses } = useModalStyles();
   const data = useTracker(() => {
@@ -79,21 +165,43 @@ const AdminAsamExtensionsManagementPage = () => {
     _id: null,
     extension: null,
     structureId: null,
+    entityShortName: null,
+    entityLongName: null,
+    famillyShortName: null,
+    famillyLongName: null,
   });
 
   const [modalOpen, setModalOpen] = useState(false);
+  const [isAddMailExtensionAction, setIsAddMailExtensionAction] = useState(false);
   const openModal = ({ extensionId, extension, structureId }) => {
-    setCurrentAsam({
-      _id: extensionId,
-      extension,
-      structureId,
-    });
+    if (extensionId !== undefined) {
+      setCurrentAsam({
+        _id: extensionId,
+        extension,
+        structureId,
+      });
+      setIsAddMailExtensionAction(false);
+    } else {
+      setIsAddMailExtensionAction(true);
+    }
     setModalOpen(true);
   };
 
   const resetAsamState = () => setCurrentAsam({ _id: null, extension: null, structureId: null });
+  const updateCurrentAsam = ({ extension, entityShortName, entityLongName, famillyShortName, famillyLongName }) => {
+    setCurrentAsam({
+      _id: null,
+      extension,
+      structureId: null,
+      entityShortName,
+      entityLongName,
+      famillyShortName,
+      famillyLongName,
+    });
+  };
   const closeModal = () => {
     setModalOpen(false);
+    setIsAddMailExtensionAction(false);
     resetAsamState();
   };
 
@@ -101,8 +209,29 @@ const AdminAsamExtensionsManagementPage = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    if (currentAsam.structureId == null) closeModal();
-    else
+    if (currentAsam.structureId == null || isAddMailExtensionAction) {
+      if (isAddMailExtensionAction) {
+        Meteor.call(
+          'asam.addNewAsam',
+          {
+            extension: currentAsam.extension,
+            entiteNomCourt: currentAsam.entityShortName,
+            entiteNomLong: currentAsam.entityLongName,
+            familleNomCourt: currentAsam.famillyShortName,
+            familleNomLong: currentAsam.famillyLongName,
+            structureId: currentAsam.structureId,
+          },
+          (err) => {
+            if (err) msg.error(err.reason || err.message);
+            else {
+              msg.success(i18n.__('api.methods.operationSuccessMsg'));
+            }
+            closeModal();
+          },
+        );
+      }
+      closeModal();
+    } else
       Meteor.call(
         'asam.assignStructureToAsam',
         {
@@ -140,7 +269,11 @@ const AdminAsamExtensionsManagementPage = () => {
           <Fade in={modalOpen}>
             <Card>
               <CardHeader
-                title={`${i18n.__('pages.AdminAsamExtensionsManagementPage.modal.title')} "${currentAsam.extension}"`}
+                title={
+                  !isAddMailExtensionAction
+                    ? `${i18n.__('pages.AdminAsamExtensionsManagementPage.modal.title')} "${currentAsam.extension}"`
+                    : `${i18n.__('pages.AdminAsamExtensionsManagementPage.modal.addEmailExtension')}"`
+                }
                 action={
                   <IconButton
                     title={i18n.__('pages.AdminAsamExtensionsManagementPage.modal.close')}
@@ -151,6 +284,9 @@ const AdminAsamExtensionsManagementPage = () => {
                 }
               />
               <form onSubmit={onSubmit}>
+                <CardContent style={{ display: isAddMailExtensionAction ? 'block' : 'none' }}>
+                  <ExtensionMail updateCurrentextension={updateCurrentAsam} />
+                </CardContent>
                 <CardContent>
                   <StructureSelectAutoComplete
                     style={{ width: '100%' }}
@@ -196,6 +332,18 @@ const AdminAsamExtensionsManagementPage = () => {
             options={options}
             localization={setMaterialTableLocalization('pages.AdminAsamExtensionsManagementPage')}
             actions={[
+              {
+                icon: AddIcon,
+                tooltip: i18n.__('pages.AdminAsamExtensionsManagementPage.actions.addMailExtension'),
+                isFreeAction: true,
+                onClick: (event, rowData) => {
+                  openModal({
+                    extensionId: rowData._id,
+                    extension: rowData.extension,
+                    structureId: rowData.structureId || null,
+                  });
+                },
+              },
               {
                 icon: EditIcon,
                 tooltip: i18n.__('pages.AdminAsamExtensionsManagementPage.actions.assignStructure'),

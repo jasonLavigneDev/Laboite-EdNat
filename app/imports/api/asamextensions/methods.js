@@ -39,7 +39,52 @@ export const unassignStructureToAsam = new ValidatedMethod({
   },
 });
 
-const LISTS_METHODS = _.pluck([assignStructureToAsam, unassignStructureToAsam], 'name');
+export const addNewAsam = new ValidatedMethod({
+  name: 'asam.addNewAsam',
+  validate: new SimpleSchema({
+    extension: {
+      type: String,
+      optional: true,
+    },
+    entiteNomCourt: {
+      type: String,
+      optional: true,
+    },
+    entiteNomLong: {
+      type: String,
+      optional: true,
+    },
+    familleNomCourt: {
+      type: String,
+      optional: true,
+    },
+    familleNomLong: {
+      type: String,
+      optional: true,
+    },
+    structureId: {
+      type: String,
+      optional: true,
+    },
+  }).validator(),
+  run({ extension, entiteNomCourt, entiteNomLong, familleNomCourt, familleNomLong, structureId }) {
+    const isAdmin = Roles.userIsInRole(this.userId, 'admin');
+    if (!isAdmin) {
+      throw new Meteor.Error('api.asamextensions.notPermitted', i18n.__('api.users.adminNeeded'));
+    }
+
+    return AsamExtensions.insert({
+      extension,
+      entiteNomCourt,
+      entiteNomLong,
+      familleNomCourt,
+      familleNomLong,
+      structureId,
+    });
+  },
+});
+
+const LISTS_METHODS = _.pluck([assignStructureToAsam, unassignStructureToAsam, addNewAsam], 'name');
 
 if (Meteor.isServer) {
   // Only allow 5 list operations per connection per second

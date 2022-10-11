@@ -145,7 +145,8 @@
         "entiteNomLong": "Long name for structure",
         "familleNomCourt": "Short name for structure's family (category)",
         "familleNomLong": "Long name for structure's family (category)"
-      }
+      },
+      "notPermitted": "You don't have sufficient rights."
     },
     "users": {
       "unknownUser": "User does not exist.",
@@ -1525,10 +1526,17 @@
       "noStructure": "Not assigned",
       "modal": {
         "title": "Assign a structure to email extension",
+        "addEmailExtension": "Add email extension",
         "close": "Close",
         "cancel": "Cancel",
         "submit": "Submit",
-        "noOptions": "Write to filter structures"
+        "noOptions": "Write to filter structures",
+        "mailExtension": "Mail extension",
+        "entityShortName": "Corresponding Entity Short name if exists",
+        "entityLongName": "Corresponding Entity long name if exists",
+        "famillyShortName": "Corresponding familly short name if exists",
+        "StructureExtensionMail": "Corresponding structure if exists",
+        "famillyLongName": "Corresponding familly long name if exists"
       }
     }
   },
