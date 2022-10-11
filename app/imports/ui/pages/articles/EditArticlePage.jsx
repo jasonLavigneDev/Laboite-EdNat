@@ -518,8 +518,8 @@ function EditArticlePage({
 
   const addGroupToArticle = (event, group) => {
     if (group && group._id) {
-      const { _id, name } = group;
-      const groups = [...(data.groups || []), { _id, name }];
+      const { _id, name, type } = group;
+      const groups = [...(data.groups || []), { _id, name, type }];
       setData({ ...data, groups });
     }
   };
