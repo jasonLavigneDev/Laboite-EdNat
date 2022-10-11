@@ -239,11 +239,19 @@ Meteor.methods({
 const defaultFieldsToSearch = ['firstName', 'lastName', 'emails.address', 'username', 'structure'];
 
 // build query for all users from group
-const queryUsersAdmin = ({ search, fieldsToSearch = defaultFieldsToSearch }) => {
-  const regex = new RegExp(search.split(' ').filter(Boolean).join('|'), 'i');
-  const searchQuery = fieldsToSearch.map((field) => ({ [field]: { $regex: regex } }));
+export const queryUsersAdmin = ({ search, fieldsToSearch = defaultFieldsToSearch }) => {
+  const regexes = search
+    .split(' ')
+    .filter(Boolean)
+    .map((term) => new RegExp(`^${term}`, 'i'));
 
-  return { $or: searchQuery };
+  if (!regexes.length) {
+    return {};
+  }
+
+  return {
+    $and: regexes.map((regex) => ({ $or: fieldsToSearch.map((field) => ({ [field]: regex })) })),
+  };
 };
 
 // publish all users from a group
