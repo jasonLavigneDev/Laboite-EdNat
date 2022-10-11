@@ -64,7 +64,7 @@ function GroupFinder({ onSelected, exclude = [], opened }) {
           return option.inputValue;
         }
         // Regular option
-        return option.name;
+        return getGroupName(option);
       }}
       noOptionsText={i18n.__('components.GroupFinder.noGroup')}
       clearText={i18n.__('components.GroupFinder.clear')}
