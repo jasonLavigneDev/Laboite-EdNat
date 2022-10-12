@@ -296,6 +296,22 @@ export const updateGroup = new ValidatedMethod({
   },
 });
 
+export const countMembersOfGroup = new ValidatedMethod({
+  name: 'groups.single.admin',
+  validate: new SimpleSchema({
+    slug: String,
+  }).validator(),
+  run({ slug }) {
+    const group = Groups.findOne({ slug }, { fields: Groups.adminFields, limit: 1 });
+
+    if (group) {
+      const { members, animators, admins } = group;
+      return new Set([members, animators, admins].flat()).size;
+    }
+    return 0;
+  },
+});
+
 if (Meteor.isServer) {
   // Get list of all method names on User
   const LISTS_METHODS = _.pluck([favGroup, unfavGroup, createGroup, removeGroup, updateGroup], 'name');
