@@ -1538,7 +1538,9 @@
       },
       "actions": {
         "assignStructure": "Assigner une structure",
-        "unassignStructure": "Desassigner la structure"
+        "unassignStructure": "Desassigner la structure",
+        "addMailExtension": "Ajouter une extension d'email",
+        "deleteMailExtension": "Supprimer une extension d'email"
       },
       "noStructure": "Non assignée",
       "modal": {
@@ -1553,7 +1555,9 @@
         "entityLongName": "Nom long de l'entité correspondant s'il existe",
         "famillyShortName": "Nom court de l'entité famille correspondant s'il existe",
         "StructureExtensionMail": "La structure correspondante s'il existe",
-        "famillyLongName": "Nom long de l'entité famille correspondant s'il existe"
+        "famillyLongName": "Nom long de l'entité famille correspondant s'il existe",
+        "confirmMsg": "Êtes vous sûr de vouloir supprimer l'extension d'email ",
+        "deleteExtensionEmailTitle": "Extension d'email "
       }
     }
   },

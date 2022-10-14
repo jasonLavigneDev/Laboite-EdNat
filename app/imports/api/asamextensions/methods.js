@@ -15,14 +15,37 @@ export const assignStructureToAsam = new ValidatedMethod({
     extensionId: {
       type: SimpleSchema.RegEx.Id,
     },
+    extension: {
+      type: String,
+      optional: true,
+    },
+    entiteNomCourt: {
+      type: String,
+      optional: true,
+    },
+    entiteNomLong: {
+      type: String,
+      optional: true,
+    },
+    familleNomCourt: {
+      type: String,
+      optional: true,
+    },
+    familleNomLong: {
+      type: String,
+      optional: true,
+    },
   }).validator(),
-  run({ extensionId, structureId = null }) {
+  run({ extensionId, extension, entiteNomCourt, entiteNomLong, familleNomCourt, familleNomLong, structureId = null }) {
     const isAdmin = Roles.userIsInRole(this.userId, 'admin');
     if (!isAdmin) {
       throw new Meteor.Error('api.asam.assignStructureToAsam.notPermitted', i18n.__('api.users.adminNeeded'));
     }
 
-    return AsamExtensions.update({ _id: extensionId }, { $set: { structureId } });
+    return AsamExtensions.update(
+      { _id: extensionId },
+      { $set: { structureId, extension, entiteNomCourt, entiteNomLong, familleNomCourt, familleNomLong } },
+    );
   },
 });
 
@@ -36,6 +59,19 @@ export const unassignStructureToAsam = new ValidatedMethod({
     }
 
     return AsamExtensions.update({ _id: extensionId }, { $set: { structureId: null } });
+  },
+});
+
+export const deleteAsam = new ValidatedMethod({
+  name: 'asam.deleteAsam',
+  validate: new SimpleSchema({ extensionId: { type: SimpleSchema.RegEx.Id } }).validator(),
+  run({ extensionId }) {
+    const isAdmin = Roles.userIsInRole(this.userId, 'admin');
+    if (!isAdmin) {
+      throw new Meteor.Error('api.asam.assignStructureToAsam.notPermitted', i18n.__('api.users.adminNeeded'));
+    }
+
+    return AsamExtensions.remove({ _id: extensionId });
   },
 });
 
