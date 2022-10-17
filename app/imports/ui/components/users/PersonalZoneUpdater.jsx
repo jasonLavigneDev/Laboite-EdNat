@@ -456,7 +456,9 @@ function PersonalZoneUpdater({
                         dangerouslySetInnerHTML={{ __html: personalSpace?.content || '' }}
                       />
                     )}
-                    {personalSpace?.external && personalSpace?.link && <Animation videoLink={personalSpace?.link} />}
+                    {personalSpace?.external && personalSpace?.link && (
+                      <Animation videoLink={personalSpace?.link} notReady={notReady} />
+                    )}
                     <Divider />
                     <div className={classes.screen}>
                       <Link to="/services">
