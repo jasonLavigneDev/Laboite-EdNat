@@ -72,8 +72,10 @@ export function createGroupNotification(currentUser, groupId, title, content, li
   const usersToSend = [...new Set([...group.admins, ...group.animators, ...group.members])]; // Concats arrays and removes duplicate user ids
   const notifLink = link === '' ? `/groups/${group.slug}` : link;
   usersToSend.forEach((uid) => {
-    const newNotif = { userId: uid, title, content, link: notifLink, type: NOTIFICATIONS_TYPES.GROUP };
-    createNotification._execute({ userId: currentUser }, { data: newNotif });
+    if (currentUser !== uid) {
+      const newNotif = { userId: uid, title, content, link: notifLink, type: NOTIFICATIONS_TYPES.GROUP };
+      createNotification._execute({ userId: currentUser }, { data: newNotif });
+    }
   });
 }
 

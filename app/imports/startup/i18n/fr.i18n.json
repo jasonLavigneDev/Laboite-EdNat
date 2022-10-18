@@ -596,7 +596,9 @@
         "body_editTooltip": "Modifier cet utilisateur",
         "body_deleteTooltip": "Enlever cet utilisateur",
         "body_editRow_deleteText": "Souhaitez vous réellement enlever cet utilisateur ?",
-        "body_addGroupTooltip": "Ajouter les membres d'un autre groupe"
+        "body_addGroupTooltip": "Ajouter les membres d'un autre groupe",
+        "body_sendGroupNotifTooltip": "Envoyer une notification à tous",
+        "body_sendMemberNotifTooltip": "Envoyer une notification à ce membre"
       }
     },
     "UserFinder": {
@@ -801,8 +803,16 @@
       "cancel": "Annuler",
       "title_label": "Titre",
       "content_label": "Contenu de la notification",
+      "ValidateForm": "Valider"
+    },
+    "SendGroupNotification": {
+      "title": "Envoyer une notification à tous"
+    },
+    "NotificationModalForm": {
+      "title_label": "Titre",
+      "content_label": "Contenu de la notification",
       "ValidateForm": "Valider",
-      "type_label": "Type de notification"
+      "cancel": "Annuler"
     },
     "SkipLink": {
       "skipToContent": "Aller au contenu"
