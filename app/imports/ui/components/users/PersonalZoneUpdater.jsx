@@ -196,7 +196,7 @@ function PersonalZoneUpdater({
   const filterService = (element) => {
     if (element.type === 'service') {
       const service = Services.findOne({ _id: element.element_id });
-      if (service.state !== 10) {
+      if (service?.state !== 10) {
         // 10 = service hide //
         return true;
       }
