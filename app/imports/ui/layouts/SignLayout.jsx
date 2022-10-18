@@ -4,6 +4,7 @@ import Paper from '@mui/material/Paper';
 import { Route, Switch } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
+import { useTracker } from 'meteor/react-meteor-data';
 import LanguageSwitcher from '../components/system/LanguageSwitcher';
 import SignUp from '../pages/system/SignUp';
 import SignIn from '../pages/system/SignIn';
@@ -14,6 +15,7 @@ import { useAppContext } from '../contexts/context';
 import OfflineServices from '../components/services/OfflineServices';
 import OfflineMenu from '../components/menus/OfflineMenu';
 import AppVersion from '../components/system/AppVersion';
+import AppSettings from '../../api/appsettings/appsettings';
 
 const useStyles = makeStyles()((theme) => ({
   root: {
@@ -74,6 +76,14 @@ export default function SignLayout() {
   const theme = useTheme();
   const [selectedTab, setTab] = useState('apps');
 
+  const { maintenance = {}, ready = false } = useTracker(() => {
+    const subSettings = Meteor.subscribe('appsettings.all');
+    return {
+      maintenance: AppSettings.findOne({}, { fields: { maintenance: 1 } }),
+      ready: subSettings.ready(),
+    };
+  });
+
   function isEoleTheme() {
     if (Meteor.settings.public.theme === 'eole') {
       return { padding: 100, margin: -100, marginLeft: 5 };
@@ -92,6 +102,7 @@ export default function SignLayout() {
         container
         component="main"
         className={isMobile || isIframed ? classes.rootMobile : classes.root}
+        style={maintenance.maintenance || !ready ? { minHeight: '100vh' } : null}
       >
         {services && <OfflineServices />}
         {help && <HelpPage />}
