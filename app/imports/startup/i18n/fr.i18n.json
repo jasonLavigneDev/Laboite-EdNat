@@ -1180,7 +1180,10 @@
       "manageUser": "Gérer l'utilisateur",
       "sendNotif": "Envoyer notification",
       "successCopyUserId": "ID de l'utilisateur copié avec succès",
-      "copyUserId": "Copier l'ID de l'utilisateur"
+      "copyUserId": "Copier l'ID de l'utilisateur",
+      "userType": "Type d'utilisateurs",
+      "all": "tous",
+      "noResult": "Pas de résultat"
     },
     "AdminUserValidationPage": {
       "title": "Utilisateurs en attente de validation"

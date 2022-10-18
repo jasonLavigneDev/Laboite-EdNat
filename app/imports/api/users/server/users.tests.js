@@ -155,20 +155,28 @@ describe('users', function () {
     describe('users.byStructure', function () {
       it('does not send data to non adminStructure users', function (done) {
         const collector = new PublicationCollector({ userId });
-        collector.collect('users.byStructure', { page: 1, itemPerPage: 5, search: '' }, (collections) => {
-          assert.equal(collections.users, undefined);
-          done();
-        });
+        collector.collect(
+          'users.byStructure',
+          { page: 1, itemPerPage: 5, search: '', userType: 'all', forceReload: null },
+          (collections) => {
+            assert.equal(collections.users, undefined);
+            done();
+          },
+        );
       });
       it('sends users with same structure to adminStructure user', function (done) {
         Roles.addUsersToRoles(userId, 'adminStructure', 'Struct');
         Meteor.users.update(userId, { $set: { structure: 'Struct' } });
         Meteor.users.update(otherUserId, { $set: { structure: 'Struct' } });
         const collector = new PublicationCollector({ userId });
-        collector.collect('users.byStructure', { page: 1, itemPerPage: 5, search: '' }, (collections) => {
-          assert.equal(collections.users.length, 2);
-          done();
-        });
+        collector.collect(
+          'users.byStructure',
+          { page: 1, itemPerPage: 5, search: '', userType: 'all', forceReload: null },
+          (collections) => {
+            assert.equal(collections.users.length, 2);
+            done();
+          },
+        );
         Roles.removeUsersFromRoles(userId, 'adminStructure', 'Struct');
       });
     });
@@ -390,29 +398,41 @@ describe('users', function () {
       it('sends all users including admin restricted fields', function (done) {
         Roles.addUsersToRoles(userId, 'admin');
         const collector = new PublicationCollector({ userId });
-        collector.collect('users.admin', { page: 1, itemPerPage: 5, search: '' }, (collections) => {
-          assert.equal(collections.users.length, 5);
-          const user = collections.users[0];
-          assert.property(user, 'createdAt');
-          done();
-        });
+        collector.collect(
+          'users.admin',
+          { page: 1, itemPerPage: 5, search: '', userType: 'all', forceReload: null },
+          (collections) => {
+            assert.equal(collections.users.length, 5);
+            const user = collections.users[0];
+            assert.property(user, 'createdAt');
+            done();
+          },
+        );
       });
       it('sends a specific page of users including admin restricted fields', function (done) {
         Roles.addUsersToRoles(userId, 'admin');
         const collector = new PublicationCollector({ userId });
-        collector.collect('users.admin', { page: 2, itemPerPage: 3, search: '' }, (collections) => {
-          assert.equal(collections.users.length, 2);
-          done();
-        });
+        collector.collect(
+          'users.admin',
+          { page: 2, itemPerPage: 3, search: '', userType: 'all', forceReload: null },
+          (collections) => {
+            assert.equal(collections.users.length, 2);
+            done();
+          },
+        );
       });
       it('sends all users including admin restricted fields matching a filter', function (done) {
         Roles.addUsersToRoles(userId, 'admin');
         const collector = new PublicationCollector({ userId });
-        collector.collect('users.admin', { page: 1, itemPerPage: 5, search: 'user@ac-test.fr' }, (collections) => {
-          assert.equal(collections.users.length, 1);
-          assert.equal(collections.users[0].emails[0].address, 'user@ac-test.fr');
-          done();
-        });
+        collector.collect(
+          'users.admin',
+          { page: 1, itemPerPage: 5, search: 'user@ac-test.fr', userType: 'all', forceReload: null },
+          (collections) => {
+            assert.equal(collections.users.length, 1);
+            assert.equal(collections.users[0].emails[0].address, 'user@ac-test.fr');
+            done();
+          },
+        );
       });
     });
   });
