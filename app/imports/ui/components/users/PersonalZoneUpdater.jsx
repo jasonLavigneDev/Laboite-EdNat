@@ -125,6 +125,7 @@ const useStyles = (isMobile) =>
       marginBottom: 15,
     },
     screen: {
+      padding: 10,
       display: 'flex',
       justifyContent: 'flex-end',
     },
@@ -383,7 +384,7 @@ function PersonalZoneUpdater({
       ) : (
         <Fade in>
           <Container className={classes.cardGrid}>
-            <Grid container spacing={4}>
+            <Grid container spacing={4} className={classes.cardGrid}>
               <Grid item xs={12} sm={12} md={12} className={classes.flex}>
                 <Grid container alignItems="center" spacing={1}>
                   {!edition && (
