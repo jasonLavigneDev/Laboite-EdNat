@@ -62,7 +62,7 @@ const useStyles = makeStyles()((theme) => ({
   },
 }));
 
-function ServiceDetailsPersSpace({ service, customDrag, isMobile, isSorted, needUpdate }) {
+function ServiceDetailsPersSpace({ service, customDrag, isMobile, isSorted, needUpdate, edition }) {
   const { classes } = useStyles();
   const history = useHistory();
   const favButtonLabel = i18n.__('components.ServiceDetails.favButtonLabelNoFav');
@@ -114,7 +114,7 @@ function ServiceDetailsPersSpace({ service, customDrag, isMobile, isSorted, need
         <span className={classes.span}>
           <CardActionArea
             className={classes.actionarea}
-            disabled={service.state === 5 || service.state === 15 || customDrag}
+            disabled={service.state !== 0 || customDrag}
             onClick={handleClick}
           >
             <CardHeader
@@ -122,9 +122,7 @@ function ServiceDetailsPersSpace({ service, customDrag, isMobile, isSorted, need
               avatar={<Avatar aria-label="recipe" className={classes.avatar} alt={service.title} src={service.logo} />}
               title={
                 <Typography
-                  className={
-                    service.state === 5 || service.state === 15 ? classes.serviceNameDiasbled : classes.serviceName
-                  }
+                  className={service.state !== 0 ? classes.serviceNameDiasbled : classes.serviceName}
                   gutterBottom
                   noWrap={!isMobile}
                   variant="h6"
@@ -138,6 +136,10 @@ function ServiceDetailsPersSpace({ service, customDrag, isMobile, isSorted, need
                   <Typography variant="body2" color="textSecondary" component="p">
                     {i18n.__('pages.SingleServicePage.inactive')}
                   </Typography>
+                ) : service.state === 10 ? (
+                  <Typography variant="body2" color="textSecondary" component="p">
+                    {i18n.__('pages.SingleServicePage.hidden')}
+                  </Typography>
                 ) : service.state === 15 ? (
                   <Typography variant="body2" color="textSecondary" component="p">
                     {i18n.__('pages.SingleServicePage.maintenance')}
@@ -150,7 +152,7 @@ function ServiceDetailsPersSpace({ service, customDrag, isMobile, isSorted, need
           </CardActionArea>
         </span>
       </Tooltip>
-      {customDrag ? (
+      {customDrag && !edition ? (
         <CardActions className={classes.cardActions}>
           {isSorted ? (
             <Tooltip title={backToDefaultButtonLabel} aria-label={backToDefaultButtonLabel}>
@@ -176,6 +178,11 @@ ServiceDetailsPersSpace.propTypes = {
   isMobile: PropTypes.bool.isRequired,
   isSorted: PropTypes.bool.isRequired,
   needUpdate: PropTypes.func.isRequired,
+  edition: PropTypes.bool,
+};
+
+ServiceDetailsPersSpace.defaultProps = {
+  edition: false,
 };
 
 export default ServiceDetailsPersSpace;

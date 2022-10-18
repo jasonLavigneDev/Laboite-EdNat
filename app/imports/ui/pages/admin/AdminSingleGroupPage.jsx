@@ -367,6 +367,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
                   </InputLabel>
                   <Select
                     labelId="type-label"
+                    label={i18n.__('pages.AdminSingleGroupPage.type')}
                     id="type"
                     name="type"
                     value={groupData.type}

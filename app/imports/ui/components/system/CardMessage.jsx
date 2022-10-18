@@ -21,7 +21,7 @@ const useStyles = makeStyles()({
   },
 });
 
-const CardMessage = ({ title, subtitle, link, linkText }) => {
+const CardMessage = ({ title, titleData = {}, subtitle, subtitleData = {}, link, linkText }) => {
   const { classes } = useStyles();
   return (
     <Grid className={classes.root} container justifyContent="center">
@@ -29,10 +29,10 @@ const CardMessage = ({ title, subtitle, link, linkText }) => {
         <Card>
           <CardContent>
             <Typography color="textSecondary" gutterBottom>
-              {i18n.__(title)}
+              {i18n.__(title, titleData)}
             </Typography>
             <Typography variant="h6" component="h3">
-              {i18n.__(subtitle)}
+              {i18n.__(subtitle, subtitleData)}
             </Typography>
           </CardContent>
           <CardActions className={classes.actions}>
@@ -54,7 +54,9 @@ export default CardMessage;
 
 CardMessage.propTypes = {
   title: PropTypes.string.isRequired,
+  titleData: PropTypes.objectOf(PropTypes.any),
   subtitle: PropTypes.string.isRequired,
+  subtitleData: PropTypes.objectOf(PropTypes.any),
   link: PropTypes.string,
   linkText: PropTypes.string,
 };
@@ -62,4 +64,6 @@ CardMessage.propTypes = {
 CardMessage.defaultProps = {
   link: null,
   linkText: null,
+  titleData: {},
+  subtitleData: {},
 };

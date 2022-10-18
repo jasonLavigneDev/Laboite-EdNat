@@ -34,4 +34,5 @@ Factory.define('appsettings', AppSettings, {
     link: faker.lorem.slug(),
     content: faker.lorem.sentences(),
   },
+  userStructureValidationMandatory: false,
 });

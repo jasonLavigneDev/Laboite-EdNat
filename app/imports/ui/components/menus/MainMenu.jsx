@@ -80,7 +80,11 @@ const MainMenu = ({ user = {} }) => {
 
   const adminChip = useTracker(() => {
     Meteor.subscribe('users.request.count');
-    return Counts.get('users.request.count') > 0;
+    Meteor.subscribe('users.awaitingForStructure.count', { structureId: user.structure });
+    const nbUsersRequestCount = Counts.get('users.request.count') || 0;
+    // If awaiting for structure feature is disabled, it will just return 0, no need to do more check
+    const nbUsersAwaitingForStructureCount = Counts.get('users.awaitingForStructure.count') || 0;
+    return nbUsersRequestCount + nbUsersAwaitingForStructureCount > 0;
   });
 
   const handleClick = (event) => {

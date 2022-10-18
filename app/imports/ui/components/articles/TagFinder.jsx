@@ -14,7 +14,7 @@ const useStyles = makeStyles()(() => ({
   },
 }));
 
-function TagFinder({ tags, onSelected, exclude, opened, resetKey, inputWidth }) {
+function TagFinder({ tags, onSelected, exclude, opened, resetKey, inputWidth, keyPressEnter }) {
   const { classes } = useStyles();
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState(tags.filter((tag) => !exclude.includes(tag.name)));
@@ -93,6 +93,7 @@ function TagFinder({ tags, onSelected, exclude, opened, resetKey, inputWidth }) 
             label={i18n.__('components.TagFinder.tagLabel')}
             variant="outlined"
             placeholder={i18n.__('components.TagFinder.placeholder')}
+            onKeyDown={keyPressEnter}
             InputProps={{
               ...params.InputProps,
               classes: {
@@ -117,6 +118,7 @@ TagFinder.defaultProps = {
   exclude: null,
   opened: false,
   inputWidth: 285,
+  keyPressEnter: () => {},
 };
 
 TagFinder.propTypes = {
@@ -126,6 +128,7 @@ TagFinder.propTypes = {
   exclude: PropTypes.arrayOf(PropTypes.string),
   opened: PropTypes.bool,
   inputWidth: PropTypes.number,
+  keyPressEnter: PropTypes.func,
 };
 
 export default TagFinder;

@@ -1,5 +1,128 @@
 # Changelog
 
+## [5.0.1](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/5.0.0...release/5.0.1) (2022-10-18)
+
+
+### Bug Fixes
+
+* **services:** fix offline services display ([12afd2e](https://gitlab.mim-libre.fr/alphabet/laboite/commit/12afd2e0f54946ef9b15a4a2e11508bdb670844f))
+
+# [5.0.0](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/4.3.3...release/5.0.0) (2022-09-16)
+
+
+### Bug Fixes
+
+* **admin menu:** display all admin menus when scrolling ([e984230](https://gitlab.mim-libre.fr/alphabet/laboite/commit/e984230e244062866e131eb0af75133f6f1a079f))
+* **admin menu:** display return "pers.space" menu when scrolling menus ([5bbbbce](https://gitlab.mim-libre.fr/alphabet/laboite/commit/5bbbbced126929c9551438c1b2696f781e8947c0))
+* **admin:** fix remove user from structure ([fabebb4](https://gitlab.mim-libre.fr/alphabet/laboite/commit/fabebb48e1a84a37eb48a49b883fa1ba528806ec))
+* **admin:** fix user structure name ([791af60](https://gitlab.mim-libre.fr/alphabet/laboite/commit/791af60446f76785c301064286ea12c43f798811))
+* **all:** last fixes before review 1 ([e905b05](https://gitlab.mim-libre.fr/alphabet/laboite/commit/e905b05837bea065f8754f0e9f430bbbac810629))
+* **ci:** disable husky if ci running ([21a2a83](https://gitlab.mim-libre.fr/alphabet/laboite/commit/21a2a83c341d3834aedaa477326be49f5a749bf9))
+* **contact:** move connected contact page to mainlayout ([25a21ed](https://gitlab.mim-libre.fr/alphabet/laboite/commit/25a21eda4a1e30fb93721240c457274b1debeb40))
+* **event:** events participants update after user joins group ([9084ae9](https://gitlab.mim-libre.fr/alphabet/laboite/commit/9084ae98941e0498a9e3e72350ec814bf41846ab))
+* **event:** fix update events at group join ([f0255e2](https://gitlab.mim-libre.fr/alphabet/laboite/commit/f0255e2bf5542858cb5fe2f0d92f8344073a43dd))
+* **fakedata:** remove undefined structure reference from users ([90ab4ab](https://gitlab.mim-libre.fr/alphabet/laboite/commit/90ab4ab561ff7bcfb5b99420ffaae9836bba098d))
+* **Filter services:** display all services categories when scrolling ([d40bfd7](https://gitlab.mim-libre.fr/alphabet/laboite/commit/d40bfd74a0e6baecb7072900a3570592c64025f0))
+* **form hook:** fix event persistance on synthetic event ([3d54ee3](https://gitlab.mim-libre.fr/alphabet/laboite/commit/3d54ee306ed7e5cc5cde669088c9d7ee1b1b2969))
+* **front:** filter dangerouslySetInnerHTML ([a3dc730](https://gitlab.mim-libre.fr/alphabet/laboite/commit/a3dc7306430ae1381fedaf6aba10d9079d932087))
+* **front:** fix meteor-lint err ([57f0946](https://gitlab.mim-libre.fr/alphabet/laboite/commit/57f09462fa3dc0f0a9cf0db5e477ef24881c94de))
+* **front:** fix meteor-lint err ([4692a2b](https://gitlab.mim-libre.fr/alphabet/laboite/commit/4692a2be0bc41e1c934fcd071ec63f48aef51e8e))
+* **front:** fix meteor-lint err ([1765be0](https://gitlab.mim-libre.fr/alphabet/laboite/commit/1765be04bdc61d2de8bfa0ea391213e51f21c327))
+* **front:** fix meteor-lint err ([a490cf3](https://gitlab.mim-libre.fr/alphabet/laboite/commit/a490cf36a64cfd7e1bf8deac855d7e361a6ed3cb))
+* **front:** fix meteor-lint err ([9d938a5](https://gitlab.mim-libre.fr/alphabet/laboite/commit/9d938a5ae1b05c5aac667d6caa0a5e12d4df9f87))
+* **help:** display help page on large widget ([b0d317b](https://gitlab.mim-libre.fr/alphabet/laboite/commit/b0d317b68badd6fb241fd1a1e78eca128dc5285c))
+* **i18n:** fix translations ([6cfa8e5](https://gitlab.mim-libre.fr/alphabet/laboite/commit/6cfa8e57eeb65cbb629598d3746ebd13c7ab5f39))
+* **legal:** fix back button with all themes ([d97d7d4](https://gitlab.mim-libre.fr/alphabet/laboite/commit/d97d7d410c1df718f1bbe1ae7f0ac857dc7e7097))
+* **licence:** open creative commons website on new tab ([becde41](https://gitlab.mim-libre.fr/alphabet/laboite/commit/becde41c4cbe116fa39d274f4e94c01f5f21e46c))
+* **link:** change url in publication share icon ([eb392c2](https://gitlab.mim-libre.fr/alphabet/laboite/commit/eb392c28eeee9751816d27b8d7ec1bb7a01e5ba1))
+* **migration:** change import path and useStyles return ([39b1415](https://gitlab.mim-libre.fr/alphabet/laboite/commit/39b141587c56a0ece8ef5894953bb47f12a0f9d1))
+* **mui:** change labelWidth, CollapsingSearch and styles ([66bfbfa](https://gitlab.mim-libre.fr/alphabet/laboite/commit/66bfbfa01a52a5c5a4619c8cd37ed6a0bbd474b9))
+* **mui:** fix fade fragment ([386ac54](https://gitlab.mim-libre.fr/alphabet/laboite/commit/386ac54ec5aaebb0a1dd24d7768d69fd4702176b))
+* **mui:** improve tabs behavior ([c42c924](https://gitlab.mim-libre.fr/alphabet/laboite/commit/c42c924a1a98314dcc87277c0e5c9f976235bb49))
+* **mui:** mui alert & colors ([c7dcf60](https://gitlab.mim-libre.fr/alphabet/laboite/commit/c7dcf607721544a937305a1cade8b1ef00376a1c))
+* **notifications:** make the notifi bell visible again ([e270113](https://gitlab.mim-libre.fr/alphabet/laboite/commit/e270113083daa891d8ee56b119dab6735cbc3478))
+* **notifications:** update keyframes for mui 5 ([9919a36](https://gitlab.mim-libre.fr/alphabet/laboite/commit/9919a3658f356ff5cc6d6029b758bcc9b2a2eacc))
+* **packages:** update package-lock.json and npm libraries ([4fd5349](https://gitlab.mim-libre.fr/alphabet/laboite/commit/4fd5349dec41059bbdc91c7dad4217fba5158f04))
+* **personalpage:** disable loading video when personal page exists ([c2a1dec](https://gitlab.mim-libre.fr/alphabet/laboite/commit/c2a1decd552c633b8a73fe961b4c8591e81c8412))
+* **personalspace:** lazy loading of animation ([413165b](https://gitlab.mim-libre.fr/alphabet/laboite/commit/413165b5aac09ecc70a82d69093a58f3926b727c))
+* **profil:** fix label of username input ([2dd70c8](https://gitlab.mim-libre.fr/alphabet/laboite/commit/2dd70c875825c8fe3d5d9279e17dca78cf62bbeb))
+* **publication:** fix mobile views ([13197dc](https://gitlab.mim-libre.fr/alphabet/laboite/commit/13197dcceb5bf6ca3a3c9d820d26b3f8885a076f))
+* **service:** modify validata schema at service creation ([152ee22](https://gitlab.mim-libre.fr/alphabet/laboite/commit/152ee22add1edbde6b7974edcd64d93e4c2994a8))
+* **service:** remove console log ([da179cd](https://gitlab.mim-libre.fr/alphabet/laboite/commit/da179cdb20c0f82bd6e128d1285cc90ffbd555d7))
+* **spinner:** fix spinner, package-lock & themes ([a446213](https://gitlab.mim-libre.fr/alphabet/laboite/commit/a4462136e356d2af3520ea1c4c3319d9396eb729))
+* **structure:** resolve bug when create a structure after child tructure ([e6fc5fb](https://gitlab.mim-libre.fr/alphabet/laboite/commit/e6fc5fbb3a3698be3b73d765236b887269d2d7ba))
+* **structures gen:** fake data use generated _ids now ([48b7f8f](https://gitlab.mim-libre.fr/alphabet/laboite/commit/48b7f8fdef162109494dfb890bb0e6797c103b6a))
+* **theme:** change light import to dark import ([dab1264](https://gitlab.mim-libre.fr/alphabet/laboite/commit/dab1264beddf764404df9057f90cf16c9c968b1b))
+* **themes:** remove themes folder from jscpd ([4bdd249](https://gitlab.mim-libre.fr/alphabet/laboite/commit/4bdd249ac73f58f2555d544af0853020a3b13624))
+* **ui list:** list view should be default one ([d4e2baa](https://gitlab.mim-libre.fr/alphabet/laboite/commit/d4e2baa516999bf308100ea8d31df02db2e1cc10))
+* **ui:** add margin between card grid and toolbar ([49edba0](https://gitlab.mim-libre.fr/alphabet/laboite/commit/49edba0a60b0bbd5c1b1db14851e527b3b436694))
+* **ui:** button work on first page render ([1b87cd2](https://gitlab.mim-libre.fr/alphabet/laboite/commit/1b87cd2005460671b1f21df909867d735883f6bb))
+* **ui:** fix hover background size ([6d10d70](https://gitlab.mim-libre.fr/alphabet/laboite/commit/6d10d7028a44fef2cd005b539381d78440969828))
+* **ui:** fix mobile ui after libraries migration ([a0f1707](https://gitlab.mim-libre.fr/alphabet/laboite/commit/a0f1707cc649c73031fa17d0ec80d9d6981c3e92))
+* **ui:** fix spinner logo for eole theme and animation ([37a8f06](https://gitlab.mim-libre.fr/alphabet/laboite/commit/37a8f067b9a454bc6526e81a27d89fbc2c17e31a))
+* **ui:** fix spinner when deleting all publi ([e9b8e39](https://gitlab.mim-libre.fr/alphabet/laboite/commit/e9b8e399aa91f5050185640ca59c535354d4f404))
+* **ui:** refactor textfield like old verison 4.3.0 ([0e77a85](https://gitlab.mim-libre.fr/alphabet/laboite/commit/0e77a85140467b12822bfb8981f5e7e5502207d9))
+* **ui:** remove black square in notifications display ([986be24](https://gitlab.mim-libre.fr/alphabet/laboite/commit/986be24cae9677ef297107a849c4c731aa1da952))
+* **version:** merge master into dev ([7cb16ee](https://gitlab.mim-libre.fr/alphabet/laboite/commit/7cb16ee51928b26576b5aaabc7b83db27709a119))
+
+
+### Build System
+
+* **husky:** disable husky in pre push hook ([6ca4db9](https://gitlab.mim-libre.fr/alphabet/laboite/commit/6ca4db9970e833fcd0276d41bce292ce009961c3))
+* **husky:** update command that disable husky if ci running ([99efbfc](https://gitlab.mim-libre.fr/alphabet/laboite/commit/99efbfcf989928ad2d248a83fa608aa03098378a))
+
+
+### Code Refactoring
+
+* **admin:** merge admin users files in one ([ab71250](https://gitlab.mim-libre.fr/alphabet/laboite/commit/ab71250edc9f9d2f7f5591a10fd564d669d19ae9))
+* **legal:** remove border from back button ([5883e03](https://gitlab.mim-libre.fr/alphabet/laboite/commit/5883e03f4fa96fe1faaca2dfb0d624f987bf4f52))
+* **log:** remove console log ([1c16fa2](https://gitlab.mim-libre.fr/alphabet/laboite/commit/1c16fa2536e6c27a94b658639f338e328eea9a06))
+* **migration:** rebase after librairies migrations ([28a07c6](https://gitlab.mim-libre.fr/alphabet/laboite/commit/28a07c64215cf97529e69805669b4930f1dd1ada))
+* **mui:** add tss-react & update code ([559429d](https://gitlab.mim-libre.fr/alphabet/laboite/commit/559429d38cffbe3f3d15a78a1384105234b0fc9a))
+* **mui:** change themes format ([5f2e539](https://gitlab.mim-libre.fr/alphabet/laboite/commit/5f2e539f9993b37fcd8e71051ce29259e13d94c2))
+* **mui:** finalize migration ([1fb8f9c](https://gitlab.mim-libre.fr/alphabet/laboite/commit/1fb8f9c8ce771b475cf9cb4d0e09c947ea0ab0fb))
+* **mui:** fix components ([c604a6b](https://gitlab.mim-libre.fr/alphabet/laboite/commit/c604a6b5cc3e57a19c684beaabd498b4916abf09))
+* **mui:** install new mui packages ([7edb905](https://gitlab.mim-libre.fr/alphabet/laboite/commit/7edb9058eca51225844168f705d3d31ba4a9131a))
+* **mui:** preset-safe script modified imports ([a447386](https://gitlab.mim-libre.fr/alphabet/laboite/commit/a447386d9a01d4a9635e2b5110c28f559a70986f))
+* **packages:** migrate package-lock and add husky script ([7e0a3f2](https://gitlab.mim-libre.fr/alphabet/laboite/commit/7e0a3f275305499833c4cb2dbdf17d31f4e17c59))
+* **profile:** change i18n  pseudonyme to nom d utilisateur ([0c61aa4](https://gitlab.mim-libre.fr/alphabet/laboite/commit/0c61aa4f5ce0329d35c3ec108d8321407b386670))
+* **profile:** change style button back to profile ([3ab1e70](https://gitlab.mim-libre.fr/alphabet/laboite/commit/3ab1e70bc3acb28f9df2ed821ff08cabeebde8d4))
+* **react:** update react version to 17 ([ac008d1](https://gitlab.mim-libre.fr/alphabet/laboite/commit/ac008d15ecb686574dc0a594c1e910434184f637))
+* **smtp method:** sendContactEmail use validatedMethod now ([86c8eeb](https://gitlab.mim-libre.fr/alphabet/laboite/commit/86c8eeb07926cce11c6890b49704c5f49cb37ed5))
+* **sortable:** update react-sortablejs ([9d900bb](https://gitlab.mim-libre.fr/alphabet/laboite/commit/9d900bb3f497a5a5c45698035dd79197968020db))
+* **table:** update @material-table/core ([ec60897](https://gitlab.mim-libre.fr/alphabet/laboite/commit/ec60897ffadadbedb71d1ba445ba6b02209dd324))
+
+
+### Continuous Integration
+
+* **yml:** delete meteor npm ci in cache deps update ([c0e6e4f](https://gitlab.mim-libre.fr/alphabet/laboite/commit/c0e6e4ff33a139c6c9852b684f11289cdc3a050a))
+
+
+### Features
+
+* **article:** add licences for articles ([2dee375](https://gitlab.mim-libre.fr/alphabet/laboite/commit/2dee375ca8f4a6629e50398f959ddbdd8b6cbb64))
+* **contact:** structure can have a contact email ([c1f625c](https://gitlab.mim-libre.fr/alphabet/laboite/commit/c1f625c90496e197af2645c4572b6709f4094566))
+* **event:** add button to add new event ([65d0c5e](https://gitlab.mim-libre.fr/alphabet/laboite/commit/65d0c5eee4903c800db2004162dd5e54fee2d90a))
+* **footer:** add back button to footers pages ([9ab8967](https://gitlab.mim-libre.fr/alphabet/laboite/commit/9ab8967af6b54df1fddcbb19241fb1420d43a353))
+* **grid view:** make configurable default view mode ([5ee21d9](https://gitlab.mim-libre.fr/alphabet/laboite/commit/5ee21d92177b3b5920112b49119bf20159beee60))
+* **mail head:** use app name instead of raw 'LaBoite' ([0aca0f2](https://gitlab.mim-libre.fr/alphabet/laboite/commit/0aca0f22a6e74087e52e6970cec24c6b269318ce))
+* **node:** add node version to package.json ([49cdec2](https://gitlab.mim-libre.fr/alphabet/laboite/commit/49cdec26061fcb5590f67caee0f09b8e143bf1a4))
+* **notif:** display bell on mobile and tab ([af992e5](https://gitlab.mim-libre.fr/alphabet/laboite/commit/af992e54c5ff9f784e77859b050fb04a6c877f35))
+* **poll:** add create poll button ([dffd104](https://gitlab.mim-libre.fr/alphabet/laboite/commit/dffd1049bc597e0f618a494caaa1cb20aa6ef52d))
+* **services:** add maintenance option on Service Administration ([c774036](https://gitlab.mim-libre.fr/alphabet/laboite/commit/c7740368a614f8acbf526bbd30a787dda1bf164c))
+* **services:** disabled button for service on maintenance or inactive ([33c1226](https://gitlab.mim-libre.fr/alphabet/laboite/commit/33c1226b82501ecb5305cefdc3a08644b41dd61a))
+* **users:** remove user from structure ([dedca5c](https://gitlab.mim-libre.fr/alphabet/laboite/commit/dedca5ce3490b4c18d84e383368041d7cdc967c2))
+
+
+### Tests
+
+* **users:** remove from structure tests ([cf5b0e9](https://gitlab.mim-libre.fr/alphabet/laboite/commit/cf5b0e929a0919747929207875d6f51c89503d7f))
+
+
+### BREAKING CHANGES
+
+* **grid view:** `ui.defaultGridViewMode` setting is mandatory
+
 ## [4.3.3](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/4.3.2...release/4.3.3) (2022-09-12)
 
 

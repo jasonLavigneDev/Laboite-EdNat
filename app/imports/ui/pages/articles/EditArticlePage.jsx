@@ -563,6 +563,13 @@ function EditArticlePage({
   if (!ready || (slug && !article._id && !data._id) || loading) {
     return <Spinner />;
   }
+  // Add tag when user press enter key
+  const keyPress = (e) => {
+    if (e.keyCode === 13) {
+      addTag();
+    }
+  };
+
   return (
     <>
       <Container>
@@ -613,7 +620,7 @@ function EditArticlePage({
               id="licence-selector"
               name="licence"
               variant="outlined"
-              label="licence"
+              label={i18n.__('pages.EditArticlePage.license')}
               fullWidth
               value={data.licence}
               onChange={handleLicence}
@@ -691,6 +698,7 @@ function EditArticlePage({
               exclude={data.tags}
               onSelected={newTagChanged}
               inputWidth={isMobile ? 310 : 1138}
+              keyPressEnter={newTag.name !== '' ? keyPress : null}
             />
             <Button variant="contained" disabled={newTag.name === ''} color="primary" onClick={addTag}>
               {i18n.__(

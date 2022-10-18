@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Roles } from 'meteor/alanning:roles';
 import PropTypes from 'prop-types';
@@ -18,6 +18,10 @@ import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
 import LanguageIcon from '@mui/icons-material/Language';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import SendIcon from '@mui/icons-material/Send';
@@ -42,6 +46,14 @@ const useStyles = makeStyles()((theme) => ({
   inline: {
     display: 'inline',
   },
+  upbuttons: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  typeselect: {
+    minWidth: '180px',
+  },
   pagination: {
     display: 'flex',
     justifyContent: 'flex-end',
@@ -59,10 +71,11 @@ const AddressBook = ({ loading, group, slug }) => {
   const history = useHistory();
   const [{ userId, addressBookPage }, dispatch] = useAppContext();
   const { search = '', searchToggle = false } = addressBookPage;
-
+  const [userType, setUserType] = useState('all');
+  const userTypes = ['all', 'animators', 'admins'];
   const { changePage, page, items, total } = usePagination(
     'users.group',
-    { search, slug },
+    { search, slug, userType },
     Meteor.users,
     {},
     { sort: { lastName: 1 } },
@@ -99,6 +112,10 @@ const AddressBook = ({ loading, group, slug }) => {
   const updateSearch = (e) => updateGlobalState('search', e.target.value);
   const resetSearch = () => updateGlobalState('search', '');
 
+  const handleUserType = (evt) => {
+    setUserType(evt.target.value);
+  };
+
   const { disabledFeatures = {} } = Meteor.settings.public;
   const enableBlog = !disabledFeatures.blog;
   const authorBlogPage = Meteor.settings.public.laboiteBlogURL
@@ -110,9 +127,30 @@ const AddressBook = ({ loading, group, slug }) => {
       <Container className={classes.root}>
         <Grid container spacing={4}>
           <Grid item xs={12} sm={12} md={12}>
-            <Button color="primary" startIcon={<ArrowBack />} onClick={history.goBack}>
-              {i18n.__('pages.AddressBook.back')}
-            </Button>
+            <div className={classes.upbuttons}>
+              <Button color="primary" startIcon={<ArrowBack />} onClick={history.goBack}>
+                {i18n.__('pages.AddressBook.back')}
+              </Button>
+              <FormControl>
+                <InputLabel id="usertype-selector-label">{i18n.__('pages.AddressBook.userType')}</InputLabel>
+                <Select
+                  className={classes.typeselect}
+                  labelId="usertype-selector-label"
+                  id="usertype-selector"
+                  name="usertype"
+                  variant="outlined"
+                  label={i18n.__('pages.AddressBook.userType')}
+                  value={userType}
+                  onChange={handleUserType}
+                >
+                  {userTypes.map((usertype) => (
+                    <MenuItem value={usertype} key={`select_${usertype}`}>
+                      {i18n.__(`api.groups.labels.${usertype}`)}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </div>
           </Grid>
           {loading ? (
             <Spinner />

@@ -57,6 +57,7 @@ describe('appsettings', function () {
           link: 'pdata_link',
           content: 'pdata_content',
         },
+        userStructureValidationMandatory: false,
       };
       AppSettings.insert(appsettinit);
     });
@@ -71,6 +72,7 @@ describe('appsettings', function () {
           assert.property(appall, 'legal');
           assert.property(appall, 'accessibility');
           assert.property(appall, 'personalData');
+          assert.property(appall, 'userStructureValidationMandatory');
           done();
         });
       });
@@ -181,6 +183,7 @@ describe('appsettings', function () {
           link: 'pdata_link',
           content: 'pdata_content',
         },
+        userStructureValidationMandatory: false,
       };
       AppSettings.insert(appsettinit);
 

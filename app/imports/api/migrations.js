@@ -515,3 +515,18 @@ Migrations.add({
     Articles.rawCollection().updateMany({}, { $unset: { licence: 1 } }, { multi: true });
   },
 });
+
+Migrations.add({
+  version: 27,
+  name: 'Add awaitingStructure to users',
+  up: () => {
+    // Add awaitingStructure prop to manage structure application validation
+    Meteor.users.rawCollection().updateMany({}, { $set: { awaitingStructure: null } });
+    // set initial value in appsettings (userStructureValidationMandatory)
+    AppSettings.update({}, { $set: { userStructureValidationMandatory: false } });
+  },
+  down: () => {
+    Meteor.users.rawCollection().updateMany({}, { $unset: { awaitingStructure: 1 } });
+    AppSettings.rawCollection().updateMany({}, { $unset: { userStructureValidationMandatory: 1 } });
+  },
+});

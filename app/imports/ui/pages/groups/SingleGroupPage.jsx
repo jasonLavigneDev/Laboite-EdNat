@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Meteor } from 'meteor/meteor';
 import PropTypes from 'prop-types';
@@ -40,6 +40,7 @@ import GroupAvatar from '../../components/groups/GroupAvatar';
 import Polls from '../../../api/polls/polls';
 import EventsAgenda from '../../../api/eventsAgenda/eventsAgenda';
 import Bookmarks from '../../../api/bookmarks/bookmarks';
+import { countMembersOfGroup } from '../../../api/groups/methods';
 import COMMON_STYLES from '../../themes/styles';
 
 const useStyles = makeStyles()((theme, { member, candidate, type }) => ({
@@ -162,6 +163,7 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
   const { type } = group;
   const [{ userId, user }] = useAppContext();
   const [loading, setLoading] = useState(false);
+  const [countUser, setCountUser] = useState(0);
   const [openedContent, toggleOpenedContent] = useState(false);
   const animator = Roles.userIsInRole(userId, 'animator', group._id);
   const member = Roles.userIsInRole(userId, 'member', group._id);
@@ -330,6 +332,17 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
     return null;
   };
 
+  useEffect(() => {
+    const { slug } = group;
+    countMembersOfGroup.call({ slug }, (err, res) => {
+      if (err) {
+        setCountUser(0);
+      } else {
+        setCountUser(res);
+      }
+    });
+  }, [group]);
+
   return (
     <Fade in>
       <Container className={classes.root}>
@@ -472,7 +485,7 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
                     _id: 'addressbook',
                     usage: i18n.__('pages.SingleGroupPage.addressBookUsage'),
                     logo: <PeopleIcon className={classes.icon} color="primary" fontSize="large" />,
-                    title: i18n.__('pages.SingleGroupPage.addressBook'),
+                    title: `${i18n.__('pages.SingleGroupPage.addressBook')} (${countUser})`,
                     url: `/groups/${group.slug}/addressbook`,
                   }}
                   isShort
@@ -565,6 +578,7 @@ export default withTracker(
     const services =
       Services.findFromPublication('services.group', { state: { $ne: 10 } }, { sort: { name: 1 } }).fetch() || [];
     const ready = subGroup.ready() && subServices.ready();
+
     return {
       group,
       ready,

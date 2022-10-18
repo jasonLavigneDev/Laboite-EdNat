@@ -5,8 +5,10 @@ import Toolbar from '@mui/material/Toolbar';
 import { Link } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import i18n from 'meteor/universe:i18n';
+import { useTracker } from 'meteor/react-meteor-data';
 import { useAppContext } from '../../contexts/context';
 import { getAppSettingsLinks } from '../../../api/appsettings/methods';
+import AppSettings from '../../../api/appsettings/appsettings';
 
 const useStyles = makeStyles()((theme) => ({
   root: {
@@ -53,6 +55,13 @@ const Footer = () => {
   const externalBlog = Meteor.settings.public.laboiteBlogURL;
   const { disabledFeatures = {} } = Meteor.settings.public;
   const enableBlog = !disabledFeatures.blog;
+  const { maintenance = {}, ready = false } = useTracker(() => {
+    const subSettings = Meteor.subscribe('appsettings.all');
+    return {
+      maintenance: AppSettings.findOne({}, { fields: { maintenance: 1 } }),
+      ready: subSettings.ready(),
+    };
+  });
 
   const toolbarContent = () => {
     return (
@@ -129,7 +138,7 @@ const Footer = () => {
     };
   }, []);
 
-  return (
+  return maintenance.maintenance || !ready ? null : (
     <AppBar position="relative">
       {isMobile ? (
         <Toolbar className={classes.root}>

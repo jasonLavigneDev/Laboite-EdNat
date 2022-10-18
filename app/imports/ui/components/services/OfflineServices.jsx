@@ -15,8 +15,8 @@ const useStyles = makeStyles()((theme, isMobile) => ({
     width: isMobile ? '100%' : null,
     margin: isMobile ? 'auto' : null,
     background: theme.palette.primary.light,
-    marginTop: '50px',
-    paddingTop: '15px',
+    marginTop: '6vh',
+    padding: '1vh 0',
     position: 'relative',
     '& > .MuiChip-root': {
       position: 'absolute',
@@ -62,6 +62,7 @@ function OfflineServices() {
           !!category &&
           !!services.length && (
             <Grid
+              item
               justifyContent="center"
               alignItems="stretch"
               className={classes.categoryItem}
@@ -76,7 +77,7 @@ function OfflineServices() {
                 <Grid
                   className={classes.serviceItem}
                   item
-                  xs={isMobile && !isIframed ? 4 : 12}
+                  xs={isMobile && !isIframed ? 11 : 12}
                   md={isMobile && !isIframed ? 2 : isIframed ? 4 : 6}
                   lg={isIframed ? 3 : 4}
                   key={service._id}
