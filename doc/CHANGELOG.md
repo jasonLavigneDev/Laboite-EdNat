@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.0.1](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/5.0.0...release/5.0.1) (2022-10-18)
+
+
+### Bug Fixes
+
+* **services:** fix offline services display ([12afd2e](https://gitlab.mim-libre.fr/alphabet/laboite/commit/12afd2e0f54946ef9b15a4a2e11508bdb670844f))
+
 # [5.0.0](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/4.3.3...release/5.0.0) (2022-09-16)
 
 
