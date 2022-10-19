@@ -97,6 +97,7 @@
     "whiteDomains": [
       "^ac-[a-z-]*\\.fr",
       "^[a-z-]*\\.gouv.fr"
-    ]
+    ],
+    "checkKeyCloakWhiteListDomain": false
   }
 }

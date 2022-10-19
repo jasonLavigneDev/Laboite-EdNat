@@ -1,6 +1,7 @@
 import React, { useEffect, lazy, Suspense } from 'react';
 import { useLocation, Route, Switch } from 'react-router-dom';
 import { useTracker } from 'meteor/react-meteor-data';
+import { Counts } from 'meteor/tmeasday:publish-counts';
 import i18n from 'meteor/universe:i18n';
 import { Roles } from 'meteor/alanning:roles';
 import Alert from '@mui/material/Alert';
@@ -51,11 +52,18 @@ function AdminLayout() {
   const location = useLocation();
 
   const isAdmin = Roles.userIsInRole(userId, 'admin');
-  const { appsettings = {}, ready = false } = useTracker(() => {
+  const {
+    appsettings = {},
+    ready = false,
+    notHideStructureusersvalidation = false,
+  } = useTracker(() => {
     const subSettings = Meteor.subscribe('appsettings.all');
+    const awaitingForStruct = Meteor.subscribe('users.awaitingForStructure.count', { structureId: user.structure });
+
     return {
       appsettings: AppSettings.findOne(),
-      ready: subSettings.ready(),
+      ready: subSettings.ready() && awaitingForStruct.ready(),
+      notHideStructureusersvalidation: Counts.get('users.awaitingForStructure.count') >= 0,
     };
   });
 
@@ -218,15 +226,16 @@ function AdminLayout() {
                       user={user}
                       loadingUser={loadingUser}
                     />
-                    {appsettings.userStructureValidationMandatory && (
-                      <StructureAdminRoute
-                        exact
-                        path="/admin/structureusersvalidation"
-                        component={AdminStructureUsersValidationPage}
-                        user={user}
-                        loadingUser={loadingUser}
-                      />
-                    )}
+                    {appsettings.userStructureValidationMandatory ||
+                      (notHideStructureusersvalidation && (
+                        <StructureAdminRoute
+                          exact
+                          path="/admin/structureusersvalidation"
+                          component={AdminStructureUsersValidationPage}
+                          user={user}
+                          loadingUser={loadingUser}
+                        />
+                      ))}
                     <StructureAdminRoute
                       exact
                       path="/admin/substructures"

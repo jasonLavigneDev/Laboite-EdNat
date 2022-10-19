@@ -36,6 +36,7 @@ import { getStructure, useStructure, useAwaitingStructure } from '../../../api/s
 import AppSettings from '../../../api/appsettings/appsettings';
 import { testMeteorSettingsUrl } from '../../utils/utilsFuncs';
 import StructureSelectAutoComplete from '../../components/structures/StructureSelectAutoComplete';
+import AsamExtensions from '../../../api/asamextensions/asamextensions';
 
 const useStyles = makeStyles()((theme) => ({
   root: {
@@ -118,19 +119,37 @@ const ProfilePage = () => {
   const { classes } = useStyles();
   const { disabledFeatures = {}, enableKeycloak } = Meteor.settings.public;
   const enableBlog = !disabledFeatures.blog;
-
-  const { isUserStructureValidationMandatory, ready: readySettingUserStructureValidationMandatory } = useTracker(() => {
-    const handle = Meteor.subscribe('appsettings.userStructureValidationMandatory');
-    const appSettings = AppSettings.findOne({ _id: 'settings' }, { fields: { userStructureValidationMandatory: 1 } });
-    return { isUserStructureValidationMandatory: appSettings.userStructureValidationMandatory, ready: handle.ready() };
-  });
-
   const { awaitingStructure, ready: isAwaitingStructureReady } = useAwaitingStructure();
   const [{ user, loadingUser, isMobile }, dispatch] = useAppContext();
-
   const userStructure = useStructure();
-
   const [selectedStructure, setSelectedStructure] = useState(userStructure || null);
+
+  const {
+    isUserStructureValidationMandatory,
+    isNewStructCorrespondingToDomainStructure,
+    ready: readySettingUserStructureValidationMandatory,
+  } = useTracker(() => {
+    const handle = Meteor.subscribe('appsettings.userStructureValidationMandatory');
+    const appSettings = AppSettings.findOne({ _id: 'settings' }, { fields: { userStructureValidationMandatory: 1 } });
+
+    const handleAsamExt = Meteor.subscribe('asamextensions.all', { getOnlyNotAffected: false });
+    const asAmExtension = AsamExtensions.findOne({ extension: user.emails[0]?.address.split('@')[1] });
+    const isNewStructCorrespondingToDomainStruct =
+      typeof asAmExtension !== 'undefined' &&
+      asAmExtension.structureId ===
+        [
+          user?.awaitingStructure !== null && user?.awaitingStructure !== undefined
+            ? user?.awaitingStructure
+            : selectedStructure?._id,
+        ];
+
+    return {
+      isUserStructureValidationMandatory: appSettings.userStructureValidationMandatory,
+      isNewStructCorrespondingToDomainStructure: !isNewStructCorrespondingToDomainStruct,
+      ready: handle.ready() && handleAsamExt.ready(),
+    };
+  });
+
   useEffect(() => {
     (async () => {
       if (user.structure && user.structure.length > 0) {
@@ -144,13 +163,11 @@ const ProfilePage = () => {
   const { flatData, isSearchLoading } = useTracker(() => {
     const subName = 'structures.top.with.direct.parent';
     const ret = { flatData: [], isSearchLoading: false };
-    if (searchText.length > 2) {
-      const handle = Meteor.subscribe(subName, { searchText });
-      const isLoading = !handle.ready();
-      const structures = Structures.findFromPublication(subName).fetch();
-      ret.flatData = structures;
-      ret.isSearchLoading = isLoading;
-    }
+    const handle = Meteor.subscribe(subName, { searchText });
+    const isLoading = !handle.ready();
+    const structures = Structures.findFromPublication(subName).fetch();
+    ret.flatData = structures;
+    ret.isSearchLoading = isLoading;
     return ret;
   }, [searchText && searchText.length > 2]);
 
@@ -601,7 +618,7 @@ const ProfilePage = () => {
                     )}
                   </Typography>
                   {readySettingUserStructureValidationMandatory &&
-                    isUserStructureValidationMandatory &&
+                    (isUserStructureValidationMandatory || isNewStructCorrespondingToDomainStructure) &&
                     isAwaitingStructureReady &&
                     awaitingStructure !== undefined && (
                       <Typography>

@@ -40,15 +40,12 @@ export const hasRightToAcceptAwaitingStructure = ({ userId, awaitingStructureId 
   return isAdminStructure || isAppAdmin;
 };
 
-export const hasRightToSetStructureDirectly = ({ userId }) => {
+export const hasRightToSetStructureDirectly = (userId, isNewStructCorrespondingToDomainStructure) => {
   const appSettings = AppSettings.findOne({ _id: 'settings' });
   const { userStructureValidationMandatory: isUserStructureValidationMandatory } = appSettings;
 
-  if (!isUserStructureValidationMandatory) {
-    return true;
-  }
-
-  const isAppAdmin = Roles.userIsInRole(userId, 'admin');
-
-  return isAppAdmin;
+  return (
+    (!isUserStructureValidationMandatory && isNewStructCorrespondingToDomainStructure) ||
+    Roles.userIsInRole(userId, 'admin')
+  );
 };

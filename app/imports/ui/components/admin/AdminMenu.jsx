@@ -63,9 +63,10 @@ export default function AdminMenu() {
     return Counts.get('users.request.count');
   });
 
-  const usersAwaitingStructureCount = useTracker(() => {
+  const { usersAwaitingStructureCount, hideStructureusersvalidation } = useTracker(() => {
     Meteor.subscribe('users.awaitingForStructure.count', { structureId: user.structure });
-    return Counts.get('users.awaitingForStructure.count');
+    const res = Counts.get('users.awaitingForStructure.count');
+    return { usersAwaitingStructureCount: res, hideStructureusersvalidation: res <= 0 };
   });
 
   const isAdmin = Roles.userIsInRole(user._id, 'admin');
@@ -186,7 +187,7 @@ export default function AdminMenu() {
       path: '/admin/structureusersvalidation',
       content: 'menuAdminOfStructureUsersValidation',
       icon: <GroupAddIcon />,
-      hidden: !isUserStructureValidationMandatory || !isAdminStructure,
+      hidden: (!isUserStructureValidationMandatory && hideStructureusersvalidation) || !isAdminStructure,
       chip: usersAwaitingStructureCount,
     },
     {

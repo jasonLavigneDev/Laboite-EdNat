@@ -25,6 +25,7 @@ import {
   hasRightToAcceptAwaitingStructure,
   hasRightToSetStructureDirectly,
 } from '../../structures/utils';
+import AsamExtensions from '../../asamextensions/asamextensions';
 
 if (Meteor.settings.public.enableKeycloak === true) {
   const { whiteDomains } = Meteor.settings.private;
