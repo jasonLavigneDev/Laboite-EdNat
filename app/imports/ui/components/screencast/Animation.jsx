@@ -27,11 +27,7 @@ const Animation = ({ videoLink, notReady }) => {
     <Grid className={classes.grid}>
       {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
       <video controls className={classes.iframe}>
-        <source
-          // eslint-disable-next-line max-len
-          src={videoLink}
-          type="video/webm"
-        />
+        <source src={videoLink} type="video/webm" />
       </video>
     </Grid>
   );

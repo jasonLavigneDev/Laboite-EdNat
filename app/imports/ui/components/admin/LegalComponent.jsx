@@ -53,15 +53,10 @@ const LegalComponent = ({ tabkey, ...props }) => {
   const [loading, setLoading] = useState(true);
   const [changes, setChanges] = useState(false);
 
-  useEffect(
-    () => {
-      setState({ ...configData });
-      setLoading(false);
-    },
-    [
-      // configData
-    ],
-  );
+  useEffect(() => {
+    setState({ ...configData });
+    setLoading(false);
+  }, []);
 
   useEffect(() => {
     if (JSON.stringify(state) !== JSON.stringify(configData)) {
