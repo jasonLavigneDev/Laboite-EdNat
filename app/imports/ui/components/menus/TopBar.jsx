@@ -133,8 +133,8 @@ function TopBar({ publicMenu, root, appsettings, adminApp }) {
               <div />
             )}
             {isMobile && (
-              <Link to="/introduction">
-                <IconButton color={location.pathname === '/introduction' ? 'primary' : 'default'}>
+              <Link to="/informations">
+                <IconButton color={location.pathname === '/informations' ? 'primary' : 'default'}>
                   <InfoIcon />
                 </IconButton>
               </Link>
