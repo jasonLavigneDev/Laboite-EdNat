@@ -23,6 +23,7 @@ import Spinner from '../../components/system/Spinner';
 import AppSettings from '../../../api/appsettings/appsettings';
 import LegalComponent from '../../components/admin/LegalComponent';
 import IntroductionEdition from '../../components/admin/IntroductionEdition';
+import GlobalInfoEdition from '../../components/admin/GlobalInfoEdition';
 import TabbedForms from '../../components/system/TabbedForms';
 
 import { useAppContext } from '../../contexts/context';
@@ -64,6 +65,12 @@ const AdminSettingsPage = ({ ready, appsettings }) => {
       title: i18n.__('pages.AdminSettingsPage.introduction'),
       Element: IntroductionEdition,
       ElementProps: { data: appsettings.introduction || [] },
+    },
+    {
+      key: 'globalInfo',
+      title: i18n.__('pages.AdminSettingsPage.globalInfo'),
+      Element: GlobalInfoEdition,
+      ElementProps: { data: appsettings.globalInfo || [] },
     },
     {
       key: 'legal',

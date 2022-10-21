@@ -27,6 +27,8 @@
         "content": "Contenu",
         "introduction": "Introduction",
         "content_introduction": "Texte d'introduction",
+        "globalInfo": "General informations",
+        "content_globalInfo": "General informations text",
         "legal": "Mentions légales",
         "external_legal": "Utiliser un lien externe pour la page Mentions légales",
         "link_legal": "Lien vers la page Mentions légales",
@@ -427,6 +429,15 @@
       "update": "Mettre à jour",
       "cancel": "Annuler"
     },
+    "GlobalInfoEdition": {
+      "title": "Informations générales",
+      "language": "Sélectionnez la langue à éditer",
+      "language_fr": "Français",
+      "language_en": "Anglais",
+      "content": "Texte d'information",
+      "update": "Mettre à jour",
+      "cancel": "Annuler"
+    },
     "Notifications": {
       "remove": "Supprimer"
     },
@@ -457,6 +468,7 @@
     "LegalComponent": {
       "title_introduction": "Introduction",
       "content_introduction": "Texte d'introduction",
+      "content_globalInfo": "Texte d'informations générales",
       "title_legal": "Mentions légales",
       "external_legal": "Utiliser un lien externe pour la page Mentions légales",
       "link_legal": "Lien vers la page Mentions légales",
@@ -928,6 +940,7 @@
       "introduction": "Introduction",
       "legal": "Mentions légales",
       "gcu": "C.G.U",
+      "globalInfo": "Informations générales",
       "accessibility": "Accessibilité",
       "personalData": "Données Personnelles",
       "maintenance": "Options de maintenance",

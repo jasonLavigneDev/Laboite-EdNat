@@ -27,6 +27,8 @@
         "content": "Content",
         "introduction": "Introduction",
         "content_introduction": "Introduction text",
+        "globalInfo": "General informations",
+        "content_globalInfo": "General informations text",
         "legal": "Legal notice",
         "external_legal": "Use an external link for legal notice page",
         "link_legal": "Legal notice text page link",
@@ -424,6 +426,15 @@
       "language_fr": "French",
       "language_en": "English",
       "content": "Introduction text",
+      "update": "Update",
+      "cancel": "Cancel"
+    },
+    "GlobalInfoEdition": {
+      "title": "General Informations",
+      "language": "Select the language to edit",
+      "language_fr": "French",
+      "language_en": "English",
+      "content": "Information text",
       "update": "Update",
       "cancel": "Cancel"
     },
@@ -925,6 +936,7 @@
       "introduction": "Introduction",
       "legal": "Legal notice",
       "gcu": "G.C.U",
+      "globalInfo": "General informations",
       "accessibility": "Accessibility",
       "personalData": "Personal Data",
       "maintenance": "Maintenance options",

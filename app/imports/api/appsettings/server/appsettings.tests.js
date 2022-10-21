@@ -17,6 +17,7 @@ import {
   getAppSettingsLinks,
   switchMaintenanceStatus,
   updateTextMaintenance,
+  updateGlobalInfoLanguage,
 } from '../methods';
 import './publications';
 import './factories';
@@ -34,6 +35,10 @@ describe('appsettings', function () {
       const appsettinit = {
         _id: 'settings',
         introduction: [
+          { language: 'en', content: 'Hello' },
+          { language: 'fr', content: 'Salut' },
+        ],
+        globalInfo: [
           { language: 'en', content: 'Hello' },
           { language: 'fr', content: 'Salut' },
         ],
@@ -68,6 +73,7 @@ describe('appsettings', function () {
           assert.equal(collections.appsettings.length, 1);
           const appall = collections.appsettings[0];
           assert.property(appall, 'introduction');
+          assert.property(appall, 'globalInfo');
           assert.property(appall, 'gcu');
           assert.property(appall, 'legal');
           assert.property(appall, 'accessibility');
@@ -85,6 +91,18 @@ describe('appsettings', function () {
           assert.property(appintro, 'introduction');
           assert.typeOf(appintro.introduction, 'array');
           assert.lengthOf(appintro.introduction, 2);
+          done();
+        });
+      });
+    });
+    describe('appsettings.globalInfo', function () {
+      it('sends the appsetting globalInfo', function (done) {
+        const collector = new PublicationCollector({});
+        collector.collect('appsettings.globalInfo', {}, (collections) => {
+          const appinfo = collections.appsettings[0];
+          assert.property(appinfo, 'globalInfo');
+          assert.typeOf(appinfo.globalInfo, 'array');
+          assert.lengthOf(appinfo.globalInfo, 2);
           done();
         });
       });
@@ -160,6 +178,10 @@ describe('appsettings', function () {
       const appsettinit = {
         _id: 'settings',
         introduction: [
+          { language: 'en', content: 'Hello' },
+          { language: 'fr', content: 'Salut' },
+        ],
+        globalInfo: [
           { language: 'en', content: 'Hello' },
           { language: 'fr', content: 'Salut' },
         ],
@@ -244,6 +266,25 @@ describe('appsettings', function () {
         const appsett = AppSettings.findOne({
           _id: 'settings',
           introduction: { $elemMatch: { language: 'fr', content: 'coucou' } },
+        });
+        assert.typeOf(appsett, 'object');
+      });
+    });
+    describe('updateGlobalInfoLanguage', function () {
+      it('normal users can not update global info language in app settings', function () {
+        assert.throws(
+          () => {
+            updateGlobalInfoLanguage._execute({ userId }, { language: 'fr', content: 'coucou' });
+          },
+          Meteor.Error,
+          /api.appsettings.updateIntroductionLanguage.notPermitted/,
+        );
+      });
+      it('admin can update app settings', function () {
+        updateGlobalInfoLanguage._execute({ userId: adminId }, { language: 'fr', content: 'coucou' });
+        const appsett = AppSettings.findOne({
+          _id: 'settings',
+          globalInfo: { $elemMatch: { language: 'fr', content: 'coucou' } },
         });
         assert.typeOf(appsett, 'object');
       });

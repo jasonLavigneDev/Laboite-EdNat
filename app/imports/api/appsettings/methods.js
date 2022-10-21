@@ -180,6 +180,47 @@ export const updateIntroductionLanguage = new ValidatedMethod({
   },
 });
 
+export const updateGlobalInfoLanguage = new ValidatedMethod({
+  name: 'appSettings.updateGlobalInfoLanguage',
+  validate: new SimpleSchema({
+    language: {
+      type: String,
+      label: getLabel('api.appsettings.labels.external'),
+      optional: true,
+    },
+    content: {
+      type: String,
+      label: getLabel('api.appsettings.labels.content'),
+      optional: true,
+    },
+  }).validator({ clean: true }),
+
+  run({ language, content }) {
+    try {
+      // check if current user is admin
+      const authorized = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
+      if (!authorized) {
+        throw new Meteor.Error(
+          'api.appsettings.updateIntroductionLanguage.notPermitted',
+          i18n.__('api.users.adminNeeded'),
+        );
+      }
+      const appsettings = AppSettings.findOne({});
+      const { globalInfo } = appsettings;
+      const langIndex = globalInfo.findIndex((entry) => entry.language === language);
+      const newIntro = [...globalInfo];
+      if (langIndex > -1) {
+        newIntro[langIndex].content = content;
+      } else {
+        newIntro.push({ language, content });
+      }
+      return AppSettings.update({ _id: 'settings' }, { $set: { globalInfo: newIntro } });
+    } catch (error) {
+      throw new Meteor.Error(error, error);
+    }
+  },
+});
+
 export const getAppSettingsLinks = new ValidatedMethod({
   name: 'appSettings.getAppSettingsLinks',
   validate: null,
@@ -197,6 +238,7 @@ const LISTS_METHODS = _.pluck(
   [
     updateAppsettings,
     updateIntroductionLanguage,
+    updateGlobalInfoLanguage,
     updateTextMaintenance,
     switchMaintenanceStatus,
     getAppSettingsLinks,

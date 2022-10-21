@@ -50,6 +50,19 @@ const IntroductionI18n = new SimpleSchema({
   },
 });
 
+const GlobalInfoI18n = new SimpleSchema({
+  language: {
+    type: String,
+    label: getLabel('api.appsettings.labels.language'),
+    optional: true,
+  },
+  content: {
+    type: String,
+    label: getLabel('api.appsettings.labels.content_globalInfo'),
+    optional: true,
+  },
+});
+
 AppSettings.schema = new SimpleSchema(
   {
     introduction: {
@@ -58,6 +71,13 @@ AppSettings.schema = new SimpleSchema(
     },
     'introduction.$': {
       type: IntroductionI18n,
+    },
+    globalInfo: {
+      type: Array,
+      label: getLabel('api.appsettings.labels.globalInfo'),
+    },
+    'globalInfo.$': {
+      type: GlobalInfoI18n,
     },
     legal: {
       type: SettingsType('legal'),
@@ -96,6 +116,7 @@ AppSettings.schema = new SimpleSchema(
 AppSettings.publicFields = {
   introduction: 1,
   legal: 1,
+  globalInfo: 1,
   accessibility: 1,
   gcu: 1,
   personalData: 1,
@@ -107,6 +128,10 @@ AppSettings.publicFields = {
 AppSettings.introduction = {
   'introduction.content': 1,
   'introduction.language': 1,
+};
+AppSettings.globalInfo = {
+  'globalInfo.content': 1,
+  'globalInfo.language': 1,
 };
 AppSettings.links = {
   'legal.link': 1,
