@@ -22,7 +22,7 @@ export const useCurrentGlobalInfo = () =>
 
     const appsettings = AppSettings.findOne() || {};
     const { globalInfo = [] } = appsettings;
-    const data = getCurrentText({ globalInfo });
+    const data = getCurrentText({ data: globalInfo });
 
     return { data, loading };
   });

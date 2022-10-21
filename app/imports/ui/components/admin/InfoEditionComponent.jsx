@@ -64,7 +64,6 @@ const InfoEditionComponent = ({ tabkey, data = [] }) => {
 
   useEffect(() => {
     if (data) {
-      console.log(language);
       const currentData = getCurrentText({ data, language });
       setContent(currentData.content || '');
       setLoading(false);
