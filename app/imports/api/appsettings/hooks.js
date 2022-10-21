@@ -1,7 +1,7 @@
 import { useTracker } from 'meteor/react-meteor-data';
 import { Meteor } from 'meteor/meteor';
 import AppSettings from './appsettings';
-import { getCurrentGlobalInfo, getCurrentIntroduction } from '../utils';
+import { getCurrentIntroduction, getCurrentText } from '../utils';
 
 export const useCurrentIntroduction = () =>
   useTracker(() => {
@@ -22,7 +22,7 @@ export const useCurrentGlobalInfo = () =>
 
     const appsettings = AppSettings.findOne() || {};
     const { globalInfo = [] } = appsettings;
-    const data = getCurrentGlobalInfo({ globalInfo });
+    const data = getCurrentText({ globalInfo });
 
     return { data, loading };
   });

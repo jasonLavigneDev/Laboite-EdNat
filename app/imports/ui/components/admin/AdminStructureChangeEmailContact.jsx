@@ -6,7 +6,7 @@ import InputLabel from '@mui/material/InputLabel';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 
-import { useStyles } from './IntroductionEdition';
+import { useStyles } from './InfoEditionComponent';
 
 const AdminStructureChangeEmailContact = ({ structure }) => {
   const { classes } = useStyles();
@@ -44,7 +44,7 @@ const AdminStructureChangeEmailContact = ({ structure }) => {
       <div>
         <div className={classes.buttonGroup}>
           <Button variant="contained" color="primary" type="submit">
-            {i18n.__('components.IntroductionEdition.update')}
+            {i18n.__('components.InfoEditionComponent.update')}
           </Button>
         </div>
       </div>

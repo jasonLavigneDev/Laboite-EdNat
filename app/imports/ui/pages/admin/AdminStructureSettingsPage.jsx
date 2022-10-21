@@ -9,7 +9,7 @@ import { useStructure, useAdminSelectedStructure } from '../../../api/structures
 import StructureSelect from '../../components/structures/StructureSelect';
 import AdminStructuresIntroductionEdition from '../../components/admin/AdminStructureIntroductionEdition';
 import TabbedForms from '../../components/system/TabbedForms';
-import { useStyles } from '../../components/admin/IntroductionEdition';
+import { useStyles } from '../../components/admin/InfoEditionComponent';
 import { useAppContext } from '../../contexts/context';
 import AdminStructureChangeEmailContact from '../../components/admin/AdminStructureChangeEmailContact';
 

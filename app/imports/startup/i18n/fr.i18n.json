@@ -420,23 +420,16 @@
       "ValidateFormCreate": "Créer",
       "cancel": "Annuler"
     },
-    "IntroductionEdition": {
-      "title": "Introduction",
+    "InfoEditionComponent": {
+      "title_introduction": "Introduction",
+      "title_globalInfo": "Informations générales",
       "language": "Selectionnez la langue à éditer",
       "language_fr": "Français",
       "language_en": "Anglais",
-      "content": "Texte d'introduction",
+      "content_introduction": "Texte d'introduction",
+      "content_globalInfo": "Texte d'informations générales",
       "update": "Mettre à jour",
-      "cancel": "Annuler"
-    },
-    "GlobalInfoEdition": {
-      "title": "Informations générales",
-      "language": "Sélectionnez la langue à éditer",
-      "language_fr": "Français",
-      "language_en": "Anglais",
-      "content": "Texte d'information",
-      "update": "Mettre à jour",
-      "cancel": "Annuler"
+      "cancel": "Annuler"     
     },
     "Notifications": {
       "remove": "Supprimer"

@@ -13,11 +13,10 @@ import { Roles } from 'meteor/alanning:roles';
 import AppSettings from '../appsettings';
 import {
   updateAppsettings,
-  updateIntroductionLanguage,
   getAppSettingsLinks,
   switchMaintenanceStatus,
   updateTextMaintenance,
-  updateGlobalInfoLanguage,
+  updateTextInfoLanguage,
 } from '../methods';
 import './publications';
 import './factories';
@@ -251,42 +250,35 @@ describe('appsettings', function () {
         assert.equal(appsett.gcu.external, 0);
       });
     });
-    describe('updateIntroductionLanguage', function () {
-      it('normal users can not update introduction language in app settings', function () {
+    describe('updateInfoLanguage', function () {
+      it('normal users can not update informations language in app settings', function () {
         assert.throws(
           () => {
-            updateIntroductionLanguage._execute({ userId }, { language: 'fr', content: 'coucou' });
+            updateTextInfoLanguage._execute({ userId }, { tabkey: 'introduction', language: 'fr', content: 'coucou' });
           },
           Meteor.Error,
           /api.appsettings.updateIntroductionLanguage.notPermitted/,
         );
       });
       it('admin can update app settings', function () {
-        updateIntroductionLanguage._execute({ userId: adminId }, { language: 'fr', content: 'coucou' });
+        updateTextInfoLanguage._execute(
+          { userId: adminId },
+          { tabkey: 'introduction', language: 'fr', content: 'coucou' },
+        );
+        updateTextInfoLanguage._execute(
+          { userId: adminId },
+          { tabkey: 'globalInfo', language: 'fr', content: 'salut' },
+        );
         const appsett = AppSettings.findOne({
           _id: 'settings',
           introduction: { $elemMatch: { language: 'fr', content: 'coucou' } },
         });
         assert.typeOf(appsett, 'object');
-      });
-    });
-    describe('updateGlobalInfoLanguage', function () {
-      it('normal users can not update global info language in app settings', function () {
-        assert.throws(
-          () => {
-            updateGlobalInfoLanguage._execute({ userId }, { language: 'fr', content: 'coucou' });
-          },
-          Meteor.Error,
-          /api.appsettings.updateIntroductionLanguage.notPermitted/,
-        );
-      });
-      it('admin can update app settings', function () {
-        updateGlobalInfoLanguage._execute({ userId: adminId }, { language: 'fr', content: 'coucou' });
-        const appsett = AppSettings.findOne({
+        const appsett2 = AppSettings.findOne({
           _id: 'settings',
-          globalInfo: { $elemMatch: { language: 'fr', content: 'coucou' } },
+          globalInfo: { $elemMatch: { language: 'fr', content: 'salut' } },
         });
-        assert.typeOf(appsett, 'object');
+        assert.typeOf(appsett2, 'object');
       });
     });
     describe('getAppSettingsLinks', function () {
