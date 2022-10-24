@@ -1096,6 +1096,54 @@ export const resetAuthToken = new ValidatedMethod({
   },
 });
 
+// This is a temporary method used to fix badly created users in database
+// intended to be called by an admin user from a browser dev console :
+//  Meteor.call('users.fixUsers', (err,res) => console.log(res))
+//
+export const fixUsers = new ValidatedMethod({
+  name: 'users.fixUsers',
+  validate: null,
+  run() {
+    if (!this.userId) {
+      throw new Meteor.Error('api.users.fixUsers.notPermitted', i18n.__('api.users.mustBeLoggedIn'));
+    }
+    // check if current user has global admin rights
+    const authorized = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
+    if (!authorized) {
+      throw new Meteor.Error('api.users.fixUsers.notPermitted', i18n.__('api.users.adminNeeded'));
+    }
+    const badUsers = Meteor.users.find({ username: null }).fetch();
+    let fixedCount = 0;
+    badUsers.forEach((user) => {
+      // try to get missing fields from keycloak data
+      if (user.services.keycloak) {
+        const updateInfos = {
+          primaryEmail: user.services.keycloak.email,
+        };
+        Accounts.addEmail(user._id, user.services.keycloak.email, true);
+        if (user.services.keycloak.given_name) {
+          updateInfos.firstName = user.services.keycloak.given_name;
+        }
+        if (user.services.keycloak.family_name) {
+          updateInfos.lastName = user.services.keycloak.family_name;
+        }
+        if (user.services.keycloak.preferred_username) {
+          // use preferred_username as username if defined
+          // (should be set as mandatory in keycloak)
+          updateInfos.username = user.services.keycloak.preferred_username;
+        }
+        if (!user.nclocator) updateInfos.nclocator = getRandomNCloudURL();
+        Meteor.users.update({ _id: user._id }, { $set: updateInfos });
+        logServer(`- fixed user ${updateInfos.username} (email:${updateInfos.primaryEmail})`);
+        fixedCount += 1;
+      } else {
+        logServer(`- could not fix user '${user._id}', no keycloak data available`);
+      }
+    });
+    return fixedCount;
+  },
+});
+
 // Get list of all method names on User
 const LISTS_METHODS = _.pluck(
   [
@@ -1126,6 +1174,7 @@ const LISTS_METHODS = _.pluck(
     userUpdated,
     toggleAdvancedPersonalPage,
     getAuthToken,
+    fixUsers,
   ],
   'name',
 );
