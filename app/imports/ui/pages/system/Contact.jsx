@@ -102,6 +102,10 @@ const Contact = ({ structures, loading }) => {
 
   const [counter, setCounter] = React.useState(0);
 
+  function onlySpaces(str) {
+    return str.trim().length === 0;
+  }
+
   React.useEffect(() => {
     const timer = counter > 0 && setInterval(() => setCounter(counter - 1), 1000);
     return () => clearInterval(timer);
@@ -109,6 +113,10 @@ const Contact = ({ structures, loading }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    if (onlySpaces(formState.values.text)) {
+      msg.error(i18n.__('pages.ContactForm.errorMsgEmpty'));
+      return;
+    }
     if (user) {
       if (formState.values.text) {
         if (!user.isActive && parseInt(formState.values.captcha, 10) !== totalNr) setCaptchaIsValid(false);
@@ -284,7 +292,7 @@ const Contact = ({ structures, loading }) => {
                   variant="contained"
                   color="primary"
                   className={classes.submit}
-                  disabled={user ? !formState.values.text : !formState.isValid}
+                  disabled={user ? !formState.values.text || onlySpaces(formState.values.text) : !formState.isValid}
                 >
                   {i18n.__('pages.ContactForm.submitButtonLabel')}
                 </Button>

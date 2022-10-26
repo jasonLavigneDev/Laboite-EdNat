@@ -987,6 +987,7 @@
       "captchaInfo": "Indiquez le résultat de l'opération",
       "redirectMsg": "Formulaire envoyé. Redirection automatique en cours...",
       "redirectTime": "secondes",
+      "errorMsgEmpty": "Vous ne pouvez pas envoyer un message vide",
       "cancel": "Annuler"
     },
     "ProfilePage": {

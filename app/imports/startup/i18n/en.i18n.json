@@ -984,6 +984,7 @@
       "captchaInfo": "Indicate the result of the operation",
       "redirectMsg": "Your request has been sent. Redirection in progress...",
       "redirectTime": "seconds",
+      "errorMsgEmpty": "You can't send an empty message",
       "cancel": "Cancel"
     },
     "ProfilePage": {
