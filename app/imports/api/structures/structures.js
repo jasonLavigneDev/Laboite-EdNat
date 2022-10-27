@@ -110,6 +110,16 @@ Structures.schema = new SimpleSchema(
       optional: true,
       label: getLabel('api.appsettings.label.userStructureValidationMandatory'),
     },
+    iconUrlImage: {
+      type: String,
+      label: getLabel('api.structures.labels.iconUrlImage'),
+      optional: true,
+    },
+    coverUrlImage: {
+      type: String,
+      label: getLabel('api.structures.labels.coverUrlImage'),
+      optional: true,
+    },
   },
   {
     tracker: Tracker,
@@ -126,6 +136,8 @@ Structures.publicFields = {
   contactEmail: 1,
   asamExtensionsIds: 1,
   userStructureValidationMandatory: 1,
+  iconUrlImage: 1,
+  coverUrlImage: 1,
 };
 
 Structures.attachSchema(Structures.schema);

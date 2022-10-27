@@ -134,7 +134,9 @@
           "language": "Structure introduction language"
         },
         "contactEmail": "Structure contact email",
-        "asamExtensionsIds": "Related email extensions ids"
+        "asamExtensionsIds": "Related email extensions ids",
+        "iconUrlImage": "Icon url image",
+        "coverUrlImage": "Cover url image"
       }
     },
     "asamextensions": {
@@ -881,7 +883,12 @@
         "editStructure": "Edit this structure",
         "deleteStructure": "Remove cette structure",
         "deleteStructureImpossibleHasChildren": "This structure can not be deleted, since it have a least one child.",
-        "deleteStructureConfirm": "Are you sure you want to remove this structure? If any article is attached to it, it will be destroyed."
+        "deleteStructureConfirm": "Are you sure you want to remove this structure? If any article is attached to it, it will be destroyed.",
+        "selectIconAndCoverImage": "Choose icon and/or cover image",
+        "selectIconImage": "Upload icon image",
+        "selectCoverImage": "Upload cover image",
+        "DeleteIconImage": "Remove icon image",
+        "DeleteCoverImage": "Remove cover image"
       },
       "attachToStructure": "Do you want to be attached to this structure?"
     },
@@ -903,6 +910,9 @@
     },
     "AdminStructureChangeEmailContact": {
       "label": "Email de contact"
+    },
+    "AdminStructureUploadIconAndCoverImage": {
+      "label": "upload images"
     },
     "AdminUserValidationTable": {
       "columnUsername": "Username",
@@ -1313,7 +1323,9 @@
       "typeGroup": "Group",
       "typeLink": "Link",
       "addZoneHere": "Add a zone here",
-      "toggleEdition": "Toggle edition mode"
+      "toggleEdition": "Toggle edition mode",
+      "coverImage": "Cover image",
+      "iconImage": "Icon image"
     },
     "HelpPage": {
       "title": "Find here all the help you need",

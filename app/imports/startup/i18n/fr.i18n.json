@@ -134,7 +134,9 @@
           "language": "Language d'introduction de structure"
         },
         "contactEmail": "Email de contact de la structure",
-        "asamExtensionsIds": "Ids des extensions d'email"
+        "asamExtensionsIds": "Ids des extensions d'email",
+        "iconUrlImage": "Url de l'image de l'icon",
+        "coverUrlImage": "Url de l'image de la couverture"
       }
     },
     "asamextensions": {
@@ -885,7 +887,12 @@
         "editStructure": "Modifier cette structure",
         "deleteStructure": "Supprimer cette structure",
         "deleteStructureImpossibleHasChildren": "Cette structure n'est pas supprimable car elle a au moins un enfant.",
-        "deleteStructureConfirm": "Etes-vous sûr de vouloir supprimer cette structure ? Si des articles y sont attachés, ils seront supprimés."
+        "deleteStructureConfirm": "Etes-vous sûr de vouloir supprimer cette structure ? Si des articles y sont attachés, ils seront supprimés.",
+        "selectIconAndCoverImage": "Choisir une image d'icon et/ou de couverture",
+        "selectIconImage": "Chargement d'icon",
+        "selectCoverImage": "Chargement de couverture",
+        "DeleteIconImage": "Enlever l'image d'icon",
+        "DeleteCoverImage": "Enlever l'image de la couverture"
       },
       "attachToStructure": "Souhaitez vous être rattaché(e) à cette structure ?"
     },
@@ -907,6 +914,9 @@
     },
     "AdminStructureChangeEmailContact": {
       "label": "Email de contact"
+    },
+    "AdminStructureUploadIconAndCoverImage": {
+      "label": "Charger les images"
     },
     "AdminUserValidationTable": {
       "columnUsername": "Pseudo",
@@ -1317,7 +1327,9 @@
       "typeGroup": "Groupe",
       "typeLink": "Lien",
       "addZoneHere": "Ajouter une zone ici",
-      "toggleEdition": "Activer/Désactiver le mode édition"
+      "toggleEdition": "Activer/Désactiver le mode édition",
+      "coverImage": "Image de couverture",
+      "iconImage": "Image de l'icon"
     },
     "HelpPage": {
       "title": "Retrouvez ici toute l'aide nécessaire",
@@ -1526,7 +1538,8 @@
     },
     "AdminStructureSettingsPage": {
       "title": "Paramétrage de la structure",
-      "userStructureValidationMandatory": "Validation obligatoire de cette structure"
+      "userStructureValidationMandatory": "Validation obligatoire de cette structure",
+      "selectIconAndCoverImage": "Choisir une image d'icon et/ou de couverture"
     },
     "AdminDefaultSpacesPage": {
       "chooseStructure": "Choisissez une structure",

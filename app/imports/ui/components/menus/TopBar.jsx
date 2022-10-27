@@ -12,6 +12,7 @@ import MenuBar from './MenuBar';
 import MainMenu from './MainMenu';
 import { useAppContext } from '../../contexts/context';
 import AppSettings from '../../../api/appsettings/appsettings';
+import IconAndCoverImagePage from '../../pages/structure/IconAndCoverImagePage';
 
 const { disabledFeatures } = Meteor.settings.public;
 
@@ -37,6 +38,8 @@ const useStyles = makeStyles()((theme, isMobile) => ({
     display: 'flex',
     justifyContent: 'center',
     width: '100%',
+  },
+  secondBarBorderTop: {
     borderTop: '1px solid rgba(0, 0, 0, 0.12)',
   },
   imgLogoContainer: {
@@ -116,49 +119,50 @@ function TopBar({ publicMenu, root, appsettings, adminApp }) {
   };
 
   return (
-    <div>
-      <AppBar position="fixed" className={classes.root}>
-        <div className={classes.firstBar}>
-          <div className={classes.leftContainer}>
-            {LOGO ? (
-              <Link to={root || (publicMenu ? '/public' : '/')} className={classes.imgLogoContainer}>
-                <img
-                  src={LOGO}
-                  className={classes.imgLogoContainer}
-                  alt="Logo"
-                  style={{ padding: isEoleTheme && !isMobile ? 10 : '' }}
-                />
-              </Link>
-            ) : (
-              <div />
-            )}
-            {isMobile && (
-              <Link to="/informations">
-                <IconButton color={location.pathname === '/informations' ? 'primary' : 'default'}>
-                  <InfoIcon />
-                </IconButton>
-              </Link>
-            )}
-          </div>
-
-          <div className={classes.rightContainer}>
-            {publicMenu ? null : (
-              <>
-                <MainMenu user={user} />
-                <IconButton onClick={handleNotifsOpen} size="large">
-                  <NotificationsBell />
-                </IconButton>
-              </>
-            )}
-          </div>
+    <AppBar position="fixed" className={classes.root}>
+      <div className={classes.firstBar}>
+        <div className={classes.leftContainer}>
+          {LOGO ? (
+            <Link to={root || (publicMenu ? '/public' : '/')} className={classes.imgLogoContainer}>
+              <img
+                src={LOGO}
+                className={classes.imgLogoContainer}
+                alt="Logo"
+                style={{ padding: isEoleTheme && !isMobile ? 10 : '' }}
+              />
+            </Link>
+          ) : (
+            <div />
+          )}
+          {isMobile && (
+            <Link to="/introduction">
+              <IconButton color={location.pathname === '/introduction' ? 'primary' : 'default'}>
+                <InfoIcon />
+              </IconButton>
+            </Link>
+          )}
         </div>
-        {!isMobile && !publicMenu && !adminApp && (
-          <div className={classes.secondBar}>
+
+        <div className={classes.rightContainer}>
+          {publicMenu ? null : (
+            <>
+              <MainMenu user={user} />
+              <IconButton onClick={handleNotifsOpen} size="large">
+                <NotificationsBell />
+              </IconButton>
+            </>
+          )}
+        </div>
+      </div>
+      {!isMobile && !publicMenu && !adminApp && (
+        <>
+          <IconAndCoverImagePage />
+          <div className={`${classes.secondBar} ${classes.secondBarBorderTop}`}>
             <MenuBar />
           </div>
-        )}
-      </AppBar>
-    </div>
+        </>
+      )}
+    </AppBar>
   );
 }
 

@@ -1,4 +1,4 @@
-import React, { useEffect, lazy, Suspense } from 'react';
+import React, { useEffect, lazy, Suspense, useState } from 'react';
 import { useLocation, Route, Switch } from 'react-router-dom';
 import { withTracker } from 'meteor/react-meteor-data';
 import { makeStyles } from 'tss-react/mui';
@@ -69,8 +69,10 @@ export const useLayoutStyles = makeStyles()((theme, isMobile) => ({
       duration: theme.transitions.duration.leavingScreen,
     }),
     overflow: 'hidden',
-    marginTop: !isMobile && theme.shape.headerHeight ? theme.shape.headerHeight : 60,
     marginBottom: isMobile ? 100 : 50,
+  },
+  mainMarginTop: {
+    marginTop: !isMobile && theme.shape.headerHeight ? theme.shape.headerHeight : 60,
   },
   flex: {
     display: 'flex',
@@ -91,9 +93,11 @@ export const useLayoutStyles = makeStyles()((theme, isMobile) => ({
 
 function MainLayout({ appsettings, ready }) {
   const [{ userId, user, loadingUser, isMobile }] = useAppContext();
+  const [mainPosition, setMainPosition] = useState('');
   const { classes } = useLayoutStyles(isMobile, {
     props: isMobile,
   });
+  const [mainContentCss, setMainContentCss] = useState(true);
   const location = useLocation();
   const { disabledFeatures = {} } = Meteor.settings.public;
 
@@ -110,11 +114,18 @@ function MainLayout({ appsettings, ready }) {
     <>
       <div className={classes.root}>
         <SkipLink />
-        <TopBar />
+        <TopBar setMainElementPosition={setMainPosition} setMainElementMarginTop={setMainContentCss} />
         {loadingUser && ready ? (
           <Spinner full />
         ) : (
-          <main className={classes.content} id="main">
+          <main
+            className={`${classes.content} ${mainContentCss ? classes.mainMarginTop : ''}`}
+            id="main"
+            style={{
+              paddingTop: mainPosition,
+              flexGrow: mainPosition === '' ? '' : '1',
+            }}
+          >
             {appsettings.maintenance && isAdmin ? (
               <Alert className={classes.alertMaintenance} variant="filled" severity="error">
                 {i18n.__(`layouts.MainLayout.alertMaintenance`)}
