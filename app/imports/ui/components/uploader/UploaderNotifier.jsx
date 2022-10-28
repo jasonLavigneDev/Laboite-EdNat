@@ -46,7 +46,7 @@ const UploaderNotifier = () => {
     <div
       style={{
         position: 'fixed',
-        bottom: 5,
+        top: '6vh',
         right: 5,
         display: 'flex',
         flexDirection: 'column',
