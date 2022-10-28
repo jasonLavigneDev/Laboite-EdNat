@@ -80,7 +80,7 @@ function AdminLayout() {
       {loadingUser && ready ? (
         <Spinner full />
       ) : (
-        <main className={cx(classes.content, classes.flex)} id="main">
+        <main className={cx(classes.content, classes.mainMarginTop, classes.flex)} id="main">
           <AdminMenu />
           <Suspense fallback={<Spinner />}>
             <div className={classes.container}>
