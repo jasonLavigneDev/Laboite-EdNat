@@ -86,6 +86,7 @@ const SingleNotification = ({ upload }) => {
         data: { fileName },
       });
     }, 5000);
+    onFinish(undefined, 'error');
   };
 
   const uploadFile = async () => {
