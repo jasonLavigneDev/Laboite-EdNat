@@ -24,6 +24,7 @@ const palette = {
   },
   background: {
     default: '#F9F9FD',
+    paper: '#F5F5F5',
   },
   grey: {
     main: '#e0e0e0',
