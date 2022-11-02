@@ -2,9 +2,8 @@ import { withStyles } from 'tss-react/mui';
 import { keyframes } from 'tss-react';
 import Badge from '@mui/material/Badge';
 
-export const badgeStyle = (theme) => ({
+export const badgeStyle = () => ({
   badge: {
-    boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
     '&::after': {
       position: 'absolute',
       top: 0,
