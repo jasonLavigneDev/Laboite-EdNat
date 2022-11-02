@@ -209,12 +209,19 @@ export function ServicesPage({ services, categories, businessRegroupings, ready,
       (service) =>
         filterServices(service) &&
         service.businessReGrouping &&
+        service.businessReGrouping !== undefined &&
         service.businessReGrouping.includes(businessRegrouping._id),
     );
   };
 
   const servicesWithoutBusinessRegrouping = () => {
-    return services.filter((service) => filterServices(service) && service.businessReGrouping.length === 0);
+    return services.filter(
+      (service) =>
+        filterServices(service) &&
+        service.businessReGrouping &&
+        service.businessReGrouping !== undefined &&
+        service.businessReGrouping.length === 0,
+    );
   };
 
   const memorizedServicesWithoutBusinessRegrouping = useMemo(() => servicesWithoutBusinessRegrouping(), [services]);
