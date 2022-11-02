@@ -1312,7 +1312,8 @@
       "searchText": "Which user are you looking for ?",
       "noAccess": "You don't have access to address book of this group",
       "noUsers": "No user found for this group",
-      "userType": "Users type"
+      "userType": "Users type",
+      "noStructure": "No Structure assigned"
     },
     "Events": {
       "seeEvent": "See event",

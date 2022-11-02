@@ -192,7 +192,9 @@ const AddressBook = ({ loading, group, slug }) => {
                                 >
                                   {user.emails[0].address}
                                 </Typography>
-                                {structure.name !== undefined ? ` - ${structure.name}` : null}
+                                {structure.name
+                                  ? ` - ${structure.name}`
+                                  : ` - ${i18n.__('pages.AddressBook.noStructure')}`}
                               </>
                             }
                           />
