@@ -80,6 +80,10 @@ export default function AdminMenu() {
     updateDocumentTitle(i18n.__(`components.MainMenu.${item.content}`));
     history.push(item.path);
   };
+  const {
+    ui: { isBusinessRegroupingMode },
+  } = Meteor.settings.public;
+
   const adminMenu = [
     {
       path: '/admin/groups',
@@ -150,7 +154,7 @@ export default function AdminMenu() {
       path: '/admin/businessRegrouping',
       content: 'menuAdminBusinessRegrouping',
       icon: <CategoryIcon />,
-      hidden: !isAdminStructure,
+      hidden: !isAdminStructure || !isBusinessRegroupingMode,
     },
     {
       path: '/admin/structureservices',
