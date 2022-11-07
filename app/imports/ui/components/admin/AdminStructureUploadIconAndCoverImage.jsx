@@ -21,18 +21,19 @@ const getSplitedLastValue = (stringValue, separator) => {
   return stringValue.split(separator)[stringValue.split(separator).length - 1];
 };
 
+const initialFile = { name: '', type: '', path: '' };
+
 const AdminStructureUploadIconAndCoverImage = ({ structure }) => {
   const { classes } = useStyles();
   const [loading, setLoading] = useState(false);
 
-  const initialFile = { name: '', type: '', path: '' };
   const [coverFile, setCoverFile] = useObjectState(initialFile);
   const [iconFile, setIconFile] = useObjectState(initialFile);
   const [{ uploads }, dispatch] = useAppContext();
 
   const updateStructureIconOrCoverImg = (iconUrlImage, coverUrlImage) => {
     Meteor.call(
-      'structures.updateIconOrCoverImage',
+      'updateStructureIconOrCoverImage',
       {
         structureId: structure._id,
         iconUrlImage,
@@ -51,7 +52,7 @@ const AdminStructureUploadIconAndCoverImage = ({ structure }) => {
 
   const removeIconOrCoverImg = (iconOrCoverImgFolder) => {
     Meteor.call(
-      'structures.deleteIconOrCoverImage',
+      'deleteIconOrCoverImage',
       {
         structureId: structure._id,
         iconUrlImage: iconOrCoverImgFolder === 'iconImg' ? structure.iconUrlImage : '-1',
