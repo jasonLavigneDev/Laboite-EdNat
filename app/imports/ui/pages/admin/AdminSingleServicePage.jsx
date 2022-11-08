@@ -198,7 +198,7 @@ const AdminSingleServicePage = ({ categories, businessReGrouping, service, ready
 
   const onUpdateBusinessReGrouping = (businessReGroupingId) => {
     // regroupement métier par service est exclusive
-    let newBusinessReGrouping = [...serviceData.businessReGrouping];
+    let newBusinessReGrouping = serviceData.businessReGrouping !== undefined ? [...serviceData.businessReGrouping] : [];
     const index = newBusinessReGrouping.findIndex((c) => c === businessReGroupingId);
     if (index > -1) {
       newBusinessReGrouping.splice(index, 1);
