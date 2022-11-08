@@ -22,14 +22,11 @@ BusinessReGrouping.schema = new SimpleSchema(
   {
     name: {
       type: String,
-      index: true,
-      unique: true,
       min: 1,
       label: getLabel('api.businessReGrouping.labels.name'),
     },
     structure: {
       type: SimpleSchema.RegEx.Id,
-      index: true,
       label: getLabel('api.businessReGrouping.labels.structure'),
       defaultValue: '',
     },

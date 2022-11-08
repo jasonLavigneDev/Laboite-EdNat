@@ -22,7 +22,7 @@ export const createBusinessReGrouping = new ValidatedMethod({
     const authorized = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
 
     const businessRegr = BusinessReGrouping.findOne({ name });
-    if (businessRegr !== undefined) {
+    if (businessRegr !== undefined && businessRegr.structure === structure) {
       throw new Meteor.Error(
         'api.businessReGrouping.createBusinessReGrouping.alreadyExists',
         i18n.__('api.businessReGrouping.createBusinessReGrouping.nameAlreadyUse'),
