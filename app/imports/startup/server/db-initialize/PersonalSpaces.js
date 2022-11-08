@@ -1,7 +1,7 @@
-import { Meteor } from 'meteor/meteor';
-import PersonalSpaces from '../../../api/personalspaces/personalspaces';
-import { updatePersonalSpace } from '../../../api/personalspaces/methods';
-import logServer from '../../../api/logging';
+// import { Meteor } from 'meteor/meteor';
+// import PersonalSpaces from '../../../api/personalspaces/personalspaces';
+// import { updatePersonalSpace } from '../../../api/personalspaces/methods';
+// import logServer from '../../../api/logging';
 // import fakeData from './fakeData.json';
 
 // function createPersonalSpaces(personalspace) {
