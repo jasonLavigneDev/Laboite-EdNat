@@ -26,7 +26,7 @@ export const createBusinessReGrouping = new ValidatedMethod({
     // Check if business regrouping exists in structure ancestors
     const currStructure = Structures.findOne(structure);
     const businessRegrForStructureAncestors = BusinessReGrouping.find({
-      structure: { $in: currStructure.ancestorsIds },
+      structure: { $in: currStructure?.ancestorsIds },
     }).fetch();
     if (businessRegr !== undefined) {
       throw new Meteor.Error(
