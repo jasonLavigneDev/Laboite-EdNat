@@ -82,9 +82,10 @@
         "name": "Name",
         "structure": "Service Structure"
       },
-      "createCategorie": {
+      "createBusinessReGrouping": {
         "alreadyExists": "This business regrouping already exists.",
-        "nameAlreadyUse": "Name already exists."
+        "nameAlreadyUse": "Name already exists.",
+        "nameAlreadyUsedForOneOfStructureAncestors": "Name already exists for one of its structure ancestors"
       }
     },
     "tags": {

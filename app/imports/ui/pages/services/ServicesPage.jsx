@@ -218,9 +218,10 @@ export function ServicesPage({ services, categories, businessRegroupings, ready,
     return services.filter(
       (service) =>
         filterServices(service) &&
-        service.businessReGrouping &&
-        service.businessReGrouping !== undefined &&
-        service.businessReGrouping.length === 0,
+        ((service.businessReGrouping &&
+          service.businessReGrouping !== undefined &&
+          service.businessReGrouping.length === 0) ||
+          service.businessReGrouping === undefined),
     );
   };
 

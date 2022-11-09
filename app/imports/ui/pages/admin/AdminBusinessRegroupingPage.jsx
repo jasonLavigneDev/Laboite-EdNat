@@ -19,6 +19,7 @@ import { useStructure, useAdminSelectedStructure } from '../../../api/structures
 import setMaterialTableLocalization from '../../components/initMaterialTableLocalization';
 import BusinessReGrouping from '../../../api/businessReGrouping/businessReGrouping';
 import { handleResult } from '../../../api/utils';
+import Structures from '../../../api/structures/structures';
 
 const useStyles = makeStyles()((theme) => ({
   marginTop: {
@@ -56,13 +57,13 @@ const AdminBusinessReGroupingPage = ({ businessReGrouping, loading }) => {
   };
 
   const businessRegroupingByStructure = (selectedStructure) => {
-    return businessReGrouping.filter((b) => b.structure === selectedStructure);
+    const currSelectedStructure = Structures.findOne(selectedStructure);
+    return businessReGrouping.filter(
+      (b) =>
+        b.structure === selectedStructure ||
+        (currSelectedStructure.ancestorsIds !== undefined && currSelectedStructure.ancestorsIds.includes(b.structure)),
+    );
   };
-
-  // const memorizedBusinessRegroupingByStructure = useMemo(
-  //   () => businessRegroupingByStructure(selectedStructureId),
-  //   [selectedStructureId],
-  // );
 
   const onRowUpdate = (newData, oldData) =>
     new Promise((resolve, reject) => {

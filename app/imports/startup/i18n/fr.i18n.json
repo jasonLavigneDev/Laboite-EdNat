@@ -84,7 +84,8 @@
       },
       "createBusinessReGrouping": {
         "alreadyExists": "Le regroupement metier existe déjà",
-        "nameAlreadyUse": "Un regroupement metier porte déjà ce nom."
+        "nameAlreadyUse": "Un regroupement metier porte déjà ce nom.",
+        "nameAlreadyUsedForOneOfStructureAncestors": "Un regroupement metier porte déjà ce nom pour un de ses structures mères"
       }
     },
     "tags": {

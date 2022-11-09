@@ -9,6 +9,7 @@ import i18n from 'meteor/universe:i18n';
 import { isActive, getLabel } from '../utils';
 import BusinessReGrouping from './businessReGrouping';
 import Services from '../services/services';
+import Structures from '../structures/structures';
 
 export const createBusinessReGrouping = new ValidatedMethod({
   name: 'BusinessReGrouping.createBusinessReGrouping',
@@ -22,10 +23,24 @@ export const createBusinessReGrouping = new ValidatedMethod({
     const authorized = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
 
     const businessRegr = BusinessReGrouping.findOne({ name, structure });
+    // Check if business regrouping exists in structure ancestors
+    const currStructure = Structures.findOne(structure);
+    const businessRegrForStructureAncestors = BusinessReGrouping.find({
+      structure: { $in: currStructure.ancestorsIds },
+    }).fetch();
     if (businessRegr !== undefined) {
       throw new Meteor.Error(
         'api.businessReGrouping.createBusinessReGrouping.alreadyExists',
         i18n.__('api.businessReGrouping.createBusinessReGrouping.nameAlreadyUse'),
+      );
+    }
+    if (
+      businessRegrForStructureAncestors.length > 0 &&
+      businessRegrForStructureAncestors.some((rg) => rg.name === name)
+    ) {
+      throw new Meteor.Error(
+        'api.businessReGrouping.createBusinessReGrouping.nameAlreadyUsedForOneOfStructureAncestors',
+        i18n.__('api.businessReGrouping.createBusinessReGrouping.nameAlreadyUsedForOneOfStructureAncestors'),
       );
     }
     if (!authorized) {
