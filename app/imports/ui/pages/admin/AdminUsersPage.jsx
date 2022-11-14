@@ -117,10 +117,10 @@ const AdminUsersPage = ({ match: { path } }) => {
 
   const { changePage, page, items, total } = usePagination(
     subscription,
-    { selectedStructureId, search, userType, forceReload },
+    { selectedStructureId, search, userType, forceReload, sort: sortByDate ? { lastLogin: -1 } : { lastName: 1 } },
     Meteor.users,
     {},
-    {},
+    { sort: sortByDate ? { lastLogin: -1 } : { lastName: 1 } },
     ITEM_PER_PAGE,
     [selectedStructureId, selectedStructureId != null],
   );

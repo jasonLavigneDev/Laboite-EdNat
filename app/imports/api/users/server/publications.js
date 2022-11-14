@@ -298,7 +298,7 @@ FindFromPublication.publish(
         fields: Meteor.users.adminFields,
         skip: itemPerPage * (page - 1),
         limit: itemPerPage,
-        sort: { lastName: 1 },
+        sort: { lastName: 1, firstName: 1 },
         ...rest,
       });
     } catch (error) {
