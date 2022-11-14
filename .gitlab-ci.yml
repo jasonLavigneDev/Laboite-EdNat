@@ -121,8 +121,7 @@ testing prerelease:
   extends: .semantic-release:testing
 
 # Avoid regression and update `version` of app/package*.json in `$DEV_BRANCH`
-merge-to-dev:
-  { extends: ".git:merge-to", variables: { GIT_MERGE_TARGET: $DEV_BRANCH } }
+merge-to-dev: {extends: '.git:merge-to', variables: {GIT_MERGE_TARGET: $DEV_BRANCH}}
 
 ## tag contribution branches with a more stable name than `git-${CI_COMMIT_SHORT_SHA}`
 tag contrib branch:
