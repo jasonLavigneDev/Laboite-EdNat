@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from 'tss-react/mui';
 import Grid from '@mui/material/Grid';
@@ -33,14 +33,26 @@ const useStyles = () =>
     },
     containerGrid: {
       paddingTop: theme.spacing(0),
-      paddingBottom: theme.spacing(2),
-      maxWidth: 2000,
+      paddingBottom: theme.spacing(0),
+      paddingLeft: theme.spacing(0),
+      paddingRight: theme.spacing(0),
+      maxWidth: 3000,
+    },
+    containerGridItem: {
+      paddingLeft: '0px !important',
+      paddingRight: '0px !important',
+    },
+    containerGridImgWrapper: {
+      marginRight: '-32px !important',
+      marginLeft: '-32px !important',
+      width: 'auto !important',
     },
   }));
 
 const IconAndCoverImagePage = ({ setMainPosition, topBarHeight, setMainMarginTop, setSecBarBorderTop }) => {
   const [{ user, loadingUser }] = useAppContext();
   const { classes } = useStyles()();
+  const [imgMarginTop, setImgMarginTop] = useState('0px');
 
   const { userStructure, coverAltValue, iconAltValue } = useTracker(() => {
     if (user) {
@@ -61,6 +73,27 @@ const IconAndCoverImagePage = ({ setMainPosition, topBarHeight, setMainMarginTop
   } else if (setMainPosition !== null) {
     setMainPosition('');
   }
+
+  const handleCoverAndIconImgDisplay = (event) => {
+    if (userStructure?.coverUrlImage !== undefined) {
+      // if (setPrevFirstBarHeight !== null && topBarHeight > 0) setPrevFirstBarHeight(topBarHeight);
+      // Get scroll position
+      // const scrollPosition = window.pageYOffset;
+      const scrollPosition = event.target.scrollingElement.scrollTop;
+      // console.log('scrollPosition', scrollPosition);
+      if (scrollPosition > 0) {
+        setImgMarginTop(`${-scrollPosition}px`);
+      } else {
+        setImgMarginTop('0px');
+      }
+    }
+  };
+  useEffect(() => {
+    window.addEventListener('scroll', (event) => handleCoverAndIconImgDisplay(event));
+    return function cleanupScrollEventListener() {
+      window.removeEventListener('scroll', handleCoverAndIconImgDisplay);
+    };
+  });
   return (
     <>
       {loadingUser ? (
@@ -68,11 +101,11 @@ const IconAndCoverImagePage = ({ setMainPosition, topBarHeight, setMainMarginTop
       ) : (
         <Fade in>
           <Container className={classes.containerGrid}>
-            <Grid container spacing={4}>
+            <Grid container spacing={4} className={classes.containerGridImgWrapper}>
               {userStructure?.coverUrlImage !== undefined && (
-                <Grid item xs={12} sm={12} md={12}>
+                <Grid item xs={12} sm={12} md={12} className={classes.containerGridItem}>
                   <div className={classes.parentImgWrapper}>
-                    <div className={classes.imgWrapper}>
+                    <div className={classes.imgWrapper} style={{ marginTop: imgMarginTop }}>
                       <img src={userStructure?.coverUrlImage} alt={coverAltValue} className={classes.coverImg} />
                       <img src={userStructure?.iconUrlImage} alt={iconAltValue} className={classes.iconImg} />
                     </div>

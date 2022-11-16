@@ -23,8 +23,8 @@ const useStyles = makeStyles()((theme, isMobile) => ({
     flexDirection: 'column',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2),
+    paddingLeft: theme.spacing(0),
+    paddingRight: theme.spacing(0),
     minHeight: 48,
   },
   firstBar: {
@@ -33,6 +33,8 @@ const useStyles = makeStyles()((theme, isMobile) => ({
     justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',
+    zIndex: 1,
+    backgroundColor: '#FFF',
   },
   secondBar: {
     display: 'flex',
