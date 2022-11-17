@@ -18,7 +18,7 @@ const useStyles = () =>
     },
     imgWrapper: {
       position: 'relative',
-      height: 350,
+      height: '175px',
     },
     coverImg: {
       display: 'block',
@@ -28,7 +28,7 @@ const useStyles = () =>
     iconImg: {
       position: 'absolute',
       bottom: '-10%',
-      left: '10%',
+      left: '19%',
       height: '30%',
     },
     containerGrid: {
