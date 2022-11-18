@@ -67,7 +67,7 @@ const IconAndCoverImagePage = ({ setMainPosition, topBarHeight, setMainMarginTop
   }, [user]);
 
   if (setMainPosition !== null && userStructure?.coverUrlImage !== undefined) {
-    setMainPosition(topBarHeight > 0 ? `${topBarHeight + 10}px` : '25%');
+    setMainPosition(topBarHeight > 0 ? `${topBarHeight + 10}px` : '16%');
     if (setMainMarginTop !== null) setMainMarginTop(false);
     if (setSecBarBorderTop !== null) setSecBarBorderTop(false);
   } else if (setMainPosition !== null) {
@@ -76,11 +76,9 @@ const IconAndCoverImagePage = ({ setMainPosition, topBarHeight, setMainMarginTop
 
   const handleCoverAndIconImgDisplay = (event) => {
     if (userStructure?.coverUrlImage !== undefined) {
-      // if (setPrevFirstBarHeight !== null && topBarHeight > 0) setPrevFirstBarHeight(topBarHeight);
       // Get scroll position
       // const scrollPosition = window.pageYOffset;
       const scrollPosition = event.target.scrollingElement.scrollTop;
-      // console.log('scrollPosition', scrollPosition);
       if (scrollPosition > 0) {
         setImgMarginTop(`${-scrollPosition}px`);
       } else {
@@ -107,7 +105,12 @@ const IconAndCoverImagePage = ({ setMainPosition, topBarHeight, setMainMarginTop
                   <div className={classes.parentImgWrapper}>
                     <div className={classes.imgWrapper} style={{ marginTop: imgMarginTop }}>
                       <img src={userStructure?.coverUrlImage} alt={coverAltValue} className={classes.coverImg} />
-                      <img src={userStructure?.iconUrlImage} alt={iconAltValue} className={classes.iconImg} />
+                      <img
+                        src={userStructure?.iconUrlImage}
+                        alt={iconAltValue}
+                        className={classes.iconImg}
+                        id="iconImgId"
+                      />
                     </div>
                   </div>
                 </Grid>

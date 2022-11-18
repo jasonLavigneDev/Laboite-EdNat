@@ -110,6 +110,28 @@ function MainLayout({ appsettings, ready }) {
     }
   }, [location]);
 
+  const handleIconImgLeftChange = () => {
+    const iconImgElt = document.getElementById('iconImgId');
+    const mainChild = document.getElementById('main').lastChild;
+    if (iconImgElt && mainChild) {
+      const newIconImgLeftPosition =
+        window.getComputedStyle(mainChild)?.paddingLeft === undefined ||
+        window.getComputedStyle(mainChild)?.paddingLeft === '0px'
+          ? '19%'
+          : parseInt(mainChild?.offsetLeft, 10) +
+            parseInt(window.getComputedStyle(mainChild)?.paddingLeft?.replace('px', ''), 10) +
+            24;
+
+      iconImgElt.style.left = `${newIconImgLeftPosition}px`;
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('resize', handleIconImgLeftChange());
+    return function cleanupResizeEventListener() {
+      window.removeEventListener('resize', handleIconImgLeftChange);
+    };
+  });
   return (
     <>
       <div className={classes.root}>
