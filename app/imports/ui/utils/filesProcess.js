@@ -27,7 +27,7 @@ export const minioSrcBuilder = (src) => {
   return `http${minioSSL ? 's' : ''}://${minioEndPoint}${minioPort ? `:${minioPort}` : ''}/${minioBucket}/${src}`;
 };
 
-export const fileUpload = async ({ name, file, path, type }, callback) => {
+export const fileUpload = async ({ name, file, path, type, storage }, callback) => {
   if (file.slice(0, 5) === 'data:') {
     const fileType = type || getExtension(name, file);
 
@@ -38,6 +38,7 @@ export const fileUpload = async ({ name, file, path, type }, callback) => {
         name: `${name}.${fileType === 'svg+xml' ? 'svg' : fileType}`,
         fileType,
         path,
+        storage,
       },
       (error) => {
         if (error) {
