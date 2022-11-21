@@ -64,7 +64,6 @@ function AdminLayout() {
       document.getElementById('root').focus();
     }
   }, [location]);
-
   return (
     <div className={classes.root}>
       <SkipLink />
@@ -183,12 +182,12 @@ function AdminLayout() {
                       user={user}
                       loadingUser={loadingUser}
                     />
-                    <AdminRoute
-                      userId={userId}
-                      loadingUser={loadingUser}
+                    <StructureAdminRoute
                       exact
                       path="/admin/businessReGrouping"
                       component={AdminBusinessReGroupingPage}
+                      user={user}
+                      loadingUser={loadingUser}
                     />
                     <StructureAdminRoute
                       exact
