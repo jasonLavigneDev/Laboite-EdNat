@@ -94,7 +94,7 @@ function UserBookmarksPage({ loading, bookmarksList }) {
   const [editUrl, setEditUrl] = useState(false);
   const [bkData, setBkData] = useState({});
   const [onEdit, setOnEdit] = useState(false);
-  const [pageSize, setPageSize] = useState(getLocalStorageValue('cstRowsPerPage', 1));
+  const [pageSize, setPageSize] = useState(getLocalStorageValue('cstRowsPerPage', 10));
 
   const OpenURLEditor = () => setEditUrl(true);
 
@@ -117,7 +117,7 @@ function UserBookmarksPage({ loading, bookmarksList }) {
 
   const handleChangeRowsPerPage = (rowsPerPage) => {
     // Access initial value from session storage
-    const cstRowsPerPage = getLocalStorageValue('cstRowsPerPage', 1);
+    const cstRowsPerPage = getLocalStorageValue('cstRowsPerPage', 10);
 
     if (cstRowsPerPage !== rowsPerPage) {
       // Update session storage
