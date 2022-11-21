@@ -27,9 +27,9 @@ const useStyles = () =>
     },
     iconImg: {
       position: 'absolute',
-      bottom: '-10%',
+      bottom: '-27%',
       left: '19%',
-      height: '30%',
+      height: '60%',
     },
     containerGrid: {
       paddingTop: theme.spacing(0),
@@ -67,7 +67,7 @@ const IconAndCoverImagePage = ({ setMainPosition, topBarHeight, setMainMarginTop
   }, [user]);
 
   if (setMainPosition !== null && userStructure?.coverUrlImage !== undefined) {
-    setMainPosition(topBarHeight > 0 ? `${topBarHeight + 10}px` : '16%');
+    setMainPosition(topBarHeight > 0 ? `${topBarHeight + 40}px` : '18%');
     if (setMainMarginTop !== null) setMainMarginTop(false);
     if (setSecBarBorderTop !== null) setSecBarBorderTop(false);
   } else if (setMainPosition !== null) {

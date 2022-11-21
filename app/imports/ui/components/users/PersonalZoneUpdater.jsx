@@ -386,7 +386,7 @@ function PersonalZoneUpdater({
           <Container className={classes.cardGrid}>
             <Grid container spacing={4} className={classes.cardGrid}>
               <Grid item xs={12} sm={12} md={12} className={classes.flex}>
-                <Grid container alignItems="center" spacing={1}>
+                <Grid container alignItems="center" spacing={1} style={{ paddingBottom: '2%' }}>
                   {!edition && (
                     <Grid item>
                       <Typography variant={isMobile ? 'h5' : 'h4'}>{i18n.__('pages.PersonalPage.welcome')}</Typography>
