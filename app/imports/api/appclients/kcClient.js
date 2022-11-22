@@ -424,6 +424,64 @@ class KeyCloakClient {
     }
   }
 
+  setAdminStructure(userId, callerId) {
+    const groupName = `adminStructure`;
+    const user = Meteor.users.findOne(userId);
+    const keycloakId = user.services && user.services.keycloak ? user.services.keycloak.id : null;
+    if (keycloakId) {
+      this._getToken()
+        .then((token) =>
+          this._getGroupId(groupName, token).then((groupId) => {
+            return axios
+              .put(`${this.kcURL}/admin/realms/${this.kcRealm}/users/${keycloakId}/groups/${groupId}`, '', {
+                headers: {
+                  Accept: 'application/json',
+                  Authorization: `Bearer ${token}`,
+                },
+              })
+              .then(() => {
+                logServer(i18n.__('api.keycloak.adminAdded', { userId }));
+              });
+          }),
+        )
+        .catch((error) => {
+          logServer(i18n.__('api.keycloak.addAdminStructureError', { userId }), 'error', callerId);
+          logServer(error.response && error.response.data ? error.response.data : error, 'error');
+        });
+    } else {
+      logServer(i18n.__('api.keycloak.userNotFound', { userId }), 'error', callerId);
+    }
+  }
+
+  unsetAdminStructure(userId, callerId) {
+    const groupName = `adminStructure`;
+    const user = Meteor.users.findOne(userId);
+    const keycloakId = user.services && user.services.keycloak ? user.services.keycloak.id : null;
+    if (keycloakId) {
+      this._getToken()
+        .then((token) =>
+          this._getGroupId(groupName, token).then((groupId) =>
+            axios
+              .delete(`${this.kcURL}/admin/realms/${this.kcRealm}/users/${keycloakId}/groups/${groupId}`, {
+                headers: {
+                  Accept: 'application/json',
+                  Authorization: `Bearer ${token}`,
+                },
+              })
+              .then(() => {
+                logServer(`Keycloak: user ${userId} removed from adminStructure`);
+              }),
+          ),
+        )
+        .catch((error) => {
+          logServer(i18n.__('api.keycloak.removeAdminStructureError', { userId }), 'error', callerId);
+          logServer(error.response && error.response.data ? error.response.data : error, 'error');
+        });
+    } else {
+      logServer(i18n.__('api.keycloak.userNotFound', { userId }), 'error', callerId);
+    }
+  }
+
   _setRole(userId, keycloakId, roleName) {
     return this._getToken().then((token) =>
       this._getGroupId(roleName, token).then((groupId) =>
@@ -534,6 +592,18 @@ if (Meteor.isServer && Meteor.settings.public.enableKeycloak) {
   Meteor.afterMethod('users.unsetAdmin', function kcUnsetAdmin({ userId }) {
     if (!this.error) {
       kcClient.unsetAdmin(userId, this.userId);
+    }
+  });
+
+  Meteor.afterMethod('users.setAdminStructure', function kcSetAdmin({ userId }) {
+    if (!this.error) {
+      kcClient.setAdminStructure(userId, this.userId);
+    }
+  });
+
+  Meteor.afterMethod('users.unsetAdminStructure', function kcUnsetAdmin({ userId }) {
+    if (!this.error) {
+      kcClient.unsetAdminStructure(userId, this.userId);
     }
   });
 
