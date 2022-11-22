@@ -5,12 +5,12 @@ import Container from '@mui/material/Container';
 import Divider from '@mui/material/Divider';
 import Spinner from '../components/system/Spinner';
 import IntroductionAccordion from '../components/introduction/IntroductionAccordion';
-import { useCurrentIntroduction } from '../../api/appsettings/hooks';
+import { useCurrentGlobalInfo } from '../../api/appsettings/hooks';
 import { useStructuresOfUserWithIntroductions } from '../../api/structures/hooks';
 import { useAppContext } from '../contexts/context';
 
 const IntroductionPage = () => {
-  const { data: introductionContent, loading: introductionLoading } = useCurrentIntroduction();
+  const { data: introductionContent, loading: introductionLoading } = useCurrentGlobalInfo();
   const { data: structuresIntroductionContent, loading: structuresIntroductionLoading } =
     useStructuresOfUserWithIntroductions();
 

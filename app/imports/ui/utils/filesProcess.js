@@ -29,12 +29,14 @@ export const minioSrcBuilder = (src) => {
 
 export const fileUpload = async ({ name, file, path, type }, callback) => {
   if (file.slice(0, 5) === 'data:') {
-    const filetype = type || getExtension(name, file);
+    const fileType = type || getExtension(name, file);
+
     Meteor.call(
       'files.upload',
       {
         file: file.replace(file.substring(0, file.indexOf(';base64,') + 8, ''), ''),
-        name: `${name}.${filetype === 'svg+xml' ? 'svg' : filetype}`,
+        name: `${name}.${fileType === 'svg+xml' ? 'svg' : fileType}`,
+        fileType,
         path,
       },
       (error) => {

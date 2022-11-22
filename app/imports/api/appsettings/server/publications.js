@@ -13,6 +13,11 @@ Meteor.publish('appsettings.introduction', () => {
   return AppSettings.find({ _id: 'settings' }, { fields: introduction, sort: { _id: 1 }, limit: 1 });
 });
 
+Meteor.publish('appsettings.globalInfo', () => {
+  const { globalInfo } = AppSettings;
+  return AppSettings.find({ _id: 'settings' }, { fields: globalInfo, sort: { _id: 1 }, limit: 1 });
+});
+
 // publish GCU settings
 Meteor.publish('appsettings.gcu', () => {
   const { gcu } = AppSettings;
@@ -47,4 +52,13 @@ Meteor.publish('appsettings.maintenance', () => {
 Meteor.publish('appsettings.textMaintenance', () => {
   const { textMaintenance } = AppSettings;
   return AppSettings.find({ _id: 'settings' }, { fields: textMaintenance, sort: { _id: 1 }, limit: 1 });
+});
+
+// publish userStructureValidationMandatory settings
+Meteor.publish('appsettings.userStructureValidationMandatory', () => {
+  const { userStructureValidationMandatory } = AppSettings;
+  return AppSettings.find(
+    { _id: 'settings' },
+    { fields: userStructureValidationMandatory, sort: { _id: 1 }, limit: 1 },
+  );
 });

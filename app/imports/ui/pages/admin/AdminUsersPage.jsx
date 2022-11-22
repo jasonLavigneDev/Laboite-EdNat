@@ -20,7 +20,7 @@ import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import SendIcon from '@mui/icons-material/Send';
+import AddAlertIcon from '@mui/icons-material/AddAlert';
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
 
 import IconButton from '@mui/material/IconButton';
@@ -29,8 +29,11 @@ import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Pagination from '@mui/material/Pagination';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
 import { Roles } from 'meteor/alanning:roles';
-import { getStructureIds } from '../../../api/users/structures';
 import { usePagination } from '../../utils/hooks';
 import Spinner from '../../components/system/Spinner';
 import { useAppContext } from '../../contexts/context';
@@ -53,6 +56,9 @@ const useStyles = makeStyles()((theme) => ({
   },
   inline: {
     display: 'inline',
+  },
+  typeselect: {
+    minWidth: '280px',
   },
   avatar: {
     backgroundColor: theme.palette.primary.main,
@@ -88,6 +94,10 @@ const AdminUsersPage = ({ match: { path } }) => {
   const [{ isMobile }] = useAppContext();
   const [search, setSearch] = useState('');
   const [sortByDate, setSortByDate] = useState(false);
+  const [userType, setUserType] = useState('all');
+  const userTypes = ['all', 'adminStructure', 'admin'];
+  // forceReload is used to force publication reload when removing a role
+  let forceReload = new Date();
 
   // for user structure
   const isStructureSpecific = path === '/admin/structureusers';
@@ -107,7 +117,7 @@ const AdminUsersPage = ({ match: { path } }) => {
 
   const { changePage, page, items, total } = usePagination(
     subscription,
-    { selectedStructureId, search, sort: sortByDate ? { lastLogin: -1 } : { lastName: 1 } },
+    { selectedStructureId, search, userType, forceReload, sort: sortByDate ? { lastLogin: -1 } : { lastName: 1 } },
     Meteor.users,
     {},
     { sort: sortByDate ? { lastLogin: -1 } : { lastName: 1 } },
@@ -123,25 +133,26 @@ const AdminUsersPage = ({ match: { path } }) => {
       .map((assignment) => assignment.user._id);
 
     const roleshandlers2 = Meteor.subscribe('roles.adminStructureAll');
-    const adminsIds2 = Meteor.roleAssignment
-      .find({ scope: { $in: getStructureIds() }, 'role._id': 'adminStructure' })
-      .fetch()
-      .map((assignment) => assignment.user._id);
-
     return {
       isLoading: !roleshandlers.ready() && !roleshandlers2.ready(),
       admins: adminsIds,
-      adminStructure: adminsIds2,
     };
   });
   const handleChangePage = (event, value) => {
     changePage(value);
   };
+  const handleUserType = (evt) => {
+    setUserType(evt.target.value);
+  };
   const searchRef = useRef();
   const updateSearch = (e) => setSearch(e.target.value);
   const resetSearch = () => setSearch('');
+
   useEffect(() => {
-    if (searchRef.current) searchRef.current.value = search;
+    if (searchRef.current) {
+      searchRef.current.value = search;
+    }
+
     if (page !== 1) {
       changePage(1);
     }
@@ -153,6 +164,7 @@ const AdminUsersPage = ({ match: { path } }) => {
     Meteor.call(method, { userId: user._id }, (error) => {
       if (error) msg.error(error.reason);
       else {
+        forceReload = new Date();
         msg.success(
           method === 'users.unsetAdmin'
             ? i18n.__('pages.AdminUsersPage.successUnsetAdmin')
@@ -177,6 +189,7 @@ const AdminUsersPage = ({ match: { path } }) => {
     Meteor.call(method, { userId: user._id }, (error) => {
       if (error) msg.error(error.reason);
       else {
+        forceReload = new Date();
         msg.success(
           method === 'users.unsetAdminStructure'
             ? i18n.__('pages.AdminUsersPage.successUnsetAdminStructure')
@@ -240,7 +253,7 @@ const AdminUsersPage = ({ match: { path } }) => {
           userData = user;
           setOpenNotif(true);
         },
-        icon: <SendIcon />,
+        icon: <AddAlertIcon />,
         hidden: isDeleting,
       },
       {
@@ -295,6 +308,25 @@ const AdminUsersPage = ({ match: { path } }) => {
                 </Grid>
               )}
               <Grid item xs={12} sm={12} md={6}>
+                <FormControl>
+                  <InputLabel id="usertype-selector-label">{i18n.__('pages.AdminUsersPage.userType')}</InputLabel>
+                  <Select
+                    className={classes.typeselect}
+                    labelId="usertype-selector-label"
+                    id="usertype-selector"
+                    name="usertype"
+                    variant="outlined"
+                    label={i18n.__('pages.AdminUsersPage.userType')}
+                    value={userType}
+                    onChange={handleUserType}
+                  >
+                    {userTypes.map((usertype) => (
+                      <MenuItem value={usertype} key={`select_${usertype}`}>
+                        {i18n.__(`pages.AdminUsersPage.${usertype}`)}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
                 <SearchField
                   updateSearch={updateSearch}
                   search={search}
@@ -399,6 +431,7 @@ const AdminUsersPage = ({ match: { path } }) => {
                     ];
                   })}
                 </List>
+                {total === 0 && <Typography variant="body">{i18n.__('pages.AdminUsersPage.noResult')}</Typography>}
               </Grid>
               {total > ITEM_PER_PAGE && (
                 <Grid item xs={12} sm={12} md={12} lg={12} className={classes.pagination}>

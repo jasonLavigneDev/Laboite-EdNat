@@ -99,3 +99,17 @@ export const useStructuresOfUserWithIntroductions = () => {
     };
   });
 };
+
+export const useAwaitingStructure = () => {
+  const [
+    {
+      user: { awaitingStructure },
+    },
+  ] = useAppContext();
+  return useTracker(() => {
+    const handle = Meteor.subscribe('structures.one', { _id: awaitingStructure });
+    const data = Structures.findOne({ _id: awaitingStructure });
+
+    return { awaitingStructure: data, ready: handle.ready() };
+  }, [awaitingStructure]);
+};

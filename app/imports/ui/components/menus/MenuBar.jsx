@@ -52,10 +52,10 @@ const MenuBar = ({ mobile }) => {
 
   const links = [
     {
-      path: '/introduction',
+      path: '/informations',
       content: 'menuIntroduction',
       icon: <InfoIcon />,
-      hidden: disabledFeatures.introductionTab,
+      hidden: disabledFeatures.introductionTab || mobile,
     },
     {
       path: '/',

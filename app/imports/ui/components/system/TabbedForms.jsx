@@ -53,7 +53,7 @@ const TabbedForms = ({ globalTitle = null, tabs }) => {
           </Tabs>
           {tabs.map(({ key, Element, ElementProps = {} }, i) => {
             if (selectedTab !== i) return null;
-            return <Element key={key} tabkey={key} data={tabs[key]} {...ElementProps} />;
+            return <Element key={key} tabkey={key} {...ElementProps} />;
           })}
         </Grid>
       </Grid>

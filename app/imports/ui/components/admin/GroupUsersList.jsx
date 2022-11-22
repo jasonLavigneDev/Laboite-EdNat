@@ -4,6 +4,7 @@ import { withTracker } from 'meteor/react-meteor-data';
 import MaterialTable from '@material-table/core';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import AddAlertIcon from '@mui/icons-material/AddAlert';
 import ClearIcon from '@mui/icons-material/Clear';
 import i18n from 'meteor/universe:i18n';
 import { makeStyles } from 'tss-react/mui';
@@ -16,6 +17,8 @@ import setMaterialTableLocalization from '../initMaterialTableLocalization';
 import Finder from './Finder';
 import Groups from '../../../api/groups/groups';
 import { useAppContext } from '../../contexts/context';
+import AdminSendNotification from '../users/AdminSendNotification';
+import SendGroupNotification from '../groups/SendGroupNotification';
 
 const useStyles = makeStyles()(() => ({
   adduser: {
@@ -80,6 +83,9 @@ const GroupsUsersList = (props) => {
   const [showSearch, setShowSearch] = useState(false);
   const [showSearchGroup, setShowSearchGroup] = useState(false);
   const [finderId, setFinderId] = useState(new Date().getTime());
+  const [openNotif, setOpenNotif] = useState(false);
+  const [openGroupNotif, setOpenGroupNotif] = useState(false);
+  const [userDataToSendNotif, setUserDataToSendNotif] = useState({});
   const { classes } = useStyles();
 
   const addUser = () => {
@@ -112,6 +118,11 @@ const GroupsUsersList = (props) => {
       }
     });
     setFinderId(new Date().getTime());
+  };
+
+  const sendNotification = (fullUser) => {
+    setUserDataToSendNotif(fullUser);
+    setOpenNotif(true);
   };
 
   useEffect(() => {
@@ -147,6 +158,24 @@ const GroupsUsersList = (props) => {
     onClick: () => {
       setShowSearchGroup(!showSearchGroup);
       setShowSearch(false);
+    },
+  });
+
+  actions.push({
+    icon: AddAlertIcon,
+    tooltip: i18n.__('components.GroupUsersList.materialTableLocalization.body_sendGroupNotifTooltip'),
+    isFreeAction: true,
+    onClick: () => {
+      setOpenGroupNotif(true);
+    },
+  });
+
+  actions.push({
+    icon: AddAlertIcon,
+    tooltip: i18n.__('components.GroupUsersList.materialTableLocalization.body_sendMemberNotifTooltip'),
+    isFreeAction: false,
+    onClick: (_, rowData) => {
+      sendNotification(rowData);
     },
   });
 
@@ -237,6 +266,12 @@ const GroupsUsersList = (props) => {
             }),
         }}
       />
+      {openNotif && (
+        <AdminSendNotification data={userDataToSendNotif} open={openNotif} onClose={() => setOpenNotif(false)} />
+      )}
+      {openGroupNotif && (
+        <SendGroupNotification groupId={groupId} open={openGroupNotif} onClose={() => setOpenGroupNotif(false)} />
+      )}
     </>
   );
 };

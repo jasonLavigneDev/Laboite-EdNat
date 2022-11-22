@@ -11,11 +11,11 @@ import 'react-quill/dist/quill.snow.css';
 import Select from '@mui/material/Select';
 
 import i18n from 'meteor/universe:i18n';
-import { updateIntroductionLanguage } from '../../../api/appsettings/methods';
+import { updateTextInfoLanguage } from '../../../api/appsettings/methods';
 import Spinner from '../system/Spinner';
 import { CustomToolbarArticle } from '../system/CustomQuill';
 import '../../utils/QuillVideo';
-import { getCurrentIntroduction } from '../../../api/utils';
+import { getCurrentText } from '../../../api/utils';
 import { stripEmptyHtml } from '../../utils/QuillText';
 
 export const useStyles = makeStyles()((theme) => ({
@@ -53,7 +53,7 @@ export const quillOptions = {
   formats: ['header', 'bold', 'italic', 'underline', 'strike', 'blockquote', 'list', 'bullet', 'indent', 'link'],
 };
 
-const IntroductionEdition = ({ data = [] }) => {
+const InfoEditionComponent = ({ tabkey, data = [] }) => {
   const { classes } = useStyles();
   const [content, setContent] = useState('');
   const [language, setLanguage] = useState(i18n._locale);
@@ -64,7 +64,7 @@ const IntroductionEdition = ({ data = [] }) => {
 
   useEffect(() => {
     if (data) {
-      const currentData = getCurrentIntroduction({ introduction: data }) || {};
+      const currentData = getCurrentText({ data, language });
       setContent(currentData.content || '');
       setLoading(false);
     }
@@ -72,7 +72,7 @@ const IntroductionEdition = ({ data = [] }) => {
 
   useEffect(() => {
     if (data) {
-      const currentData = getCurrentIntroduction({ introduction: data }) || {};
+      const currentData = getCurrentText({ data, language }) || {};
       if (content !== currentData.content) {
         setChanges(true);
       } else {
@@ -89,7 +89,7 @@ const IntroductionEdition = ({ data = [] }) => {
   const onSubmitUpdateData = () => {
     setLoading(true);
 
-    updateIntroductionLanguage.call({ language, content: stripEmptyHtml(content) }, (error) => {
+    updateTextInfoLanguage.call({ tabkey, language, content: stripEmptyHtml(content) }, (error) => {
       setLoading(false);
       if (error) {
         msg.error(error.message);
@@ -100,7 +100,7 @@ const IntroductionEdition = ({ data = [] }) => {
   };
 
   const onCancel = () => {
-    const currentData = getCurrentIntroduction({ introduction: data }) || {};
+    const currentData = getCurrentText({ introduction: data, language }) || {};
     setContent(currentData.content || '');
   };
 
@@ -114,31 +114,37 @@ const IntroductionEdition = ({ data = [] }) => {
 
   return (
     <form className={classes.root}>
-      <Typography variant="h4">{i18n.__('components.IntroductionEdition.title')}</Typography>
+      <Typography variant="h4">{i18n.__(`components.InfoEditionComponent.title_${tabkey}`)}</Typography>
 
       <FormControl className={classes.formControl}>
-        <InputLabel id="language-selector-label">{i18n.__('components.IntroductionEdition.language')}</InputLabel>
-        <Select labelId="language-selector-label" id="language-selector" value={language} onChange={handleChange}>
+        <InputLabel id="language-selector-label">{i18n.__('components.InfoEditionComponent.language')}</InputLabel>
+        <Select
+          labelId="language-selector-label"
+          id="language-selector"
+          label={i18n.__('components.InfoEditionComponent.language')}
+          value={language}
+          onChange={handleChange}
+        >
           {translations.map((tra) => (
-            <MenuItem value={tra} key={`components.IntroductionEdition.language_${tra}`}>
-              {i18n.__(`components.IntroductionEdition.language_${tra}`)}
+            <MenuItem value={tra} key={`components.InfoEditionComponent.language_${tra}`}>
+              {i18n.__(`components.InfoEditionComponent.language_${tra}`)}
             </MenuItem>
           ))}
         </Select>
       </FormControl>
       <div className={classes.wysiwyg}>
-        <InputLabel htmlFor="content">{i18n.__('components.IntroductionEdition.content')}</InputLabel>
+        <InputLabel htmlFor="content">{i18n.__(`components.InfoEditionComponent.content_${tabkey}`)}</InputLabel>
         <CustomToolbarArticle />
         <ReactQuill id="content" value={content || ''} onChange={onUpdateRichText} {...quillOptions} />
       </div>
       {changes && (
         <div className={classes.buttonGroup}>
           <Button variant="contained" color="grey" onClick={onCancel} disabled={loading}>
-            {i18n.__('components.IntroductionEdition.cancel')}
+            {i18n.__('components.InfoEditionComponent.cancel')}
           </Button>
 
           <Button variant="contained" color="primary" onClick={onSubmitUpdateData} disabled={loading}>
-            {i18n.__('components.IntroductionEdition.update')}
+            {i18n.__('components.InfoEditionComponent.update')}
           </Button>
         </div>
       )}
@@ -146,12 +152,13 @@ const IntroductionEdition = ({ data = [] }) => {
   );
 };
 
-IntroductionEdition.propTypes = {
+InfoEditionComponent.propTypes = {
+  tabkey: PropTypes.string.isRequired,
   data: PropTypes.arrayOf(PropTypes.any),
 };
 
-IntroductionEdition.defaultProps = {
+InfoEditionComponent.defaultProps = {
   data: [],
 };
 
-export default IntroductionEdition;
+export default InfoEditionComponent;

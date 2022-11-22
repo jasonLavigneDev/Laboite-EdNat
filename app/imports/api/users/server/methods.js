@@ -19,8 +19,12 @@ import logServer from '../../logging';
 import { getRandomNCloudURL } from '../../nextcloud/methods';
 import Structures from '../../structures/structures';
 import Nextcloud from '../../nextcloud/nextcloud';
-import { hasAdminRightOnStructure } from '../../structures/utils';
 import EventsAgenda from '../../eventsAgenda/eventsAgenda';
+import {
+  hasAdminRightOnStructure,
+  hasRightToAcceptAwaitingStructure,
+  hasRightToSetStructureDirectly,
+} from '../../structures/utils';
 
 if (Meteor.settings.public.enableKeycloak === true) {
   const { whiteDomains } = Meteor.settings.private;
@@ -260,6 +264,49 @@ export const checkUsername = new ValidatedMethod({
   },
 });
 
+export const acceptAwaitingStructure = new ValidatedMethod({
+  name: 'users.acceptAwaitingStructure',
+  validate: new SimpleSchema({
+    targetUserId: { type: SimpleSchema.RegEx.Id, label: getLabel('api.users.labels.id') },
+  }).validator(),
+  run({ targetUserId }) {
+    // check that user is logged in
+    if (!this.userId) {
+      throw new Meteor.Error('api.users.acceptAwaitingStructure.notLoggedIn', i18n.__('api.users.mustBeLoggedIn'));
+    }
+
+    const targetUser = Meteor.users.findOne({ _id: targetUserId });
+    const { awaitingStructure } = targetUser;
+    const structure = Structures.findOne({ _id: awaitingStructure });
+
+    if (structure === undefined) {
+      throw new Meteor.Error(
+        'api.users.acceptAwaitingStructure.unknownStructure',
+        i18n.__('api.structures.unknownStructure'),
+      );
+    }
+    // only direct admin of structure can validate awaiting structure application
+    const authorized = hasRightToAcceptAwaitingStructure({
+      userId: this.userId,
+      awaitingStructureId: awaitingStructure,
+    });
+
+    if (!authorized) {
+      throw new Meteor.Error('api.users.acceptAwaitingStructure.notPermitted', i18n.__('api.users.notPermitted'));
+    }
+
+    Meteor.users.update(
+      { _id: targetUserId },
+      {
+        $set: {
+          structure: awaitingStructure,
+          awaitingStructure: null,
+        },
+      },
+    );
+  },
+});
+
 export const setStructure = new ValidatedMethod({
   name: 'users.setStructure',
   validate: new SimpleSchema({
@@ -285,15 +332,22 @@ export const setStructure = new ValidatedMethod({
     if (!structureToFind) {
       throw new Meteor.Error(`${structure} is not an allowed value`, i18n.__('SimpleSchema.notAllowed', structure));
     }
+
+    const isAuthorizedToSetStructureDirectly = hasRightToSetStructureDirectly({
+      userId: this.userId,
+    });
+
     // check if user has structure admin role and remove it only if new structure and old structure are different
     const user = Meteor.users.findOne({ _id: this.userId });
-    if (user.structure !== structure) {
+    if (user.structure !== structure && isAuthorizedToSetStructureDirectly) {
       if (Roles.userIsInRole(this.userId, 'adminStructure', user.structure)) {
         Roles.removeUsersFromRoles(this.userId, 'adminStructure', user.structure);
       }
-    }
-    // will throw error if username already taken
-    Meteor.users.update({ _id: this.userId }, { $set: { structure } });
+    } // will throw error if username already taken
+    Meteor.users.update(
+      { _id: this.userId },
+      { $set: { [isAuthorizedToSetStructureDirectly ? 'structure' : 'awaitingStructure']: structure } },
+    );
   },
 });
 
@@ -1042,12 +1096,61 @@ export const resetAuthToken = new ValidatedMethod({
   },
 });
 
+// This is a temporary method used to fix badly created users in database
+// intended to be called by an admin user from a browser dev console :
+//  Meteor.call('users.fixUsers', (err,res) => console.log(res))
+//
+export const fixUsers = new ValidatedMethod({
+  name: 'users.fixUsers',
+  validate: null,
+  run() {
+    if (!this.userId) {
+      throw new Meteor.Error('api.users.fixUsers.notPermitted', i18n.__('api.users.mustBeLoggedIn'));
+    }
+    // check if current user has global admin rights
+    const authorized = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
+    if (!authorized) {
+      throw new Meteor.Error('api.users.fixUsers.notPermitted', i18n.__('api.users.adminNeeded'));
+    }
+    const badUsers = Meteor.users.find({ username: null }).fetch();
+    let fixedCount = 0;
+    badUsers.forEach((user) => {
+      // try to get missing fields from keycloak data
+      if (user.services.keycloak) {
+        const updateInfos = {
+          primaryEmail: user.services.keycloak.email,
+        };
+        Accounts.addEmail(user._id, user.services.keycloak.email, true);
+        if (user.services.keycloak.given_name) {
+          updateInfos.firstName = user.services.keycloak.given_name;
+        }
+        if (user.services.keycloak.family_name) {
+          updateInfos.lastName = user.services.keycloak.family_name;
+        }
+        if (user.services.keycloak.preferred_username) {
+          // use preferred_username as username if defined
+          // (should be set as mandatory in keycloak)
+          updateInfos.username = user.services.keycloak.preferred_username;
+        }
+        if (!user.nclocator) updateInfos.nclocator = getRandomNCloudURL();
+        Meteor.users.update({ _id: user._id }, { $set: updateInfos });
+        logServer(`- fixed user ${updateInfos.username} (email:${updateInfos.primaryEmail})`);
+        fixedCount += 1;
+      } else {
+        logServer(`- could not fix user '${user._id}', no keycloak data available`);
+      }
+    });
+    return fixedCount;
+  },
+});
+
 // Get list of all method names on User
 const LISTS_METHODS = _.pluck(
   [
     setUsername,
     setName,
     setStructure,
+    acceptAwaitingStructure,
     setArticlesEnable,
     setActive,
     removeUser,
@@ -1071,6 +1174,7 @@ const LISTS_METHODS = _.pluck(
     userUpdated,
     toggleAdvancedPersonalPage,
     getAuthToken,
+    fixUsers,
   ],
   'name',
 );

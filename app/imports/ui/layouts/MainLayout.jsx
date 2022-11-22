@@ -17,6 +17,7 @@ import NotValidatedMessage from '../components/system/NotValidatedMessage';
 import CustomToast from '../components/system/CustomToast';
 import { useAppContext } from '../contexts/context';
 import NoStructureSelected from '../components/system/NoStructureSelected';
+import AwaitingStructureMessage from '../components/system/AwaitingStructure';
 import SiteInMaintenance from '../components/system/SiteInMaintenance';
 import Footer from '../components/menus/Footer';
 
@@ -134,7 +135,7 @@ function MainLayout({ appsettings, ready }) {
                       <Route exact path="/help" component={HelpPage} />
 
                       {!disabledFeatures.introductionTab && (
-                        <Route exact path="/introduction" component={IntroductionPage} />
+                        <Route exact path="/informations" component={IntroductionPage} />
                       )}
 
                       {!disabledFeatures.blog && <Route exact path="/publications" component={ArticlesPage} />}
@@ -170,9 +171,13 @@ function MainLayout({ appsettings, ready }) {
                       <Route exact path="/profile" component={ProfilePage} />
                       <Route exact path="/profilestructureselection" component={StructureSelectionPage} />
                       {!disabledFeatures.introductionTab && (
-                        <Route exact path="/introduction" component={IntroductionPage} />
+                        <Route exact path="/informations" component={IntroductionPage} />
                       )}
-                      <Route component={NoStructureSelected} />
+                      {user.awaitingStructure ? (
+                        <Route component={AwaitingStructureMessage} />
+                      ) : (
+                        <Route component={NoStructureSelected} />
+                      )}
                     </Switch>
                   )
                 ) : (

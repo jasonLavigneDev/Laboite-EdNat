@@ -33,7 +33,8 @@ import { useObjectState } from '../../utils/hooks';
 import { downloadBackupPublications, uploadBackupPublications } from '../../../api/articles/methods';
 import AvatarPicker from '../../components/users/AvatarPicker';
 import Structures from '../../../api/structures/structures';
-import { getStructure, useStructure } from '../../../api/structures/hooks';
+import { getStructure, useStructure, useAwaitingStructure } from '../../../api/structures/hooks';
+import AppSettings from '../../../api/appsettings/appsettings';
 
 const useStyles = makeStyles()((theme) => ({
   root: {
@@ -115,6 +116,14 @@ const ProfilePage = () => {
   const { classes } = useStyles();
   const { disabledFeatures = {}, enableKeycloak } = Meteor.settings.public;
   const enableBlog = !disabledFeatures.blog;
+
+  const { isUserStructureValidationMandatory, ready: readySettingUserStructureValidationMandatory } = useTracker(() => {
+    const handle = Meteor.subscribe('appsettings.userStructureValidationMandatory');
+    const appSettings = AppSettings.findOne({ _id: 'settings' }, { fields: { userStructureValidationMandatory: 1 } });
+    return { isUserStructureValidationMandatory: appSettings.userStructureValidationMandatory, ready: handle.ready() };
+  });
+
+  const { awaitingStructure, ready: isAwaitingStructureReady } = useAwaitingStructure();
   const [{ user, loadingUser, isMobile }, dispatch] = useAppContext();
 
   const userStructure = useStructure();
@@ -267,6 +276,8 @@ const ProfilePage = () => {
       Meteor.call('users.setStructure', { structure: userData.structureSelect }, (error) => {
         if (error) {
           msg.error(error.message);
+        } else {
+          msg.success(i18n.__('api.methods.operationSuccessMsg'));
         }
       });
     }
@@ -572,6 +583,14 @@ const ProfilePage = () => {
                       <span>{i18n.__('pages.ProfilePage.noCurrentStructure')}</span>
                     )}
                   </Typography>
+                  {readySettingUserStructureValidationMandatory &&
+                    isUserStructureValidationMandatory &&
+                    isAwaitingStructureReady &&
+                    awaitingStructure !== undefined && (
+                      <Typography>
+                        {i18n.__('pages.ProfilePage.awaitingForStructure')} <b>{awaitingStructure.name}</b>
+                      </Typography>
+                    )}
                   <AutoComplete
                     options={flatData}
                     noOptionsText={i18n.__('pages.ProfilePage.noOptions')}
@@ -642,6 +661,7 @@ const ProfilePage = () => {
                     </InputLabel>
                     <Select
                       labelId="logoutType-label"
+                      label={i18n.__('pages.ProfilePage.logoutType')}
                       id="logoutType"
                       name="logoutType"
                       value={userData.logoutType}
@@ -673,6 +693,9 @@ const ProfilePage = () => {
                   }
                   label={i18n.__('pages.ProfilePage.advancedPersonalPage')}
                 />
+                {Meteor.user().advancedPersonalPage && (
+                  <FormHelperText>{i18n.__('pages.ProfilePage.advancedPersonalPageWarning')}</FormHelperText>
+                )}
                 {enableBlog && (
                   <>
                     <br />

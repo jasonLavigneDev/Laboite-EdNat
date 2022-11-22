@@ -22,11 +22,15 @@ import { makeStyles } from 'tss-react/mui';
 import Spinner from '../../components/system/Spinner';
 import AppSettings from '../../../api/appsettings/appsettings';
 import LegalComponent from '../../components/admin/LegalComponent';
-import IntroductionEdition from '../../components/admin/IntroductionEdition';
 import TabbedForms from '../../components/system/TabbedForms';
 
 import { useAppContext } from '../../contexts/context';
-import { switchMaintenanceStatus, updateTextMaintenance } from '../../../api/appsettings/methods';
+import {
+  switchMaintenanceStatus,
+  updateTextMaintenance,
+  setUserStructureValidationMandatoryStatus,
+} from '../../../api/appsettings/methods';
+import InfoEditionComponent from '../../components/admin/InfoEditionComponent';
 
 const useStyles = makeStyles()((theme) => ({
   root: {
@@ -44,40 +48,54 @@ const useStyles = makeStyles()((theme) => ({
   },
 }));
 
-const tabs = [
-  {
-    key: 'introduction',
-    title: i18n.__('pages.AdminSettingsPage.introduction'),
-    Element: IntroductionEdition,
-  },
-  {
-    key: 'legal',
-    title: i18n.__('pages.AdminSettingsPage.legal'),
-    Element: LegalComponent,
-  },
-  {
-    key: 'personalData',
-    title: i18n.__('pages.AdminSettingsPage.personalData'),
-    Element: LegalComponent,
-  },
-  {
-    key: 'accessibility',
-    title: i18n.__('pages.AdminSettingsPage.accessibility'),
-    Element: LegalComponent,
-  },
-  {
-    key: 'gcu',
-    title: i18n.__('pages.AdminSettingsPage.gcu'),
-    Element: LegalComponent,
-  },
-];
-
 const AdminSettingsPage = ({ ready, appsettings }) => {
   const [msgMaintenance, setMsgMaintenance] = useState(appsettings.textMaintenance);
   const { classes } = useStyles();
+  const [userStructureValidationMandatory, setUserStructureValidationMandatory] = useState(
+    appsettings.userStructureValidationMandatory,
+  );
   const [loading, setLoading] = useState(true);
   const [{ isMobile }] = useAppContext();
   const [open, setOpen] = useState(false);
+
+  const tabs = [
+    {
+      key: 'introduction',
+      title: i18n.__('pages.AdminSettingsPage.introduction'),
+      Element: InfoEditionComponent,
+      ElementProps: { data: appsettings.introduction || [] },
+    },
+    {
+      key: 'globalInfo',
+      title: i18n.__('pages.AdminSettingsPage.globalInfo'),
+      Element: InfoEditionComponent,
+      ElementProps: { data: appsettings.globalInfo || [] },
+    },
+    {
+      key: 'legal',
+      title: i18n.__('pages.AdminSettingsPage.legal'),
+      Element: LegalComponent,
+      ElementProps: { data: appsettings.legal || [] },
+    },
+    {
+      key: 'personalData',
+      title: i18n.__('pages.AdminSettingsPage.personalData'),
+      Element: LegalComponent,
+      ElementProps: { data: appsettings.personalData || [] },
+    },
+    {
+      key: 'accessibility',
+      title: i18n.__('pages.AdminSettingsPage.accessibility'),
+      Element: LegalComponent,
+      ElementProps: { data: appsettings.accessibility || [] },
+    },
+    {
+      key: 'gcu',
+      title: i18n.__('pages.AdminSettingsPage.gcu'),
+      Element: LegalComponent,
+      ElementProps: { data: appsettings.gcu || [] },
+    },
+  ];
 
   if (loading && !ready && !appsettings) {
     return <Spinner full />;
@@ -85,6 +103,8 @@ const AdminSettingsPage = ({ ready, appsettings }) => {
 
   useEffect(() => {
     if (appsettings.textMaintenance !== msgMaintenance) setMsgMaintenance(appsettings.textMaintenance);
+    if (appsettings.userStructureValidationMandatory !== userStructureValidationMandatory)
+      setUserStructureValidationMandatory(appsettings.userStructureValidationMandatory);
   }, [appsettings]);
 
   const switchMaintenance = (unlockMigration = false) => {
@@ -93,10 +113,28 @@ const AdminSettingsPage = ({ ready, appsettings }) => {
     switchMaintenanceStatus.call({ unlockMigration }, (error) => {
       setLoading(false);
       if (error) {
-        console.log(error);
-        msg.error(error.message);
+        msg.error(i18n.__('pages.AdminSettingsPage.errorMongo'));
       }
     });
+  };
+
+  const onSetUserStructureValidationMandatoryStatus = () => {
+    setLoading(true);
+    setUserStructureValidationMandatoryStatus.call(
+      { isValidationMandatory: userStructureValidationMandatory },
+      (error) => {
+        setLoading(false);
+        if (error) {
+          msg.error(error.message);
+        } else {
+          msg.success(i18n.__('api.methods.operationSuccessMsg'));
+        }
+      },
+    );
+  };
+
+  const onCheckUserStructureValidationMandatory = (e) => {
+    setUserStructureValidationMandatory(e.target.checked);
   };
 
   const onCheckMaintenance = () => {
@@ -135,6 +173,8 @@ const AdminSettingsPage = ({ ready, appsettings }) => {
     msgMaintenance === appsettings.textMaintenance
   );
 
+  const isUserStructureValidationMandatoryButtonActive =
+    userStructureValidationMandatory !== appsettings.userStructureValidationMandatory;
   return (
     <Fade in>
       <Container>
@@ -179,6 +219,44 @@ const AdminSettingsPage = ({ ready, appsettings }) => {
                 }
               />
             </Grid>
+          </Grid>
+        </Paper>
+        <Paper className={classes.root}>
+          <Grid container spacing={4}>
+            <Grid item md={12}>
+              <Typography variant={isMobile ? 'h6' : 'h4'}>
+                {i18n.__('pages.AdminSettingsPage.userStructureValidationMandatory')}
+              </Typography>
+            </Grid>
+            <Grid item md={12} className={classes.container}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={userStructureValidationMandatory}
+                    onChange={onCheckUserStructureValidationMandatory}
+                    name="external"
+                    color="primary"
+                  />
+                }
+                label={i18n.__(`pages.AdminSettingsPage.toggleUserStructureValidationMandatory`)}
+              />
+            </Grid>
+            <FormControlLabel
+              className={classes.containerForm}
+              control={
+                <div style={{ marginTop: '-20px', marginLeft: '25px' }}>
+                  <Button
+                    size="medium"
+                    variant="contained"
+                    color="primary"
+                    disabled={!isUserStructureValidationMandatoryButtonActive}
+                    onClick={onSetUserStructureValidationMandatoryStatus}
+                  >
+                    {i18n.__(`pages.AdminSettingsPage.buttonUserStructureValidationMandatory`)}
+                  </Button>
+                </div>
+              }
+            />
           </Grid>
         </Paper>
         <Dialog

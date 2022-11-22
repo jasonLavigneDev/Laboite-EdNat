@@ -14,6 +14,16 @@ Factory.define('appsettings', AppSettings, {
       content: faker.lorem.sentences(),
     },
   ],
+  globalInfo: [
+    {
+      language: 'en',
+      content: faker.lorem.sentences(),
+    },
+    {
+      language: 'fr',
+      content: faker.lorem.sentences(),
+    },
+  ],
   legal: {
     external: Boolean(Math.random() * 2),
     link: faker.lorem.slug(),
@@ -34,4 +44,5 @@ Factory.define('appsettings', AppSettings, {
     link: faker.lorem.slug(),
     content: faker.lorem.sentences(),
   },
+  userStructureValidationMandatory: false,
 });

@@ -27,6 +27,8 @@
         "content": "Content",
         "introduction": "Introduction",
         "content_introduction": "Introduction text",
+        "globalInfo": "General informations",
+        "content_globalInfo": "General informations text",
         "legal": "Legal notice",
         "external_legal": "Use an external link for legal notice page",
         "link_legal": "Legal notice text page link",
@@ -44,7 +46,8 @@
         "link_personalData": "Personal Data text page link",
         "content_personalData": "Personal Data text",
         "maintenance": "Maintenance status",
-        "textMaintenance": "Maintenance reason text"
+        "textMaintenance": "Maintenance reason text",
+        "userStructureValidationMandatory": "Structure validation mandatoriness status"
       },
       "migrationLockedText": "Database migration is locked.",
       "updateAppsettings": {
@@ -54,7 +57,8 @@
         "notPermitted": "You don't have sufficient rights."
       },
       "switchMaintenanceStatus": {
-        "notPermitted": "You don't have sufficient rights."
+        "notPermitted": "You don't have sufficient rights.",
+        "errorMongo": "Erreur MongoDB"
       },
       "updateTextMaintenance": {
         "notPermitted": "You don't have sufficient rights."
@@ -142,6 +146,7 @@
         "favServices": "Favorite Services",
         "favUserBookmarks": "Favorite Bookmarks",
         "structure": "Attachment Structure",
+        "awaitingStructure": "Waiting for validation structure",
         "primaryEmail": "Primary Email",
         "language": "Preferred Language",
         "logoutType": "Logout Method",
@@ -186,6 +191,7 @@
         "members": "Members",
         "animators": "Animators",
         "admins": "Admins",
+        "all": "All",
         "applications": "Applications ID",
         "nextcloud": "Create groupe in Nextcloud",
         "plugins": "Related services managing groups"
@@ -198,7 +204,7 @@
         "displayed": "displayed",
         "inactive": "inactive",
         "invisible": "invisible",
-        "maintenance" : "maintenance"
+        "maintenance": "maintenance"
       },
       "labels": {
         "id": "Service Id",
@@ -414,14 +420,16 @@
       "ValidateFormCreate": "Create",
       "cancel": "Cancel"
     },
-    "IntroductionEdition": {
-      "title": "Introduction",
+    "InfoEditionComponent": {
+      "title_introduction": "Introduction",
+      "title_globalInfo": "General informations",
       "language": "Select the language to edit",
       "language_fr": "French",
       "language_en": "English",
-      "content": "Introduction text",
+      "content_introduction": "Introduction text",
+      "content_globalInfo": "General informations text",
       "update": "Update",
-      "cancel": "Cancel"
+      "cancel": "Cancel"     
     },
     "Notifications": {
       "remove": "Remove"
@@ -531,6 +539,8 @@
       "menuAdminTags": "Tags Management",
       "menuAdminStructureUsers": "Structure Users",
       "menuAdminStructureServices": "Structure Services",
+      "menuUserStructure": "Structures Management",
+      "menuAdminHelpPage": "Help page management",
       "menuAdminBackHome": "Back to Personnal Space",
       "menuContact": "Contact"
     },
@@ -550,7 +560,10 @@
       "menuAdminBackHome": "Back to Personnal Space",
       "menuUserStructure": "Structures Management",
       "menuAdminOfStructures": "Sub structures Management",
-      "menuAdminStructureSettings": "Structure settings"
+      "menuAdminStructureSettings": "Structure settings",
+      "menuAdminStructureIntroduction": "Structure introduction",
+      "menuAdminOfStructureUsersValidation": "Awaiting users",
+      "menuAdminDefaultSpaces": "Default Personal Spaces"
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Your account has not been activated",
@@ -560,6 +573,10 @@
       "noStructure": "You have not Attachment Structure",
       "selectStructure": "Choose a structure in your profile.",
       "editProfileLabel": "Update my Profile"
+    },
+    "AwaitingStructureMessage": {
+      "waitingForStructure": "You are waiting to be attached to a structure",
+      "structureName": "Asked structure is: {$name} "
     },
     "GroupUsersList": {
       "loadingTitle": "Loading ...",
@@ -583,7 +600,9 @@
         "body_editTooltip": "Modify this user",
         "body_deleteTooltip": "Remove this user",
         "body_editRow_deleteText": "Do you really want to remove this user?",
-        "body_addGroupTooltip": "Add members of another group"
+        "body_addGroupTooltip": "Add members of another group",
+        "body_sendGroupNotifTooltip": "Send a notification to all",
+        "body_sendMemberNotifTooltip": "Send a notif to this member"
       }
     },
     "UserFinder": {
@@ -785,8 +804,16 @@
       "cancel": "Cancel",
       "title_label": "Title",
       "content_label": "Notification content",
-      "ValidateForm": "Validate",
-      "type_label": "Notification type"
+      "ValidateForm": "Validate"
+    },
+    "SendGroupNotification": {
+      "title": "Send notification to all"
+    },
+    "NotificationModalForm": {
+      "title_label": "Title",
+      "content_label": "Notification content",
+      "cancel": "Cancel",
+      "ValidateForm": "Validate"
     },
     "SkipLink": {
       "skipToContent": "Skip to content"
@@ -830,6 +857,22 @@
     },
     "AdminStructureChangeEmailContact": {
       "label": "Email de contact"
+    },
+    "AdminUserValidationTable": {
+      "columnUsername": "Username",
+      "columnLastName": "LastName",
+      "columnFirstName": "FirstName",
+      "columnEmails": "Mails",
+      "columnStructure": "Structure",
+      "columnCreatedAt": "Registration date",
+      "actions_tooltip": "Validate this user",
+      "materialTableLocalization": {
+        "toolbar_searchPlaceholder": "Find a user",
+        "pagination_labelRowsSelect": "users per page",
+        "body_emptyDataSourceMessage": "No user to validate",
+        "body_deleteTooltip": "Delete user",
+        "body_editRow_deleteText": "Do you really want to remove this user?"
+      }
     }
   },
   "validatejs": {
@@ -886,9 +929,11 @@
       "introduction": "Introduction",
       "legal": "Legal notice",
       "gcu": "G.C.U",
+      "globalInfo": "General informations",
       "accessibility": "Accessibility",
       "personalData": "Personal Data",
       "maintenance": "Maintenance options",
+      "errorMongo": "A MongoDB error has occured while migrating.",
       "toggleMaintenance": "Put the site in maintenance",
       "textMaintenance": "Maintenance reason",
       "buttonTextMaintenance": "Validate message",
@@ -899,10 +944,13 @@
         "ask": "Do you want to run migration again ?",
         "cancel": "No",
         "confirm": "Yes"
-      }
+      },
+      "userStructureValidationMandatory": "Structure mandatoriness of attachment status",
+      "toggleUserStructureValidationMandatory": "Structure attachment is mandatory",
+      "buttonUserStructureValidationMandatory": "Validate change"
     },
     "SignIn": {
-      "back":"Go back",
+      "back": "Go back",
       "appDescription": "Digital services shared by National Education agents",
       "appVersion": "Test Alpha 0.1 Version",
       "emailLabel": "Username or Email",
@@ -966,6 +1014,7 @@
       "useGallery": "Choose among image gallery",
       "structureMessage": "Check this box to link all imported articles to your current attachment structure.",
       "advancedPersonalPage": "Activate advanced personal page",
+      "advancedPersonalPageWarning": "If you disable the advanced personal page, your page will be reset with the parameters of your structure default page.",
       "languageLabel": "Change language",
       "activateArticles": "Activate articles",
       "authTokenTitle": "Get the Access Token",
@@ -982,7 +1031,8 @@
       "noCurrentStructure": "You have no attached structure for now",
       "chooseAttachementStructure": "Choose your attachement structure",
       "noOptions": "Type to search for structures (3 letters minimum)",
-      "onlyActiveUserOption": "Only actives users can select a structure"
+      "onlyActiveUserOption": "Only actives users can select a structure",
+      "awaitingForStructure": "You are awaiting for structure:"
     },
     "NotFound": {
       "backButtonLabel": "Back",
@@ -1142,25 +1192,13 @@
       "manageUser": "Manager user",
       "sendNotif": "Send notification",
       "successCopyUserId": "User ID copied with success",
-      "copyUserId": "Copy user ID"
+      "copyUserId": "Copy user ID",
+      "userType": "Users type",
+      "all": "all",
+      "noResult": "No result"
     },
     "AdminUserValidationPage": {
-      "title": "User validation",
-      "columnUsername": "Username",
-      "columnLastName": "LastName",
-      "columnFirstName": "FirstName",
-      "columnEmails": "Mails",
-      "columnStructure": "Structure",
-      "columnCreatedAt": "Registration date",
-      "actions_tooltip": "Validate this user",
-      "missingData": "Incomplete user data",
-      "materialTableLocalization": {
-        "toolbar_searchPlaceholder": "Find a user",
-        "pagination_labelRowsSelect": "users per page",
-        "body_emptyDataSourceMessage": "No user to validate",
-        "body_deleteTooltip": "Delete user",
-        "body_editRow_deleteText": "Do you really want to remove this user?"
-      }
+      "title": "User validation"
     },
     "AdminHelpPage": {
       "title": "Helps Management",
@@ -1184,8 +1222,9 @@
       "screenshots": "Screenshots",
       "categories": "Categories",
       "open": "Open",
+      "hidden": "Hidden service",
       "inactive": "Inactive service",
-      "maintenance" : "Service on Maintenance",
+      "maintenance": "Service on Maintenance",
       "propulsedBy": "Propulsed by"
     },
     "PersonalPage": {
@@ -1216,11 +1255,11 @@
       "slug": "Slug",
       "state": "State",
       "team": "Team",
-      "usage": "App usage",
-      "logo": "Logo of the application",
+      "usage": "Service usage",
+      "logo": "Service logo",
       "description": "Short description",
-      "url": "URL of the service",
-      "content": "Long description of the app",
+      "url": "Service URL",
+      "content": "Long description",
       "categories": "Categories",
       "screenshots": "Screenshots",
       "addScreenshots": "Add a screenshot",
@@ -1277,7 +1316,8 @@
       "back": "Back to the group",
       "searchText": "Which user are you looking for ?",
       "noAccess": "You don't have access to address book of this group",
-      "noUsers": "No user found for this group"
+      "noUsers": "No user found for this group",
+      "userType": "Users type"
     },
     "Events": {
       "seeEvent": "See event",
@@ -1386,8 +1426,21 @@
       "undefined": "Not defined",
       "sortByLastLogin": "Sort by last login date"
     },
+    "AdminStructureUsersValidationPage": {
+      "title": "Users structure validation page for {$structureName}",
+      "successSetStructure": "User successfuly added in structure",
+      "actions": {
+        "validate": "Validate user"
+      }
+    },
     "AdminServicesByStructurePage": {
       "title": "Services management for structure"
+    },
+    "AdminDefaultSpacesPage": {
+      "chooseStructure": "Choose the structure",
+      "isSaving": "Is saving default space",
+      "isSaved": "Default space saved",
+      "applyToEveryone": "Apply this default space"
     },
     "StructureSelectionPage": {
       "backToProfile": "Back to profile"

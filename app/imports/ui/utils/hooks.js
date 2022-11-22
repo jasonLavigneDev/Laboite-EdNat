@@ -112,6 +112,12 @@ export const useWindowSize = () => {
   return windowSize;
 };
 
+export const useBoolean = (defaultBoolean = false) => {
+  const [state, setState] = useState(defaultBoolean);
+  const toggle = () => setState(!state);
+  return [state, toggle, setState];
+};
+
 validate.options = {
   fullMessages: false,
 };

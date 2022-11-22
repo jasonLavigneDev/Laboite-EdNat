@@ -27,6 +27,8 @@ import {
   findUsers,
   findUser,
   removeUser,
+  setAdminOf,
+  setAnimatorOf,
   setMemberOf,
   setKeycloakId,
   setAvatar,
@@ -35,17 +37,34 @@ import {
   setArticlesEnable,
   resetAuthToken,
   removeUserFromStructure,
+  acceptAwaitingStructure,
 } from './methods';
 import Groups from '../../groups/groups';
 import PersonalSpaces from '../../personalspaces/personalspaces';
 import Nextcloud from '../../nextcloud/nextcloud';
 import './publications';
 import { getStructureIds } from '../structures';
+import AppSettings from '../../appsettings/appsettings';
 
 let allowedStructures = [];
+const testSettingsId = 'settings';
+const setValidationMandatory = (state) => {
+  AppSettings.update(
+    { _id: testSettingsId },
+    {
+      $set: {
+        userStructureValidationMandatory: state,
+      },
+    },
+  );
+};
+
 describe('users', function () {
   before(function () {
     allowedStructures = getStructureIds();
+    AppSettings.remove({});
+    const appSettings = Factory.create('appsettings');
+    AppSettings.insert({ ...appSettings, _id: testSettingsId });
   });
   describe('publications', function () {
     let userId;
@@ -62,6 +81,7 @@ describe('users', function () {
       Meteor.users.remove({});
       Meteor.roles.remove({});
       Roles.createRole('admin');
+      Roles.createRole('animator');
       Roles.createRole('member');
       Roles.createRole('adminStructure');
       _.times(3, () => {
@@ -135,20 +155,28 @@ describe('users', function () {
     describe('users.byStructure', function () {
       it('does not send data to non adminStructure users', function (done) {
         const collector = new PublicationCollector({ userId });
-        collector.collect('users.byStructure', { page: 1, itemPerPage: 5, search: '' }, (collections) => {
-          assert.equal(collections.users, undefined);
-          done();
-        });
+        collector.collect(
+          'users.byStructure',
+          { page: 1, itemPerPage: 5, search: '', userType: 'all', forceReload: null },
+          (collections) => {
+            assert.equal(collections.users, undefined);
+            done();
+          },
+        );
       });
       it('sends users with same structure to adminStructure user', function (done) {
         Roles.addUsersToRoles(userId, 'adminStructure', 'Struct');
         Meteor.users.update(userId, { $set: { structure: 'Struct' } });
         Meteor.users.update(otherUserId, { $set: { structure: 'Struct' } });
         const collector = new PublicationCollector({ userId });
-        collector.collect('users.byStructure', { page: 1, itemPerPage: 5, search: '' }, (collections) => {
-          assert.equal(collections.users.length, 2);
-          done();
-        });
+        collector.collect(
+          'users.byStructure',
+          { page: 1, itemPerPage: 5, search: '', userType: 'all', forceReload: null },
+          (collections) => {
+            assert.equal(collections.users.length, 2);
+            done();
+          },
+        );
         Roles.removeUsersFromRoles(userId, 'adminStructure', 'Struct');
       });
     });
@@ -251,21 +279,55 @@ describe('users', function () {
     });
     describe('users.group', function () {
       it('sends all users from a public group', function (done) {
+        setAdminOf._execute({ userId }, { userId, groupId: group._id });
+        setAnimatorOf._execute({ userId }, { userId: otherUserId, groupId: group._id });
         const collector = new PublicationCollector({ userId: otherUserId });
-        collector.collect('users.group', { page: 1, itemPerPage: 5, slug: group.slug, search: '' }, (collections) => {
-          assert.equal(collections.users.length, 2);
-          assert.equal(
-            collections.users.filter((user) => [firstName, 'BobLeFilou'].includes(user.firstName)).length,
-            2,
-          );
-          done();
-        });
+        collector.collect(
+          'users.group',
+          { page: 1, itemPerPage: 5, slug: group.slug, search: '', userType: 'all' },
+          (collections) => {
+            assert.equal(collections.users.length, 2);
+            assert.equal(
+              collections.users.filter((user) => [firstName, 'BobLeFilou'].includes(user.firstName)).length,
+              2,
+            );
+            done();
+          },
+        );
+      });
+      it('sends all admins from a public group', function (done) {
+        setAdminOf._execute({ userId }, { userId, groupId: group._id });
+        setAnimatorOf._execute({ userId }, { userId: otherUserId, groupId: group._id });
+        const collector = new PublicationCollector({ userId: otherUserId });
+        collector.collect(
+          'users.group',
+          { page: 1, itemPerPage: 5, slug: group.slug, search: '', userType: 'admins' },
+          (collections) => {
+            assert.equal(collections.users.length, 1);
+            assert.equal(collections.users[0].emails[0].address, 'user@ac-test.fr');
+            done();
+          },
+        );
+      });
+      it('sends all animators from a public group', function (done) {
+        setAdminOf._execute({ userId }, { userId, groupId: group._id });
+        setAnimatorOf._execute({ userId }, { userId: otherUserId, groupId: group._id });
+        const collector = new PublicationCollector({ userId: otherUserId });
+        collector.collect(
+          'users.group',
+          { page: 1, itemPerPage: 5, slug: group.slug, search: '', userType: 'animators' },
+          (collections) => {
+            assert.equal(collections.users.length, 1);
+            assert.equal(collections.users[0].firstName, 'BobLeFilou');
+            done();
+          },
+        );
       });
       it('sends all users from a public group with filter', function (done) {
         const collector = new PublicationCollector({ userId: otherUserId });
         collector.collect(
           'users.group',
-          { page: 1, itemPerPage: 5, slug: group.slug, search: 'BobLeFilou' },
+          { page: 1, itemPerPage: 5, slug: group.slug, search: 'BobLeFilou', userType: 'all' },
           (collections) => {
             assert.equal(collections.users.length, 1);
             assert.equal(collections.users[0].firstName, 'BobLeFilou');
@@ -275,29 +337,41 @@ describe('users', function () {
       });
       it('does send users from a public group when not member', function (done) {
         const collector = new PublicationCollector({ userId });
-        collector.collect('users.group', { page: 1, itemPerPage: 5, slug: group4.slug, search: '' }, (collections) => {
-          assert.equal(collections.users.length, 1);
-          assert.equal(collections.users[0].firstName, 'BobLeFilou');
-          done();
-        });
+        collector.collect(
+          'users.group',
+          { page: 1, itemPerPage: 5, slug: group4.slug, search: '', userType: 'all' },
+          (collections) => {
+            assert.equal(collections.users.length, 1);
+            assert.equal(collections.users[0].firstName, 'BobLeFilou');
+            done();
+          },
+        );
       });
       it('does not send users from a protected group when not member', function (done) {
         const collector = new PublicationCollector({ userId });
-        collector.collect('users.group', { page: 1, itemPerPage: 5, slug: group3.slug, search: '' }, (collections) => {
-          assert.equal(collections.user, undefined);
-          done();
-        });
+        collector.collect(
+          'users.group',
+          { page: 1, itemPerPage: 5, slug: group3.slug, search: '', userType: 'all' },
+          (collections) => {
+            assert.equal(collections.user, undefined);
+            done();
+          },
+        );
       });
       it('does send users from a protected group when member', function (done) {
         const collector = new PublicationCollector({ userId });
-        collector.collect('users.group', { page: 1, itemPerPage: 5, slug: group2.slug, search: '' }, (collections) => {
-          assert.equal(collections.users.length, 2);
-          assert.equal(
-            collections.users.filter((user) => [firstName, 'BobLeFilou'].includes(user.firstName)).length,
-            2,
-          );
-          done();
-        });
+        collector.collect(
+          'users.group',
+          { page: 1, itemPerPage: 5, slug: group2.slug, search: '', userType: 'all' },
+          (collections) => {
+            assert.equal(collections.users.length, 2);
+            assert.equal(
+              collections.users.filter((user) => [firstName, 'BobLeFilou'].includes(user.firstName)).length,
+              2,
+            );
+            done();
+          },
+        );
       });
     });
     describe('users.publishers', function () {
@@ -324,29 +398,41 @@ describe('users', function () {
       it('sends all users including admin restricted fields', function (done) {
         Roles.addUsersToRoles(userId, 'admin');
         const collector = new PublicationCollector({ userId });
-        collector.collect('users.admin', { page: 1, itemPerPage: 5, search: '' }, (collections) => {
-          assert.equal(collections.users.length, 5);
-          const user = collections.users[0];
-          assert.property(user, 'createdAt');
-          done();
-        });
+        collector.collect(
+          'users.admin',
+          { page: 1, itemPerPage: 5, search: '', userType: 'all', forceReload: null },
+          (collections) => {
+            assert.equal(collections.users.length, 5);
+            const user = collections.users[0];
+            assert.property(user, 'createdAt');
+            done();
+          },
+        );
       });
       it('sends a specific page of users including admin restricted fields', function (done) {
         Roles.addUsersToRoles(userId, 'admin');
         const collector = new PublicationCollector({ userId });
-        collector.collect('users.admin', { page: 2, itemPerPage: 3, search: '' }, (collections) => {
-          assert.equal(collections.users.length, 2);
-          done();
-        });
+        collector.collect(
+          'users.admin',
+          { page: 2, itemPerPage: 3, search: '', userType: 'all', forceReload: null },
+          (collections) => {
+            assert.equal(collections.users.length, 2);
+            done();
+          },
+        );
       });
       it('sends all users including admin restricted fields matching a filter', function (done) {
         Roles.addUsersToRoles(userId, 'admin');
         const collector = new PublicationCollector({ userId });
-        collector.collect('users.admin', { page: 1, itemPerPage: 5, search: 'user@ac-test.fr' }, (collections) => {
-          assert.equal(collections.users.length, 1);
-          assert.equal(collections.users[0].emails[0].address, 'user@ac-test.fr');
-          done();
-        });
+        collector.collect(
+          'users.admin',
+          { page: 1, itemPerPage: 5, search: 'user@ac-test.fr', userType: 'all', forceReload: null },
+          (collections) => {
+            assert.equal(collections.users.length, 1);
+            assert.equal(collections.users[0].emails[0].address, 'user@ac-test.fr');
+            done();
+          },
+        );
       });
     });
   });
@@ -533,13 +619,57 @@ describe('users', function () {
         );
       });
     });
+
     describe('setStructure', function () {
-      it('users can set their structure', function () {
+      it('users can ask for a structure (validation structure mandatory)', function () {
         const newStructure = allowedStructures[0];
+        setValidationMandatory(true);
+        setStructure._execute({ userId }, { structure: newStructure });
+        const user = Meteor.users.findOne({ _id: userId });
+        assert.equal(user.awaitingStructure, newStructure);
+      });
+
+      it('users loses structure admin role when structure changes (validation structure mandatory)', function () {
+        const newStructure = allowedStructures[0];
+        setValidationMandatory(true);
+        setStructure._execute({ userId }, { structure: newStructure });
+        acceptAwaitingStructure._execute({ userId: adminId }, { targetUserId: userId });
+        const user = Meteor.users.findOne({ _id: userId });
+        assert.equal(user.structure, newStructure);
+        setAdminStructure._execute({ userId: adminId }, { userId });
+        assert.equal(Roles.userIsInRole(userId, 'adminStructure', allowedStructures[0]), true);
+        setStructure._execute({ userId }, { structure: allowedStructures[0] });
+        acceptAwaitingStructure._execute({ userId: adminId }, { targetUserId: userId });
+        assert.equal(Roles.userIsInRole(userId, 'adminStructure', allowedStructures[0]), true);
+        setStructure._execute({ userId }, { structure: allowedStructures[1] });
+        acceptAwaitingStructure._execute({ userId: adminId }, { targetUserId: userId });
+
+        assert.equal(Roles.userIsInRole(userId, 'adminStructure', allowedStructures[1]), false);
+      });
+      it('users can set their structure (validation structure not mandatory)', function () {
+        const newStructure = allowedStructures[0];
+
+        setValidationMandatory(false);
         setStructure._execute({ userId }, { structure: newStructure });
         const user = Meteor.users.findOne({ _id: userId });
         assert.equal(user.structure, newStructure);
       });
+
+      it('users loses structure admin role when structure changes (validation structure not mandatory)', function () {
+        const newStructure = allowedStructures[0];
+
+        setValidationMandatory(false);
+        setStructure._execute({ userId }, { structure: newStructure });
+        const user = Meteor.users.findOne({ _id: userId });
+        assert.equal(user.structure, newStructure);
+        setAdminStructure._execute({ userId: adminId }, { userId });
+        assert.equal(Roles.userIsInRole(userId, 'adminStructure', allowedStructures[0]), true);
+        setStructure._execute({ userId }, { structure: allowedStructures[0] });
+        assert.equal(Roles.userIsInRole(userId, 'adminStructure', allowedStructures[0]), true);
+        setStructure._execute({ userId }, { structure: allowedStructures[1] });
+        assert.equal(Roles.userIsInRole(userId, 'adminStructure', allowedStructures[1]), false);
+      });
+      // }
       it('users can only set their structure to allowed values', function () {
         assert.throws(
           () => {
@@ -559,17 +689,56 @@ describe('users', function () {
           /api.users.setStructure.notLoggedIn/,
         );
       });
-      it('users loses structure admin role when structure changes', function () {
+    });
+    describe('acceptAwaitingStructure', function () {
+      it('admin user can accept awaiting structure of an user', function () {
         const newStructure = allowedStructures[0];
+        setValidationMandatory(true);
         setStructure._execute({ userId }, { structure: newStructure });
+        acceptAwaitingStructure._execute({ userId: adminId }, { targetUserId: userId });
+
         const user = Meteor.users.findOne({ _id: userId });
         assert.equal(user.structure, newStructure);
-        setAdminStructure._execute({ userId: adminId }, { userId });
-        assert.equal(Roles.userIsInRole(userId, 'adminStructure', allowedStructures[0]), true);
-        setStructure._execute({ userId }, { structure: allowedStructures[0] });
-        assert.equal(Roles.userIsInRole(userId, 'adminStructure', allowedStructures[0]), true);
-        setStructure._execute({ userId }, { structure: allowedStructures[1] });
-        assert.equal(Roles.userIsInRole(userId, 'adminStructure', allowedStructures[1]), false);
+      });
+      it('structure admin can accept awaiting structure of an user of same structure', function () {
+        const newStructure = allowedStructures[0];
+        setValidationMandatory(true);
+        setStructure._execute({ userId }, { structure: newStructure });
+        const adminStructureId = Accounts.createUser({
+          email: 'adminStructure@mail.com',
+          username: 'adminStructure@mail.com',
+          password: 'titi',
+          structure: newStructure,
+          firstName: 'adminStructureUserFirstName',
+          lastName: 'adminStructureUserLastName',
+        });
+        Roles.addUsersToRoles(adminStructureId, 'adminStructure', newStructure);
+
+        acceptAwaitingStructure._execute({ userId: adminStructureId }, { targetUserId: userId });
+        const user = Meteor.users.findOne({ _id: userId });
+        assert.equal(user.structure, newStructure);
+      });
+      it('structure admin can not accept awaiting structure of an user with different structure', function () {
+        const newStructure = allowedStructures[0];
+        setValidationMandatory(true);
+        setStructure._execute({ userId }, { structure: newStructure });
+        const adminStructureId = Accounts.createUser({
+          email: 'adminStructure1@mail.com',
+          username: 'adminStructure1@mail.com',
+          password: 'titi',
+          structure: allowedStructures[1],
+          firstName: 'adminStructureUserFirstName2',
+          lastName: 'adminStructureUserLastName2',
+        });
+        Roles.addUsersToRoles(adminStructureId, 'adminStructure', allowedStructures[1]);
+
+        assert.throws(
+          () => {
+            acceptAwaitingStructure._execute({ userId: adminStructureId }, { targetUserId: userId });
+          },
+          Meteor.Error,
+          'api.users.acceptAwaitingStructure.notPermitted',
+        );
       });
     });
     describe('setName', function () {

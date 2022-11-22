@@ -108,18 +108,22 @@ function BookmarksPage({ loading, bookmarksList, group }) {
               data={(filter ? bookmarksListFinal : bookmarksList).map((row) => ({ ...row, id: row._id }))}
               options={options}
               localization={setMaterialTableLocalization('pages.BookmarksPage')}
-              actions={[
-                {
-                  icon: add,
-                  tooltip: i18n.__('pages.BookmarksPage.materialTableLocalization.body_addTooltip'),
-                  isFreeAction: true,
-                  onClick: () => {
-                    setOnEdit(false);
-                    setBkData({});
-                    OpenURLEditor();
-                  },
-                },
-              ]}
+              actions={
+                userInGroup
+                  ? [
+                      {
+                        icon: add,
+                        tooltip: i18n.__('pages.BookmarksPage.materialTableLocalization.body_addTooltip'),
+                        isFreeAction: true,
+                        onClick: () => {
+                          setOnEdit(false);
+                          setBkData({});
+                          OpenURLEditor();
+                        },
+                      },
+                    ]
+                  : []
+              }
               editable={{
                 isDeleteHidden: (rowData) => hideEditActions(rowData.author),
                 isEditHidden: (rowData) => hideEditActions(rowData.author),

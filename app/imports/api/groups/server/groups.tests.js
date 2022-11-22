@@ -16,7 +16,7 @@ import { Roles } from 'meteor/alanning:roles';
 
 import Groups from '../groups';
 import PersonalSpaces from '../../personalspaces/personalspaces';
-import { createGroup, removeGroup, updateGroup, favGroup, unfavGroup } from '../methods';
+import { createGroup, removeGroup, updateGroup, favGroup, unfavGroup, countMembersOfGroup } from '../methods';
 import './publications';
 import './factories';
 import {
@@ -679,6 +679,27 @@ describe('groups', function () {
           Meteor.Error,
           /api.groups.unfavGroup.notPermitted/,
         );
+      });
+    });
+    describe('total count of group members', function () {
+      it('does count all members of group', function () {
+        const myGroupId = Factory.create('group', { owner: userId, name: 'toto' })._id;
+
+        setAdminOf._execute({ userId: adminId }, { userId: adminId, groupId: myGroupId });
+        setAdminOf._execute({ userId: adminId }, { userId: otherUserId, groupId: myGroupId });
+
+        setAnimatorOf._execute({ userId: adminId }, { userId, groupId: myGroupId });
+
+        setMemberOf._execute({ userId: adminId }, { userId: adminId, groupId: myGroupId });
+        setMemberOf._execute({ userId: adminId }, { userId: otherUserId, groupId: myGroupId });
+        setMemberOf._execute({ userId: adminId }, { userId, groupId: myGroupId });
+
+        assert.equal(Groups.findOne(myGroupId).slug, 'toto');
+
+        assert.equal(countMembersOfGroup._execute({}, { slug: 'toto' }), 3);
+      });
+      it('does return 0 if slug not found', function () {
+        assert.equal(countMembersOfGroup._execute({}, { slug: 'SlugNotExist' }), 0);
       });
     });
   });

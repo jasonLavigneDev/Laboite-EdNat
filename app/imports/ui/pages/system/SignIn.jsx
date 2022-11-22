@@ -97,10 +97,23 @@ function SignIn({ loggingIn, introduction, appsettings, ready }) {
     window.onbeforeunload = null;
   };
 
-  const handleSignIn = (event) => {
+  const checkAccessAndLogin = async () => {
+    if (document.hasStorageAccess && document.requestStorageAccess && isIframed) {
+      const hasAccess = await document.hasStorageAccess();
+      if (!hasAccess) {
+        await document.requestStorageAccess();
+        window.location.reload();
+        return true;
+      }
+    }
+    return false;
+  };
+
+  const handleSignIn = async (event) => {
     event.preventDefault();
     if (formState.isValid === true) {
       checkRememberMe();
+      await checkAccessAndLogin();
       const { email, password } = formState.values;
       Meteor.loginWithPassword(email, password, (err) => {
         if (err) {
@@ -110,7 +123,8 @@ function SignIn({ loggingIn, introduction, appsettings, ready }) {
     }
   };
 
-  const handleKeycloakAuth = () => {
+  const handleKeycloakAuth = async () => {
+    await checkAccessAndLogin();
     trackEvent({
       category: 'signin-page',
       action: 'connexion-click',
@@ -234,7 +248,6 @@ export const mainPagesTracker = (settingsSegment = 'all', component) => {
     const ready = subSettings.ready();
     const { introduction = [] } = appsettings;
     const currentEntry = getCurrentIntroduction({ introduction }) || {};
-    const defaultContent = introduction.find((entry) => !!entry.content.length);
 
     /**
      * @todo
@@ -248,7 +261,7 @@ export const mainPagesTracker = (settingsSegment = 'all', component) => {
         loggingIn,
         ready,
         appsettings,
-        introduction: currentEntry.content || defaultContent,
+        introduction: currentEntry.content,
         structures,
         loadingStructure,
       };
@@ -257,7 +270,7 @@ export const mainPagesTracker = (settingsSegment = 'all', component) => {
       loggingIn,
       ready,
       appsettings,
-      introduction: currentEntry.content || defaultContent,
+      introduction: currentEntry.content,
     };
   })(component);
 };

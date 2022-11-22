@@ -1,5 +1,12 @@
 # Ajout de plugins de groupe
 
+## Concept
+
+Les plugins de groupe permettent de synchroniser les utilisateurs et groupes de laboite dans des applications tierces (actuellement: Keycloak, Nextcloud, Rocketchat et BigBlueButton).
+Des variables de configuration permettent de les activer/désactiver et de créer automatiquement des liens vers les ressources créées (ex: canal de groupe dans Rocketchat) dans l'interface des groupes concernés.
+Ils utilisent des hooks déclenchés à l'appel de méthodes de laboite pour détecter des changements tels que la création d'un utilisateur ou son inscription/désinscription à un groupe.
+
+`Important`: Toute modification d'appartenance à un groupe dans laboite doit passer par les méthodes prévues à cet effet (`users.setMemeberOf`, `users.unsetMemberOf`, ...) afin que les hooks soient déclenchées et synchronisent les application tierces. Un hook spécifique (`users.userUpdated`) permet de détecter certains changements effectués sur l'utilisateur (email, nom, prénom) lorsqu'il se connecte et que ces informations ont été modifiées dans son profil Keycloak.
 
 ## Configuration
 
@@ -29,6 +36,9 @@ Par exemple :
 - `enableChangeName` détermine si on peut renommer le nom d'un goupe qui utilise ce plugin. Si plusieurs plugins sont associés à un groupe, la possibilité de changer le nom du groupe sera calculée à partir de tous les `enableChangeName` concernés.
 - TODO: envisager d'avoir une icone spécifique pour le bouton d'accès au plugin
 
+`Remarques`
+- Le plugin keycloak est un cas à part. Il n'est pas configurable de cette façon et n'impacte pas l'interface de groupe.
+- Le plugin BigBlueButton n'utilise pas non plus ce mécanisme de configuration, car l'accès au salon nécessite des actions spécifiques dans l'interface (le bouton d'accès au salon apparait cependant au même niveau que les ressources des autres plugins).
 
 ## Fichiers de Hook
 

@@ -1,10 +1,11 @@
 import React from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useTheme } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
 import AppBar from '@mui/material/AppBar';
 import IconButton from '@mui/material/IconButton';
+import InfoIcon from '@mui/icons-material/Info';
 import { withTracker } from 'meteor/react-meteor-data';
 import NotificationsBell from '../notifications/NotificationsBell';
 import MenuBar from './MenuBar';
@@ -65,6 +66,7 @@ const useStyles = makeStyles()((theme, isMobile) => ({
     alignItem: 'center',
     height: 48,
   },
+  leftContainer: { display: 'flex', flex: 1, alignItems: 'center' },
   maintenanceBar: {
     marginTop: 50,
   },
@@ -73,6 +75,7 @@ const useStyles = makeStyles()((theme, isMobile) => ({
 function TopBar({ publicMenu, root, appsettings, adminApp }) {
   const [{ isMobile, user, notificationPage }, dispatch] = useAppContext();
   const history = useHistory();
+  const location = useLocation();
   const theme = useTheme();
   const { classes } = useStyles(isMobile);
   const { SMALL_LOGO, LONG_LOGO, SMALL_LOGO_MAINTENANCE, LONG_LOGO_MAINTENANCE } = theme.logos;
@@ -116,18 +119,28 @@ function TopBar({ publicMenu, root, appsettings, adminApp }) {
     <div>
       <AppBar position="fixed" className={classes.root}>
         <div className={classes.firstBar}>
-          {LOGO ? (
-            <Link to={root || (publicMenu ? '/public' : '/')} className={classes.imgLogoContainer}>
-              <img
-                src={LOGO}
-                className={classes.imgLogoContainer}
-                alt="Logo"
-                style={{ padding: isEoleTheme && !isMobile ? 10 : '' }}
-              />
-            </Link>
-          ) : (
-            <div />
-          )}
+          <div className={classes.leftContainer}>
+            {LOGO ? (
+              <Link to={root || (publicMenu ? '/public' : '/')} className={classes.imgLogoContainer}>
+                <img
+                  src={LOGO}
+                  className={classes.imgLogoContainer}
+                  alt="Logo"
+                  style={{ padding: isEoleTheme && !isMobile ? 10 : '' }}
+                />
+              </Link>
+            ) : (
+              <div />
+            )}
+            {isMobile && (
+              <Link to="/informations">
+                <IconButton color={location.pathname === '/informations' ? 'primary' : 'default'}>
+                  <InfoIcon />
+                </IconButton>
+              </Link>
+            )}
+          </div>
+
           <div className={classes.rightContainer}>
             {publicMenu ? null : (
               <>
