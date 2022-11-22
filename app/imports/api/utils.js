@@ -177,3 +177,6 @@ export const getTree = (
  */
 export const getCurrentIntroduction = ({ introduction, language = i18n.getLocale().split('-')[0] }) =>
   introduction.find((entry) => entry.language === language);
+
+export const getCurrentText = ({ data, language = i18n.getLocale().split('-')[0] }) =>
+  data.find((entry) => entry.language === language) || [];

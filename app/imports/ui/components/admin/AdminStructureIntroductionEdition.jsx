@@ -11,7 +11,7 @@ import 'react-quill/dist/quill.snow.css';
 import Select from '@mui/material/Select';
 import i18n from 'meteor/universe:i18n';
 import { CustomToolbarArticle } from '../system/CustomQuill';
-import { quillOptions, useStyles } from './IntroductionEdition';
+import { quillOptions, useStyles } from './InfoEditionComponent';
 import Spinner from '../system/Spinner';
 import { getCurrentIntroduction } from '../../../api/utils';
 import { stripEmptyHtml } from '../../utils/QuillText';
@@ -80,17 +80,17 @@ const AdminStructuresIntroductionEdition = ({ /** Can be a state */ structure })
   return (
     <form className={classes.root}>
       <FormControl className={classes.formControl} fullWidth>
-        <InputLabel id="language-selector-label">{i18n.__('components.IntroductionEdition.language')}</InputLabel>
+        <InputLabel id="language-selector-label">{i18n.__('components.InfoEditionComponent.language')}</InputLabel>
         <Select
           labelId="language-selector-label"
-          label={i18n.__('components.IntroductionEdition.language')}
+          label={i18n.__('components.InfoEditionComponent.language')}
           id="language-selector"
           value={language}
           onChange={handleLanguageChange}
         >
           {translations.map((tra) => (
-            <MenuItem value={tra} key={`components.IntroductionEdition.language_${tra}`}>
-              {i18n.__(`components.IntroductionEdition.language_${tra}`)}
+            <MenuItem value={tra} key={`components.InfoEditionComponent.language_${tra}`}>
+              {i18n.__(`components.InfoEditionComponent.language_${tra}`)}
             </MenuItem>
           ))}
         </Select>
@@ -112,10 +112,10 @@ const AdminStructuresIntroductionEdition = ({ /** Can be a state */ structure })
         <Fade in>
           <div className={classes.buttonGroup}>
             <Button variant="contained" color="grey" onClick={onCancel} disabled={loading}>
-              {i18n.__('components.IntroductionEdition.cancel')}
+              {i18n.__('components.InfoEditionComponent.cancel')}
             </Button>
             <Button variant="contained" color="primary" onClick={onSubmitUpdateData} disabled={loading}>
-              {i18n.__('components.IntroductionEdition.update')}
+              {i18n.__('components.InfoEditionComponent.update')}
             </Button>
           </div>
         </Fade>

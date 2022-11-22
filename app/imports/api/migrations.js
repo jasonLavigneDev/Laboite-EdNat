@@ -530,3 +530,14 @@ Migrations.add({
     AppSettings.rawCollection().updateMany({}, { $unset: { userStructureValidationMandatory: 1 } });
   },
 });
+
+Migrations.add({
+  version: 28,
+  name: 'Add general informations to appsettings',
+  up: () => {
+    AppSettings.update({}, { $set: { globalInfo: [] } });
+  },
+  down: () => {
+    AppSettings.rawCollection().updateMany({}, { $unset: { globalInfo: 1 } });
+  },
+});

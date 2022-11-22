@@ -22,7 +22,6 @@ import { makeStyles } from 'tss-react/mui';
 import Spinner from '../../components/system/Spinner';
 import AppSettings from '../../../api/appsettings/appsettings';
 import LegalComponent from '../../components/admin/LegalComponent';
-import IntroductionEdition from '../../components/admin/IntroductionEdition';
 import TabbedForms from '../../components/system/TabbedForms';
 
 import { useAppContext } from '../../contexts/context';
@@ -31,6 +30,7 @@ import {
   updateTextMaintenance,
   setUserStructureValidationMandatoryStatus,
 } from '../../../api/appsettings/methods';
+import InfoEditionComponent from '../../components/admin/InfoEditionComponent';
 
 const useStyles = makeStyles()((theme) => ({
   root: {
@@ -62,8 +62,14 @@ const AdminSettingsPage = ({ ready, appsettings }) => {
     {
       key: 'introduction',
       title: i18n.__('pages.AdminSettingsPage.introduction'),
-      Element: IntroductionEdition,
+      Element: InfoEditionComponent,
       ElementProps: { data: appsettings.introduction || [] },
+    },
+    {
+      key: 'globalInfo',
+      title: i18n.__('pages.AdminSettingsPage.globalInfo'),
+      Element: InfoEditionComponent,
+      ElementProps: { data: appsettings.globalInfo || [] },
     },
     {
       key: 'legal',

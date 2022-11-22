@@ -139,8 +139,8 @@ export const updateTextMaintenance = new ValidatedMethod({
   },
 });
 
-export const updateIntroductionLanguage = new ValidatedMethod({
-  name: 'appSettings.updateIntroductionLanguage',
+export const updateTextInfoLanguage = new ValidatedMethod({
+  name: 'appSettings.updateTextInfoLanguage',
   validate: new SimpleSchema({
     language: {
       type: String,
@@ -152,9 +152,14 @@ export const updateIntroductionLanguage = new ValidatedMethod({
       label: getLabel('api.appsettings.labels.content'),
       optional: true,
     },
+    tabkey: {
+      type: String,
+      label: getLabel('api.appsettings.labels.tabkey'),
+      optional: true,
+    },
   }).validator({ clean: true }),
 
-  run({ language, content }) {
+  run({ language, content, tabkey }) {
     try {
       // check if current user is admin
       const authorized = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
@@ -165,15 +170,25 @@ export const updateIntroductionLanguage = new ValidatedMethod({
         );
       }
       const appsettings = AppSettings.findOne({});
-      const { introduction } = appsettings;
-      const langIndex = introduction.findIndex((entry) => entry.language === language);
-      const newIntro = [...introduction];
-      if (langIndex > -1) {
-        newIntro[langIndex].content = content;
-      } else {
-        newIntro.push({ language, content });
+      let newInfo;
+      let langIndex;
+      if (tabkey === 'introduction') {
+        const { globalInfo } = appsettings;
+        newInfo = [...globalInfo];
+        langIndex = globalInfo.findIndex((entry) => entry.language === language);
+      } else if (tabkey === 'globalInfo') {
+        const { introduction } = appsettings;
+        newInfo = [...introduction];
+        langIndex = introduction.findIndex((entry) => entry.language === language);
       }
-      return AppSettings.update({ _id: 'settings' }, { $set: { introduction: newIntro } });
+
+      if (langIndex > -1) {
+        newInfo[langIndex].content = content;
+      } else {
+        newInfo.push({ language, content });
+      }
+
+      return AppSettings.update({ _id: 'settings' }, { $set: { [tabkey]: newInfo } });
     } catch (error) {
       throw new Meteor.Error(error, error);
     }
@@ -196,8 +211,8 @@ export const getAppSettingsLinks = new ValidatedMethod({
 const LISTS_METHODS = _.pluck(
   [
     updateAppsettings,
-    updateIntroductionLanguage,
     updateTextMaintenance,
+    updateTextInfoLanguage,
     switchMaintenanceStatus,
     getAppSettingsLinks,
     setUserStructureValidationMandatoryStatus,

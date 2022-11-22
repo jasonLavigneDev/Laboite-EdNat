@@ -46,7 +46,7 @@ const UploaderNotifier = () => {
     <div
       style={{
         position: 'fixed',
-        bottom: 5,
+        top: '6vh',
         right: 5,
         display: 'flex',
         flexDirection: 'column',
@@ -86,6 +86,7 @@ const SingleNotification = ({ upload }) => {
         data: { fileName },
       });
     }, 5000);
+    onFinish(undefined, 'error');
   };
 
   const uploadFile = async () => {

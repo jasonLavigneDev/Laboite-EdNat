@@ -248,7 +248,6 @@ export const mainPagesTracker = (settingsSegment = 'all', component) => {
     const ready = subSettings.ready();
     const { introduction = [] } = appsettings;
     const currentEntry = getCurrentIntroduction({ introduction }) || {};
-    const defaultContent = introduction.find((entry) => !!entry.content.length);
 
     /**
      * @todo
@@ -262,7 +261,7 @@ export const mainPagesTracker = (settingsSegment = 'all', component) => {
         loggingIn,
         ready,
         appsettings,
-        introduction: currentEntry.content || defaultContent,
+        introduction: currentEntry.content,
         structures,
         loadingStructure,
       };
@@ -271,7 +270,7 @@ export const mainPagesTracker = (settingsSegment = 'all', component) => {
       loggingIn,
       ready,
       appsettings,
-      introduction: currentEntry.content || defaultContent,
+      introduction: currentEntry.content,
     };
   })(component);
 };

@@ -1,5 +1,104 @@
 # Changelog
 
+# [5.1.0](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/5.0.1...release/5.1.0) (2022-11-22)
+
+
+### Bug Fixes
+
+* **admin:** fix admin users pagination ([e18d297](https://gitlab.mim-libre.fr/alphabet/laboite/commit/e18d297e69b781f02647bcad15d9225294f7e0f5))
+* **admin:** fix error notification on maintenance page ([d5c8df5](https://gitlab.mim-libre.fr/alphabet/laboite/commit/d5c8df59f9f67af599699018add8cb5e0db59f69))
+* **admin:** fix maintenance error message ([2772b55](https://gitlab.mim-libre.fr/alphabet/laboite/commit/2772b55b6dd7bf8593407120fe00da2a6d54a4a0))
+* **admin:** fix structure route with user param ([d6c679f](https://gitlab.mim-libre.fr/alphabet/laboite/commit/d6c679f62b50674797c40975217f7de32294a5a9))
+* **admin:** limited access tio default space ([413539e](https://gitlab.mim-libre.fr/alphabet/laboite/commit/413539e78cb3a8d19b47ff8cfdf74debc095f06e))
+* **admin:** replace new notification icon in admin user page ([c7e972e](https://gitlab.mim-libre.fr/alphabet/laboite/commit/c7e972e943bafeb2f2f2ac60b2354a876442122f))
+* **adminUsers:** display message if no matching users found ([a039dae](https://gitlab.mim-libre.fr/alphabet/laboite/commit/a039dae82c510c302502db5cc909d16d0cb47ca7))
+* **adminUsers:** reload users list after role removal ([0965445](https://gitlab.mim-libre.fr/alphabet/laboite/commit/09654451f0d3d81442e8c4db667bb58ed78b9311))
+* **adminUsers:** remove unused calculation ([1c5ac0d](https://gitlab.mim-libre.fr/alphabet/laboite/commit/1c5ac0d4ff39f0c6f4459b7cb2555b5fa2dc0b8a))
+* **appsettings:** fix display of current text in admin settings ([a475499](https://gitlab.mim-libre.fr/alphabet/laboite/commit/a4754991a77d331dfd173a895875b355dcae0efc))
+* **badge:** delete unused box shadow ([9f355bf](https://gitlab.mim-libre.fr/alphabet/laboite/commit/9f355bfe6811f5a47440a40cc7d3ef646b2556d0))
+* **footer:** hide footer in maintenance mode ([d93fe59](https://gitlab.mim-libre.fr/alphabet/laboite/commit/d93fe59594113144d66e1807a28e63c4eec778e3))
+* **groups:** only group members can add events/polls ([3a9c8b4](https://gitlab.mim-libre.fr/alphabet/laboite/commit/3a9c8b42c8bb8da761d5e3272d3fca01bb8355d3))
+* **groups:** only members can add bookmarks to group ([13346dc](https://gitlab.mim-libre.fr/alphabet/laboite/commit/13346dcfa1a57d23f0fd489d2c0cf59172ee6e62))
+* **info:** fix path and information page ([82a559c](https://gitlab.mim-libre.fr/alphabet/laboite/commit/82a559c72a80ea516738e98dd37511b279cb9538))
+* **intro:** fix introduction on signin page ([6b188b5](https://gitlab.mim-libre.fr/alphabet/laboite/commit/6b188b596461f71cce2d6d68c5c38c7ee81b12a7))
+* **label:** correct labels in services creation form ([b4bea95](https://gitlab.mim-libre.fr/alphabet/laboite/commit/b4bea9543053749dfad360f75d92bdc81e828f1f))
+* **logo:** fix spinner on error on logo change ([9045f47](https://gitlab.mim-libre.fr/alphabet/laboite/commit/9045f47e60bc20c8367ebff1a9c39fa3db9c5676))
+* **logout:** optional chaining in filterservice into personalzoneupdater ([53b7a22](https://gitlab.mim-libre.fr/alphabet/laboite/commit/53b7a2261e4cb07407a0e167173bd98388cd0ae0))
+* **menu:** fix var mobile notation in main menu ([3186992](https://gitlab.mim-libre.fr/alphabet/laboite/commit/318699274cdf5eec8672b3e3065baf1d7af54e1b))
+* **migration:** fix imports paths ([66107f7](https://gitlab.mim-libre.fr/alphabet/laboite/commit/66107f71499965050fbfe1df083ebc1c44425bef))
+* **notifications:** remove notification type choice in form ([21ec926](https://gitlab.mim-libre.fr/alphabet/laboite/commit/21ec926995fcffb121a8aa52e8e24af6033adee5))
+* **notif:** set notification popup in top right corner ([873ced5](https://gitlab.mim-libre.fr/alphabet/laboite/commit/873ced5fbc2b3aab8d797a17deaf982533a20542))
+* **pagination:** set mongo version 6.0.2 into docker compose ([b6bbb91](https://gitlab.mim-libre.fr/alphabet/laboite/commit/b6bbb91773b2ad12c7158d599ac61bc3cfdcd0a4))
+* **personalPage:** hidden services must not appear on personalPage ([40a0e07](https://gitlab.mim-libre.fr/alphabet/laboite/commit/40a0e077791d9c227b6853045100ba054b789107))
+* **plugins:** check permissions in rocketchat plugin hooks ([95d7a9c](https://gitlab.mim-libre.fr/alphabet/laboite/commit/95d7a9c884b1b21309bc7b8fa25c14a5e878f707))
+* **refactor:** remove unused refactored page (AdminStructureUsersPage) ([1c12bd1](https://gitlab.mim-libre.fr/alphabet/laboite/commit/1c12bd17ba70b5c4bfa41ad2327cd1e0dc641693))
+* **search:** fix [#199](https://gitlab.mim-libre.fr/alphabet/laboite/issues/199) to support whitespace ([5b41f6f](https://gitlab.mim-libre.fr/alphabet/laboite/commit/5b41f6f4224ca15fe293243b05b5250c5097ca90))
+* **search:** fix space that fetch all users ([2a7dba7](https://gitlab.mim-libre.fr/alphabet/laboite/commit/2a7dba7d15f062fed0df6858eb273f6bb4b38a75))
+* **search:** removes doublon ([9d710e4](https://gitlab.mim-libre.fr/alphabet/laboite/commit/9d710e463aa3f26b544f6cbf3d4634bd48c58d0f))
+* **settings:** fix settings destructuration ([71b9530](https://gitlab.mim-libre.fr/alphabet/laboite/commit/71b953044fece257846f240e8bad7ab0cee95b8a))
+* **settings:** remove key from sample config, set value at migration ([8d8c9b0](https://gitlab.mim-libre.fr/alphabet/laboite/commit/8d8c9b022fe5c3fef70ccc34b08747cd88b8d36f))
+* **svg:** set mimetype when svg to fix html display ([1dc92f8](https://gitlab.mim-libre.fr/alphabet/laboite/commit/1dc92f8e770f529629e5def7e80486edff4d3bba))
+* **test:** fix tests ([8d5889a](https://gitlab.mim-libre.fr/alphabet/laboite/commit/8d5889a7950d14aaeffb42bfbf8c1b2b8ec01232))
+* **theme:** add missing property in eole and apps theme ([04a6991](https://gitlab.mim-libre.fr/alphabet/laboite/commit/04a6991d1f4f29bd36e454d18837568c0f45ed9f))
+* **theme:** delete paper background attribute ([560e1be](https://gitlab.mim-libre.fr/alphabet/laboite/commit/560e1be469f0b240b344562f7edad35e40c4a41f))
+* **topbar:** fix information button ([ee3ef60](https://gitlab.mim-libre.fr/alphabet/laboite/commit/ee3ef601f8a759a12916576655a2f3bbcdcdaf40))
+* **ui menus:** restrict three col layout to mobile ([6efa21e](https://gitlab.mim-libre.fr/alphabet/laboite/commit/6efa21ed46eac17b70404292b070a18ce5edaa56))
+* **ui topbar:** notification bell is not doubled ([d164a7e](https://gitlab.mim-libre.fr/alphabet/laboite/commit/d164a7e65edb322f4898f0f005f03575fb82c741))
+* **ui:** don't call user count if group is not loaded ([96cfec4](https://gitlab.mim-libre.fr/alphabet/laboite/commit/96cfec4b7396be2f5f2ff57b25e28c1df4756245))
+* **ui:** fix appearance of some selects ([301c4c8](https://gitlab.mim-libre.fr/alphabet/laboite/commit/301c4c8198c21516a856bbab4ce6d7e228354655))
+* **ui:** fix label on state input in service creation ([c972dab](https://gitlab.mim-libre.fr/alphabet/laboite/commit/c972dabc653d0bff7d8c8845db1f20c43e9164cb))
+* **ui:** fix ui to show notif bell on top ([1956764](https://gitlab.mim-libre.fr/alphabet/laboite/commit/1956764c102ed293dab16c8bf17cd98dab75786d))
+* **widget:** add firefox storage request on login ([97b37f5](https://gitlab.mim-libre.fr/alphabet/laboite/commit/97b37f5463ae3c8132be78e4dc37b8796ab6200b))
+
+
+### Code Refactoring
+
+* **admin:** refactor admin settings ([0586d12](https://gitlab.mim-libre.fr/alphabet/laboite/commit/0586d128375334519f3b3fd5617031956513338d))
+* **group:** refactor countMembersOfGroup method ([226f2b8](https://gitlab.mim-libre.fr/alphabet/laboite/commit/226f2b84fd07c0d938873a9ec4f7e4b1a54b19ed))
+* **group:** replace publication by method for count users ([c727b0b](https://gitlab.mim-libre.fr/alphabet/laboite/commit/c727b0bc0e99a020b5bdb48a5b34d4f5de368356))
+* **log:** remove non-useful console log ([e32a0df](https://gitlab.mim-libre.fr/alphabet/laboite/commit/e32a0dff33e7d55a9eb2716650c957e42868cc4c))
+* **migration:** rebase after librairies migrations ([5a48994](https://gitlab.mim-libre.fr/alphabet/laboite/commit/5a48994abaa7954768cc23edb1d3d5aa91cd4b6b))
+* **service:** create new component for remove duplicate code ([6332204](https://gitlab.mim-libre.fr/alphabet/laboite/commit/6332204736c369db8c9f67be24f3e31e3d85b213))
+* **settings:** remove the key in settings  and use DB ([4d06d19](https://gitlab.mim-libre.fr/alphabet/laboite/commit/4d06d1946c4d702fe69a78bb39b673d11c8eaae6))
+
+
+### Documentation
+
+* **config:** add useStructureValidationMandatory to README ([deb2b6f](https://gitlab.mim-libre.fr/alphabet/laboite/commit/deb2b6f383406bcab843295c127e5e9dcc81d1f0))
+* **plugins:** improve groupPlugins documentation ([de8d50d](https://gitlab.mim-libre.fr/alphabet/laboite/commit/de8d50d12e545dbd675bcb28b4d68c46a31914f5))
+
+
+### Features
+
+* **addressbook:** add the option to show only admins or animators ([c7ab70e](https://gitlab.mim-libre.fr/alphabet/laboite/commit/c7ab70ef1c627f35bbf37d469ca1ba7724e0a203))
+* **admin ui:** admin can change structure attachment mandatoriness ([8fde615](https://gitlab.mim-libre.fr/alphabet/laboite/commit/8fde615f5790e9c77bf98eaf007789cae88e0c2f))
+* **admin:** indicate inactive services ([a0b9c9b](https://gitlab.mim-libre.fr/alphabet/laboite/commit/a0b9c9b70124e05e0d0a309d68594f4b75da5c9d))
+* **adminUsers:** allow to show only admin or adminStructure users ([46ae357](https://gitlab.mim-libre.fr/alphabet/laboite/commit/46ae357f7def2545f0061f5f7364d54763cea114))
+* **default:** apply to all & reset methods ([5289768](https://gitlab.mim-libre.fr/alphabet/laboite/commit/5289768a6f9c9ec000897277a1fa9275bffc7ee5))
+* **group:** add total count of group members on the UI ([23464c7](https://gitlab.mim-libre.fr/alphabet/laboite/commit/23464c7d145b16d6ddb81125016c6c96ced84cbd))
+* **group:** enable sending notification to one or all member of a group ([4403cc1](https://gitlab.mim-libre.fr/alphabet/laboite/commit/4403cc1fad5823434f65abf8ded4c5a8b4506012))
+* **hook:** add useboolean hook in utils ([a9f6ded](https://gitlab.mim-libre.fr/alphabet/laboite/commit/a9f6ded3a9a57b964e28857a529a4a452f46b7fb))
+* **layout:** user know if they are awaiting structure ([7e8eaa5](https://gitlab.mim-libre.fr/alphabet/laboite/commit/7e8eaa5b783e53112a25516353d5931039b1482e))
+* **settings:** add global informations in app settings ([d7ff547](https://gitlab.mim-libre.fr/alphabet/laboite/commit/d7ff5478cc0ffb4e3c4a122a2469170d0aec0035))
+* **space:** autotmaticly generate pspace from structure ([a886bfd](https://gitlab.mim-libre.fr/alphabet/laboite/commit/a886bfd3dabd2a511cd173311c09ba8c34df9422))
+* **spaces:** add hook on users structure change ([546612e](https://gitlab.mim-libre.fr/alphabet/laboite/commit/546612eb144c06b99f3dda94bad09ff5b774d9a6))
+* **spaces:** wip add default spaces to structures ([8176354](https://gitlab.mim-libre.fr/alphabet/laboite/commit/8176354758bd62f4cee052358fdce5355db3a5cd))
+* **structure:** structure attachment validation can be mandatory ([f5e656e](https://gitlab.mim-libre.fr/alphabet/laboite/commit/f5e656e0625ea445bc4123e328cb6ca1e73ddc63))
+* **tags:** add enter event to add a to to an article ([0466bb6](https://gitlab.mim-libre.fr/alphabet/laboite/commit/0466bb62952d80bbbe33d2805bdb52e67899ba58))
+* **ui topbar:** use three column layout for topbar ([c4d5a9a](https://gitlab.mim-libre.fr/alphabet/laboite/commit/c4d5a9a2e50e26a023cd254b32b9835505b4ba69))
+* **users:** add temporary method to fix badly created users ([2bcabf1](https://gitlab.mim-libre.fr/alphabet/laboite/commit/2bcabf1b75d66a63a25cb42727526f695caa1a69))
+
+
+### Reverts
+
+* **admin:** revert fix admin users pagination ([8934009](https://gitlab.mim-libre.fr/alphabet/laboite/commit/89340091be8020aed12a6bf69a2484a01dcadac2))
+
+
+### Tests
+
+* **default:** add default space tests ([a1bb12d](https://gitlab.mim-libre.fr/alphabet/laboite/commit/a1bb12d8d7f6047ab82dd18be4251dae00ece86b))
+* **group:** add test for countMembersOfGroup method ([6ccecbd](https://gitlab.mim-libre.fr/alphabet/laboite/commit/6ccecbdfa534378a54e428f73b15844f68179288))
+
 ## [5.0.1](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/5.0.0...release/5.0.1) (2022-10-18)
 
 
