@@ -12,7 +12,7 @@ import PublishIcon from '@mui/icons-material/Publish';
 import IconButton from '@mui/material/IconButton';
 
 import { useObjectState } from '../../utils/hooks';
-import { useStyles } from './IntroductionEdition';
+import { useStyles } from './InfoEditionComponent';
 import { useAppContext } from '../../contexts/context';
 import { toBase64 } from '../../utils/filesProcess';
 import Spinner from '../system/Spinner';
