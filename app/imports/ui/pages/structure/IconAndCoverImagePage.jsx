@@ -26,10 +26,10 @@ const useStyles = () =>
       height: '100%',
     },
     iconImg: {
-      position: 'absolute',
-      bottom: '-27%',
-      left: '19%',
-      height: '60%',
+      // position: 'absolute',
+      // bottom: '-48px',
+      // left: '19%',
+      height: '100px',
     },
     containerGrid: {
       paddingTop: theme.spacing(0),
@@ -43,8 +43,9 @@ const useStyles = () =>
       paddingRight: '0px !important',
     },
     containerGridImgWrapper: {
-      marginRight: '-32px !important',
-      marginLeft: '-32px !important',
+      // marginRight: '-32px !important',
+      // marginLeft: '-32px !important'',
+      marginLeft: '0px !important',
       width: 'auto !important',
     },
   }));
@@ -107,12 +108,14 @@ const IconAndCoverImagePage = ({ setMainPosition, topBarHeight, setMainMarginTop
                   <div className={classes.parentImgWrapper}>
                     <div className={classes.imgWrapper} style={{ marginTop: imgMarginTop }}>
                       <img src={userStructure?.coverUrlImage} alt={coverAltValue} className={classes.coverImg} />
-                      <img
-                        src={userStructure?.iconUrlImage}
-                        alt={iconAltValue}
-                        className={classes.iconImg}
-                        id="iconImgId"
-                      />
+                      <Container>
+                        <img
+                          src={userStructure?.iconUrlImage}
+                          alt={iconAltValue}
+                          className={classes.iconImg}
+                          id="iconImgId"
+                        />
+                      </Container>
                     </div>
                   </div>
                 </Grid>
