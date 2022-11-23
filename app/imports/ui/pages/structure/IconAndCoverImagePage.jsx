@@ -66,13 +66,15 @@ const IconAndCoverImagePage = ({ setMainPosition, topBarHeight, setMainMarginTop
     return { userStructure: null, coverAltValue: null, iconAltValue: null };
   }, [user]);
 
-  if (setMainPosition !== null && userStructure?.coverUrlImage !== undefined) {
-    setMainPosition(topBarHeight > 0 ? `${topBarHeight + 40}px` : '18%');
-    if (setMainMarginTop !== null) setMainMarginTop(false);
-    if (setSecBarBorderTop !== null) setSecBarBorderTop(false);
-  } else if (setMainPosition !== null) {
-    setMainPosition('');
-  }
+  useEffect(() => {
+    if (setMainPosition !== null && userStructure?.coverUrlImage !== undefined) {
+      setMainPosition(topBarHeight > 0 ? `${topBarHeight + 40}px` : '18%');
+      if (setMainMarginTop !== null) setMainMarginTop(false);
+      if (setSecBarBorderTop !== null) setSecBarBorderTop(false);
+    } else if (setMainPosition !== null) {
+      setMainPosition('');
+    }
+  }, [topBarHeight]);
 
   const handleCoverAndIconImgDisplay = (event) => {
     if (userStructure?.coverUrlImage !== undefined) {
