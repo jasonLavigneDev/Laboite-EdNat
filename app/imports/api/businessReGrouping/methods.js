@@ -20,7 +20,9 @@ export const createBusinessReGrouping = new ValidatedMethod({
   }).validator(),
 
   run({ name, structure }) {
-    const authorized = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
+    const authorized =
+      isActive(this.userId) &&
+      (Roles.userIsInRole(this.userId, 'admin') || Roles.userIsInRole(this.userId, 'adminStructure', structure));
 
     const businessRegr = BusinessReGrouping.findOne({ name, structure });
     // Check if business regrouping exists in structure ancestors
@@ -64,9 +66,10 @@ export const removeBusinessReGrouping = new ValidatedMethod({
       regEx: SimpleSchema.RegEx.Id,
       label: getLabel('api.businessReGrouping.labels.id'),
     },
+    structure: { type: String, min: 1, label: getLabel('api.businessReGrouping.labels.structure') },
   }).validator(),
 
-  run({ businessReGroupingId }) {
+  run({ businessReGroupingId, structure }) {
     // check businessReGrouping existence
     const businessReGrouping = BusinessReGrouping.findOne(businessReGroupingId);
     if (businessReGrouping === undefined) {
@@ -76,7 +79,9 @@ export const removeBusinessReGrouping = new ValidatedMethod({
       );
     }
     // check if current user has admin rights
-    const authorized = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
+    const authorized =
+      isActive(this.userId) &&
+      (Roles.userIsInRole(this.userId, 'admin') || Roles.userIsInRole(this.userId, 'adminStructure', structure));
     if (!authorized) {
       throw new Meteor.Error(
         'api.businessReGrouping.removeBusinessReGrouping.notPermitted',
@@ -112,7 +117,9 @@ export const updateBusinessReGrouping = new ValidatedMethod({
       );
     }
     // check if current user has admin rights
-    const authorized = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
+    const authorized =
+      isActive(this.userId) &&
+      (Roles.userIsInRole(this.userId, 'admin') || Roles.userIsInRole(this.userId, 'adminStructure', data.structure));
     if (!authorized) {
       throw new Meteor.Error(
         'api.businessReGrouping.updateBusinessReGrouping.notPermitted',
