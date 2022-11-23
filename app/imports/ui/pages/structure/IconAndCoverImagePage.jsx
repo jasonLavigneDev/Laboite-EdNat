@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
 import { makeStyles } from 'tss-react/mui';
 import Grid from '@mui/material/Grid';
 import Fade from '@mui/material/Fade';
@@ -26,9 +25,8 @@ const useStyles = () =>
       height: '100%',
     },
     iconImg: {
-      // position: 'absolute',
-      // bottom: '-48px',
-      // left: '19%',
+      position: 'absolute',
+      bottom: '-48px',
       height: '100px',
     },
     containerGrid: {
@@ -50,10 +48,9 @@ const useStyles = () =>
     },
   }));
 
-const IconAndCoverImagePage = ({ setMainPosition, topBarHeight, setMainMarginTop, setSecBarBorderTop }) => {
+const IconAndCoverImagePage = () => {
   const [{ user, loadingUser }] = useAppContext();
   const { classes } = useStyles()();
-  const [imgMarginTop, setImgMarginTop] = useState('0px');
 
   const { userStructure, coverAltValue, iconAltValue } = useTracker(() => {
     if (user) {
@@ -67,34 +64,6 @@ const IconAndCoverImagePage = ({ setMainPosition, topBarHeight, setMainMarginTop
     return { userStructure: null, coverAltValue: null, iconAltValue: null };
   }, [user]);
 
-  // useEffect(() => {
-  //   if (setMainPosition !== null && userStructure?.coverUrlImage !== undefined) {
-  //     setMainPosition(topBarHeight > 0 ? `${topBarHeight + 40}px` : '18%');
-  //     if (setMainMarginTop !== null) setMainMarginTop(false);
-  //     if (setSecBarBorderTop !== null) setSecBarBorderTop(false);
-  //   } else if (setMainPosition !== null) {
-  //     setMainPosition('');
-  //   }
-  // }, [topBarHeight]);
-
-  // const handleCoverAndIconImgDisplay = (event) => {
-  //   if (userStructure?.coverUrlImage !== undefined) {
-  //     // Get scroll position
-  //     // const scrollPosition = window.pageYOffset;
-  //     const scrollPosition = event.target.scrollingElement.scrollTop;
-  //     if (scrollPosition > 0) {
-  //       setImgMarginTop(`${-scrollPosition}px`);
-  //     } else {
-  //       setImgMarginTop('0px');
-  //     }
-  //   }
-  // };
-  // useEffect(() => {
-  //   window.addEventListener('scroll', (event) => handleCoverAndIconImgDisplay(event));
-  //   return function cleanupScrollEventListener() {
-  //     window.removeEventListener('scroll', handleCoverAndIconImgDisplay);
-  //   };
-  // });
   return (
     <>
       {loadingUser ? (
@@ -106,7 +75,7 @@ const IconAndCoverImagePage = ({ setMainPosition, topBarHeight, setMainMarginTop
               {userStructure?.coverUrlImage !== undefined && (
                 <Grid item xs={12} sm={12} md={12} className={classes.containerGridItem}>
                   <div className={classes.parentImgWrapper}>
-                    <div className={classes.imgWrapper} style={{ marginTop: imgMarginTop }}>
+                    <div className={classes.imgWrapper}>
                       <img src={userStructure?.coverUrlImage} alt={coverAltValue} className={classes.coverImg} />
                       <Container>
                         <img
@@ -126,20 +95,6 @@ const IconAndCoverImagePage = ({ setMainPosition, topBarHeight, setMainMarginTop
       )}
     </>
   );
-};
-
-IconAndCoverImagePage.propTypes = {
-  setMainPosition: PropTypes.func,
-  topBarHeight: PropTypes.number,
-  setMainMarginTop: PropTypes.func,
-  setSecBarBorderTop: PropTypes.func,
-};
-
-IconAndCoverImagePage.defaultProps = {
-  setMainPosition: null,
-  topBarHeight: 0,
-  setMainMarginTop: null,
-  setSecBarBorderTop: null,
 };
 
 export default IconAndCoverImagePage;

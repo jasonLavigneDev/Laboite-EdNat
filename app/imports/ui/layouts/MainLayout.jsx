@@ -1,4 +1,4 @@
-import React, { useEffect, lazy, Suspense, useState } from 'react';
+import React, { useEffect, lazy, Suspense } from 'react';
 import { useLocation, Route, Switch } from 'react-router-dom';
 import { withTracker } from 'meteor/react-meteor-data';
 import { makeStyles } from 'tss-react/mui';
@@ -94,11 +94,9 @@ export const useLayoutStyles = makeStyles()((theme, isMobile) => ({
 
 function MainLayout({ appsettings, ready }) {
   const [{ userId, user, loadingUser, isMobile }] = useAppContext();
-  const [mainPosition, setMainPosition] = useState('');
   const { classes } = useLayoutStyles(isMobile, {
     props: isMobile,
   });
-  const [mainContentCss, setMainContentCss] = useState(true);
   const location = useLocation();
   const { disabledFeatures = {} } = Meteor.settings.public;
 
@@ -111,45 +109,15 @@ function MainLayout({ appsettings, ready }) {
     }
   }, [location]);
 
-  // const handleIconImgLeftChange = () => {
-  //   const iconImgElt = document.getElementById('iconImgId');
-  //   const mainChild = document.getElementById('main').lastChild;
-  //   if (iconImgElt && mainChild) {
-  //     const newIconImgLeftPosition =
-  //       window.getComputedStyle(mainChild)?.paddingLeft === undefined ||
-  //       window.getComputedStyle(mainChild)?.paddingLeft === '0px'
-  //         ? '19%'
-  //         : parseInt(mainChild?.offsetLeft, 10) +
-  //           parseInt(window.getComputedStyle(mainChild)?.paddingLeft?.replace('px', ''), 10) +
-  //           24;
-
-  //     iconImgElt.style.left = `${newIconImgLeftPosition}px`;
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   window.addEventListener('resize', handleIconImgLeftChange());
-  //   return function cleanupResizeEventListener() {
-  //     window.removeEventListener('resize', handleIconImgLeftChange);
-  //   };
-  // });
-
   return (
     <>
       <div className={classes.root}>
         <SkipLink />
-        <TopBar setMainElementPosition={setMainPosition} setMainElementMarginTop={setMainContentCss} />
+        <TopBar />
         {loadingUser && ready ? (
           <Spinner full />
         ) : (
-          <main
-            className={`${classes.content} ${mainContentCss ? classes.mainMarginTop : ''}`}
-            id="main"
-            style={{
-              paddingTop: mainPosition,
-              flexGrow: mainPosition === '' ? '' : '1',
-            }}
-          >
+          <main className={`${classes.content} ${classes.mainMarginTop}`} id="main">
             {appsettings.maintenance && isAdmin ? (
               <Alert className={classes.alertMaintenance} variant="filled" severity="error">
                 {i18n.__(`layouts.MainLayout.alertMaintenance`)}

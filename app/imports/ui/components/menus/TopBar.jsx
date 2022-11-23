@@ -77,7 +77,6 @@ const useStyles = makeStyles()((theme, isMobile) => ({
     marginTop: 50,
   },
 }));
-
 function TopBar({ publicMenu, root, appsettings, adminApp }) {
   const [{ isMobile, user, notificationPage }, dispatch] = useAppContext();
   const history = useHistory();
