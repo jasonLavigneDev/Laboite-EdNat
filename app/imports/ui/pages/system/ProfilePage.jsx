@@ -24,6 +24,9 @@ import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import MailIcon from '@mui/icons-material/Mail';
 import Input from '@mui/material/Input';
+import Collapse from '@mui/material/Collapse';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
 import Spinner from '../../components/system/Spinner';
 import { useAppContext } from '../../contexts/context';
 import LanguageSwitcher from '../../components/system/LanguageSwitcher';
@@ -119,6 +122,17 @@ const ProfilePage = () => {
   const { classes } = useStyles();
   const { disabledFeatures = {}, enableKeycloak } = Meteor.settings.public;
   const enableBlog = !disabledFeatures.blog;
+  const [expandedAuthToken, setExpandedAuthToken] = useState(false);
+  const [expandedPublicationDl, setExpandedPublicationDl] = useState(false);
+
+  const handleExpandAuthToken = () => {
+    setExpandedAuthToken(!expandedAuthToken);
+  };
+
+  const handleExpandPublicationDl = () => {
+    setExpandedPublicationDl(!expandedPublicationDl);
+  };
+
   const { awaitingStructure, ready: isAwaitingStructureReady } = useAwaitingStructure();
   const [{ user, loadingUser, isMobile }, dispatch] = useAppContext();
   const userStructure = useStructure();
@@ -760,62 +774,87 @@ const ProfilePage = () => {
         </Paper>
         {enableBlog && (
           <Paper className={classes.root}>
-            <Typography variant={isMobile ? 'h4' : 'h5'}>{i18n.__('pages.ProfilePage.backupTitle')}</Typography>
-            <p>{i18n.__('pages.ProfilePage.backupMessage')}</p>
-
-            <Grid container>
-              <Grid item xs={12} sm={6} md={6} className={classes.buttonWrapper}>
-                <Button variant="contained" onClick={downloadBackup} color="secondary">
-                  {i18n.__('pages.ProfilePage.downloadPublicationBackup')}
-                </Button>
+            <Typography variant={isMobile ? 'h4' : 'h5'} sx={{ width: '100%' }}>
+              {i18n.__('pages.ProfilePage.backupTitle')}
+              <IconButton
+                onClick={handleExpandPublicationDl}
+                sx={{
+                  transform: !expandedPublicationDl ? 'rotate(0deg)' : 'rotate(180deg)',
+                  marginTop: '-1vh',
+                }}
+              >
+                <ExpandMoreIcon />
+              </IconButton>
+            </Typography>
+            <Collapse collapsedSize={0} in={expandedPublicationDl}>
+              <p>{i18n.__('pages.ProfilePage.backupMessage')}</p>
+              <Grid container>
+                <Grid item xs={12} sm={6} md={6} className={classes.buttonWrapper}>
+                  <Button variant="contained" onClick={downloadBackup} color="secondary">
+                    {i18n.__('pages.ProfilePage.downloadPublicationBackup')}
+                  </Button>
+                </Grid>
+                <Grid item xs={12} sm={6} md={6} className={classes.buttonWrapper}>
+                  <div className={classes.fileWrap}>
+                    <label htmlFor="upload">
+                      <Input className={classes.inputFile} type="file" id="upload" onChange={uploadData} />
+                      <Button variant="contained" color="secondary" component="span" tabIndex={-1}>
+                        {i18n.__('pages.ProfilePage.UploadPublicationBackup')}
+                      </Button>
+                    </label>
+                  </div>
+                </Grid>
               </Grid>
-              <Grid item xs={12} sm={6} md={6} className={classes.buttonWrapper}>
-                <div className={classes.fileWrap}>
-                  <label htmlFor="upload">
-                    <Input className={classes.inputFile} type="file" id="upload" onChange={uploadData} />
-                    <Button variant="contained" color="secondary" component="span" tabIndex={-1}>
-                      {i18n.__('pages.ProfilePage.UploadPublicationBackup')}
-                    </Button>
-                  </label>
-                </div>
-              </Grid>
-            </Grid>
-            {user.structure ? (
-              <p>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      disabled={!user.structure}
-                      checked={structChecked}
-                      onChange={() => setStructChecked(!structChecked)}
-                      inputProps={{ 'aria-label': 'primary checkbox' }}
-                    />
-                  }
-                  label={i18n.__('pages.ProfilePage.structureMessage')}
-                />
-              </p>
-            ) : null}
+              {user.structure ? (
+                <p>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={!user.structure}
+                        checked={structChecked}
+                        onChange={() => setStructChecked(!structChecked)}
+                        inputProps={{ 'aria-label': 'primary checkbox' }}
+                      />
+                    }
+                    label={i18n.__('pages.ProfilePage.structureMessage')}
+                  />
+                </p>
+              ) : null}
+            </Collapse>
           </Paper>
         )}
         <Paper className={classes.root}>
-          <Typography variant={isMobile ? 'h4' : 'h5'}>{i18n.__('pages.ProfilePage.authTokenTitle')}</Typography>
-          <p>{i18n.__('pages.ProfilePage.authTokenMessage')}</p>
-          <p>
-            <b>{i18n.__('pages.ProfilePage.resetTokenMessage')}</b>
-          </p>
+          <Typography variant={isMobile ? 'h4' : 'h5'}>
+            {i18n.__('pages.ProfilePage.authTokenTitle')}
+            <IconButton
+              onClick={handleExpandAuthToken}
+              sx={{
+                transform: !expandedAuthToken ? 'rotate(0deg)' : 'rotate(180deg)',
+                marginTop: '-1vh',
+              }}
+            >
+              <ExpandMoreIcon />
+            </IconButton>
+          </Typography>
+          <Collapse collapsedSize={0} in={expandedAuthToken}>
+            <p>{i18n.__('pages.ProfilePage.authTokenMessage')}</p>
+            <p>
+              <b>{i18n.__('pages.ProfilePage.resetTokenMessage')}</b>
+            </p>
 
-          <Grid container>
-            <Grid item xs={12} sm={6} md={6} className={classes.buttonWrapper}>
-              <Button variant="contained" onClick={getAuthToken}>
-                {i18n.__('pages.ProfilePage.getAuthToken')}
-              </Button>
+            <Grid container>
+              <Grid item xs={12} sm={6} md={6} className={classes.buttonWrapper}>
+                <Button variant="contained" onClick={getAuthToken}>
+                  {i18n.__('pages.ProfilePage.getAuthToken')}
+                </Button>
+              </Grid>
+              <Grid item xs={12} sm={6} md={6} className={classes.buttonWrapper}>
+                <Button variant="contained" onClick={resetAuthToken} color="secondary">
+                  {i18n.__('pages.ProfilePage.resetAuthToken')}
+                </Button>
+              </Grid>
             </Grid>
-            <Grid item xs={12} sm={6} md={6} className={classes.buttonWrapper}>
-              <Button variant="contained" onClick={resetAuthToken} color="secondary">
-                {i18n.__('pages.ProfilePage.resetAuthToken')}
-              </Button>
-            </Grid>
-          </Grid>
+          </Collapse>
         </Paper>
       </Container>
     </Fade>
