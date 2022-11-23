@@ -51,8 +51,8 @@ const AdminSingleGroupPage = lazy(() => import('../pages/admin/AdminSingleGroupP
 // CSS
 export const useLayoutStyles = makeStyles()((theme, isMobile) => ({
   root: {
-    display: 'flex',
-    position: 'relative',
+    // display: 'flex',
+    // position: 'relative',
   },
   container: {
     width: `calc(100% - ${isMobile ? 65 : 300}px)`,
@@ -72,7 +72,8 @@ export const useLayoutStyles = makeStyles()((theme, isMobile) => ({
     marginBottom: isMobile ? 100 : 50,
   },
   mainMarginTop: {
-    marginTop: !isMobile && theme.shape.headerHeight ? theme.shape.headerHeight : 60,
+    marginTop: isMobile ? 60 : 20,
+    // marginTop: !isMobile && theme.shape.headerHeight ? theme.shape.headerHeight : 60,
   },
   flex: {
     display: 'flex',
@@ -110,28 +111,29 @@ function MainLayout({ appsettings, ready }) {
     }
   }, [location]);
 
-  const handleIconImgLeftChange = () => {
-    const iconImgElt = document.getElementById('iconImgId');
-    const mainChild = document.getElementById('main').lastChild;
-    if (iconImgElt && mainChild) {
-      const newIconImgLeftPosition =
-        window.getComputedStyle(mainChild)?.paddingLeft === undefined ||
-        window.getComputedStyle(mainChild)?.paddingLeft === '0px'
-          ? '19%'
-          : parseInt(mainChild?.offsetLeft, 10) +
-            parseInt(window.getComputedStyle(mainChild)?.paddingLeft?.replace('px', ''), 10) +
-            24;
+  // const handleIconImgLeftChange = () => {
+  //   const iconImgElt = document.getElementById('iconImgId');
+  //   const mainChild = document.getElementById('main').lastChild;
+  //   if (iconImgElt && mainChild) {
+  //     const newIconImgLeftPosition =
+  //       window.getComputedStyle(mainChild)?.paddingLeft === undefined ||
+  //       window.getComputedStyle(mainChild)?.paddingLeft === '0px'
+  //         ? '19%'
+  //         : parseInt(mainChild?.offsetLeft, 10) +
+  //           parseInt(window.getComputedStyle(mainChild)?.paddingLeft?.replace('px', ''), 10) +
+  //           24;
 
-      iconImgElt.style.left = `${newIconImgLeftPosition}px`;
-    }
-  };
+  //     iconImgElt.style.left = `${newIconImgLeftPosition}px`;
+  //   }
+  // };
 
-  useEffect(() => {
-    window.addEventListener('resize', handleIconImgLeftChange());
-    return function cleanupResizeEventListener() {
-      window.removeEventListener('resize', handleIconImgLeftChange);
-    };
-  });
+  // useEffect(() => {
+  //   window.addEventListener('resize', handleIconImgLeftChange());
+  //   return function cleanupResizeEventListener() {
+  //     window.removeEventListener('resize', handleIconImgLeftChange);
+  //   };
+  // });
+
   return (
     <>
       <div className={classes.root}>

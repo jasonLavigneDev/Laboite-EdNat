@@ -26,6 +26,7 @@ const useStyles = makeStyles()((theme, isMobile) => ({
     paddingLeft: theme.spacing(0),
     paddingRight: theme.spacing(0),
     minHeight: 48,
+    position: 'relative',
   },
   firstBar: {
     display: 'flex',

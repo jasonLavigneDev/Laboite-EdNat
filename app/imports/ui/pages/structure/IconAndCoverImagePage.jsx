@@ -66,34 +66,34 @@ const IconAndCoverImagePage = ({ setMainPosition, topBarHeight, setMainMarginTop
     return { userStructure: null, coverAltValue: null, iconAltValue: null };
   }, [user]);
 
-  useEffect(() => {
-    if (setMainPosition !== null && userStructure?.coverUrlImage !== undefined) {
-      setMainPosition(topBarHeight > 0 ? `${topBarHeight + 40}px` : '18%');
-      if (setMainMarginTop !== null) setMainMarginTop(false);
-      if (setSecBarBorderTop !== null) setSecBarBorderTop(false);
-    } else if (setMainPosition !== null) {
-      setMainPosition('');
-    }
-  }, [topBarHeight]);
+  // useEffect(() => {
+  //   if (setMainPosition !== null && userStructure?.coverUrlImage !== undefined) {
+  //     setMainPosition(topBarHeight > 0 ? `${topBarHeight + 40}px` : '18%');
+  //     if (setMainMarginTop !== null) setMainMarginTop(false);
+  //     if (setSecBarBorderTop !== null) setSecBarBorderTop(false);
+  //   } else if (setMainPosition !== null) {
+  //     setMainPosition('');
+  //   }
+  // }, [topBarHeight]);
 
-  const handleCoverAndIconImgDisplay = (event) => {
-    if (userStructure?.coverUrlImage !== undefined) {
-      // Get scroll position
-      // const scrollPosition = window.pageYOffset;
-      const scrollPosition = event.target.scrollingElement.scrollTop;
-      if (scrollPosition > 0) {
-        setImgMarginTop(`${-scrollPosition}px`);
-      } else {
-        setImgMarginTop('0px');
-      }
-    }
-  };
-  useEffect(() => {
-    window.addEventListener('scroll', (event) => handleCoverAndIconImgDisplay(event));
-    return function cleanupScrollEventListener() {
-      window.removeEventListener('scroll', handleCoverAndIconImgDisplay);
-    };
-  });
+  // const handleCoverAndIconImgDisplay = (event) => {
+  //   if (userStructure?.coverUrlImage !== undefined) {
+  //     // Get scroll position
+  //     // const scrollPosition = window.pageYOffset;
+  //     const scrollPosition = event.target.scrollingElement.scrollTop;
+  //     if (scrollPosition > 0) {
+  //       setImgMarginTop(`${-scrollPosition}px`);
+  //     } else {
+  //       setImgMarginTop('0px');
+  //     }
+  //   }
+  // };
+  // useEffect(() => {
+  //   window.addEventListener('scroll', (event) => handleCoverAndIconImgDisplay(event));
+  //   return function cleanupScrollEventListener() {
+  //     window.removeEventListener('scroll', handleCoverAndIconImgDisplay);
+  //   };
+  // });
   return (
     <>
       {loadingUser ? (
