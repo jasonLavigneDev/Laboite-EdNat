@@ -75,6 +75,19 @@
         "nameAlreadyUse": "Name already exists."
       }
     },
+    "businessReGrouping": {
+      "unknownBusinessReGrouping": "Business regrouping does not exist.",
+      "labels": {
+        "id": "Business regrouping Id",
+        "name": "Name",
+        "structure": "Service Structure"
+      },
+      "createBusinessReGrouping": {
+        "alreadyExists": "This business regrouping already exists.",
+        "nameAlreadyUse": "Name already exists.",
+        "nameAlreadyUsedForOneOfStructureAncestors": "Name already exists for one of its structure ancestors"
+      }
+    },
     "tags": {
       "unknownTag": "Tag does not exist.",
       "notLowerCase": "Tags must be lower case only",
@@ -217,6 +230,7 @@
         "description": "Description",
         "logo": "Logo",
         "categories": "Categories",
+        "businessReGrouping": "Regroupement métier",
         "screenshots": "Screenshots",
         "structure": "Service Structure",
         "url": "URL du service"
@@ -536,6 +550,7 @@
       "menuAdminNextcloudUrl": "Nextcloud URL management",
       "menuAdminUserValidation": "User validation",
       "menuAdminCategories": "Categories Management",
+      "menuAdminBusinessRegrouping": "Business regrouping Management",
       "menuAdminTags": "Tags Management",
       "menuAdminStructureUsers": "Structure Users",
       "menuAdminStructureServices": "Structure Services",
@@ -553,6 +568,7 @@
       "menuAdminNextcloudUrl": "Nextcloud URL management",
       "menuAdminUserValidation": "User validation",
       "menuAdminCategories": "Categories Management",
+      "menuAdminBusinessRegrouping": "Business regrouping Management",
       "menuAdminTags": "Tags Management",
       "menuAdminGroups": "Groups Management",
       "menuAdminStructureUsers": "Structure Users",
@@ -1052,7 +1068,8 @@
       "viewSimple": "Simple view",
       "filter": "Filter",
       "NoStructureServices": "No service defined for your structure",
-      "NoServices": "No services defined"
+      "NoServices": "No services defined",
+      "ServicesWithoutBusinessRegrouping": "Services without business regrouping"
     },
     "GroupsPage": {
       "title": "Explore the groups",
@@ -1094,6 +1111,7 @@
     "AdminCategoriesPage": {
       "title": "Categories Management",
       "columnName": "Name",
+      "structure": "structure",
       "materialTableLocalization": {
         "toolbar_searchPlaceholder": "Find a category",
         "pagination_labelRowsSelect": "Categories par page",
@@ -1261,6 +1279,7 @@
       "url": "Service URL",
       "content": "Long description",
       "categories": "Categories",
+      "businessReGrouping": "Business regrouping",
       "screenshots": "Screenshots",
       "addScreenshots": "Add a screenshot",
       "save": "Save",

@@ -36,6 +36,7 @@ const AdminSettingsPage = lazy(() => import('../pages/admin/AdminSettingsPage'))
 const AdminSingleServicePage = lazy(() => import('../pages/admin/AdminSingleServicePage'));
 const AdminServicesPage = lazy(() => import('../pages/admin/AdminServicesPage'));
 const AdminStructureManagementPage = lazy(() => import('../pages/admin/AdminStructuresManagementPage'));
+const AdminBusinessReGroupingPage = lazy(() => import('../pages/admin/AdminBusinessRegroupingPage'));
 const AdminServicesByStructurePage = lazy(() => import('../pages/admin/AdminServicesByStructurePage'));
 const AdminStructureSettingsPage = lazy(() => import('../pages/admin/AdminStructureSettingsPage'));
 const AdminStructureUsersValidationPage = lazy(() => import('../pages/admin/AdminStructureUsersValidationPage'));
@@ -63,7 +64,6 @@ function AdminLayout() {
       document.getElementById('root').focus();
     }
   }, [location]);
-
   return (
     <div className={classes.root}>
       <SkipLink />
@@ -179,6 +179,13 @@ function AdminLayout() {
                       exact
                       path="/admin/structureusers"
                       component={AdminUsersPage}
+                      user={user}
+                      loadingUser={loadingUser}
+                    />
+                    <StructureAdminRoute
+                      exact
+                      path="/admin/businessReGrouping"
+                      component={AdminBusinessReGroupingPage}
                       user={user}
                       loadingUser={loadingUser}
                     />

@@ -75,6 +75,19 @@
         "nameAlreadyUse": "Une catégorie porte déjà ce nom."
       }
     },
+    "businessReGrouping": {
+      "unknownBusinessReGrouping": "Le regroupement metier n'existe pas.",
+      "labels": {
+        "id": "Id d'un regroupement metier",
+        "name": "Nom",
+        "structure": "Structure d'exploitation"
+      },
+      "createBusinessReGrouping": {
+        "alreadyExists": "Le regroupement metier existe déjà",
+        "nameAlreadyUse": "Un regroupement metier porte déjà ce nom.",
+        "nameAlreadyUsedForOneOfStructureAncestors": "Un regroupement metier porte déjà ce nom pour un de ses structures mères"
+      }
+    },
     "tags": {
       "unknownTag": "Le tag n'existe pas.",
       "notLowerCase": "Les Mots clés doivent être en minuscules",
@@ -217,6 +230,7 @@
         "description": "Description",
         "logo": "Logo",
         "categories": "Catégories",
+        "businessReGrouping": "Business regrouping",
         "screenshots": "Captures d'écran",
         "structure": "Structure d'exploitation",
         "url": "URL du service"
@@ -534,6 +548,7 @@
       "menuAdminUserValidation": "Validation des utilisateurs",
       "menuAdminNextcloudUrl": "Gestion des URL Nextcloud",
       "menuAdminCategories": "Gestion des categories",
+      "menuAdminBusinessRegrouping": "Gestion des regroupement métiers",
       "menuAdminTags": "Gestion des mots clé",
       "menuAdminGroups": "Gestion des Groupes",
       "menuAdminUsers": "Gestion des utilisateurs",
@@ -551,6 +566,7 @@
       "menuAdminUserValidation": "Validation des utilisateurs",
       "menuAdminNextcloudUrl": "Gestion des URL Nextcloud",
       "menuAdminCategories": "Gestion des categories",
+      "menuAdminBusinessRegrouping": "Gestion des regroupement métiers",
       "menuAdminTags": "Gestion des mots clé",
       "menuAdminGroups": "Gestion des Groupes",
       "menuAdminUsers": "Gestion des utilisateurs",
@@ -1056,7 +1072,8 @@
       "viewSimple": "Mode simple",
       "filter": "Filtrer",
       "NoStructureServices": "Aucun service n'a été déclaré pour votre structure",
-      "NoServices": "Aucun service déclaré"
+      "NoServices": "Aucun service déclaré",
+      "ServicesWithoutBusinessRegrouping": "Services qui n'ont pas de regroupement métier"
     },
     "GroupsPage": {
       "title": "Explorer les groupes",
@@ -1098,6 +1115,7 @@
     "AdminCategoriesPage": {
       "title": "Gestion des Catégories",
       "columnName": "Nom",
+      "structure": "structure",
       "materialTableLocalization": {
         "toolbar_searchPlaceholder": "Rechercher une catégorie",
         "pagination_labelRowsSelect": "Catégories par page",
@@ -1106,6 +1124,19 @@
         "body_editTooltip": "Modifier cette catégorie",
         "body_deleteTooltip": "Supprimer cette catégorie",
         "body_editRow_deleteText": "Souhaitez vous réellement supprimer cette catégorie ?"
+      }
+    },
+    "AdminBusinessReGroupingPage": {
+      "title": "Gestion des Regroupement métier",
+      "columnName": "Nom",
+      "materialTableLocalization": {
+        "toolbar_searchPlaceholder": "Rechercher un regroupement métier",
+        "pagination_labelRowsSelect": "regroupement métier par page",
+        "body_emptyDataSourceMessage": "Aucun regroupement métier enregistré",
+        "body_addTooltip": "Ajouter un regroupement métier",
+        "body_editTooltip": "Modifier ce regroupement métier",
+        "body_deleteTooltip": "Supprimer ce regroupement métier",
+        "body_editRow_deleteText": "Souhaitez vous réellement supprimer ce regoupement métier ?"
       }
     },
     "AdminTagsPage": {
@@ -1265,6 +1296,7 @@
       "url": "URL du service",
       "content": "Longue description du service",
       "categories": "Catégories",
+      "businessReGrouping": "Regroupement métier",
       "screenshots": "Captures d'écran",
       "addScreenshots": "Ajouter un écran",
       "save": "Sauvegarder",
