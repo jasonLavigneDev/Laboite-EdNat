@@ -134,7 +134,10 @@ describe('businessReGrouping', function () {
     });
     describe('removeBusinessReGrouping', function () {
       it('does delete a business reGrouping with admin user', function () {
-        removeBusinessReGrouping._execute({ userId: adminId }, { businessReGroupingId });
+        removeBusinessReGrouping._execute(
+          { userId: adminId },
+          { businessReGroupingId, structure: 'businessReGroupingStructure' },
+        );
         assert.equal(BusinessReGrouping.findOne(businessReGroupingId), undefined);
       });
       it('does remove the business reGrouping from a service', function () {
@@ -142,7 +145,10 @@ describe('businessReGrouping', function () {
           title: 'test',
           businessReGrouping: [businessReGroupingId],
         })._id;
-        removeBusinessReGrouping._execute({ userId: adminId }, { businessReGroupingId });
+        removeBusinessReGrouping._execute(
+          { userId: adminId },
+          { businessReGroupingId, structure: 'businessReGroupingStructure' },
+        );
         assert.equal(BusinessReGrouping.findOne(businessReGroupingId), undefined);
         assert.equal(Services.findOne(oneServiceId).businessReGrouping.length, 0);
       });
@@ -150,14 +156,17 @@ describe('businessReGrouping', function () {
         // Throws if non admin user, or logged out user, tries to delete the businessReGrouping
         assert.throws(
           () => {
-            removeBusinessReGrouping._execute({ userId }, { businessReGroupingId });
+            removeBusinessReGrouping._execute(
+              { userId },
+              { businessReGroupingId, structure: 'businessReGroupingStructure' },
+            );
           },
           Meteor.Error,
           /api.businessReGrouping.removeBusinessReGrouping.notPermitted/,
         );
         assert.throws(
           () => {
-            removeBusinessReGrouping._execute({}, { businessReGroupingId });
+            removeBusinessReGrouping._execute({}, { businessReGroupingId, structure: 'businessReGroupingStructure' });
           },
           Meteor.Error,
           /api.businessReGrouping.removeBusinessReGrouping.notPermitted/,
