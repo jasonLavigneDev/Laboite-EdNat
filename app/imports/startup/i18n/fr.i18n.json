@@ -1227,7 +1227,9 @@
       "manageUser": "Gérer l'utilisateur",
       "sendNotif": "Envoyer notification",
       "successCopyUserId": "ID de l'utilisateur copié avec succès",
+      "successCopyNcLocator": "Fédération ID Nextcloud copié avec succès",
       "copyUserId": "Copier l'ID de l'utilisateur",
+      "copyNcLocator":"Copier le fédération ID Nextcloud",
       "userType": "Type d'utilisateurs",
       "all": "tous",
       "noResult": "Pas de résultat"
