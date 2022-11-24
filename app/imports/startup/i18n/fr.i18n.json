@@ -135,7 +135,7 @@
         },
         "contactEmail": "Email de contact de la structure",
         "asamExtensionsIds": "Ids des extensions d'email",
-        "iconUrlImage": "Url de l'image de l'icon",
+        "iconUrlImage": "Url de l'image de l'icône",
         "coverUrlImage": "Url de l'image de la couverture"
       }
     },
@@ -888,10 +888,10 @@
         "deleteStructure": "Supprimer cette structure",
         "deleteStructureImpossibleHasChildren": "Cette structure n'est pas supprimable car elle a au moins un enfant.",
         "deleteStructureConfirm": "Etes-vous sûr de vouloir supprimer cette structure ? Si des articles y sont attachés, ils seront supprimés.",
-        "selectIconAndCoverImage": "Choisir une image d'icon et/ou de couverture",
-        "selectIconImage": "Chargement d'icon",
+        "selectIconAndCoverImage": "Choisir une image d'icône et/ou de couverture",
+        "selectIconImage": "Chargement d'icône",
         "selectCoverImage": "Chargement de couverture",
-        "DeleteIconImage": "Enlever l'image d'icon",
+        "DeleteIconImage": "Enlever l'image d'icône",
         "DeleteCoverImage": "Enlever l'image de la couverture"
       },
       "attachToStructure": "Souhaitez vous être rattaché(e) à cette structure ?"
@@ -1329,7 +1329,7 @@
       "addZoneHere": "Ajouter une zone ici",
       "toggleEdition": "Activer/Désactiver le mode édition",
       "coverImage": "Image de couverture",
-      "iconImage": "Image de l'icon"
+      "iconImage": "Image de l'icône"
     },
     "HelpPage": {
       "title": "Retrouvez ici toute l'aide nécessaire",
@@ -1539,7 +1539,7 @@
     "AdminStructureSettingsPage": {
       "title": "Paramétrage de la structure",
       "userStructureValidationMandatory": "Validation obligatoire de cette structure",
-      "selectIconAndCoverImage": "Choisir une image d'icon et/ou de couverture"
+      "selectIconAndCoverImage": "Choisir une image d'icône et/ou de couverture"
     },
     "AdminDefaultSpacesPage": {
       "chooseStructure": "Choisissez une structure",
