@@ -56,11 +56,17 @@ export const quillOptions = {
 const InfoEditionComponent = ({ tabkey, data = [] }) => {
   const { classes } = useStyles();
   const [content, setContent] = useState('');
-  const [language, setLanguage] = useState(i18n._locale);
   const [loading, setLoading] = useState(true);
   const [changes, setChanges] = useState(false);
 
   const translations = Object.keys(i18n._translations);
+
+  const getLanguage = (lang) => {
+    if (translations.includes(lang)) return lang;
+    return 'fr';
+  };
+
+  const [language, setLanguage] = useState(getLanguage(i18n._locale));
 
   useEffect(() => {
     if (data) {
