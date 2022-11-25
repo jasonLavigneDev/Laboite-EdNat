@@ -426,7 +426,7 @@ const AdminUsersPage = ({ match: { path } }) => {
                         </ListItemSecondaryAction>
                       </ListItem>,
                       i < ITEM_PER_PAGE - 1 && i < total - 1 && (
-                        <Divider variant="inset" component="li" key={`divider-${user.emails[0].address}`} />
+                        <Divider variant="inset" component="li" key={`divider-${userEmail}`} />
                       ),
                     ];
                   })}
