@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.1.1](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/5.1.0...release/5.1.1) (2022-11-25)
+
+
+### Bug Fixes
+
+* **users:** fix blank screen on admin user page ([d229a25](https://gitlab.mim-libre.fr/alphabet/laboite/commit/d229a25407de4bd172384764ce3ac1850185a4e8))
+
 # [5.1.0](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/5.0.1...release/5.1.0) (2022-11-22)
 
 
