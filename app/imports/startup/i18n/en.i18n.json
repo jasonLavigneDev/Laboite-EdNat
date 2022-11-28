@@ -1359,7 +1359,10 @@
       "update": "Update",
       "cancel": "Cancel",
       "logo_url": "Logo URL",
-      "offlineService": "Enable this service on the offline page"
+      "offlineService": "Enable this service on the offline page",
+      "titleFieldHelperText": "title field helper text",
+      "teamFieldHelperText": "team field helper text",
+      "usageFieldHelperText": "usage field helper text"
     },
     "AdminSingleGroupPage": {
       "edition": "Edition of the group",

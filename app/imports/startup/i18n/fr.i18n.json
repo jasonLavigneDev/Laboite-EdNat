@@ -1363,7 +1363,9 @@
       "update": "Mettre à jour",
       "cancel": "Annuler",
       "logo_url": "URL du logo",
-      "offlineService": "Activer ce service sur la page non connectée"
+      "offlineService": "Activer ce service sur la page non connectée",
+      "titleFieldHelperText": "Texte d'aider pour le champ title",
+      "teamFieldHelperText": "Texte d'aider pour le champ équipe"
     },
     "AdminSingleGroupPage": {
       "edition": "Édition du groupe",
