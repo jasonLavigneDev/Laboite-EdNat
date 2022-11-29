@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.1.3](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/5.1.2...release/5.1.3) (2022-11-29)
+
+
+### Bug Fixes
+
+* **users:** emails field on users validation page ([be517e7](https://gitlab.mim-libre.fr/alphabet/laboite/commit/be517e78d906f687c33d8b568588236217199b3e))
+
 ## [5.1.2](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/5.1.1...release/5.1.2) (2022-11-29)
 
 
