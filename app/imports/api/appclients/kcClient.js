@@ -381,18 +381,18 @@ class KeyCloakClient {
                 },
               })
               .then(() => {
-                if( groupName === 'adminStructure' ){
+                if (groupName === 'adminStructure') {
                   logServer(i18n.__('api.keycloak.adminStructureAdded', { userId }));
-                }else{
+                } else {
                   logServer(i18n.__('api.keycloak.adminAdded', { userId }));
                 }
               });
           }),
         )
         .catch((error) => {
-          if( groupName === 'adminStructure' ){
+          if (groupName === 'adminStructure') {
             logServer(i18n.__('api.keycloak.addAdminStructureError', { userId }), 'error', callerId);
-          }else{
+          } else {
             logServer(i18n.__('api.keycloak.addAdminError', { userId }), 'error', callerId);
           }
           logServer(error.response && error.response.data ? error.response.data : error, 'error');
@@ -416,11 +416,10 @@ class KeyCloakClient {
                   Authorization: `Bearer ${token}`,
                 },
               })
-              .then((response) => {
-console.log('unsetAdmin delete response: ', response)
-                if( groupName === 'adminStructure' ){
+              .then(() => {
+                if (groupName === 'adminStructure') {
                   logServer(i18n.__('api.keycloak.adminStructureRemoved', { userId }));
-                }else{
+                } else {
                   logServer(i18n.__('api.keycloak.adminRemoved', { userId }));
                 }
               }),
