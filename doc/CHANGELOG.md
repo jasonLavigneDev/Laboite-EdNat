@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.1.2](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/5.1.1...release/5.1.2) (2022-11-29)
+
+
+### Bug Fixes
+
+* **admin:** fix admin settings ([f026c32](https://gitlab.mim-libre.fr/alphabet/laboite/commit/f026c32c6da3e580128da7f5e52d6ec0c605a56e))
+
 ## [5.1.1](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/5.1.0...release/5.1.1) (2022-11-25)
 
 
