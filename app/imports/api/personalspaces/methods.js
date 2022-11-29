@@ -313,6 +313,7 @@ export const generateDefaultPersonalSpace = new ValidatedMethod({
     const defaultSpace = DefaultSpaces.findOne({ structureId: structure });
     const currentSpace = PersonalSpaces.findOne({ userId }) || {};
     const { unsorted = [] } = currentSpace;
+    const { sorted = [] } = currentSpace;
 
     // add all services to favorites in user schema
     let servicesAdded = [...unsorted];
@@ -325,6 +326,10 @@ export const generateDefaultPersonalSpace = new ValidatedMethod({
           ];
         }
       });
+
+      defaultSpace.sorted.forEach((s) => {
+        sorted.push(s);
+      });
     }
     Meteor.users.update(userId, {
       $set: { favServices: servicesAdded },
@@ -335,7 +340,7 @@ export const generateDefaultPersonalSpace = new ValidatedMethod({
       { userId },
       {
         $set: {
-          sorted: defaultSpace ? defaultSpace.sorted : [],
+          sorted,
         },
       },
       { upsert: true },
