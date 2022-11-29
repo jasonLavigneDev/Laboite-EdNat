@@ -26,7 +26,7 @@ const columnsDefault = [
     title: i18n.__('components.AdminUserValidationTable.columnEmails'),
     field: 'emails',
     render: (rowData) =>
-      rowData.emails.map((m) => (
+      rowData.emails?.map((m) => (
         <a key={m.address} href={`mailto:${m.address}`} style={{ display: 'block' }}>
           {m.address}
         </a>
