@@ -709,7 +709,7 @@ describe('users', function () {
         setValidationMandatory(false);
         setStructure._execute({ userId }, { structure: newStructure });
         const user = Meteor.users.findOne({ _id: userId });
-        assert.equal(user.awaitingStructure, null);
+        assert.equal(user.awaitingStructure, newStructure);
       });
 
       it('users loses structure admin role when structure changes (validation structure not mandatory)', function () {
@@ -718,11 +718,11 @@ describe('users', function () {
         setValidationMandatory(false);
         setStructure._execute({ userId }, { structure: newStructure });
         const user = Meteor.users.findOne({ _id: userId });
-        assert.equal(user.awaitingStructure, null);
+        assert.equal(user.awaitingStructure, newStructure);
         setAdminStructure._execute({ userId: adminId }, { userId });
-        assert.notEqual(Roles.userIsInRole(userId, 'adminStructure', allowedStructures[0]), false); // varidation from admin structure nedeed
+        assert.notEqual(Roles.userIsInRole(userId, 'adminStructure', allowedStructures[0]), true); // varidation from admin structure nedeed
         setStructure._execute({ userId }, { structure: allowedStructures[0] });
-        assert.notEqual(Roles.userIsInRole(userId, 'adminStructure', allowedStructures[0]), false);
+        assert.notEqual(Roles.userIsInRole(userId, 'adminStructure', allowedStructures[0]), true);
         setStructure._execute({ userId }, { structure: allowedStructures[1] });
         assert.equal(Roles.userIsInRole(userId, 'adminStructure', allowedStructures[1]), false);
       });
