@@ -44,9 +44,5 @@ export const hasRightToSetStructureDirectly = (userId, isNewStructCorrespondingT
   const appSettings = AppSettings.findOne({ _id: 'settings' });
   const { userStructureValidationMandatory: isUserStructureValidationMandatory } = appSettings;
 
-  return (
-    isUserStructureValidationMandatory ||
-    isNewStructCorrespondingToDomainStructure ||
-    Roles.userIsInRole(userId, 'admin')
-  );
+  return isUserStructureValidationMandatory || isNewStructCorrespondingToDomainStructure;
 };
