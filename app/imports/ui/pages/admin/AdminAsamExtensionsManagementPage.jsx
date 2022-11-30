@@ -21,12 +21,18 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import Modal from '@mui/material//Modal';
 import PropTypes from 'prop-types';
+import { makeStyles } from 'tss-react/mui';
 import { getStructure } from '../../../api/structures/hooks';
 import AsamExtensions from '../../../api/asamextensions/asamextensions';
 import StructureSelectAutoComplete from '../../components/structures/StructureSelectAutoComplete';
 import setMaterialTableLocalization from '../../components/initMaterialTableLocalization';
 import { useModalStyles } from './AdminStructuresManagementPage';
 
+const useStyles = makeStyles()(() => ({
+  mailExtensionFields: {
+    display: 'none',
+  },
+}));
 const options = {
   pageSize: 10,
   pageSizeOptions: [10, 20, 50, 100],
@@ -59,6 +65,7 @@ const ExtensionMail = ({ updateCurrentextension, emailExtensionDataInfos }) => {
   const [entityLongName, setEntityLongName] = useState(emailExtensionDataInfos.entityLongName);
   const [famillyShortName, setFamillyShortName] = useState(emailExtensionDataInfos.famillyShortName);
   const [famillyLongName, setFamillyLongName] = useState(emailExtensionDataInfos.famillyLongName);
+  const { classes } = useStyles();
   const onUpdateField = (event) => {
     switch (event.target.name) {
       case 'extension':
@@ -138,7 +145,7 @@ const ExtensionMail = ({ updateCurrentextension, emailExtensionDataInfos }) => {
           required
         />
       </CardContent>
-      <CardContent>
+      <CardContent className={classes.mailExtensionFields}>
         <TextField
           onChange={onUpdateField}
           fullWidth
@@ -148,7 +155,7 @@ const ExtensionMail = ({ updateCurrentextension, emailExtensionDataInfos }) => {
           placeholder={i18n.__('pages.AdminAsamExtensionsManagementPage.modal.entityShortName')}
         />
       </CardContent>
-      <CardContent>
+      <CardContent className={classes.mailExtensionFields}>
         <TextField
           onChange={onUpdateField}
           fullWidth
@@ -158,7 +165,7 @@ const ExtensionMail = ({ updateCurrentextension, emailExtensionDataInfos }) => {
           placeholder={i18n.__('pages.AdminAsamExtensionsManagementPage.modal.entityLongName')}
         />
       </CardContent>
-      <CardContent>
+      <CardContent className={classes.mailExtensionFields}>
         <TextField
           onChange={onUpdateField}
           fullWidth
@@ -168,7 +175,7 @@ const ExtensionMail = ({ updateCurrentextension, emailExtensionDataInfos }) => {
           placeholder={i18n.__('pages.AdminAsamExtensionsManagementPage.modal.famillyShortName')}
         />
       </CardContent>
-      <CardContent>
+      <CardContent className={classes.mailExtensionFields}>
         <TextField
           onChange={onUpdateField}
           fullWidth

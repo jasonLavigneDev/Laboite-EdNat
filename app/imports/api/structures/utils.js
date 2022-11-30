@@ -45,7 +45,8 @@ export const hasRightToSetStructureDirectly = (userId, isNewStructCorrespondingT
   const { userStructureValidationMandatory: isUserStructureValidationMandatory } = appSettings;
 
   return (
-    (!isUserStructureValidationMandatory && isNewStructCorrespondingToDomainStructure) ||
+    isUserStructureValidationMandatory ||
+    isNewStructCorrespondingToDomainStructure ||
     Roles.userIsInRole(userId, 'admin')
   );
 };

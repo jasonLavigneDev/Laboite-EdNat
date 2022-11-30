@@ -226,16 +226,15 @@ function AdminLayout() {
                       user={user}
                       loadingUser={loadingUser}
                     />
-                    {appsettings.userStructureValidationMandatory ||
-                      (notHideStructureusersvalidation && (
-                        <StructureAdminRoute
-                          exact
-                          path="/admin/structureusersvalidation"
-                          component={AdminStructureUsersValidationPage}
-                          user={user}
-                          loadingUser={loadingUser}
-                        />
-                      ))}
+                    {(appsettings.userStructureValidationMandatory || notHideStructureusersvalidation) && (
+                      <StructureAdminRoute
+                        exact
+                        path="/admin/structureusersvalidation"
+                        component={AdminStructureUsersValidationPage}
+                        user={user}
+                        loadingUser={loadingUser}
+                      />
+                    )}
                     <StructureAdminRoute
                       exact
                       path="/admin/substructures"
