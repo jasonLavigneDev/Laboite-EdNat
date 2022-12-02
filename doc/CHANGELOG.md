@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.1.4](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/5.1.3...release/5.1.4) (2022-12-02)
+
+
+### Bug Fixes
+
+* **dbinitialize:** add missing default value: globalInfo ([1d266fc](https://gitlab.mim-libre.fr/alphabet/laboite/commit/1d266fcd5ba6192991f4b29e276ba09b4e7186f1))
+
 ## [5.1.3](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/5.1.2...release/5.1.3) (2022-11-29)
 
 
