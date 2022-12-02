@@ -107,6 +107,7 @@ Structures.schema = new SimpleSchema(
     'asamExtensionsIds.$': { type: SimpleSchema.RegEx.Id },
     userStructureValidationMandatory: {
       type: Boolean,
+      optional: true,
       label: getLabel('api.appsettings.label.userStructureValidationMandatory'),
     },
   },
