@@ -466,7 +466,7 @@
       "content_introduction": "Texte d'introduction",
       "content_globalInfo": "Texte d'informations générales",
       "update": "Mettre à jour",
-      "cancel": "Annuler"     
+      "cancel": "Annuler"
     },
     "Notifications": {
       "remove": "Supprimer"
@@ -1520,7 +1520,8 @@
       "titleStructures": "Informations de structures"
     },
     "AdminStructureSettingsPage": {
-      "title": "Paramétrage de la structure"
+      "title": "Paramétrage de la structure",
+      "userStructureValidationMandatory": "Validation obligatoire d'une structure"
     },
     "AdminDefaultSpacesPage": {
       "chooseStructure": "Choisissez une structure",

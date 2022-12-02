@@ -136,6 +136,40 @@ export const updateStructure = new ValidatedMethod({
   },
 });
 
+export const setUserStructureAdminValidationMandatoryStatus = new ValidatedMethod({
+  name: 'structures.setUserStructureAdminValidationMandatoryStatus',
+  validate: new SimpleSchema({
+    structureId: { type: String, regEx: SimpleSchema.RegEx.Id, label: getLabel('api.structures.labels.id') },
+    userStructureValidationMandatory: {
+      type: Boolean,
+      label: getLabel('api.appsettings.userStructureValidationMandatory'),
+    },
+  }).validator(),
+
+  run({ structureId, userStructureValidationMandatory }) {
+    // check structure existence
+    const structure = Structures.findOne({ _id: structureId });
+    if (structure === undefined) {
+      throw new Meteor.Error(
+        'api.structures.setUserStructureAdminValidationMandatoryStatus.unknownStructure',
+        i18n.__('api.structures.unknownStructure'),
+      );
+    }
+
+    const isAdminOfStructure = hasAdminRightOnStructure({ userId: this.userId, structureId });
+    const authorized = isActive(this.userId) && (Roles.userIsInRole(this.userId, 'admin') || isAdminOfStructure);
+
+    if (!authorized) {
+      throw new Meteor.Error(
+        'api.structures.setUserStructureAdminValidationMandatoryStatus.notPermitted',
+        i18n.__('api.users.notPermitted'),
+      );
+    }
+
+    return Structures.update({ _id: structureId }, { $set: { userStructureValidationMandatory } });
+  },
+});
+
 export const removeStructure = new ValidatedMethod({
   name: 'structures.removeStructure',
   validate: new SimpleSchema({

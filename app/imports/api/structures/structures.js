@@ -105,6 +105,10 @@ Structures.schema = new SimpleSchema(
       label: getLabel('api.structures.labels.asamExtensionsIds'),
     },
     'asamExtensionsIds.$': { type: SimpleSchema.RegEx.Id },
+    userStructureValidationMandatory: {
+      type: Boolean,
+      label: getLabel('api.appsettings.label.userStructureValidationMandatory'),
+    },
   },
   {
     tracker: Tracker,
@@ -120,6 +124,7 @@ Structures.publicFields = {
   introduction: 1,
   contactEmail: 1,
   asamExtensionsIds: 1,
+  userStructureValidationMandatory: 1,
 };
 
 Structures.attachSchema(Structures.schema);
@@ -132,6 +137,7 @@ export const propTypes = PropTypes.shape({
   ancestorsIds: PropTypes.arrayOf(PropTypes.string),
   childrenIds: PropTypes.arrayOf(PropTypes.string),
   asamExtensionsIds: PropTypes.arrayOf(PropTypes.string),
+  userStructureValidationMandatory: PropTypes.bool,
 });
 
 export default Structures;

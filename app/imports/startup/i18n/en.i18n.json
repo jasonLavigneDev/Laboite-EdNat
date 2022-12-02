@@ -466,7 +466,7 @@
       "content_introduction": "Introduction text",
       "content_globalInfo": "General informations text",
       "update": "Update",
-      "cancel": "Cancel"     
+      "cancel": "Cancel"
     },
     "Notifications": {
       "remove": "Remove"
@@ -1510,7 +1510,8 @@
       "titleStructures": "Structures informations"
     },
     "AdminStructureSettingsPage": {
-      "title": "Structure settings"
+      "title": "Structure settings",
+      "userStructureValidationMandatory": "Structure mandatoriness of attachment status"
     },
     "AdminAsamExtensionsManagementPage": {
       "title": "Email extensions management",

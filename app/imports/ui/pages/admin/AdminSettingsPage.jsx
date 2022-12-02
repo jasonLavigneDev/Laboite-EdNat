@@ -31,6 +31,7 @@ import {
   setUserStructureValidationMandatoryStatus,
 } from '../../../api/appsettings/methods';
 import InfoEditionComponent from '../../components/admin/InfoEditionComponent';
+import AdminStructureValidationMandatory from '../../components/admin/AdminStructureValidationMandatory';
 
 const useStyles = makeStyles()((theme) => ({
   root: {
@@ -57,6 +58,52 @@ const AdminSettingsPage = ({ appsettings }) => {
   const [loading, setLoading] = useState(true);
   const [{ isMobile }] = useAppContext();
   const [open, setOpen] = useState(false);
+
+  const tabs = [
+    {
+      key: 'introduction',
+      title: i18n.__('pages.AdminSettingsPage.introduction'),
+      Element: InfoEditionComponent,
+      ElementProps: { data: appsettings.introduction || [] },
+    },
+    {
+      key: 'globalInfo',
+      title: i18n.__('pages.AdminSettingsPage.globalInfo'),
+      Element: InfoEditionComponent,
+      ElementProps: { data: appsettings.globalInfo || [] },
+    },
+    {
+      key: 'legal',
+      title: i18n.__('pages.AdminSettingsPage.legal'),
+      Element: LegalComponent,
+      ElementProps: { data: appsettings.legal || [] },
+    },
+    {
+      key: 'personalData',
+      title: i18n.__('pages.AdminSettingsPage.personalData'),
+      Element: LegalComponent,
+      ElementProps: { data: appsettings.personalData || [] },
+    },
+    {
+      key: 'accessibility',
+      title: i18n.__('pages.AdminSettingsPage.accessibility'),
+      Element: LegalComponent,
+      ElementProps: { data: appsettings.accessibility || [] },
+    },
+    {
+      key: 'gcu',
+      title: i18n.__('pages.AdminSettingsPage.gcu'),
+      Element: LegalComponent,
+      ElementProps: { data: appsettings.gcu || [] },
+    },
+    {
+      key: 'personalSpace',
+      title: i18n.__('pages.AdminSettingsPage.personalSpace'),
+      Element: LegalComponent,
+      ElementProps: { personalSpace: appsettings.personalSpace },
+      hideExternal: false,
+    },
+  ];
 
   useEffect(() => {
     if (appsettings.textMaintenance !== msgMaintenance) setMsgMaintenance(appsettings.textMaintenance);
@@ -91,10 +138,6 @@ const AdminSettingsPage = ({ appsettings }) => {
     );
   };
 
-  const onCheckUserStructureValidationMandatory = (e) => {
-    setUserStructureValidationMandatory(e.target.checked);
-  };
-
   const onCheckMaintenance = () => {
     if (appsettings.maintenance && appsettings.textMaintenance === 'api.appsettings.migrationLockedText') {
       setOpen(true);
@@ -104,6 +147,7 @@ const AdminSettingsPage = ({ appsettings }) => {
   };
 
   const onButtonMaintenanceClick = () => {
+    <Spinner full />;
     setLoading(true);
     updateTextMaintenance.call({ text: msgMaintenance }, (error) => {
       setLoading(false);
@@ -130,49 +174,6 @@ const AdminSettingsPage = ({ appsettings }) => {
     msgMaintenance === '' ||
     msgMaintenance === appsettings.textMaintenance
   );
-
-  const isUserStructureValidationMandatoryButtonActive =
-    userStructureValidationMandatory !== appsettings.userStructureValidationMandatory;
-
-  const tabs = [
-    {
-      key: 'introduction',
-      title: i18n.__('pages.AdminSettingsPage.introduction'),
-      Element: InfoEditionComponent,
-      ElementProps: { introduction: appsettings.introduction },
-    },
-    {
-      key: 'legal',
-      title: i18n.__('pages.AdminSettingsPage.legal'),
-      Element: LegalComponent,
-      ElementProps: { legal: appsettings.legal },
-    },
-    {
-      key: 'personalData',
-      title: i18n.__('pages.AdminSettingsPage.personalData'),
-      Element: LegalComponent,
-      ElementProps: { personalData: appsettings.personalData },
-    },
-    {
-      key: 'accessibility',
-      title: i18n.__('pages.AdminSettingsPage.accessibility'),
-      Element: LegalComponent,
-      ElementProps: { accessibility: appsettings.accessibility },
-    },
-    {
-      key: 'gcu',
-      title: i18n.__('pages.AdminSettingsPage.gcu'),
-      Element: LegalComponent,
-      ElementProps: { gcu: appsettings.gcu },
-    },
-    {
-      key: 'personalSpace',
-      title: i18n.__('pages.AdminSettingsPage.personalSpace'),
-      Element: LegalComponent,
-      ElementProps: { personalSpace: appsettings.personalSpace },
-      hideExternal: false,
-    },
-  ];
 
   return loading && !appsettings ? (
     <Spinner full />
@@ -223,42 +224,14 @@ const AdminSettingsPage = ({ appsettings }) => {
           </Grid>
         </Paper>
         <Paper className={classes.root}>
-          <Grid container spacing={4}>
-            <Grid item md={12}>
-              <Typography variant={isMobile ? 'h6' : 'h4'}>
-                {i18n.__('pages.AdminSettingsPage.userStructureValidationMandatory')}
-              </Typography>
-            </Grid>
-            <Grid item md={12} className={classes.container}>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={userStructureValidationMandatory}
-                    onChange={onCheckUserStructureValidationMandatory}
-                    name="external"
-                    color="primary"
-                  />
-                }
-                label={i18n.__(`pages.AdminSettingsPage.toggleUserStructureValidationMandatory`)}
-              />
-            </Grid>
-            <FormControlLabel
-              className={classes.containerForm}
-              control={
-                <div style={{ marginTop: '-20px', marginLeft: '25px' }}>
-                  <Button
-                    size="medium"
-                    variant="contained"
-                    color="primary"
-                    disabled={!isUserStructureValidationMandatoryButtonActive}
-                    onClick={onSetUserStructureValidationMandatoryStatus}
-                  >
-                    {i18n.__(`pages.AdminSettingsPage.buttonUserStructureValidationMandatory`)}
-                  </Button>
-                </div>
-              }
-            />
-          </Grid>
+          <AdminStructureValidationMandatory
+            userStructureValidationMandatory={userStructureValidationMandatory}
+            isUserStructureValidationMandatoryButtonActive={
+              userStructureValidationMandatory !== appsettings.userStructureValidationMandatory
+            }
+            onCheckStructureAdminValidationMandatory={setUserStructureValidationMandatory}
+            onSetUserStructureValidationMandatoryStatus={onSetUserStructureValidationMandatoryStatus}
+          />
         </Paper>
         <Dialog
           open={open}
