@@ -40,9 +40,17 @@ export const hasRightToAcceptAwaitingStructure = ({ userId, awaitingStructureId 
   return isAdminStructure || isAppAdmin;
 };
 
-export const hasRightToSetStructureDirectly = (userId, isNewStructCorrespondingToDomainStructure) => {
+export const hasRightToSetStructureDirectly = (userId, structureId) => {
   const appSettings = AppSettings.findOne({ _id: 'settings' });
-  const { userStructureValidationMandatory: isUserStructureValidationMandatory } = appSettings;
+  const structure = Structures.findOne({ _id: structureId });
 
-  return isUserStructureValidationMandatory || !isNewStructCorrespondingToDomainStructure;
+  const { userStructureValidationMandatory: isUserStructureValidationMandatoryAdminLevel } = appSettings;
+
+  const isAppAdmin = Roles.userIsInRole(userId, 'admin');
+  const isUserStructureValidationMandatoryStructureAdminLevel =
+    structure && structure.userStructureValidationMandatory !== undefined && structure.userStructureValidationMandatory;
+
+  return (
+    isAppAdmin || isUserStructureValidationMandatoryAdminLevel || isUserStructureValidationMandatoryStructureAdminLevel
+  );
 };
