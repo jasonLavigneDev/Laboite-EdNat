@@ -71,11 +71,14 @@ External url for blog                                                           
 
 ## nextcloud:
 
-| Key               | Type   | Default value | Description        |
-| ----------------- | ------ | ------------- | ------------------ |
-| nextcloudUser     | string | ""            | Nextcloud user     |
-| nextcloudPassword | string | ""            | Nextcloud password |
-| nextcloudQuota    | number | "1073741824"  | Nextcloud quota    |
+| Key                 | Type     | Default value | Description                                      |
+| ------------------- | -------- | ------------- | ------------------------------------------------ |
+| nextcloudUser       | string   | ""            | Nextcloud user                                   |
+| nextcloudPassword   | string   | ""            | Nextcloud password                               |
+| nextcloudQuota      | number   | "1073741824"  | Nextcloud quota                                  |
+| nextcloudApiKeys    | [string] | []            | API keys for nextcloud token retrieval           |
+| sessionTokenKey     | string   | ""            | Password used to get token from sessiontoken app |
+| sessionTokenAppName | string   | ""            | Application name given to sessiontoken app       |
 
 ## rocketChat:
 
