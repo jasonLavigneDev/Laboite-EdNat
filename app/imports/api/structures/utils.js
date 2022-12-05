@@ -46,11 +46,8 @@ export const hasRightToSetStructureDirectly = (userId, structureId) => {
 
   const { userStructureValidationMandatory: isUserStructureValidationMandatoryAdminLevel } = appSettings;
 
-  const isAppAdmin = Roles.userIsInRole(userId, 'admin');
   const isUserStructureValidationMandatoryStructureAdminLevel =
     structure && structure.userStructureValidationMandatory !== undefined && structure.userStructureValidationMandatory;
 
-  return (
-    isAppAdmin || isUserStructureValidationMandatoryAdminLevel || isUserStructureValidationMandatoryStructureAdminLevel
-  );
+  return isUserStructureValidationMandatoryAdminLevel || isUserStructureValidationMandatoryStructureAdminLevel;
 };
