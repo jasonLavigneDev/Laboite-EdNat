@@ -32,6 +32,11 @@ export const useBookmarkPageStyles = makeStyles()(() => ({
   link: {
     color: 'blue',
     textDecoration: 'underline',
+    width: 'inherit',
+    display: 'block',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
   },
   icon: {
     height: 25,
@@ -106,6 +111,9 @@ function UserBookmarksPage({ loading, bookmarksList }) {
     return !(checkId === userId || Roles.userIsInRole(userId, 'admin'));
   };
 
+  /**
+   * @type {import('@material-table/core').Options}
+   */
   const options = {
     pageSize,
     pageSizeOptions: [10, 20, 50, 100],
