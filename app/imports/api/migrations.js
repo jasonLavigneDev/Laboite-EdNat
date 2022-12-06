@@ -1,5 +1,6 @@
 import { Migrations } from 'meteor/percolate:migrations';
 import { Meteor } from 'meteor/meteor';
+import { Roles } from 'meteor/alanning:roles';
 import Articles from './articles/articles';
 import Services from './services/services';
 import Groups from './groups/groups';
@@ -7,6 +8,8 @@ import Structures, { defaultIntroduction } from './structures/structures';
 import Tags from './tags/tags';
 import logServer from './logging';
 import AppSettings from './appsettings/appsettings';
+import { addItem } from './personalspaces/methods';
+import PersonalSpaces from './personalspaces/personalspaces';
 
 Migrations.add({
   version: 1,
@@ -539,5 +542,182 @@ Migrations.add({
   },
   down: () => {
     AppSettings.rawCollection().updateMany({}, { $unset: { globalInfo: 1 } });
+  },
+});
+
+Migrations.add({
+  version: 29,
+  name: 'Add automatic group for structures',
+  up: () => {
+    let adminId = '';
+    Structures.find({})
+      .fetch()
+      .forEach((structure) => {
+        const strucName = `${structure._id}_${structure.name}`;
+        Meteor.users
+          .find({})
+          .fetch()
+          .every((user) => {
+            if (Roles.userIsInRole(user._id, 'admin')) {
+              adminId = user._id;
+              return false;
+            }
+            return true;
+          });
+        const groupId = Groups.insert({
+          name: strucName,
+          type: 15,
+          content: '',
+          description: '',
+          avatar: '',
+          owner: adminId,
+          animators: [],
+          admins: [],
+          active: true,
+          plugins: {},
+        });
+
+        Structures.update({ _id: structure._id }, { $set: { groupId } });
+      });
+
+    Meteor.users
+      .find({})
+      .fetch()
+      .forEach((user) => {
+        const structure = Structures.findOne({ _id: user.structure });
+        if (structure) {
+          if (structure.groupId) {
+            Groups.update(
+              { _id: structure.groupId },
+              {
+                $push: { members: user._id },
+              },
+            );
+
+            if (user.favGroups === undefined) {
+              Meteor.users.update(user._id, {
+                $set: { favGroups: [structure.groupId] },
+              });
+            } else if (user.favGroups.indexOf(structure.groupId) === -1) {
+              Meteor.users.update(user._id, {
+                $push: { favGroups: structure.groupId },
+              });
+            }
+
+            Roles.addUsersToRoles(user._id, 'member', structure.groupId);
+
+            addItem(user._id, { type: 'group', element_id: structure.groupId });
+
+            if (Roles.userIsInRole(user._id, 'adminStructure', user.structure)) {
+              Roles.addUsersToRoles(user._id, 'admin', structure.groupId);
+              Groups.update(
+                { _id: structure.groupId },
+                {
+                  $push: { admins: user._id },
+                },
+              );
+            }
+          }
+
+          Structures.find({ _id: { $in: structure.ancestorsIds } })
+            .fetch()
+            .forEach((struc) => {
+              if (struc.groupId) {
+                Groups.update(
+                  { _id: struc.groupId },
+                  {
+                    $push: { members: user._id },
+                  },
+                );
+
+                if (user.favGroups === undefined) {
+                  Meteor.users.update(user._id, {
+                    $set: { favGroups: [struc.groupId] },
+                  });
+                } else if (user.favGroups.indexOf(struc.groupId) === -1) {
+                  Meteor.users.update(user._id, {
+                    $push: { favGroups: struc.groupId },
+                  });
+                }
+                Roles.addUsersToRoles(user._id, 'member', struc.groupId);
+                addItem(user._id, { type: 'group', element_id: struc.groupId });
+              }
+            });
+        }
+      });
+  },
+  down: () => {
+    Meteor.users
+      .find({})
+      .fetch()
+      .forEach((user) => {
+        const structure = Structures.findOne({ _id: user.structure });
+        if (structure) {
+          if (structure.groupId) {
+            if (user.favGroups.indexOf(structure.groupId) === -1) {
+              Meteor.users.update(
+                { _id: user._id },
+                {
+                  $pull: { favGroups: structure.groupId },
+                },
+              );
+
+              PersonalSpaces.update(
+                { userId: user._id },
+                {
+                  $pull: {
+                    unsorted: { type: 'group', element_id: structure.groupId },
+                    'sorted.$[].elements': { type: 'group', element_id: structure.groupId },
+                  },
+                },
+              );
+
+              if (Roles.userIsInRole(user._id, 'member', structure.groupId))
+                Roles.removeUsersFromRoles(user._id, 'member', structure.groupId);
+              if (Roles.userIsInRole(user._id, 'admin', structure.groupId)) {
+                Roles.removeUsersFromRoles(user._id, 'admin', structure.groupId);
+              }
+            }
+          }
+
+          Structures.find({ _id: { $in: structure.ancestorsIds } })
+            .fetch()
+            .forEach((struc) => {
+              if (struc.groupId) {
+                if (user.favGroups.indexOf(struc.groupId) === -1) {
+                  Meteor.users.update(
+                    { _id: user._id },
+                    {
+                      $pull: { favGroups: struc.groupId },
+                    },
+                  );
+
+                  PersonalSpaces.update(
+                    { userId: user._id },
+                    {
+                      $pull: {
+                        unsorted: { type: 'group', element_id: struc.groupId },
+                        'sorted.$[].elements': { type: 'group', element_id: struc.groupId },
+                      },
+                    },
+                  );
+
+                  if (Roles.userIsInRole(user._id, 'member', struc.groupId))
+                    Roles.removeUsersFromRoles(user._id, 'member', struc.groupId);
+                  if (Roles.userIsInRole(user._id, 'admin', struc.groupId)) {
+                    Roles.removeUsersFromRoles(user._id, 'admin', struc.groupId);
+                  }
+                }
+              }
+            });
+        }
+      });
+
+    Structures.find({})
+      .fetch()
+      .forEach((structure) => {
+        Groups.remove({ _id: structure.groupId });
+        Structures.update({ _id: structure._id }, { $unset: { groupId: 1 } });
+      });
   },
 });

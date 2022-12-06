@@ -93,6 +93,12 @@ Structures.schema = new SimpleSchema(
       defaultValue: null,
       regEx: SimpleSchema.RegEx.Email,
     },
+    groupId: {
+      type: SimpleSchema.RegEx.Id,
+      label: getLabel('api.structures.labels.groupId'),
+      optional: true,
+      defaultValue: '',
+    },
   },
   {
     tracker: Tracker,

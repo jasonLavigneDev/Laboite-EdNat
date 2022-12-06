@@ -29,6 +29,7 @@ import CollapsingSearch from '../../components/system/CollapsingSearch';
 import { useIconStyles, DetaiIconCustom, SimpleIconCustom } from '../../components/system/icons/icons';
 import Spinner from '../../components/system/Spinner';
 import { GRID_VIEW_MODE } from '../../utils/ui';
+import { getGroupName } from '../../utils/utilsFuncs';
 
 const useStyles = makeStyles()(() => ({
   flex: {
@@ -144,7 +145,7 @@ function GroupsPage() {
   const goToAddGroup = () => history.push('/admingroups/new');
 
   const filterGroups = (group) => {
-    let searchText = group.name + group.description + group.digest || '';
+    let searchText = getGroupName(group) + group.description + group.digest || '';
     searchText = searchText.toLowerCase();
     if (!search) return true;
     return searchText.indexOf(search.toLowerCase()) > -1;

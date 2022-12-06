@@ -9,6 +9,8 @@ import Structures, { IntroductionStructure } from './structures';
 import { hasAdminRightOnStructure, isAStructureWithSameNameExistWithSameParent } from './utils';
 import Services from '../services/services';
 import Articles from '../articles/articles';
+import Groups from '../groups/groups';
+import { _createGroup, _removeGroup } from '../groups/methods';
 
 export const createStructure = new ValidatedMethod({
   name: 'structures.createStructure',
@@ -61,6 +63,28 @@ export const createStructure = new ValidatedMethod({
       }
     }
 
+    const strucName = `${structureId}_${name}`;
+
+    _createGroup({
+      name: strucName,
+      type: 15,
+      description: 'groupe structure',
+      content: '',
+      avatar: '',
+      plugins: {},
+      userId: this.userId,
+    });
+
+    const structure = Structures.findOne({ _id: structureId });
+
+    if (structure) {
+      const group = Groups.findOne({ name: strucName });
+      if (group) {
+        structure.groupId = group._id;
+        Structures.update({ _id: structureId }, { $set: { groupId: group._id } });
+      }
+    }
+
     return structureId;
   },
 });
@@ -103,6 +127,11 @@ export const updateStructure = new ValidatedMethod({
       throw new Meteor.Error('api.structures.updateStructure.notPermitted', i18n.__('api.structures.nameAlreadyTaken'));
     }
 
+    const group = Groups.findOne({ _id: structure.groupId });
+    if (group) {
+      group.name = `${structure._id}_${name}`;
+      Groups.update({ _id: group._id }, { $set: { name: `${structure._id}_${name}` } });
+    }
     return Structures.update({ _id: structureId }, { $set: { name } });
   },
 });
@@ -168,6 +197,10 @@ export const removeStructure = new ValidatedMethod({
       }
     }
 
+    const group = Groups.findOne({ _id: structure.groupId });
+    if (group) {
+      _removeGroup({ groupId: group._id, userId: this.userId });
+    }
     return Structures.remove(structureId);
   },
 });

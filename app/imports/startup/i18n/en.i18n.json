@@ -124,6 +124,7 @@
         "parentId": "Direct parent structures Id",
         "childrenIds": "Direct childs structures ids",
         "ancestorsIds": "Parent's structures ids",
+        "groupId": "Associated group's id",
         "introduction": {
           "label": "Structure introduction",
           "title": "Structure introduction title",
@@ -187,7 +188,8 @@
       "types": {
         "open": "open",
         "moderated": "moderated",
-        "private": "private"
+        "private": "private",
+        "automatic": "automatique"
       },
       "labels": {
         "id": "Group Id",
@@ -295,6 +297,7 @@
     },
     "methods": {
       "operationSuccessMsg": "Operation succeeded.",
+      "operationRefused": "You can't delete this type of group",
       "labels": {
         "page": "Page",
         "pageSize": "Page Size",
@@ -676,7 +679,8 @@
       "groupJoined": "You are now a member of this group",
       "candidateSent": "The admin will be notified of your request",
       "alreadyCandidate": "You already sent a requet to the group",
-      "candidateCancel": "Your request has been canceled"
+      "candidateCancel": "Your request has been canceled",
+      "automaticGroup": "Automatic group"
     },
     "GroupDetailsPersSpace": {
       "groupCandidate": "Candidate",
@@ -1311,7 +1315,8 @@
       "save": "Save",
       "update": "Update",
       "cancel": "Cancel",
-      "groupRemoved": "Group deleted"
+      "groupRemoved": "Group deleted",
+      "invalidName": "Nom invalide"
     },
     "SingleGroupPage": {
       "backToList": "Back to the list",

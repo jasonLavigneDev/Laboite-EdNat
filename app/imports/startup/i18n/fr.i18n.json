@@ -124,6 +124,7 @@
         "parentId": "Id de la structure parent directe",
         "childrenIds": "Ids de structures enfants directs",
         "ancestorsIds": "Ids de structures parents",
+        "groupId": "ID du groupe associé",
         "introduction": {
           "label": "Introduction de structure",
           "title": "Titre d'introduction de structure",
@@ -187,7 +188,8 @@
       "types": {
         "open": "ouvert",
         "moderated": "modéré",
-        "private": "réservé"
+        "private": "réservé",
+        "automatic": "automatique"
       },
       "labels": {
         "id": "Id de Groupe",
@@ -295,6 +297,7 @@
     },
     "methods": {
       "operationSuccessMsg": "Opération réalisée avec succès.",
+      "operationRefused": "Vous ne pouvez pas supprimer ce type de groupe",
       "labels": {
         "page": "Page",
         "pageSize": "Taille de Page",
@@ -680,7 +683,8 @@
       "groupJoined": "Vous êtes membre du groupe",
       "candidateSent": "L'administrateur du groupe va être notifié de votre demande",
       "alreadyCandidate": "Vous avez déjà envoyé votre demande à ce groupe",
-      "candidateCancel": "Votre requête a été annulée"
+      "candidateCancel": "Votre requête a été annulée",
+      "automaticGroup": "Groupe automatique"
     },
     "GroupDetailsPersSpace": {
       "groupCandidate": "Candidat",
@@ -1328,7 +1332,8 @@
       "save": "Sauvegarder",
       "update": "Mettre à jour",
       "cancel": "Annuler",
-      "groupRemoved": "Groupe supprimé"
+      "groupRemoved": "Groupe supprimé",
+      "invalidName": "Nom invalide"
     },
     "SingleGroupPage": {
       "backToList": "Retour à la liste",

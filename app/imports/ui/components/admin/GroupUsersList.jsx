@@ -30,6 +30,7 @@ const useStyles = makeStyles()(() => ({
 
 const GroupsUsersList = (props) => {
   const { ready, group, users, groupId, userRole } = props;
+  const isAutomaticGroup = group.type === 15;
 
   const removeMethods = {
     candidate: 'users.unsetCandidateOf',
@@ -242,29 +243,33 @@ const GroupsUsersList = (props) => {
         data={data.map((row) => ({ ...row, id: row._id }))}
         options={options}
         localization={setMaterialTableLocalization('components.GroupUsersList')}
-        actions={actions}
-        editable={{
-          isDeletable: (rowData) => userDeletable(rowData),
-          onRowDelete: (oldData) =>
-            new Promise((resolve, reject) => {
-              Meteor.call(
-                removeMethods[userRole],
-                {
-                  userId: oldData._id,
-                  groupId,
-                },
-                (err, res) => {
-                  if (err) {
-                    msg.error(err.reason);
-                    reject(err);
-                  } else {
-                    msg.success(i18n.__('components.GroupUsersList.userRemoved'));
-                    resolve(res);
-                  }
-                },
-              );
-            }),
-        }}
+        actions={!isAutomaticGroup ? actions : null}
+        editable={
+          !isAutomaticGroup
+            ? {
+                isDeletable: (rowData) => userDeletable(rowData),
+                onRowDelete: (oldData) =>
+                  new Promise((resolve, reject) => {
+                    Meteor.call(
+                      removeMethods[userRole],
+                      {
+                        userId: oldData._id,
+                        groupId,
+                      },
+                      (err, res) => {
+                        if (err) {
+                          msg.error(err.reason);
+                          reject(err);
+                        } else {
+                          msg.success(i18n.__('components.GroupUsersList.userRemoved'));
+                          resolve(res);
+                        }
+                      },
+                    );
+                  }),
+              }
+            : null
+        }
       />
       {openNotif && (
         <AdminSendNotification data={userDataToSendNotif} open={openNotif} onClose={() => setOpenNotif(false)} />

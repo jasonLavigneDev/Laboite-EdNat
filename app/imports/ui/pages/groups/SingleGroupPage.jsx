@@ -42,6 +42,7 @@ import EventsAgenda from '../../../api/eventsAgenda/eventsAgenda';
 import Bookmarks from '../../../api/bookmarks/bookmarks';
 import { countMembersOfGroup } from '../../../api/groups/methods';
 import COMMON_STYLES from '../../themes/styles';
+import { getGroupName } from '../../utils/utilsFuncs';
 
 const useStyles = makeStyles()((theme, { member, candidate, type }) => ({
   root: {
@@ -166,6 +167,7 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
   const [countUser, setCountUser] = useState(0);
   const [openedContent, toggleOpenedContent] = useState(false);
   const animator = Roles.userIsInRole(userId, 'animator', group._id);
+  const isAutomaticGroup = group.type === 15;
   const member = Roles.userIsInRole(userId, 'member', group._id);
   const candidate = Roles.userIsInRole(userId, ['candidate'], group._id);
   const admin = Roles.userIsInRole(userId, ['admin', 'animator'], group._id);
@@ -248,7 +250,9 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
   const showFavorite = admin && !candidate && !member && !animator;
 
   const groupType = i18n.__(
-    `components.GroupDetails.${type === 0 ? 'publicGroup' : type === 10 ? 'closedGroup' : 'moderateGroup'}`,
+    `components.GroupDetails.${
+      type === 0 ? 'publicGroup' : type === 10 ? 'closedGroup' : type === 15 ? 'automaticGroup' : 'moderateGroup'
+    }`,
   );
 
   const icon = () => {
@@ -284,7 +288,10 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
     if (type === 5) {
       return i18n.__('components.GroupDetails.askToJoinModerateGroupButtonLabel');
     }
-    return i18n.__('components.GroupDetails.joinPublicGroupButtonLabel');
+    if (type !== 15) {
+      return i18n.__('components.GroupDetails.joinPublicGroupButtonLabel');
+    }
+    return null;
   };
 
   const goBack = () => {
@@ -357,7 +364,7 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
             <div className={classes.titleContainer}>
               <GroupAvatar type={type || 0} avatar={group.avatar} />
               <div className={classes.title}>
-                <Typography variant="h5">{group.name}</Typography>
+                <Typography variant="h5">{getGroupName(group)}</Typography>
                 <div className={classes.groupInfos}>
                   <Typography color={type === 0 ? 'primary' : 'secondary'} variant="h6">
                     {groupType}
@@ -375,31 +382,33 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
             <Grid container className={classes.actionButtons} spacing={1}>
               {type !== 10 || admin || member || animator ? (
                 <Grid item>
-                  {animator || member || candidate ? (
-                    <Button
-                      className={classes.buttonQuit}
-                      startIcon={<ClearIcon />}
-                      color="primary"
-                      variant="contained"
-                      onClick={handleJoinGroup}
-                    >
-                      {i18n.__(
-                        `pages.SingleGroupPage.${
-                          animator ? 'stopAnimating' : member ? 'leaveGroup' : 'cancelCandidate'
-                        }`,
-                      )}
-                    </Button>
-                  ) : (
-                    <Button
-                      startIcon={icon()}
-                      className={classes.buttonText}
-                      size="large"
-                      variant="contained"
-                      onClick={handleJoinGroup}
-                    >
-                      {buttonText()}
-                    </Button>
-                  )}
+                  {!isAutomaticGroup ? (
+                    animator || member || candidate ? (
+                      <Button
+                        className={classes.buttonQuit}
+                        startIcon={<ClearIcon />}
+                        color="primary"
+                        variant="contained"
+                        onClick={handleJoinGroup}
+                      >
+                        {i18n.__(
+                          `pages.SingleGroupPage.${
+                            animator ? 'stopAnimating' : member ? 'leaveGroup' : 'cancelCandidate'
+                          }`,
+                        )}
+                      </Button>
+                    ) : (
+                      <Button
+                        startIcon={icon()}
+                        className={classes.buttonText}
+                        size="large"
+                        variant="contained"
+                        onClick={handleJoinGroup}
+                      >
+                        {buttonText()}
+                      </Button>
+                    )
+                  ) : null}
                 </Grid>
               ) : null}
               {admin && (

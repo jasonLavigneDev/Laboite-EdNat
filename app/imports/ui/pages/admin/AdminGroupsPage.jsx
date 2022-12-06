@@ -13,6 +13,7 @@ import Spinner from '../../components/system/Spinner';
 import Groups from '../../../api/groups/groups';
 import { removeGroup } from '../../../api/groups/methods';
 import setMaterialTableLocalization from '../../components/initMaterialTableLocalization';
+import { getGroupName } from '../../utils/utilsFuncs';
 
 function AdminGroupsPage({ groups, loading, user }) {
   const history = useHistory();
@@ -21,6 +22,7 @@ function AdminGroupsPage({ groups, loading, user }) {
     {
       title: i18n.__('pages.AdminGroupsPage.columnName'),
       field: 'name',
+      render: (rowData) => getGroupName(rowData),
     },
     {
       title: i18n.__('pages.AdminGroupsPage.columnInfo'),
@@ -101,20 +103,25 @@ function AdminGroupsPage({ groups, loading, user }) {
             editable={{
               onRowDelete: (oldData) =>
                 new Promise((resolve, reject) => {
-                  removeGroup.call(
-                    {
-                      groupId: oldData._id,
-                    },
-                    (err, res) => {
-                      if (err) {
-                        msg.error(err.reason);
-                        reject(err);
-                      } else {
-                        msg.success(i18n.__('api.methods.operationSuccessMsg'));
-                        resolve(res);
-                      }
-                    },
-                  );
+                  if (oldData.type !== 15) {
+                    removeGroup.call(
+                      {
+                        groupId: oldData._id,
+                      },
+                      (err, res) => {
+                        if (err) {
+                          msg.error(err.reason);
+                          reject(err);
+                        } else {
+                          msg.success(i18n.__('api.methods.operationSuccessMsg'));
+                          resolve(res);
+                        }
+                      },
+                    );
+                  } else {
+                    msg.error(i18n.__('api.methods.operationRefused'));
+                    reject();
+                  }
                 }),
             }}
           />

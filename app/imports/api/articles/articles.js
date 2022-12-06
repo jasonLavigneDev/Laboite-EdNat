@@ -79,6 +79,9 @@ Articles.schema = new SimpleSchema(
     'groups.$.name': {
       type: { type: String },
     },
+    'groups.$.type': {
+      type: { type: SimpleSchema.Integer },
+    },
     createdAt: {
       type: Date,
       label: getLabel('api.articles.labels.createdAt'),

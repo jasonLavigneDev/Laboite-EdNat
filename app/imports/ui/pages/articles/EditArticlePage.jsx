@@ -54,7 +54,7 @@ import ToastUIEditor from '../../components/system/ToastUIEditor';
 import Tags from '../../../api/tags/tags';
 import TagFinder from '../../components/articles/TagFinder';
 import GroupFinder from '../../components/articles/GroupFinder';
-import { testMeteorSettingsUrl } from '../../utils/utilsFuncs';
+import { testMeteorSettingsUrl, getGroupName } from '../../utils/utilsFuncs';
 
 Quill.register('modules/ImageResize', ImageResize);
 
@@ -518,8 +518,8 @@ function EditArticlePage({
 
   const addGroupToArticle = (event, group) => {
     if (group && group._id) {
-      const { _id, name } = group;
-      const groups = [...(data.groups || []), { _id, name }];
+      const { _id, name, type } = group;
+      const groups = [...(data.groups || []), { _id, name, type }];
       setData({ ...data, groups });
     }
   };
@@ -683,7 +683,7 @@ function EditArticlePage({
                     <Chip
                       className={classes.tag}
                       key={group._id}
-                      label={group.name}
+                      label={getGroupName(group)}
                       color="secondary"
                       onDelete={() => removeGroup(group)}
                     />

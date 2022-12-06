@@ -44,6 +44,8 @@ import PersonalSpaces from '../../personalspaces/personalspaces';
 import Nextcloud from '../../nextcloud/nextcloud';
 import './publications';
 import { getStructureIds } from '../structures';
+import Structures from '../../structures/structures';
+import { createStructure } from '../../structures/methods';
 import AppSettings from '../../appsettings/appsettings';
 
 let allowedStructures = [];
@@ -59,9 +61,27 @@ const setValidationMandatory = (state) => {
   );
 };
 
+const initStructures = (userId) => {
+  Roles.addUsersToRoles(userId, 'admin');
+  Meteor.users.update({ _id: userId }, { $set: { isActive: true } });
+  Groups.remove({});
+  Structures.remove({});
+  let cpt = 0;
+  _.times(4, () => {
+    createStructure._execute({ userId }, { name: `${faker.company.companyName()}_${cpt}` });
+    cpt += 1;
+  });
+  Roles.removeUsersFromRoles(userId, 'admin');
+  Meteor.users.update({ _id: userId }, { $set: { isActive: false } });
+};
+
 describe('users', function () {
   before(function () {
-    allowedStructures = getStructureIds();
+    Meteor.roles.remove({});
+    Roles.createRole('admin');
+    Roles.createRole('animator');
+    Roles.createRole('adminStructure');
+    Roles.createRole('member');
     AppSettings.remove({});
     const appSettings = Factory.create('appsettings');
     AppSettings.insert({ ...appSettings, _id: testSettingsId });
@@ -118,6 +138,8 @@ describe('users', function () {
         lastName: `test${faker.name.lastName()}`,
       });
 
+      initStructures(userId);
+      allowedStructures = getStructureIds();
       Meteor.users.update(userId, { $set: { isActive: true, isRequest: false, articlesCount: 1 } });
       Meteor.users.update(otherUserId, { $set: { isActive: true, isRequest: false, articlesCount: 1 } });
       group = Factory.create('group', { owner: userId });
@@ -446,12 +468,8 @@ describe('users', function () {
       // Clear
       Meteor.roleAssignment.remove({});
       Meteor.users.remove({});
-      Meteor.roles.remove({});
       Groups.remove({});
       PersonalSpaces.remove({});
-      Roles.createRole('admin');
-      Roles.createRole('adminStructure');
-      Roles.createRole('member');
       // Generate 'users'
       email = faker.internet.email();
       userId = Accounts.createUser({
@@ -471,6 +489,8 @@ describe('users', function () {
         firstName: faker.name.firstName(),
         lastName: faker.name.lastName(),
       });
+      initStructures(userId);
+      allowedStructures = getStructureIds();
       // set this user as global admin
       Roles.addUsersToRoles(adminId, 'admin');
       // set users as active
@@ -712,7 +732,10 @@ describe('users', function () {
           firstName: 'adminStructureUserFirstName',
           lastName: 'adminStructureUserLastName',
         });
+        Meteor.users.update({ _id: adminStructureId }, { $set: { isActive: true } });
+        const struc = Structures.findOne({ _id: newStructure });
         Roles.addUsersToRoles(adminStructureId, 'adminStructure', newStructure);
+        Roles.addUsersToRoles(adminStructureId, 'admin', struc.groupId);
 
         acceptAwaitingStructure._execute({ userId: adminStructureId }, { targetUserId: userId });
         const user = Meteor.users.findOne({ _id: userId });
