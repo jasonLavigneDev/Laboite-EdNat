@@ -18,7 +18,7 @@ export const useStructure = (_id) => {
   }, [structure]);
 };
 
-export const getStructure = (_id) => Structures.findOne({ _id });
+export const getStructure = (_id) => Structures.findOne({ _id }) || {};
 
 /**
  * - Hook used to manage a selected structure
