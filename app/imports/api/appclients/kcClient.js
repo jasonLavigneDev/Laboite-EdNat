@@ -367,8 +367,7 @@ class KeyCloakClient {
     this._removeGroup(name, callerId);
   }
 
-  setAdmin(userId, callerId) {
-    const groupName = `admins`;
+  setAdmin(userId, callerId, groupName = `admins`) {
     const user = Meteor.users.findOne(userId);
     const keycloakId = user.services && user.services.keycloak ? user.services.keycloak.id : null;
     if (keycloakId) {
@@ -383,12 +382,20 @@ class KeyCloakClient {
                 },
               })
               .then(() => {
-                logServer(i18n.__('api.keycloak.adminAdded', { userId }));
+                if (groupName === 'adminStructure') {
+                  logServer(i18n.__('api.keycloak.adminStructureAdded', { userId }));
+                } else {
+                  logServer(i18n.__('api.keycloak.adminAdded', { userId }));
+                }
               });
           }),
         )
         .catch((error) => {
-          logServer(i18n.__('api.keycloak.addAdminError', { userId }), 'error', callerId);
+          if (groupName === 'adminStructure') {
+            logServer(i18n.__('api.keycloak.addAdminStructureError', { userId }), 'error', callerId);
+          } else {
+            logServer(i18n.__('api.keycloak.addAdminError', { userId }), 'error', callerId);
+          }
           logServer(error.response && error.response.data ? error.response.data : error, 'error');
         });
     } else {
@@ -396,8 +403,7 @@ class KeyCloakClient {
     }
   }
 
-  unsetAdmin(userId, callerId) {
-    const groupName = `admins`;
+  unsetAdmin(userId, callerId, groupName = `admins`) {
     const user = Meteor.users.findOne(userId);
     const keycloakId = user.services && user.services.keycloak ? user.services.keycloak.id : null;
     if (keycloakId) {
@@ -412,7 +418,11 @@ class KeyCloakClient {
                 },
               })
               .then(() => {
-                logServer(`Keycloak: user ${userId} removed from admins`);
+                if (groupName === 'adminStructure') {
+                  logServer(i18n.__('api.keycloak.adminStructureRemoved', { userId }));
+                } else {
+                  logServer(i18n.__('api.keycloak.adminRemoved', { userId }));
+                }
               }),
           ),
         )
@@ -535,6 +545,18 @@ if (Meteor.isServer && Meteor.settings.public.enableKeycloak) {
   Meteor.afterMethod('users.unsetAdmin', function kcUnsetAdmin({ userId }) {
     if (!this.error) {
       kcClient.unsetAdmin(userId, this.userId);
+    }
+  });
+
+  Meteor.afterMethod('users.setAdminStructure', function kcSetAdmin({ userId }) {
+    if (!this.error) {
+      kcClient.setAdmin(userId, this.userId, 'adminStructure');
+    }
+  });
+
+  Meteor.afterMethod('users.unsetAdminStructure', function kcUnsetAdmin({ userId }) {
+    if (!this.error) {
+      kcClient.unsetAdmin(userId, this.userId, 'adminStructure');
     }
   });
 
