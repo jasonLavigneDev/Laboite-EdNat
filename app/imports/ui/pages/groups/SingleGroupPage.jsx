@@ -350,6 +350,21 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
     });
   }, [group]);
 
+  if (Object.keys(group).length === 0) {
+    const urlSplit = history.location.pathname.split('groups/');
+    const oldTitle = urlSplit[urlSplit.length - 1];
+    return (
+      <>
+        <Grid item xs={12} sm={12} md={12} className={classes.flex}>
+          <Button onClick={goBack} color="primary" startIcon={<ArrowBack />}>
+            {i18n.__('pages.SingleServicePage.backToList')}
+          </Button>
+        </Grid>
+        <p> {i18n.__('pages.SingleGroupPage.GroupNotExist', { groupTitle: JSON.stringify(oldTitle) })}</p>
+      </>
+    );
+  }
+
   return (
     <Fade in>
       <Container className={classes.root}>
