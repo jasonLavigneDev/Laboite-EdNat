@@ -78,7 +78,9 @@ const AdminStructureValidationMandatory = ({
     <Grid container spacing={4} style={{ paddingLeft: structure === null ? '' : '60px' }}>
       <Grid item md={12}>
         <Typography variant={isMobile ? 'h6' : 'h4'}>
-          {i18n.__('pages.AdminSettingsPage.userStructureValidationMandatory')}
+          {structure === null
+            ? i18n.__('pages.AdminSettingsPage.userStructureValidationMandatory')
+            : i18n.__('pages.AdminSettingsPage.userStructureAdminValidationMandatory')}
         </Typography>
       </Grid>
       <Grid item md={12} className={classes.container}>
@@ -91,7 +93,11 @@ const AdminStructureValidationMandatory = ({
               color="primary"
             />
           }
-          label={i18n.__(`pages.AdminSettingsPage.toggleUserStructureValidationMandatory`)}
+          label={
+            structure === null
+              ? i18n.__(`pages.AdminSettingsPage.toggleUserStructureValidationMandatory`)
+              : i18n.__(`pages.AdminSettingsPage.userStructureAdminValidationMandatory`)
+          }
         />
       </Grid>
       <FormControlLabel

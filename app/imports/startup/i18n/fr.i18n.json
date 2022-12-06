@@ -996,7 +996,9 @@
         "confirm": "Oui"
       },
       "userStructureValidationMandatory": "Statut de la validation obligatoire d'une structure",
+      "userStructureAdminValidationMandatory": "Statut de la validation obligatoire de cette structure",
       "toggleUserStructureValidationMandatory": "Le choix d'une structure doit obligatoirement être validé par un administrateur",
+      "toggleUserStructureAdminValidationMandatory": "Le choix de cette structure doit obligatoirement être validé par un administrateur",
       "buttonUserStructureValidationMandatory": "Valider le changement"
     },
     "SignIn": {
@@ -1521,7 +1523,7 @@
     },
     "AdminStructureSettingsPage": {
       "title": "Paramétrage de la structure",
-      "userStructureValidationMandatory": "Validation obligatoire d'une structure"
+      "userStructureValidationMandatory": "Validation obligatoire de cette structure"
     },
     "AdminDefaultSpacesPage": {
       "chooseStructure": "Choisissez une structure",

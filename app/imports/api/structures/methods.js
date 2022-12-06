@@ -360,6 +360,7 @@ const LISTS_METHODS = _.pluck(
     updateStructureIntroduction,
     updateStructureContactEmail,
     getStructures,
+    setUserStructureAdminValidationMandatoryStatus,
   ],
   'name',
 );

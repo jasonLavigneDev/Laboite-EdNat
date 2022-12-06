@@ -49,5 +49,5 @@ export const hasRightToSetStructureDirectly = (userId, structureId) => {
   const isUserStructureValidationMandatoryStructureAdminLevel =
     structure && structure.userStructureValidationMandatory !== undefined && structure.userStructureValidationMandatory;
 
-  return isUserStructureValidationMandatoryAdminLevel || isUserStructureValidationMandatoryStructureAdminLevel;
+  return !isUserStructureValidationMandatoryAdminLevel && !isUserStructureValidationMandatoryStructureAdminLevel;
 };
