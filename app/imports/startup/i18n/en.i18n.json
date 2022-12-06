@@ -1049,7 +1049,9 @@
       "chooseAttachementStructure": "Choose your attachement structure",
       "noOptions": "Type to search for structures (3 letters minimum)",
       "onlyActiveUserOption": "Only actives users can select a structure",
-      "awaitingForStructure": "You are awaiting for structure:"
+      "awaitingForStructure": "You are awaiting for structure:",
+      "nclocator" : "Nextcloud Federation ID",
+      "emptyNcLocator" : "No Nextcloud given"
     },
     "NotFound": {
       "backButtonLabel": "Back",
@@ -1211,7 +1213,9 @@
       "manageUser": "Manager user",
       "sendNotif": "Send notification",
       "successCopyUserId": "User ID copied with success",
+      "successCopyNcLocator": "Nextcloud federation ID copied with success",
       "copyUserId": "Copy user ID",
+      "copyNcLocator":"Copy Nextcloud federation ID",
       "userType": "Users type",
       "all": "all",
       "noResult": "No result"

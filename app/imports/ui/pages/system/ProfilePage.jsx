@@ -99,6 +99,7 @@ const defaultState = {
   avatar: '',
   advancedPersonalPage: false,
   articlesEnable: false,
+  nclocator: '',
 };
 
 const logoutTypeLabels = {
@@ -182,6 +183,7 @@ const ProfilePage = () => {
       advancedPersonalPage:
         userData.advancedPersonalPage === false || reset ? data.advancedPersonalPage : userData.advancedPersonalPage,
       articlesEnable: userData.articlesEnable === false || reset ? data.articlesEnable : userData.articlesEnable,
+      nclocator: data.nclocator || '',
     });
     if (reset === true) {
       setErrors(defaultState);
@@ -563,6 +565,18 @@ const ProfilePage = () => {
                       {errors.username}
                     </FormHelperText>
                   </FormControl>
+                  <TextField
+                    disabled={enableKeycloak}
+                    margin="normal"
+                    id="nclocator"
+                    label={i18n.__('pages.ProfilePage.nclocator')}
+                    name="nclocator"
+                    autoComplete="nclocator"
+                    fullWidth
+                    type="text"
+                    value={userData.nclocator || i18n.__('pages.ProfilePage.emptyNcLocator')}
+                    variant="outlined"
+                  />
                 </Grid>
                 <Grid item xs={isMobile ? 12 : 4}>
                   <AvatarPicker

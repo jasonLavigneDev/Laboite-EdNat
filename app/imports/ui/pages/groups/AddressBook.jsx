@@ -23,6 +23,7 @@ import Select from '@mui/material/Select';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import LanguageIcon from '@mui/icons-material/Language';
+import CloudIcon from '@mui/icons-material/Cloud';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import SendIcon from '@mui/icons-material/Send';
 import { useHistory } from 'react-router-dom';
@@ -201,6 +202,22 @@ const AddressBook = ({ loading, group, slug }) => {
                           />
 
                           <ListItemSecondaryAction>
+                            {!!user.nclocator && (
+                              <Tooltip title={`${i18n.__('pages.AdminUsersPage.copyNcLocator')}`} aria-label="add">
+                                <IconButton
+                                  edge="end"
+                                  aria-label="comments"
+                                  onClick={() =>
+                                    navigator.clipboard
+                                      .writeText(user.nclocator)
+                                      .then(msg.success(i18n.__('pages.AdminUsersPage.successCopyNcLocator')))
+                                  }
+                                  size="large"
+                                >
+                                  <CloudIcon />
+                                </IconButton>
+                              </Tooltip>
+                            )}
                             {user.mezigName ? (
                               <Tooltip
                                 title={`${i18n.__('pages.AddressBook.goToMezig')} ${user.firstName}`}
