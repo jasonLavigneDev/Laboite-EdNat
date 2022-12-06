@@ -76,6 +76,14 @@ export const bookmarkColumns = (classes) => [
   },
 ];
 
+const getLocalStorageValue = (key, defaultValue) => {
+  let localStorageValue = sessionStorage.getItem(key);
+  if (localStorageValue == null) {
+    localStorageValue = defaultValue;
+  }
+  return localStorageValue;
+};
+
 function UserBookmarksPage({ loading, bookmarksList }) {
   const [{ user, userId }] = useAppContext();
   const history = useHistory();
@@ -86,6 +94,7 @@ function UserBookmarksPage({ loading, bookmarksList }) {
   const [editUrl, setEditUrl] = useState(false);
   const [bkData, setBkData] = useState({});
   const [onEdit, setOnEdit] = useState(false);
+  const [pageSize, setPageSize] = useState(getLocalStorageValue('cstRowsPerPage', 10));
 
   const OpenURLEditor = () => setEditUrl(true);
 
@@ -98,7 +107,7 @@ function UserBookmarksPage({ loading, bookmarksList }) {
   };
 
   const options = {
-    pageSize: 10,
+    pageSize,
     pageSizeOptions: [10, 20, 50, 100],
     paginationType: 'stepped',
     actionsColumnIndex: 6,
@@ -106,6 +115,16 @@ function UserBookmarksPage({ loading, bookmarksList }) {
     emptyRowsWhenPaging: false,
   };
 
+  const handleChangeRowsPerPage = (rowsPerPage) => {
+    // Access initial value from session storage
+    const cstRowsPerPage = getLocalStorageValue('cstRowsPerPage', 10);
+
+    if (cstRowsPerPage !== rowsPerPage) {
+      // Update session storage
+      sessionStorage.setItem('cstRowsPerPage', rowsPerPage);
+      setPageSize(rowsPerPage);
+    }
+  };
   return (
     <>
       {loading ? (
@@ -127,6 +146,7 @@ function UserBookmarksPage({ loading, bookmarksList }) {
               })}
               options={options}
               localization={setMaterialTableLocalization('pages.BookmarksPage')}
+              onRowsPerPageChange={handleChangeRowsPerPage}
               actions={[
                 {
                   icon: add,
