@@ -1360,9 +1360,11 @@
       "cancel": "Cancel",
       "logo_url": "Logo URL",
       "offlineService": "Enable this service on the offline page",
-      "titleFieldHelperText": "title field helper text",
-      "teamFieldHelperText": "team field helper text",
-      "usageFieldHelperText": "usage field helper text"
+      "titleFieldHelperText": "Service title",
+      "StateFieldHelperText": "Service state",
+      "teamFieldHelperText": "Team that manages the service",
+      "usageFieldHelperText": "Service usage",
+      "descriptionFieldHelperText": "Short description"
     },
     "AdminSingleGroupPage": {
       "edition": "Edition of the group",

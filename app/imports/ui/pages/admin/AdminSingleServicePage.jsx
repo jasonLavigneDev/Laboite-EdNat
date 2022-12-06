@@ -83,6 +83,9 @@ const useStyles = makeStyles()((theme) => ({
     justifyContent: 'space-between',
     marginTop: theme.spacing(5),
   },
+  topSpacing: {
+    marginTop: theme.spacing(4),
+  },
   screenshotWrapper: {
     marginTop: 30,
     position: 'relative',
@@ -331,6 +334,7 @@ const AdminSingleServicePage = ({ categories, businessReGrouping, service, ready
                 variant="outlined"
                 fullWidth
                 margin="normal"
+                className={classes.topSpacing}
               />
             </Tooltip>
             <TextField
@@ -342,26 +346,29 @@ const AdminSingleServicePage = ({ categories, businessReGrouping, service, ready
               fullWidth
               margin="normal"
               disabled
+              className={classes.topSpacing}
             />
-            <FormControl variant="outlined" fullWidth margin="normal">
-              <InputLabel htmlFor="state" id="state-label">
-                {i18n.__('pages.AdminSingleServicePage.state')}
-              </InputLabel>
-              <Select
-                labelId="state-label"
-                id="state"
-                name="state"
-                value={serviceData.state}
-                onChange={onUpdateField}
-                label={i18n.__('pages.AdminSingleServicePage.state')}
-              >
-                {Object.keys(Services.stateLabels).map((val) => (
-                  <MenuItem key={val} value={val}>
-                    {i18n.__(Services.stateLabels[val])}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            <Tooltip title={i18n.__('pages.AdminSingleServicePage.StateFieldHelperText')} arrow key="tooTipState">
+              <FormControl variant="outlined" fullWidth margin="normal" className={classes.topSpacing}>
+                <InputLabel htmlFor="state" id="state-label">
+                  {i18n.__('pages.AdminSingleServicePage.state')}
+                </InputLabel>
+                <Select
+                  labelId="state-label"
+                  id="state"
+                  name="state"
+                  value={serviceData.state}
+                  onChange={onUpdateField}
+                  label={i18n.__('pages.AdminSingleServicePage.state')}
+                >
+                  {Object.keys(Services.stateLabels).map((val) => (
+                    <MenuItem key={val} value={val}>
+                      {i18n.__(Services.stateLabels[val])}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Tooltip>
             <Tooltip title={i18n.__('pages.AdminSingleServicePage.teamFieldHelperText')} arrow key="toolTipTeam">
               <TextField
                 onChange={onUpdateField}
@@ -371,25 +378,27 @@ const AdminSingleServicePage = ({ categories, businessReGrouping, service, ready
                 variant="outlined"
                 fullWidth
                 margin="normal"
+                className={classes.topSpacing}
               />
             </Tooltip>
-            <Tooltip title={i18n.__('pages.AdminSingleServicePage.teamFieldHelperText')} arrow key="toolTipUsage">
+            <Tooltip title={i18n.__('pages.AdminSingleServicePage.usageFieldHelperText')} arrow key="toolTipUsage">
               <TextField
                 onChange={onUpdateField}
                 value={serviceData.usage}
                 name="usage"
-                label={i18n.__('pages.AdminSingleServicePage.usageFieldHelperText')}
+                label={i18n.__('pages.AdminSingleServicePage.usage')}
                 variant="outlined"
                 fullWidth
                 margin="normal"
+                className={classes.topSpacing}
               />
             </Tooltip>
             <div className={classes.logoWrapper}>
-              <div>{i18n.__('pages.AdminSingleServicePage.logo')}</div>
+              <div className={classes.topSpacing}>{i18n.__('pages.AdminSingleServicePage.logo')}</div>
               <ImageAdminUploader
                 onImageChange={onUpdateLogo}
                 name="logo"
-                className={classes.logo}
+                className={`${classes.logo}`}
                 alt={`logo for ${serviceData.title}`}
                 src={serviceData.logo}
                 path={`services/${params._id}`}
@@ -405,20 +414,28 @@ const AdminSingleServicePage = ({ categories, businessReGrouping, service, ready
                   variant="outlined"
                   fullWidth
                   margin="normal"
+                  className={classes.topSpacing}
                 />
               )}
             </div>
-            <TextField
-              onChange={onUpdateField}
-              value={serviceData.description}
-              name="description"
-              label={i18n.__('pages.AdminSingleServicePage.description')}
-              variant="outlined"
-              inputProps={{ maxLength: 64 }}
-              fullWidth
-              multiline
-              margin="normal"
-            />
+            <Tooltip
+              title={i18n.__('pages.AdminSingleServicePage.descriptionFieldHelperText')}
+              arrow
+              key="toolTipDescription"
+            >
+              <TextField
+                onChange={onUpdateField}
+                value={serviceData.description}
+                name="description"
+                label={i18n.__('pages.AdminSingleServicePage.description')}
+                variant="outlined"
+                inputProps={{ maxLength: 64 }}
+                fullWidth
+                multiline
+                margin="normal"
+                className={classes.topSpacing}
+              />
+            </Tooltip>
             <TextField
               onChange={onUpdateField}
               value={serviceData.url}
@@ -427,6 +444,7 @@ const AdminSingleServicePage = ({ categories, businessReGrouping, service, ready
               variant="outlined"
               fullWidth
               margin="normal"
+              className={classes.topSpacing}
             />
             {offlinePage && !structureMode && (
               <FormControlLabel
@@ -439,15 +457,18 @@ const AdminSingleServicePage = ({ categories, businessReGrouping, service, ready
                   />
                 }
                 label={i18n.__('pages.AdminSingleServicePage.offlineService')}
+                className={classes.topSpacing}
               />
             )}
-            <div className={classes.wysiwyg}>
+            <div className={`${classes.wysiwyg} ${classes.topSpacing}`}>
               <InputLabel htmlFor="content">{i18n.__('pages.AdminSingleServicePage.content')}</InputLabel>
               <CustomToolbarArticle />
               <ReactQuill id="content" value={content} onChange={onUpdateRichText} modules={quillOptions} />
             </div>
-            <InputLabel id="categories-label">{i18n.__('pages.AdminSingleServicePage.categories')}</InputLabel>
-            <div className={classes.chipWrapper}>
+            <InputLabel id="categories-label" className={classes.topSpacing}>
+              {i18n.__('pages.AdminSingleServicePage.categories')}
+            </InputLabel>
+            <div className={`${classes.chipWrapper}`}>
               {categories.map((categ) => {
                 const isActive = serviceData.categories && Boolean(serviceData.categories.find((c) => c === categ._id));
                 return (
@@ -464,7 +485,7 @@ const AdminSingleServicePage = ({ categories, businessReGrouping, service, ready
               })}
             </div>
             {structureMode && isBusinessRegroupingMode && businessReGrouping.length > 0 && (
-              <InputLabel id="businessReGrouping-label">
+              <InputLabel id="businessReGrouping-label" className={classes.topSpacing}>
                 {i18n.__('pages.AdminSingleServicePage.businessReGrouping')}
               </InputLabel>
             )}
@@ -489,7 +510,7 @@ const AdminSingleServicePage = ({ categories, businessReGrouping, service, ready
               </div>
             )}
             {minioEndPoint && (
-              <div style={{ display: 'flex', alignItems: 'center' }}>
+              <div style={{ display: 'flex', alignItems: 'center', marginTop: '20px' }}>
                 <InputLabel>
                   {i18n.__('pages.AdminSingleServicePage.screenshots')} (
                   {(serviceData.screenshots && serviceData.screenshots.length) || 0})
@@ -531,11 +552,16 @@ const AdminSingleServicePage = ({ categories, businessReGrouping, service, ready
               </Grid>
             )}
             <div className={classes.buttonGroup}>
-              <Button variant="contained" color="grey" onClick={onCancel}>
+              <Button variant="contained" color="grey" onClick={onCancel} className={classes.topSpacing}>
                 {i18n.__('pages.AdminSingleServicePage.cancel')}
               </Button>
 
-              <Button variant="contained" color="primary" onClick={onSubmitUpdateService}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={onSubmitUpdateService}
+                className={classes.topSpacing}
+              >
                 {params._id
                   ? i18n.__('pages.AdminSingleServicePage.update')
                   : i18n.__('pages.AdminSingleServicePage.save')}
