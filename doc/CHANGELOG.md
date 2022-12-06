@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.1.5](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/5.1.4...release/5.1.5) (2022-12-06)
+
+
+### Bug Fixes
+
+* **avatar:** uploads of images and size limit check ([e0e8286](https://gitlab.mim-libre.fr/alphabet/laboite/commit/e0e82864948cce25a644acbc0e443f57929a2c91))
+
 ## [5.1.4](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/5.1.3...release/5.1.4) (2022-12-02)
 
 

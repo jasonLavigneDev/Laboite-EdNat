@@ -52,25 +52,34 @@ export const filesupload = new ValidatedMethod({
     name: String,
     path: String,
     fileType: String,
+    storage: Boolean,
   }).validator(),
-  async run({ file, path, name, fileType }) {
+  async run({ file, path, name, fileType, storage }) {
     try {
       checkUserAdminRights(path, this.userId);
-      const filePath = `${path}/${name}`;
-      const fileArray = file.split(',');
-      const [fileData, fileData2] = fileArray;
-      const buffer = Buffer.from(fileData2 || fileData, 'base64');
-      const metadata = {};
+      const { minioFileSize, minioStorageFilesSize } = Meteor.settings.public;
+      const size = storage ? minioStorageFilesSize : minioFileSize;
+      if (file.length < size) {
+        const filePath = `${path}/${name}`;
+        const fileArray = file.split(',');
+        const [fileData, fileData2] = fileArray;
+        const buffer = Buffer.from(fileData2 || fileData, 'base64');
+        const metadata = {};
 
-      // ? Needs this to ensure minio serve the SVG with correct content-type in order to have them displayed properly in HTML
-      // * ISSUE : https://gitlab.mim-libre.fr/alphabet/laboite/-/issues/158
-      if (fileType.includes('svg')) {
-        metadata['Content-Type'] = 'image/svg+xml';
+        // ? Needs this to ensure minio serve the SVG with correct content-type in order to have them displayed properly in HTML
+        // * ISSUE : https://gitlab.mim-libre.fr/alphabet/laboite/-/issues/158
+        if (fileType.includes('svg')) {
+          metadata['Content-Type'] = 'image/svg+xml';
+        }
+
+        const result = await s3Client.putObject(minioBucket, filePath, buffer, metadata);
+
+        return result;
       }
-
-      const result = await s3Client.putObject(minioBucket, filePath, buffer, metadata);
-
-      return result;
+      throw new Meteor.Error(
+        i18n.__('components.UploaderNotifier.fileTooLargeTitle'),
+        `${i18n.__('components.UploaderNotifier.fileTooLarge')} ${size / 1000}ko`,
+      );
     } catch (error) {
       throw new Meteor.Error(error.typeError, error.message);
     }
