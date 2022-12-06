@@ -6,12 +6,13 @@ import logServer from '../logging';
 import Groups from '../groups/groups';
 import AppRoles from '../users/users';
 import { isActive } from '../utils';
+import { testMeteorSettingsUrl } from '../../ui/utils/utilsFuncs';
 
 const keycloakSettings = Meteor.settings.keycloak;
 
 class KeyCloakClient {
   constructor() {
-    this.kcURL = Meteor.settings.public.keycloakUrl;
+    this.kcURL = testMeteorSettingsUrl(Meteor.settings.public.keycloakUrl);
     this.kcRealm = Meteor.settings.public.keycloakRealm;
     this.clientId = null;
     this.adminsGroupId = null;

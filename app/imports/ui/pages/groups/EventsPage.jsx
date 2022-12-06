@@ -31,6 +31,7 @@ import Groups from '../../../api/groups/groups';
 
 import EventsAgenda from '../../../api/eventsAgenda/eventsAgenda';
 import { GroupPaginate, GroupListActions } from './common';
+import { testMeteorSettingsUrl } from '../../utils/utilsFuncs';
 
 export const useEvenstPageStyles = makeStyles()((theme) => ({
   root: {
@@ -164,7 +165,9 @@ const EventsPage = ({ loading, group }) => {
                   <IconButton
                     onClick={() =>
                       window.open(
-                        `${Meteor.settings.public.services.agendaUrl}/add-event?groupId=${group._id}`,
+                        `${testMeteorSettingsUrl(Meteor.settings.public.services.agendaUrl)}/add-event?groupId=${
+                          group._id
+                        }`,
                         '_blank',
                       )
                     }
@@ -206,7 +209,7 @@ const EventsPage = ({ loading, group }) => {
                         />
 
                         <GroupListActions
-                          url={`${Meteor.settings.public.services.agendaUrl}/event/${event._id}`}
+                          url={`${testMeteorSettingsUrl(Meteor.settings.public.services.agendaUrl)}/event/${event._id}`}
                           title={`${i18n.__('pages.Events.seeEvent')} ${event.title}`}
                         />
                       </ListItem>,

@@ -35,6 +35,7 @@ import AvatarPicker from '../../components/users/AvatarPicker';
 import Structures from '../../../api/structures/structures';
 import { getStructure, useStructure, useAwaitingStructure } from '../../../api/structures/hooks';
 import AppSettings from '../../../api/appsettings/appsettings';
+import { testMeteorSettingsUrl } from '../../utils/utilsFuncs';
 
 const useStyles = makeStyles()((theme) => ({
   root: {
@@ -404,7 +405,9 @@ const ProfilePage = () => {
   };
 
   // eslint-disable-next-line max-len
-  const accountURL = `${Meteor.settings.public.keycloakUrl}/realms/${Meteor.settings.public.keycloakRealm}/account`;
+  const accountURL = `${testMeteorSettingsUrl(Meteor.settings.public.keycloakUrl)}/realms/${
+    Meteor.settings.public.keycloakRealm
+  }/account`;
 
   const SendNewAvatarToMedia = (avImg) => {
     dispatch({

@@ -33,6 +33,7 @@ import Spinner from '../../components/system/Spinner';
 import Groups from '../../../api/groups/groups';
 import { getStructure } from '../../../api/structures/hooks';
 import { GroupSearch, GroupPaginate } from './common';
+import { testMeteorSettingsUrl } from '../../utils/utilsFuncs';
 
 const useStyles = makeStyles()((theme) => ({
   root: {
@@ -119,7 +120,7 @@ const AddressBook = ({ loading, group, slug }) => {
   const { disabledFeatures = {} } = Meteor.settings.public;
   const enableBlog = !disabledFeatures.blog;
   const authorBlogPage = Meteor.settings.public.laboiteBlogURL
-    ? `${Meteor.settings.public.laboiteBlogURL}/authors/`
+    ? `${testMeteorSettingsUrl(Meteor.settings.public.laboiteBlogURL)}/authors/`
     : `${Meteor.absoluteUrl()}public/`;
 
   return (
@@ -208,7 +209,9 @@ const AddressBook = ({ loading, group, slug }) => {
                                   aria-label="comments"
                                   onClick={() =>
                                     window.open(
-                                      `${Meteor.settings.public.services.mezigUrl}/profil/${user.mezigName}`,
+                                      `${testMeteorSettingsUrl(Meteor.settings.public.services.mezigUrl)}/profil/${
+                                        user.mezigName
+                                      }`,
                                       '_blank',
                                     )
                                   }

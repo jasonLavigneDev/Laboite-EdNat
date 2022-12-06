@@ -5,12 +5,14 @@ import { Roles } from 'meteor/alanning:roles';
 import logServer from '../logging';
 import Groups from '../groups/groups';
 import { isActive } from '../utils';
+import { testMeteorSettingsUrl } from '../../ui/utils/utilsFuncs';
 
 const nextcloudPlugin = Meteor.settings.public.groupPlugins.nextcloud;
 const { nextcloud } = Meteor.settings;
 
 function ocsUrl(ncURL) {
-  const origin = ncURL.startsWith('http') ? ncURL : `https://${ncURL}`;
+  const testedNcUrl = testMeteorSettingsUrl(ncURL);
+  const origin = ncURL.startsWith('http') ? testedNcUrl : `https://${testedNcUrl}`;
   return new URL('/ocs/v1.php/cloud', origin).href;
 }
 

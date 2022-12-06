@@ -9,6 +9,7 @@ import logServer from '../../../api/logging';
 import AppRoles from '../../../api/users/users';
 import { getStructureIds } from '../../../api/users/structures';
 import fakeData from './fakeData.json';
+import { testMeteorSettingsUrl } from '../../../ui/utils/utilsFuncs';
 
 const accountConfig = {
   loginExpirationInDays: Meteor.settings.private.loginExpirationInDays || 90,
@@ -22,7 +23,7 @@ if (Meteor.settings.keycloak) {
       {
         $set: {
           loginStyle: 'redirect',
-          serverUrl: Meteor.settings.public.keycloakUrl,
+          serverUrl: testMeteorSettingsUrl(Meteor.settings.public.keycloakUrl),
           realm: Meteor.settings.public.keycloakRealm,
           clientId: Meteor.settings.keycloak.client,
           realmPublicKey: Meteor.settings.keycloak.pubkey,
