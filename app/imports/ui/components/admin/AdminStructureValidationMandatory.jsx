@@ -11,7 +11,6 @@ import Checkbox from '@mui/material/Checkbox';
 import Grid from '@mui/material/Grid';
 
 import { useAppContext } from '../../contexts/context';
-import { setUserStructureAdminValidationMandatoryStatus } from '../../../api/structures/methods';
 
 const useStyles = makeStyles()((theme) => ({
   root: {
@@ -62,7 +61,8 @@ const AdminStructureValidationMandatory = ({
     if (onSetUserStructureValidationMandatoryStatus !== null) {
       onSetUserStructureValidationMandatoryStatus();
     } else {
-      setUserStructureAdminValidationMandatoryStatus.call(
+      Meteor.call(
+        'structures.setUserStructureAdminValidationMandatoryStatus',
         { structureId: structure._id, userStructureValidationMandatory: userStructureAdminValidationMandatory },
         (error) => {
           if (error) {

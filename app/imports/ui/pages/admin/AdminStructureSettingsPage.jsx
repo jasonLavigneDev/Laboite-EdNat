@@ -69,8 +69,8 @@ const AdminStructureSettingsPage = () => {
                   {
                     title: i18n.__('pages.AdminStructureSettingsPage.userStructureValidationMandatory'),
                     key: 'userStructureAdminValidationMandatory',
-                    Element: AdminStructureValidationMandatory,
                     ElementProps: { structure: selectedStructure },
+                    Element: AdminStructureValidationMandatory,
                   },
                 ]}
               />
