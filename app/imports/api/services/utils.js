@@ -1,21 +1,16 @@
+export const presetServiceIds = ['addressbook', 'events', 'polls', 'bookmarks', 'articles'];
+/**
+ * The serviceInternalUrlPath global var
+ * need to be defined into the /config/settings.development.json or /config/settings.json file
+ * in the public field
+ * { "public": { "serviceInternalUrlPath": ...
+ */
+export const serviceInternalUrlPath = Meteor.settings.public?.serviceInternalUrlPath || 'services';
+
 export const getServiceInternalUrl = ({ service }) => {
-  const isAddressBook = service._id === 'addressbook';
-  const isEvents = service._id === 'events';
-  const isPoll = service._id === 'polls';
-  const isBookmark = service._id === 'bookmarks';
-  const isArticles = service._id === 'articles';
-  const isForms = service._id === 'forms';
-  return isAddressBook
-    ? service.url
-    : isEvents
-    ? service.url
-    : isPoll
-    ? service.url
-    : isBookmark
-    ? service.url
-    : isArticles
-    ? service.url
-    : isForms
-    ? service.url
-    : `/services/${service.slug}`;
+  if (presetServiceIds.includes(service._id)) {
+    return service.url;
+  }
+
+  return `/${serviceInternalUrlPath}/${service.slug}`;
 };
