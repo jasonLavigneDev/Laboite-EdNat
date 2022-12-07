@@ -15,7 +15,8 @@
     "visualize": "meteor --production --extra-packages bundle-visualizer --settings ../config/settings.development.json",
     "init-npm": "rm -rf node_modules && rm -f package-lock.json && npm upgrade && npm i",
     "prepare": "cd .. && npx husky install",
-    "serve-widget": "serve private/widget --listen 4000"
+    "serve-widget": "serve private/widget --listen 4000",
+    "check-lang": "node ./scripts/lang-check.js imports/startup/i18n/*.json"
   },
   "dependencies": {
     "@babel/runtime": "^7.21.5",
@@ -50,6 +51,7 @@
     "faker": "^4.1.0",
     "fbjs": "^2.0.0",
     "helmet": "^6.1.5",
+    "glob": "^8.0.3",
     "html2canvas": "^1.4.1",
     "html2pdf.js": "^0.10.1",
     "jspdf": "^2.5.1",
