@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 function template(content, options) {
   return Object.entries(options).reduce((acc, [key, value]) => {
     const re = new RegExp(`{{${key}}}`, 'g');
