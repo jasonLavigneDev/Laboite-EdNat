@@ -11,6 +11,7 @@ import { generateDefaultPersonalSpace } from '../personalspaces/methods';
 import PersonalSpaces from '../personalspaces/personalspaces';
 import AsamExtensions from '../asamextensions/asamextensions';
 import Structures from '../structures/structures';
+import Groups from '../groups/groups';
 
 const AppRoles = ['candidate', 'member', 'animator', 'admin', 'adminStructure'];
 
@@ -300,13 +301,42 @@ if (Meteor.isServer) {
       }
       // signal updates to plugins
       Meteor.call('users.userUpdated', { userId: details.user._id, data: updateInfos }, (err) => {
-        if (err) console.log(err);
+        if (err) logServer(`error : ${err}`);
       });
 
       // check if user has a personnal space generated from structure
       const pSpace = PersonalSpaces.findOne({ userId: details.user._id });
       if (details.user.structure && !pSpace) {
         generateDefaultPersonalSpace.call({ userId: details.user._id });
+      }
+
+      // add user to group of structure if he / she is not a member of his structure's group
+      const userStructure = Structures.findOne({ _id: details.user.structure });
+      const userGroupOfStructure =
+        userStructure && userStructure?.groupId ? Groups.findOne({ _id: userStructure?.groupId }) : null;
+
+      if (userGroupOfStructure !== null && !userGroupOfStructure.members?.includes(details.user._id)) {
+        // TO DO : call AddUserToGroupOfStructure method
+        if (userStructure.groupId) {
+          Meteor.call('users.setMemberOf', { userId: details.user._id, groupId: userStructure.groupId }, (err) => {
+            if (err) logServer(`error : ${err}`);
+          });
+        }
+        const structureAncestors = Structures.find({ _id: { $in: userStructure.ancestorsIds } }).fetch();
+        if (structureAncestors) {
+          structureAncestors.forEach((struct) => {
+            if (struct.groupId) {
+              const group = Groups.findOne({ _id: struct.groupId });
+              if (group) {
+                Meteor.call('users.setMemberOf', { userId: details.user._id, groupId: group.groupId }, (err) => {
+                  if (err) logServer(`error : ${err}`);
+                });
+              }
+            }
+          });
+        }
+      } else if (userGroupOfStructure === null) {
+        logServer(`There is no group attached to structure !!!`);
       }
     } else {
       Meteor.users.update({ _id: details.user._id }, { $set: { lastLogin: loginDate } });
