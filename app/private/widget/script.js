@@ -5,6 +5,20 @@
   const ROOT_URL = `{{rootUrl}}`;
   const WIDGET_STYLE = `{{style}}`;
 
+  // ------------------ UTILS ------------------
+  /**
+   *
+   * @param {HTMLElement} element
+   * @param {string} oldToken
+   * @param {string} newToken
+   */
+  const replaceOrAddClass = function replaceOrAddClass(element, oldToken, newToken) {
+    if (!element.classList.replace(oldToken, newToken)) {
+      element.classList.remove(oldToken);
+      element.classList.add(newToken);
+    }
+  };
+
   // ------------------ VARIABLES WIDGET ------------------
   let notifications = 0;
   let userLogged = 'disconnected';
@@ -84,16 +98,16 @@
 
   const openRizimo = () => {
     if (!dragged) {
-      widgetContainer.setAttribute('class', 'lb_widget-container opened');
+      replaceOrAddClass(widgetContainer, 'closed', 'opened');
       iframeContainer.setAttribute('iframe-state', 'opened');
-      openButton.setAttribute('class', 'lb_widget opened');
+      replaceOrAddClass(openButton, 'closed', 'opened');
     }
     dragged = false;
   };
   const closeRizimo = () => {
-    widgetContainer.setAttribute('class', 'lb_widget-container closed');
+    replaceOrAddClass(widgetContainer, 'opened', 'closed');
     iframeContainer.setAttribute('iframe-state', 'closed');
-    openButton.setAttribute('class', 'lb_widget closed');
+    replaceOrAddClass(openButton, 'opened', 'closed');
   };
   const toggleFullscreen = () => {
     widgetContainer.classList.toggle('fullscreen');
@@ -171,7 +185,7 @@
 
   const onlongpress = () => {
     dragged = true;
-    openButton.setAttribute('class', 'lb_widget closed moving');
+    openButton.classList.add('moving');
     document.addEventListener('touchmove', onMouseMove, false);
     document.addEventListener('mousemove', onMouseMove, false);
     if (timer) {
@@ -197,7 +211,7 @@
       if (timer) {
         clearTimeout(timer);
       }
-      openButton.setAttribute('class', 'lb_widget closed');
+      openButton.classList.remove('moving');
       document.removeEventListener('mousemove', onMouseMove);
       document.onmouseup = null;
     };
@@ -217,7 +231,7 @@
         clearTimeout(timer);
       }
       dragged = false;
-      openButton.setAttribute('class', 'lb_widget closed');
+      openButton.classList.remove('moving');
       document.removeEventListener('touchmove', onMouseMove);
       document.ontouchend = null;
     };
@@ -229,10 +243,41 @@
   };
 
   openButton.ondrop = function handleDrop(e) {
-    console.log(e);
+    // Prevent default behavior (Prevent file from being opened)
+    e.preventDefault();
+
+    const files = [];
+
+    if (e.dataTransfer.items) {
+      // Use DataTransferItemList interface to access the file(s)
+      [...e.dataTransfer.items].forEach((item) => {
+        // If dropped items aren't files, reject them
+        if (item.kind === 'file') {
+          files.push(item.getAsFile());
+        }
+      });
+    } else {
+      // Use DataTransfer interface to access the file(s)
+      [...e.dataTransfer.files].forEach((file) => {
+        files.push(file);
+      });
+    }
+
+    files.forEach((file, i) => {
+      console.log(`… file[${i}].name = ${file.name}`);
+    });
   };
 
   openButton.ondragover = function handleDragOver(e) {
-    console.log(e);
+    // Prevent default behavior (Prevent file from being opened)
+    e.preventDefault();
+  };
+
+  openButton.ondragenter = function handleDragEnter() {
+    openButton.classList.add('dropping');
+  };
+
+  openButton.ondragleave = function handleDragLeave() {
+    openButton.classList.remove('dropping');
   };
 }

@@ -61,6 +61,11 @@
     transform: scale(1.2);
 }
 
+.lb_widget.dropping {
+    transform: scale(1.2);
+    background: red;
+}
+
 .lb_widget-container.closed {
     display: none;
 }
