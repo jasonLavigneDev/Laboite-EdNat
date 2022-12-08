@@ -1,9 +1,9 @@
 {
   // ------------------ METEOR CONSTANTS ------------------
-  const ABSOLUTE_URL = '{{absoluteUrl}}';
-  const THEME = '{{theme}}';
-  const WIDGET_STYLE = '{{style}}';
-  const ROOT_URL = '{{rootUrl}';
+  const ABSOLUTE_URL = `{{absoluteUrl}}`;
+  const THEME = `{{theme}}`;
+  const ROOT_URL = `{{rootUrl}`;
+  const WIDGET_STYLE = `{{style}}`;
 
   // ------------------ VARIABLES WIDGET ------------------
   let notifications = 0;
