@@ -106,7 +106,7 @@ const InfoEditionComponent = ({ tabkey, data = [] }) => {
   };
 
   const onCancel = () => {
-    const currentData = getCurrentText({ introduction: data, language }) || {};
+    const currentData = getCurrentText({ data, language }) || {};
     setContent(currentData.content || '');
   };
 

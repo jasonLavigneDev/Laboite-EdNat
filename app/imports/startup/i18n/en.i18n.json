@@ -47,7 +47,9 @@
         "content_personalData": "Personal Data text",
         "maintenance": "Maintenance status",
         "textMaintenance": "Maintenance reason text",
-        "userStructureValidationMandatory": "Structure validation mandatoriness status"
+        "personalSpace": "Personal space",
+        "external_personalSpace": "Use an external link for Personal Space page",
+        "link_personalSpace": "Personal Space video link"
       },
       "migrationLockedText": "Database migration is locked.",
       "updateAppsettings": {
@@ -502,7 +504,11 @@
       "content_personalData": "Personal Data text",
       "changesNotSaved": "Changes not saved",
       "update": "Update",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "title_personalSpace": "Personal Space",
+      "content_personalSpace": "Personal Space text",
+      "external_personalSpace": "Use an external link for Personal Space page",
+      "link_personalSpace": "Personal Space video link"
     },
     "AdminNextcloudUrlEdit": {
       "subtitle": "Add & edit Nextcloud URL",
@@ -958,6 +964,7 @@
       "globalInfo": "General informations",
       "accessibility": "Accessibility",
       "personalData": "Personal Data",
+      "personalSpace": "Personal Space Intro",
       "maintenance": "Maintenance options",
       "errorMongo": "A MongoDB error has occured while migrating.",
       "toggleMaintenance": "Put the site in maintenance",
@@ -1264,7 +1271,7 @@
       "welcome": "Welcome on your personal space",
       "searchText": "Need to find a service, group or personal link ?",
       "searchElement": "Search element",
-      "noFavYet": "Add here some elements from Applications tab",
+      "noFavYet": "Add some Applications",
       "unsorted": "To be sorted",
       "unsortedFav": "My Favorites",
       "unsortedGroup": "My groups",

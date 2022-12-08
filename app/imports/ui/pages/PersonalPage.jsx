@@ -5,6 +5,7 @@ import Services from '../../api/services/services';
 import PersonalSpaces from '../../api/personalspaces/personalspaces';
 import UserBookmarks from '../../api/userBookmarks/userBookmarks';
 import PersonalZoneUpdater from '../components/users/PersonalZoneUpdater';
+import AppSettings from '../../api/appsettings/appsettings';
 
 export default withTracker(() => {
   const subscription = Meteor.subscribe('personalspaces.self');
@@ -12,11 +13,13 @@ export default withTracker(() => {
   const allServices = Services.find().fetch();
   const allGroups = Groups.find().fetch();
   const allLinks = UserBookmarks.find().fetch();
+  const appSettingsValues = AppSettings.findOne() || {};
   return {
     personalspace,
     isLoading: !subscription.ready(),
     allServices,
     allGroups,
     allLinks,
+    appSettingsValues,
   };
 })(PersonalZoneUpdater);
