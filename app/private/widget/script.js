@@ -2,7 +2,7 @@
   // ------------------ METEOR CONSTANTS ------------------
   const ABSOLUTE_URL = `{{absoluteUrl}}`;
   const THEME = `{{theme}}`;
-  const ROOT_URL = `{{rootUrl}`;
+  const ROOT_URL = `{{rootUrl}}`;
   const WIDGET_STYLE = `{{style}}`;
 
   // ------------------ VARIABLES WIDGET ------------------
@@ -226,5 +226,13 @@
   openButton.ondragstart = function handleDragStart() {
     dragged = true;
     return false;
+  };
+
+  openButton.ondrop = function handleDrop(e) {
+    console.log(e);
+  };
+
+  openButton.ondragover = function handleDragOver(e) {
+    console.log(e);
   };
 }
