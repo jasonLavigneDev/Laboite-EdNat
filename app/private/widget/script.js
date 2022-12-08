@@ -82,7 +82,7 @@
 
   // ------------------ FUNCTIONS WIDGET ------------------
 
-  const openRizimo = (e) => {
+  const openRizimo = () => {
     if (!dragged) {
       widgetContainer.setAttribute('class', 'lb_widget-container opened');
       iframeContainer.setAttribute('iframe-state', 'opened');
@@ -186,14 +186,14 @@
     openButton.style.top = null;
   };
 
-  openButton.onmousedown = function (event) {
+  openButton.onmousedown = function handleMouseDown(event) {
     shiftX = event.clientX - openButton.getBoundingClientRect().left;
     shiftY = event.clientY - openButton.getBoundingClientRect().top;
 
     timer = setTimeout(onlongpress, touchduration);
 
     // drop the openButton, remove unneeded handlers
-    document.onmouseup = function () {
+    document.onmouseup = function handleMouseUp() {
       if (timer) {
         clearTimeout(timer);
       }
@@ -203,7 +203,7 @@
     };
   };
 
-  openButton.ontouchstart = function (event) {
+  openButton.ontouchstart = function handleTouchStart(event) {
     const touch = event.touches ? event.touches[0] : null;
     const ref = touch || event;
     shiftX = ref.clientX - openButton.getBoundingClientRect().left;
@@ -212,7 +212,7 @@
     timer = setTimeout(onlongpress, touchduration);
 
     // drop the openButton, remove unneeded handlers
-    document.ontouchend = function () {
+    document.ontouchend = function handleTouchEnd() {
       if (timer) {
         clearTimeout(timer);
       }
@@ -223,7 +223,7 @@
     };
   };
 
-  openButton.ondragstart = function () {
+  openButton.ondragstart = function handleDragStart() {
     dragged = true;
     return false;
   };
