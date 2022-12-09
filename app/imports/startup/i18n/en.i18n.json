@@ -1349,7 +1349,8 @@
       "Polls": "Polls",
       "groupArticles": "Access blog's articles",
       "BookmarksUsage": "Bookmarks list",
-      "Bookmarks": "Bookmarks"
+      "Bookmarks": "Bookmarks",
+      "GroupNotExist" : "Group {$groupTitle} does not exist"
     },
     "AddressBook": {
       "sendEmail": "Send an email to",

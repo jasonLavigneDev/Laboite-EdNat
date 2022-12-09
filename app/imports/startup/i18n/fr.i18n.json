@@ -1365,7 +1365,8 @@
       "Polls": "Sondages",
       "groupArticles": "Accéder aux publications",
       "BookmarksUsage": "Liste des marque-pages",
-      "Bookmarks": "Marque-pages"
+      "Bookmarks": "Marque-pages",
+      "GroupNotExist" : "Le groupe {$groupTitle} n'existe pas"
     },
     "AddressBook": {
       "sendEmail": "Envoyer un email à",
