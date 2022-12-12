@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Meteor } from 'meteor/meteor';
 import PropTypes from 'prop-types';
 import i18n from 'meteor/universe:i18n';
@@ -10,11 +10,16 @@ import { makeStyles } from 'tss-react/mui';
 import LanguageIcon from '@mui/icons-material/Language';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import StarIcon from '@mui/icons-material/Star';
+import QrCode2Icon from '@mui/icons-material/QrCode2';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
 import Container from '@mui/material/Container';
 import { Roles } from 'meteor/alanning:roles';
 import add from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
 import { useHistory } from 'react-router-dom';
+import QRCode from 'qrcode';
 import Spinner from '../../components/system/Spinner';
 import { useAppContext } from '../../contexts/context';
 import { removeUserBookmark, updateUserBookmark } from '../../../api/userBookmarks/methods';
@@ -41,6 +46,11 @@ export const useBookmarkPageStyles = makeStyles()(() => ({
   icon: {
     height: 25,
     width: 25,
+  },
+  modal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 }));
 
@@ -107,6 +117,22 @@ const getLocalStorageValue = (key, defaultValue) => {
   return localStorageValue;
 };
 
+function QRCanvas({ url }) {
+  const canvasRef = useRef(null);
+  useEffect(() => {
+    if (url) {
+      QRCode.toCanvas(canvasRef.current, url, function (error) {
+        if (error) console.log(error);
+      });
+    }
+  }, [url]);
+  return <canvas ref={canvasRef} id="qrCanvas" />;
+}
+
+QRCanvas.propTypes = {
+  url: PropTypes.string.isRequired,
+};
+
 function UserBookmarksPage({ loading, bookmarksList }) {
   const [{ user, userId }] = useAppContext();
   const history = useHistory();
@@ -118,6 +144,12 @@ function UserBookmarksPage({ loading, bookmarksList }) {
   const [bkData, setBkData] = useState({});
   const [onEdit, setOnEdit] = useState(false);
   const [pageSize, setPageSize] = useState(getLocalStorageValue('cstRowsPerPage', 10));
+  const [qrUrl, setQrUrl] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   const OpenURLEditor = () => setEditUrl(true);
 
@@ -214,6 +246,16 @@ function UserBookmarksPage({ loading, bookmarksList }) {
                     },
                   };
                 },
+                (rowData) => {
+                  return {
+                    icon: () => <QrCode2Icon />,
+                    tooltip: i18n.__('pages.UserBookmarksPage.showQrCode'),
+                    onClick: () => {
+                      setIsModalOpen(true);
+                      setQrUrl(rowData.url);
+                    },
+                  };
+                },
               ]}
               editable={{
                 isDeleteHidden: (rowData) => hideEditActions(rowData.userId),
@@ -259,6 +301,14 @@ function UserBookmarksPage({ loading, bookmarksList }) {
               }}
             />
           </Container>
+          <Dialog className={classes.modal} open={isModalOpen} onClose={closeModal}>
+            <DialogContent>
+              <QRCanvas url={qrUrl} />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={closeModal}>{i18n.__('pages.UserBookmarksPage.close')}</Button>
+            </DialogActions>
+          </Dialog>
           {editUrl ? (
             <BookMarkEdit
               method="userBookmark"
