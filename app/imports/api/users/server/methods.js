@@ -10,7 +10,6 @@ import { Roles } from 'meteor/alanning:roles';
 import { isActive, getLabel } from '../../utils';
 import Groups from '../../groups/groups';
 // initialize Meteor.users customizations
-// eslint-disable-next-line import/no-cycle
 import AppRoles from '../users';
 
 import { favGroup, unfavGroup } from '../../groups/methods';
