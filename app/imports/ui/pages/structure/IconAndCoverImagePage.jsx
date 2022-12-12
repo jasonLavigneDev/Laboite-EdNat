@@ -72,7 +72,7 @@ const IconAndCoverImagePage = () => {
         <Fade in>
           <Container className={classes.containerGrid}>
             <Grid container spacing={4} className={classes.containerGridImgWrapper}>
-              {userStructure?.coverUrlImage !== undefined && (
+              {userStructure?.coverUrlImage !== undefined && userStructure?.iconUrlImage !== undefined && (
                 <Grid item xs={12} sm={12} md={12} className={classes.containerGridItem}>
                   <div className={classes.parentImgWrapper}>
                     <div className={classes.imgWrapper}>
