@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { Meteor } from 'meteor/meteor';
 import PropTypes from 'prop-types';
 import i18n from 'meteor/universe:i18n';
@@ -19,12 +19,12 @@ import { Roles } from 'meteor/alanning:roles';
 import add from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
 import { useHistory } from 'react-router-dom';
-import QRCode from 'qrcode';
 import Spinner from '../../components/system/Spinner';
 import { useAppContext } from '../../contexts/context';
 import { removeUserBookmark, updateUserBookmark } from '../../../api/userBookmarks/methods';
 import setMaterialTableLocalization from '../../components/initMaterialTableLocalization';
 import BookMarkEdit from '../../components/users/BookMarkEdit';
+import QRCanvas from '../../components/users/QRCanvas';
 import UserBookmarks from '../../../api/userBookmarks/userBookmarks';
 
 export const useBookmarkPageStyles = makeStyles()(() => ({
@@ -115,22 +115,6 @@ const getLocalStorageValue = (key, defaultValue) => {
     localStorageValue = defaultValue;
   }
   return localStorageValue;
-};
-
-function QRCanvas({ url }) {
-  const canvasRef = useRef(null);
-  useEffect(() => {
-    if (url) {
-      QRCode.toCanvas(canvasRef.current, url, function (error) {
-        if (error) console.log(error);
-      });
-    }
-  }, [url]);
-  return <canvas ref={canvasRef} id="qrCanvas" />;
-}
-
-QRCanvas.propTypes = {
-  url: PropTypes.string.isRequired,
 };
 
 function UserBookmarksPage({ loading, bookmarksList }) {

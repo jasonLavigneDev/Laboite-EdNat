@@ -14,6 +14,10 @@ import Tooltip from '@mui/material/Tooltip';
 import add from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
 import Fade from '@mui/material/Fade';
+import QrCode2Icon from '@mui/icons-material/QrCode2';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
 import { useHistory } from 'react-router-dom';
 import Spinner from '../../components/system/Spinner';
 import { useAppContext } from '../../contexts/context';
@@ -23,6 +27,7 @@ import BookMarkEdit from '../../components/users/BookMarkEdit';
 import Bookmarks from '../../../api/bookmarks/bookmarks';
 import Groups from '../../../api/groups/groups';
 import { bookmarkColumns, useBookmarkPageStyles } from '../users/UserBookmarksPage';
+import QRCanvas from '../../components/users/QRCanvas';
 
 function BookmarksPage({ loading, bookmarksList, group }) {
   const [{ userId }] = useAppContext();
@@ -35,6 +40,12 @@ function BookmarksPage({ loading, bookmarksList, group }) {
   const [editUrl, setEditUrl] = useState(false);
   const [bkData, setBkData] = useState({});
   const [onEdit, setOnEdit] = useState(false);
+  const [qrUrl, setQrUrl] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   const bookmarksListFinal = bookmarksList.filter((bookmark) => bookmark.author === userId);
 
@@ -64,6 +75,30 @@ function BookmarksPage({ loading, bookmarksList, group }) {
     addRowPosition: 'first',
     emptyRowsWhenPaging: false,
   };
+
+  const tableActions = [];
+  if (userInGroup) {
+    tableActions.push({
+      icon: add,
+      tooltip: i18n.__('pages.BookmarksPage.materialTableLocalization.body_addTooltip'),
+      isFreeAction: true,
+      onClick: () => {
+        setOnEdit(false);
+        setBkData({});
+        OpenURLEditor();
+      },
+    });
+  }
+  tableActions.push((rowData) => {
+    return {
+      icon: () => <QrCode2Icon />,
+      tooltip: i18n.__('pages.UserBookmarksPage.showQrCode'),
+      onClick: () => {
+        setIsModalOpen(true);
+        setQrUrl(rowData.url);
+      },
+    };
+  });
 
   return (
     <Fade in>
@@ -108,22 +143,7 @@ function BookmarksPage({ loading, bookmarksList, group }) {
               data={(filter ? bookmarksListFinal : bookmarksList).map((row) => ({ ...row, id: row._id }))}
               options={options}
               localization={setMaterialTableLocalization('pages.BookmarksPage')}
-              actions={
-                userInGroup
-                  ? [
-                      {
-                        icon: add,
-                        tooltip: i18n.__('pages.BookmarksPage.materialTableLocalization.body_addTooltip'),
-                        isFreeAction: true,
-                        onClick: () => {
-                          setOnEdit(false);
-                          setBkData({});
-                          OpenURLEditor();
-                        },
-                      },
-                    ]
-                  : []
-              }
+              actions={tableActions}
               editable={{
                 isDeleteHidden: (rowData) => hideEditActions(rowData.author),
                 isEditHidden: (rowData) => hideEditActions(rowData.author),
@@ -183,6 +203,14 @@ function BookmarksPage({ loading, bookmarksList, group }) {
         ) : (
           <p className={classes.ErrorPage}>{i18n.__('pages.BookmarksPage.noAccess')}</p>
         )}
+        <Dialog className={classes.modal} open={isModalOpen} onClose={closeModal}>
+          <DialogContent>
+            <QRCanvas url={qrUrl} />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={closeModal}>{i18n.__('pages.UserBookmarksPage.close')}</Button>
+          </DialogActions>
+        </Dialog>
       </Container>
     </Fade>
   );
