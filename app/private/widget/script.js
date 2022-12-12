@@ -137,7 +137,11 @@
     }
   };
 
-  const receiveMessage = ({ data }) => {
+  const receiveMessage = (...args) => {
+    console.log('Recivied message: ', args);
+
+    const { data } = args[0];
+
     const { type, content } = data;
     if (type === 'notifications') {
       handleNotification(content);
@@ -266,6 +270,39 @@
     files.forEach((file, i) => {
       console.log(`… file[${i}].name = ${file.name}`);
     });
+
+    window.FTFiles = files;
+    // TODO: Remove hard-codded URL
+    const FTWindow = window.open(
+      'http://127.0.0.1:5500/app/private/widget/index.html',
+      // 'https://francetransfert.numerique.gouv.fr/upload',
+      '_blank',
+      'popup=true,width=600,height=800',
+    );
+    window.FTWindow = FTWindow;
+    FTWindow.focus();
+    FTWindow.postMessage('upload', '*', { files });
+
+    // This cannot work, because the rizommo script and the opener. Does not share a same-origin. So CORS will block any interraction
+    // FTWindow.addEventListener('load', () => {
+    //   /**
+    //    * @type {HTMLInputElement}
+    //    */
+    //   const input = FTWindow.document.querySelector('.upload-wrapper input[type="file"]');
+    //   if (input) {
+    //     input.files = window.FTFiles;
+    //   } else {
+    //     FTWindow.close();
+    //     window.focus();
+
+    //     // eslint-disable-next-line no-console
+    //     console.error('No file input found.');
+    //     // eslint-disable-next-line no-alert
+    //     alert('Impossible de transférer les fichiers');
+    //   }
+
+    //   FTWindow.console.debug('Files', window.FTFiles);
+    // });
   };
 
   openButton.ondragover = function handleDragOver(e) {
