@@ -12,6 +12,8 @@ import PersonalSpaces from '../personalspaces/personalspaces';
 import AsamExtensions from '../asamextensions/asamextensions';
 import Structures from '../structures/structures';
 import Groups from '../groups/groups';
+// eslint-disable-next-line import/no-cycle
+import { setMemberOf } from './server/methods';
 
 const AppRoles = ['candidate', 'member', 'animator', 'admin', 'adminStructure'];
 
@@ -316,11 +318,15 @@ if (Meteor.isServer) {
         userStructure && userStructure?.groupId ? Groups.findOne({ _id: userStructure?.groupId }) : null;
 
       if (userGroupOfStructure !== null && !userGroupOfStructure.members?.includes(details.user._id)) {
-        // TO DO : call AddUserToGroupOfStructure method
         if (userStructure.groupId) {
-          Meteor.call('users.setMemberOf', { userId: details.user._id, groupId: userStructure.groupId }, (err) => {
-            if (err) logServer(`error : ${err}`);
-          });
+          try {
+            setMemberOf._execute(
+              { userId: details.user._id },
+              { userId: details.user._id, groupId: userStructure.groupId },
+            );
+          } catch (err) {
+            logServer(`error : ${err}`);
+          }
         }
         const structureAncestors = Structures.find({ _id: { $in: userStructure.ancestorsIds } }).fetch();
         if (structureAncestors) {
@@ -328,9 +334,14 @@ if (Meteor.isServer) {
             if (struct.groupId) {
               const group = Groups.findOne({ _id: struct.groupId });
               if (group) {
-                Meteor.call('users.setMemberOf', { userId: details.user._id, groupId: group.groupId }, (err) => {
-                  if (err) logServer(`error : ${err}`);
-                });
+                try {
+                  setMemberOf._execute(
+                    { userId: details.user._id },
+                    { userId: details.user._id, groupId: group.groupId },
+                  );
+                } catch (err) {
+                  logServer(`error : ${err}`);
+                }
               }
             }
           });

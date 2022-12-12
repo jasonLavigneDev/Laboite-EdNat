@@ -10,6 +10,7 @@ import { Roles } from 'meteor/alanning:roles';
 import { isActive, getLabel } from '../../utils';
 import Groups from '../../groups/groups';
 // initialize Meteor.users customizations
+// eslint-disable-next-line import/no-cycle
 import AppRoles from '../users';
 
 import { favGroup, unfavGroup } from '../../groups/methods';
@@ -697,24 +698,17 @@ export const setStructure = new ValidatedMethod({
     }
 
     const user = Meteor.users.findOne({ _id: this.userId });
+    const isAuthorizedToSetStructureDirectly = hasRightToSetStructureDirectly(user._id, structure);
+    const isAppAdmin = Roles.userIsInRole(user._id, 'admin');
 
     // check if user has structure admin role and remove it only if new structure and old structure are different
     if (user.structure !== structure) {
       if (Roles.userIsInRole(this.userId, 'adminStructure', user.structure)) {
         Roles.removeUsersFromRoles(this.userId, 'adminStructure', user.structure);
       }
-    } // will throw error if username already taken
-
-    const isAuthorizedToSetStructureDirectly = hasRightToSetStructureDirectly(user._id, structure);
-    const isAppAdmin = Roles.userIsInRole(user._id, 'admin');
-
-    if (user.structure !== structure) {
-      if (Roles.userIsInRole(this.userId, 'adminStructure', user.structure)) {
-        Roles.removeUsersFromRoles(this.userId, 'adminStructure', user.structure);
-      }
 
       if (isAuthorizedToSetStructureDirectly || isAppAdmin) RemoveUserFromGroupsOfOldStructure(this.userId, user);
-    }
+    } // will throw error if username already taken
 
     Meteor.users.update(
       { _id: this.userId },
