@@ -75,7 +75,9 @@
     "nextcloudUser": "",
     "nextcloudPassword": "",
     "nextcloudQuota": "1073741824"
-  },
+    "nextcloudApiKeys": [],
+    "sessionTokenKey": "",
+    "sessionTokenAppName": "apps.education.fr"  },
   "rocketChat": {
     "rocketChatUser": "",
     "rocketChatPassword": ""

@@ -377,7 +377,8 @@
       "configOk": "connecté avec succès à l'API Nextcloud",
       "misingNCLocator": "Information d'instance nextcloud (nclocator) manquante.",
       "apiError": "Error while accessing Nextcloud API",
-      "mustNotBeUsed": "Cette url est utilisée par au moins un utilisateur et ne peut donc pas être supprimée."
+      "mustNotBeUsed": "Cette url est utilisée par au moins un utilisateur et ne peut donc pas être supprimée.",
+      "getTokenError": "Erreur de récupération du jeton Nextcloud pour l'utilisateur {$user}"
     },
     "rocketChat": {
       "initClient": "RocketChat: client API initialisé",
@@ -454,7 +455,7 @@
       "content_introduction": "Texte d'introduction",
       "content_globalInfo": "Texte d'informations générales",
       "update": "Mettre à jour",
-      "cancel": "Annuler"     
+      "cancel": "Annuler"
     },
     "Notifications": {
       "remove": "Supprimer"
