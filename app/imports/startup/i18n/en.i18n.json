@@ -1143,6 +1143,19 @@
         "body_editRow_deleteText": "Do you really want to delete this category ?"
       }
     },
+    "AdminBusinessReGroupingPage": {
+      "title": "Business regrouping managment",
+      "columnName": "Name",
+      "materialTableLocalization": {
+        "toolbar_searchPlaceholder": "Search a business regrouping",
+        "pagination_labelRowsSelect": "Business regrouping by page",
+        "body_emptyDataSourceMessage": "No business regrouping recorded",
+        "body_addTooltip": "Add a business regrouping",
+        "body_editTooltip": "Update this business regrouping",
+        "body_deleteTooltip": "Delete this business regrouping",
+        "body_editRow_deleteText": "Do you really want to delete this business regrouping?"
+      }
+    },
     "AdminTagsPage": {
       "title": "Tags Management",
       "columnName": "Name",

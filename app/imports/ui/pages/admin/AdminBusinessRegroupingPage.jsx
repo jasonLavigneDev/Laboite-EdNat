@@ -84,6 +84,8 @@ const AdminBusinessReGroupingPage = ({ businessReGrouping, loading }) => {
       createBusinessReGrouping.call({ name, structure: selectedStructureId }, handleResult(resolve, reject));
     });
 
+  const selectedBusinessRegroupingByStructure = businessRegroupingByStructure(selectedStructureId);
+
   return (
     <>
       {loading ? (
@@ -102,9 +104,14 @@ const AdminBusinessReGroupingPage = ({ businessReGrouping, loading }) => {
               <Grid item md={12} className={classes.marginTop}>
                 <MaterialTable
                   // other props
-                  title={`${i18n.__('pages.AdminBusinessReGroupingPage.title')} (${businessReGrouping.length})`}
+                  title={`${
+                    i18n.__('pages.AdminBusinessReGroupingPage.title')
+                  } (${
+                    selectedBusinessRegroupingByStructure.length
+                  })`
+                  }
                   columns={columns}
-                  data={businessRegroupingByStructure(selectedStructureId).map((row) => ({ ...row, id: row._id }))}
+                  data={selectedBusinessRegroupingByStructure.map((row) => ({ ...row, id: row._id }))}
                   options={options}
                   localization={setMaterialTableLocalization('pages.AdminBusinessReGroupingPage')}
                   editable={{
