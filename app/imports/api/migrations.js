@@ -564,19 +564,24 @@ Migrations.add({
             }
             return true;
           });
-        const groupId = Groups.insert({
-          name: strucName,
-          type: 15,
-          content: '',
-          description: '',
-          avatar: '',
-          owner: adminId,
-          animators: [],
-          admins: [],
-          active: true,
-          plugins: {},
-        });
-
+        let groupId = '';
+        const existingGroup = Groups.findOne({ name: strucName });
+        if (existingGroup) {
+          groupId = existingGroup._id;
+        } else {
+          groupId = Groups.insert({
+            name: strucName,
+            type: 15,
+            content: '',
+            description: '',
+            avatar: '',
+            owner: adminId,
+            animators: [],
+            admins: [],
+            active: true,
+            plugins: {},
+          });
+        }
         Structures.update({ _id: structure._id }, { $set: { groupId } });
       });
 
@@ -587,12 +592,15 @@ Migrations.add({
         const structure = Structures.findOne({ _id: user.structure });
         if (structure) {
           if (structure.groupId) {
-            Groups.update(
-              { _id: structure.groupId },
-              {
-                $push: { members: user._id },
-              },
-            );
+            const strucGroup = Groups.findOne(structure.groupId);
+            if (strucGroup.members.indexOf(user._id) === -1) {
+              Groups.update(
+                { _id: structure.groupId },
+                {
+                  $push: { members: user._id },
+                },
+              );
+            }
 
             if (user.favGroups === undefined) {
               Meteor.users.update(user._id, {
@@ -610,12 +618,14 @@ Migrations.add({
 
             if (Roles.userIsInRole(user._id, 'adminStructure', user.structure)) {
               Roles.addUsersToRoles(user._id, 'admin', structure.groupId);
-              Groups.update(
-                { _id: structure.groupId },
-                {
-                  $push: { admins: user._id },
-                },
-              );
+              if (strucGroup.admins.indexOf(user._id) === -1) {
+                Groups.update(
+                  { _id: structure.groupId },
+                  {
+                    $push: { admins: user._id },
+                  },
+                );
+              }
             }
           }
 
@@ -623,12 +633,15 @@ Migrations.add({
             .fetch()
             .forEach((struc) => {
               if (struc.groupId) {
-                Groups.update(
-                  { _id: struc.groupId },
-                  {
-                    $push: { members: user._id },
-                  },
-                );
+                const ancestorGroup = Groups.findOne({ _id: struc.groupId });
+                if (ancestorGroup.members.indexOf(user._id) === -1) {
+                  Groups.update(
+                    { _id: struc.groupId },
+                    {
+                      $push: { members: user._id },
+                    },
+                  );
+                }
 
                 if (user.favGroups === undefined) {
                   Meteor.users.update(user._id, {
