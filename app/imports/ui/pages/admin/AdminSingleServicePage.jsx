@@ -83,6 +83,7 @@ const useStyles = makeStyles()((theme) => ({
     marginTop: theme.spacing(5),
   },
   screenshotWrapper: {
+    marginTop: 30,
     position: 'relative',
   },
   screenshotDelete: {
