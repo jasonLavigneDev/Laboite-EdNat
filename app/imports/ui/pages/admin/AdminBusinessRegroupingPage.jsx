@@ -104,12 +104,9 @@ const AdminBusinessReGroupingPage = ({ businessReGrouping, loading }) => {
               <Grid item md={12} className={classes.marginTop}>
                 <MaterialTable
                   // other props
-                  title={`${
-                    i18n.__('pages.AdminBusinessReGroupingPage.title')
-                  } (${
+                  title={`${i18n.__('pages.AdminBusinessReGroupingPage.title')} (${
                     selectedBusinessRegroupingByStructure.length
-                  })`
-                  }
+                  })`}
                   columns={columns}
                   data={selectedBusinessRegroupingByStructure.map((row) => ({ ...row, id: row._id }))}
                   options={options}
