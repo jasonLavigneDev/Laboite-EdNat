@@ -83,7 +83,6 @@ const useStyles = makeStyles()((theme) => ({
     marginTop: theme.spacing(5),
   },
   screenshotWrapper: {
-    marginTop: 30,
     position: 'relative',
   },
   screenshotDelete: {
@@ -481,18 +480,21 @@ const AdminSingleServicePage = ({ categories, businessReGrouping, service, ready
               </div>
             )}
             {minioEndPoint && (
-              <InputLabel>
-                {i18n.__('pages.AdminSingleServicePage.screenshots')} (
-                {(serviceData.screenshots && serviceData.screenshots.length) || 0})
+              <div style={{ display: 'flex' }}>
+                <InputLabel>
+                  {i18n.__('pages.AdminSingleServicePage.screenshots')} (
+                  {(serviceData.screenshots && serviceData.screenshots.length) || 0})
+                </InputLabel>
                 <IconButton
                   color="primary"
+                  style={{ top: -13 }}
                   aria-label={i18n.__('pages.AdminSingleServicePage.onAddScreenshots')}
                   onClick={onAddScreenshots}
                   size="large"
                 >
                   <AddIcon />
                 </IconButton>
-              </InputLabel>
+              </div>
             )}
             {minioEndPoint && (
               <Grid container spacing={4}>
