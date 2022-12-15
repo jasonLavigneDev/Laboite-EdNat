@@ -133,8 +133,20 @@
           "content": "Structure introduction content",
           "language": "Structure introduction language"
         },
-        "contactEmail": "Structure contact email"
+        "contactEmail": "Structure contact email",
+        "asamExtensionsIds": "Related email extensions ids"
       }
+    },
+    "asamextensions": {
+      "labels": {
+        "structureId": "Related structure id",
+        "extension": "Email extension",
+        "entiteNomCourt": "Short name for structure",
+        "entiteNomLong": "Long name for structure",
+        "familleNomCourt": "Short name for structure's family (category)",
+        "familleNomLong": "Long name for structure's family (category)"
+      },
+      "notPermitted": "You don't have sufficient rights."
     },
     "users": {
       "unknownUser": "User does not exist.",
@@ -595,7 +607,8 @@
       "menuAdminStructureSettings": "Structure settings",
       "menuAdminStructureIntroduction": "Structure introduction",
       "menuAdminOfStructureUsersValidation": "Awaiting users",
-      "menuAdminDefaultSpaces": "Default Personal Spaces"
+      "menuAdminDefaultSpaces": "Default Personal Spaces",
+      "menuAdminAsam": "Email extensions Management"
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Your account has not been activated",
@@ -980,7 +993,9 @@
         "confirm": "Yes"
       },
       "userStructureValidationMandatory": "Structure mandatoriness of attachment status",
+      "userStructureAdminValidationMandatory": "Mandatoriness of attachment status for this structure",
       "toggleUserStructureValidationMandatory": "Structure attachment is mandatory",
+      "toggleUserStructureAdminValidationMandatory": "Attachment is mandatory for this structure",
       "buttonUserStructureValidationMandatory": "Validate change"
     },
     "SignIn": {
@@ -1498,7 +1513,39 @@
       "titleStructures": "Structures informations"
     },
     "AdminStructureSettingsPage": {
-      "title": "Structure settings"
+      "title": "Structure settings",
+      "userStructureValidationMandatory": "Mandatoriness of attachment status for this structure"
+    },
+    "AdminAsamExtensionsManagementPage": {
+      "title": "Email extensions management",
+      "materialTableLocalization": {
+        "toolbar_searchPlaceholder": "Search for an extension",
+        "pagination_labelRowsSelect": "extensions by page",
+        "body_emptyDataSourceMessage": "No recorded extension"
+      },
+      "actions": {
+        "assignStructure": "Assign a structure",
+        "unassignStructure": "Unassign the structure",
+        "addMailExtension": "Add email extension",
+        "deleteMailExtension": "Delete email extension"
+      },
+      "noStructure": "Not assigned",
+      "modal": {
+        "title": "Assign a structure to email extension",
+        "addEmailExtension": "Add email extension",
+        "close": "Close",
+        "cancel": "Cancel",
+        "submit": "Submit",
+        "noOptions": "Write to filter structures",
+        "mailExtension": "Mail extension",
+        "entityShortName": "Corresponding Entity Short name if exists",
+        "entityLongName": "Corresponding Entity long name if exists",
+        "famillyShortName": "Corresponding familly short name if exists",
+        "StructureExtensionMail": "Corresponding structure if exists",
+        "famillyLongName": "Corresponding familly long name if exists",
+        "confirmMsg": "Are you sure you want to delete email extension ",
+        "deleteExtensionEmailTitle": "Email extension "
+      }
     }
   },
   "layouts": {

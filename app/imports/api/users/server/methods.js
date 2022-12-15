@@ -696,26 +696,30 @@ export const setStructure = new ValidatedMethod({
       throw new Meteor.Error(`${structure} is not an allowed value`, i18n.__('SimpleSchema.notAllowed', structure));
     }
 
-    const isAuthorizedToSetStructureDirectly = hasRightToSetStructureDirectly({
-      userId: this.userId,
-    });
+    const user = Meteor.users.findOne({ _id: this.userId });
+    const isAuthorizedToSetStructureDirectly = hasRightToSetStructureDirectly(user._id, structure);
+    const isAppAdmin = Roles.userIsInRole(user._id, 'admin');
 
     // check if user has structure admin role and remove it only if new structure and old structure are different
-    const user = Meteor.users.findOne({ _id: this.userId });
-    if (user.structure !== structure && isAuthorizedToSetStructureDirectly) {
+    if (user.structure !== structure) {
       if (Roles.userIsInRole(this.userId, 'adminStructure', user.structure)) {
         Roles.removeUsersFromRoles(this.userId, 'adminStructure', user.structure);
       }
 
-      RemoveUserFromGroupsOfOldStructure(this.userId, user);
-    }
+      if (isAuthorizedToSetStructureDirectly || isAppAdmin) RemoveUserFromGroupsOfOldStructure(this.userId, user);
+    } // will throw error if username already taken
 
     Meteor.users.update(
-      { _id: user._id },
-      { $set: { [isAuthorizedToSetStructureDirectly ? 'structure' : 'awaitingStructure']: structure } },
+      { _id: this.userId },
+      {
+        $set: {
+          structure: isAuthorizedToSetStructureDirectly || isAppAdmin ? structure : user.structure,
+          awaitingStructure: isAuthorizedToSetStructureDirectly || isAppAdmin ? null : structure,
+        },
+      },
     );
 
-    if (isAuthorizedToSetStructureDirectly) AddUserToGroupOfStructure(this.userId, user, structureToFind);
+    if (isAuthorizedToSetStructureDirectly || isAppAdmin) AddUserToGroupOfStructure(this.userId, user, structureToFind);
   },
 });
 

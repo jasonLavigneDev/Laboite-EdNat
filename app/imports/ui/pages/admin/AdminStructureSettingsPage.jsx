@@ -12,6 +12,7 @@ import TabbedForms from '../../components/system/TabbedForms';
 import { useStyles } from '../../components/admin/InfoEditionComponent';
 import { useAppContext } from '../../contexts/context';
 import AdminStructureChangeEmailContact from '../../components/admin/AdminStructureChangeEmailContact';
+import AdminStructureValidationMandatory from '../../components/admin/AdminStructureValidationMandatory';
 
 const AdminStructureSettingsPage = () => {
   const userStructure = useStructure();
@@ -64,6 +65,12 @@ const AdminStructureSettingsPage = () => {
                     key: 'Contact',
                     Element: AdminStructureChangeEmailContact,
                     ElementProps: { structure: selectedStructure },
+                  },
+                  {
+                    title: i18n.__('pages.AdminStructureSettingsPage.userStructureValidationMandatory'),
+                    key: 'userStructureAdminValidationMandatory',
+                    ElementProps: { structure: selectedStructure },
+                    Element: AdminStructureValidationMandatory,
                   },
                 ]}
               />

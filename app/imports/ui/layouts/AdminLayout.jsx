@@ -1,6 +1,7 @@
 import React, { useEffect, lazy, Suspense } from 'react';
 import { useLocation, Route, Switch } from 'react-router-dom';
 import { useTracker } from 'meteor/react-meteor-data';
+import { Counts } from 'meteor/tmeasday:publish-counts';
 import i18n from 'meteor/universe:i18n';
 import { Roles } from 'meteor/alanning:roles';
 import Alert from '@mui/material/Alert';
@@ -41,6 +42,7 @@ const AdminServicesByStructurePage = lazy(() => import('../pages/admin/AdminServ
 const AdminStructureSettingsPage = lazy(() => import('../pages/admin/AdminStructureSettingsPage'));
 const AdminStructureUsersValidationPage = lazy(() => import('../pages/admin/AdminStructureUsersValidationPage'));
 const AdminStructureDefaultSpace = lazy(() => import('../pages/admin/AdminStructureDefaultSpace'));
+const AdminAsamExtensionsManagementPage = lazy(() => import('../pages/admin/AdminAsamExtensionsManagementPage'));
 
 const { disabledFeatures = {} } = Meteor.settings.public;
 
@@ -50,11 +52,18 @@ function AdminLayout() {
   const location = useLocation();
 
   const isAdmin = Roles.userIsInRole(userId, 'admin');
-  const { appsettings = {}, ready = false } = useTracker(() => {
+  const {
+    appsettings = {},
+    ready = false,
+    notHideStructureusersvalidation = false,
+  } = useTracker(() => {
     const subSettings = Meteor.subscribe('appsettings.all');
+    const awaitingForStruct = Meteor.subscribe('users.awaitingForStructure.count', { structureId: user.structure });
+
     return {
       appsettings: AppSettings.findOne(),
-      ready: subSettings.ready(),
+      ready: subSettings.ready() && awaitingForStruct.ready(),
+      notHideStructureusersvalidation: Counts.get('users.awaitingForStructure.count') >= 0,
     };
   });
 
@@ -112,6 +121,13 @@ function AdminLayout() {
                       exact
                       path="/admin/services/:_id"
                       component={AdminSingleServicePage}
+                    />
+                    <AdminRoute
+                      userId={userId}
+                      loadingUser={loadingUser}
+                      exact
+                      path="/admin/asam"
+                      component={AdminAsamExtensionsManagementPage}
                     />
                     <AdminRoute
                       userId={userId}
@@ -210,7 +226,7 @@ function AdminLayout() {
                       user={user}
                       loadingUser={loadingUser}
                     />
-                    {appsettings.userStructureValidationMandatory && (
+                    {(appsettings.userStructureValidationMandatory || notHideStructureusersvalidation) && (
                       <StructureAdminRoute
                         exact
                         path="/admin/structureusersvalidation"
