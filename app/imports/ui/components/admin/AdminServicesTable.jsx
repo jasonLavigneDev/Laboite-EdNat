@@ -32,13 +32,9 @@ const AdminServicesTable = ({ tableTitle, structureMode, urlStruct, urlNew, serv
       field: 'url',
       render: (rowData) => {
         const { url } = rowData;
+        // const shortUrl = url.substring(0, 20) + (url.length > 20 ? '...' : '');
         return (
-          <a
-            href={url}
-            target="_blank"
-            rel="noreferrer noopener"
-            style={{ overflow: 'hidden', overflowWrap: 'anywhere' }}
-          >
+          <a href={url} target="_blank" rel="noreferrer noopener" className="no-overflow">
             {url}
           </a>
         );

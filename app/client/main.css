@@ -12,3 +12,13 @@ a {
 .ql-editor {
   max-height: 600px;
 }
+
+.no-overflow {
+  width: inherit;
+  display: block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
