@@ -28,6 +28,7 @@
     "minioSSL": false,
     "minioPort": null,
     "minioEndPoint": "",
+    "displayMediasStorageMenu": false,
     "minioBucket": "",
     "imageFilesTypes": ["svg", "png", "jpg", "gif", "jpeg"],
     "audioFilesTypes": ["wav", "mp3", "ogg"],
