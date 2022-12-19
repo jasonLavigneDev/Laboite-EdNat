@@ -1163,11 +1163,11 @@
       }
     },
     "AdminBusinessReGroupingPage": {
-      "title": "Gestion des Regroupement métier",
+      "title": "Gestion des Regroupements métier",
       "columnName": "Nom",
       "materialTableLocalization": {
         "toolbar_searchPlaceholder": "Rechercher un regroupement métier",
-        "pagination_labelRowsSelect": "regroupement métier par page",
+        "pagination_labelRowsSelect": "Regroupements métier par page",
         "body_emptyDataSourceMessage": "Aucun regroupement métier enregistré",
         "body_addTooltip": "Ajouter un regroupement métier",
         "body_editTooltip": "Modifier ce regroupement métier",
