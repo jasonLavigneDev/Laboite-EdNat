@@ -1,3 +1,5 @@
 .env
 config/**.development.json
 config/settings.development.json
+
+.DS_Store

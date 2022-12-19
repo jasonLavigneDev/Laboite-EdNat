@@ -32,6 +32,11 @@ export const useBookmarkPageStyles = makeStyles()(() => ({
   link: {
     color: 'blue',
     textDecoration: 'underline',
+    width: 'inherit',
+    display: 'block',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
   },
   icon: {
     height: 25,
@@ -39,11 +44,20 @@ export const useBookmarkPageStyles = makeStyles()(() => ({
   },
 }));
 
+/**
+ * @param {Record<string, any>} classes Styles
+ * @returns {import('@material-table/core').Column<any>[]}
+ */
 export const bookmarkColumns = (classes) => [
   {
     title: i18n.__('pages.BookmarksPage.columnIcon'),
     field: 'icon',
     editable: 'never',
+    width: 0,
+    align: 'center',
+    headerStyle: {
+      position: 'unset',
+    },
     render: (rowData) => {
       const { icon } = rowData;
 
@@ -57,10 +71,16 @@ export const bookmarkColumns = (classes) => [
   {
     title: i18n.__('pages.BookmarksPage.columnName'),
     field: 'name',
+    headerStyle: {
+      position: 'unset',
+    },
   },
   {
     title: i18n.__('pages.BookmarksPage.columnUrl'),
     field: 'url',
+    headerStyle: {
+      position: 'unset',
+    },
     render: (rowData) => {
       const { url } = rowData;
       return (
@@ -73,6 +93,9 @@ export const bookmarkColumns = (classes) => [
   {
     title: i18n.__('pages.BookmarksPage.columnTag'),
     field: 'tag',
+    headerStyle: {
+      position: 'unset',
+    },
   },
 ];
 
@@ -106,13 +129,26 @@ function UserBookmarksPage({ loading, bookmarksList }) {
     return !(checkId === userId || Roles.userIsInRole(userId, 'admin'));
   };
 
+  /**
+   * @type {import('@material-table/core').Options}
+   */
   const options = {
     pageSize,
     pageSizeOptions: [10, 20, 50, 100],
     paginationType: 'stepped',
-    actionsColumnIndex: 6,
     addRowPosition: 'first',
     emptyRowsWhenPaging: false,
+    actionsColumnIndex: -1,
+    actionsCellStyle: {
+      position: 'sticky',
+      right: 0,
+      background: 'white',
+    },
+    headerStyle: {
+      position: 'sticky',
+      right: 0,
+      background: 'white',
+    },
   };
 
   const handleChangeRowsPerPage = (rowsPerPage) => {
