@@ -63,7 +63,6 @@ export const useStyles = makeStyles()((theme) => ({
     position: 'relative',
   },
   image: {
-    width: '100%',
     height: '100%',
   },
 }));

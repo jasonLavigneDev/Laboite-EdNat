@@ -157,9 +157,7 @@ const AdminStructureUploadIconAndCoverImage = ({ structure }) => {
                   title={i18n.__('components.AdminStructureTreeItem.actions.DeleteIconImage')}
                   aria-label={i18n.__('components.AdminStructureTreeItem.actions.DeleteIconImage')}
                 >
-                  <IconButton tabIndex={-1} size="large">
-                    <DeleteIcon />
-                  </IconButton>
+                  <DeleteIcon />
                 </Tooltip>
               </IconButton>
             </Typography>
@@ -202,9 +200,7 @@ const AdminStructureUploadIconAndCoverImage = ({ structure }) => {
                   title={i18n.__('components.AdminStructureTreeItem.actions.DeleteCoverImage')}
                   aria-label={i18n.__('components.AdminStructureTreeItem.actions.DeleteCoverImage')}
                 >
-                  <IconButton tabIndex={-1} size="large">
-                    <DeleteIcon />
-                  </IconButton>
+                  <DeleteIcon />
                 </Tooltip>
               </IconButton>
             </Typography>
