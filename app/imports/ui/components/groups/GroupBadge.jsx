@@ -8,7 +8,7 @@ export const badgeStyle = () => ({
       position: 'absolute',
       top: 0,
       left: 0,
-      width: '100%',
+      width: '89%',
       height: '100%',
       borderRadius: '50%',
       animation: `${keyframes`
