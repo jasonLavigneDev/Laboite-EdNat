@@ -130,7 +130,7 @@ const AdminStructureUploadIconAndCoverImage = ({ structure }) => {
         {loading && <Spinner full />}
         <CardContent>
           <Card>
-            <Typography>
+            <Typography className={classes.actionsTitle}>
               {`${i18n.__('components.AdminStructureTreeItem.actions.selectIconImage')} : ${
                 iconFile?.name !== ''
                   ? iconFile?.name
@@ -147,19 +147,19 @@ const AdminStructureUploadIconAndCoverImage = ({ structure }) => {
                   <input className={classes.inputFil} type="file" title=" " onChange={uploadIconImg} />
                 </IconButton>
               </Tooltip>
-              <IconButton
-                onClick={() => removeIconOrCoverImg('iconImg')}
-                tabIndex={-1}
-                size="large"
-                style={{ display: iconFile?.name !== '' || structure?.iconUrlImage ? 'inline-block' : 'none' }}
+              <Tooltip
+                title={i18n.__('components.AdminStructureTreeItem.actions.DeleteIconImage')}
+                aria-label={i18n.__('components.AdminStructureTreeItem.actions.DeleteIconImage')}
               >
-                <Tooltip
-                  title={i18n.__('components.AdminStructureTreeItem.actions.DeleteIconImage')}
-                  aria-label={i18n.__('components.AdminStructureTreeItem.actions.DeleteIconImage')}
+                <IconButton
+                  onClick={() => removeIconOrCoverImg('iconImg')}
+                  tabIndex={-1}
+                  size="large"
+                  style={{ display: iconFile?.name !== '' || structure?.iconUrlImage ? 'inline-grid' : 'none' }}
                 >
                   <DeleteIcon />
-                </Tooltip>
-              </IconButton>
+                </IconButton>
+              </Tooltip>
             </Typography>
             <div className={classes.logoWrapper}>
               <div className={`${classes.imageWrapper} ${classes.logo}`}>
@@ -173,7 +173,7 @@ const AdminStructureUploadIconAndCoverImage = ({ structure }) => {
           </Card>
           <br />
           <Card>
-            <Typography>
+            <Typography className={classes.actionsTitle}>
               {`${i18n.__('components.AdminStructureTreeItem.actions.selectCoverImage')} : ${
                 coverFile?.name !== ''
                   ? coverFile?.name
@@ -190,19 +190,19 @@ const AdminStructureUploadIconAndCoverImage = ({ structure }) => {
                   <input className={classes.inputFil} type="file" title=" " onChange={uploadCoverImg} />
                 </IconButton>
               </Tooltip>
-              <IconButton
-                onClick={() => removeIconOrCoverImg('coverImg')}
-                tabIndex={-1}
-                size="large"
-                style={{ display: iconFile?.name !== '' || structure?.coverUrlImage ? 'inline-block' : 'none' }}
+              <Tooltip
+                title={i18n.__('components.AdminStructureTreeItem.actions.DeleteCoverImage')}
+                aria-label={i18n.__('components.AdminStructureTreeItem.actions.DeleteCoverImage')}
               >
-                <Tooltip
-                  title={i18n.__('components.AdminStructureTreeItem.actions.DeleteCoverImage')}
-                  aria-label={i18n.__('components.AdminStructureTreeItem.actions.DeleteCoverImage')}
+                <IconButton
+                  onClick={() => removeIconOrCoverImg('coverImg')}
+                  tabIndex={-1}
+                  size="large"
+                  style={{ display: iconFile?.name !== '' || structure?.coverUrlImage ? 'inline-grid' : 'none' }}
                 >
                   <DeleteIcon />
-                </Tooltip>
-              </IconButton>
+                </IconButton>
+              </Tooltip>
             </Typography>
             <div className={classes.logoWrapper}>
               <div className={`${classes.imageWrapper} ${classes.logo}`}>

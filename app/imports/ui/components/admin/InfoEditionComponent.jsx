@@ -51,6 +51,7 @@ export const useStyles = makeStyles()((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     marginBottom: theme.spacing(1),
+    paddingLeft: theme.spacing(2),
   },
   logo: {
     height: 100,
@@ -64,6 +65,9 @@ export const useStyles = makeStyles()((theme) => ({
   },
   image: {
     height: '100%',
+  },
+  actionsTitle: {
+    paddingLeft: theme.spacing(2),
   },
 }));
 
