@@ -941,7 +941,9 @@
     "UserBookmarksPage": {
       "back": "Retour",
       "favoriteBookmark": "Ajouter à votre espace personnel",
-      "unfavoriteBookmark": "Supprimer de votre espace personnel"
+      "unfavoriteBookmark": "Supprimer de votre espace personnel",
+      "close": "Fermer",
+      "showQrCode": "Voir le QR Code"
     },
     "BookmarksPage": {
       "columnIcon": "Favicon",
@@ -1087,8 +1089,8 @@
       "noOptions": "Ecrire pour chercher des structures (3 lettres minimum)",
       "onlyActiveUserOption": "Seuls les utilisateurs actifs peuvent définir une structure",
       "awaitingForStructure": "Vous êtes en attente de validation pour :",
-      "nclocator" : "ID de Fédération Nextcloud",
-      "emptyNcLocator" : "Aucun Nextcloud renseigné"
+      "nclocator": "ID de Fédération Nextcloud",
+      "emptyNcLocator": "Aucun Nextcloud renseigné"
     },
     "NotFound": {
       "backButtonLabel": "Retour",
@@ -1265,7 +1267,7 @@
       "successCopyUserId": "ID de l'utilisateur copié avec succès",
       "successCopyNcLocator": "Fédération ID Nextcloud copié avec succès",
       "copyUserId": "Copier l'ID de l'utilisateur",
-      "copyNcLocator":"Copier l'ID de fédération Nextcloud",
+      "copyNcLocator": "Copier l'ID de fédération Nextcloud",
       "userType": "Type d'utilisateurs",
       "all": "tous",
       "noResult": "Pas de résultat"
@@ -1382,7 +1384,7 @@
       "groupArticles": "Accéder aux publications",
       "BookmarksUsage": "Liste des marque-pages",
       "Bookmarks": "Marque-pages",
-      "GroupNotExist" : "Le groupe {$groupTitle} n'existe pas"
+      "GroupNotExist": "Le groupe {$groupTitle} n'existe pas"
     },
     "AddressBook": {
       "sendEmail": "Envoyer un email à",
