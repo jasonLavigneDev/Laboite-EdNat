@@ -10,10 +10,11 @@ import Typography from '@mui/material/Typography';
 import Badge from '@mui/material/Badge';
 
 import ServiceDetails from './ServiceDetails';
+import ServiceDetailsList from './ServiceDetailsList';
 import { useZoneStyles as useStyles } from '../personalspace/PersonalZone';
 
-const ServiceDetailsListZone = ({ services, index, title, favAction, isShort, isExpandedZone }) => {
-  const { classes } = useStyles();
+const ServiceDetailsListZone = ({ services, index, title, favAction, isShort, isExpandedZone, isShortMobile }) => {
+  const { classes } = useStyles(isShortMobile);
   const [isExpanded, setIsExpanded] = useState(isExpandedZone);
   const handleClickExpansion = () => {
     setIsExpanded(!isExpanded);
@@ -51,9 +52,13 @@ const ServiceDetailsListZone = ({ services, index, title, favAction, isShort, is
             ? null
             : services
                 .map((serv) => {
-                  return (
+                  return !isShortMobile ? (
                     <Grid className={classes.gridItem} item key={`service_${serv._id}`} xs={12} sm={6} md={4} lg={3}>
                       <ServiceDetails service={serv} favAction={favAction(serv._id)} isShort={isShort} />
+                    </Grid>
+                  ) : (
+                    <Grid className={classes.gridItem} item xs={4} md={2} key={serv._id}>
+                      <ServiceDetailsList service={serv} favAction={favAction(serv._id)} />
                     </Grid>
                   );
                 })
@@ -71,12 +76,14 @@ ServiceDetailsListZone.propTypes = {
   favAction: PropTypes.func.isRequired,
   isShort: PropTypes.bool,
   isExpandedZone: PropTypes.bool,
+  isShortMobile: PropTypes.bool,
 };
 
 ServiceDetailsListZone.defaultProps = {
   isShort: false,
   isExpandedZone: false,
   index: null,
+  isShortMobile: false,
 };
 
 export default ServiceDetailsListZone;

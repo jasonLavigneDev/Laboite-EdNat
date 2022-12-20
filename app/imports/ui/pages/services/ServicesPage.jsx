@@ -140,7 +140,13 @@ const useStyles = makeStyles()((theme, isMobile) => ({
 }));
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
-
+const getLocalStorageViewMode = (key, defaultValue) => {
+  let localStorageViewMode = sessionStorage.getItem(key);
+  if (localStorageViewMode == null) {
+    localStorageViewMode = defaultValue;
+  }
+  return localStorageViewMode;
+};
 export function ServicesPage({ services, categories, businessRegroupings, ready, structureMode, offline }) {
   const [{ user, loadingUser, isMobile, servicePage }, dispatch] = useAppContext();
   const structure = offline ? null : useStructure();
@@ -157,7 +163,7 @@ export function ServicesPage({ services, categories, businessRegroupings, ready,
     catList = [],
     search = '',
     filterToggle = false,
-    viewMode = GRID_VIEW_MODE[defaultGridViewMode],
+    viewMode = getLocalStorageViewMode('cstViewMode', GRID_VIEW_MODE[defaultGridViewMode]),
   } = servicePage;
 
   const favs = loadingUser || offline ? [] : user.favServices;
@@ -173,7 +179,15 @@ export function ServicesPage({ services, categories, businessRegroupings, ready,
 
   const toggleFilter = () => updateGlobalState('filterToggle', !filterToggle);
   const resetCatList = () => updateGlobalState('catList', []);
-  const changeViewMode = (_, value) => updateGlobalState('viewMode', value);
+  const changeViewMode = (_, value) => {
+    // Access initial value from session storage
+    const cstViewMode = getLocalStorageViewMode('cstViewMode', GRID_VIEW_MODE[defaultGridViewMode]);
+    if (cstViewMode !== value) {
+      // Update session storage
+      sessionStorage.setItem('cstViewMode', value);
+    }
+    updateGlobalState('viewMode', value);
+  };
   const updateCatList = (catId) => {
     // Call by click on categories of services
     if (catList.includes(catId)) {
@@ -362,6 +376,7 @@ export function ServicesPage({ services, categories, businessRegroupings, ready,
                     isShort={!isMobile && viewMode === GRID_VIEW_MODE.compact}
                     isSorted
                     isExpandedZone
+                    isShortMobile={isMobile && viewMode === GRID_VIEW_MODE.compact}
                   />
                 )}
               {services.length > 0 &&
@@ -379,6 +394,7 @@ export function ServicesPage({ services, categories, businessRegroupings, ready,
                         isShort={!isMobile && viewMode === GRID_VIEW_MODE.compact}
                         isSorted
                         isExpandedZone
+                        isMobile={isMobile && viewMode === GRID_VIEW_MODE.compact}
                       />
                     ),
                 )}
