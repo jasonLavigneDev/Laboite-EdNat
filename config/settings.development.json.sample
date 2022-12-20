@@ -59,6 +59,7 @@
         "enableChangeName": false
       }
     },
+    "serviceInternalUrlPath": "",
     "services":{
       "agendaUrl": "",
       "sondagesUrl": "",
