@@ -316,6 +316,7 @@ export const generateDefaultPersonalSpace = new ValidatedMethod({
 
     // add all services to favorites in user schema
     let servicesAdded = [...unsorted];
+
     if (defaultSpace && defaultSpace.sorted) {
       defaultSpace.sorted.forEach(({ elements = [] }) => {
         if (elements) {
@@ -339,7 +340,7 @@ export const generateDefaultPersonalSpace = new ValidatedMethod({
       { userId },
       {
         $set: {
-          sorted,
+          sorted: defaultSpace ? [...defaultSpace.sorted, ...sorted] : sorted,
         },
       },
       { upsert: true },
