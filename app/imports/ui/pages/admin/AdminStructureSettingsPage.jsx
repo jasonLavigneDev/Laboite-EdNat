@@ -13,6 +13,7 @@ import { useStyles } from '../../components/admin/InfoEditionComponent';
 import { useAppContext } from '../../contexts/context';
 import AdminStructureChangeEmailContact from '../../components/admin/AdminStructureChangeEmailContact';
 import AdminStructureValidationMandatory from '../../components/admin/AdminStructureValidationMandatory';
+import AdminStructureUploadIconAndCoverImage from '../../components/admin/AdminStructureUploadIconAndCoverImage';
 
 const AdminStructureSettingsPage = () => {
   const userStructure = useStructure();
@@ -71,6 +72,12 @@ const AdminStructureSettingsPage = () => {
                     key: 'userStructureAdminValidationMandatory',
                     ElementProps: { structure: selectedStructure },
                     Element: AdminStructureValidationMandatory,
+                  },
+                  {
+                    title: i18n.__('pages.AdminStructureSettingsPage.selectIconAndCoverImage'),
+                    key: 'selectIconAndCoverImage',
+                    Element: AdminStructureUploadIconAndCoverImage,
+                    ElementProps: { structure: selectedStructure },
                   },
                 ]}
               />

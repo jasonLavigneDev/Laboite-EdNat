@@ -51,8 +51,8 @@ const AdminSingleGroupPage = lazy(() => import('../pages/admin/AdminSingleGroupP
 // CSS
 export const useLayoutStyles = makeStyles()((theme, isMobile) => ({
   root: {
-    display: 'flex',
-    position: 'relative',
+    // display: 'flex',
+    // position: 'relative',
   },
   container: {
     width: `calc(100% - ${isMobile ? 65 : 300}px)`,
@@ -69,8 +69,11 @@ export const useLayoutStyles = makeStyles()((theme, isMobile) => ({
       duration: theme.transitions.duration.leavingScreen,
     }),
     overflow: 'hidden',
-    marginTop: !isMobile && theme.shape.headerHeight ? theme.shape.headerHeight : 60,
     marginBottom: isMobile ? 100 : 50,
+  },
+  mainMarginTop: {
+    marginTop: isMobile ? 60 : 20,
+    // marginTop: !isMobile && theme.shape.headerHeight ? theme.shape.headerHeight : 60,
   },
   flex: {
     display: 'flex',
@@ -114,7 +117,7 @@ function MainLayout({ appsettings, ready }) {
         {loadingUser && ready ? (
           <Spinner full />
         ) : (
-          <main className={classes.content} id="main">
+          <main className={`${classes.content} ${classes.mainMarginTop}`} id="main">
             {appsettings.maintenance && isAdmin ? (
               <Alert className={classes.alertMaintenance} variant="filled" severity="error">
                 {i18n.__(`layouts.MainLayout.alertMaintenance`)}

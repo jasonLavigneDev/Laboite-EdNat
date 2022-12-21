@@ -12,6 +12,7 @@ import { isActive } from '../../utils';
 import logServer from '../../logging';
 import Services from '../../services/services';
 import { hasAdminRightOnStructure } from '../../structures/utils';
+import Structures from '../../structures/structures';
 
 const { minioSSL, minioEndPoint, minioBucket, minioPort } = Meteor.settings.public;
 
@@ -37,6 +38,12 @@ const checkUserAdminRights = (path, userId) => {
       } else {
         const service = Services.findOne(serviceID);
         isStructureAdmin = service.structure && hasAdminRightOnStructure({ userId, structureId: service.structure });
+      }
+    } else if (path.startsWith('structures/')) {
+      const structureId = path.split('/')[1];
+      if (structureId !== undefined) {
+        const structure = Structures.findOne(structureId);
+        isStructureAdmin = structure && hasAdminRightOnStructure({ userId, structureId });
       }
     }
     if (!isUserPath && !isGroupAdmin && !isStructureAdmin) {
