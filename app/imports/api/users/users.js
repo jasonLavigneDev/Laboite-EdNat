@@ -251,7 +251,7 @@ if (Meteor.isServer) {
         previousStructure !== userDocument.structure ||
         (isAdvancedPersonalPage && !userDocument.advancedPersonalPage)
       ) {
-        generateDefaultPersonalSpace.call({ userId: userDocument._id });
+        generateDefaultPersonalSpace.call({ userId: userDocument._id, oldStructure: previousStructure });
       }
     },
     { fetchPrevious: true },

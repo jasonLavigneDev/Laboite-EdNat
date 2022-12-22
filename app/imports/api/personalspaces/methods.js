@@ -297,9 +297,10 @@ export const generateDefaultPersonalSpace = new ValidatedMethod({
   name: 'personalspaces.generateDefaultPersonalSpace',
   validate: new SimpleSchema({
     userId: { type: String, regEx: SimpleSchema.RegEx.Id },
+    oldStructure: { type: String, defaultValue: '', optional: true },
   }).validator(),
 
-  run({ userId }) {
+  run({ userId, oldStructure = '' }) {
     // check if active and logged in
     if (!isActive(userId)) {
       throw new Meteor.Error(
@@ -309,13 +310,24 @@ export const generateDefaultPersonalSpace = new ValidatedMethod({
     }
 
     const user = Meteor.users.findOne({ _id: userId });
-    const { structure } = user;
+    const { structure, awaitingStructure } = user;
     const defaultSpace = DefaultSpaces.findOne({ structureId: structure });
     const currentSpace = PersonalSpaces.findOne({ userId }) || {};
-    const { unsorted = [], sorted = [] } = currentSpace;
+    const { unsorted = [] } = currentSpace;
+    let { sorted = [] } = currentSpace;
 
     // add all services to favorites in user schema
     let servicesAdded = [...unsorted];
+
+    // if structure changed, old structure defaultSpace might not have been taken in account for the new personal space
+    if (sorted.length > 0 && oldStructure !== '' && (awaitingStructure === undefined || awaitingStructure === null)) {
+      const oldDefaultSpace = DefaultSpaces.findOne({ structureId: oldStructure });
+      if (oldDefaultSpace && oldDefaultSpace.sorted) {
+        oldDefaultSpace.sorted.forEach((odDefaultElt) => {
+          sorted = sorted.filter((elt) => elt.zone_id !== odDefaultElt.zone_id);
+        });
+      }
+    }
 
     if (defaultSpace && defaultSpace.sorted) {
       defaultSpace.sorted.forEach(({ elements = [] }) => {
@@ -326,21 +338,27 @@ export const generateDefaultPersonalSpace = new ValidatedMethod({
           ];
         }
       });
-
-      defaultSpace.sorted.forEach((s) => {
-        sorted.push(s);
-      });
     }
     Meteor.users.update(userId, {
       $set: { favServices: servicesAdded },
     });
+
+    sorted = sorted.filter((elt) => elt.elements.length > 0);
+    if (defaultSpace && defaultSpace.sorted.length > 0) {
+      defaultSpace.sorted = defaultSpace.sorted.filter((elt) => elt.elements.length > 0);
+
+      // Remove zones that are already in personal space
+      defaultSpace.sorted.forEach((ds) => {
+        sorted = sorted.filter((elt) => elt.zone_id !== ds.zone_id);
+      });
+    }
 
     // Copy the personal space from the default structure one
     return PersonalSpaces.update(
       { userId },
       {
         $set: {
-          sorted: defaultSpace ? [...defaultSpace.sorted, ...sorted] : sorted,
+          sorted: defaultSpace && defaultSpace.sorted.length > 0 ? [...defaultSpace.sorted, ...sorted] : sorted,
         },
       },
       { upsert: true },

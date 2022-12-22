@@ -8,6 +8,7 @@ import i18n from 'meteor/universe:i18n';
 import DefaultSpaces from './defaultspaces';
 import { generateDefaultPersonalSpace } from '../personalspaces/methods';
 import { hasAdminRightOnStructure } from '../structures/utils';
+import PersonalSpaces from '../personalspaces/personalspaces';
 
 export const updateStructureSpace = new ValidatedMethod({
   name: 'defaultspaces.updateStructureSpace',
@@ -28,6 +29,26 @@ export const updateStructureSpace = new ValidatedMethod({
       DefaultSpaces.insert({ ...data });
     } else {
       DefaultSpaces.update({ _id: currentStructureSpace._id }, { $set: data });
+
+      // take in account of this modification for user's personal space
+      if (data.sorted?.length > 0) {
+        data.sorted.forEach((defaultSpace) => {
+          const usersPS = PersonalSpaces.find({ sorted: { $elemMatch: { zone_id: defaultSpace.zone_id } } }).fetch();
+          if (usersPS && usersPS.length > 0) {
+            usersPS.forEach((ps) => {
+              if (defaultSpace.elements?.length === 0) {
+                PersonalSpaces.update({ _id: ps._id }, { $pull: { sorted: { zone_id: defaultSpace.zone_id } } });
+              } else if (defaultSpace.elements?.length > 0) {
+                PersonalSpaces.update(
+                  { _id: ps._id, 'sorted.zone_id': defaultSpace.zone_id },
+                  { $set: { 'sorted.$.elements': defaultSpace.elements } },
+                  { upsert: false },
+                );
+              }
+            });
+          }
+        });
+      }
     }
   },
 });
