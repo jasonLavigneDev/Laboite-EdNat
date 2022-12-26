@@ -126,9 +126,7 @@ const AdminStructureSpace = () => {
   }, [selectedStructureId, loading]);
 
   const handleEditionData = (data) => {
-    setIsSaving(true);
     Meteor.call('defaultspaces.updateStructureSpace', { data }, (err) => {
-      setIsSaving(false);
       if (err) {
         msg.error(err.reason);
       }
@@ -137,10 +135,12 @@ const AdminStructureSpace = () => {
 
   const applyDefaultSpace = () => {
     toggleConfirm();
+    setIsSaving(true);
     Meteor.call(
       'defaultspaces.applyDefaultSpaceToAllUsers',
       { structureId: selectedStructureId || userStructure._id },
       (error) => {
+        setIsSaving(false);
         if (error) {
           msg.error(error.reason);
         } else {

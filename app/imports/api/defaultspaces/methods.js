@@ -30,20 +30,29 @@ export const updateStructureSpace = new ValidatedMethod({
     } else {
       DefaultSpaces.update({ _id: currentStructureSpace._id }, { $set: data });
 
-      // take in account of this modification for user's personal space
+      // take in account of this modification for user's personal space who didn't activate their person space
       if (data.sorted?.length > 0) {
         data.sorted.forEach((defaultSpace) => {
           const usersPS = PersonalSpaces.find({ sorted: { $elemMatch: { zone_id: defaultSpace.zone_id } } }).fetch();
           if (usersPS && usersPS.length > 0) {
             usersPS.forEach((ps) => {
-              if (defaultSpace.elements?.length === 0) {
-                PersonalSpaces.update({ _id: ps._id }, { $pull: { sorted: { zone_id: defaultSpace.zone_id } } });
-              } else if (defaultSpace.elements?.length > 0) {
-                PersonalSpaces.update(
-                  { _id: ps._id, 'sorted.zone_id': defaultSpace.zone_id },
-                  { $set: { 'sorted.$.elements': defaultSpace.elements } },
-                  { upsert: false },
-                );
+              const currUser = Meteor.users.findOne({ _id: ps.userId });
+              if (!currUser?.advancedPersonalPage) {
+                if (defaultSpace.elements?.length === 0) {
+                  PersonalSpaces.update({ _id: ps._id }, { $pull: { sorted: { zone_id: defaultSpace.zone_id } } });
+                } else if (defaultSpace.elements?.length > 0) {
+                  PersonalSpaces.update(
+                    { _id: ps._id, 'sorted.zone_id': defaultSpace.zone_id, userId: currUser._id },
+                    {
+                      $set: {
+                        name: defaultSpace.name,
+                        isExpanded: defaultSpace.isExpanded,
+                        'sorted.$.elements': defaultSpace.elements,
+                      },
+                    },
+                    { upsert: false },
+                  );
+                }
               }
             });
           }

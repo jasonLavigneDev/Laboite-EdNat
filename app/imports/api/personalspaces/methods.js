@@ -311,7 +311,7 @@ export const generateDefaultPersonalSpace = new ValidatedMethod({
 
     const user = Meteor.users.findOne({ _id: userId });
     const { structure, awaitingStructure } = user;
-    const defaultSpace = DefaultSpaces.findOne({ structureId: structure });
+    const defaultSpace = !user.advancedPersonalPage ? DefaultSpaces.findOne({ structureId: structure }) : null;
     const currentSpace = PersonalSpaces.findOne({ userId }) || {};
     const { unsorted = [] } = currentSpace;
     let { sorted = [] } = currentSpace;
@@ -323,13 +323,13 @@ export const generateDefaultPersonalSpace = new ValidatedMethod({
     if (sorted.length > 0 && oldStructure !== '' && (awaitingStructure === undefined || awaitingStructure === null)) {
       const oldDefaultSpace = DefaultSpaces.findOne({ structureId: oldStructure });
       if (oldDefaultSpace && oldDefaultSpace.sorted) {
-        oldDefaultSpace.sorted.forEach((odDefaultElt) => {
-          sorted = sorted.filter((elt) => elt.zone_id !== odDefaultElt.zone_id);
+        oldDefaultSpace.sorted.forEach((oldDefaultElt) => {
+          sorted = sorted.filter((elt) => elt.zone_id !== oldDefaultElt.zone_id);
         });
       }
     }
 
-    if (defaultSpace && defaultSpace.sorted) {
+    if (defaultSpace !== null && defaultSpace && defaultSpace.sorted) {
       defaultSpace.sorted.forEach(({ elements = [] }) => {
         if (elements) {
           servicesAdded = [
@@ -344,7 +344,7 @@ export const generateDefaultPersonalSpace = new ValidatedMethod({
     });
 
     sorted = sorted.filter((elt) => elt.elements.length > 0);
-    if (defaultSpace && defaultSpace.sorted.length > 0) {
+    if (defaultSpace !== null && defaultSpace && defaultSpace.sorted.length > 0) {
       defaultSpace.sorted = defaultSpace.sorted.filter((elt) => elt.elements.length > 0);
 
       // Remove zones that are already in personal space
