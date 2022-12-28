@@ -156,12 +156,14 @@ function TopBar({ publicMenu, root, appsettings, adminApp }) {
           )}
         </div>
       </div>
-      {!isMobile && !publicMenu && !adminApp && (
+      {!publicMenu && !adminApp && (
         <>
           <IconAndCoverImagePage />
-          <div className={`${classes.secondBar} ${classes.secondBarBorderTop}`}>
-            <MenuBar />
-          </div>
+          {!isMobile && (
+            <div className={`${classes.secondBar} ${classes.secondBarBorderTop}`}>
+              <MenuBar />
+            </div>
+          )}
         </>
       )}
     </AppBar>
