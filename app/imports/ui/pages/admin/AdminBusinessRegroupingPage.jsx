@@ -29,7 +29,10 @@ const useStyles = makeStyles()((theme) => ({
 
 const onRowDelete = (oldData) =>
   new Promise((resolve, reject) => {
-    removeBusinessReGrouping.call({ businessReGroupingId: oldData._id }, handleResult(resolve, reject));
+    removeBusinessReGrouping.call(
+      { businessReGroupingId: oldData._id, structure: oldData.structure },
+      handleResult(resolve, reject),
+    );
   });
 
 const AdminBusinessReGroupingPage = ({ businessReGrouping, loading }) => {
