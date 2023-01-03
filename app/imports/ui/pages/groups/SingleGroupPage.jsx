@@ -43,6 +43,7 @@ import Bookmarks from '../../../api/bookmarks/bookmarks';
 import { countMembersOfGroup } from '../../../api/groups/methods';
 import COMMON_STYLES from '../../themes/styles';
 import { getGroupName } from '../../utils/utilsFuncs';
+import { testUrl } from '../../../api/utils';
 
 const useStyles = makeStyles()((theme, { member, candidate, type }) => ({
   root: {
@@ -314,7 +315,7 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
 
   const openGroupFolder = (plugin) => {
     const resourceURL = groupPlugins[plugin].groupURL
-      .replace('[URL]', groupPlugins[plugin].URL)
+      .replace('[URL]', testUrl(groupPlugins[plugin].URL))
       .replace('[GROUPNAME]', encodeURIComponent(group.name))
       .replace('[GROUPSLUG]', group.slug);
     window.open(resourceURL, '_blank');
