@@ -310,6 +310,10 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
     });
   };
 
+  const openBlog = () => {
+    window.open(`${Meteor.settings.public.services.laboiteBlogURL}/groups/${group.slug}`, '_blank');
+  };
+
   const openGroupFolder = (plugin) => {
     const resourceURL = groupPlugins[plugin].groupURL
       .replace('[URL]', testUrl(groupPlugins[plugin].URL))
@@ -493,6 +497,22 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
                     </Button>
                   </Grid>
                 ) : null}
+<<<<<<< HEAD
+=======
+                {Meteor.settings.public.services.laboiteBlogURL ? (
+                  <Grid item key={`groupblog_${group._id}`} className={classes.cardGrid}>
+                    <Button
+                      startIcon={<LibraryBooksIcon />}
+                      className={classes.buttonAdmin}
+                      size="large"
+                      variant="contained"
+                      onClick={() => openBlog()}
+                    >
+                      {i18n.__(`pages.SingleGroupPage.groupArticles`)}
+                    </Button>
+                  </Grid>
+                ) : null}
+>>>>>>> dd44327c (fix(config): move blog url from public to public.services)
                 {Object.keys(groupPlugins)
                   .filter((p) => groupPlugins[p].enable === true)
                   .map((p) => {

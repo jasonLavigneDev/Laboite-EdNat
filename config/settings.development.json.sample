@@ -23,7 +23,6 @@
       "siteId": 1,
       "urlBase": "https://URL.fr"
     },
-    "laboiteBlogURL": "",
     "enableBBB": false,
     "BBBUrl": "",
     "minioPort": null,
@@ -61,7 +60,8 @@
     "services":{
       "agendaUrl": "",
       "sondagesUrl": "",
-      "mezigUrl": ""
+      "mezigUrl": "",
+      "laboiteBlogURL": "",
     }
   },
   "keycloak": {

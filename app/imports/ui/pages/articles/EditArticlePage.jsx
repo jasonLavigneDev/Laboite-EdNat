@@ -58,7 +58,8 @@ import { testMeteorSettingsUrl, getGroupName } from '../../utils/utilsFuncs';
 
 Quill.register('modules/ImageResize', ImageResize);
 
-const { minioEndPoint, minioPort, minioBucket, laboiteBlogURL } = Meteor.settings.public;
+const { minioEndPoint, minioPort, minioBucket } = Meteor.settings.public;
+const { laboiteBlogURL } = Meteor.settings.public.services;
 
 const HOST = `https://${minioEndPoint}${minioPort ? `:${minioPort}` : ''}/${minioBucket}/`;
 
