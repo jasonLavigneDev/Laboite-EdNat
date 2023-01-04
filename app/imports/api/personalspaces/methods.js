@@ -348,9 +348,9 @@ export const generateDefaultPersonalSpace = new ValidatedMethod({
       defaultSpace.sorted = defaultSpace.sorted.filter((elt) => elt.elements.length > 0);
 
       // Remove zones that are already in personal space
-      defaultSpace.sorted.forEach((ds) => {
-        sorted = sorted.filter((elt) => elt.zone_id !== ds.zone_id);
-      });
+      // defaultSpace.sorted.forEach((ds) => {
+      //   sorted = sorted.filter((elt) => elt.zone_id !== ds.zone_id);
+      // });
     }
 
     // Copy the personal space from the default structure one
@@ -358,7 +358,8 @@ export const generateDefaultPersonalSpace = new ValidatedMethod({
       { userId },
       {
         $set: {
-          sorted: defaultSpace && defaultSpace.sorted.length > 0 ? [...defaultSpace.sorted, ...sorted] : sorted,
+          sorted:
+            defaultSpace && defaultSpace !== null && defaultSpace.sorted.length > 0 ? [...defaultSpace.sorted] : sorted,
         },
       },
       { upsert: true },

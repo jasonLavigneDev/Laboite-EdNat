@@ -194,7 +194,7 @@ export default function AdminMenu() {
       path: '/admin/structurespaces',
       content: 'menuAdminDefaultSpaces',
       icon: <RestorePageIcon />,
-      hidden: !isAdminStructure,
+      hidden: !isAdminStructure || disabledFeatures.menuAdminDefaultSpaces,
     },
     {
       path: 'adminDivider2',

@@ -13,6 +13,7 @@
       "groups": false,
       "introductionTab": false,
       "introductionTabStructuresInfos": true,
+      "menuAdminDefaultSpaces": true
     },
     "ui": {
       "defaultGridViewMode": "compact",

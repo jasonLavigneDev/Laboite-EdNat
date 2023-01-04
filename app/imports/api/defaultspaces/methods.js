@@ -8,7 +8,6 @@ import i18n from 'meteor/universe:i18n';
 import DefaultSpaces from './defaultspaces';
 import { generateDefaultPersonalSpace } from '../personalspaces/methods';
 import { hasAdminRightOnStructure } from '../structures/utils';
-import PersonalSpaces from '../personalspaces/personalspaces';
 
 export const updateStructureSpace = new ValidatedMethod({
   name: 'defaultspaces.updateStructureSpace',
@@ -31,33 +30,36 @@ export const updateStructureSpace = new ValidatedMethod({
       DefaultSpaces.update({ _id: currentStructureSpace._id }, { $set: data });
 
       // take in account of this modification for user's personal space who didn't activate their person space
-      if (data.sorted?.length > 0) {
-        data.sorted.forEach((defaultSpace) => {
-          const usersPS = PersonalSpaces.find({ sorted: { $elemMatch: { zone_id: defaultSpace.zone_id } } }).fetch();
-          if (usersPS && usersPS.length > 0) {
-            usersPS.forEach((ps) => {
-              const currUser = Meteor.users.findOne({ _id: ps.userId });
-              if (!currUser?.advancedPersonalPage) {
-                if (defaultSpace.elements?.length === 0) {
-                  PersonalSpaces.update({ _id: ps._id }, { $pull: { sorted: { zone_id: defaultSpace.zone_id } } });
-                } else if (defaultSpace.elements?.length > 0) {
-                  PersonalSpaces.update(
-                    { _id: ps._id, 'sorted.zone_id': defaultSpace.zone_id, userId: currUser._id },
-                    {
-                      $set: {
-                        name: defaultSpace.name,
-                        isExpanded: defaultSpace.isExpanded,
-                        'sorted.$.elements': defaultSpace.elements,
-                      },
-                    },
-                    { upsert: false },
-                  );
-                }
-              }
-            });
-          }
-        });
-      }
+      // if (data.sorted?.length > 0) {
+      //   data.sorted.forEach((defaultSpace) => {
+      //     const usersPS = PersonalSpaces.find({ sorted: { $elemMatch: { zone_id: defaultSpace.zone_id } } }).fetch();
+      //     if (usersPS && usersPS.length > 0) {
+      //       usersPS.forEach((ps) => {
+      //         const currUser = Meteor.users.findOne({ _id: ps.userId });
+      //         if (!currUser?.advancedPersonalPage) {
+      //           if (defaultSpace.elements?.length === 0) {
+      //             PersonalSpaces.update(
+      //               { _id: ps._id, userId: currUser._id },
+      //               { $pull: { sorted: { zone_id: defaultSpace.zone_id } } },
+      //             );
+      //           } else if (defaultSpace.elements?.length > 0) {
+      //             PersonalSpaces.update(
+      //               { _id: ps._id, 'sorted.zone_id': defaultSpace.zone_id, userId: currUser._id },
+      //               {
+      //                 $set: {
+      //                   name: defaultSpace.name,
+      //                   isExpanded: defaultSpace.isExpanded,
+      //                   'sorted.$.elements': defaultSpace.elements,
+      //                 },
+      //               },
+      //               { upsert: false },
+      //             );
+      //           }
+      //         }
+      //       });
+      //     }
+      //   });
+      // }
     }
   },
 });
