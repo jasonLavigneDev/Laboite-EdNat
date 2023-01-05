@@ -4,15 +4,13 @@ import i18n from 'meteor/universe:i18n';
 import { Roles } from 'meteor/alanning:roles';
 import logServer from '../logging';
 import Groups from '../groups/groups';
-import { isActive } from '../utils';
-import { testMeteorSettingsUrl } from '../../ui/utils/utilsFuncs';
+import { isActive, testUrl } from '../utils';
 
 const nextcloudPlugin = Meteor.settings.public.groupPlugins.nextcloud;
 const { nextcloud } = Meteor.settings;
 
 function ocsUrl(ncURL) {
-  const testedNcUrl = testMeteorSettingsUrl(ncURL);
-  const origin = ncURL.startsWith('http') ? testedNcUrl : `https://${testedNcUrl}`;
+  const origin = testUrl(ncURL);
   return new URL('/ocs/v1.php/cloud', origin).href;
 }
 
@@ -31,7 +29,7 @@ class NextcloudClient {
     const ncUser = (nextcloud && nextcloud.nextcloudUser) || '';
     const ncPassword = (nextcloud && nextcloud.nextcloudPassword) || '';
     this.nextURL = ocsUrl(ncURL);
-    this.appsURL = `${ncURL}/apps`;
+    this.appsURL = testUrl(`${ncURL}/apps`);
     this.basicAuth = Buffer.from(`${ncUser}:${ncPassword}`, 'binary').toString('base64');
   }
 

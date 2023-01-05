@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import i18n from 'meteor/universe:i18n';
 import SimpleSchema from 'simpl-schema';
+import { testMeteorSettingsUrl } from '../ui/utils/utilsFuncs';
 
 export function isActive(userId) {
   if (!userId) return false;
@@ -180,3 +181,8 @@ export const getCurrentIntroduction = ({ introduction, language = i18n.getLocale
 
 export const getCurrentText = ({ data, language = i18n.getLocale().split('-')[0] }) =>
   data.find((entry) => entry.language === language) || [];
+
+export const testUrl = (URL, withSlash = false) => {
+  const testedUrl = testMeteorSettingsUrl(URL, withSlash);
+  return URL.startsWith('http') ? testedUrl : `https://${testedUrl}`;
+};
