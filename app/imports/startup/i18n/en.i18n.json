@@ -1008,7 +1008,8 @@
       "userStructureAdminValidationMandatory": "Mandatoriness of attachment status for this structure",
       "toggleUserStructureValidationMandatory": "Structure attachment is mandatory",
       "toggleUserStructureAdminValidationMandatory": "Attachment is mandatory for this structure",
-      "buttonUserStructureValidationMandatory": "Validate change"
+      "buttonUserStructureValidationMandatory": "Validate change",
+      "dbVersion": "Database version"
     },
     "SignIn": {
       "back": "Go back",

@@ -1012,7 +1012,8 @@
       "userStructureAdminValidationMandatory": "Statut de la validation obligatoire de cette structure",
       "toggleUserStructureValidationMandatory": "Le choix d'une structure doit obligatoirement être validé par un administrateur",
       "toggleUserStructureAdminValidationMandatory": "Le choix de cette structure doit obligatoirement être validé par un administrateur",
-      "buttonUserStructureValidationMandatory": "Valider le changement"
+      "buttonUserStructureValidationMandatory": "Valider le changement",
+      "dbVersion": "Version de la base de données"
     },
     "SignIn": {
       "back": "Retour",

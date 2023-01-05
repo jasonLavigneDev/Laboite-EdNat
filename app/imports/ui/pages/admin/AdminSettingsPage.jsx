@@ -58,6 +58,7 @@ const AdminSettingsPage = ({ appsettings }) => {
   const [loading, setLoading] = useState(true);
   const [{ isMobile }] = useAppContext();
   const [open, setOpen] = useState(false);
+  const [migrationVersion, setMigrationVersion] = useState('');
 
   const tabs = [
     {
@@ -104,6 +105,13 @@ const AdminSettingsPage = ({ appsettings }) => {
       hideExternal: false,
     },
   ];
+
+  useEffect(() => {
+    Meteor.call('migration.getVersion', {}, (error, result) => {
+      if (error) console.log(error);
+      setMigrationVersion(result);
+    });
+  }, []);
 
   useEffect(() => {
     if (appsettings.textMaintenance !== msgMaintenance) setMsgMaintenance(appsettings.textMaintenance);
@@ -185,6 +193,9 @@ const AdminSettingsPage = ({ appsettings }) => {
           <Grid container spacing={4}>
             <Grid item md={12}>
               <Typography variant={isMobile ? 'h6' : 'h4'}>{i18n.__('pages.AdminSettingsPage.maintenance')}</Typography>
+              <Typography>
+                {i18n.__('pages.AdminSettingsPage.dbVersion')} : {migrationVersion}
+              </Typography>
             </Grid>
             <Grid item md={12} className={classes.container}>
               <FormControlLabel
