@@ -354,16 +354,21 @@ export const generateDefaultPersonalSpace = new ValidatedMethod({
     }
 
     // Copy the personal space from the default structure one
-    return PersonalSpaces.update(
-      { userId },
-      {
-        $set: {
-          sorted:
-            defaultSpace && defaultSpace !== null && defaultSpace.sorted.length > 0 ? [...defaultSpace.sorted] : sorted,
+    let matchedDocuments = 0;
+    if (!user.advancedPersonalPage) {
+      matchedDocuments = PersonalSpaces.update(
+        { userId },
+        {
+          $set: {
+            sorted:
+              defaultSpace && defaultSpace !== null && defaultSpace.sorted.length > 0 ? [...defaultSpace.sorted] : [],
+          },
         },
-      },
-      { upsert: true },
-    );
+        { upsert: true },
+      );
+    }
+
+    return matchedDocuments;
   },
 });
 
