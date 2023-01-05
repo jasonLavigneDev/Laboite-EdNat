@@ -13,6 +13,7 @@
       "groups": false,
       "introductionTab": false,
       "introductionTabStructuresInfos": true,
+      "menuAdminDefaultSpaces": true  // THIS PARAMS IS SET FOR HIDDEN DEFAULTSPACE FUNCTIONNALITY WHICH DOESN'T WORK
     },
     "ui": {
       "defaultGridViewMode": "compact",
