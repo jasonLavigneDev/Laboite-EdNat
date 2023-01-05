@@ -605,7 +605,9 @@ const ProfilePage = () => {
                     autoComplete="nclocator"
                     fullWidth
                     type="text"
-                    value={userData.nclocator || i18n.__('pages.ProfilePage.emptyNcLocator')}
+                    value={
+                      `${userData?.username}@${userData?.nclocator}` || i18n.__('pages.ProfilePage.emptyNcLocator')
+                    }
                     variant="outlined"
                   />
                 </Grid>

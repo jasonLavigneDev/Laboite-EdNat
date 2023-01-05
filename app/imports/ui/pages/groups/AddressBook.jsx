@@ -176,6 +176,7 @@ const AddressBook = ({ loading, group, slug }) => {
                   <List className={classes.list} disablePadding>
                     {items.map((user, i) => {
                       const structure = getStructure(user.structure);
+                      const federationId = `${user.username}@${user.nclocator}`;
 
                       return [
                         <ListItem alignItems="flex-start" key={`user-${user.emails[0].address}`}>
@@ -209,7 +210,7 @@ const AddressBook = ({ loading, group, slug }) => {
                                   aria-label="comments"
                                   onClick={() =>
                                     navigator.clipboard
-                                      .writeText(user.nclocator)
+                                      .writeText(federationId)
                                       .then(msg.success(i18n.__('pages.AdminUsersPage.successCopyNcLocator')))
                                   }
                                   size="large"

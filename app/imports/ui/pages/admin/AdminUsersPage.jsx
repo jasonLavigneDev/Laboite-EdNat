@@ -219,8 +219,9 @@ const AdminUsersPage = ({ match: { path } }) => {
       navigator.clipboard.writeText(user._id).then(msg.success(i18n.__('pages.AdminUsersPage.successCopyUserId')));
     };
     const copyNcLocator = () => {
+      const federationId = `${user.username}@${user.nclocator}`;
       navigator.clipboard
-        .writeText(user.nclocator)
+        .writeText(federationId)
         .then(msg.success(i18n.__('pages.AdminUsersPage.successCopyNcLocator')));
     };
 
