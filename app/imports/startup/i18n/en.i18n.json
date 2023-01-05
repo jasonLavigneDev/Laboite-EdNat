@@ -1393,6 +1393,8 @@
       "groupArticles": "Access blog's articles",
       "BookmarksUsage": "Bookmarks list",
       "Bookmarks": "Bookmarks",
+      "ArticlesUsage": "Articles list",
+      "Articles": "Articles",
       "GroupNotExist": "Group {$groupTitle} does not exist"
     },
     "AddressBook": {
@@ -1412,6 +1414,15 @@
       "searchText": "Which event are you looking for ?",
       "dayOf": "All day of",
       "noEvents": "No current or upcoming polls were found for this group"
+    },
+    "GroupArticlesPage": {
+      "seeArticle": "See article",
+      "back": "Back to the group",
+      "searchText": "Which article are you looking for ?",
+      "noArticles": "No articles were found for this group",
+      "noAccess": "You don't have access to articles of this group",
+      "publicPage": "Public page",
+      "openPublicPage": "Open this group's public page"
     },
     "Polls": {
       "seePoll": "See poll",

@@ -1396,6 +1396,8 @@
       "groupArticles": "Accéder aux publications",
       "BookmarksUsage": "Liste des marque-pages",
       "Bookmarks": "Marque-pages",
+      "ArticlesUsage": "liste des publications",
+      "Articles": "Publications",
       "GroupNotExist": "Le groupe {$groupTitle} n'existe pas"
     },
     "AddressBook": {
@@ -1415,6 +1417,15 @@
       "searchText": "Quel événement cherchez-vous ?",
       "dayOf": "Sur la journée du",
       "noEvents": "Il n'y a actuellement aucun événement en cours ou à venir pour ce groupe."
+    },
+    "GroupArticlesPage": {
+      "seeArticle": "Consulter la publication",
+      "back": "Retour au groupe",
+      "searchText": "Quelle publication cherchez-vous ?",
+      "noArticles": "Il n'y a actuellement aucune publication pour ce groupe",
+      "noAccess": "Vous n'avez pas accès aux publications de ce groupe.",
+      "publicPage": "Page publique",
+      "openPublicPage": "Ouvrir la page publique de ce groupe"
     },
     "Polls": {
       "seePoll": "Voir le sondage",
