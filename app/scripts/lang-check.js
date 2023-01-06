@@ -68,7 +68,7 @@ async function main(paths) {
   );
 
   const report = await checkFiles(files);
-  console.log('Analylisis Completed!');
+  console.log('Analysis complete!');
 
   if (report.count > 0) {
     const reportPath = path.resolve(`./.reports/lang-report-${Date.now()}.json`);
