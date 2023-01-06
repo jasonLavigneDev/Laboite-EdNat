@@ -1355,7 +1355,12 @@
       "update": "Mettre à jour",
       "cancel": "Annuler",
       "logo_url": "URL du logo",
-      "offlineService": "Activer ce service sur la page non connectée"
+      "offlineService": "Activer ce service sur la page non connectée",
+      "titleFieldHelperText": "Title du service",
+      "StateFieldHelperText": "État du service",
+      "teamFieldHelperText": "Équipe qui gère le service",
+      "usageFieldHelperText": "Utilisation du service",
+      "descriptionFieldHelperText": "Courte description"
     },
     "AdminSingleGroupPage": {
       "edition": "Édition du groupe",
