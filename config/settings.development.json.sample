@@ -13,7 +13,8 @@
       "groups": false,
       "introductionTab": false,
       "introductionTabStructuresInfos": true,
-      "menuAdminDefaultSpaces": true  // THIS PARAMS IS SET FOR HIDDEN DEFAULTSPACE FUNCTIONNALITY WHICH DOESN'T WORK
+      "menuAdminDefaultSpaces": true,  // THIS PARAMS IS SET FOR HIDDEN DEFAULTSPACE FUNCTIONNALITY WHICH DOESN'T WORK
+      "mediaStorageMenu": false
     },
     "ui": {
       "defaultGridViewMode": "compact",
@@ -29,7 +30,6 @@
     "minioSSL": false,
     "minioPort": null,
     "minioEndPoint": "",
-    "displayMediasStorageMenu": false,
     "minioBucket": "",
     "imageFilesTypes": ["svg", "png", "jpg", "gif", "jpeg"],
     "audioFilesTypes": ["wav", "mp3", "ogg"],

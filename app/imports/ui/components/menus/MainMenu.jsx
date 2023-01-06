@@ -54,7 +54,7 @@ export const userMenu = [
   {
     path: '/medias',
     content: 'menuMedias',
-    hidden: !Meteor.settings.public.minioEndPoint || !Meteor.settings.public.displayMediasStorageMenu,
+    hidden: !Meteor.settings.public.minioEndPoint || disabledFeatures.mediaStorageMenu,
   },
   {
     path: '/userBookmarks',
