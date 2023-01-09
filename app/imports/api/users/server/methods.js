@@ -7,7 +7,7 @@ import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { Roles } from 'meteor/alanning:roles';
 
-import { isActive, getLabel } from '../../utils';
+import { isActive, getLabel, checkPaginationParams } from '../../utils';
 import Groups from '../../groups/groups';
 // initialize Meteor.users customizations
 import AppRoles from '../users';
@@ -19,6 +19,7 @@ import logServer from '../../logging';
 import { getRandomNCloudURL } from '../../nextcloud/methods';
 import Structures from '../../structures/structures';
 import Nextcloud from '../../nextcloud/nextcloud';
+import { queryUsersAdmin, queryUsersByStructure } from './utils';
 import EventsAgenda from '../../eventsAgenda/eventsAgenda';
 import {
   hasAdminRightOnStructure,
@@ -1179,11 +1180,93 @@ export const fixUsers = new ValidatedMethod({
   },
 });
 
+export const getUsersAdmin = new ValidatedMethod({
+  name: 'users.admins',
+  validate: null,
+  run({ page = 1, itemPerPage = 10, search = '', ...rest }) {
+    if (!isActive(this.userId) || !Roles.userIsInRole(this.userId, 'admin')) {
+      return this.ready();
+    }
+
+    new SimpleSchema({
+      userType: {
+        type: String,
+        allowedValues: ['adminStructure', 'admin', 'all'],
+      },
+    })
+      .extend(checkPaginationParams)
+      .validate({ page, itemPerPage, search, userType: rest.userType });
+
+    const query = queryUsersAdmin({ search, userType: rest.userType });
+    const sortQuery = rest.sortQuery !== undefined ? rest.sortQuery : { lastName: 1, firstName: 1 };
+    const restCopy = { ...rest };
+    delete restCopy.sortQuery;
+    delete restCopy.userType;
+
+    const data = Meteor.users
+      .find(query, {
+        fields: Meteor.users.adminFields,
+        skip: itemPerPage * (page - 1),
+        limit: itemPerPage,
+        sort: sortQuery,
+        ...restCopy,
+      })
+      .fetch();
+    const total = Meteor.users.find(query).count();
+
+    return { data, pageSize: itemPerPage, page, total };
+  },
+});
+
+export const getUsersByStructure = new ValidatedMethod({
+  name: 'users.byStructure',
+  validate: null,
+  run({ selectedStructureId = null, page = 1, itemPerPage = 10, search, ...rest }) {
+    const currentUser = Meteor.users.findOne({ _id: this.userId });
+    const usedStructure = selectedStructureId || currentUser.structure;
+    const hasAdminRight = hasAdminRightOnStructure({ userId: this.userId, structureId: usedStructure });
+
+    const isAuthorized = isActive(this.userId) && (Roles.userIsInRole(this.userId, 'admin') || hasAdminRight);
+
+    if (!isAuthorized) {
+      // TODO add a normalized 403 here
+      throw new Meteor.Error(403, 'User is not authorized');
+    }
+
+    new SimpleSchema({
+      userType: {
+        type: String,
+        allowedValues: ['adminStructure', 'admin', 'all'],
+      },
+    })
+      .extend(checkPaginationParams)
+      .validate({ page, itemPerPage, search, userType: rest.userType });
+
+    const query = queryUsersByStructure({ search, userType: rest.userType }, usedStructure);
+    const sortQuery = rest.sortQuery !== undefined ? rest.sortQuery : { lastName: 1, firstName: 1 };
+    const restCopy = { ...rest };
+    delete restCopy.sortQuery;
+    delete restCopy.userType;
+
+    const data = Meteor.users
+      .find(query, {
+        fields: Meteor.users.adminFields,
+        skip: itemPerPage * (page - 1),
+        limit: itemPerPage,
+        sort: sortQuery,
+        ...restCopy,
+      })
+      .fetch();
+    const total = Meteor.users.find(query).count();
+
+    return { data, pageSize: itemPerPage, page, total };
+  },
+});
+
 // Get list of all method names on User
 const LISTS_METHODS = _.pluck(
   [
     setStructure,
-    acceptAwaitingStructure,
     setArticlesEnable,
     setActive,
     removeUser,
@@ -1210,6 +1293,8 @@ const LISTS_METHODS = _.pluck(
     fixUsers,
     hasUserOnRequest,
     hasUserOnAwaitingStructure,
+    getUsersAdmin,
+    getUsersByStructure,
   ],
   'name',
 );
