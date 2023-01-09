@@ -33,7 +33,12 @@ const AdminServicesTable = ({ tableTitle, structureMode, urlStruct, urlNew, serv
       render: (rowData) => {
         const { url } = rowData;
         return (
-          <a href={url} target="_blank" rel="noreferrer noopener">
+          <a
+            href={url}
+            target="_blank"
+            rel="noreferrer noopener"
+            style={{ overflow: 'hidden', overflowWrap: 'anywhere' }}
+          >
             {url}
           </a>
         );
@@ -57,6 +62,7 @@ const AdminServicesTable = ({ tableTitle, structureMode, urlStruct, urlNew, serv
     actionsColumnIndex: 5,
     addRowPosition: 'first',
     emptyRowsWhenPaging: false,
+    tableLayout: 'fixed',
   };
 
   if (offlinePage) {

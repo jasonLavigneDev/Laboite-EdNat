@@ -44,7 +44,11 @@ import PersonalSpaces from '../../personalspaces/personalspaces';
 import Nextcloud from '../../nextcloud/nextcloud';
 import './publications';
 import { getStructureIds } from '../structures';
+import Structures from '../../structures/structures';
+import { createStructure } from '../../structures/methods';
 import AppSettings from '../../appsettings/appsettings';
+import AsamExtensions from '../../asamextensions/asamextensions';
+import checkDomain from '../../domains';
 
 let allowedStructures = [];
 const testSettingsId = 'settings';
@@ -59,9 +63,27 @@ const setValidationMandatory = (state) => {
   );
 };
 
+const initStructures = (userId) => {
+  Roles.addUsersToRoles(userId, 'admin');
+  Meteor.users.update({ _id: userId }, { $set: { isActive: true } });
+  Groups.remove({});
+  Structures.remove({});
+  let cpt = 0;
+  _.times(4, () => {
+    createStructure._execute({ userId }, { name: `${faker.company.companyName()}_${cpt}` });
+    cpt += 1;
+  });
+  Roles.removeUsersFromRoles(userId, 'admin');
+  Meteor.users.update({ _id: userId }, { $set: { isActive: false } });
+};
+
 describe('users', function () {
   before(function () {
-    allowedStructures = getStructureIds();
+    Meteor.roles.remove({});
+    Roles.createRole('admin');
+    Roles.createRole('animator');
+    Roles.createRole('adminStructure');
+    Roles.createRole('member');
     AppSettings.remove({});
     const appSettings = Factory.create('appsettings');
     AppSettings.insert({ ...appSettings, _id: testSettingsId });
@@ -118,6 +140,8 @@ describe('users', function () {
         lastName: `test${faker.name.lastName()}`,
       });
 
+      initStructures(userId);
+      allowedStructures = getStructureIds();
       Meteor.users.update(userId, { $set: { isActive: true, isRequest: false, articlesCount: 1 } });
       Meteor.users.update(otherUserId, { $set: { isActive: true, isRequest: false, articlesCount: 1 } });
       group = Factory.create('group', { owner: userId });
@@ -446,12 +470,8 @@ describe('users', function () {
       // Clear
       Meteor.roleAssignment.remove({});
       Meteor.users.remove({});
-      Meteor.roles.remove({});
       Groups.remove({});
       PersonalSpaces.remove({});
-      Roles.createRole('admin');
-      Roles.createRole('adminStructure');
-      Roles.createRole('member');
       // Generate 'users'
       email = faker.internet.email();
       userId = Accounts.createUser({
@@ -471,6 +491,8 @@ describe('users', function () {
         firstName: faker.name.firstName(),
         lastName: faker.name.lastName(),
       });
+      initStructures(userId);
+      allowedStructures = getStructureIds();
       // set this user as global admin
       Roles.addUsersToRoles(adminId, 'admin');
       // set users as active
@@ -478,6 +500,41 @@ describe('users', function () {
       // create a group and set userId as member
       groupId = Factory.create('group', { owner: adminId })._id;
       setMemberOf._execute({ userId: adminId }, { userId, groupId });
+    });
+    describe('checkDomain', function () {
+      it('domain mail exists in keycloak white list', function () {
+        Meteor.settings.private = {
+          whiteDomains: ['^ac-[a-z-]*\\.fr', '^[a-z-]*\\.gouv.fr'],
+          checkKeyCloakWhiteListDomain: true,
+        };
+
+        AsamExtensions.insert({
+          extension: 'test.apitech.fr',
+        });
+        assert.equal(checkDomain('domainMailTest@test.apitech.fr'), true);
+      });
+    });
+
+    describe('checkDomain', function () {
+      it('domain mail does not match settings whiteDomains', function () {
+        Meteor.settings.private = {
+          whiteDomains: ['^ac-[a-z-]*\\.fr', '^[a-z-]*\\.gouv.fr'],
+        };
+
+        AsamExtensions.insert({
+          extension: 'test.apitech.fr',
+        });
+        assert.equal(checkDomain('domainMailTest@test.apitech.fr'), false);
+      });
+    });
+
+    describe('checkDomain', function () {
+      it('domain mail not exists in keycloak white list', function () {
+        AsamExtensions.insert({
+          extension: 'test.apitech.fr',
+        });
+        assert.equal(checkDomain('domainMailTest@test.test.apitech.fr'), false);
+      });
     });
     describe('(un)setAdmin', function () {
       it('global admin can set/unset a user as admin', function () {
@@ -646,13 +703,13 @@ describe('users', function () {
 
         assert.equal(Roles.userIsInRole(userId, 'adminStructure', allowedStructures[1]), false);
       });
-      it('users can set their structure (validation structure not mandatory)', function () {
+      it('users can set their structure (validation structure not mandatory ==> validation needed)', function () {
         const newStructure = allowedStructures[0];
 
         setValidationMandatory(false);
         setStructure._execute({ userId }, { structure: newStructure });
         const user = Meteor.users.findOne({ _id: userId });
-        assert.equal(user.structure, newStructure);
+        assert.equal(user.awaitingStructure, null);
       });
 
       it('users loses structure admin role when structure changes (validation structure not mandatory)', function () {
@@ -661,11 +718,11 @@ describe('users', function () {
         setValidationMandatory(false);
         setStructure._execute({ userId }, { structure: newStructure });
         const user = Meteor.users.findOne({ _id: userId });
-        assert.equal(user.structure, newStructure);
+        assert.equal(user.awaitingStructure, null);
         setAdminStructure._execute({ userId: adminId }, { userId });
-        assert.equal(Roles.userIsInRole(userId, 'adminStructure', allowedStructures[0]), true);
+        assert.notEqual(Roles.userIsInRole(userId, 'adminStructure', allowedStructures[0]), false); // varidation from admin structure nedeed
         setStructure._execute({ userId }, { structure: allowedStructures[0] });
-        assert.equal(Roles.userIsInRole(userId, 'adminStructure', allowedStructures[0]), true);
+        assert.notEqual(Roles.userIsInRole(userId, 'adminStructure', allowedStructures[0]), false);
         setStructure._execute({ userId }, { structure: allowedStructures[1] });
         assert.equal(Roles.userIsInRole(userId, 'adminStructure', allowedStructures[1]), false);
       });
@@ -712,7 +769,10 @@ describe('users', function () {
           firstName: 'adminStructureUserFirstName',
           lastName: 'adminStructureUserLastName',
         });
+        Meteor.users.update({ _id: adminStructureId }, { $set: { isActive: true } });
+        const struc = Structures.findOne({ _id: newStructure });
         Roles.addUsersToRoles(adminStructureId, 'adminStructure', newStructure);
+        Roles.addUsersToRoles(adminStructureId, 'admin', struc.groupId);
 
         acceptAwaitingStructure._execute({ userId: adminStructureId }, { targetUserId: userId });
         const user = Meteor.users.findOne({ _id: userId });

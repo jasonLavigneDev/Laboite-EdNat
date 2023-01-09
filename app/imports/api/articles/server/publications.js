@@ -1,11 +1,13 @@
 import { Meteor } from 'meteor/meteor';
+import { Roles } from 'meteor/alanning:roles';
 import { FindFromPublication } from 'meteor/percolate:find-from-publication';
 import { publishComposite } from 'meteor/reywood:publish-composite';
 import SimpleSchema from 'simpl-schema';
 import logServer from '../../logging';
 import Tags from '../../tags/tags';
-import { checkPaginationParams, getLabel } from '../../utils';
+import { checkPaginationParams, getLabel, isActive } from '../../utils';
 import Articles from '../articles';
+import Groups from '../../groups/groups';
 
 // build query for all articles
 const queryAllArticles = ({ nodrafts, search, userId }) => {
@@ -130,4 +132,79 @@ publishComposite('articles.one', ({ slug }) => {
       },
     ],
   };
+});
+
+// build query for all articles from group
+const queryGroupArticles = ({ search, group }) => {
+  const regex = new RegExp(search, 'i');
+  const fieldsToSearch = ['title', 'description'];
+  const searchQuery = fieldsToSearch.map((field) => ({
+    [field]: { $regex: regex },
+    groups: { $elemMatch: { _id: group._id } },
+  }));
+  return {
+    $or: searchQuery,
+  };
+};
+
+Meteor.methods({
+  'get_groups.articles_count': function getArticlesGroupCount({ search, slug }) {
+    try {
+      const group = Groups.findOne(
+        { slug },
+        {
+          fields: Groups.allPublicFields,
+          limit: 1,
+          sort: { name: -1 },
+        },
+      );
+      const query = queryGroupArticles({ search, group });
+      return Articles.find(query).count();
+    } catch (error) {
+      return 0;
+    }
+  },
+});
+
+// publish all existing articles for specific group
+FindFromPublication.publish('groups.articles', function groupsArticles({ page, search, slug, itemPerPage, ...rest }) {
+  if (!isActive(this.userId)) {
+    return this.ready();
+  }
+  try {
+    checkPaginationParams.validate({ page, itemPerPage, search });
+  } catch (err) {
+    logServer(`publish groups.articles : ${err}`);
+    this.error(err);
+  }
+  const group = Groups.findOne(
+    { slug },
+    {
+      fields: Groups.allPublicFields,
+      limit: 1,
+      sort: { name: -1 },
+    },
+  );
+  // for protected/private groups, publish articles only for allowed users
+  if (
+    group === undefined ||
+    (group.type !== 0 && !Roles.userIsInRole(this.userId, ['admin', 'animator', 'member'], group._id))
+  ) {
+    return this.ready();
+  }
+
+  try {
+    const query = queryGroupArticles({ search, group });
+    const res = Articles.find(query, {
+      fields: Articles.publicFields,
+      skip: itemPerPage * (page - 1),
+      limit: itemPerPage,
+      sort: { updatedAt: -1 },
+      ...rest,
+    });
+
+    return res;
+  } catch (error) {
+    return this.ready();
+  }
 });

@@ -12,6 +12,7 @@ Meteor.startup(() => {
     AppSettings.insert({
       _id: 'settings',
       introduction,
+      globalInfo: [],
       legal: {
         external: false,
         link: '',
@@ -32,6 +33,7 @@ Meteor.startup(() => {
         link: '',
         content: '',
       },
+
       userStructureValidationMandatory: false,
     });
   }

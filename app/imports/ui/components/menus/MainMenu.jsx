@@ -17,6 +17,7 @@ import AppVersion from '../system/AppVersion';
 import LogoutDialog from '../system/LogoutDialog';
 import UserAvatar from '../users/UserAvatar';
 import updateDocumentTitle from '../../utils/updateDocumentTitle';
+import { testMeteorSettingsUrl } from '../../utils/utilsFuncs';
 
 const { disabledFeatures = {} } = Meteor.settings.public;
 
@@ -53,7 +54,7 @@ export const userMenu = [
   {
     path: '/medias',
     content: 'menuMedias',
-    hidden: !Meteor.settings.public.minioEndPoint,
+    hidden: !Meteor.settings.public.minioEndPoint || disabledFeatures.mediaStorageMenu,
   },
   {
     path: '/userBookmarks',
@@ -112,7 +113,8 @@ const MainMenu = ({ user = {} }) => {
 
   const keycloakLogout = () => {
     const { keycloakUrl, keycloakRealm } = Meteor.settings.public;
-    const keycloakLogoutUrl = `${keycloakUrl}/realms/${keycloakRealm}/protocol/openid-connect/logout`;
+    const keycloakUrlTested = testMeteorSettingsUrl(keycloakUrl);
+    const keycloakLogoutUrl = `${keycloakUrlTested}/realms/${keycloakRealm}/protocol/openid-connect/logout`;
     const redirectUri = `${Meteor.absoluteUrl()}/logout`;
     window.location = `${keycloakLogoutUrl}?post_logout_redirect_uri=${redirectUri}`;
   };

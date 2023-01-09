@@ -7,6 +7,7 @@ import CardHeader from '@mui/material/CardHeader';
 import i18n from 'meteor/universe:i18n';
 import { Link } from 'react-router-dom';
 import GroupAvatar from './GroupAvatar';
+import { getGroupName } from '../../utils/utilsFuncs';
 
 const useStyles = makeStyles()((theme) => ({
   noUnderline: {
@@ -57,7 +58,7 @@ const GroupDetailsList = ({ group, member, candidate, animator, admin }) => {
         <Link to={`/groups/${group.slug}`} className={classes.noUnderline}>
           <CardHeader
             avatar={<GroupAvatar type={type} avatar={avatar} />}
-            title={group.name}
+            title={getGroupName(group)}
             titleTypographyProps={{
               variant: 'h6',
               color: 'primary',

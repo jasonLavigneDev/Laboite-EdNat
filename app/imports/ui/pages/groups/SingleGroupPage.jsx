@@ -40,8 +40,11 @@ import GroupAvatar from '../../components/groups/GroupAvatar';
 import Polls from '../../../api/polls/polls';
 import EventsAgenda from '../../../api/eventsAgenda/eventsAgenda';
 import Bookmarks from '../../../api/bookmarks/bookmarks';
+import Articles from '../../../api/articles/articles';
 import { countMembersOfGroup } from '../../../api/groups/methods';
 import COMMON_STYLES from '../../themes/styles';
+import { getGroupName } from '../../utils/utilsFuncs';
+import { testUrl } from '../../../api/utils';
 
 const useStyles = makeStyles()((theme, { member, candidate, type }) => ({
   root: {
@@ -159,13 +162,14 @@ const useStyles = makeStyles()((theme, { member, candidate, type }) => ({
   },
 }));
 
-const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks }) => {
+const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks, articles }) => {
   const { type } = group;
   const [{ userId, user }] = useAppContext();
   const [loading, setLoading] = useState(false);
   const [countUser, setCountUser] = useState(0);
   const [openedContent, toggleOpenedContent] = useState(false);
   const animator = Roles.userIsInRole(userId, 'animator', group._id);
+  const isAutomaticGroup = group.type === 15;
   const member = Roles.userIsInRole(userId, 'member', group._id);
   const candidate = Roles.userIsInRole(userId, ['candidate'], group._id);
   const admin = Roles.userIsInRole(userId, ['admin', 'animator'], group._id);
@@ -248,7 +252,9 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
   const showFavorite = admin && !candidate && !member && !animator;
 
   const groupType = i18n.__(
-    `components.GroupDetails.${type === 0 ? 'publicGroup' : type === 10 ? 'closedGroup' : 'moderateGroup'}`,
+    `components.GroupDetails.${
+      type === 0 ? 'publicGroup' : type === 10 ? 'closedGroup' : type === 15 ? 'automaticGroup' : 'moderateGroup'
+    }`,
   );
 
   const icon = () => {
@@ -284,7 +290,10 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
     if (type === 5) {
       return i18n.__('components.GroupDetails.askToJoinModerateGroupButtonLabel');
     }
-    return i18n.__('components.GroupDetails.joinPublicGroupButtonLabel');
+    if (type !== 15) {
+      return i18n.__('components.GroupDetails.joinPublicGroupButtonLabel');
+    }
+    return null;
   };
 
   const goBack = () => {
@@ -301,13 +310,9 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
     });
   };
 
-  const openBlog = () => {
-    window.open(`${Meteor.settings.public.laboiteBlogURL}/groups/${group.slug}`, '_blank');
-  };
-
   const openGroupFolder = (plugin) => {
     const resourceURL = groupPlugins[plugin].groupURL
-      .replace('[URL]', groupPlugins[plugin].URL)
+      .replace('[URL]', testUrl(groupPlugins[plugin].URL))
       .replace('[GROUPNAME]', encodeURIComponent(group.name))
       .replace('[GROUPSLUG]', group.slug);
     window.open(resourceURL, '_blank');
@@ -343,6 +348,46 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
     });
   }, [group]);
 
+  if (Object.keys(group).length === 0) {
+    const urlSplit = history.location.pathname.split('groups/');
+    const oldTitle = urlSplit[urlSplit.length - 1];
+    return (
+      <>
+        <Grid item xs={12} sm={12} md={12} className={classes.flex}>
+          <Button onClick={goBack} color="primary" startIcon={<ArrowBack />}>
+            {i18n.__('pages.SingleServicePage.backToList')}
+          </Button>
+        </Grid>
+        <p> {i18n.__('pages.SingleGroupPage.GroupNotExist', { groupTitle: JSON.stringify(oldTitle) })}</p>
+      </>
+    );
+  }
+
+  const AppCard = ({ id, usage, logo, title, url }) => {
+    return (
+      <Grid item xs={12} sm={12} md={6} lg={4} className={classes.cardGrid}>
+        <ServiceDetails
+          service={{
+            _id: id,
+            usage,
+            logo,
+            title,
+            url,
+          }}
+          isShort
+        />
+      </Grid>
+    );
+  };
+
+  AppCard.propTypes = {
+    id: PropTypes.string.isRequired,
+    usage: PropTypes.string.isRequired,
+    logo: PropTypes.element.isRequired,
+    title: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired,
+  };
+
   return (
     <Fade in>
       <Container className={classes.root}>
@@ -357,7 +402,7 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
             <div className={classes.titleContainer}>
               <GroupAvatar type={type || 0} avatar={group.avatar} />
               <div className={classes.title}>
-                <Typography variant="h5">{group.name}</Typography>
+                <Typography variant="h5">{getGroupName(group)}</Typography>
                 <div className={classes.groupInfos}>
                   <Typography color={type === 0 ? 'primary' : 'secondary'} variant="h6">
                     {groupType}
@@ -375,31 +420,33 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
             <Grid container className={classes.actionButtons} spacing={1}>
               {type !== 10 || admin || member || animator ? (
                 <Grid item>
-                  {animator || member || candidate ? (
-                    <Button
-                      className={classes.buttonQuit}
-                      startIcon={<ClearIcon />}
-                      color="primary"
-                      variant="contained"
-                      onClick={handleJoinGroup}
-                    >
-                      {i18n.__(
-                        `pages.SingleGroupPage.${
-                          animator ? 'stopAnimating' : member ? 'leaveGroup' : 'cancelCandidate'
-                        }`,
-                      )}
-                    </Button>
-                  ) : (
-                    <Button
-                      startIcon={icon()}
-                      className={classes.buttonText}
-                      size="large"
-                      variant="contained"
-                      onClick={handleJoinGroup}
-                    >
-                      {buttonText()}
-                    </Button>
-                  )}
+                  {!isAutomaticGroup ? (
+                    animator || member || candidate ? (
+                      <Button
+                        className={classes.buttonQuit}
+                        startIcon={<ClearIcon />}
+                        color="primary"
+                        variant="contained"
+                        onClick={handleJoinGroup}
+                      >
+                        {i18n.__(
+                          `pages.SingleGroupPage.${
+                            animator ? 'stopAnimating' : member ? 'leaveGroup' : 'cancelCandidate'
+                          }`,
+                        )}
+                      </Button>
+                    ) : (
+                      <Button
+                        startIcon={icon()}
+                        className={classes.buttonText}
+                        size="large"
+                        variant="contained"
+                        onClick={handleJoinGroup}
+                      >
+                        {buttonText()}
+                      </Button>
+                    )
+                  ) : null}
                 </Grid>
               ) : null}
               {admin && (
@@ -446,19 +493,6 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
                     </Button>
                   </Grid>
                 ) : null}
-                {Meteor.settings.public.laboiteBlogURL ? (
-                  <Grid item key={`groupblog_${group._id}`} className={classes.cardGrid}>
-                    <Button
-                      startIcon={<LibraryBooksIcon />}
-                      className={classes.buttonAdmin}
-                      size="large"
-                      variant="contained"
-                      onClick={() => openBlog()}
-                    >
-                      {i18n.__(`pages.SingleGroupPage.groupArticles`)}
-                    </Button>
-                  </Grid>
-                ) : null}
                 {Object.keys(groupPlugins)
                   .filter((p) => groupPlugins[p].enable === true)
                   .map((p) => {
@@ -479,63 +513,57 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
                   <ServiceDetails service={service} isShort />
                 </Grid>
               ))}
-              <Grid item xs={12} sm={12} md={6} lg={4} className={classes.cardGrid}>
-                <ServiceDetails
-                  service={{
-                    _id: 'addressbook',
-                    usage: i18n.__('pages.SingleGroupPage.addressBookUsage'),
-                    logo: <PeopleIcon className={classes.icon} color="primary" fontSize="large" />,
-                    title: `${i18n.__('pages.SingleGroupPage.addressBook')} (${countUser})`,
-                    url: `/groups/${group.slug}/addressbook`,
-                  }}
-                  isShort
-                />
-              </Grid>
-              <Grid item xs={12} sm={12} md={6} lg={4} className={classes.cardGrid}>
-                <ServiceDetails
-                  service={{
-                    _id: 'events',
-                    usage: i18n.__('pages.SingleGroupPage.EventsUsage'),
-                    logo: <TodayIcon className={classes.icon} color="primary" fontSize="large" />,
-                    title:
-                      events === undefined
-                        ? `${i18n.__('pages.SingleGroupPage.Events')}`
-                        : `${i18n.__('pages.SingleGroupPage.Events')} (${events})`,
-                    url: `/groups/${group.slug}/events`,
-                  }}
-                  isShort
-                />
-              </Grid>
-              <Grid item xs={12} sm={12} md={6} lg={4} className={classes.cardGrid}>
-                <ServiceDetails
-                  service={{
-                    _id: 'polls',
-                    usage: i18n.__('pages.SingleGroupPage.PollUsage'),
-                    logo: <PollIcon className={classes.icon} color="primary" fontSize="large" />,
-                    title:
-                      polls === undefined
-                        ? `${i18n.__('pages.SingleGroupPage.Polls')}`
-                        : `${i18n.__('pages.SingleGroupPage.Polls')} (${polls})`,
-                    url: `/groups/${group.slug}/poll`,
-                  }}
-                  isShort
-                />
-              </Grid>
-              <Grid item xs={12} sm={12} md={6} lg={4} className={classes.cardGrid}>
-                <ServiceDetails
-                  service={{
-                    _id: 'bookmarks',
-                    usage: i18n.__('pages.SingleGroupPage.BookmarksUsage'),
-                    logo: <BookmarksIcon className={classes.icon} color="primary" fontSize="large" />,
-                    title:
-                      polls === undefined
-                        ? `${i18n.__('pages.SingleGroupPage.Bookmarks')}`
-                        : `${i18n.__('pages.SingleGroupPage.Bookmarks')} (${bookmarks})`,
-                    url: `/groups/${group.slug}/bookmarks`,
-                  }}
-                  isShort
-                />
-              </Grid>
+              <AppCard
+                id="addressbook"
+                usage={i18n.__('pages.SingleGroupPage.addressBookUsage')}
+                logo={<PeopleIcon className={classes.icon} color="primary" fontSize="large" />}
+                title={`${i18n.__('pages.SingleGroupPage.addressBook')} (${countUser})`}
+                url={`/groups/${group.slug}/addressbook`}
+              />
+              <AppCard
+                id="events"
+                usage={i18n.__('pages.SingleGroupPage.EventsUsage')}
+                logo={<TodayIcon className={classes.icon} color="primary" fontSize="large" />}
+                title={
+                  events === undefined
+                    ? `${i18n.__('pages.SingleGroupPage.Events')}`
+                    : `${i18n.__('pages.SingleGroupPage.Events')} (${events})`
+                }
+                url={`/groups/${group.slug}/events`}
+              />
+              <AppCard
+                id="polls"
+                usage={i18n.__('pages.SingleGroupPage.PollUsage')}
+                logo={<PollIcon className={classes.icon} color="primary" fontSize="large" />}
+                title={
+                  polls === undefined
+                    ? `${i18n.__('pages.SingleGroupPage.Polls')}`
+                    : `${i18n.__('pages.SingleGroupPage.Polls')} (${polls})`
+                }
+                url={`/groups/${group.slug}/poll`}
+              />
+              <AppCard
+                id="bookmarks"
+                usage={i18n.__('pages.SingleGroupPage.BookmarksUsage')}
+                logo={<BookmarksIcon className={classes.icon} color="primary" fontSize="large" />}
+                title={
+                  bookmarks === undefined
+                    ? `${i18n.__('pages.SingleGroupPage.Bookmarks')}`
+                    : `${i18n.__('pages.SingleGroupPage.Bookmarks')} (${bookmarks})`
+                }
+                url={`/groups/${group.slug}/bookmarks`}
+              />
+              <AppCard
+                id="articles"
+                usage={i18n.__('pages.SingleGroupPage.ArticlesUsage')}
+                logo={<LibraryBooksIcon className={classes.icon} color="primary" fontSize="large" />}
+                title={
+                  articles === undefined
+                    ? `${i18n.__('pages.SingleGroupPage.Articles')}`
+                    : `${i18n.__('pages.SingleGroupPage.Articles')} (${articles})`
+                }
+                url={`/groups/${group.slug}/articles`}
+              />
             </>
           ) : null}
           <Grid item xs={12} sm={12} md={12} className={classes.cardGrid}>
@@ -574,6 +602,7 @@ export default withTracker(
     const polls = Polls.find({}).count();
     const bookmarks = Bookmarks.find({}).count();
     const events = EventsAgenda.find({}).count();
+    const articles = Articles.find({}).count();
     const subServices = Meteor.subscribe('services.group', { ids: group.applications });
     const services =
       Services.findFromPublication('services.group', { state: { $ne: 10 } }, { sort: { name: 1 } }).fetch() || [];
@@ -586,6 +615,7 @@ export default withTracker(
       polls,
       bookmarks,
       events,
+      articles,
     };
   },
 )(SingleGroupPage);
@@ -596,6 +626,7 @@ SingleGroupPage.defaultProps = {
   polls: undefined,
   bookmarks: undefined,
   events: undefined,
+  articles: undefined,
 };
 
 SingleGroupPage.propTypes = {
@@ -605,4 +636,5 @@ SingleGroupPage.propTypes = {
   polls: PropTypes.number,
   bookmarks: PropTypes.number,
   events: PropTypes.number,
+  articles: PropTypes.number,
 };

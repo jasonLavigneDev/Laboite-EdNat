@@ -13,6 +13,7 @@ import { createStructure, getAllChilds, removeStructure, updateStructure } from 
 import './publications';
 import './factories';
 import Structures from '../structures';
+import Groups from '../../groups/groups';
 
 describe('structures', function () {
   describe('mutators', function () {
@@ -70,6 +71,7 @@ describe('structures', function () {
       // clear
       Meteor.users.remove({});
       Roles.createRole('admin', { unlessExists: true });
+      Roles.createRole('animator', { unlessExists: true });
 
       const email = faker.internet.email();
       const struct = Factory.create('structure');
@@ -110,6 +112,10 @@ describe('structures', function () {
         const _id = createStructure._execute({ userId: adminId }, { name: `${structureName}WithAdminUser` });
         const structure = Structures.findOne({ _id });
         assert.typeOf(structure, 'object');
+
+        const group = Groups.findOne({ name: `${_id}_${structureName}WithAdminUser` });
+        assert.typeOf(group, 'object');
+        assert.equal(group._id, structure.groupId);
       });
       it('does create a structure with structure admin user of parent', function () {
         // logServer('User admin:', adminId);
@@ -124,6 +130,10 @@ describe('structures', function () {
         );
         const structure = Structures.findOne({ _id });
         assert.typeOf(structure, 'object');
+
+        const group = Groups.findOne({ name: `${_id}_${structureName}WithStructureAdminUser` });
+        assert.typeOf(group, 'object');
+        assert.equal(group._id, structure.groupId);
       });
       it('does not create a structure with a non admin user', function () {
         assert.throws(
@@ -214,6 +224,24 @@ describe('structures', function () {
           /api.structures.updateStructure.notPermitted/,
         );
       });
+      it('does update group linked to the structure', function () {
+        const _id = createStructure._execute({ userId: adminId }, { name: `${structureName}ForEdition` });
+        const structure = Structures.findOne({ _id });
+        const { groupId } = structure;
+        assert.typeOf(structure, 'object');
+
+        const group = Groups.findOne({ _id: groupId });
+        assert.typeOf(group, 'object');
+
+        updateStructure._execute({ userId: adminId }, { structureId: _id, name: `StructureWithNewName` });
+        const structureEdited = Structures.findOne({ _id });
+        assert.typeOf(structureEdited, 'object');
+        assert.equal(structureEdited.name, 'StructureWithNewName');
+
+        const groupEdited = Groups.findOne({ _id: groupId });
+        assert.typeOf(groupEdited, 'object');
+        assert.equal(groupEdited.name, `${_id}_StructureWithNewName`);
+      });
     });
 
     describe('removeStructure', function () {
@@ -233,6 +261,23 @@ describe('structures', function () {
         removeStructure._execute({ userId }, { structureId });
         const structure = Structures.findOne(structureId);
         assert.equal(structure, undefined);
+      });
+
+      it('does remove group linked to the structure', function () {
+        const _id = createStructure._execute({ userId: adminId }, { name: `${structureName}ForRemoval` });
+        const structure = Structures.findOne({ _id });
+        const { groupId } = structure;
+        assert.typeOf(structure, 'object');
+
+        const group = Groups.findOne({ _id: groupId });
+        assert.typeOf(group, 'object');
+
+        removeStructure._execute({ userId: adminId }, { structureId: _id });
+        const structureRemoved = Structures.findOne({ _id });
+        assert.equal(structureRemoved, undefined);
+
+        const groupRemoved = Groups.findOne({ _id: groupId });
+        assert.equal(groupRemoved, undefined);
       });
 
       it('does not remove a structure with non admin user', function () {

@@ -5,6 +5,7 @@ import { makeStyles } from 'tss-react/mui';
 import PropTypes from 'prop-types';
 import PeopleIcon from '@mui/icons-material/People';
 import LockIcon from '@mui/icons-material/Lock';
+import BusinessIcon from '@mui/icons-material/Business';
 import SecurityIcon from '@mui/icons-material/Security';
 import Badge from '@mui/material/Badge';
 import { useAppContext } from '../../contexts/context';
@@ -25,6 +26,9 @@ const useStyles = makeStyles()((theme) => ({
   private: {
     backgroundColor: '#cf3429',
   },
+  automatic: {
+    backgroundColor: '#cf3429',
+  },
   avatar: {
     width: 250,
     height: 250,
@@ -42,7 +46,7 @@ const GroupAvatar = ({ type, avatar, profil }) => {
   const { classes } = useStyles();
   const [{ isMobile }] = useAppContext();
   const getClasse = () => {
-    const typeClasse = type === 0 ? 'public' : type === 10 ? 'private' : 'moderate';
+    const typeClasse = type === 0 ? 'public' : type === 10 ? 'private' : type === 15 ? 'automatic' : 'moderate';
     if (avatar === '') {
       const allClasses = `${classes[`${typeClasse}`]} ${classes[`${profil === 'true' ? 'iconProfil' : ''}`]}`;
       return allClasses;
@@ -56,6 +60,8 @@ const GroupAvatar = ({ type, avatar, profil }) => {
       <PeopleIcon className={getClasse()} />
     ) : type === 10 ? (
       <LockIcon className={getClasse()} />
+    ) : type === 15 ? (
+      <BusinessIcon className={getClasse()} />
     ) : (
       <SecurityIcon className={getClasse()} />
     );

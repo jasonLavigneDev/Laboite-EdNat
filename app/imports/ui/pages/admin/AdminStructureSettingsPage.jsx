@@ -12,6 +12,8 @@ import TabbedForms from '../../components/system/TabbedForms';
 import { useStyles } from '../../components/admin/InfoEditionComponent';
 import { useAppContext } from '../../contexts/context';
 import AdminStructureChangeEmailContact from '../../components/admin/AdminStructureChangeEmailContact';
+import AdminStructureValidationMandatory from '../../components/admin/AdminStructureValidationMandatory';
+import AdminStructureUploadIconAndCoverImage from '../../components/admin/AdminStructureUploadIconAndCoverImage';
 
 const AdminStructureSettingsPage = () => {
   const userStructure = useStructure();
@@ -63,6 +65,18 @@ const AdminStructureSettingsPage = () => {
                     title: 'Contact',
                     key: 'Contact',
                     Element: AdminStructureChangeEmailContact,
+                    ElementProps: { structure: selectedStructure },
+                  },
+                  {
+                    title: i18n.__('pages.AdminStructureSettingsPage.userStructureValidationMandatory'),
+                    key: 'userStructureAdminValidationMandatory',
+                    Element: AdminStructureValidationMandatory,
+                    ElementProps: { structure: selectedStructure },
+                  },
+                  {
+                    title: i18n.__('pages.AdminStructureSettingsPage.selectIconAndCoverImage'),
+                    key: 'selectIconAndCoverImage',
+                    Element: AdminStructureUploadIconAndCoverImage,
                     ElementProps: { structure: selectedStructure },
                   },
                 ]}

@@ -172,11 +172,11 @@ export const updateTextInfoLanguage = new ValidatedMethod({
       const appsettings = AppSettings.findOne({});
       let newInfo;
       let langIndex;
-      if (tabkey === 'introduction') {
+      if (tabkey === 'globalInfo') {
         const { globalInfo } = appsettings;
         newInfo = [...globalInfo];
         langIndex = globalInfo.findIndex((entry) => entry.language === language);
-      } else if (tabkey === 'globalInfo') {
+      } else if (tabkey === 'introduction') {
         const { introduction } = appsettings;
         newInfo = [...introduction];
         langIndex = introduction.findIndex((entry) => entry.language === language);

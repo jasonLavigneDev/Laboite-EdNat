@@ -95,6 +95,10 @@ AppSettings.schema = new SimpleSchema(
       type: SettingsType('personal_data'),
       label: getLabel('api.appsettings.labels.personal_data'),
     },
+    personalSpace: {
+      type: SettingsType('personal_space'),
+      label: getLabel('api.appsettings.labels.personal_data'),
+    },
     maintenance: {
       type: Boolean,
       defaultValue: false,
@@ -123,6 +127,7 @@ AppSettings.publicFields = {
   maintenance: 1,
   textMaintenance: 1,
   userStructureValidationMandatory: 1,
+  personalSpace: 1,
 };
 
 AppSettings.introduction = {
@@ -142,6 +147,8 @@ AppSettings.links = {
   'gcu.external': 1,
   'personalData.link': 1,
   'personalData.external': 1,
+  'personalSpace.link': 1,
+  'personalSpace.external': 1,
 };
 
 AppSettings.legal = {
@@ -163,6 +170,11 @@ AppSettings.personalData = {
   'personalData.link': 1,
   'personalData.external': 1,
   'personalData.content': 1,
+};
+AppSettings.personalSpace = {
+  'personalSpace.link': 1,
+  'personalSpace.external': 1,
+  'personalSpace.content': 1,
 };
 
 AppSettings.attachSchema(AppSettings.schema);

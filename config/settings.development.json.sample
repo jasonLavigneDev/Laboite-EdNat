@@ -13,9 +13,12 @@
       "groups": false,
       "introductionTab": false,
       "introductionTabStructuresInfos": true,
+      "menuAdminDefaultSpaces": true,  // THIS PARAMS IS SET FOR HIDDEN DEFAULTSPACE FUNCTIONNALITY WHICH DOESN'T WORK
+      "mediaStorageMenu": false
     },
     "ui": {
-      "defaultGridViewMode": "compact"
+      "defaultGridViewMode": "compact",
+      "isBusinessRegroupingMode": false
     },
     "matomo": {
       "siteId": 1,
@@ -74,7 +77,9 @@
     "nextcloudUser": "",
     "nextcloudPassword": "",
     "nextcloudQuota": "1073741824"
-  },
+    "nextcloudApiKeys": [],
+    "sessionTokenKey": "",
+    "sessionTokenAppName": "apps.education.fr"  },
   "rocketChat": {
     "rocketChatUser": "",
     "rocketChatPassword": ""
@@ -96,6 +101,7 @@
     "whiteDomains": [
       "^ac-[a-z-]*\\.fr",
       "^[a-z-]*\\.gouv.fr"
-    ]
+    ],
+    "checkKeyCloakWhiteListDomain": false
   }
 }

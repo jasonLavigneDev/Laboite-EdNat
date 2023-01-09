@@ -25,7 +25,7 @@ import './db-initialize/Groups';
 import './db-initialize/Tags';
 import './db-initialize/Articles';
 import './db-initialize/AppSettings';
-import './db-initialize/PersonalSpaces';
+// import './db-initialize/PersonalSpaces';
 
 Meteor.startup(() => {
   Migrations.migrateTo('latest');

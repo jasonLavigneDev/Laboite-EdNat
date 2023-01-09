@@ -15,6 +15,7 @@ import PublishIcon from '@mui/icons-material/Publish';
 import i18n from 'meteor/universe:i18n';
 import GroupAvatar from './GroupAvatar';
 import GroupBadge from './GroupBadge';
+import { getGroupName } from '../../utils/utilsFuncs';
 
 const useStyles = makeStyles()((theme, { type, admin, member, candidate }) => ({
   card: {
@@ -145,11 +146,11 @@ function GroupDetailsPersSpace({
         enterDelay={600}
         title={
           <>
-            <Typography>{group.name}</Typography>
+            <Typography>{getGroupName(group)}</Typography>
             {i18n.__('pages.PersonalPage.typeGroup')}
           </>
         }
-        aria-label={group.name}
+        aria-label={getGroupName(group)}
       >
         {/* this span is to allow display of tooltip when CardActionArea is disabled 
         (occur when a service is disabled) */}
@@ -177,7 +178,7 @@ function GroupDetailsPersSpace({
               }
               title={
                 <Typography className={classes.serviceName} gutterBottom noWrap={!isMobile} variant="h6" component="h2">
-                  {group.name}
+                  {getGroupName(group)}
                 </Typography>
               }
               subheader={

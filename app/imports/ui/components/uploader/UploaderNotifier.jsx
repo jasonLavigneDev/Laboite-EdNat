@@ -46,7 +46,7 @@ const UploaderNotifier = () => {
     <div
       style={{
         position: 'fixed',
-        top: '6vh',
+        bottom: 5,
         right: 5,
         display: 'flex',
         flexDirection: 'column',
@@ -86,11 +86,10 @@ const SingleNotification = ({ upload }) => {
         data: { fileName },
       });
     }, 5000);
-    onFinish(undefined, 'error');
   };
 
   const uploadFile = async () => {
-    const { goodFormat, goodSize } = checkFile(file, storage, type);
+    const { goodFormat } = checkFile(file, storage, type);
     let isStorageFull = false;
     if (storage) {
       isStorageFull = await testStorageSize(file.length);
@@ -99,14 +98,6 @@ const SingleNotification = ({ upload }) => {
       setError({
         title: i18n.__('components.UploaderNotifier.storageFullTitle'),
         message: `${i18n.__('components.UploaderNotifier.storageFull')} ${storageToSize(maxMinioDiskPerUser)}`,
-      });
-      deleteUploadFromQueue();
-    } else if (!goodSize) {
-      setError({
-        title: i18n.__('components.UploaderNotifier.fileTooLargeTitle'),
-        message: `${i18n.__('components.UploaderNotifier.fileTooLarge')} ${storageToSize(
-          storage ? minioStorageFilesSize : minioFileSize,
-        )}`,
       });
       deleteUploadFromQueue();
     } else if (!goodFormat) {
@@ -120,7 +111,7 @@ const SingleNotification = ({ upload }) => {
       });
       deleteUploadFromQueue();
     } else {
-      fileUpload({ name: fileName, path, file, type }, (url, err) => {
+      fileUpload({ name: fileName, path, file, type, storage }, (url, err) => {
         if (url) {
           setLoading(false);
           onFinish(url);

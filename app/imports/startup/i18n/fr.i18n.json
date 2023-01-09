@@ -47,7 +47,9 @@
         "content_personalData": "Texte des Données Personnelles",
         "maintenance": "Statut de maintenance",
         "textMaintenance": "Raison de la maintenance",
-        "userStructureValidationMandatory": "Statut de la validation obligatoire d'une structure"
+        "personalSpace": "Espace Personnel",
+        "external_personalSpace": "Utiliser un lien externe pour la page Espace Personnel",
+        "link_personalSpace": "Lien vers la video de la page Espace Personnel"
       },
       "migrationLockedText": "La migration de la base de données est bloquée.",
       "updateAppsettings": {
@@ -73,6 +75,19 @@
       "createCategorie": {
         "alreadyExists": "La cétégorie existe déjà",
         "nameAlreadyUse": "Une catégorie porte déjà ce nom."
+      }
+    },
+    "businessReGrouping": {
+      "unknownBusinessReGrouping": "Le regroupement metier n'existe pas.",
+      "labels": {
+        "id": "Id d'un regroupement metier",
+        "name": "Nom",
+        "structure": "Structure d'exploitation"
+      },
+      "createBusinessReGrouping": {
+        "alreadyExists": "Le regroupement metier existe déjà",
+        "nameAlreadyUse": "Un regroupement metier porte déjà ce nom.",
+        "nameAlreadyUsedForOneOfStructureAncestors": "Un regroupement metier porte déjà ce nom pour un de ses structures mères"
       }
     },
     "tags": {
@@ -111,14 +126,29 @@
         "parentId": "Id de la structure parent directe",
         "childrenIds": "Ids de structures enfants directs",
         "ancestorsIds": "Ids de structures parents",
+        "groupId": "ID du groupe associé",
         "introduction": {
           "label": "Introduction de structure",
           "title": "Titre d'introduction de structure",
           "content": "Contenu d'introduction de structure",
           "language": "Language d'introduction de structure"
         },
-        "contactEmail": "Email de contact de la structure"
+        "contactEmail": "Email de contact de la structure",
+        "asamExtensionsIds": "Ids des extensions d'email",
+        "iconUrlImage": "Url de l'image de l'icône",
+        "coverUrlImage": "Url de l'image de la couverture"
       }
+    },
+    "asamextensions": {
+      "labels": {
+        "structureId": "Id de la structure lié à l'extension d'email",
+        "extension": "Extension d'email",
+        "entiteNomCourt": "Nom court de la structure",
+        "entiteNomLong": "Nom long de la structure",
+        "familleNomCourt": "Nom court de la famille de structure",
+        "familleNomLong": "Nom long de la famille de structure"
+      },
+      "notPermitted": "Vous n'avez pas les droits nécessaires."
     },
     "users": {
       "unknownUser": "L'utilisateur n'existe pas.",
@@ -174,7 +204,8 @@
       "types": {
         "open": "ouvert",
         "moderated": "modéré",
-        "private": "réservé"
+        "private": "réservé",
+        "automatic": "automatique"
       },
       "labels": {
         "id": "Id de Groupe",
@@ -217,6 +248,7 @@
         "description": "Description",
         "logo": "Logo",
         "categories": "Catégories",
+        "businessReGrouping": "Business regrouping",
         "screenshots": "Captures d'écran",
         "structure": "Structure d'exploitation",
         "url": "URL du service"
@@ -281,6 +313,7 @@
     },
     "methods": {
       "operationSuccessMsg": "Opération réalisée avec succès.",
+      "operationRefused": "Vous ne pouvez pas supprimer ce type de groupe",
       "labels": {
         "page": "Page",
         "pageSize": "Taille de Page",
@@ -305,7 +338,13 @@
       "groupRemoved": "Keycloak: groupe {$groupName} supprimé",
       "groupRemoveError": "Keycloak: ERREUR lors de la suppression du groupe {$groupName}",
       "adminAdded": "Keycloak: utilisateur {$userId} ajouté comme administrateur",
+      "adminStructureAdded": "Keycloak: utilisateur {$userId} ajouté comme administrateur de structure",
+      "adminRemoved": "Keycloak: utilisateur {$userId} supprimé des administrateur",
+      "adminStructureRemoved": "Keycloak: utilisateur {$userId} supprimé des administrateur de structure",
       "addAdminError": "Keycloak : ERREUR lors de l'ajout de l'utilisateur {$userId} aux administrateurs",
+      "addAdminStructureError": "Keycloak : ERROR lors de l'ajout de l'utilisateur {$userId} comme admin de structure`",
+      "removeAdminError": "Keycloak : ERROR lors de la suppression de l'utilisateur {$userId} comme admin`",
+      "removeAdminStructureError": "Keycloak : ERROR lors de la suppression de l'utilisateur {$userId} comme admin de structure`",
       "userNotFound": "Keycloak: Id de l'utilisateur {$userId} introuvable",
       "userGroupAdded": "Keycloak: groupe {$groupName} ajouté à l'utilisateur {$userId}",
       "userGroupAddError": "Keycloak : ERREUR lors de l'ajout du groupe {$groupName} à l'utilisateur {$userId}",
@@ -352,7 +391,8 @@
       "configOk": "connecté avec succès à l'API Nextcloud",
       "misingNCLocator": "Information d'instance nextcloud (nclocator) manquante.",
       "apiError": "Error while accessing Nextcloud API",
-      "mustNotBeUsed": "Cette url est utilisée par au moins un utilisateur et ne peut donc pas être supprimée."
+      "mustNotBeUsed": "Cette url est utilisée par au moins un utilisateur et ne peut donc pas être supprimée.",
+      "getTokenError": "Erreur de récupération du jeton Nextcloud pour l'utilisateur {$user}"
     },
     "rocketChat": {
       "initClient": "RocketChat: client API initialisé",
@@ -429,7 +469,7 @@
       "content_introduction": "Texte d'introduction",
       "content_globalInfo": "Texte d'informations générales",
       "update": "Mettre à jour",
-      "cancel": "Annuler"     
+      "cancel": "Annuler"
     },
     "Notifications": {
       "remove": "Supprimer"
@@ -480,7 +520,11 @@
       "content_personalData": "Texte des Données Personnelles",
       "changesNotSaved": "Changements non sauvegardés",
       "update": "Mettre à jour",
-      "cancel": "Annuler"
+      "cancel": "Annuler",
+      "title_personalSpace": "Espace personnel",
+      "content_personalSpace": "Texte de l'espace personnel",
+      "external_personalSpace": "Utiliser un lien externe pour la page Espace Personnel",
+      "link_personalSpace": "Lien vers la video de la page Espace Personnel"
     },
     "AdminNextCloudUrlEdit": {
       "subtitle": "Ajout et édition d'URL Nextcloud",
@@ -534,6 +578,7 @@
       "menuAdminUserValidation": "Validation des utilisateurs",
       "menuAdminNextcloudUrl": "Gestion des URL Nextcloud",
       "menuAdminCategories": "Gestion des categories",
+      "menuAdminBusinessRegrouping": "Gestion des regroupements métiers",
       "menuAdminTags": "Gestion des mots clé",
       "menuAdminGroups": "Gestion des Groupes",
       "menuAdminUsers": "Gestion des utilisateurs",
@@ -551,6 +596,7 @@
       "menuAdminUserValidation": "Validation des utilisateurs",
       "menuAdminNextcloudUrl": "Gestion des URL Nextcloud",
       "menuAdminCategories": "Gestion des categories",
+      "menuAdminBusinessRegrouping": "Gestion des regroupements métiers",
       "menuAdminTags": "Gestion des mots clé",
       "menuAdminGroups": "Gestion des Groupes",
       "menuAdminUsers": "Gestion des utilisateurs",
@@ -564,7 +610,8 @@
       "menuAdminStructureSettings": "Réglages de structure",
       "menuAdminStructureIntroduction": "Introduction de structure",
       "menuAdminOfStructureUsersValidation": "Utilisateurs en attente",
-      "menuAdminDefaultSpaces": "Espaces par défaut"
+      "menuAdminDefaultSpaces": "Espaces par défaut",
+      "menuAdminAsam": "Gestion des extensions d'email"
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Votre compte n'a pas été activé",
@@ -658,7 +705,8 @@
       "groupJoined": "Vous êtes membre du groupe",
       "candidateSent": "L'administrateur du groupe va être notifié de votre demande",
       "alreadyCandidate": "Vous avez déjà envoyé votre demande à ce groupe",
-      "candidateCancel": "Votre requête a été annulée"
+      "candidateCancel": "Votre requête a été annulée",
+      "automaticGroup": "Groupe automatique"
     },
     "GroupDetailsPersSpace": {
       "groupCandidate": "Candidat",
@@ -839,7 +887,12 @@
         "editStructure": "Modifier cette structure",
         "deleteStructure": "Supprimer cette structure",
         "deleteStructureImpossibleHasChildren": "Cette structure n'est pas supprimable car elle a au moins un enfant.",
-        "deleteStructureConfirm": "Etes-vous sûr de vouloir supprimer cette structure ? Si des articles y sont attachés, ils seront supprimés."
+        "deleteStructureConfirm": "Etes-vous sûr de vouloir supprimer cette structure ? Si des articles y sont attachés, ils seront supprimés.",
+        "selectIconAndCoverImage": "Choisir une image d'icône et/ou de couverture",
+        "selectIconImage": "Chargement d'icône",
+        "selectCoverImage": "Chargement de couverture",
+        "DeleteIconImage": "Enlever l'image d'icône",
+        "DeleteCoverImage": "Enlever l'image de la couverture"
       },
       "attachToStructure": "Souhaitez vous être rattaché(e) à cette structure ?"
     },
@@ -861,6 +914,9 @@
     },
     "AdminStructureChangeEmailContact": {
       "label": "Email de contact"
+    },
+    "AdminStructureUploadIconAndCoverImage": {
+      "label": "Charger les images"
     },
     "AdminUserValidationTable": {
       "columnUsername": "Pseudo",
@@ -895,7 +951,9 @@
     "UserBookmarksPage": {
       "back": "Retour",
       "favoriteBookmark": "Ajouter à votre espace personnel",
-      "unfavoriteBookmark": "Supprimer de votre espace personnel"
+      "unfavoriteBookmark": "Supprimer de votre espace personnel",
+      "close": "Fermer",
+      "showQrCode": "Voir le QR Code"
     },
     "BookmarksPage": {
       "columnIcon": "Favicon",
@@ -936,6 +994,7 @@
       "globalInfo": "Informations générales",
       "accessibility": "Accessibilité",
       "personalData": "Données Personnelles",
+      "personalSpace": "Intro de l'espace perso",
       "maintenance": "Options de maintenance",
       "toggleMaintenance": "Mettre le site en maintenance",
       "errorMongo": "Une erreur MongoDB est survenue lors de la migration.",
@@ -950,8 +1009,11 @@
         "confirm": "Oui"
       },
       "userStructureValidationMandatory": "Statut de la validation obligatoire d'une structure",
+      "userStructureAdminValidationMandatory": "Statut de la validation obligatoire de cette structure",
       "toggleUserStructureValidationMandatory": "Le choix d'une structure doit obligatoirement être validé par un administrateur",
-      "buttonUserStructureValidationMandatory": "Valider le changement"
+      "toggleUserStructureAdminValidationMandatory": "Le choix de cette structure doit obligatoirement être validé par un administrateur",
+      "buttonUserStructureValidationMandatory": "Valider le changement",
+      "dbVersion": "Version de la base de données"
     },
     "SignIn": {
       "back": "Retour",
@@ -993,6 +1055,7 @@
       "captchaInfo": "Indiquez le résultat de l'opération",
       "redirectMsg": "Formulaire envoyé. Redirection automatique en cours...",
       "redirectTime": "secondes",
+      "errorMsgEmpty": "Vous ne pouvez pas envoyer un message vide",
       "cancel": "Annuler"
     },
     "ProfilePage": {
@@ -1036,7 +1099,9 @@
       "chooseAttachementStructure": "Choisir votre structure de rattachement",
       "noOptions": "Ecrire pour chercher des structures (3 lettres minimum)",
       "onlyActiveUserOption": "Seuls les utilisateurs actifs peuvent définir une structure",
-      "awaitingForStructure": "Vous êtes en attente de validation pour :"
+      "awaitingForStructure": "Vous êtes en attente de validation pour :",
+      "nclocator": "ID de Fédération Nextcloud",
+      "emptyNcLocator": "Aucun Nextcloud renseigné"
     },
     "NotFound": {
       "backButtonLabel": "Retour",
@@ -1056,7 +1121,8 @@
       "viewSimple": "Mode simple",
       "filter": "Filtrer",
       "NoStructureServices": "Aucun service n'a été déclaré pour votre structure",
-      "NoServices": "Aucun service déclaré"
+      "NoServices": "Aucun service déclaré",
+      "ServicesWithoutBusinessRegrouping": "Services qui n'ont pas de regroupement métier"
     },
     "GroupsPage": {
       "title": "Explorer les groupes",
@@ -1098,6 +1164,7 @@
     "AdminCategoriesPage": {
       "title": "Gestion des Catégories",
       "columnName": "Nom",
+      "structure": "structure",
       "materialTableLocalization": {
         "toolbar_searchPlaceholder": "Rechercher une catégorie",
         "pagination_labelRowsSelect": "Catégories par page",
@@ -1106,6 +1173,19 @@
         "body_editTooltip": "Modifier cette catégorie",
         "body_deleteTooltip": "Supprimer cette catégorie",
         "body_editRow_deleteText": "Souhaitez vous réellement supprimer cette catégorie ?"
+      }
+    },
+    "AdminBusinessReGroupingPage": {
+      "title": "Gestion des Regroupements métier",
+      "columnName": "Nom",
+      "materialTableLocalization": {
+        "toolbar_searchPlaceholder": "Rechercher un regroupement métier",
+        "pagination_labelRowsSelect": "Regroupements métier par page",
+        "body_emptyDataSourceMessage": "Aucun regroupement métier enregistré",
+        "body_addTooltip": "Ajouter un regroupement métier",
+        "body_editTooltip": "Modifier ce regroupement métier",
+        "body_deleteTooltip": "Supprimer ce regroupement métier",
+        "body_editRow_deleteText": "Souhaitez vous réellement supprimer ce regoupement métier ?"
       }
     },
     "AdminTagsPage": {
@@ -1196,7 +1276,9 @@
       "manageUser": "Gérer l'utilisateur",
       "sendNotif": "Envoyer notification",
       "successCopyUserId": "ID de l'utilisateur copié avec succès",
+      "successCopyNcLocator": "Fédération ID Nextcloud copié avec succès",
       "copyUserId": "Copier l'ID de l'utilisateur",
+      "copyNcLocator": "Copier l'ID de fédération Nextcloud",
       "userType": "Type d'utilisateurs",
       "all": "tous",
       "noResult": "Pas de résultat"
@@ -1235,7 +1317,7 @@
       "welcome": "Bienvenue sur votre espace personnel",
       "searchText": "Besoin de retrouver un service, groupe ou lien personnel ?",
       "searchElement": "Chercher un élément",
-      "noFavYet": "Ajoutez ici des éléments depuis l'onglet Applications",
+      "noFavYet": "Ajoutez des Applications",
       "unsorted": "À trier",
       "unsortedFav": "Mes Favoris",
       "unsortedGroup": "Mes groupes",
@@ -1246,7 +1328,9 @@
       "typeGroup": "Groupe",
       "typeLink": "Lien",
       "addZoneHere": "Ajouter une zone ici",
-      "toggleEdition": "Activer/Désactiver le mode édition"
+      "toggleEdition": "Activer/Désactiver le mode édition",
+      "coverImage": "Image de couverture",
+      "iconImage": "Image de l'icône"
     },
     "HelpPage": {
       "title": "Retrouvez ici toute l'aide nécessaire",
@@ -1265,6 +1349,7 @@
       "url": "URL du service",
       "content": "Longue description du service",
       "categories": "Catégories",
+      "businessReGrouping": "Regroupement métier",
       "screenshots": "Captures d'écran",
       "addScreenshots": "Ajouter un écran",
       "save": "Sauvegarder",
@@ -1285,7 +1370,8 @@
       "save": "Sauvegarder",
       "update": "Mettre à jour",
       "cancel": "Annuler",
-      "groupRemoved": "Groupe supprimé"
+      "groupRemoved": "Groupe supprimé",
+      "invalidName": "Nom invalide"
     },
     "SingleGroupPage": {
       "backToList": "Retour à la liste",
@@ -1310,7 +1396,10 @@
       "Polls": "Sondages",
       "groupArticles": "Accéder aux publications",
       "BookmarksUsage": "Liste des marque-pages",
-      "Bookmarks": "Marque-pages"
+      "Bookmarks": "Marque-pages",
+      "ArticlesUsage": "liste des publications",
+      "Articles": "Publications",
+      "GroupNotExist": "Le groupe {$groupTitle} n'existe pas"
     },
     "AddressBook": {
       "sendEmail": "Envoyer un email à",
@@ -1320,7 +1409,8 @@
       "searchText": "Quel utilisateur cherchez-vous ?",
       "noAccess": "Vous n'avez pas accès à l'annuaire de ce groupe.",
       "noUsers": "Il n'y a aucun utilisateur trouvé pour ce groupe.",
-      "userType": "Type d'utilisateurs"
+      "userType": "Type d'utilisateurs",
+      "noStructure": "Aucune structure assignée"
     },
     "Events": {
       "seeEvent": "Voir l'événement",
@@ -1328,6 +1418,15 @@
       "searchText": "Quel événement cherchez-vous ?",
       "dayOf": "Sur la journée du",
       "noEvents": "Il n'y a actuellement aucun événement en cours ou à venir pour ce groupe."
+    },
+    "GroupArticlesPage": {
+      "seeArticle": "Consulter la publication",
+      "back": "Retour au groupe",
+      "searchText": "Quelle publication cherchez-vous ?",
+      "noArticles": "Il n'y a actuellement aucune publication pour ce groupe",
+      "noAccess": "Vous n'avez pas accès aux publications de ce groupe.",
+      "publicPage": "Page publique",
+      "openPublicPage": "Ouvrir la page publique de ce groupe"
     },
     "Polls": {
       "seePoll": "Voir le sondage",
@@ -1450,7 +1549,9 @@
       "titleStructures": "Informations de structures"
     },
     "AdminStructureSettingsPage": {
-      "title": "Paramétrage de la structure"
+      "title": "Paramétrage de la structure",
+      "userStructureValidationMandatory": "Validation obligatoire de cette structure",
+      "selectIconAndCoverImage": "Choisir une image d'icône et/ou de couverture"
     },
     "AdminDefaultSpacesPage": {
       "chooseStructure": "Choisissez une structure",
@@ -1458,6 +1559,37 @@
       "isSaved": "Espace sauvegardé",
       "applyToEveryone": "Appliquer cet espace",
       "applyText": "Cela appliquera les changements à l'espace personnel de tous les utilisateurs de votre structure n'ayant pas activé l'espace avancé."
+    },
+    "AdminAsamExtensionsManagementPage": {
+      "title": "Gestion des extensions d'email",
+      "materialTableLocalization": {
+        "toolbar_searchPlaceholder": "Rechercher une extension",
+        "pagination_labelRowsSelect": "extensions par page",
+        "body_emptyDataSourceMessage": "Aucune extension enregistrée"
+      },
+      "actions": {
+        "assignStructure": "Assigner une structure",
+        "unassignStructure": "Desassigner la structure",
+        "addMailExtension": "Ajouter une extension d'email",
+        "deleteMailExtension": "Supprimer une extension d'email"
+      },
+      "noStructure": "Non assignée",
+      "modal": {
+        "title": "Assigner une structure à l'extension d'email",
+        "addEmailExtension": "Ajouter une extension d'email",
+        "close": "Fermer",
+        "cancel": "Annuler",
+        "submit": "Valider",
+        "noOptions": "Ecrire pour filtrer les structures",
+        "mailExtension": "L'extension d'email",
+        "entityShortName": "Nom court de l'entité correspondant s'il existe",
+        "entityLongName": "Nom long de l'entité correspondant s'il existe",
+        "famillyShortName": "Nom court de l'entité famille correspondant s'il existe",
+        "StructureExtensionMail": "La structure correspondante s'il existe",
+        "famillyLongName": "Nom long de l'entité famille correspondant s'il existe",
+        "confirmMsg": "Êtes vous sûr de vouloir supprimer l'extension d'email ",
+        "deleteExtensionEmailTitle": "Extension d'email "
+      }
     }
   },
   "layouts": {

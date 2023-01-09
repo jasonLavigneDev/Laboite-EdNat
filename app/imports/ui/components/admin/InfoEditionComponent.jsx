@@ -38,6 +38,37 @@ export const useStyles = makeStyles()((theme) => ({
   marginTop: {
     marginTop: theme.spacing(3),
   },
+  inputFil: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    opacity: 0,
+    cursor: 'pointer',
+  },
+  logoWrapper: {
+    display: 'flex',
+    flexDirection: 'column',
+    marginBottom: theme.spacing(1),
+    paddingLeft: theme.spacing(2),
+  },
+  logo: {
+    height: 100,
+    width: 100,
+    boxShadow: theme.shadows[2],
+    borderRadius: theme.shape.borderRadius,
+    marginRight: theme.spacing(3),
+  },
+  imageWrapper: {
+    position: 'relative',
+  },
+  image: {
+    height: '100%',
+  },
+  actionsTitle: {
+    paddingLeft: theme.spacing(2),
+  },
 }));
 
 export const quillOptions = {
@@ -56,11 +87,17 @@ export const quillOptions = {
 const InfoEditionComponent = ({ tabkey, data = [] }) => {
   const { classes } = useStyles();
   const [content, setContent] = useState('');
-  const [language, setLanguage] = useState(i18n._locale);
   const [loading, setLoading] = useState(true);
   const [changes, setChanges] = useState(false);
 
   const translations = Object.keys(i18n._translations);
+
+  const getLanguage = (lang) => {
+    if (translations.includes(lang)) return lang;
+    return 'fr';
+  };
+
+  const [language, setLanguage] = useState(getLanguage(i18n._locale));
 
   useEffect(() => {
     if (data) {
@@ -100,7 +137,7 @@ const InfoEditionComponent = ({ tabkey, data = [] }) => {
   };
 
   const onCancel = () => {
-    const currentData = getCurrentText({ introduction: data, language }) || {};
+    const currentData = getCurrentText({ data, language }) || {};
     setContent(currentData.content || '');
   };
 

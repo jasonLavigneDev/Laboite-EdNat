@@ -1,6 +1,7 @@
 import React, { useEffect, lazy, Suspense } from 'react';
 import { useLocation, Route, Switch } from 'react-router-dom';
 import { useTracker } from 'meteor/react-meteor-data';
+import { Counts } from 'meteor/tmeasday:publish-counts';
 import i18n from 'meteor/universe:i18n';
 import { Roles } from 'meteor/alanning:roles';
 import Alert from '@mui/material/Alert';
@@ -36,10 +37,12 @@ const AdminSettingsPage = lazy(() => import('../pages/admin/AdminSettingsPage'))
 const AdminSingleServicePage = lazy(() => import('../pages/admin/AdminSingleServicePage'));
 const AdminServicesPage = lazy(() => import('../pages/admin/AdminServicesPage'));
 const AdminStructureManagementPage = lazy(() => import('../pages/admin/AdminStructuresManagementPage'));
+const AdminBusinessReGroupingPage = lazy(() => import('../pages/admin/AdminBusinessRegroupingPage'));
 const AdminServicesByStructurePage = lazy(() => import('../pages/admin/AdminServicesByStructurePage'));
 const AdminStructureSettingsPage = lazy(() => import('../pages/admin/AdminStructureSettingsPage'));
 const AdminStructureUsersValidationPage = lazy(() => import('../pages/admin/AdminStructureUsersValidationPage'));
 const AdminStructureDefaultSpace = lazy(() => import('../pages/admin/AdminStructureDefaultSpace'));
+const AdminAsamExtensionsManagementPage = lazy(() => import('../pages/admin/AdminAsamExtensionsManagementPage'));
 
 const { disabledFeatures = {} } = Meteor.settings.public;
 
@@ -49,11 +52,18 @@ function AdminLayout() {
   const location = useLocation();
 
   const isAdmin = Roles.userIsInRole(userId, 'admin');
-  const { appsettings = {}, ready = false } = useTracker(() => {
+  const {
+    appsettings = {},
+    ready = false,
+    notHideStructureusersvalidation = false,
+  } = useTracker(() => {
     const subSettings = Meteor.subscribe('appsettings.all');
+    const awaitingForStruct = Meteor.subscribe('users.awaitingForStructure.count', { structureId: user.structure });
+
     return {
       appsettings: AppSettings.findOne(),
-      ready: subSettings.ready(),
+      ready: subSettings.ready() && awaitingForStruct.ready(),
+      notHideStructureusersvalidation: Counts.get('users.awaitingForStructure.count') >= 0,
     };
   });
 
@@ -63,7 +73,6 @@ function AdminLayout() {
       document.getElementById('root').focus();
     }
   }, [location]);
-
   return (
     <div className={classes.root}>
       <SkipLink />
@@ -71,7 +80,7 @@ function AdminLayout() {
       {loadingUser && ready ? (
         <Spinner full />
       ) : (
-        <main className={cx(classes.content, classes.flex)} id="main">
+        <main className={cx(classes.content, classes.mainMarginTop, classes.flex)} id="main">
           <AdminMenu />
           <Suspense fallback={<Spinner />}>
             <div className={classes.container}>
@@ -112,6 +121,13 @@ function AdminLayout() {
                       exact
                       path="/admin/services/:_id"
                       component={AdminSingleServicePage}
+                    />
+                    <AdminRoute
+                      userId={userId}
+                      loadingUser={loadingUser}
+                      exact
+                      path="/admin/asam"
+                      component={AdminAsamExtensionsManagementPage}
                     />
                     <AdminRoute
                       userId={userId}
@@ -184,6 +200,13 @@ function AdminLayout() {
                     />
                     <StructureAdminRoute
                       exact
+                      path="/admin/businessReGrouping"
+                      component={AdminBusinessReGroupingPage}
+                      user={user}
+                      loadingUser={loadingUser}
+                    />
+                    <StructureAdminRoute
+                      exact
                       path="/admin/structureservices"
                       component={AdminServicesByStructurePage}
                       user={user}
@@ -203,7 +226,7 @@ function AdminLayout() {
                       user={user}
                       loadingUser={loadingUser}
                     />
-                    {appsettings.userStructureValidationMandatory && (
+                    {(appsettings.userStructureValidationMandatory || notHideStructureusersvalidation) && (
                       <StructureAdminRoute
                         exact
                         path="/admin/structureusersvalidation"

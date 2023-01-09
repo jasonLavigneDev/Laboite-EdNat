@@ -26,6 +26,7 @@ import { useAppContext } from '../../contexts/context';
 import Spinner from '../system/Spinner';
 import GroupBadge from './GroupBadge';
 import COMMON_STYLES from '../../themes/styles';
+import { getGroupName } from '../../utils/utilsFuncs';
 
 const useStyles = makeStyles()((theme, { type, member, candidate, isShort }) => ({
   memberInfo: {
@@ -133,6 +134,7 @@ function GroupDetails({ group = {}, isShort, member, candidate, admin, animator 
   const [{ userId }] = useAppContext();
   const [loading, setLoading] = useState(false);
   const history = useHistory();
+  const isAutomaticGroup = group.type === 15;
 
   const { classes } = useStyles({ group, member: member || animator, candidate, isShort, type });
 
@@ -171,7 +173,10 @@ function GroupDetails({ group = {}, isShort, member, candidate, admin, animator 
     if (type === 5) {
       return i18n.__('components.GroupDetails.askToJoinModerateGroupButtonLabel');
     }
-    return i18n.__('components.GroupDetails.joinPublicGroupButtonLabel');
+    if (type !== 15) {
+      return i18n.__('components.GroupDetails.joinPublicGroupButtonLabel');
+    }
+    return null;
   };
 
   const infoText = () => {
@@ -209,6 +214,8 @@ function GroupDetails({ group = {}, isShort, member, candidate, admin, animator 
     groupType = i18n.__('components.GroupDetails.publicGroup');
   } else if (type === 10) {
     groupType = i18n.__('components.GroupDetails.closedGroup');
+  } else if (type === 15) {
+    groupType = i18n.__('components.GroupDetails.automaticGroup');
   }
 
   return (
@@ -235,7 +242,7 @@ function GroupDetails({ group = {}, isShort, member, candidate, admin, animator 
                 <GroupAvatar type={type} avatar={avatar} />
               )
             }
-            title={group.name}
+            title={getGroupName(group)}
             titleTypographyProps={{
               variant: 'h6',
               color: 'primary',
@@ -257,7 +264,7 @@ function GroupDetails({ group = {}, isShort, member, candidate, admin, animator 
       <CardContent className={isShort ? classes.cardContentMobile : classes.cardContent}>
         {!isShort && <Typography variant="body1">{group.description}</Typography>}
         <div className={isShort ? classes.cardActionShort : classes.cardActions}>
-          {!member && !animator && !candidate ? (
+          {!member && !animator && !candidate && !isAutomaticGroup ? (
             <Button
               startIcon={icon()}
               className={classes.buttonText}

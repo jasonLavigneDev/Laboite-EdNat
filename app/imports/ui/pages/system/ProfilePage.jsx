@@ -24,7 +24,9 @@ import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import MailIcon from '@mui/icons-material/Mail';
 import Input from '@mui/material/Input';
-import AutoComplete from '@mui/material/Autocomplete';
+import Collapse from '@mui/material/Collapse';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
 import Spinner from '../../components/system/Spinner';
 import { useAppContext } from '../../contexts/context';
 import LanguageSwitcher from '../../components/system/LanguageSwitcher';
@@ -35,6 +37,9 @@ import AvatarPicker from '../../components/users/AvatarPicker';
 import Structures from '../../../api/structures/structures';
 import { getStructure, useStructure, useAwaitingStructure } from '../../../api/structures/hooks';
 import AppSettings from '../../../api/appsettings/appsettings';
+import { testMeteorSettingsUrl } from '../../utils/utilsFuncs';
+import StructureSelectAutoComplete from '../../components/structures/StructureSelectAutoComplete';
+import AsamExtensions from '../../../api/asamextensions/asamextensions';
 
 const useStyles = makeStyles()((theme) => ({
   root: {
@@ -98,6 +103,7 @@ const defaultState = {
   avatar: '',
   advancedPersonalPage: false,
   articlesEnable: false,
+  nclocator: '',
 };
 
 const logoutTypeLabels = {
@@ -116,19 +122,48 @@ const ProfilePage = () => {
   const { classes } = useStyles();
   const { disabledFeatures = {}, enableKeycloak } = Meteor.settings.public;
   const enableBlog = !disabledFeatures.blog;
+  const [expandedAuthToken, setExpandedAuthToken] = useState(false);
+  const [expandedPublicationDl, setExpandedPublicationDl] = useState(false);
 
-  const { isUserStructureValidationMandatory, ready: readySettingUserStructureValidationMandatory } = useTracker(() => {
-    const handle = Meteor.subscribe('appsettings.userStructureValidationMandatory');
-    const appSettings = AppSettings.findOne({ _id: 'settings' }, { fields: { userStructureValidationMandatory: 1 } });
-    return { isUserStructureValidationMandatory: appSettings.userStructureValidationMandatory, ready: handle.ready() };
-  });
+  const handleExpandAuthToken = () => {
+    setExpandedAuthToken(!expandedAuthToken);
+  };
+
+  const handleExpandPublicationDl = () => {
+    setExpandedPublicationDl(!expandedPublicationDl);
+  };
 
   const { awaitingStructure, ready: isAwaitingStructureReady } = useAwaitingStructure();
   const [{ user, loadingUser, isMobile }, dispatch] = useAppContext();
-
   const userStructure = useStructure();
-
   const [selectedStructure, setSelectedStructure] = useState(userStructure || null);
+
+  const {
+    isUserStructureValidationMandatory,
+    isNewStructCorrespondingToDomainStructure,
+    ready: readySettingUserStructureValidationMandatory,
+  } = useTracker(() => {
+    const handle = Meteor.subscribe('appsettings.userStructureValidationMandatory');
+    const appSettings = AppSettings.findOne({ _id: 'settings' }, { fields: { userStructureValidationMandatory: 1 } });
+
+    const handleAsamExt = Meteor.subscribe('asamextensions.all', { getOnlyNotAffected: false });
+    const asAmExtension = AsamExtensions.findOne({ extension: user.emails[0]?.address.split('@')[1] });
+    const isNewStructCorrespondingToDomainStruct =
+      typeof asAmExtension !== 'undefined' &&
+      asAmExtension.structureId ===
+        [
+          user?.awaitingStructure !== null && user?.awaitingStructure !== undefined
+            ? user?.awaitingStructure
+            : selectedStructure?._id,
+        ];
+
+    return {
+      isUserStructureValidationMandatory: appSettings.userStructureValidationMandatory,
+      isNewStructCorrespondingToDomainStructure: !isNewStructCorrespondingToDomainStruct,
+      ready: handle.ready() && handleAsamExt.ready(),
+    };
+  });
+
   useEffect(() => {
     (async () => {
       if (user.structure && user.structure.length > 0) {
@@ -142,13 +177,11 @@ const ProfilePage = () => {
   const { flatData, isSearchLoading } = useTracker(() => {
     const subName = 'structures.top.with.direct.parent';
     const ret = { flatData: [], isSearchLoading: false };
-    if (searchText.length > 2) {
-      const handle = Meteor.subscribe(subName, { searchText });
-      const isLoading = !handle.ready();
-      const structures = Structures.findFromPublication(subName).fetch();
-      ret.flatData = structures;
-      ret.isSearchLoading = isLoading;
-    }
+    const handle = Meteor.subscribe(subName, { searchText });
+    const isLoading = !handle.ready();
+    const structures = Structures.findFromPublication(subName).fetch();
+    ret.flatData = structures;
+    ret.isSearchLoading = isLoading;
     return ret;
   }, [searchText && searchText.length > 2]);
 
@@ -181,6 +214,7 @@ const ProfilePage = () => {
       advancedPersonalPage:
         userData.advancedPersonalPage === false || reset ? data.advancedPersonalPage : userData.advancedPersonalPage,
       articlesEnable: userData.articlesEnable === false || reset ? data.articlesEnable : userData.articlesEnable,
+      nclocator: data.nclocator || '',
     });
     if (reset === true) {
       setErrors(defaultState);
@@ -404,7 +438,9 @@ const ProfilePage = () => {
   };
 
   // eslint-disable-next-line max-len
-  const accountURL = `${Meteor.settings.public.keycloakUrl}/realms/${Meteor.settings.public.keycloakRealm}/account`;
+  const accountURL = `${testMeteorSettingsUrl(Meteor.settings.public.keycloakUrl)}/realms/${
+    Meteor.settings.public.keycloakRealm
+  }/account`;
 
   const SendNewAvatarToMedia = (avImg) => {
     dispatch({
@@ -560,6 +596,20 @@ const ProfilePage = () => {
                       {errors.username}
                     </FormHelperText>
                   </FormControl>
+                  <TextField
+                    disabled={enableKeycloak}
+                    margin="normal"
+                    id="nclocator"
+                    label={i18n.__('pages.ProfilePage.nclocator')}
+                    name="nclocator"
+                    autoComplete="nclocator"
+                    fullWidth
+                    type="text"
+                    value={
+                      `${userData?.username}@${userData?.nclocator}` || i18n.__('pages.ProfilePage.emptyNcLocator')
+                    }
+                    variant="outlined"
+                  />
                 </Grid>
                 <Grid item xs={isMobile ? 12 : 4}>
                   <AvatarPicker
@@ -584,16 +634,15 @@ const ProfilePage = () => {
                     )}
                   </Typography>
                   {readySettingUserStructureValidationMandatory &&
-                    isUserStructureValidationMandatory &&
+                    (isUserStructureValidationMandatory || isNewStructCorrespondingToDomainStructure) &&
                     isAwaitingStructureReady &&
                     awaitingStructure !== undefined && (
                       <Typography>
                         {i18n.__('pages.ProfilePage.awaitingForStructure')} <b>{awaitingStructure.name}</b>
                       </Typography>
                     )}
-                  <AutoComplete
-                    options={flatData}
-                    noOptionsText={i18n.__('pages.ProfilePage.noOptions')}
+                  <StructureSelectAutoComplete
+                    flatData={flatData}
                     loading={isSearchLoading}
                     getOptionLabel={(option) => option.name}
                     renderOption={(props, option) => {
@@ -625,7 +674,7 @@ const ProfilePage = () => {
                           },
                         });
                     }}
-                    inputValue={searchText}
+                    searchText={searchText}
                     onInputChange={(event, newInputValue) => {
                       setSearchText(newInputValue);
                     }}
@@ -727,62 +776,87 @@ const ProfilePage = () => {
         </Paper>
         {enableBlog && (
           <Paper className={classes.root}>
-            <Typography variant={isMobile ? 'h4' : 'h5'}>{i18n.__('pages.ProfilePage.backupTitle')}</Typography>
-            <p>{i18n.__('pages.ProfilePage.backupMessage')}</p>
-
-            <Grid container>
-              <Grid item xs={12} sm={6} md={6} className={classes.buttonWrapper}>
-                <Button variant="contained" onClick={downloadBackup} color="secondary">
-                  {i18n.__('pages.ProfilePage.downloadPublicationBackup')}
-                </Button>
+            <Typography variant={isMobile ? 'h4' : 'h5'} sx={{ width: '100%' }}>
+              {i18n.__('pages.ProfilePage.backupTitle')}
+              <IconButton
+                onClick={handleExpandPublicationDl}
+                sx={{
+                  transform: !expandedPublicationDl ? 'rotate(0deg)' : 'rotate(180deg)',
+                  marginTop: '-1vh',
+                }}
+              >
+                <ExpandMoreIcon />
+              </IconButton>
+            </Typography>
+            <Collapse collapsedSize={0} in={expandedPublicationDl}>
+              <p>{i18n.__('pages.ProfilePage.backupMessage')}</p>
+              <Grid container>
+                <Grid item xs={12} sm={6} md={6} className={classes.buttonWrapper}>
+                  <Button variant="contained" onClick={downloadBackup} color="secondary">
+                    {i18n.__('pages.ProfilePage.downloadPublicationBackup')}
+                  </Button>
+                </Grid>
+                <Grid item xs={12} sm={6} md={6} className={classes.buttonWrapper}>
+                  <div className={classes.fileWrap}>
+                    <label htmlFor="upload">
+                      <Input className={classes.inputFile} type="file" id="upload" onChange={uploadData} />
+                      <Button variant="contained" color="secondary" component="span" tabIndex={-1}>
+                        {i18n.__('pages.ProfilePage.UploadPublicationBackup')}
+                      </Button>
+                    </label>
+                  </div>
+                </Grid>
               </Grid>
-              <Grid item xs={12} sm={6} md={6} className={classes.buttonWrapper}>
-                <div className={classes.fileWrap}>
-                  <label htmlFor="upload">
-                    <Input className={classes.inputFile} type="file" id="upload" onChange={uploadData} />
-                    <Button variant="contained" color="secondary" component="span" tabIndex={-1}>
-                      {i18n.__('pages.ProfilePage.UploadPublicationBackup')}
-                    </Button>
-                  </label>
-                </div>
-              </Grid>
-            </Grid>
-            {user.structure ? (
-              <p>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      disabled={!user.structure}
-                      checked={structChecked}
-                      onChange={() => setStructChecked(!structChecked)}
-                      inputProps={{ 'aria-label': 'primary checkbox' }}
-                    />
-                  }
-                  label={i18n.__('pages.ProfilePage.structureMessage')}
-                />
-              </p>
-            ) : null}
+              {user.structure ? (
+                <p>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={!user.structure}
+                        checked={structChecked}
+                        onChange={() => setStructChecked(!structChecked)}
+                        inputProps={{ 'aria-label': 'primary checkbox' }}
+                      />
+                    }
+                    label={i18n.__('pages.ProfilePage.structureMessage')}
+                  />
+                </p>
+              ) : null}
+            </Collapse>
           </Paper>
         )}
         <Paper className={classes.root}>
-          <Typography variant={isMobile ? 'h4' : 'h5'}>{i18n.__('pages.ProfilePage.authTokenTitle')}</Typography>
-          <p>{i18n.__('pages.ProfilePage.authTokenMessage')}</p>
-          <p>
-            <b>{i18n.__('pages.ProfilePage.resetTokenMessage')}</b>
-          </p>
+          <Typography variant={isMobile ? 'h4' : 'h5'}>
+            {i18n.__('pages.ProfilePage.authTokenTitle')}
+            <IconButton
+              onClick={handleExpandAuthToken}
+              sx={{
+                transform: !expandedAuthToken ? 'rotate(0deg)' : 'rotate(180deg)',
+                marginTop: '-1vh',
+              }}
+            >
+              <ExpandMoreIcon />
+            </IconButton>
+          </Typography>
+          <Collapse collapsedSize={0} in={expandedAuthToken}>
+            <p>{i18n.__('pages.ProfilePage.authTokenMessage')}</p>
+            <p>
+              <b>{i18n.__('pages.ProfilePage.resetTokenMessage')}</b>
+            </p>
 
-          <Grid container>
-            <Grid item xs={12} sm={6} md={6} className={classes.buttonWrapper}>
-              <Button variant="contained" onClick={getAuthToken}>
-                {i18n.__('pages.ProfilePage.getAuthToken')}
-              </Button>
+            <Grid container>
+              <Grid item xs={12} sm={6} md={6} className={classes.buttonWrapper}>
+                <Button variant="contained" onClick={getAuthToken}>
+                  {i18n.__('pages.ProfilePage.getAuthToken')}
+                </Button>
+              </Grid>
+              <Grid item xs={12} sm={6} md={6} className={classes.buttonWrapper}>
+                <Button variant="contained" onClick={resetAuthToken} color="secondary">
+                  {i18n.__('pages.ProfilePage.resetAuthToken')}
+                </Button>
+              </Grid>
             </Grid>
-            <Grid item xs={12} sm={6} md={6} className={classes.buttonWrapper}>
-              <Button variant="contained" onClick={resetAuthToken} color="secondary">
-                {i18n.__('pages.ProfilePage.resetAuthToken')}
-              </Button>
-            </Grid>
-          </Grid>
+          </Collapse>
         </Paper>
       </Container>
     </Fade>

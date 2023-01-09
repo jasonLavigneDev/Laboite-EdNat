@@ -45,4 +45,9 @@ Factory.define('appsettings', AppSettings, {
     content: faker.lorem.sentences(),
   },
   userStructureValidationMandatory: false,
+  personalSpace: {
+    external: Boolean(Math.random() * 2),
+    link: faker.lorem.slug(),
+    content: faker.lorem.sentences(),
+  },
 });

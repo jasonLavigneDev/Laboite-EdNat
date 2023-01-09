@@ -10,6 +10,10 @@ import { makeStyles } from 'tss-react/mui';
 import LanguageIcon from '@mui/icons-material/Language';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import StarIcon from '@mui/icons-material/Star';
+import QrCode2Icon from '@mui/icons-material/QrCode2';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
 import Container from '@mui/material/Container';
 import { Roles } from 'meteor/alanning:roles';
 import add from '@mui/icons-material/Add';
@@ -20,6 +24,7 @@ import { useAppContext } from '../../contexts/context';
 import { removeUserBookmark, updateUserBookmark } from '../../../api/userBookmarks/methods';
 import setMaterialTableLocalization from '../../components/initMaterialTableLocalization';
 import BookMarkEdit from '../../components/users/BookMarkEdit';
+import QRCanvas from '../../components/users/QRCanvas';
 import UserBookmarks from '../../../api/userBookmarks/userBookmarks';
 
 export const useBookmarkPageStyles = makeStyles()(() => ({
@@ -32,18 +37,37 @@ export const useBookmarkPageStyles = makeStyles()(() => ({
   link: {
     color: 'blue',
     textDecoration: 'underline',
+    width: 'inherit',
+    display: 'block',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
   },
   icon: {
     height: 25,
     width: 25,
   },
+  modal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 }));
 
+/**
+ * @param {Record<string, any>} classes Styles
+ * @returns {import('@material-table/core').Column<any>[]}
+ */
 export const bookmarkColumns = (classes) => [
   {
     title: i18n.__('pages.BookmarksPage.columnIcon'),
     field: 'icon',
     editable: 'never',
+    width: 0,
+    align: 'center',
+    headerStyle: {
+      position: 'unset',
+    },
     render: (rowData) => {
       const { icon } = rowData;
 
@@ -57,10 +81,16 @@ export const bookmarkColumns = (classes) => [
   {
     title: i18n.__('pages.BookmarksPage.columnName'),
     field: 'name',
+    headerStyle: {
+      position: 'unset',
+    },
   },
   {
     title: i18n.__('pages.BookmarksPage.columnUrl'),
     field: 'url',
+    headerStyle: {
+      position: 'unset',
+    },
     render: (rowData) => {
       const { url } = rowData;
       return (
@@ -73,8 +103,19 @@ export const bookmarkColumns = (classes) => [
   {
     title: i18n.__('pages.BookmarksPage.columnTag'),
     field: 'tag',
+    headerStyle: {
+      position: 'unset',
+    },
   },
 ];
+
+const getLocalStorageValue = (key, defaultValue) => {
+  let localStorageValue = sessionStorage.getItem(key);
+  if (localStorageValue == null) {
+    localStorageValue = defaultValue;
+  }
+  return localStorageValue;
+};
 
 function UserBookmarksPage({ loading, bookmarksList }) {
   const [{ user, userId }] = useAppContext();
@@ -86,6 +127,13 @@ function UserBookmarksPage({ loading, bookmarksList }) {
   const [editUrl, setEditUrl] = useState(false);
   const [bkData, setBkData] = useState({});
   const [onEdit, setOnEdit] = useState(false);
+  const [pageSize, setPageSize] = useState(getLocalStorageValue('cstRowsPerPage', 10));
+  const [qrUrl, setQrUrl] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   const OpenURLEditor = () => setEditUrl(true);
 
@@ -97,15 +145,38 @@ function UserBookmarksPage({ loading, bookmarksList }) {
     return !(checkId === userId || Roles.userIsInRole(userId, 'admin'));
   };
 
+  /**
+   * @type {import('@material-table/core').Options}
+   */
   const options = {
-    pageSize: 10,
+    pageSize,
     pageSizeOptions: [10, 20, 50, 100],
     paginationType: 'stepped',
-    actionsColumnIndex: 6,
     addRowPosition: 'first',
     emptyRowsWhenPaging: false,
+    actionsColumnIndex: -1,
+    actionsCellStyle: {
+      position: 'sticky',
+      right: 0,
+      background: 'white',
+    },
+    headerStyle: {
+      position: 'sticky',
+      right: 0,
+      background: 'white',
+    },
   };
 
+  const handleChangeRowsPerPage = (rowsPerPage) => {
+    // Access initial value from session storage
+    const cstRowsPerPage = getLocalStorageValue('cstRowsPerPage', 10);
+
+    if (cstRowsPerPage !== rowsPerPage) {
+      // Update session storage
+      sessionStorage.setItem('cstRowsPerPage', rowsPerPage);
+      setPageSize(rowsPerPage);
+    }
+  };
   return (
     <>
       {loading ? (
@@ -127,6 +198,7 @@ function UserBookmarksPage({ loading, bookmarksList }) {
               })}
               options={options}
               localization={setMaterialTableLocalization('pages.BookmarksPage')}
+              onRowsPerPageChange={handleChangeRowsPerPage}
               actions={[
                 {
                   icon: add,
@@ -155,6 +227,16 @@ function UserBookmarksPage({ loading, bookmarksList }) {
                           }
                         },
                       );
+                    },
+                  };
+                },
+                (rowData) => {
+                  return {
+                    icon: () => <QrCode2Icon />,
+                    tooltip: i18n.__('pages.UserBookmarksPage.showQrCode'),
+                    onClick: () => {
+                      setIsModalOpen(true);
+                      setQrUrl(rowData.url);
                     },
                   };
                 },
@@ -203,6 +285,14 @@ function UserBookmarksPage({ loading, bookmarksList }) {
               }}
             />
           </Container>
+          <Dialog className={classes.modal} open={isModalOpen} onClose={closeModal}>
+            <DialogContent>
+              <QRCanvas url={qrUrl} />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={closeModal}>{i18n.__('pages.UserBookmarksPage.close')}</Button>
+            </DialogActions>
+          </Dialog>
           {editUrl ? (
             <BookMarkEdit
               method="userBookmark"
