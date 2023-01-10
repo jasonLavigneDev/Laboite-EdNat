@@ -209,7 +209,7 @@ function PersonalZoneUpdater({
   };
 
   const doNotDisplayHidenServices = (element) => {
-    return filterService(element) || element.type === 'group' || element.type === 'link';
+    return filterService(element) || filterGroup(element) || filterLink(element);
   };
   // focus on search input when it appears
   useEffect(() => {
