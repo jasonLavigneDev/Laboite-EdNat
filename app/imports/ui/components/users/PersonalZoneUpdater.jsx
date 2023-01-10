@@ -207,6 +207,10 @@ function PersonalZoneUpdater({
     }
     return false;
   };
+
+  const doNotDisplayHidenServices = (element) => {
+    return filterService(element) || filterGroup(element) || filterLink(element);
+  };
   // focus on search input when it appears
   useEffect(() => {
     if (inputRef.current && searchToggle) {
@@ -532,7 +536,7 @@ function PersonalZoneUpdater({
             {localPS.sorted.map(({ zone_id: zoneId, elements, name, isExpanded }, index) => [
               <PersonalZone
                 key={`zone-${zoneId}`}
-                elements={elements.filter(filterSearch).filter(filterService)}
+                elements={elements.filter(filterSearch).filter(doNotDisplayHidenServices)}
                 index={index}
                 title={name}
                 edition={edition}
