@@ -124,6 +124,7 @@ const ProfilePage = () => {
   const enableBlog = !disabledFeatures.blog;
   const [expandedAuthToken, setExpandedAuthToken] = useState(false);
   const [expandedPublicationDl, setExpandedPublicationDl] = useState(false);
+  const [expandDefaultSpaceApplied, setExpandDefaultSpaceApplied] = useState(true);
 
   const handleExpandAuthToken = () => {
     setExpandedAuthToken(!expandedAuthToken);
@@ -131,6 +132,10 @@ const ProfilePage = () => {
 
   const handleExpandPublicationDl = () => {
     setExpandedPublicationDl(!expandedPublicationDl);
+  };
+
+  const handleExpandDefaultSpaceApplied = () => {
+    setExpandDefaultSpaceApplied(!expandDefaultSpaceApplied);
   };
 
   const { awaitingStructure, ready: isAwaitingStructureReady } = useAwaitingStructure();
@@ -457,11 +462,24 @@ const ProfilePage = () => {
     });
   };
 
-  if (loadingUser) {
-    return <Spinner />;
-  }
+  const structName = selectedStructure && selectedStructure.name ? selectedStructure.name : '';
+  const applyDefaultSpace = () => {
+    if (user.advancedPersonalPage) {
+      msg.error(i18n.__('pages.ProfilePage.ApplyDefaultSpaceWarning'));
+    } else {
+      Meteor.call('personalspaces.generateDefaultPersonalSpace', { userId: Meteor.userId() }, (error) => {
+        if (error) {
+          msg.error(error.message);
+        } else {
+          msg.success(i18n.__('api.methods.operationSuccessMsg'));
+        }
+      });
+    }
+  };
 
-  return (
+  return loadingUser ? (
+    <Spinner />
+  ) : (
     <Fade in>
       <Container>
         <Paper className={classes.root}>
@@ -731,6 +749,31 @@ const ProfilePage = () => {
               </Button>
             </div>
           </form>
+        </Paper>
+        <Paper className={classes.root}>
+          <Typography variant={isMobile ? 'h4' : 'h5'}>
+            {i18n.__('pages.ProfilePage.ApplyDefaultSpace', { structName })}
+            <IconButton
+              onClick={handleExpandDefaultSpaceApplied}
+              sx={{
+                transform: !expandDefaultSpaceApplied ? 'rotate(0deg)' : 'rotate(180deg)',
+                marginTop: '-1vh',
+              }}
+            >
+              <ExpandMoreIcon />
+            </IconButton>
+          </Typography>
+          <Collapse collapsedSize={0} in={expandDefaultSpaceApplied}>
+            <p>
+              <b>{i18n.__('pages.ProfilePage.ApplyDefaultSpaceMessage')}</b>
+            </p>
+
+            <Grid item xs={12} sm={6} md={6} className={classes.buttonWrapper}>
+              <Button variant="contained" onClick={applyDefaultSpace}>
+                {i18n.__('pages.ProfilePage.ApplyDefaultSpaceBtn', { structName })}
+              </Button>
+            </Grid>
+          </Collapse>
         </Paper>
         {enableBlog && (
           <Paper className={classes.root}>
