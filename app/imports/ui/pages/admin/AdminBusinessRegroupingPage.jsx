@@ -20,6 +20,7 @@ import setMaterialTableLocalization from '../../components/initMaterialTableLoca
 import BusinessReGrouping from '../../../api/businessReGrouping/businessReGrouping';
 import { handleResult } from '../../../api/utils';
 import Structures from '../../../api/structures/structures';
+import { compareBussinessRegrouping } from '../../utils/utilsFuncs';
 
 const useStyles = makeStyles()((theme) => ({
   marginTop: {
@@ -47,6 +48,7 @@ const AdminBusinessReGroupingPage = ({ businessReGrouping, loading }) => {
       name: i18n.__('pages.AdminBusinessReGroupingPage.columnName'),
       field: 'name',
       defaultSort: 'asc',
+      customSort: compareBussinessRegrouping,
     },
   ];
 
@@ -57,6 +59,7 @@ const AdminBusinessReGroupingPage = ({ businessReGrouping, loading }) => {
     actionsColumnIndex: 4,
     addRowPosition: 'first',
     emptyRowsWhenPaging: false,
+    sorting: true,
   };
 
   const businessRegroupingByStructure = (selectedStructure) => {
@@ -137,7 +140,7 @@ AdminBusinessReGroupingPage.propTypes = {
 export default withTracker(() => {
   const businessReGroupingHandle = Meteor.subscribe('businessReGrouping.all');
   const loading = !businessReGroupingHandle.ready();
-  const businessReGrouping = BusinessReGrouping.find({}, { sort: { name: 1 } }).fetch();
+  const businessReGrouping = BusinessReGrouping.find({}).fetch();
   return {
     businessReGrouping,
     loading,
