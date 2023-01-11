@@ -394,7 +394,7 @@ export function ServicesPage({ services, categories, businessRegroupings, ready,
                         isShort={!isMobile && viewMode === GRID_VIEW_MODE.compact}
                         isSorted
                         isExpandedZone
-                        isMobile={isMobile && viewMode === GRID_VIEW_MODE.compact}
+                        isShortMobile={isMobile && viewMode === GRID_VIEW_MODE.compact}
                       />
                     ),
                 )}
