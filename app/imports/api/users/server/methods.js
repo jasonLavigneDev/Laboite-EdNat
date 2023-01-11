@@ -706,7 +706,18 @@ export const setStructure = new ValidatedMethod({
         Roles.removeUsersFromRoles(this.userId, 'adminStructure', user.structure);
       }
 
-      if (isAuthorizedToSetStructureDirectly || isAppAdmin) RemoveUserFromGroupsOfOldStructure(user);
+      if (isAuthorizedToSetStructureDirectly || isAppAdmin) {
+        // check group and user existence for old structure
+        const oldStruct = Structures.findOne({ _id: user.structure });
+        if (oldStruct) {
+          if (oldStruct.groupId) {
+            const group = Groups.findOne({ _id: oldStruct.groupId });
+            if (group !== undefined && group.members.indexOf(user._id) !== -1) {
+              RemoveUserFromGroupsOfOldStructure(this.userId, user);
+            }
+          }
+        }
+      }
     } // will throw error if username already taken
 
     Meteor.users.update(
