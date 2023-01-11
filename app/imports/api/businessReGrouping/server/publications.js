@@ -7,5 +7,5 @@ Meteor.publish('businessReGrouping.all', function businessReGroupingAll() {
   if (!Meteor.settings.public.offlinePage && !isActive(this.userId)) {
     return this.ready();
   }
-  return BusinessReGrouping.find({}, { fields: BusinessReGrouping.publicFields, sort: { _id: 1 }, limit: 1000 });
+  return BusinessReGrouping.find({}, { fields: BusinessReGrouping.publicFields, sort: { name: 1 } });
 });
