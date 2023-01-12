@@ -580,23 +580,23 @@ export const unsetCandidateOf = new ValidatedMethod({
   },
 });
 
-export function RemoveUserFromGroupsOfOldStructure(currentUserId, user) {
+export function RemoveUserFromGroupsOfOldStructure(user) {
   if (user.structure) {
     const oldStructure = Structures.findOne({ _id: user.structure });
     if (oldStructure) {
       const ancestors = Structures.find({ _id: { $in: oldStructure.ancestorsIds } }).fetch();
       if (oldStructure.groupId) {
         if (Roles.getScopesForUser(user._id, 'admin').includes(oldStructure.groupId)) {
-          unsetAdminOf._execute({ userId: currentUserId }, { userId: user._id, groupId: oldStructure.groupId });
+          unsetAdminOf._execute({ userId: user._id }, { userId: user._id, groupId: oldStructure.groupId });
         }
-        unsetMemberOf._execute({ userId: currentUserId }, { userId: user._id, groupId: oldStructure.groupId });
+        unsetMemberOf._execute({ userId: user._id }, { userId: user._id, groupId: oldStructure.groupId });
       }
       if (ancestors) {
         ancestors.forEach((st) => {
           if (st.groupId) {
             const gr = Groups.findOne({ _id: st.groupId });
             if (gr) {
-              unsetMemberOf._execute({ userId: currentUserId }, { userId: user._id, groupId: gr._id });
+              unsetMemberOf._execute({ userId: user._id }, { userId: user._id, groupId: gr._id });
             }
           }
         });
@@ -654,7 +654,7 @@ export const acceptAwaitingStructure = new ValidatedMethod({
       throw new Meteor.Error('api.users.acceptAwaitingStructure.notPermitted', i18n.__('api.users.notPermitted'));
     }
 
-    RemoveUserFromGroupsOfOldStructure(this.userId, targetUser);
+    RemoveUserFromGroupsOfOldStructure(targetUser);
 
     Meteor.users.update(
       { _id: targetUserId },
@@ -706,7 +706,7 @@ export const setStructure = new ValidatedMethod({
         Roles.removeUsersFromRoles(this.userId, 'adminStructure', user.structure);
       }
 
-      if (isAuthorizedToSetStructureDirectly || isAppAdmin) RemoveUserFromGroupsOfOldStructure(this.userId, user);
+      if (isAuthorizedToSetStructureDirectly || isAppAdmin) RemoveUserFromGroupsOfOldStructure(user);
     } // will throw error if username already taken
 
     Meteor.users.update(
