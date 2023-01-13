@@ -734,3 +734,26 @@ Migrations.add({
       });
   },
 });
+
+Migrations.add({
+  version: 30,
+  name: 'Add group type to articles with groups',
+  up: () => {
+    const articles = Articles.find({ groups: { $exists: true } }).fetch();
+    articles.forEach(({ _id: articleId, groups }) => {
+      if (groups.length > 0) {
+        const updatedGroups = [];
+        groups.forEach(({ _id }) => {
+          const group = Groups.findOne(_id);
+          if (group) {
+            updatedGroups.push({ _id: group._id, name: group.name, type: group.type });
+          }
+        });
+        Articles.update({ _id: articleId }, { $set: { groups: updatedGroups } });
+      }
+    });
+  },
+  down: () => {
+    // no rollback on this step
+  },
+});
