@@ -137,11 +137,7 @@
     }
   };
 
-  const receiveMessage = (...args) => {
-    console.log('Recivied message: ', args);
-
-    const { data } = args[0];
-
+  const receiveMessage = (data) => {
     const { type, content } = data;
     if (type === 'notifications') {
       handleNotification(content);

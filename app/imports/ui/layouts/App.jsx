@@ -1,5 +1,5 @@
 import React, { useEffect, Suspense, lazy } from 'react';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { BrowserRouter, Switch, Route, useLocation } from 'react-router-dom';
 import { Meteor } from 'meteor/meteor';
 import { Helmet } from 'react-helmet';
 import { ThemeProvider, useTheme } from '@mui/material/styles';
@@ -42,6 +42,20 @@ function App() {
   const theme = useTheme();
   const { enableLinkTracking } = useMatomo();
   enableLinkTracking();
+  const location = useLocation();
+
+  // Listen on events send by the widget
+  useEffect(() => {
+    function receiveMessage(data) {
+      // console.log('Recivied message: ', data);
+    };
+
+    window.addEventListener('message', receiveMessage, false);
+
+    return () => {
+      window.removeEventListener('message', receiveMessage, false);
+    };
+  }, []);
 
   const { userId, loadingUser = false, loading } = state;
   const externalBlog = !!Meteor.settings.public.services.laboiteBlogURL;
