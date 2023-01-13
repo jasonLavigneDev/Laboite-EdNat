@@ -391,11 +391,13 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
                     onChange={onUpdateField}
                     disabled={(!isAdmin && !!params._id) || isAutomaticGroup}
                   >
-                    {Object.keys(Groups.typeLabels).map((val) => (
-                      <MenuItem key={val} value={val}>
-                        {i18n.__(Groups.typeLabels[val])}
-                      </MenuItem>
-                    ))}
+                    {Object.keys(Groups.typeLabels)
+                      .filter((type) => type !== '15')
+                      .map((val) => (
+                        <MenuItem key={val} value={val}>
+                          {i18n.__(Groups.typeLabels[val])}
+                        </MenuItem>
+                      ))}
                   </Select>
                 </FormControl>
                 <TextField
