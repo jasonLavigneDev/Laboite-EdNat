@@ -497,8 +497,6 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
                     </Button>
                   </Grid>
                 ) : null}
-<<<<<<< HEAD
-=======
                 {Meteor.settings.public.services.laboiteBlogURL ? (
                   <Grid item key={`groupblog_${group._id}`} className={classes.cardGrid}>
                     <Button
@@ -512,7 +510,6 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
                     </Button>
                   </Grid>
                 ) : null}
->>>>>>> dd44327c (fix(config): move blog url from public to public.services)
                 {Object.keys(groupPlugins)
                   .filter((p) => groupPlugins[p].enable === true)
                   .map((p) => {
