@@ -496,7 +496,8 @@
       "gcu": "Conditions générales d'utilisation",
       "accessibility": "Accessibilité",
       "legal": "Mentions légales",
-      "contact": "Contact"
+      "contact": "Contact",
+      "personalSpace": "Intro de l'espace perso"
     },
     "LegalComponent": {
       "title_introduction": "Introduction",
