@@ -496,7 +496,8 @@
       "gcu": "G.C.U",
       "accessibility": "Accessibility",
       "legal": "Legal notice",
-      "contact": "Contact"
+      "contact": "Contact",
+      "personalSpace": "Personal Space Intro"
     },
     "LegalComponent": {
       "title_introduction": "Introduction",
