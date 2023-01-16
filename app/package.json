@@ -47,6 +47,7 @@
     "email": "^0.2.6",
     "faker": "^4.1.0",
     "fbjs": "^2.0.0",
+    "file-saver": "^2.0.5",
     "html2canvas": "^1.4.1",
     "html2pdf.js": "^0.10.1",
     "jspdf": "^2.5.1",
