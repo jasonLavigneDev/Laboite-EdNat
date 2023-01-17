@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { makeStyles } from 'tss-react/mui';
 import i18n from 'meteor/universe:i18n';
 import Container from '@mui/material/Container';
@@ -11,7 +11,6 @@ import Box from '@mui/material/Box';
 import { useAppContext } from '../contexts/context';
 import FTDropzone from '../components/francetransfert/Dropzone';
 import FTFoldForm from '../components/francetransfert/FoldForm';
-import FTFoldSettings from '../components/francetransfert/FoldSettings';
 
 const useStyles = makeStyles()((theme) => ({
   description: {
@@ -55,6 +54,16 @@ export default function UploadPage() {
   /** @type {useState<File[]>} */
   const [files, setFiles] = useState([]);
 
+  const handleSubmit = useCallback(
+    (data) => {
+      console.log({
+        data,
+        files,
+      });
+    },
+    [files],
+  );
+
   return (
     <Fade in>
       <Container>
@@ -71,7 +80,7 @@ export default function UploadPage() {
           </Grid>
           <Grid item xs={6}>
             <Paper>
-              <FTFoldForm className={classes.sectionPaper} />
+              <FTFoldForm isUploadable={files.length > 0} className={classes.sectionPaper} onSubmit={handleSubmit} />
             </Paper>
           </Grid>
         </Box>

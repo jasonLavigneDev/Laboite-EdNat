@@ -581,6 +581,7 @@
     },
     "MainMenu": {
       "menuUserBookmarks": "Marque-pages",
+      "menuUpload": "Transférer des fichier",
       "menuProfileLabel": "Profil",
       "menuHelpLabel": "Aide",
       "menuLogoutLabel": "Se déconnecter",
@@ -993,7 +994,8 @@
         },
         "languageLabel": "Langue d'affichage des courriels",
         "encryptLabel": "Protéger l'archive zip de mon pli par mot de passe",
-        "goBack": "Retour"
+        "cancel": "Annuler",
+        "save": "Sauvegarder"
       },
       "settingsBtn": "Paramètres",
       "send": "Envoyer"

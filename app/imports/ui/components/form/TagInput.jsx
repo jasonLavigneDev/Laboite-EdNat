@@ -37,7 +37,7 @@ const useStyles = makeStyles()((theme) => ({
 export default function TagsInput({ ...props }) {
   const [{ isMobile }] = useAppContext();
   const { classes } = useStyles(isMobile);
-  const { onAddTag, onRemoveTag, validate, placeholder, tags, ...other } = props;
+  const { onAddTag, onRemoveTag, validate, placeholder, tags = [], ...other } = props;
   const [inputValue, setInputValue] = React.useState('');
   /**
    * @type {import('react').MutableRefObject<HTMLDivElement>}

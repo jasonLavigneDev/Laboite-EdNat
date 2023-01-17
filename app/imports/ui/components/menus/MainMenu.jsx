@@ -58,6 +58,10 @@ export const userMenu = [
     path: '/userBookmarks',
     content: 'menuUserBookmarks',
   },
+  {
+    path: '/upload',
+    content: 'menuUpload',
+  },
 ];
 
 export const userGroups = [

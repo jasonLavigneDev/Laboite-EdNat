@@ -581,6 +581,7 @@
     "MainMenu": {
       "menuAdminGroups": "Groups Management",
       "menuUserBookmarks": "Bookmarks",
+      "menuUpload": "Transfer files",
       "menuProfileLabel": "Profile",
       "menuHelpLabel": "Help",
       "menuLogoutLabel": "Logout",
@@ -989,7 +990,8 @@
         },
         "languageLabel": "Email display language",
         "encryptLabel": "Password protect the zip archive of my fold",
-        "goBack": "Back"
+        "cancel": "Cancel",
+        "save": "Save"
       },
       "settingsBtn": "Settings",
       "send": "Send"
