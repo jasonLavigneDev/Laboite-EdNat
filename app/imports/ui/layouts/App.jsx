@@ -1,5 +1,5 @@
 import React, { useEffect, Suspense, lazy } from 'react';
-import { BrowserRouter, Switch, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import { Meteor } from 'meteor/meteor';
 import { Helmet } from 'react-helmet';
 import { ThemeProvider, useTheme } from '@mui/material/styles';
@@ -14,6 +14,7 @@ import MsgHandler from '../components/system/MsgHandler';
 import DynamicStore, { useAppContext } from '../contexts/context';
 import lightTheme from '../themes/light';
 import { instance } from '../utils/matomo';
+import LocalizationLayout from './locales/LocalizationLayout';
 
 // dynamic imports
 const MainLayout = lazy(() => import('./MainLayout'));
@@ -42,13 +43,12 @@ function App() {
   const theme = useTheme();
   const { enableLinkTracking } = useMatomo();
   enableLinkTracking();
-  const location = useLocation();
 
   // Listen on events send by the widget
   useEffect(() => {
     function receiveMessage(data) {
       // console.log('Recivied message: ', data);
-    };
+    }
 
     window.addEventListener('message', receiveMessage, false);
 
@@ -58,6 +58,7 @@ function App() {
   }, []);
 
   const { userId, loadingUser = false, loading } = state;
+  const useKeycloak = Meteor.settings.public.enableKeycloak;
   const externalBlog = !!Meteor.settings.public.services.laboiteBlogURL;
   const { disabledFeatures = {}, minioEndPoint } = Meteor.settings.public;
   const enableBlog = !disabledFeatures.blog;
@@ -73,25 +74,28 @@ function App() {
       ) : (
         <Suspense fallback={<Spinner full />}>
           <CssBaseline />
-          <Switch>
-            <PublicRoute exact path="/signin" component={SignLayout} {...state} />
-            {externalBlog || !enableBlog ? null : <Route exact path="/public/" component={PublishersPage} />}
-            {externalBlog || !enableBlog ? null : <Route exact path="/public/:userId" component={ArticlesPage} />}
-            {externalBlog || !enableBlog ? null : (
-              <Route exact path="/public/:userId/:slug" component={PublicArticleDetailsPage} />
-            )}
-            <ProtectedRoute exact path="/logout" component={Logout} {...state} />
-            <Route exact path="/legal/:legalKey" component={LegalPage} />
-            {!userId && <Route exact path="/contact" component={SignLayout} {...state} />}
-            <ProtectedRoute
-              path="/admin"
-              component={AdminLayout}
-              userId={userId}
-              loadingUser={loadingUser}
-              {...state}
-            />
-            <ProtectedRoute path="/" component={MainLayout} {...state} />
-          </Switch>
+          <LocalizationLayout>
+            <Switch>
+              <PublicRoute exact path="/signin" component={SignLayout} {...state} />
+              {useKeycloak ? null : <PublicRoute exact path="/signup" component={SignLayout} {...state} />}
+              {externalBlog || !enableBlog ? null : <Route exact path="/public/" component={PublishersPage} />}
+              {externalBlog || !enableBlog ? null : <Route exact path="/public/:userId" component={ArticlesPage} />}
+              {externalBlog || !enableBlog ? null : (
+                <Route exact path="/public/:userId/:slug" component={PublicArticleDetailsPage} />
+              )}
+              <ProtectedRoute exact path="/logout" component={Logout} {...state} />
+              <Route exact path="/legal/:legalKey" component={LegalPage} />
+              {!userId && <Route exact path="/contact" component={SignLayout} {...state} />}
+              <ProtectedRoute
+                path="/admin"
+                component={AdminLayout}
+                userId={userId}
+                loadingUser={loadingUser}
+                {...state}
+              />
+              <ProtectedRoute path="/" component={MainLayout} {...state} />
+            </Switch>
+          </LocalizationLayout>
           <MsgHandler />
           {!!minioEndPoint && <UploaderNotifier />}
         </Suspense>
