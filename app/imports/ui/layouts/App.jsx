@@ -46,6 +46,7 @@ function App() {
 
   // Listen on events send by the widget
   useEffect(() => {
+    // eslint-disable-next-line no-unused-vars
     function receiveMessage(data) {
       // console.log('Recivied message: ', data);
     }
