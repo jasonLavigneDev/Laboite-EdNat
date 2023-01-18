@@ -54,53 +54,7 @@ const useStyles = makeStyles()((theme) => ({
 const fileMaxSize = 2000000000; // 2 GB
 const chunkSize = 5242880; // 5 MB
 
-const endpoint = 'https://test-francetransfert.aot.agency';
-const apiKey = 'RlNjMDNkMzIcTRWGZrg5W8I4LWEwMDIJYzxzMwZmE4ZjUwYjCo';
-
-const FT = axios.create({
-  baseURL: endpoint,
-  headers: {
-    cleAPI: apiKey,
-  },
-});
-
-function foldTypeToFTTypePli(foldType) {
-  if (foldType === 0) return 'COU';
-  if (foldType === 1) return 'LIE';
-
-  throw new Error('Unkown foldType');
-}
-
-export function initializeFold(sender, { data, files }) {
-  const typePli = foldTypeToFTTypePli(data.foldType);
-
-  const body = {
-    typePli,
-    courrielExpediteur: sender,
-    Message: data.message,
-    preferences: {
-      dateValidite: data?.settings?.expiryDate,
-      motDePasse: data?.settings?.password,
-      langueCourriel: data?.settings?.language,
-      protectionArchive: data?.settings?.encrypt,
-    },
-    fichiers: files.map((file) => ({
-      idFichier: file.id,
-      nomFichier: file.name,
-      tailleFichier: file.size,
-    })),
-  };
-
-  if (typePli === 'COU') {
-    body.objet = data.subject;
-    body.destinataires = data.recipients;
-  }
-  if (typePli === 'LIE') {
-    body.objet = data.title;
-  }
-
-  return FT.post(`/api-public/initPli`, body);
-}
+const { endpoint, apiKey } = Meteor.settings.public.franceTransfert;
 
 export default function UploadPage() {
   const [{ isMobile, user }] = useAppContext();
@@ -216,18 +170,13 @@ export default function UploadPage() {
         })),
       };
 
-      // Meteor.call('francetransfert.initFold', data, (err, res) => {
-      //   if (err) {
-      //     toast.error(err.message);
-      //   } else {
-      //     console.log('Successfuly created fold : ', res);
-      //     if(res.statutPli.codeStatutPli) uploadFiles(res.idPli);
-      //   }
-      // });
-
-      initializeFold(sender, data).then(({ data: res }) => {
-        console.log('Successfuly created fold : ', res);
-        if (res.statutPli.codeStatutPli) uploadFiles(res.idPli);
+      Meteor.call('francetransfert.initFold', data, (err, res) => {
+        if (err) {
+          toast.error(err.message);
+        } else {
+          console.log('Successfuly created fold : ', res);
+          if (res.statutPli.codeStatutPli) uploadFiles(res.idPli);
+        }
       });
     },
     [files, user?.emails[0].address, user?.primaryEmail],
