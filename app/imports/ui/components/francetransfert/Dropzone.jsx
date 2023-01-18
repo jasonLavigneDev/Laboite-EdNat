@@ -61,8 +61,8 @@ const maxTotalSize = 20000000000; // 20 GB
 
 /**
  * @typedef {Object} FTDropzoneProps
- * @property {Resumable.ResumableFile[]} files
- * @property {(file: Resumable.ResumableFile, index: number) => void} onRemoveFile
+ * @property {Flow.FlowFile[]} files
+ * @property {(file: Flow.FlowFile, index: number) => void} onRemoveFile
  */
 
 /**

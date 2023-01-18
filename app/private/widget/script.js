@@ -255,28 +255,6 @@
     return false;
   };
 
-  /**
-   *
-   * @param {File} file
-   * @returns
-   */
-  const downloadFile = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = function onloadFile() {
-        const arrayBuffer = this.result;
-        const array = new Uint8Array(arrayBuffer);
-        const binaryString = String.fromCharCode.apply(null, array);
-
-        resolve(binaryString);
-      };
-      reader.onerror = function onErrorFile(error) {
-        reject(error);
-      };
-      reader.readAsArrayBuffer(file);
-    });
-  };
-
   container.ondrop = function handleDrop(e) {
     // Prevent default behavior (Prevent file from being opened)
     e.preventDefault();

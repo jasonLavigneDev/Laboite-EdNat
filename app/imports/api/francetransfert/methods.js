@@ -44,10 +44,15 @@ export const initFold = new ValidatedMethod({
 
       return result.data;
     } catch (error) {
-      throw new Meteor.Error(
-        'api.francetransfert.initFold.franceTransfertError',
-        error.response.data.erreurs[0].libelleErreur,
-      );
+      if (error.response?.data?.erreurs?.[0]?.libelleErreur) {
+        throw new Meteor.Error(
+          'api.francetransfert.initFold.franceTransfertError',
+          error.response?.data?.erreurs?.[0]?.libelleErreur || JSON.stringify(),
+        );
+      } else {
+        console.error('Unkown FT error', error);
+        throw new Meteor.Error('api.francetransfert.initFold.franceTransfertError');
+      }
     }
   },
 });

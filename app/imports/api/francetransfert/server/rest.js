@@ -1,19 +1,44 @@
-import { createProxyMiddleware } from 'http-proxy-middleware';
+// import { PassThrough } from 'stream';
+// import meter from 'stream-meter';
+import { FT } from '../ft';
 
-const { apiKey, endpoint } = Meteor.settings?.franceTransfert || {};
+const { apiKey } = Meteor.settings?.franceTransfert || {};
 
-export const ftUploadProxy = createProxyMiddleware({
-  target: `${endpoint}`,
-  pathRewrite: { '^/api/francetransfert/upload': '^/api-public/chargementPli' },
-  changeOrigin: true,
-  logLevel: 'debug',
-  // onProxyReq: (proxyReq, req, res) => {
-  onProxyReq: (proxyReq) => {
-    // console.log(req);
-    // console.log(Meteor.userId());
-    proxyReq.setHeader('cleAPI', apiKey);
-  },
-  onProxyRes(proxyRes) {
-    console.info(proxyRes.headers['content-type']);
-  },
-});
+/**
+ *
+ * @param {import('connect').IncomingMessage} request
+ * @param {import('http').ServerResponse} response
+ * @param {import('connect').NextFunction} next
+ * @returns
+ */
+export default function ftUploadProxy(request, response) {
+  // const passTroughStream = new PassThrough();
+  // request.pipe(meter(1e7)).pipe(passTroughStream, { end: false });
+
+  const chunks = [];
+  request.on('data', (chunk) => chunks.push(chunk));
+  request.on('end', () => {
+    const data = Buffer.concat(chunks);
+
+    FT({
+      method: 'POST',
+      url: '/api-public/chargementPli',
+      headers: {
+        accept: request.headers.accept,
+        'content-type': request.headers['content-type'],
+        'content-length': request.headers['content-length'],
+        cleAPI: apiKey,
+      },
+      data,
+      // data: passTroughStream,
+    })
+      .then((res) => {
+        response.writeHead(res.status, res.statusText, res.headers);
+        response.end(JSON.stringify(res.data));
+      })
+      .catch((err) => {
+        response.writeHead(err.response.status, err.response.statusText, err.response.headers);
+        response.end(JSON.stringify(err.response.data));
+      });
+  });
+}

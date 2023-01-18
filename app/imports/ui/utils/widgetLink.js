@@ -15,10 +15,6 @@ export default function useWidgetLink() {
       if (data.type === 'widget') {
         switch (data.event) {
           case 'upload':
-            console.log(event);
-            console.log({ ...data });
-
-            console.log('Recivied files: ', data.files);
             history.push('/upload', data.files);
             break;
           default:
@@ -30,5 +26,5 @@ export default function useWidgetLink() {
     return () => {
       window.removeEventListener('message', handle);
     };
-  }, []);
+  }, [history]);
 }

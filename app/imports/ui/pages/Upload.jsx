@@ -7,14 +7,26 @@ import Typography from '@mui/material/Typography';
 import Fade from '@mui/material/Fade';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
-import Resumable from 'resumablejs';
+import Flow, { FlowChunk } from '@flowjs/flow.js';
 
 import { toast } from 'react-toastify';
-import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 import { useAppContext } from '../contexts/context';
 import FTDropzone from '../components/francetransfert/Dropzone';
 import FTFoldForm from '../components/francetransfert/FoldForm';
+
+FlowChunk.prototype.getParams = function getParams() {
+  return {
+    numMorceauFichier: this.offset + 1, // flowChunkNumber
+    tailleMorceau: this.chunkSize, // flowChunkSize
+    tailleMorceauFichier: this.endByte - this.startByte, // flowCurrentChunkSize
+    tailleFichier: this.fileObj.size, // flowTotalSize
+    idFichier: this.fileObj.uniqueIdentifier, // flowIdentifier
+    nomFichier: this.fileObj.name, // flowFilename
+    cheminFichier: this.fileObj.relativePath, // flowRelativePath
+    totalMorceauxFichier: this.fileObj.chunks.length, // flowTotalChunks
+  };
+};
 
 const useStyles = makeStyles()((theme) => ({
   description: {
@@ -54,49 +66,30 @@ const useStyles = makeStyles()((theme) => ({
 const fileMaxSize = 2000000000; // 2 GB
 const chunkSize = 5242880; // 5 MB
 
-const { endpoint, apiKey } = Meteor.settings.public.franceTransfert;
-
 export default function UploadPage() {
   const [{ isMobile, user }] = useAppContext();
   const { classes } = useStyles(isMobile);
   const { state } = useLocation();
 
-  /** @type {useState<Resumable.ResumableFile[]>} */
+  /** @type {useState<Flow.FlowFile[]>} */
   const [files, setFiles] = useState([]);
   const dropzone = useRef();
   const upload = useRef();
   /**
-   * @type {import('react').MutableRefObject<import('resumablejs')>
+   * @type {import('react').MutableRefObject<Flow>
    */
   const resumable = useRef();
 
   useEffect(() => {
-    resumable.current = new Resumable({
-      // target: '/api/francetransfert/upload',
-      target: endpoint,
-      headers: {
-        cleAPI: apiKey,
-      },
+    resumable.current = new Flow({
+      target: '/api/francetransfert/upload',
 
       chunkSize,
       maxFileSize: fileMaxSize,
-      chunkNumberParameterName: 'numMorceauFichier',
-      currentChunkSizeParameterName: 'tailleMorceauFichier',
-      totalSizeParameterName: 'tailleFichier',
-      identifierParameterName: 'idFichier',
-      fileNameParameterName: 'nomFichier',
-      totalChunksParameterName: 'totalMorceauxFichier',
       fileParameterName: 'fichier',
-      chunkSizeParameterName: 'tailleMorceau',
-      relativePathParameterName: 'cheminFichier',
-      typeParameterName: 'typeFichier',
       method: 'multipart',
       uploadMethod: 'POST',
       testChunks: false,
-
-      maxChunkRetries: 0,
-      permanentErrors: [400, 401, 403, 404, 409, 415, 500, 501],
-      chunkRetryInterval: 10000000,
     });
 
     resumable.current.assignDrop(dropzone.current);
@@ -114,6 +107,18 @@ export default function UploadPage() {
         return prev;
       });
     });
+
+    resumable.current.on('fileError', (file) => {
+      toast.error(`Erreur lors du chargement de ${file.name}`);
+      console.error(file.error);
+    });
+    resumable.current.on('complete', () => {
+      console.log('complete');
+    });
+
+    return () => {
+      resumable.current.off();
+    };
   }, []);
 
   useEffect(() => {
@@ -149,12 +154,7 @@ export default function UploadPage() {
         courrielExpediteur: sender,
       };
 
-      resumable.current.on('fileSuccess', console.log);
-      resumable.current.on('fileError', console.log);
-      resumable.current.on('uploadStart', console.log);
-
       resumable.current.upload();
-      // success!
     },
     [sender],
   );
@@ -165,7 +165,7 @@ export default function UploadPage() {
         data: formData,
         files: files.map((f) => ({
           id: f.uniqueIdentifier,
-          name: f.fileName,
+          name: f.name,
           size: f.size,
         })),
       };
@@ -175,14 +175,12 @@ export default function UploadPage() {
           toast.error(err.message);
         } else {
           console.log('Successfuly created fold : ', res);
-          if (res.statutPli.codeStatutPli) uploadFiles(res.idPli);
+          if (res.statutPli.codeStatutPli === '000-INI') uploadFiles(res.idPli);
         }
       });
     },
     [files, user?.emails[0].address, user?.primaryEmail],
   );
-
-  console.log(files);
 
   return (
     <Fade in>

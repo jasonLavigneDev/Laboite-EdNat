@@ -1,12 +1,15 @@
 import { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
+// TODO:
 export default function useAppTransfert() {
   const history = useHistory();
   //   const location = useLocation();
 
   //   APP Drop to upload
   useEffect(() => {
+    return; // TODO: finish this
+
     /**
      *
      * @param {DragEvent} e
@@ -39,7 +42,7 @@ export default function useAppTransfert() {
           files.push(file);
         });
       }
-      console.log('Recivied files: ', files);
+
       history.push('/upload', files);
     }
     document.body.addEventListener('drop', handleDrop);
