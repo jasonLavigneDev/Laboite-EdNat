@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from 'tss-react/mui';
 import i18n from 'meteor/universe:i18n';
@@ -24,6 +24,7 @@ import { alpha } from '@mui/material/styles';
 import clsx from 'clsx';
 import { useAppContext } from '../../contexts/context';
 import usePrettyBytes from '../../hooks/usePrettyBytes';
+import { forkRef } from '../../utils/hooks';
 
 const useStyles = makeStyles()((theme) => ({
   dropzone: {
@@ -54,6 +55,11 @@ const maxTotalSize = 20000000000; // 20 GB
  */
 
 /**
+ * @template T
+ * @typedef {import('react').MutableRefObject<T>} useRef
+ */
+
+/**
  * @typedef {Object} FTDropzoneProps
  * @property {Resumable.ResumableFile[]} files
  * @property {(file: Resumable.ResumableFile, index: number) => void} onRemoveFile
@@ -65,6 +71,10 @@ const maxTotalSize = 20000000000; // 20 GB
  */
 export default function FTDropzone(props) {
   const { files, onRemoveFile, className, dropzoneRef, inputRef, ...rest } = props;
+  /**
+   * @type {useRef<HTMLInputElement>}
+   */
+  const ref = useRef();
 
   const [{ isMobile }] = useAppContext();
   const { classes } = useStyles(isMobile);
@@ -74,6 +84,10 @@ export default function FTDropzone(props) {
 
   const formattedTotalSize = usePrettyBytes(totalSize);
   const formattedMaxTotalSize = usePrettyBytes(maxTotalSize);
+
+  const open = useCallback(() => {
+    ref.current.click();
+  }, []);
 
   return (
     <Box
@@ -111,8 +125,8 @@ export default function FTDropzone(props) {
         flexDirection={files.length <= 0 ? 'column' : 'row'}
         flex={files.length <= 0 ? '1' : '0'}
       >
-        <IconButton color="primary" size={files.length <= 0 ? 'medium' : 'large'}>
-          <input ref={inputRef} multiple />
+        <IconButton color="primary" size={files.length <= 0 ? 'medium' : 'large'} onClick={open}>
+          <input ref={forkRef(ref, inputRef)} multiple hidden />
           <AddCircleIcon fontSize="inherit" />
         </IconButton>
         <Box mt={files.length <= 0 ? 4 : 0} textAlign="center">
@@ -206,7 +220,7 @@ FileSummary.propTypes = {
 };
 
 // eslint-disable-next-line prettier/prettier
-const noop = () => { };
+const noop = () => {};
 FileSummary.defaultProps = {
   onRemove: noop,
 };

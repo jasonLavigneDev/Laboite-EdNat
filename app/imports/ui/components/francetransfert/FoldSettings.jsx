@@ -5,6 +5,7 @@ import i18n from 'meteor/universe:i18n';
 import { makeStyles } from 'tss-react/mui';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { useForm, useWatch } from 'react-hook-form';
@@ -105,7 +106,10 @@ export default function FTFoldSettings({ onGoBack, onChange, values, ...rest }) 
               label: capitalizeFirstLetter(languageNames.of(lang.replace(/_/g, '-'))),
             }))}
           />
-          <CheckboxElement name="encrypt" label={i18n.__('pages.UploadPage.settings.encryptLabel')} />
+          <CheckboxElement
+            name="encrypt"
+            label={<Typography variant="body2">{i18n.__('pages.UploadPage.settings.encryptLabel')}</Typography>}
+          />
         </Box>
         <Box padding={1} display="flex" justifyContent="space-between" alignItems="center">
           <Button type="button" onClick={() => onGoBack()}>

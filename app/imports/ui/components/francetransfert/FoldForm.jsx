@@ -5,7 +5,6 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import Link from '@mui/material/Link';
 import Button from '@mui/material/Button';
 
@@ -74,11 +73,9 @@ export default function FTFoldForm(props) {
   const [showSettings, setSettingsDisplay] = useState(false);
 
   const tosCeckbox = (
-    <FormControlLabel
-      sx={{
-        mt: 4,
-      }}
-      control={<CheckboxElement name="tos" validation={{ validate: (v) => v === true }} />}
+    <CheckboxElement
+      name="tos"
+      validation={{ validate: (v) => v === true }}
       label={
         <Typography variant="body2">
           {i18n.__('pages.UploadPage.tosLabel.a')}
@@ -99,6 +96,7 @@ export default function FTFoldForm(props) {
   const messageField = (
     <TextFieldElement
       name="message"
+      id="message"
       label={i18n.__('pages.UploadPage.messageLabel')}
       multiline
       minRows={3}

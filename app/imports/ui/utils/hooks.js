@@ -161,3 +161,13 @@ export const useFormStateValidator = (formSchema) => {
 
   return [formState, handleChange, setFormState];
 };
+
+export const forkRef =
+  (...refs) =>
+  (node) => {
+    refs.forEach((ref) => {
+      if (typeof ref === 'function') ref(node);
+      // eslint-disable-next-line no-param-reassign
+      else if (ref) ref.current = node;
+    });
+  };

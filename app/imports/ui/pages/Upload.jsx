@@ -53,8 +53,8 @@ const useStyles = makeStyles()((theme) => ({
 const fileMaxSize = 2000000000; // 2 GB
 const chunkSize = 5242880; // 5 MB
 
-const endpoint = '';
-const apiKey = '';
+const endpoint = 'https://test-francetransfert.aot.agency';
+const apiKey = 'RlNjMDNkMzIcTRWGZrg5W8I4LWEwMDIJYzxzMwZmE4ZjUwYjCo';
 
 const FT = axios.create({
   baseURL: endpoint,
