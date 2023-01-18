@@ -15,6 +15,8 @@ import DynamicStore, { useAppContext } from '../contexts/context';
 import lightTheme from '../themes/light';
 import { instance } from '../utils/matomo';
 import LocalizationLayout from './locales/LocalizationLayout';
+// import useAppTransfert from '../utils/appTransfert';
+import useWidgetLink from '../utils/widgetLink';
 
 // dynamic imports
 const MainLayout = lazy(() => import('./MainLayout'));
@@ -43,20 +45,8 @@ function App() {
   const theme = useTheme();
   const { enableLinkTracking } = useMatomo();
   enableLinkTracking();
-
-  // Listen on events send by the widget
-  useEffect(() => {
-    // eslint-disable-next-line no-unused-vars
-    function receiveMessage(data) {
-      // console.log('Recivied message: ', data);
-    }
-
-    window.addEventListener('message', receiveMessage, false);
-
-    return () => {
-      window.removeEventListener('message', receiveMessage, false);
-    };
-  }, []);
+  // useAppTransfert();
+  useWidgetLink();
 
   const { userId, loadingUser = false, loading } = state;
   const useKeycloak = Meteor.settings.public.enableKeycloak;

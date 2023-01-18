@@ -70,7 +70,7 @@
 
   // Create Container for Widget
   const widgetContainer = document.createElement('div');
-  widgetContainer.setAttribute('class', 'lb_widget-container closed');
+  widgetContainer.setAttribute('class', 'lb_widget-container');
 
   // Insert Header and Iframe into container
   widgetContainer.append(widgetHeader);
@@ -79,7 +79,7 @@
   // ------------------ ROBOT WIDGET ------------------
   // Create open button with the robot
   const openButton = document.createElement('button');
-  openButton.setAttribute('class', 'lb_widget closed');
+  openButton.setAttribute('class', 'lb_widget');
   openButton.title = 'Accéder aux services réservés aux agents de l’Etat';
   openButton.innerHTML = `<img src="${ABSOLUTE_URL}images/logos/${THEME}/widget/${userLogged}.svg" />`;
 
@@ -92,33 +92,37 @@
   const head = document.head || document.querySelector('head');
   head.append(stylesBalise);
 
+  // ------------------- CONTAINER --------------------
+  const container = document.createElement('div');
+  container.setAttribute('class', 'lb_container closed');
+
   // ------------------ INSERT WIDGET ------------------
   // insert root
-  target.append(openButton);
-  target.append(widgetContainer);
+  container.appendChild(openButton);
+  container.appendChild(widgetContainer);
+
+  target.append(container);
 
   // ------------------ FUNCTIONS WIDGET ------------------
 
   const openRizimo = () => {
     if (!dragged) {
-      replaceOrAddClass(widgetContainer, 'closed', 'opened');
+      replaceOrAddClass(container, 'closed', 'opened');
       iframeContainer.setAttribute('iframe-state', 'opened');
-      replaceOrAddClass(openButton, 'closed', 'opened');
     }
     dragged = false;
   };
   const closeRizimo = () => {
-    replaceOrAddClass(widgetContainer, 'opened', 'closed');
+    replaceOrAddClass(container, 'opened', 'closed');
     iframeContainer.setAttribute('iframe-state', 'closed');
-    replaceOrAddClass(openButton, 'opened', 'closed');
   };
   const toggleFullscreen = (state = null) => {
     if (state === true) {
-      widgetContainer.classList.add('fullscreen');
+      container.classList.add('fullscreen');
     } else if (state === false) {
-      widgetContainer.classList.remove('fullscreen');
+      container.classList.remove('fullscreen');
     } else {
-      widgetContainer.classList.toggle('fullscreen');
+      container.classList.toggle('fullscreen');
     }
   };
 
@@ -168,19 +172,19 @@
     const positionTop = clientY - shiftY;
 
     if (positionLeft > window.innerWidth - 85) {
-      openButton.style.left = `${window.innerWidth - 85}px`;
+      container.style.left = `${window.innerWidth - 85}px`;
     } else if (positionLeft < 0) {
-      openButton.style.left = '10px';
+      container.style.left = '10px';
     } else {
-      openButton.style.left = `${positionLeft}px`;
+      container.style.left = `${positionLeft}px`;
     }
 
     if (positionTop > window.innerHeight - 85) {
-      openButton.style.top = `${window.innerHeight - 85}px`;
+      container.style.top = `${window.innerHeight - 85}px`;
     } else if (positionTop < 0) {
-      openButton.style.top = '10px';
+      container.style.top = '10px';
     } else {
-      openButton.style.top = `${positionTop}px`;
+      container.style.top = `${positionTop}px`;
     }
   };
 
@@ -203,13 +207,13 @@
   };
 
   window.onresize = () => {
-    openButton.style.right = '10px';
-    openButton.style.bottom = '10px';
-    openButton.style.left = null;
-    openButton.style.top = null;
+    container.style.right = '10px';
+    container.style.bottom = '10px';
+    container.style.left = null;
+    container.style.top = null;
   };
 
-  openButton.onmousedown = function handleMouseDown(event) {
+  container.onmousedown = function handleMouseDown(event) {
     shiftX = event.clientX - openButton.getBoundingClientRect().left;
     shiftY = event.clientY - openButton.getBoundingClientRect().top;
 
@@ -226,7 +230,7 @@
     };
   };
 
-  openButton.ontouchstart = function handleTouchStart(event) {
+  container.ontouchstart = function handleTouchStart(event) {
     const touch = event.touches ? event.touches[0] : null;
     const ref = touch || event;
     shiftX = ref.clientX - openButton.getBoundingClientRect().left;
@@ -246,45 +250,75 @@
     };
   };
 
-  openButton.ondragstart = function handleDragStart() {
+  container.ondragstart = function handleDragStart() {
     dragged = true;
     return false;
   };
 
-  openButton.ondrop = function handleDrop(e) {
+  /**
+   *
+   * @param {File} file
+   * @returns
+   */
+  const downloadFile = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = function onloadFile() {
+        const arrayBuffer = this.result;
+        const array = new Uint8Array(arrayBuffer);
+        const binaryString = String.fromCharCode.apply(null, array);
+
+        resolve(binaryString);
+      };
+      reader.onerror = function onErrorFile(error) {
+        reject(error);
+      };
+      reader.readAsArrayBuffer(file);
+    });
+  };
+
+  container.ondrop = function handleDrop(e) {
     // Prevent default behavior (Prevent file from being opened)
     e.preventDefault();
 
-    // const files = [];
+    /**
+     * @type {File[]}
+     */
+    const files = [];
 
-    // if (e.dataTransfer.items) {
-    //   // Use DataTransferItemList interface to access the file(s)
-    //   [...e.dataTransfer.items].forEach((item) => {
-    //     // If dropped items aren't files, reject them
-    //     if (item.kind === 'file') {
-    //       files.push(item.getAsFile());
-    //     }
-    //   });
-    // } else {
-    //   // Use DataTransfer interface to access the file(s)
-    //   [...e.dataTransfer.files].forEach((file) => {
-    //     files.push(file);
-    //   });
-    // }
+    if (e.dataTransfer.items) {
+      // Use DataTransferItemList interface to access the file(s)
+      [...e.dataTransfer.items].forEach((item) => {
+        // If dropped items aren't files, reject them
+        if (item.kind === 'file') {
+          files.push(item.getAsFile());
+        }
+      });
+    } else {
+      // Use DataTransfer interface to access the file(s)
+      [...e.dataTransfer.files].forEach((file) => {
+        files.push(file);
+      });
+    }
 
+    iframeContainer.contentWindow.postMessage({ type: 'widget', event: 'upload', files }, '*');
     openRizimo();
+    toggleFullscreen(true);
+    openButton.classList.remove('dropping');
   };
 
-  openButton.ondragover = function handleDragOver(e) {
+  container.ondragover = function handleDragOver(e) {
     // Prevent default behavior (Prevent file from being opened)
     e.preventDefault();
   };
 
-  openButton.ondragenter = function handleDragEnter() {
+  container.ondragenter = function handleDragEnter() {
     openButton.classList.add('dropping');
+    // iframeContainer.style.pointerEvents = 'all';
   };
 
-  openButton.ondragleave = function handleDragLeave() {
+  container.ondragleave = function handleDragLeave() {
     openButton.classList.remove('dropping');
+    // iframeContainer.style.pointerEvents = 'none';
   };
 }

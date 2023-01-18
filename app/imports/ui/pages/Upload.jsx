@@ -11,6 +11,7 @@ import Resumable from 'resumablejs';
 
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import { useLocation } from 'react-router-dom';
 import { useAppContext } from '../contexts/context';
 import FTDropzone from '../components/francetransfert/Dropzone';
 import FTFoldForm from '../components/francetransfert/FoldForm';
@@ -104,6 +105,7 @@ export function initializeFold(sender, { data, files }) {
 export default function UploadPage() {
   const [{ isMobile, user }] = useAppContext();
   const { classes } = useStyles(isMobile);
+  const { state } = useLocation();
 
   /** @type {useState<Resumable.ResumableFile[]>} */
   const [files, setFiles] = useState([]);
@@ -159,6 +161,18 @@ export default function UploadPage() {
       });
     });
   }, []);
+
+  useEffect(() => {
+    if (state) {
+      if (Array.isArray(state)) {
+        state.forEach((file) => {
+          if (file instanceof File) {
+            resumable.current.addFile(file);
+          }
+        });
+      }
+    }
+  }, [state]);
 
   /**
    * @param {Resumable.ResumableFile} file
