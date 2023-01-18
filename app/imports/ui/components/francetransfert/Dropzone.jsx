@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from 'tss-react/mui';
 import i18n from 'meteor/universe:i18n';
@@ -20,9 +20,7 @@ import FontDownloadIcon from '@mui/icons-material/FontDownload';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-import { toast } from 'react-toastify';
 import { alpha } from '@mui/material/styles';
-import { useDropzone } from 'react-dropzone';
 import clsx from 'clsx';
 import { useAppContext } from '../../contexts/context';
 import usePrettyBytes from '../../hooks/usePrettyBytes';
@@ -57,8 +55,8 @@ const maxTotalSize = 20000000000; // 20 GB
 
 /**
  * @typedef {Object} FTDropzoneProps
- * @property {import('react').Dispatch<import('react').SetStateAction<File[]>>} setFiles
- * @property {File[]} files
+ * @property {Resumable.ResumableFile[]} files
+ * @property {(file: Resumable.ResumableFile, index: number) => void} onRemoveFile
  */
 
 /**
@@ -66,51 +64,24 @@ const maxTotalSize = 20000000000; // 20 GB
  * @returns
  */
 export default function FTDropzone(props) {
-  const { files, setFiles, className, ...rest } = props;
+  const { files, onRemoveFile, className, dropzoneRef, inputRef, ...rest } = props;
 
   const [{ isMobile }] = useAppContext();
   const { classes } = useStyles(isMobile);
 
   const totalSize = useMemo(() => files.reduce((acc, curr) => acc + curr.size, 0), [files]);
-
-  const remainingSize = maxTotalSize - totalSize;
-  const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
-    noClick: true,
-    multiple: true,
-    maxSize: remainingSize,
-    onDropAccepted(newFiles) {
-      setFiles(([...prev]) => {
-        // check for duplicates
-        newFiles.forEach((file) => {
-          // if the file is a duplicate, dont add it again and notify the user
-          if (prev.some((p) => p.path === file.path)) {
-            toast.info(i18n.__('pages.UploadPage.fileAlreadyExists', { name: file.name }));
-          } else {
-            prev.push(file);
-          }
-        });
-
-        return prev;
-      });
-    },
-  });
-
-  /**
-   * @param {File} file
-   */
-  const handleRemoveFile = useCallback((file) => {
-    setFiles((prev) => prev.filter((p) => p.path !== file.path));
-  }, []);
+  const [isDragActive, setDragActive] = useState(false);
 
   const formattedTotalSize = usePrettyBytes(totalSize);
   const formattedMaxTotalSize = usePrettyBytes(maxTotalSize);
 
   return (
     <Box
-      {...getRootProps({
-        ...rest,
-        className: clsx(className, classes.dropzone, isDragActive && classes.dropzoneActive),
-      })}
+      {...rest}
+      ref={dropzoneRef}
+      onDragEnter={() => setDragActive(true)}
+      onDragLeave={() => setDragActive(false)}
+      className={clsx(className, classes.dropzone, isDragActive && classes.dropzoneActive)}
     >
       {files.length > 0 && (
         <>
@@ -123,8 +94,12 @@ export default function FTDropzone(props) {
             })}
           </h4>
           <List dense className={classes.filesList}>
-            {files.map((file) => (
-              <FileSummary key={file.name} file={file} onRemove={() => handleRemoveFile(file)} />
+            {files.map((resumable, index) => (
+              <FileSummary
+                key={resumable.file.name}
+                file={resumable.file}
+                onRemove={() => onRemoveFile(resumable, index)}
+              />
             ))}
           </List>
         </>
@@ -137,8 +112,8 @@ export default function FTDropzone(props) {
         flex={files.length <= 0 ? '1' : '0'}
       >
         <IconButton color="primary" size={files.length <= 0 ? 'medium' : 'large'}>
-          <input {...getInputProps()} />
-          <AddCircleIcon fontSize="inherit" onClick={open} />
+          <input ref={inputRef} multiple />
+          <AddCircleIcon fontSize="inherit" />
         </IconButton>
         <Box mt={files.length <= 0 ? 4 : 0} textAlign="center">
           <Typography variant="subtitle1" fontWeight="700">
@@ -151,7 +126,12 @@ export default function FTDropzone(props) {
   );
 }
 
+FTDropzone.displayName = 'FTDropzone';
 FTDropzone.propTypes = {
+  files: PropTypes.array.isRequired,
+  onRemoveFile: PropTypes.func.isRequired,
+  dropzoneRef: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({ current: PropTypes.any })]).isRequired,
+  inputRef: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({ current: PropTypes.any })]).isRequired,
   ...Box.prototype,
 };
 

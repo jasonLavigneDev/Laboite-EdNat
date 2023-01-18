@@ -60,7 +60,10 @@
 
   // ------------------ CONTAINER WIDGET ------------------
   // Create Iframe
+  const iframeName = 'lb-widget';
   const iframeContainer = document.createElement('iframe');
+  iframeContainer.setAttribute('id', iframeName);
+  iframeContainer.setAttribute('name', iframeName);
   iframeContainer.setAttribute('class', 'lb_iframe-widget');
   iframeContainer.setAttribute('iframe-state', 'closed');
   iframeContainer.setAttribute('src', ROOT_URL);
@@ -109,8 +112,14 @@
     iframeContainer.setAttribute('iframe-state', 'closed');
     replaceOrAddClass(openButton, 'opened', 'closed');
   };
-  const toggleFullscreen = () => {
-    widgetContainer.classList.toggle('fullscreen');
+  const toggleFullscreen = (state = null) => {
+    if (state === true) {
+      widgetContainer.classList.add('fullscreen');
+    } else if (state === false) {
+      widgetContainer.classList.remove('fullscreen');
+    } else {
+      widgetContainer.classList.toggle('fullscreen');
+    }
   };
 
   const handleNotification = (content) => {
@@ -263,42 +272,15 @@
       });
     }
 
-    files.forEach((file, i) => {
-      console.log(`… file[${i}].name = ${file.name}`);
+    const iframeEvent = new CustomEvent('widget-drop', {
+      files,
     });
 
-    window.FTFiles = files;
-    // TODO: Remove hard-codded URL
-    const FTWindow = window.open(
-      'http://127.0.0.1:5500/app/private/widget/index.html',
-      // 'https://francetransfert.numerique.gouv.fr/upload',
-      '_blank',
-      'popup=true,width=600,height=800',
-    );
-    window.FTWindow = FTWindow;
-    FTWindow.focus();
-    FTWindow.postMessage('upload', '*', { files });
-
-    // This cannot work, because the rizommo script and the opener. Does not share a same-origin. So CORS will block any interraction
-    // FTWindow.addEventListener('load', () => {
-    //   /**
-    //    * @type {HTMLInputElement}
-    //    */
-    //   const input = FTWindow.document.querySelector('.upload-wrapper input[type="file"]');
-    //   if (input) {
-    //     input.files = window.FTFiles;
-    //   } else {
-    //     FTWindow.close();
-    //     window.focus();
-
-    //     // eslint-disable-next-line no-console
-    //     console.error('No file input found.');
-    //     // eslint-disable-next-line no-alert
-    //     alert('Impossible de transférer les fichiers');
-    //   }
-
-    //   FTWindow.console.debug('Files', window.FTFiles);
-    // });
+    // console.log(iframeContainer, iframeEvent);
+    iframeContainer.contentWindow.postMessage();
+    // iframeContainer.contentWindow.dispatchEvent(iframeEvent);
+    openRizimo();
+    // toggleFullscreen(true);
   };
 
   openButton.ondragover = function handleDragOver(e) {

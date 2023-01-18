@@ -8,6 +8,7 @@ import addNotification from './notifications/server/rest';
 import getStats from './stats/server/rest';
 import getNcToken from './nextcloud/server/rest';
 import { widget } from './widget';
+import { ftUploadProxy } from './francetransfert/server/rest';
 
 WebApp.connectHandlers.use(bodyParser.urlencoded({ extended: false }));
 WebApp.connectHandlers.use(bodyParser.json());
@@ -27,6 +28,7 @@ const options = {
 const rest = Rest.create(options);
 
 // adds connect-rest middleware to connect
+WebApp.connectHandlers.use('/api/francetransfert/upload', Meteor.bindEnvironment(ftUploadProxy));
 WebApp.connectHandlers.use(rest.processRequest());
 
 // rest.get('/notifications/?userid', Meteor.bindEnvironment(getNotifications));
