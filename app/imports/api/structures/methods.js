@@ -325,7 +325,7 @@ export const updateStructureIntroduction = new ValidatedMethod({
     }
     const isAdminOfStructure = hasAdminRightOnStructure({
       userId: this.userId,
-      structureId: structure.parentId ? structure.parentId : structureId,
+      structureId,
     });
     const authorized = isActive(this.userId) && (Roles.userIsInRole(this.userId, 'admin') || isAdminOfStructure);
 
