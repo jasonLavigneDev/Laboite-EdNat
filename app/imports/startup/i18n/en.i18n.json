@@ -1225,7 +1225,7 @@
         "body_addTooltip": "Add a group",
         "body_editTooltip": "Modify this group",
         "body_deleteTooltip": "Remove this group",
-        "body_editRow_deleteText": "Do you really want to delete this group ?"
+        "body_editRow_deleteText": "Do you really want to delete this group and unsubscribe its members ?"
       }
     },
     "AdminNextcloudUrlPage": {
