@@ -2,8 +2,6 @@
 // import meter from 'stream-meter';
 import { FT } from '../ft';
 
-const { apiKey } = Meteor.settings?.franceTransfert || {};
-
 /**
  *
  * @param {import('connect').IncomingMessage} request
@@ -27,7 +25,6 @@ export default function ftUploadProxy(request, response) {
         accept: request.headers.accept,
         'content-type': request.headers['content-type'],
         'content-length': request.headers['content-length'],
-        cleAPI: apiKey,
       },
       data,
       // data: passTroughStream,
