@@ -581,7 +581,7 @@
     },
     "MainMenu": {
       "menuUserBookmarks": "Marque-pages",
-      "menuUpload": "Transférer des fichier",
+      "menuUpload": "Transférer des fichiers",
       "menuProfileLabel": "Profil",
       "menuHelpLabel": "Aide",
       "menuLogoutLabel": "Se déconnecter",
@@ -962,7 +962,7 @@
   },
   "pages": {
     "UploadPage": {
-      "description": "{$appName} permet d'envoyer des fichiers volumineux non sensibles de manière sécurisée à un agent de l'Etat ou entre agents grâce à France transfert.",
+      "description": "Vous pouvez envoyer des fichiers volumineux non sensibles de manière sécurisée à un agent de l'Etat ou entre agents grâce à France transfert.",
       "fileCount": "{$count} éléments",
       "totalSize": "{$totalSize} / {$maxSize}",
       "fileAlreadyExists": "Le fichier {$name} est déjà importé.",

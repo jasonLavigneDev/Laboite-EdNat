@@ -958,7 +958,7 @@
   },
   "pages": {
     "UploadPage": {
-      "description": "{$appName} allows you to send large, non-sensitive files securely to a government agent or between agents using France transfert.",
+      "description": "You can send large, non-sensitive files securely to a government agent or between agents using France transfert.",
       "fileCount": "{$count} elements",
       "fileAlreadyExists": "The file {$name} is already imported.",
       "emailFold": "Email",
