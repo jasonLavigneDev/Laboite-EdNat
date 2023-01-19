@@ -1,4 +1,4 @@
-import React, { lazy, useEffect } from 'react';
+import React, { Suspense, lazy, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { useAppContext } from '../../contexts/context';
@@ -26,7 +26,11 @@ export default function LocalizationLayout({ children }) {
       break;
   }
 
-  return <Lang>{children}</Lang>;
+  return (
+    <Suspense fallback={children}>
+      <Lang>{children}</Lang>
+    </Suspense>
+  );
 }
 
 LocalizationLayout.propTypes = {
