@@ -97,13 +97,13 @@ export default () => (
   <MatomoProvider value={instance}>
     <CacheProvider value={muiCache}>
       <ThemeProvider theme={lightTheme}>
-        <LocalizationLayout>
-          <BrowserRouter>
-            <DynamicStore>
+        <BrowserRouter>
+          <DynamicStore>
+            <LocalizationLayout>
               <App />
-            </DynamicStore>
-          </BrowserRouter>
-        </LocalizationLayout>
+            </LocalizationLayout>
+          </DynamicStore>
+        </BrowserRouter>
       </ThemeProvider>
     </CacheProvider>
   </MatomoProvider>
