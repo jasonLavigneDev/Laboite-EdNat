@@ -596,20 +596,22 @@ const ProfilePage = () => {
                       {errors.username}
                     </FormHelperText>
                   </FormControl>
-                  <TextField
-                    disabled={enableKeycloak}
-                    margin="normal"
-                    id="nclocator"
-                    label={i18n.__('pages.ProfilePage.nclocator')}
-                    name="nclocator"
-                    autoComplete="nclocator"
-                    fullWidth
-                    type="text"
-                    value={
-                      `${userData?.username}@${userData?.nclocator}` || i18n.__('pages.ProfilePage.emptyNcLocator')
-                    }
-                    variant="outlined"
-                  />
+                  {Meteor.settings.public.groupPlugins.nextcloud.enable && (
+                    <TextField
+                      disabled={enableKeycloak}
+                      margin="normal"
+                      id="nclocator"
+                      label={i18n.__('pages.ProfilePage.nclocator')}
+                      name="nclocator"
+                      autoComplete="nclocator"
+                      fullWidth
+                      type="text"
+                      value={
+                        `${userData?.username}@${userData?.nclocator}` || i18n.__('pages.ProfilePage.emptyNcLocator')
+                      }
+                      variant="outlined"
+                    />
+                  )}
                 </Grid>
                 <Grid item xs={isMobile ? 12 : 4}>
                   <AvatarPicker

@@ -30,6 +30,8 @@ import { useAppContext } from '../../contexts/context';
 import UserBookmarks from '../../../api/userBookmarks/userBookmarks';
 import CollapsingSearch from '../system/CollapsingSearch';
 
+const { disabledFeatures } = Meteor.settings.public;
+
 const useStyles = (isMobile) =>
   makeStyles()((theme) => ({
     small: {
@@ -477,7 +479,7 @@ function PersonalZoneUpdater({
                 </Grid>
               ) : null}
             </Grid>
-            {!edition && localPS.unsorted.filter(filterGroup).length !== 0
+            {!edition && !disabledFeatures.groups && localPS.unsorted.filter(filterGroup).length !== 0
               ? [
                   <PersonalZone
                     key="zone-favGroup-000000000000"
