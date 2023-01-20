@@ -7,7 +7,6 @@ import Structures from '../structures/structures';
 import { getLabel } from '../utils';
 import { getRandomNCloudURL } from '../nextcloud/methods';
 import AsamExtensions from '../asamextensions/asamextensions';
-import { generateDefaultPersonalSpace } from '../personalspaces/methods';
 
 const AppRoles = ['candidate', 'member', 'animator', 'admin', 'adminStructure'];
 
@@ -242,20 +241,6 @@ if (Meteor.isServer) {
 
     return newUser;
   });
-
-  Meteor.users.after.update(
-    function afterUpdateUser(userId, userDocument) {
-      const previousStructure = this.previous.structure;
-      const isAdvancedPersonalPage = this.previous.advancedPersonalPage;
-      if (
-        previousStructure !== userDocument.structure ||
-        (isAdvancedPersonalPage && !userDocument.advancedPersonalPage)
-      ) {
-        generateDefaultPersonalSpace.call({ userId: userDocument._id });
-      }
-    },
-    { fetchPrevious: true },
-  );
 }
 
 Meteor.users.helpers({
