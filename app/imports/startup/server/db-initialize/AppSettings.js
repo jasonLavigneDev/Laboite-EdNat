@@ -33,6 +33,11 @@ Meteor.startup(() => {
         link: '',
         content: '',
       },
+      personalSpace: {
+        external: false,
+        link: '',
+        content: '',
+      },
 
       userStructureValidationMandatory: false,
     });
