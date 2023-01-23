@@ -97,7 +97,7 @@ AppSettings.schema = new SimpleSchema(
     },
     personalSpace: {
       type: SettingsType('personal_space'),
-      label: getLabel('api.appsettings.labels.personal_data'),
+      label: getLabel('api.appsettings.labels.personalSpace'),
     },
     maintenance: {
       type: Boolean,
