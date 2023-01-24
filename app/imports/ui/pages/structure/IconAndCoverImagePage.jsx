@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { makeStyles } from 'tss-react/mui';
 import Grid from '@mui/material/Grid';
 import Fade from '@mui/material/Fade';
@@ -10,14 +10,14 @@ import Spinner from '../../components/system/Spinner';
 import { useAppContext } from '../../contexts/context';
 import Structures from '../../../api/structures/structures';
 
-const useStyles = () =>
+const useStyles = (isMobile) =>
   makeStyles()((theme) => ({
     parentImgWrapper: {
       flexDirection: 'column',
     },
     imgWrapper: {
       position: 'relative',
-      height: '175px',
+      height: !isMobile ? '175px' : '',
     },
     coverImg: {
       display: 'block',
@@ -27,8 +27,8 @@ const useStyles = () =>
     },
     iconImg: {
       position: 'absolute',
-      bottom: '-48px',
-      height: '100px',
+      bottom: !isMobile ? '-48px' : '-25px',
+      height: !isMobile ? '100px' : '50px',
     },
     containerGrid: {
       paddingTop: theme.spacing(0),
@@ -42,16 +42,14 @@ const useStyles = () =>
       paddingRight: '0px !important',
     },
     containerGridImgWrapper: {
-      // marginRight: '-32px !important',
-      // marginLeft: '-32px !important'',
       marginLeft: '0px !important',
       width: 'auto !important',
     },
   }));
 
 const IconAndCoverImagePage = () => {
-  const [{ user, loadingUser }] = useAppContext();
-  const { classes } = useStyles()();
+  const [{ user, loadingUser, isMobile }] = useAppContext();
+  const { classes } = useStyles(isMobile)();
 
   const { userStructure, coverAltValue, iconAltValue } = useTracker(() => {
     if (user) {
@@ -65,6 +63,20 @@ const IconAndCoverImagePage = () => {
     return { userStructure: null, coverAltValue: null, iconAltValue: null };
   }, [user]);
 
+  const imgWrapperRef = useRef(null);
+  const iconImgRef = useRef(null);
+  useEffect(() => {
+    // update cover and icon images style for a widget mode
+    if (userStructure?.coverUrlImage !== undefined) {
+      imgWrapperRef.current.style.height = !isMobile ? '175px' : 'auto';
+    }
+
+    if (userStructure?.iconUrlImage !== undefined) {
+      iconImgRef.current.style.bottom =
+        !isMobile || (isMobile && userStructure?.coverUrlImage === undefined) ? '-48px' : '-25px';
+      iconImgRef.current.style.height = !isMobile ? '100px' : '50px';
+    }
+  }, [isMobile]);
   return (
     <>
       {loadingUser ? (
@@ -73,19 +85,27 @@ const IconAndCoverImagePage = () => {
         <Fade in>
           <Container className={classes.containerGrid}>
             <Grid container spacing={4} className={classes.containerGridImgWrapper}>
-              {userStructure?.coverUrlImage !== undefined && userStructure?.iconUrlImage !== undefined && (
+              {(userStructure?.coverUrlImage !== undefined || userStructure?.iconUrlImage !== undefined) && (
                 <Grid item xs={12} sm={12} md={12} className={classes.containerGridItem}>
                   <div className={classes.parentImgWrapper}>
-                    <div className={classes.imgWrapper}>
-                      <img src={userStructure?.coverUrlImage} alt={coverAltValue} className={classes.coverImg} />
-                      <Container>
-                        <img
-                          src={userStructure?.iconUrlImage}
-                          alt={iconAltValue}
-                          className={classes.iconImg}
-                          id="iconImgId"
-                        />
-                      </Container>
+                    <div
+                      className={userStructure?.coverUrlImage !== undefined ? classes.imgWrapper : ''}
+                      ref={imgWrapperRef}
+                    >
+                      {userStructure?.coverUrlImage !== undefined && (
+                        <img src={userStructure?.coverUrlImage} alt={coverAltValue} className={classes.coverImg} />
+                      )}
+                      {userStructure?.iconUrlImage !== undefined && (
+                        <Container>
+                          <img
+                            src={userStructure?.iconUrlImage}
+                            alt={iconAltValue}
+                            className={classes.iconImg}
+                            id="iconImgId"
+                            ref={iconImgRef}
+                          />
+                        </Container>
+                      )}
                     </div>
                   </div>
                 </Grid>
