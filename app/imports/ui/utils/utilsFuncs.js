@@ -31,5 +31,19 @@ export const getGroupName = (group) => {
   return `[STRUC] ${group.name.slice(group.name.indexOf('_') + 1, group.name.length)}`;
 };
 
+export const compareBussinessRegrouping = (firstBussRegr, secBussRegr) => {
+  // Use toUpperCase() to ignore character casing
+  const firstBussRegrName = firstBussRegr.name.toUpperCase();
+  const secBussRegrName = secBussRegr.name.toUpperCase();
+
+  let comparison = 0;
+  if (firstBussRegrName > secBussRegrName) {
+    comparison = 1;
+  } else if (firstBussRegrName < secBussRegrName) {
+    comparison = -1;
+  }
+  return comparison;
+};
+
 // delete when there is more than one function in this file
 export const tempFunction = (args) => console.log(args);

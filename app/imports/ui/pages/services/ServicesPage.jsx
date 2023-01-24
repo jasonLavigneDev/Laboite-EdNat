@@ -40,6 +40,7 @@ import ServiceDetailsListZone from '../../components/services/ServiceDetailsList
 import { useIconStyles, DetaiIconCustom, SimpleIconCustom } from '../../components/system/icons/icons';
 import { useStructure } from '../../../api/structures/hooks';
 import { GRID_VIEW_MODE } from '../../utils/ui';
+import { compareBussinessRegrouping } from '../../utils/utilsFuncs';
 
 const useStyles = makeStyles()((theme, isMobile) => ({
   flex: {
@@ -382,22 +383,24 @@ export function ServicesPage({ services, categories, businessRegroupings, ready,
               {services.length > 0 &&
                 isBusinessRegroupingMode &&
                 structureMode &&
-                businessRegroupings.map(
-                  (businessRegrouping, i) =>
-                    servicesByBusinessRegrouping(businessRegrouping).length > 0 && (
-                      <ServiceDetailsListZone
-                        key={`BusinessRegroupingZone${i + 1}`}
-                        services={servicesByBusinessRegrouping(businessRegrouping)}
-                        index={i}
-                        title={businessRegrouping.name}
-                        favAction={favAction}
-                        isShort={!isMobile && viewMode === GRID_VIEW_MODE.compact}
-                        isSorted
-                        isExpandedZone
-                        isShortMobile={isMobile && viewMode === GRID_VIEW_MODE.compact}
-                      />
-                    ),
-                )}
+                businessRegroupings
+                  .sort(compareBussinessRegrouping)
+                  .map(
+                    (businessRegrouping, i) =>
+                      servicesByBusinessRegrouping(businessRegrouping).length > 0 && (
+                        <ServiceDetailsListZone
+                          key={`BusinessRegroupingZone${i + 1}`}
+                          services={servicesByBusinessRegrouping(businessRegrouping)}
+                          index={i}
+                          title={businessRegrouping.name}
+                          favAction={favAction}
+                          isShort={!isMobile && viewMode === GRID_VIEW_MODE.compact}
+                          isSorted
+                          isExpandedZone
+                          isShortMobile={isMobile && viewMode === GRID_VIEW_MODE.compact}
+                        />
+                      ),
+                  )}
             </Grid>
             <Dialog fullScreen open={filterToggle && isMobile} TransitionComponent={Transition}>
               <AppBar className={classes.appBar}>
