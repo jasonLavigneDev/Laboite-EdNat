@@ -713,7 +713,7 @@ export const setStructure = new ValidatedMethod({
           if (oldStruct.groupId) {
             const group = Groups.findOne({ _id: oldStruct.groupId });
             if (group !== undefined && group.members.indexOf(user._id) !== -1) {
-              RemoveUserFromGroupsOfOldStructure(this.userId, user);
+              RemoveUserFromGroupsOfOldStructure(user);
             }
           }
         }
