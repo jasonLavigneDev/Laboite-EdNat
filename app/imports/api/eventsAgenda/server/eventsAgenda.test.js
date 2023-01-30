@@ -10,6 +10,7 @@ import EventsAgenda from '../eventsAgenda';
 import './factories';
 import './publications';
 import Groups from '../../groups/groups';
+import '../../groups/server/factories';
 import { setMemberOf } from '../../users/server/methods';
 
 describe('eventAgenda', function eventTests() {
@@ -68,7 +69,7 @@ describe('eventAgenda', function eventTests() {
       });
       Meteor.users.update({}, { $set: { isActive: true } }, { multi: true });
       Roles.addUsersToRoles(adminId, 'admin');
-      group = Factory.create('group', { owner: adminId, trype: 0 });
+      group = Factory.create('group', { owner: adminId, type: 0 });
       groupId = group._id;
       group2 = Factory.create('group', { owner: adminId, type: 5 });
       group2Id = group2._id;

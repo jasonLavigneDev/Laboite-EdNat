@@ -26,6 +26,7 @@ import { usePagination } from '../../utils/hooks';
 import TopBar from '../../components/menus/TopBar';
 import CollapsingSearch from '../../components/system/CollapsingSearch';
 import Footer from '../../components/menus/Footer';
+import { testMeteorSettingsUrl } from '../../utils/utilsFuncs';
 
 const useStyles = makeStyles()((theme) => ({
   root: {
@@ -149,15 +150,13 @@ function ArticlesPage({
   };
 
   const mapList = (func) => items.filter((article) => filterServices(article)).map(func);
-  const blogPage = Meteor.settings.public.laboiteBlogURL || `${Meteor.absoluteUrl()}public/`;
+  const blogPage =
+    testMeteorSettingsUrl(Meteor.settings.public.laboiteBlogURL, true) || `${Meteor.absoluteUrl()}public/`;
 
   const handleCopyURL = () => {
     let myPublicPublicationURL;
     if (Meteor.settings.public.laboiteBlogURL) {
-      myPublicPublicationURL = `${blogPage}/authors/${Meteor.userId()}`;
-      if (blogPage.charAt(blogPage.length - 1) === '/') {
-        myPublicPublicationURL = `${blogPage}authors/${Meteor.userId()}`;
-      }
+      myPublicPublicationURL = `${blogPage}authors/${Meteor.userId()}`;
     } else {
       myPublicPublicationURL = `${blogPage}${Meteor.userId()}`;
     }

@@ -17,6 +17,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import CreateIcon from '@mui/icons-material/Create';
 import Chip from '@mui/material/Chip';
+import { getGroupName } from '../../utils/utilsFuncs';
 
 const useStyles = makeStyles()((theme) => ({
   action: {
@@ -148,7 +149,7 @@ export default function ArticleDetails({ article, publicPage }) {
           {article.groups && (
             <div className={classes.tags}>
               {article.groups.map((group) => {
-                return <Chip className={classes.tag} key={group._id} label={group.name} color="secondary" />;
+                return <Chip className={classes.tag} key={group._id} label={getGroupName(group)} color="secondary" />;
               })}
             </div>
           )}

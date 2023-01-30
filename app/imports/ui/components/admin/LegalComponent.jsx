@@ -46,19 +46,20 @@ const quillOptions = {
   formats: ['header', 'bold', 'italic', 'underline', 'strike', 'blockquote', 'list', 'bullet', 'indent', 'link'],
 };
 
-const LegalComponent = ({ tabkey, data = {} }) => {
+const LegalComponent = ({ tabkey, ...props }) => {
+  const configData = props[tabkey] || {};
   const { classes } = useStyles();
-  const [state, setState] = useObjectState(data);
+  const [state, setState] = useObjectState(configData);
   const [loading, setLoading] = useState(true);
   const [changes, setChanges] = useState(false);
 
   useEffect(() => {
-    setState({ ...data });
+    setState({ ...configData });
     setLoading(false);
-  }, [data]);
+  }, []);
 
   useEffect(() => {
-    if (JSON.stringify(state) !== JSON.stringify(data)) {
+    if (JSON.stringify(state) !== JSON.stringify(configData)) {
       setChanges(true);
     } else {
       setChanges(false);
@@ -84,9 +85,8 @@ const LegalComponent = ({ tabkey, data = {} }) => {
     }
   };
 
-  const onSubmitUpdateData = () => {
+  const onSubmitUpdateconfigData = () => {
     setLoading(true);
-
     updateAppsettings.call({ ...state, key: tabkey }, (error) => {
       setLoading(false);
       if (error) {
@@ -98,7 +98,7 @@ const LegalComponent = ({ tabkey, data = {} }) => {
   };
 
   const onCancel = () => {
-    setState({ ...data });
+    setState({ ...configData });
   };
 
   if (loading && !!state) {
@@ -135,7 +135,7 @@ const LegalComponent = ({ tabkey, data = {} }) => {
             {i18n.__('components.LegalComponent.cancel')}
           </Button>
 
-          <Button variant="contained" color="primary" onClick={onSubmitUpdateData} disabled={loading}>
+          <Button variant="contained" color="primary" onClick={onSubmitUpdateconfigData} disabled={loading}>
             {i18n.__('components.LegalComponent.update')}
           </Button>
         </div>
@@ -146,11 +146,11 @@ const LegalComponent = ({ tabkey, data = {} }) => {
 
 LegalComponent.propTypes = {
   tabkey: PropTypes.string.isRequired,
-  data: PropTypes.objectOf(PropTypes.any),
+  configData: PropTypes.objectOf(PropTypes.any),
 };
 
 LegalComponent.defaultProps = {
-  data: {},
+  configData: {},
 };
 
 export default LegalComponent;

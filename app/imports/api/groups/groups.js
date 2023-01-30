@@ -26,7 +26,7 @@ Groups.schema = new SimpleSchema(
       index: true,
       unique: true,
       min: 1,
-      max: 60,
+      max: 90,
       label: getLabel('api.groups.labels.name'),
     },
     slug: {
@@ -70,7 +70,7 @@ Groups.schema = new SimpleSchema(
     },
     type: {
       type: SimpleSchema.Integer,
-      allowedValues: [0, 5, 10], // 0 Ouvert, 5 Modéré, 10 Fermé
+      allowedValues: [0, 5, 10, 15], // 0 Ouvert, 5 Modéré, 10 Fermé, 15: Automatique
       label: getLabel('api.groups.labels.type'),
     },
     avatar: {
@@ -158,6 +158,7 @@ Groups.typeLabels = {
   0: 'api.groups.types.open',
   5: 'api.groups.types.moderated',
   10: 'api.groups.types.private',
+  15: 'api.groups.types.automatic',
 };
 
 Groups.publicFields = {

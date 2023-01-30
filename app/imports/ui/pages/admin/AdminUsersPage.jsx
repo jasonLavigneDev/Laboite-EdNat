@@ -28,6 +28,7 @@ import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications';
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import DeleteIcon from '@mui/icons-material/Delete';
+import CloudIcon from '@mui/icons-material/Cloud';
 import Pagination from '@mui/material/Pagination';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
@@ -217,7 +218,15 @@ const AdminUsersPage = ({ match: { path } }) => {
     const copyUserId = () => {
       navigator.clipboard.writeText(user._id).then(msg.success(i18n.__('pages.AdminUsersPage.successCopyUserId')));
     };
+    const copyNcLocator = () => {
+      const federationId = `${user.username}@${user.nclocator}`;
+      navigator.clipboard
+        .writeText(federationId)
+        .then(msg.success(i18n.__('pages.AdminUsersPage.successCopyNcLocator')));
+    };
+
     const isDeleting = verifyDelete === user._id;
+    const haveNcLocator = !!user.nclocator;
 
     const actionButtons = [
       {
@@ -246,6 +255,12 @@ const AdminUsersPage = ({ match: { path } }) => {
         onclick: copyUserId,
         icon: <VpnKeyIcon />,
         hidden: isDeleting,
+      },
+      {
+        label: i18n.__('pages.AdminUsersPage.copyNcLocator'),
+        onclick: copyNcLocator,
+        icon: <CloudIcon />,
+        hidden: isDeleting || !haveNcLocator,
       },
       {
         label: i18n.__('pages.AdminUsersPage.sendNotif'),
@@ -417,7 +432,12 @@ const AdminUsersPage = ({ match: { path } }) => {
                             (button) =>
                               !button.hidden && (
                                 <Tooltip key={button.label} title={button.label} aria-label={button.label}>
-                                  <IconButton edge="end" aria-label={button.label} onClick={button.onclick}>
+                                  <IconButton
+                                    edge="end"
+                                    aria-label={button.label}
+                                    onClick={button.onclick}
+                                    sx={{ padding: '0 0.5vw' }}
+                                  >
                                     {button.icon}
                                   </IconButton>
                                 </Tooltip>

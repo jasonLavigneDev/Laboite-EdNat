@@ -23,6 +23,7 @@ import Select from '@mui/material/Select';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import LanguageIcon from '@mui/icons-material/Language';
+import CloudIcon from '@mui/icons-material/Cloud';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import SendIcon from '@mui/icons-material/Send';
 import { useHistory } from 'react-router-dom';
@@ -33,6 +34,7 @@ import Spinner from '../../components/system/Spinner';
 import Groups from '../../../api/groups/groups';
 import { getStructure } from '../../../api/structures/hooks';
 import { GroupSearch, GroupPaginate } from './common';
+import { testMeteorSettingsUrl } from '../../utils/utilsFuncs';
 
 const useStyles = makeStyles()((theme) => ({
   root: {
@@ -119,7 +121,7 @@ const AddressBook = ({ loading, group, slug }) => {
   const { disabledFeatures = {} } = Meteor.settings.public;
   const enableBlog = !disabledFeatures.blog;
   const authorBlogPage = Meteor.settings.public.laboiteBlogURL
-    ? `${Meteor.settings.public.laboiteBlogURL}/authors/`
+    ? `${testMeteorSettingsUrl(Meteor.settings.public.laboiteBlogURL)}/authors/`
     : `${Meteor.absoluteUrl()}public/`;
 
   return (
@@ -174,6 +176,7 @@ const AddressBook = ({ loading, group, slug }) => {
                   <List className={classes.list} disablePadding>
                     {items.map((user, i) => {
                       const structure = getStructure(user.structure);
+                      const federationId = `${user.username}@${user.nclocator}`;
 
                       return [
                         <ListItem alignItems="flex-start" key={`user-${user.emails[0].address}`}>
@@ -192,12 +195,30 @@ const AddressBook = ({ loading, group, slug }) => {
                                 >
                                   {user.emails[0].address}
                                 </Typography>
-                                {structure.name !== undefined ? ` - ${structure.name}` : null}
+                                {structure.name
+                                  ? ` - ${structure.name}`
+                                  : ` - ${i18n.__('pages.AddressBook.noStructure')}`}
                               </>
                             }
                           />
 
                           <ListItemSecondaryAction>
+                            {!!user.nclocator && (
+                              <Tooltip title={`${i18n.__('pages.AdminUsersPage.copyNcLocator')}`} aria-label="add">
+                                <IconButton
+                                  edge="end"
+                                  aria-label="comments"
+                                  onClick={() =>
+                                    navigator.clipboard
+                                      .writeText(federationId)
+                                      .then(msg.success(i18n.__('pages.AdminUsersPage.successCopyNcLocator')))
+                                  }
+                                  size="large"
+                                >
+                                  <CloudIcon />
+                                </IconButton>
+                              </Tooltip>
+                            )}
                             {user.mezigName ? (
                               <Tooltip
                                 title={`${i18n.__('pages.AddressBook.goToMezig')} ${user.firstName}`}
@@ -208,7 +229,9 @@ const AddressBook = ({ loading, group, slug }) => {
                                   aria-label="comments"
                                   onClick={() =>
                                     window.open(
-                                      `${Meteor.settings.public.services.mezigUrl}/profil/${user.mezigName}`,
+                                      `${testMeteorSettingsUrl(Meteor.settings.public.services.mezigUrl)}/profil/${
+                                        user.mezigName
+                                      }`,
                                       '_blank',
                                     )
                                   }

@@ -37,6 +37,7 @@ import { CustomToolbarArticle } from '../../components/system/CustomQuill';
 import '../../utils/QuillVideo';
 import AvatarPicker from '../../components/users/AvatarPicker';
 import AdminGroupDelete from '../../components/admin/AdminGroupDelete';
+import { getGroupName } from '../../utils/utilsFuncs';
 
 const useStyles = makeStyles()((theme) => ({
   root: {
@@ -130,6 +131,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
   const [loading, setLoading] = useState(!!params._id);
   const [tabId, setTabId] = React.useState(0);
   const [content, setContent] = useState('');
+  const isAutomaticGroup = group.type === 15;
   const [openRemoveModal, setOpenRemoveModal] = useState(false);
 
   const [plugins, setPlugins] = useState({}); // { nextcloud: false, rocketChat: true}
@@ -140,7 +142,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
 
   const [{ userId }] = useAppContext();
   const isAdmin = Roles.userIsInRole(userId, 'admin', params._id);
-  const canDelete = isAdmin || group.owner === userId;
+  const canDelete = (isAdmin || group.owner === userId) && !isAutomaticGroup;
 
   const typeLabel = React.useRef(null);
   const { minioEndPoint } = Meteor.settings.public;
@@ -230,6 +232,15 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
     setTempImageLoaded(false);
     history.goBack();
   };
+
+  const nameIsInvalid = () => {
+    return !isAutomaticGroup && groupData.name.toLowerCase().includes('[struc]');
+  };
+
+  const typeIsInvalid = () => {
+    return !isAutomaticGroup && groupData.type === 15;
+  };
+
   const submitUpdateGroup = () => {
     if (groupData.avatar !== group.avatar) {
       if (tempImageLoaded && minioEndPoint) {
@@ -251,39 +262,44 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
     const method = params._id ? updateGroup : createGroup;
     setLoading(true);
     const { _id, slug, avatar, ...rest } = groupData;
-    let args;
+    if (!isAutomaticGroup && rest.name.toLowerCase().includes('[struc]')) {
+      msg.error(i18n.__('pages.AdminSingleGroupPage.invalidName'));
+      history.goBack();
+    } else {
+      let args;
 
-    if (params._id) {
-      args = {
-        groupId: params._id,
-        data: {
+      if (params._id) {
+        args = {
+          groupId: params._id,
+          data: {
+            ...rest,
+            content,
+            plugins,
+            avatar: avatar.replace('groupAvatar_TEMP.png', 'groupAvatar.png'),
+          },
+        };
+      } else {
+        args = {
           ...rest,
           content,
           plugins,
-          avatar: avatar.replace('groupAvatar_TEMP.png', 'groupAvatar.png'),
-        },
-      };
-    } else {
-      args = {
-        ...rest,
-        content,
-        plugins,
-        avatar,
-      };
-    }
-    method.call(args, (error) => {
-      setLoading(false);
-      if (error) {
-        msg.error(error.reason ? error.reason : error.message);
-      } else {
-        msg.success(i18n.__('api.methods.operationSuccessMsg'));
-        if (history.location.state?.prevPath.includes('groups/')) {
-          history.push(`/groups/${slug}`);
-        } else {
-          history.goBack();
-        }
+          avatar,
+        };
       }
-    });
+      method.call(args, (error) => {
+        setLoading(false);
+        if (error) {
+          msg.error(error.reason ? error.reason : error.message);
+        } else {
+          msg.success(i18n.__('api.methods.operationSuccessMsg'));
+          if (history.location.state?.prevPath.includes('groups/')) {
+            history.push(`/groups/${slug}`);
+          } else {
+            history.goBack();
+          }
+        }
+      });
+    }
   };
 
   if (!ready || loading || (!!params._id && !group._id)) {
@@ -333,7 +349,8 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
         <Paper className={classes.root}>
           <Grid item xs={12} sm={12} md={12} className={classes.flex}>
             <Typography component="h1" style={{ width: '100%' }}>
-              {i18n.__(`pages.AdminSingleGroupPage.${params._id ? 'edition' : 'creation'}`)} <b>{groupData.name}</b>
+              {i18n.__(`pages.AdminSingleGroupPage.${params._id ? 'edition' : 'creation'}`)}{' '}
+              <b>{getGroupName(group)}</b>
             </Typography>
           </Grid>
 
@@ -348,7 +365,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
                   variant="outlined"
                   fullWidth
                   margin="normal"
-                  disabled={(!isAdmin && !!params._id) || !groupEnableChangeName}
+                  disabled={(!isAdmin && !!params._id) || !groupEnableChangeName || isAutomaticGroup}
                 />
                 <TextField
                   onChange={onUpdateField}
@@ -372,13 +389,15 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
                     name="type"
                     value={groupData.type}
                     onChange={onUpdateField}
-                    disabled={!isAdmin && !!params._id}
+                    disabled={(!isAdmin && !!params._id) || isAutomaticGroup}
                   >
-                    {Object.keys(Groups.typeLabels).map((val) => (
-                      <MenuItem key={val} value={val}>
-                        {i18n.__(Groups.typeLabels[val])}
-                      </MenuItem>
-                    ))}
+                    {Object.keys(Groups.typeLabels)
+                      .filter((type) => type !== '15')
+                      .map((val) => (
+                        <MenuItem key={val} value={val}>
+                          {i18n.__(Groups.typeLabels[val])}
+                        </MenuItem>
+                      ))}
                   </Select>
                 </FormControl>
                 <TextField
@@ -450,7 +469,13 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
                   {i18n.__('pages.AdminSingleGroupPage.delete')}
                 </Button>
               ) : null}
-              <Button variant="contained" color="primary" onClick={submitUpdateGroup} className={classes.button}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={submitUpdateGroup}
+                disabled={nameIsInvalid() || typeIsInvalid()}
+                className={classes.button}
+              >
                 {params._id ? i18n.__('pages.AdminSingleGroupPage.update') : i18n.__('pages.AdminSingleGroupPage.save')}
               </Button>
             </div>

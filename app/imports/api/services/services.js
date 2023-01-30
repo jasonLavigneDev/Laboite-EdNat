@@ -73,6 +73,8 @@ Services.schema = new SimpleSchema(
       optional: true,
       label: getLabel('api.services.labels.offline'),
     },
+    businessReGrouping: { type: Array, defaultValue: [], label: getLabel('api.services.labels.businessReGrouping') },
+    'businessReGrouping.$': { type: String, regEx: SimpleSchema.RegEx.Id },
   },
   { clean: { removeEmptyStrings: false }, tracker: Tracker },
 );
@@ -90,6 +92,7 @@ Services.publicFields = {
   url: 1,
   logo: 1,
   categories: 1,
+  businessReGrouping: 1,
   usage: 1,
   team: 1,
   slug: 1,

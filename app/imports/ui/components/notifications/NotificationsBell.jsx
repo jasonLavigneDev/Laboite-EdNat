@@ -10,24 +10,29 @@ import Notifications from '../../../api/notifications/notifications';
 import Notification from './Notification';
 import notificationSystem from './NotificationSystem';
 import { badgeStyle } from '../groups/GroupBadge';
-import { useAppContext } from '../../contexts/context';
+import * as flags from '../../utils/flags';
 
 const useStyles = makeStyles()((theme) => badgeStyle(theme));
 
+const sendNonReadNotificationCountToWindow = (count) => {
+  if (flags.IS_FRAMED) {
+    window.top.postMessage(
+      {
+        type: 'notifications',
+        content: count,
+      },
+      '*',
+    );
+  }
+};
+
 const NotificationsBell = ({ nonReadNotifsCount }) => {
-  const [{ isIframed }] = useAppContext();
   const { classes } = useStyles();
+
   useEffect(() => {
-    if (isIframed) {
-      window.top.postMessage(
-        {
-          type: 'notifications',
-          content: nonReadNotifsCount,
-        },
-        '*',
-      );
-    }
+    sendNonReadNotificationCountToWindow(nonReadNotifsCount);
   }, [nonReadNotifsCount]);
+
   return (
     <div id="NotificationsBell">
       {nonReadNotifsCount > 0 ? (
@@ -57,6 +62,9 @@ export default withTracker(() => {
 
   const notifications = Notifications.find({}, { sort: { createdAt: -1 } }).fetch() || [];
   const nonReadNotifsCount = Notifications.find({ userId: Meteor.userId(), read: false }).count();
+
+  sendNonReadNotificationCountToWindow(nonReadNotifsCount);
+
   return {
     nonReadNotifsCount,
     notifications,

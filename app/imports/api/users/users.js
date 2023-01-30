@@ -2,13 +2,11 @@ import { Meteor } from 'meteor/meteor';
 import SimpleSchema from 'simpl-schema';
 import { Tracker } from 'meteor/tracker';
 import { Roles } from 'meteor/alanning:roles';
-import i18n from 'meteor/universe:i18n';
-import { getLabel } from '../utils';
-import checkDomain from '../domains';
 import logServer from '../logging';
+import Structures from '../structures/structures';
+import { getLabel } from '../utils';
 import { getRandomNCloudURL } from '../nextcloud/methods';
-import { generateDefaultPersonalSpace } from '../personalspaces/methods';
-import PersonalSpaces from '../personalspaces/personalspaces';
+import AsamExtensions from '../asamextensions/asamextensions';
 
 const AppRoles = ['candidate', 'member', 'animator', 'admin', 'adminStructure'];
 
@@ -182,6 +180,11 @@ Meteor.users.schema = new SimpleSchema(
       },
       label: getLabel('api.users.labels.ncloud'),
     },
+    nctoken: {
+      type: String,
+      optional: true,
+      label: getLabel('api.users.labels.ncloudToken'),
+    },
     articlesEnable: {
       type: Boolean,
       optional: true,
@@ -214,6 +217,21 @@ if (Meteor.isServer) {
       logServer('Creating new user after Keycloak authentication :');
       logServer(`  Keycloak id: ${user.services.keycloak.id}`);
       logServer(`  email: ${user.services.keycloak.email}`);
+
+      // split the email in two parts
+      const splittedEmail = user.services.keycloak.email.split('@');
+      // remove first part to keep extension
+      splittedEmail.shift();
+      const emailExtension = AsamExtensions.findOne({ extension: splittedEmail.join('') });
+      if (typeof emailExtension !== 'undefined' && typeof emailExtension.structureId === 'string') {
+        const structure = Structures.findOne({ _id: emailExtension.structureId });
+        // If we have a structure, assign it to user and make them directly active
+        if (typeof structure !== 'undefined') {
+          newUser.structure = structure._id;
+          newUser.isActive = true;
+        }
+      }
+
       newUser.emails = [{ address: user.services.keycloak.email, verified: true }];
     }
     if (options.firstName) newUser.firstName = options.firstName;
@@ -223,92 +241,6 @@ if (Meteor.isServer) {
 
     return newUser;
   });
-  // server side login hook
-  Accounts.onLogin((details) => {
-    const loginDate = new Date();
-    if (details.type === 'keycloak') {
-      // update user informations from existing data and keycloak service data
-      const updateInfos = {
-        ...details.user,
-        lastLogin: loginDate,
-        primaryEmail: details.user.services.keycloak.email,
-      };
-      delete updateInfos.services;
-      delete updateInfos.profile;
-      if (details.user.services.keycloak.given_name) {
-        updateInfos.firstName = details.user.services.keycloak.given_name;
-      }
-      if (details.user.services.keycloak.family_name) {
-        updateInfos.lastName = details.user.services.keycloak.family_name;
-      }
-      if (
-        details.user.services.keycloak.preferred_username &&
-        details.user.services.keycloak.preferred_username !== details.user.username
-      ) {
-        // use preferred_username as username if defined
-        // (should be set as mandatory in keycloak)
-        updateInfos.username = details.user.services.keycloak.preferred_username;
-      }
-      if (details.user.isActive === false) {
-        // auto activate user based on email address
-        if (
-          checkDomain(details.user.services.keycloak.email) ||
-          Meteor.settings.keycloak.adminEmails.indexOf(details.user.services.keycloak.email) !== -1
-        ) {
-          updateInfos.isActive = true;
-          updateInfos.isRequest = false;
-        } else {
-          // user email not whitelisted, request activation by admin
-          updateInfos.isRequest = true;
-        }
-      }
-      // make sure that default values are set for this user
-      const cleanedInfo = Meteor.users.simpleSchema().clean(updateInfos);
-      Meteor.users.update({ _id: details.user._id }, { $set: cleanedInfo });
-      // Manage primary email change
-      if (details.user.primaryEmail !== details.user.services.keycloak.email) {
-        updateInfos.email = details.user.services.keycloak.email;
-        Accounts.addEmail(details.user._id, details.user.services.keycloak.email, true);
-        if (details.user.primaryEmail !== undefined) {
-          Accounts.removeEmail(details.user._id, details.user.primaryEmail);
-        }
-      }
-      // check if user is defined as admin in settings
-      if (Meteor.settings.keycloak.adminEmails.indexOf(details.user.services.keycloak.email) !== -1) {
-        if (!Roles.userIsInRole(details.user._id, 'admin')) {
-          Roles.addUsersToRoles(details.user._id, 'admin');
-          updateInfos.admin = true;
-          logServer(`${i18n.__('api.users.adminGiven')} : ${details.user.services.keycloak.email}`);
-        }
-      }
-      // signal updates to plugins
-      Meteor.call('users.userUpdated', { userId: details.user._id, data: updateInfos }, (err) => {
-        if (err) console.log(err);
-      });
-
-      // check if user has a personnal space generated from structure
-      const pSpace = PersonalSpaces.findOne({ userId: details.user._id });
-      if (details.user.structure && !pSpace) {
-        generateDefaultPersonalSpace.call({ userId: details.user._id });
-      }
-    } else {
-      Meteor.users.update({ _id: details.user._id }, { $set: { lastLogin: loginDate } });
-    }
-  });
-
-  Meteor.users.after.update(
-    function afterUpdateUser(userId, userDocument) {
-      const previousStructure = this.previous.structure;
-      const isAdvancedPersonalPage = this.previous.advancedPersonalPage;
-      if (
-        previousStructure !== userDocument.structure ||
-        (isAdvancedPersonalPage && !userDocument.advancedPersonalPage)
-      ) {
-        generateDefaultPersonalSpace.call({ userId: userDocument._id });
-      }
-    },
-    { fetchPrevious: true },
-  );
 }
 
 Meteor.users.helpers({

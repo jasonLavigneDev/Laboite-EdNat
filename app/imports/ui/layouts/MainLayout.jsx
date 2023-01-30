@@ -32,6 +32,7 @@ const SingleGroupPage = lazy(() => import('../pages/groups/SingleGroupPage'));
 const AddressBook = lazy(() => import('../pages/groups/AddressBook'));
 const EventsPage = lazy(() => import('../pages/groups/EventsPage'));
 const PollPage = lazy(() => import('../pages/groups/PollPage'));
+const GroupArticlesPage = lazy(() => import('../pages/groups/GroupArticlesPage'));
 const ContactPage = lazy(() => import('../pages/system/Contact'));
 const ProfilePage = lazy(() => import('../pages/system/ProfilePage'));
 const ArticlesPage = lazy(() => import('../pages/articles/ArticlesPage'));
@@ -51,8 +52,8 @@ const AdminSingleGroupPage = lazy(() => import('../pages/admin/AdminSingleGroupP
 // CSS
 export const useLayoutStyles = makeStyles()((theme, isMobile) => ({
   root: {
-    display: 'flex',
-    position: 'relative',
+    // display: 'flex',
+    // position: 'relative',
   },
   container: {
     width: `calc(100% - ${isMobile ? 65 : 300}px)`,
@@ -69,8 +70,11 @@ export const useLayoutStyles = makeStyles()((theme, isMobile) => ({
       duration: theme.transitions.duration.leavingScreen,
     }),
     overflow: 'hidden',
-    marginTop: !isMobile && theme.shape.headerHeight ? theme.shape.headerHeight : 60,
     marginBottom: isMobile ? 100 : 50,
+  },
+  mainMarginTop: {
+    marginTop: isMobile ? 60 : 20,
+    // marginTop: !isMobile && theme.shape.headerHeight ? theme.shape.headerHeight : 60,
   },
   flex: {
     display: 'flex',
@@ -114,7 +118,7 @@ function MainLayout({ appsettings, ready }) {
         {loadingUser && ready ? (
           <Spinner full />
         ) : (
-          <main className={classes.content} id="main">
+          <main className={`${classes.content} ${classes.mainMarginTop}`} id="main">
             {appsettings.maintenance && isAdmin ? (
               <Alert className={classes.alertMaintenance} variant="filled" severity="error">
                 {i18n.__(`layouts.MainLayout.alertMaintenance`)}
@@ -153,6 +157,9 @@ function MainLayout({ appsettings, ready }) {
                       {!disabledFeatures.groups && <Route exact path="/groups/:slug/poll" component={PollPage} />}
                       {!disabledFeatures.groups && (
                         <Route exact path="/groups/:slug/bookmarks" component={BookmarksPage} />
+                      )}
+                      {!disabledFeatures.groups && (
+                        <Route exact path="/groups/:slug/articles" component={GroupArticlesPage} />
                       )}
                       {!disabledFeatures.groups && <Route exact path="/admingroups" component={AdminGroupsPage} />}
                       {!disabledFeatures.groups && (

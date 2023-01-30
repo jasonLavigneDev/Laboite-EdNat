@@ -9,6 +9,9 @@ import Structures, { IntroductionStructure } from './structures';
 import { hasAdminRightOnStructure, isAStructureWithSameNameExistWithSameParent } from './utils';
 import Services from '../services/services';
 import Articles from '../articles/articles';
+import Groups from '../groups/groups';
+import { _createGroup, _removeGroup } from '../groups/methods';
+import { removeFilesFolder } from '../files/server/methods';
 
 export const createStructure = new ValidatedMethod({
   name: 'structures.createStructure',
@@ -61,6 +64,28 @@ export const createStructure = new ValidatedMethod({
       }
     }
 
+    const strucName = `${structureId}_${name}`;
+
+    _createGroup({
+      name: strucName,
+      type: 15,
+      description: 'groupe structure',
+      content: '',
+      avatar: '',
+      plugins: {},
+      userId: this.userId,
+    });
+
+    const structure = Structures.findOne({ _id: structureId });
+
+    if (structure) {
+      const group = Groups.findOne({ name: strucName });
+      if (group) {
+        structure.groupId = group._id;
+        Structures.update({ _id: structureId }, { $set: { groupId: group._id } });
+      }
+    }
+
     return structureId;
   },
 });
@@ -103,9 +128,59 @@ export const updateStructure = new ValidatedMethod({
       throw new Meteor.Error('api.structures.updateStructure.notPermitted', i18n.__('api.structures.nameAlreadyTaken'));
     }
 
+    const group = Groups.findOne({ _id: structure.groupId });
+    if (group) {
+      group.name = `${structure._id}_${name}`;
+      Groups.update({ _id: group._id }, { $set: { name: `${structure._id}_${name}` } });
+    }
     return Structures.update({ _id: structureId }, { $set: { name } });
   },
 });
+
+export const setUserStructureAdminValidationMandatoryStatus = new ValidatedMethod({
+  name: 'structures.setUserStructureAdminValidationMandatoryStatus',
+  validate: new SimpleSchema({
+    structureId: { type: String, regEx: SimpleSchema.RegEx.Id, label: getLabel('api.structures.labels.id') },
+    userStructureValidationMandatory: {
+      type: Boolean,
+      label: getLabel('api.appsettings.userStructureValidationMandatory'),
+    },
+  }).validator(),
+
+  run({ structureId, userStructureValidationMandatory }) {
+    // check structure existence
+    const structure = Structures.findOne({ _id: structureId });
+    if (structure === undefined) {
+      throw new Meteor.Error(
+        'api.structures.setUserStructureAdminValidationMandatoryStatus.unknownStructure',
+        i18n.__('api.structures.unknownStructure'),
+      );
+    }
+
+    const isAdminOfStructure = hasAdminRightOnStructure({ userId: this.userId, structureId });
+    const authorized = isActive(this.userId) && (Roles.userIsInRole(this.userId, 'admin') || isAdminOfStructure);
+
+    if (!authorized) {
+      throw new Meteor.Error(
+        'api.structures.setUserStructureAdminValidationMandatoryStatus.notPermitted',
+        i18n.__('api.users.notPermitted'),
+      );
+    }
+
+    return Structures.update({ _id: structureId }, { $set: { userStructureValidationMandatory } });
+  },
+});
+const structureRemoveIconOrCoverImagesFromMinio = (structure, removeIconImg, removeCoverImg) => {
+  if (Meteor.isServer && !Meteor.isTest && Meteor.settings.public.minioEndPoint) {
+    if (structure.iconUrlImage && removeIconImg) {
+      removeFilesFolder(`structures/${structure._id}/iconImg`);
+    }
+
+    if (structure.coverUrlImage && removeCoverImg) {
+      removeFilesFolder(`structures/${structure._id}/coverImg`);
+    }
+  }
+};
 
 export const removeStructure = new ValidatedMethod({
   name: 'structures.removeStructure',
@@ -168,6 +243,13 @@ export const removeStructure = new ValidatedMethod({
       }
     }
 
+    const group = Groups.findOne({ _id: structure.groupId });
+    if (group) {
+      _removeGroup({ groupId: group._id, userId: this.userId });
+    }
+    // If there are icon or cover images ==> delete them from minio
+    structureRemoveIconOrCoverImagesFromMinio(structure, true, true);
+
     return Structures.remove(structureId);
   },
 });
@@ -222,7 +304,6 @@ export const updateStructureContactEmail = new ValidatedMethod({
     if (!authorized) {
       throw new Meteor.Error('api.structures.updateContactEmail.notPermitted', i18n.__('api.users.notPermitted'));
     }
-
     return Structures.update({ _id: structureId }, { $set: { contactEmail } });
   },
 });
@@ -244,7 +325,7 @@ export const updateStructureIntroduction = new ValidatedMethod({
     }
     const isAdminOfStructure = hasAdminRightOnStructure({
       userId: this.userId,
-      structureId: structure.parentId ? structure.parentId : structureId,
+      structureId,
     });
     const authorized = isActive(this.userId) && (Roles.userIsInRole(this.userId, 'admin') || isAdminOfStructure);
 
@@ -275,6 +356,14 @@ export const updateStructureIntroduction = new ValidatedMethod({
   },
 });
 
+export const getStructures = new ValidatedMethod({
+  name: 'structures.getStructures',
+  validate: null,
+  run() {
+    return Structures.find().fetch();
+  },
+});
+
 // Get list of all method names on Structures
 const LISTS_METHODS = _.pluck(
   [
@@ -284,11 +373,69 @@ const LISTS_METHODS = _.pluck(
     getAllChilds,
     updateStructureIntroduction,
     updateStructureContactEmail,
+    getStructures,
+    setUserStructureAdminValidationMandatoryStatus,
   ],
   'name',
 );
 
 if (Meteor.isServer) {
+  Meteor.methods({
+    updateStructureIconOrCoverImage({ structureId, iconUrlImage, coverUrlImage }) {
+      const structure = Structures.findOne({ _id: structureId });
+
+      if (structure === undefined) {
+        throw new Meteor.Error(
+          'api.structures.updateIconOrCoverImage.unknownStructure',
+          i18n.__('api.structures.unknownStructure'),
+        );
+      }
+
+      const authorized = isActive(this.userId) && hasAdminRightOnStructure({ userId: this.userId, structureId });
+
+      if (!authorized) {
+        throw new Meteor.Error('api.structures.updateIconOrCoverImage.notPermitted', i18n.__('api.users.notPermitted'));
+      }
+      let res = -1;
+
+      if (iconUrlImage !== '-1') res = Structures.update({ _id: structureId }, { $set: { iconUrlImage } });
+
+      if (coverUrlImage !== '-1') res = Structures.update({ _id: structureId }, { $set: { coverUrlImage } });
+      // Structures.update({ _id: structureId }, { $set: { iconUrlImage, coverUrlImage } });
+
+      return res;
+    },
+
+    deleteIconOrCoverImage({ structureId, iconUrlImage, coverUrlImage }) {
+      const structure = Structures.findOne({ _id: structureId });
+
+      if (structure === undefined) {
+        throw new Meteor.Error(
+          'api.structures.updateIconOrCoverImage.unknownStructure',
+          i18n.__('api.structures.unknownStructure'),
+        );
+      }
+
+      const authorized = isActive(this.userId) && hasAdminRightOnStructure({ userId: this.userId, structureId });
+
+      if (!authorized) {
+        throw new Meteor.Error('api.structures.deleteIconOrCoverImage.notPermitted', i18n.__('api.users.notPermitted'));
+      }
+
+      // If there are icon or cover images ==> delete them from minio
+      structureRemoveIconOrCoverImagesFromMinio(structure, iconUrlImage !== '-1', coverUrlImage !== -1);
+
+      let res = {};
+
+      if (iconUrlImage !== '-1') res = Structures.update({ _id: structureId }, { $unset: { iconUrlImage: '' } });
+
+      if (coverUrlImage !== '-1') res = Structures.update({ _id: structureId }, { $unset: { coverUrlImage: '' } });
+      // Structures.update({ _id: structureId }, { $set: { iconUrlImage, coverUrlImage } });
+
+      return res;
+    },
+  });
+
   // Only allow 5 list operations per connection per second
   DDPRateLimiter.addRule(
     {

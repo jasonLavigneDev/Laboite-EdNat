@@ -61,7 +61,7 @@ const onDelete = ({ structureId }) => {
   });
 };
 
-const useModalStyles = makeStyles()(() => ({
+export const useModalStyles = makeStyles()(() => ({
   modal: {
     display: 'flex',
     alignItems: 'center',

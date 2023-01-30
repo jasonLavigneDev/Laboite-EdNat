@@ -4,12 +4,16 @@
 import { PublicationCollector } from 'meteor/johanbrook:publication-collector';
 import { assert } from 'chai';
 import { Meteor } from 'meteor/meteor';
+import { Roles } from 'meteor/alanning:roles';
 import { _ } from 'meteor/underscore';
 import '../../../startup/i18n/en.i18n.json';
 import faker from 'faker';
 import { Random } from 'meteor/random';
 import { Factory } from 'meteor/dburles:factory';
 import { Accounts } from 'meteor/accounts-base';
+import Groups from '../../groups/groups';
+import '../../groups/server/factories';
+import { setMemberOf } from '../../users/server/methods';
 
 import Articles from '../articles';
 import {
@@ -92,6 +96,120 @@ describe('articles', function () {
           assert.equal(art.title, 'coucou');
           done();
         });
+      });
+    });
+  });
+  describe('group publications', function eventPublications() {
+    let userId;
+    let adminId;
+    let memberId;
+    let group;
+    let group2;
+    let groupId;
+    let group2Id;
+    beforeEach(function beforeTesting() {
+      Groups.remove({});
+      Articles.remove({});
+      Meteor.roleAssignment.remove({});
+      Meteor.roles.remove({});
+      Meteor.users.remove({});
+      Roles.createRole('admin');
+      Roles.createRole('member');
+
+      userId = Accounts.createUser({
+        username: 'randomguy',
+        password: 'toto',
+        email: faker.internet.email(),
+        structure: faker.company.companyName(),
+        firstName: faker.name.firstName(),
+        lastName: faker.name.lastName(),
+        groupCount: 0,
+        groupQuota: 10,
+      });
+      adminId = Accounts.createUser({
+        email: faker.internet.email(),
+        username: 'admin',
+        password: 'toto',
+        structure: faker.company.companyName(),
+        firstName: faker.name.firstName(),
+        lastName: faker.name.lastName(),
+        groupCount: 0,
+        groupQuota: 10,
+      });
+      memberId = Accounts.createUser({
+        email: faker.internet.email(),
+        username: 'member',
+        password: 'toto',
+        structure: faker.company.companyName(),
+        firstName: faker.name.firstName(),
+        lastName: faker.name.lastName(),
+        groupCount: 0,
+        groupQuota: 10,
+      });
+      Meteor.users.update({}, { $set: { isActive: true } }, { multi: true });
+      Roles.addUsersToRoles(adminId, 'admin');
+      group = Factory.create('group', { owner: adminId, type: 0 });
+      groupId = group._id;
+      group2 = Factory.create('group', { owner: adminId, type: 5 });
+      group2Id = group2._id;
+      setMemberOf._execute({ userId: memberId }, { userId: memberId, groupId });
+      setMemberOf._execute({ userId: adminId }, { userId: memberId, groupId: group2Id });
+
+      _.times(3, () => {
+        Factory.create('article', {
+          _id: Random.id(),
+          userId: adminId,
+          groups: [
+            { _id: groupId, name: 'group', type: 0 },
+            { _id: group2Id, name: 'group2', type: 5 },
+          ],
+        });
+      });
+    });
+    describe('groups.articles', function eventsForUserPub() {
+      it('does send articles from a public group when not member', function groupArticlesPub(done) {
+        const collector = new PublicationCollector({ userId });
+        collector.collect(
+          'groups.articles',
+          { page: 1, search: '', slug: group.slug, itemPerPage: 10 },
+          (collections) => {
+            assert.equal(collections.articles.length, 3);
+            done();
+          },
+        );
+      });
+      it('does not send articles from a protected group when not member', function groupArticlesProtected(done) {
+        const collector = new PublicationCollector({ userId });
+        collector.collect(
+          'groups.articles',
+          { page: 1, search: '', slug: group2.slug, itemPerPage: 10 },
+          (collections) => {
+            assert.equal(collections.articles, undefined);
+            done();
+          },
+        );
+      });
+      it('does send articles from a protected group when admin', function groupArticlesProtectedAdmin(done) {
+        const collector = new PublicationCollector({ userId: adminId });
+        collector.collect(
+          'groups.articles',
+          { page: 1, search: '', slug: group2.slug, itemPerPage: 10 },
+          (collections) => {
+            assert.equal(collections.articles.length, 3);
+            done();
+          },
+        );
+      });
+      it('does send articles from a protected group when member', function groupArticlesProtectedMember(done) {
+        const collector = new PublicationCollector({ userId: memberId });
+        collector.collect(
+          'groups.articles',
+          { page: 1, search: '', slug: group2.slug, itemPerPage: 10 },
+          (collections) => {
+            assert.equal(collections.articles.length, 3);
+            done();
+          },
+        );
       });
     });
   });

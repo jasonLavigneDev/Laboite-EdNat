@@ -17,6 +17,7 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import RestorePageIcon from '@mui/icons-material/RestorePage';
 import HttpIcon from '@mui/icons-material/Http';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import EmailIcon from '@mui/icons-material/Email';
 import SettingsInputComponentIcon from '@mui/icons-material/SettingsInputComponent';
 import SettingsIcon from '@mui/icons-material/Settings';
 import CategoryIcon from '@mui/icons-material/Category';
@@ -62,9 +63,10 @@ export default function AdminMenu() {
     return Counts.get('users.request.count');
   });
 
-  const usersAwaitingStructureCount = useTracker(() => {
+  const { usersAwaitingStructureCount, hideStructureusersvalidation } = useTracker(() => {
     Meteor.subscribe('users.awaitingForStructure.count', { structureId: user.structure });
-    return Counts.get('users.awaitingForStructure.count');
+    const res = Counts.get('users.awaitingForStructure.count');
+    return { usersAwaitingStructureCount: res, hideStructureusersvalidation: res <= 0 };
   });
 
   const isAdmin = Roles.userIsInRole(user._id, 'admin');
@@ -80,6 +82,10 @@ export default function AdminMenu() {
     updateDocumentTitle(i18n.__(`components.MainMenu.${item.content}`));
     history.push(item.path);
   };
+  const {
+    ui: { isBusinessRegroupingMode },
+  } = Meteor.settings.public;
+
   const adminMenu = [
     {
       path: '/admin/groups',
@@ -142,9 +148,16 @@ export default function AdminMenu() {
       icon: <SettingsIcon />,
       hidden: !isAdmin,
     },
+    { path: '/admin/asam', content: 'menuAdminAsam', icon: <EmailIcon />, hidden: !isAdmin },
     {
       path: 'adminDivider',
       content: 'Divider',
+    },
+    {
+      path: '/admin/businessRegrouping',
+      content: 'menuAdminBusinessRegrouping',
+      icon: <CategoryIcon />,
+      hidden: !isAdminStructure || !isBusinessRegroupingMode,
     },
     {
       path: '/admin/structureservices',
@@ -174,14 +187,14 @@ export default function AdminMenu() {
       path: '/admin/structureusersvalidation',
       content: 'menuAdminOfStructureUsersValidation',
       icon: <GroupAddIcon />,
-      hidden: !isUserStructureValidationMandatory || !isAdminStructure,
+      hidden: (!isUserStructureValidationMandatory && hideStructureusersvalidation) || !isAdminStructure,
       chip: usersAwaitingStructureCount,
     },
     {
       path: '/admin/structurespaces',
       content: 'menuAdminDefaultSpaces',
       icon: <RestorePageIcon />,
-      hidden: !isAdminStructure,
+      hidden: !isAdminStructure || disabledFeatures.menuAdminDefaultSpaces,
     },
     {
       path: 'adminDivider2',

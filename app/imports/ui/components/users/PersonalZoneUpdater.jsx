@@ -6,12 +6,14 @@ import { makeStyles } from 'tss-react/mui';
 import Container from '@mui/material/Container';
 import { Link } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
 import i18n from 'meteor/universe:i18n';
 import Typography from '@mui/material/Typography';
 import Fade from '@mui/material/Fade';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
+import Divider from '@mui/material/Divider';
 
 import Switch from '@mui/material/Switch';
 import EditIcon from '@mui/icons-material/Edit';
@@ -27,6 +29,8 @@ import Animation from '../screencast/Animation';
 import { useAppContext } from '../../contexts/context';
 import UserBookmarks from '../../../api/userBookmarks/userBookmarks';
 import CollapsingSearch from '../system/CollapsingSearch';
+
+const { disabledFeatures } = Meteor.settings.public;
 
 const useStyles = (isMobile) =>
   makeStyles()((theme) => ({
@@ -123,8 +127,9 @@ const useStyles = (isMobile) =>
       marginBottom: 15,
     },
     screen: {
-      marginTop: 30,
-      marginBottom: 40,
+      padding: 10,
+      display: 'flex',
+      justifyContent: 'flex-end',
     },
   }));
 
@@ -134,6 +139,7 @@ function PersonalZoneUpdater({
   allServices,
   allGroups,
   allLinks,
+  appSettingsValues,
   edition,
   handleEditionData,
 }) {
@@ -202,6 +208,10 @@ function PersonalZoneUpdater({
       }
     }
     return false;
+  };
+
+  const doNotDisplayHidenServices = (element) => {
+    return filterService(element) || filterGroup(element) || filterLink(element);
   };
   // focus on search input when it appears
   useEffect(() => {
@@ -372,7 +382,7 @@ function PersonalZoneUpdater({
   };
 
   const notReady = isLoading || loadingUser;
-
+  const { personalSpace = {} } = appSettingsValues;
   return (
     <>
       {notReady ? (
@@ -380,9 +390,9 @@ function PersonalZoneUpdater({
       ) : (
         <Fade in>
           <Container className={classes.cardGrid}>
-            <Grid container spacing={4}>
+            <Grid container spacing={4} className={classes.cardGrid}>
               <Grid item xs={12} sm={12} md={12} className={classes.flex}>
-                <Grid container alignItems="center" spacing={1}>
+                <Grid container alignItems="center" spacing={1} style={{ paddingBottom: '2%' }}>
                   {!edition && (
                     <Grid item>
                       <Typography variant={isMobile ? 'h5' : 'h4'}>{i18n.__('pages.PersonalPage.welcome')}</Typography>
@@ -442,19 +452,34 @@ function PersonalZoneUpdater({
                   inputRef={inputRef}
                 />
               </Grid>
+            </Grid>
+            <Grid container spacing={4}>
               {!edition && localPS.unsorted.length === 0 && localPS.sorted.length === 0 ? (
-                <Grid>
-                  <Animation />
-                  <div className={classes.screen}>
-                    <Link to="/services">
-                      {i18n.__('pages.PersonalPage.noFavYet')}
-                      <NavigateNextIcon className={classes.goIcon} />
-                    </Link>
-                  </div>
+                <Grid item md={12} xs={12}>
+                  <Paper className={classes.expansionpanel}>
+                    {personalSpace?.content?.length > 0 && !personalSpace?.external && (
+                      <div
+                        style={{ padding: '10px' }}
+                        dangerouslySetInnerHTML={{ __html: personalSpace?.content || '' }}
+                      />
+                    )}
+                    {personalSpace?.external && personalSpace?.link && (
+                      <Animation videoLink={personalSpace?.link} notReady={notReady} />
+                    )}
+                    <Divider />
+                    <div className={classes.screen}>
+                      <Link to="/services">
+                        <Button variant="contained" color="primary">
+                          {i18n.__('pages.PersonalPage.noFavYet')}
+                          <NavigateNextIcon className={classes.goIcon} />
+                        </Button>
+                      </Link>
+                    </div>
+                  </Paper>
                 </Grid>
               ) : null}
             </Grid>
-            {!edition && localPS.unsorted.filter(filterGroup).length !== 0
+            {!edition && !disabledFeatures.groups && localPS.unsorted.filter(filterGroup).length !== 0
               ? [
                   <PersonalZone
                     key="zone-favGroup-000000000000"
@@ -513,7 +538,7 @@ function PersonalZoneUpdater({
             {localPS.sorted.map(({ zone_id: zoneId, elements, name, isExpanded }, index) => [
               <PersonalZone
                 key={`zone-${zoneId}`}
-                elements={elements.filter(filterSearch)}
+                elements={elements.filter(filterSearch).filter(doNotDisplayHidenServices)}
                 index={index}
                 title={name}
                 edition={edition}
@@ -564,6 +589,7 @@ PersonalZoneUpdater.propTypes = {
   allServices: PropTypes.arrayOf(PropTypes.object).isRequired,
   allGroups: PropTypes.arrayOf(PropTypes.object).isRequired,
   allLinks: PropTypes.arrayOf(PropTypes.object).isRequired,
+  appSettingsValues: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 PersonalZoneUpdater.defaultProps = {

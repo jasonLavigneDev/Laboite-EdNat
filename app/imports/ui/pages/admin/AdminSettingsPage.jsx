@@ -31,6 +31,7 @@ import {
   setUserStructureValidationMandatoryStatus,
 } from '../../../api/appsettings/methods';
 import InfoEditionComponent from '../../components/admin/InfoEditionComponent';
+import AdminStructureValidationMandatory from '../../components/admin/AdminStructureValidationMandatory';
 
 const useStyles = makeStyles()((theme) => ({
   root: {
@@ -48,7 +49,7 @@ const useStyles = makeStyles()((theme) => ({
   },
 }));
 
-const AdminSettingsPage = ({ ready, appsettings }) => {
+const AdminSettingsPage = ({ appsettings }) => {
   const [msgMaintenance, setMsgMaintenance] = useState(appsettings.textMaintenance);
   const { classes } = useStyles();
   const [userStructureValidationMandatory, setUserStructureValidationMandatory] = useState(
@@ -57,6 +58,7 @@ const AdminSettingsPage = ({ ready, appsettings }) => {
   const [loading, setLoading] = useState(true);
   const [{ isMobile }] = useAppContext();
   const [open, setOpen] = useState(false);
+  const [migrationVersion, setMigrationVersion] = useState('');
 
   const tabs = [
     {
@@ -75,31 +77,41 @@ const AdminSettingsPage = ({ ready, appsettings }) => {
       key: 'legal',
       title: i18n.__('pages.AdminSettingsPage.legal'),
       Element: LegalComponent,
-      ElementProps: { data: appsettings.legal || [] },
+      ElementProps: { legal: appsettings.legal || [] },
     },
     {
       key: 'personalData',
       title: i18n.__('pages.AdminSettingsPage.personalData'),
       Element: LegalComponent,
-      ElementProps: { data: appsettings.personalData || [] },
+      ElementProps: { personalData: appsettings.personalData || [] },
     },
     {
       key: 'accessibility',
       title: i18n.__('pages.AdminSettingsPage.accessibility'),
       Element: LegalComponent,
-      ElementProps: { data: appsettings.accessibility || [] },
+      ElementProps: { accessibility: appsettings.accessibility || [] },
     },
     {
       key: 'gcu',
       title: i18n.__('pages.AdminSettingsPage.gcu'),
       Element: LegalComponent,
-      ElementProps: { data: appsettings.gcu || [] },
+      ElementProps: { gcu: appsettings.gcu || [] },
+    },
+    {
+      key: 'personalSpace',
+      title: i18n.__('pages.AdminSettingsPage.personalSpace'),
+      Element: LegalComponent,
+      ElementProps: { personalSpace: appsettings.personalSpace },
+      hideExternal: false,
     },
   ];
 
-  if (loading && !ready && !appsettings) {
-    return <Spinner full />;
-  }
+  useEffect(() => {
+    Meteor.call('migration.getVersion', {}, (error, result) => {
+      if (error) console.log(error);
+      setMigrationVersion(result);
+    });
+  }, []);
 
   useEffect(() => {
     if (appsettings.textMaintenance !== msgMaintenance) setMsgMaintenance(appsettings.textMaintenance);
@@ -125,16 +137,13 @@ const AdminSettingsPage = ({ ready, appsettings }) => {
       (error) => {
         setLoading(false);
         if (error) {
+          // console.log(error);
           msg.error(error.message);
         } else {
           msg.success(i18n.__('api.methods.operationSuccessMsg'));
         }
       },
     );
-  };
-
-  const onCheckUserStructureValidationMandatory = (e) => {
-    setUserStructureValidationMandatory(e.target.checked);
   };
 
   const onCheckMaintenance = () => {
@@ -146,6 +155,7 @@ const AdminSettingsPage = ({ ready, appsettings }) => {
   };
 
   const onButtonMaintenanceClick = () => {
+    <Spinner full />;
     setLoading(true);
     updateTextMaintenance.call({ text: msgMaintenance }, (error) => {
       setLoading(false);
@@ -173,9 +183,9 @@ const AdminSettingsPage = ({ ready, appsettings }) => {
     msgMaintenance === appsettings.textMaintenance
   );
 
-  const isUserStructureValidationMandatoryButtonActive =
-    userStructureValidationMandatory !== appsettings.userStructureValidationMandatory;
-  return (
+  return loading && !appsettings ? (
+    <Spinner full />
+  ) : (
     <Fade in>
       <Container>
         <TabbedForms tabs={tabs} globalTitle={i18n.__('pages.AdminSettingsPage.edition')} />
@@ -183,6 +193,9 @@ const AdminSettingsPage = ({ ready, appsettings }) => {
           <Grid container spacing={4}>
             <Grid item md={12}>
               <Typography variant={isMobile ? 'h6' : 'h4'}>{i18n.__('pages.AdminSettingsPage.maintenance')}</Typography>
+              <Typography>
+                {i18n.__('pages.AdminSettingsPage.dbVersion')} : {migrationVersion}
+              </Typography>
             </Grid>
             <Grid item md={12} className={classes.container}>
               <FormControlLabel
@@ -222,42 +235,14 @@ const AdminSettingsPage = ({ ready, appsettings }) => {
           </Grid>
         </Paper>
         <Paper className={classes.root}>
-          <Grid container spacing={4}>
-            <Grid item md={12}>
-              <Typography variant={isMobile ? 'h6' : 'h4'}>
-                {i18n.__('pages.AdminSettingsPage.userStructureValidationMandatory')}
-              </Typography>
-            </Grid>
-            <Grid item md={12} className={classes.container}>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={userStructureValidationMandatory}
-                    onChange={onCheckUserStructureValidationMandatory}
-                    name="external"
-                    color="primary"
-                  />
-                }
-                label={i18n.__(`pages.AdminSettingsPage.toggleUserStructureValidationMandatory`)}
-              />
-            </Grid>
-            <FormControlLabel
-              className={classes.containerForm}
-              control={
-                <div style={{ marginTop: '-20px', marginLeft: '25px' }}>
-                  <Button
-                    size="medium"
-                    variant="contained"
-                    color="primary"
-                    disabled={!isUserStructureValidationMandatoryButtonActive}
-                    onClick={onSetUserStructureValidationMandatoryStatus}
-                  >
-                    {i18n.__(`pages.AdminSettingsPage.buttonUserStructureValidationMandatory`)}
-                  </Button>
-                </div>
-              }
-            />
-          </Grid>
+          <AdminStructureValidationMandatory
+            userStructureValidationMandatory={userStructureValidationMandatory}
+            isUserStructureValidationMandatoryButtonActive={
+              userStructureValidationMandatory !== appsettings.userStructureValidationMandatory
+            }
+            onCheckStructureAdminValidationMandatory={setUserStructureValidationMandatory}
+            onSetUserStructureValidationMandatoryStatus={onSetUserStructureValidationMandatoryStatus}
+          />
         </Paper>
         <Dialog
           open={open}
@@ -293,12 +278,10 @@ const AdminSettingsPage = ({ ready, appsettings }) => {
 };
 
 export default withTracker(() => {
-  const subSettings = Meteor.subscribe('appsettings.all');
+  // const subSettings = Meteor.subscribe('appsettings.all');
   const appsettings = AppSettings.findOne();
-  const ready = subSettings.ready();
   return {
     appsettings,
-    ready,
   };
 })(AdminSettingsPage);
 
@@ -308,5 +291,4 @@ AdminSettingsPage.defaultProps = {
 
 AdminSettingsPage.propTypes = {
   appsettings: PropTypes.objectOf(PropTypes.any),
-  ready: PropTypes.bool.isRequired,
 };

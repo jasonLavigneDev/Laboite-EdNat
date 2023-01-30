@@ -13,7 +13,7 @@ import logServer from '../logging';
 import UserBookmarks from '../userBookmarks/userBookmarks';
 import DefaultSpaces from '../defaultspaces/defaultspaces';
 
-const addItem = (userId, item) => {
+export const addItem = (userId, item) => {
   const currentPersonalSpace = PersonalSpaces.findOne({ userId });
   let alreadyExists = false;
   if (currentPersonalSpace === undefined) {
@@ -316,6 +316,7 @@ export const generateDefaultPersonalSpace = new ValidatedMethod({
 
     // add all services to favorites in user schema
     let servicesAdded = [...unsorted];
+
     if (defaultSpace && defaultSpace.sorted) {
       defaultSpace.sorted.forEach(({ elements = [] }) => {
         if (elements) {

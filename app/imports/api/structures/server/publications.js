@@ -94,8 +94,7 @@ FindFromPublication.publish(
 
     return Structures.find(query, {
       fields: Structures.publicFields,
-      sort: { name: 1 },
-      limit: 20,
+      sort: { _id: 1 },
     });
   },
 );

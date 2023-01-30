@@ -11,6 +11,7 @@ import logServer from '../../logging';
 import Polls from '../../polls/polls';
 import EventsAgenda from '../../eventsAgenda/eventsAgenda';
 import Bookmarks from '../../bookmarks/bookmarks';
+import Articles from '../../articles/articles';
 
 // publish groups that user is admin/animator of
 publishComposite('groups.adminof', function groupsAdminOf() {
@@ -135,7 +136,7 @@ publishComposite('groups.users', function groupDetails({ groupId, role = 'member
 const queryAllGroups = ({ search }) => {
   const regex = new RegExp(search, 'i');
   return {
-    type: { $ne: 10 },
+    type: { $nin: [10, 15] },
     $or: [
       {
         name: { $regex: regex },
@@ -320,6 +321,19 @@ publishComposite('groups.single', function groupSingle({ slug }) {
           const groupId = group._id;
           return Bookmarks.find(
             { groupId },
+            {
+              fields: {
+                _id: 1,
+              },
+            },
+          );
+        },
+      },
+      {
+        find(group) {
+          const groupId = group._id;
+          return Articles.find(
+            { groups: { $elemMatch: { _id: groupId } } },
             {
               fields: {
                 _id: 1,
