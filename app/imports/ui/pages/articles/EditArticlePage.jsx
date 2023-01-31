@@ -350,7 +350,10 @@ function EditArticlePage({
             if (isImage || data.markdown) {
               newHTML = newContent.replace(imgData, url);
             } else if (!data.markdown) {
-              newHTML = newContent.replace(imgTag, `<a target="_blank" href="${url}">${url}</a>`);
+              newHTML = newContent.replace(
+                imgTag,
+                `<a target="_blank" href="${url}" rel="noopener noreferrer" >${url}</a>`,
+              );
             }
             if (data.markdown) {
               toastRef.current.getInstance().setMarkdown(newHTML);
@@ -381,7 +384,7 @@ function EditArticlePage({
     } else {
       const stringToAdd = toastInstance.isMarkdownMode()
         ? `[${audioUrl}](${audioUrl})`
-        : `<a target="_blank" href="${audioUrl}">${audioUrl}</a>`;
+        : `<a target="_blank" href="${audioUrl}" rel="noopener noreferrer" >${audioUrl}</a>`;
       toastInstance.insertText(stringToAdd);
     }
     toggleAudio(false);
@@ -426,7 +429,7 @@ function EditArticlePage({
       } else {
         stringToAdd = toastInstance.isMarkdownMode()
           ? `[${url}](${url})`
-          : `<a target="_blank" href="${url}">${url}</a>`;
+          : `<a target="_blank" href="${url}" rel="noopener noreferrer" >${url}</a>`;
       }
       toastInstance.insertText(stringToAdd);
     }
@@ -637,7 +640,12 @@ function EditArticlePage({
           </FormControl>
           <Paper className={classes.licencePaper}>
             {i18n.__('pages.EditArticlePage.licenceInfo')}{' '}
-            <a href="https://creativecommons.org/licenses/" target="_blank" style={{ color: 'blue' }} rel="noreferrer">
+            <a
+              href="https://creativecommons.org/licenses/"
+              target="_blank"
+              style={{ color: 'blue' }}
+              rel="noopener noreferrer"
+            >
               https://creativecommons.org/licenses/
             </a>
           </Paper>
