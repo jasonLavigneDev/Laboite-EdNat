@@ -120,7 +120,7 @@ function SignIn({ loggingIn, introduction, appsettings, ready }) {
         </Typography>
         {!ready && !loggingIn && <Spinner />}
         <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(introduction) }} />
-        <form className={classes.form} noValidate>
+        <div className={classes.form} noValidate>
           {loggingIn && <Spinner full />}
           {useKeycloak ? (
             <>
@@ -139,7 +139,7 @@ function SignIn({ loggingIn, introduction, appsettings, ready }) {
               <RememberButton />
             </>
           ) : null}
-        </form>
+        </div>
       </div>
     </Fade>
   );
