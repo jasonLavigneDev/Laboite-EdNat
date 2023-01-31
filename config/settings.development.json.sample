@@ -90,7 +90,7 @@
     "toEmail": ""
   },
   "private": {
-    "loginExpirationInDays": 90,
+    "loginExpirationInDays": 1,
     "fillWithFakeData": false,
     "minioAccess": "",
     "minioSecret": "",

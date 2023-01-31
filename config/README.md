@@ -107,4 +107,4 @@ Copy `settings-development.json.sample` to `settings-development.json` and updat
 | apiKeys               | [string] | [""]                                       | API access keys for external services            |
 | BBBSecret             | string   | ""                                         | Big Blue Button Secret                           |
 | whiteDomains          | [string] | ["^ac-[a-z-]_\\.fr", "^[a-z-]_\\.gouv.fr"] | Emails white domains for user account activation |
-| loginExpirationInDays | number   | 90                                         | Number of days for the token session to expire   |
+| loginExpirationInDays | number   | 1                                          | Number of days for the token session to expire   |
