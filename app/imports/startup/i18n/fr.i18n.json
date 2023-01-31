@@ -1032,18 +1032,6 @@
       "rememberMe": "Rester connecté(e)",
       "maintenanceLogin": "Site en maintenance"
     },
-    "SignUp": {
-      "appDescription": "Création de votre compte",
-      "firstNameLabel": "Prénom",
-      "lastNameLabel": "Nom",
-      "userNameLabel": "Identifiant",
-      "emailLabel": "Courriel",
-      "pwdLabel": "Mot de passe",
-      "pwdButtonLabel": "Afficher ou masquer le mot de passe",
-      "structureLabel": "Structure de rattachement",
-      "submitButtonLabel": "Inscription",
-      "createError": "Erreur: problème lors de la création du compte"
-    },
     "ContactForm": {
       "appDescription": "Formulaire de contact",
       "firstNameLabel": "Prénom",
@@ -1061,6 +1049,9 @@
     },
     "ProfilePage": {
       "title": "Mes préférences",
+      "firstNameLabel": "Prénom",
+      "lastNameLabel": "Nom",
+      "emailLabel": "Courriel",
       "useEmail": "Utiliser mon email",
       "usernameError": "Ce pseudonyme n'est pas disponible",
       "emailAlreadyExists": "Cette adresse électronique est déjà utilisée",

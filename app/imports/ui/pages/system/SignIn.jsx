@@ -3,13 +3,10 @@ import { Meteor } from 'meteor/meteor';
 import sanitizeHtml from 'sanitize-html';
 import { withTracker } from 'meteor/react-meteor-data';
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { makeStyles } from 'tss-react/mui';
 import validate from 'validate.js';
 import i18n from 'meteor/universe:i18n';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Fade from '@mui/material/Fade';
 import FormGroup from '@mui/material/FormGroup';
@@ -24,25 +21,9 @@ import Structures from '../../../api/structures/structures';
 import { getCurrentIntroduction } from '../../../api/utils';
 import { usePageTracking } from '../../utils/matomo';
 import { useAppContext } from '../../contexts/context';
-import { useFormStateValidator } from '../../utils/hooks';
 
 validate.options = {
   fullMessages: false,
-};
-
-const schema = {
-  email: {
-    presence: { allowEmpty: false, message: 'validatejs.isRequired' },
-    length: {
-      maximum: 64,
-    },
-  },
-  password: {
-    presence: { allowEmpty: false, message: 'validatejs.isRequired' },
-    length: {
-      maximum: 128,
-    },
-  },
 };
 
 const useStyles = makeStyles()((theme) => ({
@@ -86,8 +67,6 @@ function SignIn({ loggingIn, introduction, appsettings, ready }) {
     ], // optional
   });
 
-  const [formState, handleChange] = useFormStateValidator(schema);
-
   const [rememberMe, setRememberMe] = useState(true);
 
   const checkRememberMe = () => {
@@ -109,20 +88,6 @@ function SignIn({ loggingIn, introduction, appsettings, ready }) {
     return false;
   };
 
-  const handleSignIn = async (event) => {
-    event.preventDefault();
-    if (formState.isValid === true) {
-      checkRememberMe();
-      await checkAccessAndLogin();
-      const { email, password } = formState.values;
-      Meteor.loginWithPassword(email, password, (err) => {
-        if (err) {
-          msg.error(i18n.__('pages.SignIn.loginError'));
-        }
-      });
-    }
-  };
-
   const handleKeycloakAuth = async () => {
     await checkAccessAndLogin();
     trackEvent({
@@ -134,7 +99,6 @@ function SignIn({ loggingIn, introduction, appsettings, ready }) {
     Meteor.loginWithKeycloak();
   };
 
-  const hasError = (field) => !!(formState.touched[field] && formState.errors[field]);
   const useKeycloak = Meteor.settings.public.enableKeycloak;
 
   const RememberButton = () => (
@@ -156,7 +120,7 @@ function SignIn({ loggingIn, introduction, appsettings, ready }) {
         </Typography>
         {!ready && !loggingIn && <Spinner />}
         <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(introduction) }} />
-        <form onSubmit={handleSignIn} className={classes.form} noValidate>
+        <form className={classes.form} noValidate>
           {loggingIn && <Spinner full />}
           {useKeycloak ? (
             <>
@@ -174,66 +138,7 @@ function SignIn({ loggingIn, introduction, appsettings, ready }) {
               </Button>
               <RememberButton />
             </>
-          ) : (
-            <>
-              <TextField
-                margin="normal"
-                required
-                id="email"
-                label={i18n.__('pages.SignIn.emailLabel')}
-                name="email"
-                autoComplete="email"
-                autoFocus
-                error={hasError('email')}
-                fullWidth
-                helperText={hasError('email') ? i18n.__(formState.errors.email[0]) : null}
-                onChange={handleChange}
-                type="text"
-                value={formState.values.email || ''}
-                variant="outlined"
-                disabled={loggingIn}
-              />
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label={i18n.__('pages.SignIn.pwdLabel')}
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                error={hasError('password')}
-                helperText={hasError('password') ? i18n.__(formState.errors.password[0]) : null}
-                onChange={handleChange}
-                value={formState.values.password || ''}
-                disabled={loggingIn}
-              />
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-                className={classes.submit}
-                disabled={!formState.isValid || loggingIn}
-              >
-                {i18n.__('pages.SignIn.connect')}
-              </Button>
-              <RememberButton />
-              <Grid container>
-                <Grid item xs>
-                  <Link to="/" variant="body2">
-                    {i18n.__('pages.SignIn.forgotPwd')}
-                  </Link>
-                </Grid>
-                <Grid item>
-                  <Link to="/signup" variant="body2">
-                    {i18n.__('pages.SignIn.createAccount')}
-                  </Link>
-                </Grid>
-              </Grid>
-            </>
-          )}
+          ) : null}
         </form>
       </div>
     </Fade>

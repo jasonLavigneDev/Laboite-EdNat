@@ -526,7 +526,7 @@ const ProfilePage = () => {
                     margin="normal"
                     autoComplete="fname"
                     id="firstName"
-                    label={i18n.__('pages.SignUp.firstNameLabel')}
+                    label={i18n.__('pages.ProfilePage.firstNameLabel')}
                     name="firstName"
                     error={errors.firstName !== ''}
                     helperText={errors.firstName}
@@ -541,7 +541,7 @@ const ProfilePage = () => {
                     margin="normal"
                     id="lastName"
                     autoComplete="lname"
-                    label={i18n.__('pages.SignUp.lastNameLabel')}
+                    label={i18n.__('pages.ProfilePage.lastNameLabel')}
                     name="lastName"
                     error={errors.lastName !== ''}
                     helperText={errors.lastName}
@@ -555,7 +555,7 @@ const ProfilePage = () => {
                     disabled={enableKeycloak}
                     margin="normal"
                     id="email"
-                    label={i18n.__('pages.SignUp.emailLabel')}
+                    label={i18n.__('pages.ProfilePage.emailLabel')}
                     name="email"
                     autoComplete="email"
                     error={errors.email !== ''}
