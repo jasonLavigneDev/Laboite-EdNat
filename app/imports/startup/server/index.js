@@ -1,6 +1,7 @@
 import { Migrations } from 'meteor/percolate:migrations';
 import { Meteor } from 'meteor/meteor';
 import { WebApp } from 'meteor/webapp';
+import helmet from 'helmet';
 import { NOTIFICATIONS_TYPES, SCOPE_TYPES } from '../../api/notifications/enums';
 import { checkMigrationStatus } from '../../api/appsettings/methods';
 
@@ -40,4 +41,5 @@ Meteor.startup(() => {
   checkMigrationStatus();
   // set up Default language to French in HTML attribute
   WebApp.addHtmlAttributeHook(() => ({ lang: 'fr' }));
+  if (Meteor.isProduction) WebApp.connectHandlers.use(helmet());
 });
