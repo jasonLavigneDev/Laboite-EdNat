@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useTheme } from '@mui/material/styles';
@@ -7,12 +7,15 @@ import AppBar from '@mui/material/AppBar';
 import IconButton from '@mui/material/IconButton';
 import InfoIcon from '@mui/icons-material/Info';
 import { withTracker } from 'meteor/react-meteor-data';
+import { toast } from 'react-toastify';
 import NotificationsBell from '../notifications/NotificationsBell';
 import MenuBar from './MenuBar';
 import MainMenu from './MainMenu';
 import { useAppContext } from '../../contexts/context';
 import AppSettings from '../../../api/appsettings/appsettings';
 import IconAndCoverImagePage from '../../pages/structure/IconAndCoverImagePage';
+import BookMarkEdit from '../users/BookMarkEdit';
+import BookmarkMessageInfo from '../users/BookMarkMessageInfo';
 
 const { disabledFeatures } = Meteor.settings.public;
 
@@ -76,7 +79,59 @@ const useStyles = makeStyles()((theme, isMobile) => ({
   maintenanceBar: {
     marginTop: 50,
   },
+  createNewBookMarkFromCtrlVmessage: {
+    backgroundColor: '#F6F6F6',
+    color: 'black',
+  },
+  bookMarkToastMessage: {
+    width: 400,
+    textAlign: 'center',
+    fontSize: '22px',
+    right: 90,
+  },
 }));
+
+const clipboardIsNotSupported = () => {
+  // l'api Navigator.clipboard n'est pas autorisé dans pas mal de navigateur
+  return !('clipboard' in navigator) || !('readText' in navigator.clipboard);
+};
+
+const isValidUrl = (urlString) => {
+  try {
+    return urlString.startsWith('http') && Boolean(new URL(urlString));
+  } catch (e) {
+    return false;
+  }
+};
+
+const isPermissionGranted = async (permissionName) => {
+  let permission = { state: '' };
+  try {
+    if (clipboardIsNotSupported()) {
+      permission.state = 'not granted';
+    } else {
+      permission = await navigator.permissions.query({ name: permissionName });
+    }
+  } catch (err) {
+    msg.error(`checkPermission error: ${err}`);
+  }
+  return permission.state === 'granted' || permission.state === 'prompt';
+};
+
+const getClipboardUrlValue = async () => {
+  let resValue = '';
+  if (await isPermissionGranted('clipboard-read')) {
+    const clipBoardDatas = await navigator.clipboard?.readText();
+    if (isValidUrl(clipBoardDatas)) {
+      resValue = clipBoardDatas;
+    }
+  }
+  return resValue;
+};
+
+const clearClipboard = async () => {
+  await navigator?.clipboard?.writeText('');
+};
 function TopBar({ publicMenu, root, appsettings, adminApp }) {
   const [{ isMobile, user, notificationPage }, dispatch] = useAppContext();
   const history = useHistory();
@@ -120,6 +175,67 @@ function TopBar({ publicMenu, root, appsettings, adminApp }) {
     }
   };
 
+  const [createNewBookMark, setCreateNewBookMark] = useState(false);
+  const [clipBoardCopiedDatas, setClipBoardCopiedDatas] = useState('');
+
+  const askToCreateNewBookMark = () => {
+    toast(
+      <BookmarkMessageInfo
+        bookmarkClasse={classes.createNewBookMarkFromCtrlVmessage}
+        clipboardIsNotSupported={clipboardIsNotSupported()}
+      />,
+      {
+        position: toast.POSITION.BOTTOM_RIGHT,
+        className: classes.bookMarkToastMessage,
+        autoClose: 7000,
+        closeButton: true,
+        onClick: () => {
+          setCreateNewBookMark(!clipboardIsNotSupported());
+        },
+      },
+    );
+  };
+  useEffect(() => {
+    const handlePaste = (event) => {
+      const copiedDatas = event.clipboardData.getData('text');
+      if (isValidUrl(copiedDatas)) {
+        setClipBoardCopiedDatas(clipBoardCopiedDatas !== copiedDatas ? copiedDatas : clipBoardCopiedDatas);
+        setCreateNewBookMark(true);
+      }
+    };
+
+    const handleWindowFocused = async () => {
+      const clipBoardDatas = await getClipboardUrlValue();
+      if (clipBoardDatas !== '') {
+        setClipBoardCopiedDatas(clipBoardDatas);
+        toast.dismiss();
+        askToCreateNewBookMark();
+      }
+    };
+
+    if (disabledFeatures.bookmarksFromClipboard !== undefined && !disabledFeatures.bookmarksFromClipboard) {
+      window.addEventListener('paste', handlePaste);
+      window.addEventListener('focus', handleWindowFocused);
+
+      return () => {
+        window.removeEventListener('paste', handlePaste);
+        window.removeEventListener('focus', handleWindowFocused);
+      };
+    }
+
+    return () => {};
+  }, []);
+
+  const getBookmarkName = () => {
+    let bookmarkName = '';
+    if (clipBoardCopiedDatas !== '') {
+      const url = new URL(clipBoardCopiedDatas);
+      bookmarkName = url.hostname;
+    }
+
+    return bookmarkName;
+  };
+
   return (
     <AppBar position="fixed" className={classes.root}>
       <div className={classes.firstBar}>
@@ -159,6 +275,20 @@ function TopBar({ publicMenu, root, appsettings, adminApp }) {
       {!publicMenu && !adminApp && (
         <>
           <IconAndCoverImagePage />
+          {createNewBookMark && (
+            <BookMarkEdit
+              data={{ url: clipBoardCopiedDatas, name: getBookmarkName() }}
+              onEdit={false}
+              open={createNewBookMark}
+              onClose={() => {
+                setCreateNewBookMark(false);
+                setClipBoardCopiedDatas('');
+                clearClipboard();
+              }}
+              favUserBookmarkDirectry
+              method="userBookmark"
+            />
+          )}
           {!isMobile && (
             <div className={`${classes.secondBar} ${classes.secondBarBorderTop}`}>
               <MenuBar />
