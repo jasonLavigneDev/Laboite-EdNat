@@ -79,6 +79,11 @@ export default function UploadPage() {
    * @type {import('react').MutableRefObject<Flow>
    */
   const resumable = useRef();
+  const [submitting, setSubmitting] = useState(false);
+  const [uploading, setUploading] = useState(false);
+
+  const [updateState, update] = useState();
+  const forceUpdate = useCallback(() => update({}), []);
 
   useEffect(() => {
     resumable.current = new Flow({
@@ -95,7 +100,6 @@ export default function UploadPage() {
     resumable.current.assignDrop(dropzone.current);
     resumable.current.assignBrowse(upload.current);
 
-    resumable.current.removeFile();
     resumable.current.on('fileAdded', (file) => {
       setFiles(([...prev]) => {
         if (prev.some((p) => p.uniqueIdentifier === file.uniqueIdentifier)) {
@@ -108,18 +112,51 @@ export default function UploadPage() {
       });
     });
 
+    resumable.current.on('fileRemoved', (file) => {
+      setFiles(([...prev]) => {
+        return prev.filter(({ uniqueIdentifier }) => uniqueIdentifier !== file.uniqueIdentifier);
+      });
+    });
+
+    resumable.current.on(
+      'fileProgress',
+      (file) => {
+        setFiles((prev) => {
+          const newFiles = prev.slice();
+          const fileIndex = newFiles.findIndex((f) => f.uniqueIdentifier === file.uniqueIdentifier);
+
+          if (fileIndex !== -1) newFiles[fileIndex] = file;
+
+          return newFiles;
+        });
+      },
+      [],
+    );
+
     resumable.current.on('fileError', (file) => {
       toast.error(`Erreur lors du chargement de ${file.name}`);
       console.error(file.error);
     });
-    resumable.current.on('complete', () => {
-      console.log('complete');
+    resumable.current.on('uploadStart', () => {
+      setUploading(true);
     });
 
     return () => {
       resumable.current.off();
     };
   }, []);
+
+  useEffect(() => {
+    function handleComplete() {
+      setUploading(false);
+      setSubmitting(false);
+    }
+
+    resumable.current.on('complete', handleComplete);
+    return () => {
+      resumable.current.off('complete', handleComplete);
+    };
+  });
 
   useEffect(() => {
     if (state) {
@@ -132,19 +169,6 @@ export default function UploadPage() {
       }
     }
   }, [state]);
-
-  /**
-   * @param {Resumable.ResumableFile} file
-   * @returns
-   */
-  const handleRemoveFile = useCallback((file, index) => {
-    setFiles((prev) => {
-      const newFiles = prev.slice();
-      newFiles.splice(index, 1);
-      return newFiles;
-    });
-    resumable.current.removeFile(file);
-  }, []);
 
   const sender = user.primaryEmail || user.emails[0].address;
   const uploadFiles = useCallback(
@@ -159,6 +183,12 @@ export default function UploadPage() {
     [sender],
   );
 
+  const handleAbort = useCallback(() => {
+    resumable.current.cancel();
+    files.forEach((file) => resumable.current.addFile(file.file));
+    forceUpdate();
+  }, [files]);
+
   const handleSubmit = useCallback(
     (formData) => {
       const data = {
@@ -169,6 +199,8 @@ export default function UploadPage() {
           size: f.size,
         })),
       };
+
+      setSubmitting(true);
 
       Meteor.call('francetransfert.initFold', data, (err, res) => {
         if (err) {
@@ -196,15 +228,27 @@ export default function UploadPage() {
               <FTDropzone
                 files={files}
                 className={classes.sectionPaper}
-                onRemoveFile={handleRemoveFile}
+                onRemoveFile={(file) => resumable.current.removeFile(file)}
                 dropzoneRef={dropzone}
                 inputRef={upload}
+                updateState={updateState}
+                forceUpdate={forceUpdate}
               />
             </Paper>
           </Grid>
           <Grid item xs={6}>
             <Paper>
-              <FTFoldForm isUploadable={files.length > 0} className={classes.sectionPaper} onSubmit={handleSubmit} />
+              <FTFoldForm
+                isUploadable={files.length > 0}
+                className={classes.sectionPaper}
+                onSubmit={handleSubmit}
+                isSubmitting={submitting}
+                isUploading={uploading}
+                uploader={resumable.current}
+                updateState={updateState}
+                onCancel={handleAbort}
+                forceUpdate={forceUpdate}
+              />
             </Paper>
           </Grid>
         </Box>

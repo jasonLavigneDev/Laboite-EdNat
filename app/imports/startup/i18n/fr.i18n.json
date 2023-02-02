@@ -998,7 +998,10 @@
         "save": "Sauvegarder"
       },
       "settingsBtn": "Paramètres",
-      "send": "Envoyer"
+      "send": "Envoyer",
+      "pause": "Pause",
+      "resume": "Reprendre",
+      "abort": "Annuler"
     },
     "UserBookmarksPage": {
       "back": "Retour",

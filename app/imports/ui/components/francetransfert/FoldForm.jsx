@@ -26,6 +26,14 @@ import TabPanel, { a11yProps } from './TabPanel';
 
 /**
  * @typedef {Object} FTFoldFormProps
+ * @property {{formData: any} => string} onSubmit
+ * @property {boolean} isUploadable
+ * @property {boolean} isSubmitting
+ * @property {boolean} isUploading
+ * @property {import('@flowjs/flow.js')} uploader
+ * @property {() => void} forceUpdate
+ * @property {any} updateState
+ * @property {() => void} onCancel
  */
 
 /**
@@ -33,7 +41,7 @@ import TabPanel, { a11yProps } from './TabPanel';
  * @returns
  */
 export default function FTFoldForm(props) {
-  const { onSubmit, isUploadable, ...rest } = props;
+  const { onSubmit, isUploadable, isSubmitting, isUploading, uploader, forceUpdate, onCancel, ...rest } = props;
   const theme = useTheme();
 
   const form = useForm({
@@ -75,6 +83,7 @@ export default function FTFoldForm(props) {
   const tosCeckbox = (
     <CheckboxElement
       name="tos"
+      disabled={isSubmitting}
       validation={{ validate: (v) => v === true }}
       label={
         <Typography variant="body2">
@@ -97,6 +106,7 @@ export default function FTFoldForm(props) {
     <TextFieldElement
       name="message"
       id="message"
+      disabled={isSubmitting}
       label={i18n.__('pages.UploadPage.messageLabel')}
       multiline
       minRows={3}
@@ -105,7 +115,7 @@ export default function FTFoldForm(props) {
     />
   );
 
-  if (showSettings)
+  if (showSettings && !isSubmitting)
     return (
       <FTFoldSettings
         onChange={(settings) => setValue('settings', settings)}
@@ -120,8 +130,8 @@ export default function FTFoldForm(props) {
       <Box display="flex" flexDirection="column" {...rest}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs value={foldType} onChange={handleFoldTypeChange} centered>
-            <Tab label={i18n.__('pages.UploadPage.emailFold')} {...a11yProps(0)} />
-            <Tab label={i18n.__('pages.UploadPage.linkFold')} {...a11yProps(1)} />
+            <Tab disabled={isSubmitting} label={i18n.__('pages.UploadPage.emailFold')} {...a11yProps(0)} />
+            <Tab disabled={isSubmitting} label={i18n.__('pages.UploadPage.linkFold')} {...a11yProps(1)} />
           </Tabs>
         </Box>
         <Box flex="1">
@@ -133,6 +143,7 @@ export default function FTFoldForm(props) {
             <TabPanel value={foldType} index={0}>
               <Controller
                 name="recipients"
+                disabled={isSubmitting}
                 control={control}
                 rules={{
                   validate: (v, formState) => {
@@ -171,24 +182,65 @@ export default function FTFoldForm(props) {
                   />
                 )}
               />
-              <TextFieldElement name="subject" label={i18n.__('pages.UploadPage.subjectLabel')} fullWidth />
+              <TextFieldElement
+                name="subject"
+                label={i18n.__('pages.UploadPage.subjectLabel')}
+                fullWidth
+                disabled={isSubmitting}
+              />
               {messageField}
               {tosCeckbox}
             </TabPanel>
             <TabPanel value={foldType} index={1}>
-              <TextFieldElement name="title" label={i18n.__('pages.UploadPage.linkNameLabel')} fullWidth />
+              <TextFieldElement
+                name="title"
+                label={i18n.__('pages.UploadPage.linkNameLabel')}
+                fullWidth
+                disabled={isSubmitting}
+              />
               {messageField}
               {tosCeckbox}
             </TabPanel>
           </SwipeableViews>
         </Box>
         <Box padding={1} display="flex" justifyContent="space-between" alignItems="center">
-          <Button type="buttion" onClick={() => setSettingsDisplay(true)}>
-            {i18n.__('pages.UploadPage.settingsBtn')}
-          </Button>
-          <Button type="submit" disabled={!isValid || !isUploadable}>
-            {i18n.__('pages.UploadPage.send')}
-          </Button>
+          {uploader && isUploading ? (
+            <>
+              <Button type="button" onClick={onCancel}>
+                {i18n.__('pages.UploadPage.abort')}
+              </Button>
+              {uploader.isUploading() ? (
+                <Button
+                  type="button"
+                  onClick={() => {
+                    uploader.pause();
+                    forceUpdate();
+                  }}
+                >
+                  {i18n.__('pages.UploadPage.pause')}
+                </Button>
+              ) : (
+                <Button
+                  type="button"
+                  onClick={() => {
+                    uploader.resume();
+                    forceUpdate();
+                  }}
+                >
+                  {i18n.__('pages.UploadPage.resume')}
+                </Button>
+              )}
+            </>
+          ) : (
+            <>
+              <Button type="button" onClick={() => setSettingsDisplay(true)}>
+                {i18n.__('pages.UploadPage.settingsBtn')}
+              </Button>
+              <Button type="submit" disabled={!isValid || !isUploadable || isSubmitting}>
+                {i18n.__('pages.UploadPage.send')}
+              </Button>
+            </>
+          )}
         </Box>
       </Box>
     </FormContainer>
@@ -198,6 +250,11 @@ export default function FTFoldForm(props) {
 FTFoldForm.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   isUploadable: PropTypes.bool.isRequired,
+  isUploading: PropTypes.bool.isRequired,
+  isSubmitting: PropTypes.bool.isRequired,
+  forceUpdate: PropTypes.func.isRequired,
+  updateState: PropTypes.any.isRequired,
+  onCancel: PropTypes.func.isRequired,
   ...Box.prototype,
 };
 

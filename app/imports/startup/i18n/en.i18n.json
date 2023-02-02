@@ -994,7 +994,10 @@
         "save": "Save"
       },
       "settingsBtn": "Settings",
-      "send": "Send"
+      "send": "Send",
+      "pause": "Pause",
+      "resume": "Resume",
+      "abort": "Abort"
     },
     "UserBookmarksPage": {
       "back": "Go back",

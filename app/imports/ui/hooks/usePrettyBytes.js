@@ -23,15 +23,17 @@ function getBytesUnit(bytes) {
 /**
  *
  * @param {number} bytes
+ * @param {Intl.NumberFormatOptions} options
  * @returns {string}
  */
-function prettyBytes(bytes) {
+export function prettyBytes(bytes, options = {}) {
   const [value, unit] = getBytesUnit(bytes);
 
   const bytesFormatter = new Intl.NumberFormat(i18n._locale, {
     style: 'unit',
     unit,
     maximumFractionDigits: 2,
+    ...options,
   });
 
   return bytesFormatter.format(value);
@@ -40,8 +42,9 @@ function prettyBytes(bytes) {
 /**
  *
  * @param {number} bytes
+ * @param {Intl.NumberFormatOptions} options
  * @returns
  */
-export default function usePrettyBytes(bytes) {
-  return useMemo(() => prettyBytes(bytes), [bytes]);
+export default function usePrettyBytes(bytes, options) {
+  return useMemo(() => prettyBytes(bytes, options), [bytes]);
 }

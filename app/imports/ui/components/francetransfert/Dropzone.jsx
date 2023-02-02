@@ -5,26 +5,16 @@ import i18n from 'meteor/universe:i18n';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
-import Avatar from '@mui/material/Avatar';
 import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import ListItemText from '@mui/material/ListItemText';
 
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import ImageIcon from '@mui/icons-material/Image';
-import ArticleIcon from '@mui/icons-material/Article';
-import MovieIcon from '@mui/icons-material/Movie';
-import AudioFileIcon from '@mui/icons-material/AudioFile';
-import FontDownloadIcon from '@mui/icons-material/FontDownload';
-import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
-import DeleteIcon from '@mui/icons-material/Delete';
 
 import { alpha } from '@mui/material/styles';
 import clsx from 'clsx';
 import { useAppContext } from '../../contexts/context';
 import usePrettyBytes from '../../hooks/usePrettyBytes';
 import { forkRef } from '../../utils/hooks';
+import FileSummary from './FileSummary';
 
 const useStyles = makeStyles()((theme) => ({
   dropzone: {
@@ -63,6 +53,8 @@ const maxTotalSize = 20000000000; // 20 GB
  * @typedef {Object} FTDropzoneProps
  * @property {Flow.FlowFile[]} files
  * @property {(file: Flow.FlowFile, index: number) => void} onRemoveFile
+ * @property {() => void} forceUpdate
+ * @property {any} updateState
  */
 
 /**
@@ -70,7 +62,7 @@ const maxTotalSize = 20000000000; // 20 GB
  * @returns
  */
 export default function FTDropzone(props) {
-  const { files, onRemoveFile, className, dropzoneRef, inputRef, ...rest } = props;
+  const { files, onRemoveFile, className, dropzoneRef, inputRef, forceUpdate, updateState, ...rest } = props;
   /**
    * @type {useRef<HTMLInputElement>}
    */
@@ -110,8 +102,10 @@ export default function FTDropzone(props) {
           <List dense className={classes.filesList}>
             {files.map((resumable, index) => (
               <FileSummary
-                key={resumable.file.name}
-                file={resumable.file}
+                updateState={updateState}
+                forceUpdate={forceUpdate}
+                key={resumable.uniqueIdentifier}
+                file={resumable}
                 onRemove={() => onRemoveFile(resumable, index)}
               />
             ))}
@@ -146,81 +140,7 @@ FTDropzone.propTypes = {
   onRemoveFile: PropTypes.func.isRequired,
   dropzoneRef: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({ current: PropTypes.any })]).isRequired,
   inputRef: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({ current: PropTypes.any })]).isRequired,
+  forceUpdate: PropTypes.func.isRequired,
+  updateState: PropTypes.any.isRequired,
   ...Box.prototype,
-};
-
-/**
- *
- * @param {object} props
- * @param {File} props.file
- * @param {() => void} props.onRemove
- * @returns
- */
-function FileSummary({ file, onRemove }) {
-  const [{ isMobile }] = useAppContext();
-  const { classes } = useStyles(isMobile);
-
-  const formattedSize = usePrettyBytes(file.size);
-
-  const [type, extension] = file.type.split('/');
-
-  let Icon = ArticleIcon;
-
-  switch (type) {
-    case 'image':
-      Icon = ImageIcon;
-      break;
-    case 'audio':
-      Icon = AudioFileIcon;
-      break;
-
-    case 'video':
-      Icon = MovieIcon;
-      break;
-
-    case 'font':
-      Icon = FontDownloadIcon;
-      break;
-
-    case 'application':
-      if (extension === 'pdf') Icon = PictureAsPdfIcon;
-      break;
-
-    default:
-      break;
-  }
-
-  return (
-    <ListItem
-      secondaryAction={
-        <IconButton onClick={() => onRemove()} edge="end" aria-label="delete">
-          <DeleteIcon />
-        </IconButton>
-      }
-    >
-      <ListItemAvatar>
-        <Avatar>
-          <Icon />
-        </Avatar>
-      </ListItemAvatar>
-      <ListItemText
-        classes={{
-          primary: classes.fileSummaryPrimary,
-        }}
-        primary={file.name}
-        secondary={formattedSize}
-      />
-    </ListItem>
-  );
-}
-
-FileSummary.propTypes = {
-  onRemove: PropTypes.func,
-  file: PropTypes.instanceOf(File).isRequired,
-};
-
-// eslint-disable-next-line prettier/prettier
-const noop = () => {};
-FileSummary.defaultProps = {
-  onRemove: noop,
 };
