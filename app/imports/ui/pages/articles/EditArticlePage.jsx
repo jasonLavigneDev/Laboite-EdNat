@@ -372,7 +372,7 @@ function EditArticlePage({
     } else {
       const stringToAdd = toastInstance.isMarkdownMode()
         ? `[${videoUrl}](${videoUrl})`
-        : `<a target="_blank" href="${videoUrl}">${videoUrl}</a>`;
+        : `<a target="_blank" href="${videoUrl}" rel="noopener noreferrer">${videoUrl}</a>`;
       toastInstance.insertText(stringToAdd);
     }
     toggleWebcam(false);

@@ -124,7 +124,11 @@ const GroupArticlesPage = ({ loading, group }) => {
                 title={i18n.__(`pages.GroupArticlesPage.openPublicPage`)}
                 aria-label={i18n.__(`pages.GroupArticlesPage.openPublicPage`)}
               >
-                <Button color="primary" startIcon={<OpenInNewIcon />} onClick={() => window.open(blogPage, '_blank')}>
+                <Button
+                  color="primary"
+                  startIcon={<OpenInNewIcon />}
+                  onClick={() => window.open(blogPage, '_blank', 'noopener,noreferrer')}
+                >
                   {i18n.__('pages.GroupArticlesPage.publicPage')}
                 </Button>
               </Tooltip>
