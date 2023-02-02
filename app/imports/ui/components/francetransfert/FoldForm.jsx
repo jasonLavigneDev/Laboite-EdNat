@@ -41,7 +41,17 @@ import TabPanel, { a11yProps } from './TabPanel';
  * @returns
  */
 export default function FTFoldForm(props) {
-  const { onSubmit, isUploadable, isSubmitting, isUploading, uploader, forceUpdate, onCancel, ...rest } = props;
+  const {
+    onSubmit,
+    isUploadable,
+    isSubmitting,
+    isUploading,
+    uploader,
+    forceUpdate,
+    onCancel,
+    updateState: _,
+    ...rest
+  } = props;
   const theme = useTheme();
 
   const form = useForm({

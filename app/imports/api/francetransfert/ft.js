@@ -38,7 +38,7 @@ function foldTypeToFTTypePli(foldType) {
   throw new Error('Unkown foldType');
 }
 
-export function initializeFold(sender, { data, files }) {
+export function initFold(sender, { data, files }) {
   const typePli = foldTypeToFTTypePli(data.foldType);
 
   const body = {
@@ -67,4 +67,22 @@ export function initializeFold(sender, { data, files }) {
   }
 
   return FT.post(`/api-public/initPli`, body);
+}
+
+export function getFoldStatus(id, sender) {
+  const params = {
+    idPli: id,
+    courrielExpediteur: sender,
+  };
+
+  return FT.get(`/api-public/statutPli`, { params });
+}
+
+export function getFoldData(id, sender) {
+  const params = {
+    idPli: id,
+    courrielExpediteur: sender,
+  };
+
+  return FT.get(`/api-public/donneesPli`, { params });
 }

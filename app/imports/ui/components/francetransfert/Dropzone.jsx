@@ -62,7 +62,17 @@ const maxTotalSize = 20000000000; // 20 GB
  * @returns
  */
 export default function FTDropzone(props) {
-  const { files, onRemoveFile, className, dropzoneRef, inputRef, forceUpdate, updateState, ...rest } = props;
+  const {
+    files,
+    onRemoveFile,
+    className,
+    dropzoneRef,
+    inputRef,
+    forceUpdate,
+    updateState,
+    updateState: _,
+    ...rest
+  } = props;
   /**
    * @type {useRef<HTMLInputElement>}
    */

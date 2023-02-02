@@ -6,7 +6,7 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import i18n from 'meteor/universe:i18n';
 
 import { isActive } from '../utils';
-import { initializeFold } from './ft';
+import * as ft from './ft';
 
 export const initFold = new ValidatedMethod({
   name: 'francetransfert.initFold',
@@ -40,7 +40,7 @@ export const initFold = new ValidatedMethod({
     const email = user.primaryEmail || user.emails[0].address;
 
     try {
-      const result = await initializeFold(email, data);
+      const result = await ft.initFold(email, data);
 
       return result.data;
     } catch (error) {
@@ -57,8 +57,72 @@ export const initFold = new ValidatedMethod({
   },
 });
 
+export const getFoldStatus = new ValidatedMethod({
+  name: 'francetransfert.getFoldStatus',
+  validate: new SimpleSchema({
+    foldId: String,
+  }).validator(),
+
+  async run({ foldId }) {
+    if (!isActive(this.userId)) {
+      throw new Meteor.Error('api.francetransfert.getFoldStatus.notPermitted', i18n.__('api.users.mustBeLoggedIn'));
+    }
+
+    const user = Meteor.users.findOne(this.userId, { fields: { primaryEmail: 1, emails: 1 } });
+    const email = user.primaryEmail || user.emails[0].address;
+
+    try {
+      const result = await ft.getFoldStatus(foldId, email);
+
+      return result.data;
+    } catch (error) {
+      if (error.response?.data?.libelleErreur) {
+        throw new Meteor.Error(
+          'api.francetransfert.getFoldStatus.franceTransfertError',
+          error.response?.data?.libelleErreur || JSON.stringify(),
+        );
+      } else {
+        console.error('Unkown FT error', error);
+        throw new Meteor.Error('api.francetransfert.getFoldStatus.franceTransfertError');
+      }
+    }
+  },
+});
+
+export const getFoldData = new ValidatedMethod({
+  name: 'francetransfert.getFoldData',
+  validate: new SimpleSchema({
+    foldId: String,
+  }).validator(),
+
+  async run({ foldId }) {
+    if (!isActive(this.userId)) {
+      throw new Meteor.Error('api.francetransfert.getFoldData.notPermitted', i18n.__('api.users.mustBeLoggedIn'));
+    }
+
+    const user = Meteor.users.findOne(this.userId, { fields: { primaryEmail: 1, emails: 1 } });
+    const email = user.primaryEmail || user.emails[0].address;
+
+    try {
+      const result = await ft.getFoldData(foldId, email);
+
+      return result.data;
+    } catch (error) {
+      if (error.response?.data?.libelleErreur) {
+        throw new Meteor.Error(
+          'api.francetransfert.getFoldData.franceTransfertError',
+          error.response?.data?.libelleErreur || JSON.stringify(),
+        );
+      } else {
+        console.error('Unkown FT error', error);
+        throw new Meteor.Error('api.francetransfert.getFoldData.franceTransfertError');
+      }
+    }
+  },
+});
+
 // Get list of all method names on User
-const LISTS_METHODS = _.pluck([initFold], 'name');
+const LISTS_METHODS = _.pluck([initFold, getFoldStatus, getFoldData], 'name');
 
 if (Meteor.isServer) {
   // Only allow 5 list operations per connection per second

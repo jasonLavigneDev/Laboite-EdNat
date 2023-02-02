@@ -14,6 +14,7 @@ import { useLocation } from 'react-router-dom';
 import { useAppContext } from '../contexts/context';
 import FTDropzone from '../components/francetransfert/Dropzone';
 import FTFoldForm from '../components/francetransfert/FoldForm';
+import FoldData from '../components/francetransfert/FoldData';
 
 FlowChunk.prototype.getParams = function getParams() {
   return {
@@ -82,7 +83,7 @@ export default function UploadPage() {
   const [submitting, setSubmitting] = useState(false);
   const [uploading, setUploading] = useState(false);
 
-  const [updateState, update] = useState();
+  const [updateState, update] = useState({});
   const forceUpdate = useCallback(() => update({}), []);
 
   useEffect(() => {
@@ -146,17 +147,69 @@ export default function UploadPage() {
     };
   }, []);
 
+  const [foldStatus, setFoldStatus] = useState(null);
+  const [foldData, setFoldData] = useState(null);
   useEffect(() => {
+    async function waitStatus() {
+      const foldIdBody = {
+        foldId: resumable.current.opts.query.idPli,
+      };
+
+      let status;
+      while (status !== '032-PAT') {
+        // eslint-disable-next-line no-await-in-loop
+        status = await new Promise((resolve, reject) => {
+          Meteor.call('francetransfert.getFoldStatus', foldIdBody, (err, res) => {
+            if (err) {
+              reject(err);
+            } else {
+              setFoldStatus({
+                status: res.statutPli.codeStatutPli,
+                label: res.statutPli.libelleStatutPli,
+              });
+              resolve(res.statutPli.codeStatutPli);
+            }
+          });
+        });
+
+        if (['010-ECC', '011-ECH', '021-ETG', '022-EAV', '031-EEC'].includes(status)) {
+          toast.error('Erreur lors de la vérification des fichiers');
+          return false;
+        }
+
+        // eslint-disable-next-line no-await-in-loop
+        await new Promise((r) => setTimeout(r, 1000));
+      }
+
+      return true;
+    }
+
     function handleComplete() {
       setUploading(false);
       setSubmitting(false);
+
+      const foldIdBody = {
+        foldId: resumable.current.opts.query.idPli,
+      };
+
+      waitStatus().then((success) => {
+        if (success === true) {
+          Meteor.call('francetransfert.getFoldData', foldIdBody, (err, res) => {
+            if (err) {
+              toast.error('Erreur lors de la récupération des données du pli');
+            } else {
+              setFoldData(res);
+            }
+          });
+        }
+      });
     }
 
     resumable.current.on('complete', handleComplete);
     return () => {
       resumable.current.off('complete', handleComplete);
     };
-  });
+  }, []);
 
   useEffect(() => {
     if (state) {
@@ -206,7 +259,8 @@ export default function UploadPage() {
         if (err) {
           toast.error(err.message);
         } else {
-          console.log('Successfuly created fold : ', res);
+          // console.log('Successfuly created fold : ', res);
+          // eslint-disable-next-line no-lonely-if
           if (res.statutPli.codeStatutPli === '000-INI') uploadFiles(res.idPli);
         }
       });
@@ -223,34 +277,44 @@ export default function UploadPage() {
           </Typography>
         </Paper>
         <Box display="flex" justifyContent="space-around" mt={6}>
-          <Grid item xs={6}>
-            <Paper>
-              <FTDropzone
-                files={files}
-                className={classes.sectionPaper}
-                onRemoveFile={(file) => resumable.current.removeFile(file)}
-                dropzoneRef={dropzone}
-                inputRef={upload}
-                updateState={updateState}
-                forceUpdate={forceUpdate}
-              />
-            </Paper>
-          </Grid>
-          <Grid item xs={6}>
-            <Paper>
-              <FTFoldForm
-                isUploadable={files.length > 0}
-                className={classes.sectionPaper}
-                onSubmit={handleSubmit}
-                isSubmitting={submitting}
-                isUploading={uploading}
-                uploader={resumable.current}
-                updateState={updateState}
-                onCancel={handleAbort}
-                forceUpdate={forceUpdate}
-              />
-            </Paper>
-          </Grid>
+          {foldStatus ? (
+            <Grid item xs={6}>
+              <Paper>
+                <FoldData foldStatus={foldStatus} foldData={foldData} className={classes.sectionPaper} />
+              </Paper>
+            </Grid>
+          ) : (
+            <>
+              <Grid item xs={6}>
+                <Paper>
+                  <FTDropzone
+                    files={files}
+                    className={classes.sectionPaper}
+                    onRemoveFile={(file) => resumable.current.removeFile(file)}
+                    dropzoneRef={dropzone}
+                    inputRef={upload}
+                    updateState={updateState}
+                    forceUpdate={forceUpdate}
+                  />
+                </Paper>
+              </Grid>
+              <Grid item xs={6}>
+                <Paper>
+                  <FTFoldForm
+                    isUploadable={files.length > 0}
+                    className={classes.sectionPaper}
+                    onSubmit={handleSubmit}
+                    isSubmitting={submitting}
+                    isUploading={uploading}
+                    uploader={resumable.current}
+                    updateState={updateState}
+                    onCancel={handleAbort}
+                    forceUpdate={forceUpdate}
+                  />
+                </Paper>
+              </Grid>
+            </>
+          )}
         </Box>
       </Container>
     </Fade>
