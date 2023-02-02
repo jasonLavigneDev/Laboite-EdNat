@@ -40,18 +40,16 @@ const useStyles = makeStyles()((theme) => ({
   },
 }));
 
-if (Meteor.settings.public.enableKeycloak === true) {
-  // notify login failure after redirect (useful if another account with same email already exists)
-  Accounts.onLoginFailure((details) => {
-    let errMsg;
-    if (details.error.reason === 'Email already exists.') {
-      errMsg = i18n.__('pages.SignIn.EmailAlreadyExists');
-    } else {
-      errMsg = `${i18n.__('pages.SignIn.keycloakError')} (${details.error.reason})`;
-    }
-    msg.error(errMsg);
-  });
-}
+// notify login failure after redirect (useful if another account with same email already exists)
+Accounts.onLoginFailure((details) => {
+  let errMsg;
+  if (details.error.reason === 'Email already exists.') {
+    errMsg = i18n.__('pages.SignIn.EmailAlreadyExists');
+  } else {
+    errMsg = `${i18n.__('pages.SignIn.keycloakError')} (${details.error.reason})`;
+  }
+  msg.error(errMsg);
+});
 
 function SignIn({ loggingIn, introduction, appsettings, ready }) {
   const [{ isIframed }] = useAppContext();
@@ -99,8 +97,6 @@ function SignIn({ loggingIn, introduction, appsettings, ready }) {
     Meteor.loginWithKeycloak();
   };
 
-  const useKeycloak = Meteor.settings.public.enableKeycloak;
-
   const RememberButton = () => (
     <FormGroup>
       <FormControlLabel
@@ -110,7 +106,7 @@ function SignIn({ loggingIn, introduction, appsettings, ready }) {
     </FormGroup>
   );
 
-  return useKeycloak && loggingIn ? (
+  return loggingIn ? (
     <Spinner />
   ) : (
     <Fade in>
@@ -122,23 +118,17 @@ function SignIn({ loggingIn, introduction, appsettings, ready }) {
         <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(introduction) }} />
         <div className={classes.form} noValidate>
           {loggingIn && <Spinner full />}
-          {useKeycloak ? (
-            <>
-              <Button
-                disabled={loggingIn}
-                fullWidth
-                variant="contained"
-                color={appsettings.maintenance ? 'inherit' : 'primary'}
-                className={classes.submit}
-                onClick={handleKeycloakAuth}
-              >
-                {appsettings.maintenance
-                  ? i18n.__('pages.SignIn.maintenanceLogin')
-                  : i18n.__('pages.SignIn.loginKeycloak')}
-              </Button>
-              <RememberButton />
-            </>
-          ) : null}
+          <Button
+            disabled={loggingIn}
+            fullWidth
+            variant="contained"
+            color={appsettings.maintenance ? 'inherit' : 'primary'}
+            className={classes.submit}
+            onClick={handleKeycloakAuth}
+          >
+            {appsettings.maintenance ? i18n.__('pages.SignIn.maintenanceLogin') : i18n.__('pages.SignIn.loginKeycloak')}
+          </Button>
+          <RememberButton />
         </div>
       </div>
     </Fade>

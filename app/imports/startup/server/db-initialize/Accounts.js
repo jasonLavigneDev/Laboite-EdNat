@@ -16,22 +16,20 @@ const accountConfig = {
 };
 
 if (Meteor.settings.keycloak) {
-  if (Meteor.settings.public.enableKeycloak === true) {
-    accountConfig.forbidClientAccountCreation = true;
-    ServiceConfiguration.configurations.upsert(
-      { service: 'keycloak' },
-      {
-        $set: {
-          loginStyle: 'redirect',
-          serverUrl: testMeteorSettingsUrl(Meteor.settings.public.keycloakUrl),
-          realm: Meteor.settings.public.keycloakRealm,
-          clientId: Meteor.settings.keycloak.client,
-          realmPublicKey: Meteor.settings.keycloak.pubkey,
-          bearerOnly: false,
-        },
+  accountConfig.forbidClientAccountCreation = true;
+  ServiceConfiguration.configurations.upsert(
+    { service: 'keycloak' },
+    {
+      $set: {
+        loginStyle: 'redirect',
+        serverUrl: testMeteorSettingsUrl(Meteor.settings.public.keycloakUrl),
+        realm: Meteor.settings.public.keycloakRealm,
+        clientId: Meteor.settings.keycloak.client,
+        realmPublicKey: Meteor.settings.keycloak.pubkey,
+        bearerOnly: false,
       },
-    );
-  }
+    },
+  );
 } else {
   logServer('No Keycloak configuration. Please invoke meteor with a settings file.');
 }
