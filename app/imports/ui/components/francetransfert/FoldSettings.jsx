@@ -14,9 +14,15 @@ import { FormContainer, PasswordElement, SelectElement, CheckboxElement, DatePic
 import ErrorIcon from '@mui/icons-material/Error';
 import CheckIcon from '@mui/icons-material/Check';
 
+import clsx from 'clsx';
 import { useAppContext } from '../../contexts/context';
 
 const useStyles = makeStyles()((theme) => ({
+  container: {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+  },
   conditionsList: {
     listStyleType: 'none',
     padding: 0,
@@ -76,15 +82,18 @@ export default function FTFoldSettings({ onGoBack, onChange, values, ...rest }) 
     formState: { isValid },
   } = form;
 
+  const { classes } = useStyles();
+
   return (
     <FormContainer
+      FormProps={{ className: classes.container }}
       formContext={form}
       handleSubmit={handleSubmit((data) => {
         onChange(data);
         onGoBack();
       })}
     >
-      <Box display="flex" flexDirection="column" {...rest}>
+      <Box {...rest} className={clsx(rest.className, classes.container)}>
         <Box flex="1">
           <LocalizationProvider dateAdapter={AdapterMoment}>
             <DatePickerElement

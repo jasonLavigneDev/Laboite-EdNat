@@ -18,6 +18,7 @@ import FileSummary from './FileSummary';
 
 const useStyles = makeStyles()((theme) => ({
   dropzone: {
+    flex: 1,
     display: 'flex',
     flexDirection: 'column',
   },

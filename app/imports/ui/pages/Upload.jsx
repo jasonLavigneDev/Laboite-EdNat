@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { makeStyles } from 'tss-react/mui';
 import i18n from 'meteor/universe:i18n';
 import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Fade from '@mui/material/Fade';
 import Paper from '@mui/material/Paper';
@@ -36,6 +35,7 @@ const useStyles = makeStyles()((theme) => ({
     whiteSpace: 'nowrap',
   },
   sectionPaper: {
+    display: 'flex',
     padding: '1rem',
 
     // No mobile first because laboite is an app used more on desktop than mobile
@@ -56,6 +56,12 @@ const useStyles = makeStyles()((theme) => ({
     [theme.breakpoints.down('xs')]: {
       width: '10rem',
     },
+  },
+  resultPaper: {
+    display: 'flex',
+    padding: '1rem',
+    width: '80%',
+    height: '40rem',
   },
 }));
 
@@ -135,7 +141,7 @@ export default function UploadPage() {
     );
 
     resumable.current.on('fileError', (file) => {
-      toast.error(`Erreur lors du chargement de ${file.name}`);
+      toast.error(i18n.__('pages.UploadPage.errorWhenLoadingFile', { fileName: file.name }));
       console.error(file.error);
     });
     resumable.current.on('uploadStart', () => {
@@ -173,7 +179,7 @@ export default function UploadPage() {
         });
 
         if (['010-ECC', '011-ECH', '021-ETG', '022-EAV', '031-EEC'].includes(status)) {
-          toast.error('Erreur lors de la vérification des fichiers');
+          toast.error(i18n.__('pages.UploadPage.errorWhenVerifyingFiles'));
           return false;
         }
 
@@ -196,7 +202,7 @@ export default function UploadPage() {
         if (success === true) {
           Meteor.call('francetransfert.getFoldData', foldIdBody, (err, res) => {
             if (err) {
-              toast.error('Erreur lors de la récupération des données du pli');
+              toast.error(i18n.__('pages.UploadPage.errorWhenRetrievingFoldData'));
             } else {
               setFoldData(res);
             }
@@ -276,45 +282,34 @@ export default function UploadPage() {
             {i18n.__('pages.UploadPage.description', { appName: Meteor.settings.public.appName })}
           </Typography>
         </Paper>
-        <Box display="flex" justifyContent="space-around" mt={6}>
-          {foldStatus ? (
-            <Grid item xs={6}>
-              <Paper>
-                <FoldData foldStatus={foldStatus} foldData={foldData} className={classes.sectionPaper} />
-              </Paper>
-            </Grid>
-          ) : (
-            <>
-              <Grid item xs={6}>
-                <Paper>
-                  <FTDropzone
-                    files={files}
-                    className={classes.sectionPaper}
-                    onRemoveFile={(file) => resumable.current.removeFile(file)}
-                    dropzoneRef={dropzone}
-                    inputRef={upload}
-                    updateState={updateState}
-                    forceUpdate={forceUpdate}
-                  />
-                </Paper>
-              </Grid>
-              <Grid item xs={6}>
-                <Paper>
-                  <FTFoldForm
-                    isUploadable={files.length > 0}
-                    className={classes.sectionPaper}
-                    onSubmit={handleSubmit}
-                    isSubmitting={submitting}
-                    isUploading={uploading}
-                    uploader={resumable.current}
-                    updateState={updateState}
-                    onCancel={handleAbort}
-                    forceUpdate={forceUpdate}
-                  />
-                </Paper>
-              </Grid>
-            </>
-          )}
+        <Box mt={6}>
+          <Box display={foldStatus ? 'flex' : 'none'} justifyContent="center">
+            <FoldData foldStatus={foldStatus} foldData={foldData} mt={6} mx="auto" className={classes.resultPaper} />
+          </Box>
+          <Box display={foldStatus ? 'none' : 'flex'} justifyContent="space-around" mt={6}>
+            <Paper className={classes.sectionPaper}>
+              <FTDropzone
+                files={files}
+                onRemoveFile={(file) => resumable.current.removeFile(file)}
+                dropzoneRef={dropzone}
+                inputRef={upload}
+                updateState={updateState}
+                forceUpdate={forceUpdate}
+              />
+            </Paper>
+            <Paper className={classes.sectionPaper}>
+              <FTFoldForm
+                isUploadable={files.length > 0}
+                onSubmit={handleSubmit}
+                isSubmitting={submitting}
+                isUploading={uploading}
+                uploader={resumable.current}
+                updateState={updateState}
+                onCancel={handleAbort}
+                forceUpdate={forceUpdate}
+              />
+            </Paper>
+          </Box>
         </Box>
       </Container>
     </Fade>

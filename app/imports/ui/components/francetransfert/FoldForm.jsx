@@ -13,11 +13,21 @@ import SwipeableViews from 'react-swipeable-views';
 import { toast } from 'react-toastify';
 import { Controller, useForm } from 'react-hook-form';
 
+import { makeStyles } from 'tss-react/mui';
 import { FormContainer, TextFieldElement, CheckboxElement } from 'react-hook-form-mui';
+import clsx from 'clsx';
 import TagsInput from '../form/TagInput';
 import FTFoldSettings from './FoldSettings';
 import { validateEmail } from '../../utils/utilsFuncs';
 import TabPanel, { a11yProps } from './TabPanel';
+
+const useStyles = makeStyles()(() => ({
+  container: {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+  },
+}));
 
 /**
  * @template T
@@ -90,6 +100,8 @@ export default function FTFoldForm(props) {
    */
   const [showSettings, setSettingsDisplay] = useState(false);
 
+  const { classes } = useStyles();
+
   const tosCeckbox = (
     <CheckboxElement
       name="tos"
@@ -136,8 +148,12 @@ export default function FTFoldForm(props) {
     );
 
   return (
-    <FormContainer formContext={form} handleSubmit={handleSubmit(onSubmit)}>
-      <Box display="flex" flexDirection="column" {...rest}>
+    <FormContainer
+      FormProps={{ className: classes.container }}
+      formContext={form}
+      handleSubmit={handleSubmit(onSubmit)}
+    >
+      <Box {...rest} className={clsx(rest.className, classes.container)}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs value={foldType} onChange={handleFoldTypeChange} centered>
             <Tab disabled={isSubmitting} label={i18n.__('pages.UploadPage.emailFold')} {...a11yProps(0)} />

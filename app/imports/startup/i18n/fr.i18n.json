@@ -1001,7 +1001,22 @@
       "send": "Envoyer",
       "pause": "Pause",
       "resume": "Reprendre",
-      "abort": "Annuler"
+      "abort": "Annuler",
+      "errorWhenLoadingFile": "Erreur lors du chargement de {$fileName}",
+      "errorWhenVerifyingFiles": "Erreur lors de la vérification des fichiers",
+      "errorWhenRetrievingFoldData": "Erreur lors de la récupération des données du pli",
+      "summary": {
+        "title": "Le pli a été envoyé avec succès",
+        "expiryDate": "Le pli sera disponible jusqu'au {$date}.",
+        "link": "Lien de téléchargement: ",
+        "password": "Mot de passe du lien: ",
+        "showPassword": "Afficher",
+        "hidePassword": "Cacher",
+        "clickToCopy": "Cliquez pour copier",
+        "passwordCopied": "Mot de passe copié.",
+        "linkCopied": "Lien copié.",
+        "errorWhenCopying": "Impossible de copier le mot de passe."
+      }
     },
     "UserBookmarksPage": {
       "back": "Retour",
