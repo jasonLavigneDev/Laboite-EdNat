@@ -44,7 +44,7 @@ Meteor.startup(() => {
   // set up various security related headers
   const scriptSrcs = ["'self'", "'unsafe-inline'", "'unsafe-eval'"];
   if (Meteor.settings.public.matomo?.urlBase) scriptSrcs.push(Meteor.settings.public.matomo.urlBase);
-  const imgSrcs = ["'self'", 'data:', 'blob:'];
+  const imgSrcs = ['*', 'data:', 'blob:'];
   if (Meteor.settings.public.minioEndPoint) imgSrcs.push(`https://${Meteor.settings.public.minioEndPoint}`);
   WebApp.connectHandlers.use(helmet());
   WebApp.connectHandlers.use(
