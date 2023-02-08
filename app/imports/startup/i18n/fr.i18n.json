@@ -1,5 +1,8 @@
 {
   "api": {
+    "franceTransfert": {
+      "FTError": "Erreur avec France Transfert"
+    },
     "bookmarks": {
       "labels": {
         "url": "URL",
@@ -570,6 +573,7 @@
     },
     "MainMenu": {
       "menuUserBookmarks": "Marque-pages",
+      "menuUpload": "Transférer des fichiers",
       "menuProfileLabel": "Profil",
       "menuHelpLabel": "Aide",
       "menuFeedbackLabel": "Partager mon avis",
@@ -1022,6 +1026,64 @@
     "body_editRow_saveTooltip": "Valider"
   },
   "pages": {
+    "UploadPage": {
+      "description": "Vous pouvez envoyer des fichiers volumineux non sensibles de manière sécurisée à un agent de l'Etat ou entre agents grâce à France transfert.",
+      "fileCount": "{$count} éléments",
+      "totalSize": "{$totalSize} / {$maxSize}",
+      "fileAlreadyExists": "Le fichier {$name} est déjà importé.",
+      "emailFold": "Courriel",
+      "linkFold": "Lien",
+      "addFilesLabel": "Ajouter vos fichiers et dossiers",
+      "recipientsLabel": "Destinataires",
+      "recipientsHelper": "Entrez les mails déstinataires séparés d'un espace",
+      "recipientsPlaceholder": "Les adresses courriels des destinataires",
+      "recipientsHelp": "Si l'expéditeur est un agent de l'Etat, le ou les destinataires peuvent être un agent de l'Etat ou un particulier. Si l'expéditeur est un particulier, les destinataires ne peuvent être que des agents de l'Etat.",
+      "subjectLabel": "Objet",
+      "messageLabel": "Message",
+      "linkNameLabel": "Nom de votre transfert",
+      "wrongEmailFormat": "Une adresse courriel valide est requise (jean.dupont@email.com).",
+      "tosLabel": {
+        "a": "J'ai pris connaissance des ",
+        "b": "CGU",
+        "c": " et je n'envoie pas de données sensibles, telles que définies à l'article 4.2, non chiffrées au préalable."
+      },
+      "settings": {
+        "expiryDateLabel": "Délai de validité",
+        "passwordLabel": "Mot de passe",
+        "passwordConditions": {
+          "minMaxChars": "12 caractères minimum - 64 caractères maximum",
+          "lowercase": "Au moins 3 lettres minuscules (a-z non accentué)",
+          "uppercase": "Au moins 3 lettres majuscules (A-Z non accentué)",
+          "numbers": "Au moins 3 chiffres",
+          "specialChars": "Au moins 3 caractères spéciaux (!@#$%^&*()_-:+)",
+          "supported": "Aucun caractère spécial non supporté"
+        },
+        "languageLabel": "Langue d'affichage des courriels",
+        "encryptLabel": "Protéger l'archive zip de mon pli par mot de passe",
+        "cancel": "Annuler",
+        "save": "Sauvegarder"
+      },
+      "settingsBtn": "Paramètres",
+      "send": "Envoyer",
+      "pause": "Pause",
+      "resume": "Reprendre",
+      "abort": "Annuler",
+      "errorWhenLoadingFile": "Erreur lors du chargement de {$fileName}",
+      "errorWhenVerifyingFiles": "Erreur lors de la vérification des fichiers",
+      "errorWhenRetrievingFoldData": "Erreur lors de la récupération des données du pli",
+      "summary": {
+        "title": "Le pli a été envoyé avec succès",
+        "expiryDate": "Le pli sera disponible jusqu'au {$date}.",
+        "link": "Lien de téléchargement: ",
+        "password": "Mot de passe du lien: ",
+        "showPassword": "Afficher",
+        "hidePassword": "Cacher",
+        "clickToCopy": "Cliquez pour copier",
+        "passwordCopied": "Mot de passe copié.",
+        "linkCopied": "Lien copié.",
+        "errorWhenCopying": "Impossible de copier le mot de passe."
+      }
+    },
     "UserBookmarksPage": {
       "back": "Retour",
       "favoriteBookmark": "Ajouter à votre espace personnel",

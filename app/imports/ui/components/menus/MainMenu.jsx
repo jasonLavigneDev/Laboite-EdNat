@@ -62,6 +62,14 @@ export const userMenu = [
       'data-tour-id': 'bookMark',
     },
   },
+  {
+    path: '/upload',
+    content: 'menuUpload',
+  },
+  {
+    path: '/upload',
+    content: 'menuUpload',
+  },
 ];
 
 export const userGroups = [

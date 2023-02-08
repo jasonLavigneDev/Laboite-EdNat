@@ -15,6 +15,9 @@ import DynamicStore, { useAppContext } from '../contexts/context';
 import lightTheme from '../themes/light';
 import { instance } from '../utils/analyticsServices';
 import { OnBoardingContext } from '../contexts';
+import LocalizationLayout from './locales/LocalizationLayout';
+// import useAppTransfert from '../utils/appTransfert';
+import useWidgetLink from '../utils/widgetLink';
 
 // dynamic imports
 const MainLayout = lazy(() => import('./MainLayout'));
@@ -43,6 +46,8 @@ function App() {
   const theme = useTheme();
   const { enableLinkTracking } = useMatomo();
   enableLinkTracking();
+  // useAppTransfert();
+  useWidgetLink();
 
   const { userId, loadingUser = false, loading } = state;
   const externalBlog = !!Meteor.settings.public.laboiteBlogURL;
@@ -93,9 +98,11 @@ export default () => (
       <ThemeProvider theme={lightTheme}>
         <BrowserRouter>
           <DynamicStore>
-            <OnBoardingContext.Provider>
-              <App />
-            </OnBoardingContext.Provider>
+            <LocalizationLayout>
+              <OnBoardingContext.Provider>
+                <App />
+              </OnBoardingContext.Provider>
+            </LocalizationLayout>
           </DynamicStore>
         </BrowserRouter>
       </ThemeProvider>

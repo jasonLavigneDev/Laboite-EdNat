@@ -1,5 +1,17 @@
 import { Meteor } from 'meteor/meteor';
 
+/**
+ *
+ * @param {string} email
+ * @returns
+ */
+export const validateEmail = (email) => {
+  return email.match(
+    // eslint-disable-next-line max-len, no-useless-escape
+    /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+  );
+};
+
 export const isUrlExternal = (url) => {
   if (url.search(Meteor.absoluteUrl()) === -1 && url.search('http') !== -1) {
     return true;

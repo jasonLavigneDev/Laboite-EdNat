@@ -76,6 +76,10 @@
       "mezigUrl": ""
     }
   },
+  "franceTransfert": {
+    "apiKey": "",
+    "endpoint": ""
+  },
   "keycloak": {
     "pubkey": "",
     "client": "sso",

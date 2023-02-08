@@ -4,3 +4,4 @@ config/settings.development.json
 
 .DS_Store
 .reports
+passwords.txt
