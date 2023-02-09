@@ -377,7 +377,7 @@ const AdminAsamExtensionsManagementPage = () => {
                   !isAddMailExtensionAction && !isDeleteMailExtensionAction
                     ? `${i18n.__('pages.AdminAsamExtensionsManagementPage.modal.title')} "${currentAsam.extension}"`
                     : !isDeleteMailExtensionAction
-                    ? `${i18n.__('pages.AdminAsamExtensionsManagementPage.modal.addEmailExtension')}"`
+                    ? `${i18n.__('pages.AdminAsamExtensionsManagementPage.modal.addEmailExtension')}`
                     : `${i18n.__('pages.AdminAsamExtensionsManagementPage.modal.deleteExtensionEmailTitle')} "${
                         currentAsam.extension
                       }"`
