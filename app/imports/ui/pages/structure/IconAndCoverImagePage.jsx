@@ -29,6 +29,7 @@ const useStyles = (isMobile) =>
       position: 'absolute',
       bottom: !isMobile ? '-48px' : '-25px',
       height: !isMobile ? '100px' : '50px',
+      width: '10vw',
     },
     containerGrid: {
       paddingTop: theme.spacing(0),
