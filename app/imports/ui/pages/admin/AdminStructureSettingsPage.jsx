@@ -74,7 +74,7 @@ const AdminStructureSettingsPage = () => {
                     ElementProps: { structure: selectedStructure },
                   },
                   {
-                    title: i18n.__('pages.AdminStructureSettingsPage.selectIconAndCoverImage'),
+                    title: i18n.__('components.AdminStructureTreeItem.actions.selectIconAndCoverImage'),
                     key: 'selectIconAndCoverImage',
                     Element: AdminStructureUploadIconAndCoverImage,
                     ElementProps: { structure: selectedStructure },
