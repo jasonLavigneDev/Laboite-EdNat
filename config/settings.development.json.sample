@@ -27,7 +27,6 @@
     "laboiteBlogURL": "",
     "enableBBB": false,
     "BBBUrl": "",
-    "minioSSL": false,
     "minioPort": null,
     "minioEndPoint": "",
     "minioBucket": "",

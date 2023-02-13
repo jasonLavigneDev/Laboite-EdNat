@@ -23,8 +23,8 @@ export const getExtension = (name, file) => {
 };
 
 export const minioSrcBuilder = (src) => {
-  const { minioSSL, minioEndPoint, minioBucket, minioPort } = Meteor.settings.public;
-  return `http${minioSSL ? 's' : ''}://${minioEndPoint}${minioPort ? `:${minioPort}` : ''}/${minioBucket}/${src}`;
+  const { minioEndPoint, minioBucket, minioPort } = Meteor.settings.public;
+  return `https://${minioEndPoint}${minioPort ? `:${minioPort}` : ''}/${minioBucket}/${src}`;
 };
 
 export const fileUpload = async ({ name, file, path, type, storage }, callback) => {

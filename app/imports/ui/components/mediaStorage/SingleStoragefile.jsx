@@ -8,9 +8,9 @@ import MusicNoteIcon from '@mui/icons-material/MusicNote';
 import VideocamIcon from '@mui/icons-material/Videocam';
 import PropTypes from 'prop-types';
 
-const { minioEndPoint, minioPort, minioBucket, minioSSL } = Meteor.settings.public;
+const { minioEndPoint, minioPort, minioBucket } = Meteor.settings.public;
 
-const HOST = `http${minioSSL ? 's' : ''}://${minioEndPoint}${minioPort ? `:${minioPort}` : ''}/${minioBucket}/`;
+const HOST = `https://${minioEndPoint}${minioPort ? `:${minioPort}` : ''}/${minioBucket}/`;
 
 export const PICTURES_TYPES = Meteor.settings.public.imageFilesTypes;
 export const SOUND_TYPES = Meteor.settings.public.audioFilesTypes;

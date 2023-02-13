@@ -14,9 +14,9 @@ import Services from '../../services/services';
 import { hasAdminRightOnStructure } from '../../structures/utils';
 import Structures from '../../structures/structures';
 
-const { minioSSL, minioEndPoint, minioBucket, minioPort } = Meteor.settings.public;
+const { minioEndPoint, minioBucket, minioPort } = Meteor.settings.public;
 
-const HOST = `http${minioSSL ? 's' : ''}://${minioEndPoint}${minioPort ? `:${minioPort}` : ''}/${minioBucket}/`;
+const HOST = `https://${minioEndPoint}${minioPort ? `:${minioPort}` : ''}/${minioBucket}/`;
 
 const checkUserAdminRights = (path, userId) => {
   // check if current user has admin rights
