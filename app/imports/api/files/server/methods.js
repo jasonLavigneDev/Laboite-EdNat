@@ -67,7 +67,7 @@ function _validatePath(path) {
 function _validateName(name) {
   // check filename safety (should not include ..,*,/,|,\,:,!)
   if (name.includes('..')) return SimpleSchema.ErrorTypes.VALUE_NOT_ALLOWED;
-  const regex = /[*/|\\:!]/;
+  const regex = /[*/|\\:!<>&]/;
   if (regex.test(name)) return SimpleSchema.ErrorTypes.VALUE_NOT_ALLOWED;
   return undefined;
 }
