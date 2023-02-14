@@ -85,7 +85,7 @@ export const updateService = new ValidatedMethod({
     if (Meteor.isServer && !Meteor.isTest && Meteor.settings.public.minioEndPoint) {
       const files = [data.logo, ...data.screenshots];
       Meteor.call('files.selectedRemove', {
-        path: `services/${serviceId}/`,
+        path: `services/${serviceId}`,
         toKeep: files,
       });
     }

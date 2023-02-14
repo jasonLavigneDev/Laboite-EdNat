@@ -148,16 +148,15 @@ export function _createGroup({ name, type, content, description, avatar, plugins
 
       // move group temp avatar from user minio to group minio and update avatar link
       if (avatar !== '' && avatar.includes('groupAvatar.png')) {
+        const { minioEndPoint, minioBucket, minioPort } = Meteor.settings.public;
+        const HOST = `https://${minioEndPoint}${minioPort ? `:${minioPort}` : ''}/${minioBucket}/`;
         Meteor.call('files.move', {
           sourcePath: `users/${userId}`,
           destinationPath: `groups/${groupId}`,
-          files: ['groupAvatar.png'],
+          files: [`${HOST}users/${userId}/groupAvatar.png`],
         });
 
-        const { minioEndPoint, minioBucket, minioPort } = Meteor.settings.public;
-        const avatarLink = `https://${minioEndPoint}${
-          minioPort ? `:${minioPort}` : ''
-        }/${minioBucket}/groups/${groupId}/groupAvatar.png?${new Date().getTime()}`;
+        const avatarLink = `${HOST}groups/${groupId}/groupAvatar.png?${new Date().getTime()}`;
 
         Groups.update({ _id: groupId }, { $set: { avatar: avatarLink } });
       }

@@ -52,12 +52,59 @@ const checkUserAdminRights = (path, userId) => {
   }
 };
 
+function _validatePath(path) {
+  const allowedTypes = ['users', 'groups', 'services', 'structures'];
+  const parts = path.split('/');
+  if (parts.length === 2) {
+    if (allowedTypes.includes(parts[0])) {
+      // don't allow .. or * as second part of path
+      if (parts[1] !== '..' && parts[1] !== '*') return undefined;
+    }
+  }
+  return SimpleSchema.ErrorTypes.VALUE_NOT_ALLOWED;
+}
+
+function _validateName(name) {
+  // check filename safety (should not include ..,*,/,|,\,:,!)
+  if (name.includes('..')) return SimpleSchema.ErrorTypes.VALUE_NOT_ALLOWED;
+  const regex = /[*/|\\:!]/;
+  if (regex.test(name)) return SimpleSchema.ErrorTypes.VALUE_NOT_ALLOWED;
+  return undefined;
+}
+
+function validateFilePath() {
+  const path = this.value;
+  return _validatePath(path);
+}
+
+function validateFileName() {
+  const name = this.value;
+  return _validateName(name);
+}
+
+function validateFileFull() {
+  const fullName = this.value.replace(HOST, '');
+  // validate path part and file part
+  const parts = fullName.split('/');
+  if (parts.length === 3) {
+    const path = parts.slice(0, 2).join('/');
+    if (_validatePath(path) === undefined && _validateName(parts[2]) === undefined) return undefined;
+  }
+  return SimpleSchema.ErrorTypes.VALUE_NOT_ALLOWED;
+}
+
 export const filesupload = new ValidatedMethod({
   name: 'files.upload',
   validate: new SimpleSchema({
     file: String,
-    name: String,
-    path: String,
+    name: {
+      type: String,
+      custom: validateFileName,
+    },
+    path: {
+      type: String,
+      custom: validateFilePath,
+    },
     fileType: String,
     storage: Boolean,
   }).validator(),
@@ -116,13 +163,22 @@ export const removeSelectedFiles = new ValidatedMethod({
       type: Array,
       optional: true,
     },
-    'toRemove.$': String,
+    'toRemove.$': {
+      type: String,
+      custom: validateFileFull,
+    },
     toKeep: {
       type: Array,
       optional: true,
     },
-    'toKeep.$': String,
-    path: String,
+    'toKeep.$': {
+      type: String,
+      custom: validateFileFull,
+    },
+    path: {
+      type: String,
+      custom: validateFilePath,
+    },
   }).validator(),
   async run({ path, toRemove = [], toKeep = [] }) {
     checkUserAdminRights(path, this.userId);
@@ -170,10 +226,19 @@ export const removeSelectedFiles = new ValidatedMethod({
 export const moveFiles = new ValidatedMethod({
   name: 'files.move',
   validate: new SimpleSchema({
-    sourcePath: String,
-    destinationPath: String,
+    sourcePath: {
+      type: String,
+      custom: validateFilePath,
+    },
+    destinationPath: {
+      type: String,
+      custom: validateFilePath,
+    },
     files: Array,
-    'files.$': String,
+    'files.$': {
+      type: String,
+      custom: validateFileFull,
+    },
   }).validator(),
   async run({ sourcePath, destinationPath, files }) {
     checkUserAdminRights(destinationPath, this.userId);
@@ -205,9 +270,18 @@ export const moveFiles = new ValidatedMethod({
 export const rename = new ValidatedMethod({
   name: 'files.rename',
   validate: new SimpleSchema({
-    path: String,
-    oldName: String,
-    newName: String,
+    path: {
+      type: String,
+      custom: validateFilePath,
+    },
+    oldName: {
+      type: String,
+      custom: validateFileName,
+    },
+    newName: {
+      type: String,
+      custom: validateFileName,
+    },
   }).validator(),
   async run({ path, oldName, newName }) {
     checkUserAdminRights(path, this.userId);
