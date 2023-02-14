@@ -9,7 +9,6 @@ import CardMedia from '@mui/material/CardMedia';
 import CardActionArea from '@mui/material/CardActionArea';
 import Badge from '@mui/material/Badge';
 import Avatar from '@mui/material/Avatar';
-import { useMatomo } from '@datapunt/matomo-tracker-react';
 
 import Tooltip from '@mui/material/Tooltip';
 import BlockIcon from '@mui/icons-material/Block';
@@ -18,6 +17,8 @@ import Box from '@mui/material/Box';
 import FavButton from './FavButton';
 import { isUrlExternal } from '../../utils/utilsFuncs';
 import { useAppContext } from '../../contexts/context';
+import { eventTracking } from '../../../api/analyticsEvents/eventsTracking';
+import AnalyticsEvents from '../../../api/analyticsEvents/analyticsEvents';
 
 const useStyles = makeStyles()((theme) => ({
   action: {
@@ -64,28 +65,28 @@ const useStyles = makeStyles()((theme) => ({
   },
 }));
 
-export default function ServiceDetails({ service, favAction, noIconMode = false }) {
+export default function ServiceDetailsList({ service, favAction, noIconMode = false }) {
   const { classes } = useStyles();
   const history = useHistory();
   const isDisabled = service.state === 5 || service.state === 15;
 
   const [{ isMobile }] = useAppContext();
-  const { trackEvent } = useMatomo();
   const favorite = favAction === 'fav';
 
-  const isExternal = isUrlExternal(service.url);
-  const launchService = () => {
-    trackEvent({
-      category: 'signin-page',
-      action: 'open-service',
-      name: `Ouverture de ${service.title}`, // optional
+  const isExternalService = isUrlExternal(service.url);
+
+  const launchService = React.useCallback(() => {
+    eventTracking({
+      target: AnalyticsEvents.targets.SERVICE,
+      content: service.title,
     });
-    if (isExternal) {
+
+    if (isExternalService) {
       window.open(service.url, '_blank', 'noreferrer,noopener');
     } else {
       history.push(service.url.replace(Meteor.absoluteUrl(), '/'));
     }
-  };
+  }, [history, isExternalService, service?.url, service?.title]);
 
   const handleLaunchService = () => {
     if (service.state === 5) msg.error(i18n.__('pages.SingleServicePage.inactive'));
@@ -152,12 +153,12 @@ export default function ServiceDetails({ service, favAction, noIconMode = false 
   );
 }
 
-ServiceDetails.defaultProps = {
+ServiceDetailsList.defaultProps = {
   favAction: null,
   noIconMode: false,
 };
 
-ServiceDetails.propTypes = {
+ServiceDetailsList.propTypes = {
   service: PropTypes.objectOf(PropTypes.any).isRequired,
   favAction: PropTypes.string,
   noIconMode: PropTypes.bool,

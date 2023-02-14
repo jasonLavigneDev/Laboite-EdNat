@@ -1,6 +1,7 @@
 import { Migrations } from 'meteor/percolate:migrations';
 import { Meteor } from 'meteor/meteor';
 import { WebApp } from 'meteor/webapp';
+import { SyncedCron } from 'meteor/littledata:synced-cron';
 import { checkMigrationStatus } from '../../api/appsettings/methods';
 
 // import i18n translation files
@@ -32,4 +33,11 @@ Meteor.startup(() => {
   checkMigrationStatus();
   // set up Default language to French in HTML attribute
   WebApp.addHtmlAttributeHook(() => ({ lang: 'fr' }));
+
+  SyncedCron.config({
+    log: true,
+    // Name of collection to use for synchronisation and logging
+    collectionTTL: 172800,
+  });
+  SyncedCron.start();
 });

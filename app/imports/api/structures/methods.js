@@ -356,14 +356,6 @@ export const updateStructureIntroduction = new ValidatedMethod({
   },
 });
 
-export const getStructures = new ValidatedMethod({
-  name: 'structures.getStructures',
-  validate: null,
-  run() {
-    return Structures.find().fetch();
-  },
-});
-
 export const getOneStructure = new ValidatedMethod({
   name: 'structures.getOneStructure',
   validate: new SimpleSchema({
@@ -384,7 +376,6 @@ const LISTS_METHODS = _.pluck(
     getAllChilds,
     updateStructureIntroduction,
     updateStructureContactEmail,
-    getStructures,
     getOneStructure,
     setUserStructureAdminValidationMandatoryStatus,
   ],

@@ -10,6 +10,7 @@
       "blog": false,
       "notificationsTab": false,
       "groups": false,
+      "analytics": false,
       "introductionTab": false,
       "introductionTabStructuresInfos": true,
       "menuAdminDefaultSpaces": false,  // THIS PARAMS IS SET FOR HIDDEN DEFAULTSPACE FUNCTIONNALITY
@@ -22,6 +23,11 @@
     "matomo": {
       "siteId": 1,
       "urlBase": "https://URL.fr"
+    },
+    "countly": {
+      "app_key": "lol",
+      "url": "https://countly.url.fr",
+      consent: true,
     },
     "laboiteBlogURL": "",
     "enableBBB": false,
@@ -37,6 +43,7 @@
     "minioFileSize": 500000,
     "minioStorageFilesSize": 3000000,
     "maxMinioDiskPerUser": 1000000,
+    "analyticsExpirationInDays": 24,
     "NotificationsExpireDays": {
       "setRole": null,
       "unsetRole": null,

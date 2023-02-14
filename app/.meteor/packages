@@ -46,5 +46,8 @@ eoleteam:accounts-keycloak
 mexar:mdt
 random@1.2.1
 server-render@0.4.1
-montiapm:agent
+mizzao:user-status
+littledata:synced-cron
 montiapm:profiler
+montiapm:agent
+sakulstra:aggregate

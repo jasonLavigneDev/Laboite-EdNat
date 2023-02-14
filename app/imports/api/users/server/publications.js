@@ -1,13 +1,16 @@
 import { Meteor } from 'meteor/meteor';
 import { Roles } from 'meteor/alanning:roles';
 import { Counts } from 'meteor/tmeasday:publish-counts';
+import { UserStatus } from 'meteor/mizzao:user-status';
 import { FindFromPublication } from 'meteor/percolate:find-from-publication';
 import SimpleSchema from 'simpl-schema';
+import moment from 'moment';
 import { checkPaginationParams, isActive, getLabel } from '../../utils';
 import Groups from '../../groups/groups';
 import { getStructureIds } from '../structures';
 import logServer from '../../logging';
 import { hasAdminRightOnStructure, hasRightToAcceptAwaitingStructure } from '../../structures/utils';
+import Structures from '../../structures/structures';
 
 // publish additional fields for current user
 Meteor.publish('userData', function publishUserData() {
@@ -417,5 +420,37 @@ Meteor.publish('users.awaitingForStructure.count', function usersAwaitingForStru
     return this.ready();
   }
   Counts.publish(this, 'users.awaitingForStructure.count', Meteor.users.find({ awaitingStructure: structureId }));
+  this.ready();
   return [];
+});
+
+Meteor.publish('users.connections.counts', function usersAll() {
+  Counts.publish(this, 'users.connections.counts.logged', UserStatus.connections.find({ userId: { $exists: true } }));
+  Counts.publish(
+    this,
+    'users.connections.counts.notLogged',
+    UserStatus.connections.find({ userId: { $exists: false } }),
+  );
+  Counts.publish(this, 'users.connections.counts.idle', Meteor.users.find({ status: { idle: true } }));
+  Counts.publish(this, 'users.connections.counts.idle', Meteor.users.find({ status: { idle: false } }));
+  Counts.publish(
+    this,
+    'users.new.counts',
+    Meteor.users.find({ createdAt: { $gte: new Date(moment().subtract(2, 'days').format()) } }),
+  );
+
+  const structuresWithLoggedUsers = [];
+
+  Structures.find()
+    .fetch()
+    .forEach(({ _id }) => {
+      const users = Meteor.users.find({ structure: _id, $or: [{ 'status.online': true }, { 'status.idle': true }] });
+
+      if (users.count() !== 0) {
+        structuresWithLoggedUsers.push(_id);
+        Counts.publish(this, `users.connections.counts.structures.${_id}`, users);
+      }
+    });
+
+  return Structures.find({ _id: { $in: structuresWithLoggedUsers } }, { sort: { name: 1 }, limit: 200 });
 });

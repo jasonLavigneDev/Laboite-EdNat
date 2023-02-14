@@ -12,15 +12,12 @@ import Fade from '@mui/material/Fade';
 import FormGroup from '@mui/material/FormGroup';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { useMatomo } from '@datapunt/matomo-tracker-react';
 
 import Spinner from '../../components/system/Spinner';
 import { useAppContext } from '../../contexts/context';
 import AppSettings from '../../../api/appsettings/appsettings';
-
 import Structures from '../../../api/structures/structures';
 import { getCurrentIntroduction } from '../../../api/utils';
-import { usePageTracking } from '../../utils/matomo';
 
 validate.options = {
   fullMessages: false,
@@ -66,16 +63,6 @@ export const checkAccessAndLogin = async (isIframed) => {
 function SignIn({ loggingIn, introduction, appsettings, ready }) {
   const [{ isIframed }] = useAppContext();
   const { classes } = useStyles();
-  const { trackEvent } = useMatomo();
-  usePageTracking({
-    documentTitle: 'Page de connexion',
-    customDimensions: [
-      {
-        id: 'Widget',
-        value: isIframed,
-      },
-    ], // optional
-  });
 
   const [rememberMe, setRememberMe] = useState(true);
 
@@ -87,12 +74,12 @@ function SignIn({ loggingIn, introduction, appsettings, ready }) {
   };
 
   const handleKeycloakAuth = async () => {
-    await checkAccessAndLogin(isIframed);
-    trackEvent({
-      category: 'signin-page',
-      action: 'connexion-click',
-      name: 'Connexion avec Keycloak', // optional
-    });
+    // await checkAccessAndLogin();
+    // trackEvent({
+    //   category: 'signin-page',
+    //   action: 'connexion-click',
+    //   name: 'Connexion avec Keycloak', // optional
+    // });
     checkRememberMe();
     Meteor.loginWithKeycloak();
   };

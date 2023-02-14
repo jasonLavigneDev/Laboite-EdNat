@@ -295,7 +295,7 @@ export function ServicesPage({ services, categories, businessRegroupings, ready,
             <Grid container spacing={4}>
               <Grid item xs={12} className={isMobile ? null : classes.flex}>
                 <Typography variant={isMobile ? 'h6' : 'h4'} className={classes.flex}>
-                  {i18n.__(structureMode ? structure && structure.name : 'pages.ServicesPage.titleServices')}
+                  {i18n.__(structureMode ? structure?.name : 'pages.ServicesPage.titleServices')}
                 </Typography>
                 <div className={classes.spaceBetween}>{!isMobile && toggleButtons}</div>
               </Grid>
