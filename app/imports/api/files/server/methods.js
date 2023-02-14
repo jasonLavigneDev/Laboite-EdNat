@@ -93,6 +93,23 @@ function validateFileFull() {
   return SimpleSchema.ErrorTypes.VALUE_NOT_ALLOWED;
 }
 
+function checkExtension(name) {
+  const fileTypes = [
+    ...Meteor.settings.public.imageFilesTypes,
+    ...Meteor.settings.public.audioFilesTypes,
+    ...Meteor.settings.public.videoFilesTypes,
+    ...Meteor.settings.public.textFilesTypes,
+    ...Meteor.settings.public.otherFilesTypes,
+  ];
+  const extension = name.split('.').pop();
+  if (!fileTypes.includes(extension)) {
+    throw new Meteor.Error(
+      'components.UploadNotifier.ExtensionNotAllowed',
+      i18n.__('components.UploaderNotifier.formatNotAcceptedTitle'),
+    );
+  }
+}
+
 export const filesupload = new ValidatedMethod({
   name: 'files.upload',
   validate: new SimpleSchema({
@@ -111,6 +128,7 @@ export const filesupload = new ValidatedMethod({
   async run({ file, path, name, fileType, storage }) {
     try {
       checkUserAdminRights(path, this.userId);
+      checkExtension(name);
       const { minioFileSize, minioStorageFilesSize } = Meteor.settings.public;
       const size = storage ? minioStorageFilesSize : minioFileSize;
       if (file.length < size) {
@@ -285,7 +303,7 @@ export const rename = new ValidatedMethod({
   }).validator(),
   async run({ path, oldName, newName }) {
     checkUserAdminRights(path, this.userId);
-
+    checkExtension(newName);
     const conds = new Minio.CopyConditions();
     s3Client.copyObject(minioBucket, `${path}/${newName}`, `${minioBucket}/${path}/${oldName}`, conds, (err) => {
       s3Client.removeObject(minioBucket, `${path}/${oldName}`);
