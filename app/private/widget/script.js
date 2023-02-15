@@ -66,6 +66,7 @@
   iframeContainer.setAttribute('name', iframeName);
   iframeContainer.setAttribute('class', 'lb_iframe-widget');
   iframeContainer.setAttribute('iframe-state', 'closed');
+  iframeContainer.setAttribute('name', 'lb_iframe-widget');
   iframeContainer.setAttribute('src', ROOT_URL);
 
   // Create Container for Widget
@@ -150,12 +151,45 @@
     }
   };
 
-  const receiveMessage = (data) => {
-    const { type, content } = data;
-    if (type === 'notifications') {
-      handleNotification(content);
-    } else if (type === 'userLogged') {
-      handleUserLogged(content);
+  const messageCallback = (message, data) => {
+    iframeContainer.contentWindow.postMessage({ type: 'callback', callback: message.data.callback, data }, '*');
+  };
+
+  const receiveMessage = (message) => {
+    const { type, content } = message.data;
+
+    switch (type) {
+      case 'notifications':
+        handleNotification(content);
+        break;
+      case 'userLogged':
+        handleUserLogged(content);
+        break;
+
+      case 'isWiget':
+        messageCallback(message, true);
+        break;
+      case 'isFullScreen':
+        messageCallback(message, container.classList.contains('fullscreen'));
+        break;
+      case 'isOpened':
+        messageCallback(message, container.classList.contains('opened'));
+        break;
+      case 'openWidget':
+        openRizimo();
+        messageCallback(message);
+        break;
+      case 'closeWidget':
+        closeRizimo();
+        messageCallback(message);
+        break;
+      case 'setFullScreen':
+        toggleFullscreen(content);
+        messageCallback(message);
+        break;
+
+      default:
+        break;
     }
   };
 
