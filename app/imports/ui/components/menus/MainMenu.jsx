@@ -207,6 +207,20 @@ const MainMenu = ({ user = {} }) => {
         >
           {i18n.__('components.MainMenu.menuHelpLabel')}
         </MenuItem>
+        {Meteor.settings.public.ui.feedbackLink && (
+          <MenuItem
+            className={classes.menuItem}
+            onClick={() =>
+              window.open(
+                `${Meteor.settings.public.ui.feedbackLink}?email=${Meteor.user()?.emails[0].address}`,
+                '_blank',
+                'noreferrer,noopener',
+              )
+            }
+          >
+            {i18n.__('components.MainMenu.menuFeedbackLabel')}
+          </MenuItem>
+        )}
         <Divider />
         <MenuItem className={classes.menuItem} onClick={onLogout}>
           {i18n.__('components.MainMenu.menuLogoutLabel')}
