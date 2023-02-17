@@ -4,8 +4,7 @@ import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
 import DoneIcon from '@mui/icons-material/Done';
 
-import { propTypes as structurePropTypes } from '../../../api/structures/structures';
-import { useAppContext } from '../../contexts/context';
+import Structures, { propTypes as structurePropTypes } from '../../../api/structures/structures';
 import { useAwaitingUsers } from '../../../api/users/hooks';
 import AdminUserValidationTable from '../../components/admin/AdminUserValidationTable';
 
@@ -23,7 +22,7 @@ const AdminStructureUsersValidationPage = ({ users, structure, loading }) => {
 
   return (
     <AdminUserValidationTable
-      title={i18n.__('pages.AdminStructureUsersValidationPage.title', { structureName: structure.name })}
+      title={i18n.__('pages.AdminStructureUsersValidationPage.title', { structureName: structure.name || '' })}
       users={users}
       loading={loading}
       columnsFields={columnsFields}
@@ -47,7 +46,12 @@ AdminStructureUsersValidationPage.propTypes = {
 };
 
 export default withTracker(() => {
-  const [{ user, structure }] = useAppContext();
-  const { data, loading } = useAwaitingUsers({ structureId: structure._id || user.structure });
+  let structure = {};
+  const user = Meteor.user();
+  Meteor.subscribe('structures.one');
+  if (user.structure) {
+    structure = Structures.findOne(user.structure) || {};
+  }
+  const { data, loading } = useAwaitingUsers({ structureId: structure._id || null });
   return { users: data, loading, structure };
 })(AdminStructureUsersValidationPage);

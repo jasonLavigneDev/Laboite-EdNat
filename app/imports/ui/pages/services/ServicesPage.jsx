@@ -41,6 +41,7 @@ import { useIconStyles, DetaiIconCustom, SimpleIconCustom } from '../../componen
 import { useStructure } from '../../../api/structures/hooks';
 import { GRID_VIEW_MODE } from '../../utils/ui';
 import { compareBussinessRegrouping } from '../../utils/utilsFuncs';
+import Structures from '../../../api/structures/structures';
 
 const useStyles = makeStyles()((theme, isMobile) => ({
   flex: {
@@ -479,15 +480,17 @@ ServicesPage.defaultProps = {
 
 export default withTracker(({ match: { path } }) => {
   const structureMode = path === '/structure';
-  const [{ structure }] = useAppContext();
+  const structure = Meteor.user().structure || null;
   /**
    * - Grab current user structure with the ancestors
    *
    * - This is used to get all services from top level to current one
    */
   const currentStructureWithAncestors = [];
-  if (structure && structure._id) {
-    currentStructureWithAncestors.push(structure._id, ...structure.ancestorsIds);
+  if (structure) {
+    Meteor.subscribe('structures.one');
+    const userStruct = Structures.findOne(structure);
+    if (userStruct._id) currentStructureWithAncestors.push(userStruct._id, ...userStruct.ancestorsIds);
   }
   const subName = structureMode ? 'services.structure.ids' : 'services.all';
   const servicesHandle = Meteor.subscribe(subName, structureMode && { structureIds: currentStructureWithAncestors });
