@@ -22,6 +22,7 @@ import Screencast from '../components/screencast/Screencast';
 import { useAppContext } from '../contexts/context';
 import Helps from '../../api/helps/helps';
 import { useZoneStyles } from '../components/personalspace/PersonalZone';
+import slugy from '../utils/slugy';
 
 const sortCategName = (a, b) => a.localeCompare(b);
 
@@ -146,8 +147,8 @@ function HelpPage() {
                     content: zoneClasses.expansionpanelsummarycontent,
                   }}
                 >
-                  <Typography variant="h5" color="primary" className={zoneClasses.zone}>
-                    {category.name}
+                  <Typography variant="h5" id={slugy(category.name)} color="primary" className={zoneClasses.zone}>
+                    <a href={`#${slugy(category.name)}`}>{category.name}</a>
                   </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
