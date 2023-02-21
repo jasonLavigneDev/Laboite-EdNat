@@ -1,0 +1,179 @@
+/** Le préfixe choisi pour les classes CSS, afin d'assurer une unicité, est `lb_` */
+
+.lb_container {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  width: 75px;
+  height: 75px;
+  z-index: 9999;
+}
+
+.lb_container .lb_widget {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  font-size: 25px;
+  transition: transform 0.1s ease-in-out;
+  box-shadow: 0px 3px 5px -1px rgb(0 0 0 / 20%), 0px 6px 10px 0px rgb(0 0 0 / 14%), 0px 1px 18px 0px rgb(0 0 0 / 12%);
+}
+
+.lb_container .lb_widget:hover {
+  transform: scale(1.1);
+}
+
+.lb_container .lb_widget *,
+.lb_container .lb_widget-container * {
+  box-sizing: content-box !important;
+}
+
+.lb_container .lb_widget > img {
+  width: 75px;
+  height: 75px;
+}
+
+.lb_container .lb_widget .notifications {
+  position: absolute;
+  background-color: #ce0500;
+  font-size: 15px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  top: 0;
+  right: 0;
+  box-shadow: 0px 3px 5px -1px rgb(0 0 0 / 20%), 0px 6px 10px 0px rgb(0 0 0 / 14%), 0px 1px 18px 0px rgb(0 0 0 / 12%);
+}
+
+.lb_container.opened .lb_widget {
+  display: none;
+}
+
+.lb_container .lb_widget.moving {
+  transform: scale(1.2);
+}
+
+.lb_container.closed .lb_widget-container {
+  /* display: none; */
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.lb_container.closed .lb_widget-container .lb_widget-header {
+  display: none;
+}
+
+.lb_container.opened .lb_widget-container {
+  transition: all 0.2s ease-in-out;
+  z-index: 9999;
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  bottom: 5px;
+  right: 5px;
+  height: 600px;
+  max-height: calc(100% - 10px);
+  width: 500px;
+  max-width: calc(100% - 10px);
+  background: white;
+  border-width: 2px;
+  border-style: solid;
+  border-color: #000091;
+  border-radius: 8px;
+  animation: fadeIn 0.7s;
+  overflow: hidden;
+  box-shadow: 0px 3px 5px -1px rgb(0 0 0 / 20%), 0px 6px 10px 0px rgb(0 0 0 / 14%), 0px 1px 18px 0px rgb(0 0 0 / 12%);
+}
+
+.lb_container.opened.fullscreen .lb_widget-container {
+  height: calc(100% - 10px);
+  width: calc(100% - 10px);
+}
+
+.lb_container .lb_widget-container iframe {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 0 0 8px 8px;
+}
+
+.lb_container .lb_widget-container .lb_widget-header {
+  height: 35px;
+  background-color: #000091;
+  display: flex;
+  padding: 5px;
+  justify-content: space-between;
+}
+
+.lb_container .lb_widget-container img {
+  height: 35px;
+}
+
+.lb_container .lb_widget-container .buttons-container {
+  display: flex;
+}
+
+.lb_container .lb_widget-container .buttons-container button {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  position: relative;
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+}
+
+.lb_container .lb_widget-container .cross-stand-alone:before,
+.lb_container .cross-stand-alone:after {
+  content: '';
+  position: absolute;
+  top: 18px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #fff;
+  border-radius: 4px;
+}
+
+.lb_container .lb_widget-container .cross-stand-alone:before {
+  transform: rotate(45deg);
+}
+
+.lb_container .lb_widget-container .cross-stand-alone:after {
+  transform: rotate(-45deg);
+}
+
+.lb_container .lb_widget-container button.full-screen {
+  width: 35px;
+  height: 35px;
+  color: #fff;
+  font-size: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 5px;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}

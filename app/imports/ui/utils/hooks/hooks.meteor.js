@@ -143,10 +143,10 @@ export const usePaginatedMethod = (
         isDirect // if is direct page number to access
           ? modifier // go to page
           : modifier > 0 // else if going next N page
-            ? meta?.result.nbPages >= currentpage + modifier // and if not going above last page
-            : currentpage + modifier // then add N to current page
-              ? currentpage + modifier < 1 // else if going below first page
-              : currentpage, // then stay on current page,
+          ? meta?.result.nbPages >= currentpage + modifier // and if not going above last page
+          : currentpage + modifier // then add N to current page
+          ? currentpage + modifier < 1 // else if going below first page
+          : currentpage, // then stay on current page,
     );
   });
 

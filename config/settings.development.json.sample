@@ -30,6 +30,10 @@
       "url": "https://countly.url.fr",
       consent: true,
     },
+    "onBoarding": {
+      "enabled": true,
+      "appDesignation": "Laboîte"
+    },
     "laboiteBlogURL": "",
     "enableBBB": false,
     "BBBUrl": "",

@@ -14,6 +14,7 @@ import MsgHandler from '../components/system/MsgHandler';
 import DynamicStore, { useAppContext } from '../contexts/context';
 import lightTheme from '../themes/light';
 import { instance } from '../utils/analyticsServices';
+import { OnBoardingContext } from '../contexts';
 
 // dynamic imports
 const MainLayout = lazy(() => import('./MainLayout'));
@@ -92,7 +93,9 @@ export default () => (
       <ThemeProvider theme={lightTheme}>
         <BrowserRouter>
           <DynamicStore>
-            <App />
+            <OnBoardingContext.Provider>
+              <App />
+            </OnBoardingContext.Provider>
           </DynamicStore>
         </BrowserRouter>
       </ThemeProvider>

@@ -14,7 +14,8 @@
     "visualize": "meteor --production --extra-packages bundle-visualizer --settings ../config/settings.development.json",
     "preinstall": "npx npm-force-resolutions",
     "prepare": "cd .. && npx husky install",
-    "check-lang": "node ./scripts/lang-check.js imports/startup/i18n/*.json"
+    "check-lang": "node ./scripts/lang-check.js imports/startup/i18n/*.json",
+    "serve-widget": "serve private/widget"
   },
   "dependencies": {
     "@babel/runtime": "^7.17.8",
@@ -55,6 +56,8 @@
     "file-saver": "^2.0.5",
     "glob": "^8.0.3",
     "html2pdf.js": "^0.10.1",
+    "intro.js": "^6.0.0",
+    "intro.js-react": "^0.7.1",
     "jspdf": "^2.5.1",
     "lodash.throttle": "^4.1.1",
     "mail": "^0.2.3",
@@ -84,6 +87,7 @@
     "slugify": "^1.6.5",
     "sortablejs": "^1.15.0",
     "tss-react": "^3.7.1",
+    "uuid": "^9.0.0",
     "validate.js": "^0.13.1",
     "webrtc-adapter": "^7.7.1",
     "xml2js": "^0.4.23"
@@ -99,6 +103,7 @@
   },
   "devDependencies": {
     "@meteorjs/eslint-config-meteor": "^1.0.5",
+    "@types/intro.js": "^5.1.0",
     "@types/meteor": "^2.7.1",
     "babel-eslint": "^10.1.0",
     "eslint": "^7.32.0",
@@ -120,7 +125,8 @@
     "husky": "^7.0.4",
     "jscpd": "^3.4.5",
     "npm-force-resolutions": "0.0.10",
-    "prettier": "^2.6.0"
+    "prettier": "^2.6.0",
+    "serve": "^14.2.0"
   },
   "resolutions": {
     "axios": "0.26.1",
