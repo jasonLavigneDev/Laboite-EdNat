@@ -19,7 +19,8 @@
     },
     "ui": {
       "defaultGridViewMode": "compact",
-      "isBusinessRegroupingMode": false
+      "isBusinessRegroupingMode": false,
+      "feedbackLink": ""
     },
     "matomo": {
       "siteId": 1,
