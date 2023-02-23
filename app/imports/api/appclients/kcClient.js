@@ -114,6 +114,7 @@ class KeyCloakClient {
         // check that clientId is set in case keycloak was not available at startup
         return this._ensureClientId(newToken)
           .then(() => this._ensureAdminsId(newToken))
+          .then(() => this._ensureAdminStructure(newToken))
           .then(() => Promise.resolve(newToken));
       })
       .catch((error) => {
@@ -189,6 +190,19 @@ class KeyCloakClient {
       });
     }
     return Promise.resolve(this.adminsGroupId);
+  }
+
+  _ensureAdminStructure(token) {
+    return this._getGroupId('adminStructure', token).then((groupId) => {
+      if (groupId) {
+        return groupId;
+      }
+      return this._addGroup('adminStructure', token)
+        .then(() => this._getGroupId('adminStructure', token))
+        .then((newGroupId) => {
+          return newGroupId;
+        });
+    });
   }
 
   _getGroupId(name, token) {
