@@ -8,7 +8,8 @@ import Structures, { propTypes as structurePropTypes } from '../../../api/struct
 import { useAwaitingUsers } from '../../../api/users/hooks';
 import AdminUserValidationTable from '../../components/admin/AdminUserValidationTable';
 
-const AdminStructureUsersValidationPage = ({ users, structure, loading }) => {
+const AdminStructureUsersValidationPage = ({ structure, loadingStruct }) => {
+  const { data: users, loading } = useAwaitingUsers({ structureId: structure._id || null });
   const accept = (user) => {
     const data = { targetUserId: user._id };
     Meteor.call('users.acceptAwaitingStructure', { ...data }, (err) => {
@@ -24,7 +25,7 @@ const AdminStructureUsersValidationPage = ({ users, structure, loading }) => {
     <AdminUserValidationTable
       title={i18n.__('pages.AdminStructureUsersValidationPage.title', { structureName: structure.name || '' })}
       users={users}
-      loading={loading}
+      loading={loading || loadingStruct}
       columnsFields={columnsFields}
       actions={[
         {
@@ -41,17 +42,16 @@ const AdminStructureUsersValidationPage = ({ users, structure, loading }) => {
 
 AdminStructureUsersValidationPage.propTypes = {
   structure: structurePropTypes.isRequired,
-  users: PropTypes.arrayOf(PropTypes.any).isRequired,
-  loading: PropTypes.bool.isRequired,
+  loadingStruct: PropTypes.bool.isRequired,
 };
 
 export default withTracker(() => {
-  let structure = {};
   const user = Meteor.user();
-  Meteor.subscribe('structures.one');
   if (user.structure) {
-    structure = Structures.findOne(user.structure) || {};
+    const subscription = Meteor.subscribe('structures.one');
+    const loadingStruct = !subscription.ready();
+    const structure = loadingStruct ? {} : Structures.findOne(user.structure);
+    return { loadingStruct, structure };
   }
-  const { data, loading } = useAwaitingUsers({ structureId: structure._id || null });
-  return { users: data, loading, structure };
+  return { loadingStruct: true, structure: {} };
 })(AdminStructureUsersValidationPage);
