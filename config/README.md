@@ -5,7 +5,7 @@ Copy `settings-development.json.sample` to `settings-development.json` and updat
 ## public:
 
 | Key                                             | Type     | Default value                        | Description                                                                                 |
-| ----------------------------------------------- | -------- | ------------------------------------ | ------------------------------------------------------------------------------------------- |
+| ----------------------------------------------- | -------- | ------------------------------------ | ------------------------------------------------------------------------------------------- | --- |
 | enableKeycloak                                  | boolean  | false                                | If true, keycloak is enabled                                                                |
 | keycloakUrl                                     | string   | ""                                   | Keycloak URL                                                                                |
 | keycloakRealm                                   | string   | ""                                   | Keycloak Realm                                                                              |
@@ -15,8 +15,7 @@ Copy `settings-development.json.sample` to `settings-development.json` and updat
 | appDescription                                  | string   | ""                                   | Application description, it will be displayed under the title                               |
 | laboiteBlogURL                                  | string   | ""                                   | Laboite Blog URL                                                                            |
 | enableBBB                                       | boolean  | true                                 | If true, Big Blue Button is enabled                                                         |
-| BBBUrl                                          | string   | ""                                   | Big Blue Button URL                                                                         |
-| minioSSL                                        | boolean  | false                                | If true, minio is SSL ù                                                                     |
+| BBBUrl                                          | string   | ""                                   | Big Blue Button URL                                                                         | ù   |
 | minioPort                                       | number   | null                                 | Minio port                                                                                  |
 | minioEndPoint                                   | string   | ""                                   | Minio End Point                                                                             |
 | minioBucket                                     | string   | ""                                   | Minio Bucket                                                                                |

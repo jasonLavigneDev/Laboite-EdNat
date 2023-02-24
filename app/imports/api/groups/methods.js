@@ -154,8 +154,8 @@ export function _createGroup({ name, type, content, description, avatar, plugins
           files: ['groupAvatar.png'],
         });
 
-        const { minioSSL, minioEndPoint, minioBucket, minioPort } = Meteor.settings.public;
-        const avatarLink = `http${minioSSL ? 's' : ''}://${minioEndPoint}${
+        const { minioEndPoint, minioBucket, minioPort } = Meteor.settings.public;
+        const avatarLink = `https://${minioEndPoint}${
           minioPort ? `:${minioPort}` : ''
         }/${minioBucket}/groups/${groupId}/groupAvatar.png?${new Date().getTime()}`;
 

@@ -58,9 +58,9 @@ import { testMeteorSettingsUrl, getGroupName } from '../../utils/utilsFuncs';
 
 Quill.register('modules/ImageResize', ImageResize);
 
-const { minioEndPoint, minioPort, minioBucket, minioSSL, laboiteBlogURL } = Meteor.settings.public;
+const { minioEndPoint, minioPort, minioBucket, laboiteBlogURL } = Meteor.settings.public;
 
-const HOST = `http${minioSSL ? 's' : ''}://${minioEndPoint}${minioPort ? `:${minioPort}` : ''}/${minioBucket}/`;
+const HOST = `https://${minioEndPoint}${minioPort ? `:${minioPort}` : ''}/${minioBucket}/`;
 
 const useStyles = makeStyles()((theme, isTablet) => ({
   flex: {

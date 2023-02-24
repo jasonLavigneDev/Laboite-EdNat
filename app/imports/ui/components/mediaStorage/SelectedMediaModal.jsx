@@ -24,9 +24,9 @@ import Spinner from '../system/Spinner';
 import { PICTURES_TYPES, VIDEO_TYPES, SOUND_TYPES } from './SingleStoragefile';
 import COMMON_STYLES from '../../themes/styles';
 
-const { minioEndPoint, minioPort, minioBucket, minioSSL } = Meteor.settings.public;
+const { minioEndPoint, minioPort, minioBucket } = Meteor.settings.public;
 
-const HOST = `http${minioSSL ? 's' : ''}://${minioEndPoint}${minioPort ? `:${minioPort}` : ''}/${minioBucket}/`;
+const HOST = `https://${minioEndPoint}${minioPort ? `:${minioPort}` : ''}/${minioBucket}/`;
 
 const useStyles = makeStyles()((theme, isMobile) => ({
   root: COMMON_STYLES.root,
