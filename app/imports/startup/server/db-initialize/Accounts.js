@@ -12,7 +12,7 @@ import fakeData from './fakeData.json';
 import { testMeteorSettingsUrl } from '../../../ui/utils/utilsFuncs';
 
 const accountConfig = {
-  loginExpirationInDays: Meteor.settings.private.loginExpirationInDays || 90,
+  loginExpirationInDays: Meteor.settings.private.loginExpirationInDays || 1,
 };
 
 if (Meteor.settings.keycloak) {
