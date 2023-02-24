@@ -420,7 +420,9 @@ function EditArticlePage({
     } else {
       let stringToAdd = '';
       if (format === 'image') {
-        stringToAdd = toastInstance.isMarkdownMode() ? `![${url}](${url})` : `<img src="${url}" />`;
+        stringToAdd = toastInstance.isMarkdownMode()
+          ? `![${url}](${url.replaceAll(' ', '%20')})`
+          : `<img src="${url}" />`;
       } else {
         stringToAdd = toastInstance.isMarkdownMode()
           ? `[${url}](${url})`
