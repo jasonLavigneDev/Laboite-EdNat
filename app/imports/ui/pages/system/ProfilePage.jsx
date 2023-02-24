@@ -120,7 +120,7 @@ const ProfilePage = () => {
   const [submitted, setSubmitted] = useState(false);
   const [structChecked, setStructChecked] = useState(false);
   const { classes } = useStyles();
-  const { disabledFeatures = {}, enableKeycloak } = Meteor.settings.public;
+  const { disabledFeatures = {} } = Meteor.settings.public;
   const enableBlog = !disabledFeatures.blog;
   const [expandedAuthToken, setExpandedAuthToken] = useState(false);
   const [expandedPublicationDl, setExpandedPublicationDl] = useState(false);
@@ -297,14 +297,6 @@ const ProfilePage = () => {
   const submitUpdateUser = () => {
     setSubmitted(true);
     let modifications = false;
-    if (userData.username !== user.username) {
-      modifications = true;
-      Meteor.call('users.setUsername', { username: userData.username.trim() }, (error) => {
-        if (error) {
-          msg.error(error.message);
-        }
-      });
-    }
     if (userData.structureSelect !== user.structure) {
       modifications = true;
       Meteor.call('users.setStructure', { structure: userData.structureSelect }, (error) => {
@@ -322,38 +314,6 @@ const ProfilePage = () => {
           msg.error(error.message);
         }
       });
-    }
-    if (userData.email !== user.emails[0].address) {
-      modifications = true;
-      Meteor.call('users.setEmail', { email: userData.email.trim() }, (error) => {
-        if (error) {
-          if (error.error === 'validation-error') {
-            setErrors({ email: error.details[0].message });
-          } else if (error.message === 'Email already exists. [403]') {
-            setErrors({ email: i18n.__('pages.ProfilePage.emailAlreadyExists') });
-          } else setErrors({ email: error.message });
-        }
-      });
-    }
-    if (userData.firstName !== user.firstName || userData.lastName !== user.lastName) {
-      modifications = true;
-      Meteor.call(
-        'users.setName',
-        { firstName: userData.firstName.trim(), lastName: userData.lastName.trim() },
-        (error) => {
-          if (error) {
-            if (error.error === 'validation-error') {
-              error.details.forEach((detail) => {
-                if (detail.name === 'firstName') {
-                  setErrors({ firstName: detail.message });
-                } else setErrors({ lastName: detail.message });
-              });
-            } else {
-              msg.error(error.message);
-            }
-          }
-        },
-      );
     }
     if (userData.avatar !== user.avatar) {
       modifications = true;
@@ -510,23 +470,21 @@ const ProfilePage = () => {
             <Grid container className={classes.form} spacing={2}>
               <Grid container spacing={2} style={{ alignItems: 'center' }}>
                 <Grid item xs={isMobile ? 16 : 8} style={{ paddingLeft: '18px' }}>
-                  {enableKeycloak ? (
-                    <Paper className={classes.keycloakMessage}>
-                      <Typography>{i18n.__('pages.ProfilePage.keycloakProcedure')}</Typography>
-                      <br />
-                      <Typography>
-                        <a href={accountURL} className={classes.keycloakLink}>
-                          {i18n.__('pages.ProfilePage.keycloakProcedureLink')}
-                        </a>
-                      </Typography>
-                    </Paper>
-                  ) : null}
+                  <Paper className={classes.keycloakMessage}>
+                    <Typography>{i18n.__('pages.ProfilePage.keycloakProcedure')}</Typography>
+                    <br />
+                    <Typography>
+                      <a href={accountURL} className={classes.keycloakLink}>
+                        {i18n.__('pages.ProfilePage.keycloakProcedureLink')}
+                      </a>
+                    </Typography>
+                  </Paper>
                   <TextField
-                    disabled={enableKeycloak}
+                    disabled
                     margin="normal"
                     autoComplete="fname"
                     id="firstName"
-                    label={i18n.__('pages.SignUp.firstNameLabel')}
+                    label={i18n.__('pages.ProfilePage.firstNameLabel')}
                     name="firstName"
                     error={errors.firstName !== ''}
                     helperText={errors.firstName}
@@ -537,11 +495,11 @@ const ProfilePage = () => {
                     variant="outlined"
                   />
                   <TextField
-                    disabled={enableKeycloak}
+                    disabled
                     margin="normal"
                     id="lastName"
                     autoComplete="lname"
-                    label={i18n.__('pages.SignUp.lastNameLabel')}
+                    label={i18n.__('pages.ProfilePage.lastNameLabel')}
                     name="lastName"
                     error={errors.lastName !== ''}
                     helperText={errors.lastName}
@@ -552,10 +510,10 @@ const ProfilePage = () => {
                     variant="outlined"
                   />
                   <TextField
-                    disabled={enableKeycloak}
+                    disabled
                     margin="normal"
                     id="email"
-                    label={i18n.__('pages.SignUp.emailLabel')}
+                    label={i18n.__('pages.ProfilePage.emailLabel')}
                     name="email"
                     autoComplete="email"
                     error={errors.email !== ''}
@@ -566,7 +524,7 @@ const ProfilePage = () => {
                     value={userData.email || ''}
                     variant="outlined"
                   />
-                  <FormControl variant="outlined" fullWidth disabled={enableKeycloak} margin="normal">
+                  <FormControl variant="outlined" fullWidth disabled margin="normal">
                     <InputLabel error={errors.username !== ''} htmlFor="username" id="username-label">
                       {i18n.__('api.users.labels.username')}
                     </InputLabel>
@@ -584,7 +542,7 @@ const ProfilePage = () => {
                             aria-label={i18n.__('pages.ProfilePage.useEmail')}
                           >
                             <span>
-                              <IconButton onClick={useEmail} disabled={enableKeycloak} size="large">
+                              <IconButton onClick={useEmail} disabled size="large">
                                 <MailIcon />
                               </IconButton>
                             </span>
@@ -598,7 +556,7 @@ const ProfilePage = () => {
                   </FormControl>
                   {Meteor.settings.public.groupPlugins.nextcloud.enable && (
                     <TextField
-                      disabled={enableKeycloak}
+                      disabled
                       margin="normal"
                       id="nclocator"
                       label={i18n.__('pages.ProfilePage.nclocator')}
@@ -704,29 +662,27 @@ const ProfilePage = () => {
                   </Button>
                 </FormControl>
               </Grid>
-              {enableKeycloak ? (
-                <Grid item>
-                  <FormControl variant="outlined" fullWidth>
-                    <InputLabel htmlFor="logoutType" id="logoutType-label">
-                      {i18n.__('pages.ProfilePage.logoutType')}
-                    </InputLabel>
-                    <Select
-                      labelId="logoutType-label"
-                      label={i18n.__('pages.ProfilePage.logoutType')}
-                      id="logoutType"
-                      name="logoutType"
-                      value={userData.logoutType}
-                      onChange={onUpdateField}
-                    >
-                      {Object.keys(logoutTypeLabels).map((val) => (
-                        <MenuItem key={val} value={val}>
-                          {i18n.__(logoutTypeLabels[val])}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-              ) : null}
+              <Grid item>
+                <FormControl variant="outlined" fullWidth>
+                  <InputLabel htmlFor="logoutType" id="logoutType-label">
+                    {i18n.__('pages.ProfilePage.logoutType')}
+                  </InputLabel>
+                  <Select
+                    labelId="logoutType-label"
+                    label={i18n.__('pages.ProfilePage.logoutType')}
+                    id="logoutType"
+                    name="logoutType"
+                    value={userData.logoutType}
+                    onChange={onUpdateField}
+                  >
+                    {Object.keys(logoutTypeLabels).map((val) => (
+                      <MenuItem key={val} value={val}>
+                        {i18n.__(logoutTypeLabels[val])}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
               <Grid item>
                 <Grid container spacing={2} style={{ alignItems: 'center' }}>
                   <p className={classes.labelLanguage}>{i18n.__('pages.ProfilePage.languageLabel')}</p>

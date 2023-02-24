@@ -126,16 +126,12 @@ const MainMenu = ({ user = {} }) => {
 
   const onLogout = () => {
     updateDocumentTitle('');
-    if (Meteor.settings.public.enableKeycloak) {
-      const logoutType = user.logoutType || 'ask';
-      if (logoutType === 'ask') {
-        setOpenLogout(true);
-      } else if (logoutType === 'global') {
-        keycloakLogout();
-      } else Meteor.logout();
-    } else {
-      Meteor.logout();
-    }
+    const logoutType = user.logoutType || 'ask';
+    if (logoutType === 'ask') {
+      setOpenLogout(true);
+    } else if (logoutType === 'global') {
+      keycloakLogout();
+    } else Meteor.logout();
   };
 
   return (

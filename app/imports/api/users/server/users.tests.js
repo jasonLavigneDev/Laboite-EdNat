@@ -17,9 +17,6 @@ import {
   setAdminStructure,
   unsetAdminStructure,
   setStructure,
-  setUsername,
-  setName,
-  setEmail,
   setLanguage,
   setLogoutType,
   setActive,
@@ -651,32 +648,6 @@ describe('users', function () {
       });
     });
 
-    describe('setUsername', function () {
-      it('users can set their username', function () {
-        setUsername._execute({ userId }, { username: 'moi' });
-        const user = Meteor.users.findOne({ _id: userId });
-        assert.equal(user.username, 'moi');
-      });
-      it('users can not set their username to already taken values', function () {
-        assert.throws(
-          () => {
-            setUsername._execute({ userId }, { username: emailAdmin });
-          },
-          Meteor.Error,
-          /Username already exists. \[403\]/,
-        );
-      });
-      it('only logged in users can set their username', function () {
-        assert.throws(
-          () => {
-            setUsername._execute({}, { username: 'moi' });
-          },
-          Meteor.Error,
-          /api.users.setUsername.notLoggedIn/,
-        );
-      });
-    });
-
     describe('setStructure', function () {
       it('users can ask for a structure (validation structure mandatory)', function () {
         const newStructure = allowedStructures[0];
@@ -798,49 +769,6 @@ describe('users', function () {
           },
           Meteor.Error,
           'api.users.acceptAwaitingStructure.notPermitted',
-        );
-      });
-    });
-    describe('setName', function () {
-      it('users can set their firstname and lastname', function () {
-        setName._execute({ userId }, { firstName: 'newFirstname', lastName: 'newLastname' });
-        const user = Meteor.users.findOne({ _id: userId });
-        assert.equal(user.firstName, 'newFirstname');
-        assert.equal(user.lastName, 'newLastname');
-      });
-      it('only logged in users can set their name', function () {
-        assert.throws(
-          () => {
-            setName._execute({}, { firstName: 'newFirstname', lastName: 'newLastname' });
-          },
-          Meteor.Error,
-          /api.users.setName.notLoggedIn/,
-        );
-      });
-    });
-    describe('setEmail', function () {
-      it('users can set their email address', function () {
-        setEmail._execute({ userId }, { email: 'toto@test.org' });
-        const user = Meteor.users.findOne({ _id: userId });
-        assert.equal(user.emails[0].address, 'toto@test.org');
-        assert.equal(user.emails[0].verified, false);
-      });
-      it('users can not use an already existing email address', function () {
-        assert.throws(
-          () => {
-            setEmail._execute({ userId }, { email: emailAdmin });
-          },
-          Meteor.Error,
-          /Email already exists. \[403\]/,
-        );
-      });
-      it('only logged in users can set their email address', function () {
-        assert.throws(
-          () => {
-            setEmail._execute({}, { email: 'toto@test.org' });
-          },
-          Meteor.Error,
-          /api.users.setEmail.notLoggedIn/,
         );
       });
     });

@@ -5,8 +5,7 @@ Copy `settings-development.json.sample` to `settings-development.json` and updat
 ## public:
 
 | Key                                             | Type     | Default value                        | Description                                                                                 |
-| ----------------------------------------------- | -------- | ------------------------------------ | ------------------------------------------------------------------------------------------- | --- |
-| enableKeycloak                                  | boolean  | false                                | If true, keycloak is enabled                                                                |
+| ----------------------------------------------- | -------- | ------------------------------------ | ------------------------------------------------------------------------------------------- |
 | keycloakUrl                                     | string   | ""                                   | Keycloak URL                                                                                |
 | keycloakRealm                                   | string   | ""                                   | Keycloak Realm                                                                              |
 | offlinePage                                     | boolean  | false                                | If true, offline services at signin page                                                    |

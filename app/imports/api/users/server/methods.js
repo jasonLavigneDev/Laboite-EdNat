@@ -26,7 +26,7 @@ import {
   hasRightToSetStructureDirectly,
 } from '../../structures/utils';
 
-if (Meteor.settings.public.enableKeycloak === true) {
+if (Meteor.settings.private) {
   const { whiteDomains } = Meteor.settings.private;
   if (!!whiteDomains && whiteDomains.length > 0) {
     logServer(i18n.__('api.users.logWhiteDomains', { domains: JSON.stringify(whiteDomains) }));
@@ -224,26 +224,6 @@ export const removeUserFromStructure = new ValidatedMethod({
   },
 });
 
-export const setUsername = new ValidatedMethod({
-  name: 'users.setUsername',
-  validate: new SimpleSchema({
-    username: validateSchema.username,
-  }).validator(),
-
-  run({ username }) {
-    // check that user is logged in
-    if (!this.userId) {
-      throw new Meteor.Error('api.users.setUsername.notLoggedIn', i18n.__('api.users.mustBeLoggedIn'));
-    }
-    if (Meteor.settings.public.enableKeycloak) {
-      // do not allow if keycloak mode is active
-      throw new Meteor.Error('api.users.setUsername.disabled', i18n.__('api.users.managedByKeycloak'));
-    }
-    // will throw error if username already taken
-    Accounts.setUsername(this.userId, username);
-  },
-});
-
 export const checkUsername = new ValidatedMethod({
   name: 'users.checkUsername',
   validate: new SimpleSchema({
@@ -253,7 +233,7 @@ export const checkUsername = new ValidatedMethod({
   run({ username }) {
     // check that user is logged in
     if (!this.userId) {
-      throw new Meteor.Error('api.users.setUsername.notLoggedIn', i18n.__('api.users.mustBeLoggedIn'));
+      throw new Meteor.Error('api.users.checkUsername.notLoggedIn', i18n.__('api.users.mustBeLoggedIn'));
     }
     // return false if another user as an email or username matching username
     let user = Accounts.findUserByUsername(username, { fields: { _id: 1 } });
@@ -763,61 +743,6 @@ export const setNcloudUrlAll = new ValidatedMethod({
   },
 });
 
-export const setName = new ValidatedMethod({
-  name: 'users.setName',
-  validate: new SimpleSchema({
-    firstName: {
-      type: String,
-      min: 1,
-      label: getLabel('api.users.labels.firstName'),
-      optional: true,
-    },
-    lastName: {
-      type: String,
-      min: 1,
-      label: getLabel('api.users.labels.lastName'),
-      optional: true,
-    },
-  }).validator(),
-
-  run(data) {
-    if (Meteor.settings.public.enableKeycloak === true) {
-      throw new Meteor.Error('api.user.setName.disabled', i18n.__('api.users.managedByKeycloak'));
-    }
-    // check that user is logged in
-    if (!this.userId) {
-      throw new Meteor.Error('api.users.setName.notLoggedIn', i18n.__('api.users.mustBeLoggedIn'));
-    }
-    if (Object.keys(data).length !== 0) Meteor.users.update({ _id: this.userId }, { $set: data });
-  },
-});
-
-export const setEmail = new ValidatedMethod({
-  name: 'users.setEmail',
-  validate: new SimpleSchema({
-    email: {
-      type: String,
-      regEx: SimpleSchema.RegEx.Email,
-      label: getLabel('api.users.labels.emailAddress'),
-      optional: true,
-    },
-  }).validator(),
-
-  run({ email }) {
-    if (Meteor.settings.public.enableKeycloak === true) {
-      throw new Meteor.Error('api.user.setEmail.disabled', i18n.__('api.users.managedByKeycloak'));
-    }
-    // check that user is logged in
-    if (!this.userId) {
-      throw new Meteor.Error('api.users.setEmail.notLoggedIn', i18n.__('api.users.mustBeLoggedIn'));
-    }
-    const oldEmail = Meteor.users.findOne(this.userId).emails[0].address;
-    Accounts.addEmail(this.userId, email);
-    Accounts.removeEmail(this.userId, oldEmail);
-    // FIXME: new address should be verified (send verificationEmail)
-  },
-});
-
 export const setAdmin = new ValidatedMethod({
   name: 'users.setAdmin',
   validate: new SimpleSchema({
@@ -1238,8 +1163,6 @@ export const fixUsers = new ValidatedMethod({
 // Get list of all method names on User
 const LISTS_METHODS = _.pluck(
   [
-    setUsername,
-    setName,
     setStructure,
     acceptAwaitingStructure,
     setArticlesEnable,

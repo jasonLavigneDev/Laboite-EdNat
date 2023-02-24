@@ -495,7 +495,7 @@ class KeyCloakClient {
 }
 
 // setup client calls on methods hooks
-if (Meteor.isServer && Meteor.settings.public.enableKeycloak) {
+if (Meteor.isServer) {
   const kcClient = new KeyCloakClient();
 
   Meteor.afterMethod('groups.createGroup', function kcCreateGroup({ name }) {

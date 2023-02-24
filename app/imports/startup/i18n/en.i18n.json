@@ -1028,18 +1028,6 @@
       "rememberMe": "Remember me",
       "maintenanceLogin": "Site in maintenance"
     },
-    "SignUp": {
-      "appDescription": "Create new account",
-      "firstNameLabel": "First name",
-      "lastNameLabel": "Last name",
-      "userNameLabel": "User name",
-      "emailLabel": "Email",
-      "pwdLabel": "Password",
-      "pwdButtonLabel": "Toggle password visibility",
-      "structureLabel": "Connection structure",
-      "submitButtonLabel": "Sign Up",
-      "createError": "Error: impossible to create this account"
-    },
     "ContactForm": {
       "appDescription": "Send contact formular",
       "firstNameLabel": "First name",
@@ -1057,6 +1045,9 @@
     },
     "ProfilePage": {
       "title": "My settings",
+      "firstNameLabel": "First name",
+      "lastNameLabel": "Last name",
+      "emailLabel": "Email",
       "useEmail": "Use my email",
       "usernameError": "Name not available",
       "emailAlreadyExists": "Email already exists",
