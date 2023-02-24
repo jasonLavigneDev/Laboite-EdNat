@@ -272,13 +272,13 @@ const AdminUsersPage = ({ match: { path } }) => {
         hidden: isDeleting,
       },
       {
-        label: i18n.__('pages.AdminUsersPage.deleteUser'),
+        label: i18n.__(`pages.AdminUsersPage.deleteUser${isStructureSpecific ? 'FromStructure' : ''}`),
         onclick: () => setVerifyDelete(user._id),
         icon: <DeleteIcon />,
         hidden: isDeleting,
       },
       {
-        label: i18n.__('pages.AdminUsersPage.deleteUser'),
+        label: i18n.__(`pages.AdminUsersPage.deleteUser${isStructureSpecific ? 'FromStructure' : ''}`),
         onclick: () => deleteUser(user),
         icon: <CheckIcon />,
         hidden: !isDeleting,
@@ -424,8 +424,16 @@ const AdminUsersPage = ({ match: { path } }) => {
                               color={user._id === Meteor.userId() ? 'error' : 'textPrimary'}
                             >
                               {user._id === Meteor.userId()
-                                ? i18n.__('pages.AdminUsersPage.deleteSelfConfirmation')
-                                : i18n.__('pages.AdminUsersPage.deleteUserConfirmation')}
+                                ? i18n.__(
+                                    `pages.AdminUsersPage.deleteSelf${
+                                      isStructureSpecific ? 'FromStructure' : ''
+                                    }Confirmation`,
+                                  )
+                                : i18n.__(
+                                    `pages.AdminUsersPage.deleteUser${
+                                      isStructureSpecific ? 'FromStructure' : ''
+                                    }Confirmation`,
+                                  )}
                             </Typography>
                           )}
                           {generateButtons(user).map(
