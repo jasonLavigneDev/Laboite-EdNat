@@ -292,7 +292,7 @@ export function _removeGroup({ groupId, userId }) {
   // remove from users favorite groups
   Meteor.users.update({ favGroups: { $all: [groupId] } }, { $pull: { favGroups: groupId } }, { multi: true });
   logServer(`GROUPS - user ${userId} remove group ${groupId}`, levels.VERBOSE, scopes.USER);
-  return null;
+  return group;
 }
 
 export const removeGroup = new ValidatedMethod({
