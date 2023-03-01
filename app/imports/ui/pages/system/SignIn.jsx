@@ -88,13 +88,21 @@ function SignIn({ loggingIn, introduction, appsettings, ready }) {
 
   const handleKeycloakAuth = async () => {
     await checkAccessAndLogin();
+    let keycloackLoginStyle = 'redirect';
+
     trackEvent({
       category: 'signin-page',
       action: 'connexion-click',
       name: 'Connexion avec Keycloak', // optional
     });
     checkRememberMe();
-    Meteor.loginWithKeycloak();
+    if (
+      (isIframed && Meteor.settings.public.keycloackLoginStyleIframe) ||
+      (!isIframed && Meteor.settings.public.keycloackLoginStyle)
+    ) {
+      keycloackLoginStyle = 'popup';
+    }
+    Meteor.loginWithKeycloak({ loginStyle: keycloackLoginStyle });
   };
 
   const RememberButton = () => (
