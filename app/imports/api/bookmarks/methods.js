@@ -69,10 +69,10 @@ export const createBookmark = new ValidatedMethod({
 export const updateBookmark = new ValidatedMethod({
   name: 'bookmark.updateURL',
   validate: new SimpleSchema({
-    id: { type: String, regEx: SimpleSchema.RegEx.url, label: getLabel('api.bookmarks.labels.id') },
+    id: { type: String, regEx: SimpleSchema.RegEx.Id, label: getLabel('api.bookmarks.labels.id') },
     url: { type: String, regEx: SimpleSchema.RegEx.url, label: getLabel('api.bookmarks.labels.url') },
-    name: { type: String, regEx: SimpleSchema.RegEx.url, label: getLabel('api.bookmarks.labels.name') },
-    tag: { type: String, regEx: SimpleSchema.RegEx.url, label: getLabel('api.bookmarks.labels.tag'), defaultValue: '' },
+    name: { type: String, label: getLabel('api.bookmarks.labels.name') },
+    tag: { type: String, label: getLabel('api.bookmarks.labels.tag'), defaultValue: '' },
     groupId: { type: String, regEx: SimpleSchema.RegEx.Id, label: getLabel('api.groups.labels.id') },
   }).validator({ clean: true }),
 
