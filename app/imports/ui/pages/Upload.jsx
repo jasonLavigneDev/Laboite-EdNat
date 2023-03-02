@@ -147,7 +147,6 @@ export default function UploadPage() {
     resumable.current.on('uploadStart', () => {
       setUploading(true);
     });
-
     return () => {
       resumable.current.off();
     };
@@ -184,7 +183,7 @@ export default function UploadPage() {
         }
 
         // eslint-disable-next-line no-await-in-loop
-        await new Promise((r) => setTimeout(r, 1000));
+        await new Promise((r) => setTimeout(r, 5000));
       }
 
       return true;
@@ -192,7 +191,6 @@ export default function UploadPage() {
 
     function handleComplete() {
       setUploading(false);
-      setSubmitting(false);
 
       const foldIdBody = {
         foldId: resumable.current.opts.query.idPli,
@@ -262,7 +260,9 @@ export default function UploadPage() {
       setSubmitting(true);
 
       Meteor.call('francetransfert.initFold', data, (err, res) => {
+        setSubmitting(false);
         if (err) {
+          console.error(err);
           toast.error(err.message);
         } else {
           // console.log('Successfuly created fold : ', res);

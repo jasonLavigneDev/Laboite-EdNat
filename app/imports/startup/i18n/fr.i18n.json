@@ -1,5 +1,8 @@
 {
   "api": {
+    "franceTransfert": {
+      "FTError": "Erreur avec France Transfert"
+    },
     "bookmarks": {
       "labels": {
         "url": "URL",

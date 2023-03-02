@@ -1,3 +1,4 @@
+import i18n from 'meteor/universe:i18n';
 import axios from 'axios';
 import url from 'url';
 
@@ -31,12 +32,73 @@ export const FT = axios.create({
   },
 });
 
+export function throwFTError(error) {
+  if (axios.isAxiosError(error)) {
+    let details;
+    // Log error
+    if (error.response) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx
+      details = {
+        headers: error.response.headers,
+        data: error.response.data,
+        status: error.response.status,
+        message: error.message,
+      };
+      console.error('Error from FT:', JSON.stringify(details, null, 2));
+    } else if (error.request) {
+      // The request was made but no response was received
+      // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+      // http.ClientRequest in node.js
+      details = {
+        config: error.config,
+        message: error.message,
+      };
+      console.error('Error requesting FT:', details);
+    } else {
+      // Something happened in setting up the request that triggered an Error
+      details = {
+        config: error.code,
+        message: error.message,
+      };
+      console.error('Error', details);
+    }
+
+    if (error.response?.data?.erreurs?.[0]?.libelleErreur) {
+      return new Meteor.Error(
+        'api.francetransfert.initFold.franceTransfertError',
+        error.response?.data?.erreurs?.[0]?.libelleErreur || JSON.stringify(),
+        details,
+      );
+    }
+
+    return new Meteor.Error(
+      'api.francetransfert.franceTransfertError',
+      i18n.__('api.franceTransfert.FTError'),
+      details,
+    );
+  }
+
+  console.error(error);
+  return new Meteor.Error('Unkown FT error');
+}
+
 function foldTypeToFTTypePli(foldType) {
   if (foldType === 0) return 'COU';
   if (foldType === 1) return 'LIE';
 
   throw new Error('Unkown foldType');
 }
+
+async function wrapError(promise) {
+  try {
+    return await promise;
+  } catch (error) {
+    throw throwFTError(error);
+  }
+}
+
+// Calls
 
 export function initFold(sender, { data, files }) {
   const typePli = foldTypeToFTTypePli(data.foldType);
@@ -66,7 +128,7 @@ export function initFold(sender, { data, files }) {
     body.objet = data.title;
   }
 
-  return FT.post(`/api-public/initPli`, body);
+  return wrapError(FT.post(`/api-public/initPli`, body));
 }
 
 export function getFoldStatus(id, sender) {
@@ -75,7 +137,7 @@ export function getFoldStatus(id, sender) {
     courrielExpediteur: sender,
   };
 
-  return FT.get(`/api-public/statutPli`, { params });
+  return wrapError(FT.get(`/api-public/statutPli`, { params }));
 }
 
 export function getFoldData(id, sender) {
@@ -84,5 +146,5 @@ export function getFoldData(id, sender) {
     courrielExpediteur: sender,
   };
 
-  return FT.get(`/api-public/donneesPli`, { params });
+  return wrapError(FT.get(`/api-public/donneesPli`, { params }));
 }

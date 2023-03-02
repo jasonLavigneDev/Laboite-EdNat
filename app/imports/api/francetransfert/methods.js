@@ -39,21 +39,8 @@ export const initFold = new ValidatedMethod({
     const user = Meteor.users.findOne(this.userId, { fields: { primaryEmail: 1, emails: 1 } });
     const email = user.primaryEmail || user.emails[0].address;
 
-    try {
-      const result = await ft.initFold(email, data);
-
-      return result.data;
-    } catch (error) {
-      if (error.response?.data?.erreurs?.[0]?.libelleErreur) {
-        throw new Meteor.Error(
-          'api.francetransfert.initFold.franceTransfertError',
-          error.response?.data?.erreurs?.[0]?.libelleErreur || JSON.stringify(),
-        );
-      } else {
-        console.error('Unkown FT error', error);
-        throw new Meteor.Error('api.francetransfert.initFold.franceTransfertError');
-      }
-    }
+    const result = await ft.initFold(email, data);
+    return result.data;
   },
 });
 
@@ -71,21 +58,8 @@ export const getFoldStatus = new ValidatedMethod({
     const user = Meteor.users.findOne(this.userId, { fields: { primaryEmail: 1, emails: 1 } });
     const email = user.primaryEmail || user.emails[0].address;
 
-    try {
-      const result = await ft.getFoldStatus(foldId, email);
-
-      return result.data;
-    } catch (error) {
-      if (error.response?.data?.libelleErreur) {
-        throw new Meteor.Error(
-          'api.francetransfert.getFoldStatus.franceTransfertError',
-          error.response?.data?.libelleErreur || JSON.stringify(),
-        );
-      } else {
-        console.error('Unkown FT error', error);
-        throw new Meteor.Error('api.francetransfert.getFoldStatus.franceTransfertError');
-      }
-    }
+    const result = await ft.getFoldStatus(foldId, email);
+    return result.data;
   },
 });
 
@@ -103,21 +77,8 @@ export const getFoldData = new ValidatedMethod({
     const user = Meteor.users.findOne(this.userId, { fields: { primaryEmail: 1, emails: 1 } });
     const email = user.primaryEmail || user.emails[0].address;
 
-    try {
-      const result = await ft.getFoldData(foldId, email);
-
-      return result.data;
-    } catch (error) {
-      if (error.response?.data?.libelleErreur) {
-        throw new Meteor.Error(
-          'api.francetransfert.getFoldData.franceTransfertError',
-          error.response?.data?.libelleErreur || JSON.stringify(),
-        );
-      } else {
-        console.error('Unkown FT error', error);
-        throw new Meteor.Error('api.francetransfert.getFoldData.franceTransfertError');
-      }
-    }
+    const result = await ft.getFoldData(foldId, email);
+    return result.data;
   },
 });
 
