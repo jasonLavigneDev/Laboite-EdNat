@@ -128,7 +128,7 @@ function MainLayout({ appsettings, ready }) {
             <Suspense fallback={<Spinner />}>
               {!appsettings.maintenance || isAdmin ? (
                 user.isActive ? (
-                  user.structure !== undefined ? (
+                  user.structure ? (
                     <Switch>
                       <Route exact path="/" component={PersonalPage} />
                       <Route exact path="/profile" component={ProfilePage} />
