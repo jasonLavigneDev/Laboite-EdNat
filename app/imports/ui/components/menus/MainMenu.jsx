@@ -1,7 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import i18n from 'meteor/universe:i18n';
-import { useTracker } from 'meteor/react-meteor-data';
-import { Counts } from 'meteor/tmeasday:publish-counts';
 import { Roles } from 'meteor/alanning:roles';
 import { useHistory, useLocation } from 'react-router-dom';
 import Chip from '@mui/material/Chip';
@@ -79,14 +77,21 @@ const MainMenu = ({ user = {} }) => {
   const isAdmin = Roles.userIsInRole(user._id, 'admin');
   const isAdminStructure = Roles.userIsInRole(user._id, 'adminStructure', user.structure);
 
-  const adminChip = useTracker(() => {
-    Meteor.subscribe('users.request.count');
-    Meteor.subscribe('users.awaitingForStructure.count', { structureId: user.structure });
-    const nbUsersRequestCount = Counts.get('users.request.count') || 0;
-    // If awaiting for structure feature is disabled, it will just return 0, no need to do more check
-    const nbUsersAwaitingForStructureCount = Counts.get('users.awaitingForStructure.count') || 0;
-    return nbUsersRequestCount + nbUsersAwaitingForStructureCount > 0;
-  });
+  const [hasUserOnRequest, setHasUserOnRequest] = useState(false);
+  const [hasUserOnAwaitingStructure, setHasUserOnAwaitingStructure] = useState(false);
+
+  useEffect(() => {
+    if (isAdmin) {
+      Meteor.call('users.hasUserOnRequest', {}, (err, res) => {
+        setHasUserOnRequest(res);
+      });
+    }
+    if (isAdminStructure) {
+      Meteor.call('users.hasUserOnAwaitingStructure', { structureId: user.structure }, (err, res) => {
+        setHasUserOnAwaitingStructure(res);
+      });
+    }
+  }, []);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -186,7 +191,7 @@ const MainMenu = ({ user = {} }) => {
               onClick={() => handleMenuClick(item)}
               selected={currentLink ? currentLink.path === item.path : false}
             >
-              {item.content === 'menuAdminApp' && adminChip && (
+              {item.content === 'menuAdminApp' && (hasUserOnRequest || hasUserOnAwaitingStructure) && (
                 <Chip className={classes.chip} size="small" label="!" color="secondary" />
               )}
               {i18n.__(`components.MainMenu.${item.content}`)}

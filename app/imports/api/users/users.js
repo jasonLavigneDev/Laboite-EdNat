@@ -116,6 +116,7 @@ Meteor.users.schema = new SimpleSchema(
     awaitingStructure: {
       type: SimpleSchema.RegEx.Id,
       optional: true,
+      index: 1,
       label: getLabel('api.users.labels.awaitingStructure'),
     },
     primaryEmail: {
