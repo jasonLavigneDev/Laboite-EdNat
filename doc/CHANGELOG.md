@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.2.2](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/5.2.1...release/5.2.2) (2023-03-06)
+
+
+### Bug Fixes
+
+* **mongo:** add index on notification collection ([c6128b3](https://gitlab.mim-libre.fr/alphabet/laboite/commit/c6128b3b36ff83b7db058fa8e12ad64b62a4287e))
+
 ## [5.2.1](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/5.2.0...release/5.2.1) (2023-03-06)
 
 
