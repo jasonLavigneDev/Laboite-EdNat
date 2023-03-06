@@ -1187,6 +1187,25 @@ export const resetAuthToken = new ValidatedMethod({
   },
 });
 
+export const hasUserOnRequest = new ValidatedMethod({
+  name: 'users.hasUserOnRequest',
+  validate: null,
+  run() {
+    return !!Meteor.users.findOne({ isActive: { $ne: true } });
+  },
+});
+
+export const hasUserOnAwaitingStructure = new ValidatedMethod({
+  name: 'users.hasUserOnAwaitingStructure',
+  validate: new SimpleSchema({
+    structureId: { type: String, regEx: SimpleSchema.RegEx.Id },
+  }).validator({ clean: true }),
+
+  run({ structureId }) {
+    return !!Meteor.users.findOne({ awaitingStructure: structureId });
+  },
+});
+
 // This is a temporary method used to fix badly created users in database
 // intended to be called by an admin user from a browser dev console :
 //  Meteor.call('users.fixUsers', (err,res) => console.log(res))
@@ -1266,6 +1285,8 @@ const LISTS_METHODS = _.pluck(
     toggleAdvancedPersonalPage,
     getAuthToken,
     fixUsers,
+    hasUserOnRequest,
+    hasUserOnAwaitingStructure,
   ],
   'name',
 );
