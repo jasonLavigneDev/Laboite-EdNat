@@ -186,3 +186,17 @@ export const testUrl = (URL, withSlash = false) => {
   const testedUrl = testMeteorSettingsUrl(URL, withSlash);
   return URL.startsWith('http') ? testedUrl : `https://${testedUrl}`;
 };
+
+/** Check a string for malicious content */
+export const validateString = (content, strict = false) => {
+  const scriptRegex = strict
+    ? /[<>"'&]/g
+    : /(<script)|(<\/script)|(onload *=)|(onclick *=)|(onchange *=)|(onblur *=)/gi;
+  if (content.match(scriptRegex) !== null) {
+    throw new Meteor.Error(
+      'api.utils.validateString.error',
+      i18n.__(strict ? 'api.utils.badCharsDetected' : 'api.utils.scriptDetected'),
+    );
+  }
+  return content;
+};

@@ -437,6 +437,10 @@
       "warning": "Server warning",
       "error": "Server error"
     },
+    "utils": {
+      "scriptDetected": "Forbidden content has been detected",
+      "badCharsDetected": "Following characters are Forbidden: < > & ' \""
+    },
     "rateLimitError": "Error, too many requests. Please slow down. You must wait {$timeToReset} seconds before trying again."
   },
   "components": {

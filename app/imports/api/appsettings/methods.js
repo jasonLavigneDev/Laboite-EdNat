@@ -8,7 +8,7 @@ import { Roles } from 'meteor/alanning:roles';
 import i18n from 'meteor/universe:i18n';
 import logServer from '../logging';
 
-import { isActive, getLabel } from '../utils';
+import { isActive, getLabel, validateString } from '../utils';
 import AppSettings from './appsettings';
 
 export function checkMigrationStatus() {
@@ -43,6 +43,9 @@ export const updateAppsettings = new ValidatedMethod({
 
   run({ external, link, content, key }) {
     try {
+      if (link) validateString(link);
+      if (content) validateString(content);
+      validateString(key, true);
       // check if current user is admin
       const authorized = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
       if (!authorized) {
@@ -126,6 +129,7 @@ export const updateTextMaintenance = new ValidatedMethod({
   }).validator({ clean: true }),
 
   run({ text }) {
+    if (text) validateString(text);
     try {
       // check if current user is admin
       const authorized = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
@@ -160,6 +164,9 @@ export const updateTextInfoLanguage = new ValidatedMethod({
   }).validator({ clean: true }),
 
   run({ language, content, tabkey }) {
+    if (language) validateString(language, true);
+    if (tabkey) validateString(tabkey, true);
+    if (content) validateString(content);
     try {
       // check if current user is admin
       const authorized = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
