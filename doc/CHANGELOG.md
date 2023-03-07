@@ -1,5 +1,19 @@
 # Changelog
 
+## [5.2.2](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/5.2.1...release/5.2.2) (2023-03-06)
+
+
+### Bug Fixes
+
+* **mongo:** add index on notification collection ([c6128b3](https://gitlab.mim-libre.fr/alphabet/laboite/commit/c6128b3b36ff83b7db058fa8e12ad64b62a4287e))
+
+## [5.2.1](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/5.2.0...release/5.2.1) (2023-03-06)
+
+
+### Performance Improvements
+
+* **structure:** replace subscribe by method in main layout ([cdbc469](https://gitlab.mim-libre.fr/alphabet/laboite/commit/cdbc469d75c8173e3a73eed1a0b103ed8b037d12))
+
 # [5.2.0](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/5.1.5...release/5.2.0) (2023-01-30)
 
 

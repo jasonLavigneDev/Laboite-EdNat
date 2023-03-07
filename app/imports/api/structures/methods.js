@@ -364,6 +364,17 @@ export const getStructures = new ValidatedMethod({
   },
 });
 
+export const getOneStructure = new ValidatedMethod({
+  name: 'structures.getOneStructure',
+  validate: new SimpleSchema({
+    structureId: { type: String, regEx: SimpleSchema.RegEx.Id, label: getLabel('api.structures.labels.id') },
+  }).validator(),
+  run({ structureId }) {
+    const structure = Structures.findOne({ _id: structureId });
+    return structure;
+  },
+});
+
 // Get list of all method names on Structures
 const LISTS_METHODS = _.pluck(
   [
@@ -374,6 +385,7 @@ const LISTS_METHODS = _.pluck(
     updateStructureIntroduction,
     updateStructureContactEmail,
     getStructures,
+    getOneStructure,
     setUserStructureAdminValidationMandatoryStatus,
   ],
   'name',

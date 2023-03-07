@@ -24,6 +24,7 @@ Notifications.schema = new SimpleSchema(
   {
     userId: {
       type: String,
+      index: true,
       label: getLabel('api.notifications.labels.userId'),
     },
     title: { type: String, optional: true, label: getLabel('api.notifications.labels.title') },
