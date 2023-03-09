@@ -272,23 +272,63 @@ export const unsetAdminOf = new ValidatedMethod({
   },
 });
 
+export function RemoveAllRolesFromGroup(user, group) {
+  if (Roles.getScopesForUser(user._id, 'admin').includes(group._id)) {
+    Roles.removeUsersFromRoles(user._id, 'admin', group._id);
+    if (group.admins.indexOf(user._id) !== -1) {
+      Groups.update(group._id, {
+        $pull: { admins: user._id },
+      });
+    }
+  }
+
+  if (Roles.getScopesForUser(user._id, 'animator').includes(group._id)) {
+    Roles.removeUsersFromRoles(user._id, 'animator', group._id);
+    if (group.animators.indexOf(user._id) !== -1) {
+      Groups.update(group._id, {
+        $pull: { animators: user._id },
+      });
+    }
+  }
+
+  if (Roles.getScopesForUser(user._id, 'member').includes(group._id)) {
+    Roles.removeUsersFromRoles(user._id, 'member', group._id);
+    if (group.members.indexOf(user._id) !== -1) {
+      Groups.update(group._id, {
+        $pull: { members: user._id },
+      });
+    }
+  }
+
+  if (Roles.getScopesForUser(user._id, 'candidate').includes(group._id)) {
+    Roles.removeUsersFromRoles(user._id, 'candidate', group._id);
+    if (group.candidates.indexOf(user._id) !== -1) {
+      Groups.update(group._id, {
+        $pull: { candidates: user._id },
+      });
+    }
+  }
+}
+
 export function RemoveUserFromGroupsOfOldStructure(user) {
   if (user.structure) {
     const oldStructure = Structures.findOne({ _id: user.structure });
     if (oldStructure) {
       const ancestors = Structures.find({ _id: { $in: oldStructure.ancestorsIds } }).fetch();
       if (oldStructure.groupId) {
-        if (Roles.getScopesForUser(user._id, 'admin').includes(oldStructure.groupId)) {
-          unsetAdminOf._execute({ userId: user._id }, { userId: user._id, groupId: oldStructure.groupId });
+        const group = Groups.findOne({ _id: oldStructure.groupId });
+        if (group) {
+          RemoveAllRolesFromGroup(user, group);
+          unfavGroup._execute({ userId: user._id }, { groupId: oldStructure.groupId });
         }
-        unsetMemberOf._execute({ userId: user._id }, { userId: user._id, groupId: oldStructure.groupId });
       }
       if (ancestors) {
         ancestors.forEach((st) => {
           if (st.groupId) {
             const gr = Groups.findOne({ _id: st.groupId });
             if (gr) {
-              unsetMemberOf._execute({ userId: user._id }, { userId: user._id, groupId: gr._id });
+              RemoveAllRolesFromGroup(user, gr);
+              unfavGroup._execute({ userId: user._id }, { groupId: gr.groupId });
             }
           }
         });
