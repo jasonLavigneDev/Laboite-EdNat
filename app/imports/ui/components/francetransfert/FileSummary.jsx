@@ -24,7 +24,7 @@ import { useAppContext } from '../../contexts/context';
 import usePrettyBytes from '../../hooks/usePrettyBytes';
 
 const useStyles = makeStyles()(() => ({
-  fileSummaryPrimary: {
+  textOverflowWrapEllipsis: {
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
     overflow: 'hidden',
@@ -40,6 +40,8 @@ const useStyles = makeStyles()(() => ({
  * @template T
  * @typedef {import('react').MutableRefObject<T>} useRef
  */
+
+const secondaryHeight = 24;
 
 /**
  * @typedef {Object} FileSummaryProps
@@ -64,6 +66,13 @@ const FileSummary = React.memo(
     const formattedSize = usePrettyBytes(file.size);
     const averageSpeed = usePrettyBytes(flow.averageSpeed, {
       unitDisplay: 'short',
+    });
+
+    console.log({
+      file,
+      name: flow.name,
+      isUploading: flow.isUploading(),
+      isComplete: flow.isComplete(),
     });
 
     const Icon = useMemo(() => {
@@ -106,15 +115,19 @@ const FileSummary = React.memo(
       [forceUpdate],
     );
 
-    const secondary = flow.flowObj.isUploading() ? (
-      <LinearProgressWithLabel
-        variant={flow.isUploading() ? 'determinate' : 'indeterminate'}
-        value={flow.isUploading() ? flow.progress() * 100 : undefined}
-        label={`${averageSpeed}/s`}
-      />
-    ) : (
-      formattedSize
-    );
+    let secondary;
+    const isUploadingOrComplete = flow.isUploading() || flow.isComplete();
+    if (flow.flowObj.isUploading()) {
+      secondary = (
+        <LinearProgressWithLabel
+          variant={isUploadingOrComplete ? 'determinate' : 'indeterminate'}
+          value={isUploadingOrComplete ? flow.progress() * 100 : undefined}
+          label={!flow.isComplete() ? `${averageSpeed}/s` : null}
+        />
+      );
+    } else {
+      secondary = formattedSize;
+    }
 
     return (
       <ListItem
@@ -143,10 +156,11 @@ const FileSummary = React.memo(
         </ListItemAvatar>
         <ListItemText
           classes={{
-            primary: classes.fileSummaryPrimary,
+            primary: classes.textOverflowWrapEllipsis,
+            secondary: classes.textOverflowWrapEllipsis,
           }}
           primary={file.name}
-          secondaryTypographyProps={{ component: flow.isUploading() ? 'div' : 'span' }}
+          secondaryTypographyProps={{ component: 'div', height: secondaryHeight }}
           secondary={secondary}
         />
       </ListItem>
@@ -176,7 +190,7 @@ export default FileSummary;
  */
 function LinearProgressWithLabel({ label, ...props }) {
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+    <Box sx={{ display: 'flex', height: secondaryHeight, alignItems: 'center' }}>
       <Box sx={{ width: '100%', mr: 1 }}>
         <LinearProgress {...props} />
       </Box>
@@ -190,6 +204,9 @@ function LinearProgressWithLabel({ label, ...props }) {
 }
 
 LinearProgressWithLabel.propTypes = {
-  label: PropTypes.string.isRequired,
+  label: PropTypes.string,
   ...LinearProgress.propTypes,
+};
+LinearProgressWithLabel.defaultProps = {
+  label: null,
 };
