@@ -61,7 +61,8 @@ Structures.schema = new SimpleSchema(
       label: getLabel('api.structures.labels.name'),
     },
     parentId: {
-      type: SimpleSchema.RegEx.Id,
+      type: String,
+      regEx: SimpleSchema.RegEx.Id,
       label: getLabel('api.structures.labels.parentId'),
       optional: true,
       defaultValue: null,
@@ -71,13 +72,13 @@ Structures.schema = new SimpleSchema(
       label: getLabel('api.structures.labels.childrenIds'),
       defaultValue: [],
     },
-    'childrenIds.$': { type: String },
+    'childrenIds.$': { type: String, regEx: SimpleSchema.RegEx.Id },
     ancestorsIds: {
       type: Array,
       label: getLabel('api.structures.labels.ancestorsIds'),
       defaultValue: [],
     },
-    'ancestorsIds.$': { type: String },
+    'ancestorsIds.$': { type: String, regEx: SimpleSchema.RegEx.Id },
     introduction: {
       type: Array,
       label: getLabel('api.structures.labels.introduction.label'),
@@ -94,17 +95,18 @@ Structures.schema = new SimpleSchema(
       regEx: SimpleSchema.RegEx.Email,
     },
     groupId: {
-      type: SimpleSchema.RegEx.Id,
+      type: String,
+      regEx: SimpleSchema.RegEx.Id,
       label: getLabel('api.structures.labels.groupId'),
       optional: true,
-      defaultValue: '',
+      defaultValue: null,
     },
     asamExtensionsIds: {
       type: Array,
       defaultValue: [],
       label: getLabel('api.structures.labels.asamExtensionsIds'),
     },
-    'asamExtensionsIds.$': { type: SimpleSchema.RegEx.Id },
+    'asamExtensionsIds.$': { type: String, regEx: SimpleSchema.RegEx.Id },
     userStructureValidationMandatory: {
       type: Boolean,
       optional: true,

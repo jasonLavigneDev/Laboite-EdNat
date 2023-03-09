@@ -3,7 +3,7 @@ import { DDPRateLimiter } from 'meteor/ddp-rate-limiter';
 import SimpleSchema from 'simpl-schema';
 import i18n from 'meteor/universe:i18n';
 import { _ } from 'meteor/underscore';
-import { getLabel, isActive } from '../../utils';
+import { getLabel, isActive, validateString } from '../../utils';
 import Structures from '../structures';
 import { hasAdminRightOnStructure } from '../utils';
 import { structureRemoveIconOrCoverImagesFromMinio } from '../methods';
@@ -38,6 +38,8 @@ export const updateStructureIconOrCoverImage = new ValidatedMethod({
     if (!authorized) {
       throw new Meteor.Error('api.structures.updateIconOrCoverImage.notPermitted', i18n.__('api.users.notPermitted'));
     }
+    if (iconUrlImage) validateString(iconUrlImage);
+    if (coverUrlImage) validateString(coverUrlImage);
     let res = -1;
 
     if (iconUrlImage !== '-1') res = Structures.update({ _id: structureId }, { $set: { iconUrlImage } });

@@ -6,7 +6,7 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { Roles } from 'meteor/alanning:roles';
 import i18n from 'meteor/universe:i18n';
 
-import { isActive, getLabel } from '../utils';
+import { isActive, getLabel, validateString } from '../utils';
 import Categories from './categories';
 import Services from '../services/services';
 
@@ -29,6 +29,7 @@ export const createCategorie = new ValidatedMethod({
     if (!authorized) {
       throw new Meteor.Error('api.categories.createCategorie.notPermitted', i18n.__('api.users.adminNeeded'));
     }
+    validateString(name);
     Categories.insert({
       name,
     });
@@ -83,6 +84,7 @@ export const updateCategorie = new ValidatedMethod({
     if (!authorized) {
       throw new Meteor.Error('api.categories.updateCategorie.notPermitted', i18n.__('api.users.adminNeeded'));
     }
+    validateString(data.name);
     Categories.update({ _id: categoryId }, { $set: data });
   },
 });

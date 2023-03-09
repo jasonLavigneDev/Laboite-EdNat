@@ -6,11 +6,24 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { Roles } from 'meteor/alanning:roles';
 import i18n from 'meteor/universe:i18n';
 
-import { isActive, getLabel } from '../utils';
+import { isActive, getLabel, validateString } from '../utils';
 import slugy from '../../ui/utils/slugy';
 import { hasAdminRightOnStructure } from '../structures/utils';
 import Services from './services';
 import { addService, removeElement } from '../personalspaces/methods';
+
+const checkService = (data) => {
+  validateString(data.title);
+  validateString(data.team);
+  validateString(data.usage);
+  validateString(data.description);
+  validateString(data.content);
+  validateString(data.url);
+  validateString(data.logo);
+  data.categories.forEach((item) => validateString(item));
+  data.screenshots.forEach((item) => validateString(item));
+  data.businessReGrouping.forEach((item) => validateString(item));
+};
 
 export const createService = new ValidatedMethod({
   name: 'services.createService',
@@ -34,6 +47,7 @@ export const createService = new ValidatedMethod({
         i18n.__('api.services.ServiceAlreadyExists'),
       );
     }
+    checkService(data);
     const serviceId = Services.insert(data);
 
     Services.update(serviceId, {
@@ -79,6 +93,7 @@ export const updateService = new ValidatedMethod({
     if (!authorized) {
       throw new Meteor.Error('api.services.updateService.notPermitted', i18n.__('api.users.adminNeeded'));
     }
+    checkService(data);
     // update service data, making sure that structure is not modified
     Services.update({ _id: serviceId }, { $set: { ...data, structure: currentService.structure } });
 

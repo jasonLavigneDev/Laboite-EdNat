@@ -189,9 +189,9 @@ export const testUrl = (URL, withSlash = false) => {
 
 /** Check a string for malicious content */
 export const validateString = (content, strict = false) => {
-  const scriptRegex = strict
-    ? /[<>"'&]/g
-    : /(<script)|(<\/script)|(onload *=)|(onclick *=)|(onchange *=)|(onblur *=)/gi;
+  /** strict forbids any of the following characters : < > " ' &
+      otherwise, forbid script tags and pattern like " onload=... */
+  const scriptRegex = strict ? /[<>"'&]/g : /((<|%3C|&lt;)script)|(('|"|%22|%27) *on[a-z_]+ *(=|%3D))/gi;
   if (content.match(scriptRegex) !== null) {
     throw new Meteor.Error(
       'api.utils.validateString.error',

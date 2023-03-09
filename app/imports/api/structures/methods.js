@@ -4,7 +4,7 @@ import SimpleSchema from 'simpl-schema';
 import { Roles } from 'meteor/alanning:roles';
 import i18n from 'meteor/universe:i18n';
 import { _ } from 'meteor/underscore';
-import { getLabel, isActive } from '../utils';
+import { getLabel, isActive, validateString } from '../utils';
 import Structures, { IntroductionStructure } from './structures';
 import { hasAdminRightOnStructure, isAStructureWithSameNameExistWithSameParent } from './utils';
 import Services from '../services/services';
@@ -37,7 +37,7 @@ export const createStructure = new ValidatedMethod({
         i18n.__('api.structures.nameAlreadyTaken'),
       );
     }
-
+    validateString(name);
     const structureId = Structures.insert({
       name,
       parentId,
@@ -127,7 +127,7 @@ export const updateStructure = new ValidatedMethod({
     if (structuresWithSameNameOnSameLevel) {
       throw new Meteor.Error('api.structures.updateStructure.notPermitted', i18n.__('api.structures.nameAlreadyTaken'));
     }
-
+    validateString(name);
     const group = Groups.findOne({ _id: structure.groupId });
     if (group) {
       group.name = `${structure._id}_${name}`;
@@ -305,6 +305,7 @@ export const updateStructureContactEmail = new ValidatedMethod({
     if (!authorized) {
       throw new Meteor.Error('api.structures.updateContactEmail.notPermitted', i18n.__('api.users.notPermitted'));
     }
+    validateString(contactEmail);
     return Structures.update({ _id: structureId }, { $set: { contactEmail } });
   },
 });
@@ -342,7 +343,8 @@ export const updateStructureIntroduction = new ValidatedMethod({
         i18n.__('api.users.unknownIntroduction'),
       );
     }
-
+    validateString(title);
+    validateString(content);
     introductionToChange = {
       ...introductionToChange,
       title,

@@ -757,3 +757,14 @@ Migrations.add({
     // no rollback on this step
   },
 });
+
+Migrations.add({
+  version: 31,
+  name: 'Update structure.groupId default value',
+  up: () => {
+    Structures.update({ groupId: '' }, { $set: { groupId: null } });
+  },
+  down: () => {
+    // no rollback on this step
+  },
+});
