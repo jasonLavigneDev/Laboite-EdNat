@@ -68,13 +68,6 @@ const FileSummary = React.memo(
       unitDisplay: 'short',
     });
 
-    console.log({
-      file,
-      name: flow.name,
-      isUploading: flow.isUploading(),
-      isComplete: flow.isComplete(),
-    });
-
     const Icon = useMemo(() => {
       const [type, extension] = file.type.split('/');
       switch (type) {
