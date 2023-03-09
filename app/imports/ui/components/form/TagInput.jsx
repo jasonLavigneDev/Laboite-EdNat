@@ -54,27 +54,46 @@ export default function TagsInput({ ...props }) {
     scrollToBottonTag();
   }, [tags]);
 
+  function handleTag(value) {
+    const duplicatedValues = tags.indexOf(value);
+
+    if (!validate(value)) return;
+
+    if (duplicatedValues !== -1) {
+      setInputValue('');
+      return;
+    }
+    if (!value.replace(/\s/g, '').length) return;
+
+    onAddTag(value);
+    setInputValue('');
+  }
+
+  function handleBlur(event) {
+    const value = event.target.value.trim();
+    if (!value) {
+      return;
+    }
+
+    event.preventDefault();
+    handleTag(value);
+  }
+
   function handleKeyDown(event) {
     if (['Enter', 'Tab', 'Space', ' '].includes(event.key)) {
-      event.preventDefault();
       const value = event.target.value.trim();
-      const duplicatedValues = tags.indexOf(value);
-
-      if (!validate(value)) return;
-
-      if (duplicatedValues !== -1) {
-        setInputValue('');
+      if (!value) {
         return;
       }
-      if (!value.replace(/\s/g, '').length) return;
 
-      onAddTag(value);
-      setInputValue('');
-    }
-    if (tags.length && !inputValue.length && event.key === 'Backspace') {
       event.preventDefault();
+      handleTag(value);
+    }
+
+    if (tags.length && !inputValue.length && event.key === 'Backspace') {
       setInputValue(tags[tags.length - 1]);
       onRemoveTag(tags.length - 1);
+      event.preventDefault();
     }
   }
 
@@ -98,6 +117,7 @@ export default function TagsInput({ ...props }) {
         {({ getInputProps }) => {
           const { onBlur, onChange, onFocus, ...inputProps } = getInputProps({
             onKeyDown: handleKeyDown,
+            onBlur: handleBlur,
             placeholder,
           });
           return (
@@ -138,7 +158,7 @@ export default function TagsInput({ ...props }) {
 }
 
 // eslint-disable-next-line prettier/prettier
-const noop = () => { };
+const noop = () => {};
 TagsInput.defaultProps = {
   tags: [],
   onAddTag: noop,

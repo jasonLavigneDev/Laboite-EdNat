@@ -973,6 +973,7 @@
       "linkFold": "Lien",
       "addFilesLabel": "Ajouter vos fichiers et dossiers",
       "recipientsLabel": "Destinataires",
+      "recipientsHelper": "Entrez les mails déstinataires séparés d'un espace",
       "recipientsPlaceholder": "Les adresses courriels des destinataires",
       "recipientsHelp": "Si l'expéditeur est un agent de l'Etat, le ou les destinataires peuvent être un agent de l'Etat ou un particulier. Si l'expéditeur est un particulier, les destinataires ne peuvent être que des agents de l'Etat.",
       "subjectLabel": "Objet",

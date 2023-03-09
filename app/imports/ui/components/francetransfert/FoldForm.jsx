@@ -200,6 +200,7 @@ export default function FTFoldForm(props) {
                     tags={value}
                     multiline
                     id="recipients"
+                    helperText={i18n.__('pages.UploadPage.recipientsHelper')}
                     label={i18n.__('pages.UploadPage.recipientsLabel')}
                     placeholder={i18n.__('pages.UploadPage.recipientsPlaceholder')}
                     required
