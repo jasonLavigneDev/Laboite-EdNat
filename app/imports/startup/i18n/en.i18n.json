@@ -439,7 +439,8 @@
     },
     "utils": {
       "scriptDetected": "Forbidden content has been detected",
-      "badCharsDetected": "Following characters are Forbidden: < > & ' \""
+      "badCharsDetected": "Following characters are Forbidden: < > & ' \"",
+      "stringTooLong": "String is too long (max 500k)"
     },
     "rateLimitError": "Error, too many requests. Please slow down. You must wait {$timeToReset} seconds before trying again."
   },
