@@ -4,6 +4,7 @@ import { _ } from 'meteor/underscore';
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import i18n from 'meteor/universe:i18n';
+import sanitizeHtml from 'sanitize-html';
 
 import { isActive, getLabel, validateString } from '../utils';
 import Articles from './articles';
@@ -12,8 +13,8 @@ const validateData = (data) => {
   // check for unauthorized content in article data
   validateString(data.title);
   validateString(data.description);
-  validateString(data.content);
   validateString(data.licence);
+  if (data.markdown) validateString(data.content);
   data.tags.forEach((tag) => validateString(tag));
   data.groups.forEach((group) => validateString(group.name));
 };
@@ -29,9 +30,11 @@ export const createArticle = new ValidatedMethod({
       throw new Meteor.Error('api.articles.createArticle.notLoggedIn', i18n.__('api.users.mustBeLoggedIn'));
     }
     validateData(data);
+    const sanitizedContent = data.markdown ? data.content : sanitizeHtml(data.content);
+    validateString(sanitizedContent);
     Meteor.users.update({ _id: this.userId }, { $inc: { articlesCount: 1 }, $set: { lastArticle: new Date() } });
     const structure = Meteor.users.findOne(this.userId, { fields: { structure: 1 } }).structure || '';
-    return Articles.insert({ ...data, userId: this.userId, structure });
+    return Articles.insert({ ...data, content: sanitizedContent, userId: this.userId, structure });
   },
 });
 
@@ -75,9 +78,11 @@ export const updateArticle = new ValidatedMethod({
       throw new Meteor.Error('api.articles.updateArticle.notPermitted', i18n.__('api.articles.adminArticleNeeded'));
     }
     validateData(data);
+    const sanitizedContent = data.markdown ? data.content : sanitizeHtml(data.content);
+    validateString(sanitizedContent);
     const userStructure = Meteor.users.findOne(this.userId, { fields: { structure: 1 } }).structure || '';
     Meteor.users.update({ _id: this.userId }, { $set: { lastArticle: new Date() } });
-    const updateData = { ...data, userId: this.userId };
+    const updateData = { ...data, content: sanitizedContent, userId: this.userId };
     if (updateStructure) updateData.structure = userStructure;
     return Articles.update({ _id: articleId }, { $set: updateData });
   },
@@ -137,13 +142,16 @@ export const uploadBackupPublications = new ValidatedMethod({
       }
       articles.forEach((data) => validateData(data));
       const userStructure = Meteor.users.findOne(this.userId, { fields: { structure: 1 } }).structure || '';
-      return articles.map((article) =>
-        Articles.insert({
+      return articles.map((article) => {
+        const sanitizedContent = article.markdown ? article.content : sanitizeHtml(article.content);
+        validateString(sanitizedContent);
+        return Articles.insert({
           ...article,
+          content: sanitizedContent,
           userId: this.userId,
           structure: updateStructure ? userStructure : article.structure,
-        }),
-      );
+        });
+      });
     } catch (error) {
       throw new Meteor.Error(error, error);
     }

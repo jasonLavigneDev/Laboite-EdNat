@@ -5,6 +5,7 @@ import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { Roles } from 'meteor/alanning:roles';
 import i18n from 'meteor/universe:i18n';
+import sanitizeHtml from 'sanitize-html';
 import { isActive, getLabel, validateString } from '../utils';
 import Groups from './groups';
 import { addGroup, removeElement } from '../personalspaces/methods';
@@ -197,9 +198,10 @@ export const createGroup = new ValidatedMethod({
     }
     validateString(name);
     validateString(description);
-    validateString(content);
     validateString(avatar);
-    return _createGroup({ name, type, content, description, plugins, avatar, userId: this.userId });
+    const sanitizedContent = sanitizeHtml(content);
+    validateString(sanitizedContent);
+    return _createGroup({ name, type, content: sanitizedContent, description, plugins, avatar, userId: this.userId });
   },
 });
 
@@ -308,18 +310,19 @@ export const updateGroup = new ValidatedMethod({
     }
     if (data.name) validateString(data.name);
     if (data.description) validateString(data.description);
-    if (data.content) validateString(data.content);
     if (data.avatar) validateString(data.avatar);
     if (data.groupPadId) validateString(data.groupPadId);
     if (data.digest) validateString(data.digest);
+    const sanitizedContent = sanitizeHtml(data.content);
+    validateString(sanitizedContent);
     let groupData = {};
     if (!Roles.userIsInRole(this.userId, 'admin', groupId)) {
       // animator can only update description and content
       if (data.description) groupData.description = data.description;
-      if (data.content) groupData.content = data.content;
+      if (data.content) groupData.content = sanitizedContent;
       if (data.avatar) groupData.avatar = data.avatar;
     } else {
-      groupData = { ...data };
+      groupData = { ...data, content: sanitizedContent };
     }
     return _updateGroup(groupId, groupData, group);
   },

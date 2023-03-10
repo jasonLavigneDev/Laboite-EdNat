@@ -4,6 +4,7 @@ import SimpleSchema from 'simpl-schema';
 import { Roles } from 'meteor/alanning:roles';
 import i18n from 'meteor/universe:i18n';
 import { _ } from 'meteor/underscore';
+import sanitizeHtml from 'sanitize-html';
 import { getLabel, isActive, validateString } from '../utils';
 import Structures, { IntroductionStructure } from './structures';
 import { hasAdminRightOnStructure, isAStructureWithSameNameExistWithSameParent } from './utils';
@@ -344,11 +345,12 @@ export const updateStructureIntroduction = new ValidatedMethod({
       );
     }
     validateString(title);
-    validateString(content);
+    const sanitizedContent = sanitizeHtml(content);
+    validateString(sanitizedContent);
     introductionToChange = {
       ...introductionToChange,
       title,
-      content,
+      content: sanitizedContent,
     };
     const newIntroductionArray = oldIntroductionArray.map((entry) => {
       if (entry.language === language) return introductionToChange;

@@ -5,6 +5,7 @@ import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { Roles } from 'meteor/alanning:roles';
 import i18n from 'meteor/universe:i18n';
+import sanitizeHtml from 'sanitize-html';
 
 import { isActive, getLabel, validateString } from '../utils';
 import slugy from '../../ui/utils/slugy';
@@ -17,7 +18,6 @@ const checkService = (data) => {
   validateString(data.team);
   validateString(data.usage);
   validateString(data.description);
-  validateString(data.content);
   validateString(data.url);
   validateString(data.logo);
   data.categories.forEach((item) => validateString(item));
@@ -48,7 +48,9 @@ export const createService = new ValidatedMethod({
       );
     }
     checkService(data);
-    const serviceId = Services.insert(data);
+    const sanitizedContent = sanitizeHtml(data.content);
+    validateString(sanitizedContent);
+    const serviceId = Services.insert({ ...data, content: sanitizedContent });
 
     Services.update(serviceId, {
       $set: {
@@ -94,8 +96,13 @@ export const updateService = new ValidatedMethod({
       throw new Meteor.Error('api.services.updateService.notPermitted', i18n.__('api.users.adminNeeded'));
     }
     checkService(data);
+    const sanitizedContent = sanitizeHtml(data.content);
+    validateString(sanitizedContent);
     // update service data, making sure that structure is not modified
-    Services.update({ _id: serviceId }, { $set: { ...data, structure: currentService.structure } });
+    Services.update(
+      { _id: serviceId },
+      { $set: { ...data, content: sanitizedContent, structure: currentService.structure } },
+    );
 
     if (Meteor.isServer && !Meteor.isTest && Meteor.settings.public.minioEndPoint) {
       const files = [data.logo, ...data.screenshots];
