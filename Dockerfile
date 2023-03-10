@@ -1,5 +1,5 @@
 # The tag here should match the Meteor version of your app, per .meteor/release
-FROM hub.eole.education/proxyhub/geoffreybooth/meteor-base:2.10.0
+FROM hub.eole.education/proxyhub/geoffreybooth/meteor-base:2.11.0
 
 # Copy app package.json and package-lock.json into container
 COPY ./app/package*.json $APP_SOURCE_FOLDER/
@@ -15,7 +15,7 @@ RUN bash $SCRIPTS_FOLDER/build-meteor-bundle.sh
 RUN cd $APP_SOURCE_FOLDER && meteor npm install
 
 # Rather than Node 8 latest (Alpine), you can also use the specific version of Node expected by your Meteor release, per https://docs.meteor.com/changelog.html
-FROM hub.eole.education/proxyhub/library/node:14.21.2-alpine
+FROM hub.eole.education/proxyhub/library/node:14.21.3-alpine
 
 ENV APP_BUNDLE_FOLDER /opt/bundle
 ENV SCRIPTS_FOLDER /docker
@@ -38,7 +38,7 @@ RUN bash $SCRIPTS_FOLDER/build-meteor-npm-dependencies.sh --build-from-source
 
 # Start another Docker stage, so that the final image doesn’t contain the layer with the build dependencies
 # See previous FROM line; this must match
-FROM hub.eole.education/proxyhub/library/node:14.21.2-alpine
+FROM hub.eole.education/proxyhub/library/node:14.21.3-alpine
 
 ENV APP_BUNDLE_FOLDER /opt/bundle
 ENV SCRIPTS_FOLDER /docker
