@@ -987,9 +987,6 @@
         "body_actionTooltip": "Open bookmark's URL"
       }
     },
-    "EventsPage": {
-      "noAccess": "You don't have access to events of this group"
-    },
     "LegalPage": {
       "personalData": "Personal Data",
       "gcu": "General Conditions of Use",
@@ -1421,13 +1418,6 @@
       "userType": "Users type",
       "noStructure": "No Structure assigned"
     },
-    "Events": {
-      "seeEvent": "See event",
-      "back": "Back to the group",
-      "searchText": "Which event are you looking for ?",
-      "dayOf": "All day of",
-      "noEvents": "No current or upcoming polls were found for this group"
-    },
     "GroupArticlesPage": {
       "seeArticle": "See article",
       "back": "Back to the group",
@@ -1437,21 +1427,20 @@
       "publicPage": "Public page",
       "openPublicPage": "Open this group's public page"
     },
-    "Polls": {
+    "ExtService": {
+      "back": "Go back to group",
       "seePoll": "See poll",
-      "back": "Back to the group",
-      "searchText": "Which poll are you looking for ?",
-      "noPoll": "No current or upcoming polls were found for this group",
-      "noAccess": "You don't have access to polls of this group"
-    },
-    "Forms": {
       "seeForm": "Replie to form",
-      "seeFormForEdit": "Edit answers for form",
-      "blockForm": "You've already replied to this form and cannot change your answers",
-      "back": "Back to the group",
-      "searchText": "Which poll are you looking for ?",
-      "noForm": "No current forms were found for this group",
-      "noAccess": "You don't have access to forms of this group"
+      "seeEvent": "See event",
+      "addPoll": "Add new poll",
+      "addEvent": "Add new event",
+      "addForm": "Add new form",
+      "searchText": "What are you looking for ?",
+      "noElements": "There is nothing to display.",
+      "noAccess": "You don't have access to the elements of this group",
+      "seeFormForEdit": "Edit your form's answers",
+      "blockForm": "You have already answered to this form, and you cannot modify your answers.",
+      "dayOf": "All day of"
     },
     "ArticlesPage": {
       "title": "Your publications",

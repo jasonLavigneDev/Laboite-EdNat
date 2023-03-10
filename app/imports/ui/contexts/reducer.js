@@ -43,15 +43,10 @@ const reducer = (state, action) => {
         ...newState,
         notificationPage: { ...data },
       };
-    case 'pollPage':
+    case 'extServicePage':
       return {
         ...newState,
-        pollPage: { ...data },
-      };
-    case 'formsPage':
-      return {
-        ...newState,
-        formsPage: { ...data },
+        extServicePage: { ...data },
       };
     case 'addressBookPage':
       return {

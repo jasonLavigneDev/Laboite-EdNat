@@ -10,7 +10,7 @@ const queryGroupForms = ({ search, group }) => {
   const regex = new RegExp(search, 'i');
   const fieldsToSearch = [
     'title',
-    'desc',
+    'description',
     'owner',
     'isPublic',
     'isModel',

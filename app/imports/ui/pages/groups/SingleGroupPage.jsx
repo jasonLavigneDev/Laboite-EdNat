@@ -548,7 +548,7 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, forms, events, bo
                     ? `${i18n.__('pages.SingleGroupPage.Events')}`
                     : `${i18n.__('pages.SingleGroupPage.Events')} (${events})`
                 }
-                url={`/groups/${group.slug}/events`}
+                url={`/groups/${group.slug}/services/events`}
               />
               <AppCard
                 id="polls"
@@ -559,7 +559,7 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, forms, events, bo
                     ? `${i18n.__('pages.SingleGroupPage.Polls')}`
                     : `${i18n.__('pages.SingleGroupPage.Polls')} (${polls})`
                 }
-                url={`/groups/${group.slug}/poll`}
+                url={`/groups/${group.slug}/services/polls`}
               />
               <AppCard
                 id="forms"
@@ -570,7 +570,7 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, forms, events, bo
                     ? `${i18n.__('pages.SingleGroupPage.Forms')}`
                     : `${i18n.__('pages.SingleGroupPage.Forms')} (${forms})`
                 }
-                url={`/groups/${group.slug}/forms`}
+                url={`/groups/${group.slug}/services/forms`}
               />
               <AppCard
                 id="bookmarks"

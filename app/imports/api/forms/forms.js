@@ -82,7 +82,7 @@ Forms.schema = new SimpleSchema(
       max: 96,
       label: getLabel('api.forms.labels.title'),
     },
-    desc: {
+    description: {
       type: String,
       optional: true,
       max: 256,
@@ -148,7 +148,7 @@ Forms.schema = new SimpleSchema(
 
 Forms.publicFields = {
   title: 1,
-  desc: 1,
+  description: 1,
   owner: 1,
   isPublic: 1,
   isModel: 1,
