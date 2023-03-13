@@ -1428,6 +1428,11 @@
       "openPublicPage": "Open this group's public page"
     },
     "ExtService": {
+      "title":{
+        "polls": "Polls",
+        "events": "Events",
+        "forms": "Forms"
+      },
       "back": "Go back to group",
       "seePoll": "See poll",
       "seeForm": "Replie to form",

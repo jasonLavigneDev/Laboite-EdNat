@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import AddIcon from '@mui/icons-material/Add';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
+import Paper from '@mui/material/Paper';
 import Fade from '@mui/material/Fade';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
@@ -19,7 +20,6 @@ import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import ClearIcon from '@mui/icons-material/Clear';
 import SearchIcon from '@mui/icons-material/Search';
-import Divider from '@mui/material/Divider';
 import Button from '@mui/material/Button';
 import PollIcon from '@mui/icons-material/Poll';
 import { useHistory } from 'react-router-dom';
@@ -42,7 +42,6 @@ export const useExtServicePageStyles = makeStyles()((theme) => ({
   },
   list: {
     width: '100%',
-    backgroundColor: theme.palette.background.paper,
   },
   inline: {
     display: 'inline',
@@ -60,6 +59,22 @@ export const useExtServicePageStyles = makeStyles()((theme) => ({
   },
   ErrorPage: {
     textAlign: 'center',
+  },
+
+  iconTitle: {
+    height: 45,
+    width: 45,
+  },
+  cardGrid: {
+    marginTop: theme.spacing(3),
+  },
+  titleContainer: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+
+  title: {
+    marginLeft: theme.spacing(1),
   },
 }));
 
@@ -239,14 +254,14 @@ const ExternalServiceGroupPage = ({ loading, group, slug, service }) => {
     return item.title;
   };
 
-  const getItemIcon = () => {
+  const getItemIcon = (title) => {
     switch (service) {
       case 'polls':
-        return <PollIcon className={classes.icon} />;
+        return <PollIcon className={title ? classes.iconTitle : classes.icon} />;
       case 'events':
-        return <EventAvailableIcon className={classes.icon} />;
+        return <EventAvailableIcon className={title ? classes.iconTitle : classes.icon} />;
       case 'forms':
-        return <ListAltIcon className={classes.icon} />;
+        return <ListAltIcon className={title ? classes.iconTitle : classes.icon} />;
       default:
         return null;
     }
@@ -259,6 +274,10 @@ const ExternalServiceGroupPage = ({ loading, group, slug, service }) => {
     return item.description;
   };
 
+  const getTitlePage = () => {
+    return i18n.__(`pages.ExtService.title.${service}`);
+  };
+
   return (
     <Fade in>
       <Container className={classes.root}>
@@ -267,6 +286,14 @@ const ExternalServiceGroupPage = ({ loading, group, slug, service }) => {
             <Button color="primary" startIcon={<ArrowBack />} onClick={history.goBack}>
               {i18n.__('pages.ExtService.back')}
             </Button>
+            <Grid item xs={12} sm={12} md={6} className={classes.cardGrid}>
+              <div className={classes.titleContainer}>
+                {getItemIcon(true)}
+                <div className={classes.title}>
+                  <Typography variant="h4">{getTitlePage(group)}</Typography>
+                </div>
+              </div>
+            </Grid>
           </Grid>
           {loading ? (
             <Spinner />
@@ -319,34 +346,33 @@ const ExternalServiceGroupPage = ({ loading, group, slug, service }) => {
               {finalItems.length > 0 ? (
                 <Grid item xs={12} sm={12} md={12}>
                   <List className={classes.list} disablePadding>
-                    {finalItems.map((item, i) => [
-                      <ListItem alignItems="flex-start" key={`user-${item.title}`}>
-                        {getItemIcon()}
-                        <ListItemText
-                          primary={getItemTitle(item)}
-                          secondary={
-                            <>
-                              <Typography
-                                component="span"
-                                variant="body2"
-                                className={classes.inline}
-                                color="textPrimary"
-                              >
-                                {getItemDescription(item)}
-                              </Typography>
-                            </>
-                          }
-                        />
+                    {finalItems.map((item) => [
+                      <Paper sx={{ marginBottom: '1vh', minHeight: '7vh' }}>
+                        <ListItem alignItems="flex-start" key={`user-${item.title}`}>
+                          {getItemIcon(false)}
+                          <ListItemText
+                            primary={getItemTitle(item)}
+                            secondary={
+                              <>
+                                <Typography
+                                  component="span"
+                                  variant="body2"
+                                  className={classes.inline}
+                                  color="textPrimary"
+                                >
+                                  {getItemDescription(item)}
+                                </Typography>
+                              </>
+                            }
+                          />
 
-                        <GroupListActions
-                          url={getUrlToDisplay(item)}
-                          title={getTitleOfAction(item)}
-                          disable={isDisable(item)}
-                        />
-                      </ListItem>,
-                      i < ITEM_PER_PAGE - 1 && i < total - 1 && (
-                        <Divider variant="inset" component="li" key={`divider-${item.title}`} />
-                      ),
+                          <GroupListActions
+                            url={getUrlToDisplay(item)}
+                            title={getTitleOfAction(item)}
+                            disable={isDisable(item)}
+                          />
+                        </ListItem>
+                      </Paper>,
                     ])}
                   </List>
                 </Grid>

@@ -1431,6 +1431,11 @@
       "openPublicPage": "Ouvrir la page publique de ce groupe"
     },
     "ExtService": {
+      "title":{
+        "polls": "Sondages",
+        "events": "Evénements",
+        "forms": "Questionnaires"
+      },
       "back": "Retour au groupe",
       "seePoll": "Voir le sondage",
       "seeForm": "Répondre au formulaire",
