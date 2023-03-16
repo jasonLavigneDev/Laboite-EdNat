@@ -14,7 +14,6 @@ import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
 import Spinner from '../../components/system/Spinner';
-import { useAppContext } from '../../contexts/context';
 import AppSettings from '../../../api/appsettings/appsettings';
 import Structures from '../../../api/structures/structures';
 import { getCurrentIntroduction } from '../../../api/utils';
@@ -61,7 +60,6 @@ export const checkAccessAndLogin = async (isIframed) => {
 };
 
 function SignIn({ loggingIn, introduction, appsettings, ready }) {
-  const [{ isIframed }] = useAppContext();
   const { classes } = useStyles();
 
   const [rememberMe, setRememberMe] = useState(true);
