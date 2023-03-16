@@ -97,6 +97,7 @@
     "apiKeys": [
       ""
     ],
+    "createUserApiKeys": [],
     "BBBSecret": "",
     "whiteDomains": [
       "^ac-[a-z-]*\\.fr",

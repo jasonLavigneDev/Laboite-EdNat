@@ -40,7 +40,7 @@ This API endpoint will only be available if at least one API key is defined in l
 curl -X  POST -H "X-API-KEY: XXXXX-XXXXX-XXXXX-XXXXX-XXXXX" \
      -H "Content-Type: application/json" \
      -d '{"username":"bleponge", "email":"bleponge@test.fr", "firstname":"Bob", "lastname":"Leponge"}' \
-     http://localhost:3000/api/nctoken
+     http://localhost:3000/api/createuser
 ```
 
 ## Success Response
