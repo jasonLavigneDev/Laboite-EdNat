@@ -3,7 +3,7 @@ import i18n from 'meteor/universe:i18n';
 import { findStructureByEmail } from '../users';
 import logServer from '../../logging';
 
-export default function createUser(req, content) {
+export default async function createUser(req, content) {
   // sample use:
   // curl -X POST -H "X-API-KEY: createuser-password" \
   //      -H "Content-Type: application/json" \
