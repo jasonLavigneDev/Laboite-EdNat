@@ -81,7 +81,7 @@ FindFromPublication.publish('groups.events', function groupsEvents({ page, searc
       fields: EventsAgenda.publicFields,
       skip: itemPerPage * (page - 1),
       limit: itemPerPage,
-      sort: { name: -1 },
+      sort: { start: -1 },
       ...rest,
     });
 

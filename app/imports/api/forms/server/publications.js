@@ -8,19 +8,7 @@ import Groups from '../../groups/groups';
 // build query for all users from group
 const queryGroupForms = ({ search, group }) => {
   const regex = new RegExp(search, 'i');
-  const fieldsToSearch = [
-    'title',
-    'description',
-    'owner',
-    'isPublic',
-    'isModel',
-    'createdAt',
-    'groups',
-    'active',
-    'editableAnswers',
-    'components',
-    'formAnswers',
-  ];
+  const fieldsToSearch = ['title', 'description'];
 
   const searchQuery = fieldsToSearch.map((field) => ({
     [field]: { $regex: regex },
@@ -40,7 +28,7 @@ Meteor.methods({
         {
           fields: Groups.allPublicFields,
           limit: 1,
-          sort: { name: -1 },
+          sort: { createdAt: -1 },
         },
       );
       const query = queryGroupForms({ search, form });
@@ -84,7 +72,7 @@ FindFromPublication.publish('groups.forms', function groupForms({ page, search, 
       fields: Forms.publicFields,
       skip: itemPerPage * (page - 1),
       limit: itemPerPage,
-      sort: { name: -1 },
+      sort: { title: -1 },
       ...rest,
     });
 

@@ -71,7 +71,7 @@ FindFromPublication.publish('groups.polls', function groupsPolls({ page, search,
       fields: Polls.publicFields,
       skip: itemPerPage * (page - 1),
       limit: itemPerPage,
-      sort: { title: -1 },
+      sort: { updatedAt: -1 },
       ...rest,
     });
     return res;

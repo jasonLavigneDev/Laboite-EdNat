@@ -156,8 +156,6 @@ Forms.publicFields = {
   groups: 1,
   active: 1,
   editableAnswers: 1,
-  components: 1,
-  formAnswers: 1,
 };
 
 Forms.attachSchema(Forms.schema);

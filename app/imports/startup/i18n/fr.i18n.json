@@ -1406,7 +1406,7 @@
       "groupArticles": "Accéder aux publications",
       "BookmarksUsage": "Liste des marque-pages",
       "Bookmarks": "Marque-pages",
-      "ArticlesUsage": "liste des publications",
+      "ArticlesUsage": "Liste des publications",
       "Articles": "Publications",
       "GroupNotExist": "Le groupe {$groupTitle} n'existe pas"
     },

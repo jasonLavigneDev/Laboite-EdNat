@@ -80,10 +80,6 @@ export const useExtServicePageStyles = makeStyles()((theme) => ({
 
 const ITEM_PER_PAGE = 10;
 
-const NO_REPLIE = 1;
-const ALREADY_REPLIE = 2;
-const REPLIE_NO_EDITABLE = 3;
-
 const ExternalServiceGroupPage = ({ loading, group, slug, service }) => {
   const { classes } = useExtServicePageStyles();
   const history = useHistory();
@@ -104,12 +100,25 @@ const ExternalServiceGroupPage = ({ loading, group, slug, service }) => {
 
   const { search = '', searchToggle = false } = extServicePage;
 
+  const getSortOfCollection = () => {
+    switch (service) {
+      case 'events':
+        return { start: -1 };
+      case 'polls':
+        return { updatedAt: -1 };
+      case 'forms':
+        return { title: -1 };
+      default:
+        return { createdAt: -1 };
+    }
+  };
+
   const { changePage, page, items, total } = usePagination(
     `groups.${service}`,
     { search, slug },
     getCollectionToCheck(),
     {},
-    { sorted: { title: -1 } },
+    { sort: getSortOfCollection() },
     ITEM_PER_PAGE,
   );
 
@@ -150,41 +159,10 @@ const ExternalServiceGroupPage = ({ loading, group, slug, service }) => {
     }
   }, [search]);
 
-  const userAlreadyReplied = (form) => {
-    if (!form.formAnswers || form.formAnswers.length === 0) return false;
-    const { formAnswers } = form;
-    return !!formAnswers.find((answer) => answer.userId === userId);
-  };
-
-  const getAnswerType = (form) => {
-    if (userAlreadyReplied(form) && form.editableAnswers) return ALREADY_REPLIE;
-    if (userAlreadyReplied(form) && !form.editableAnswers) return REPLIE_NO_EDITABLE;
-    return NO_REPLIE;
-  };
-
-  const getAnswerURL = (type, form) => {
-    if (type === REPLIE_NO_EDITABLE) return '';
-    return `${testMeteorSettingsUrl(Meteor.settings.public.services.questionnaireURL)}/visualizer/${form._id}`;
-  };
-
-  const getTitleOfFormAction = (form) => {
-    const type = getAnswerType(form);
-    switch (type) {
-      case NO_REPLIE:
-        return `${i18n.__('pages.ExtService.seeForm')} ${form.title}`;
-      case ALREADY_REPLIE:
-        return `${i18n.__('pages.ExtService.seeFormForEdit')} ${form.title}`;
-      case REPLIE_NO_EDITABLE:
-        return `${i18n.__('pages.ExtService.blockForm')} ${form.title}`;
-      default:
-        return `${i18n.__('pages.ExtService.seeForm')} ${form.title}`;
-    }
-  };
-
   const getTitleOfAction = (item) => {
     if (service === 'polls') return `${i18n.__('pages.ExtService.seePoll')} ${item.title}`;
     if (service === 'events') return `${i18n.__('pages.ExtService.seeEvent')} ${item.title}`;
-    if (service === 'forms') return getTitleOfFormAction(item);
+    if (service === 'forms') return `${i18n.__('pages.ExtService.seeForm')} ${item.title}`;
     return '';
   };
 
@@ -193,7 +171,8 @@ const ExternalServiceGroupPage = ({ loading, group, slug, service }) => {
       return `${testMeteorSettingsUrl(Meteor.settings.public.services.sondagesUrl)}/poll/answer/${item._id}?autologin`;
     if (service === 'events')
       return `${testMeteorSettingsUrl(Meteor.settings.public.services.agendaUrl)}/event/${item._id}`;
-    if (service === 'forms') return getAnswerURL(getAnswerType(item), item);
+    if (service === 'forms')
+      return `${testMeteorSettingsUrl(Meteor.settings.public.services.questionnaireURL)}/visualizer/${item._id}`;
     return '';
   };
 
@@ -207,10 +186,6 @@ const ExternalServiceGroupPage = ({ loading, group, slug, service }) => {
         group._id
       }`;
     return '';
-  };
-
-  const isDisable = (item) => {
-    return service === 'forms' && getAnswerType(item) === REPLIE_NO_EDITABLE;
   };
 
   const getAddActionTitle = () => {
@@ -366,11 +341,7 @@ const ExternalServiceGroupPage = ({ loading, group, slug, service }) => {
                             }
                           />
 
-                          <GroupListActions
-                            url={getUrlToDisplay(item)}
-                            title={getTitleOfAction(item)}
-                            disable={isDisable(item)}
-                          />
+                          <GroupListActions url={getUrlToDisplay(item)} title={getTitleOfAction(item)} />
                         </ListItem>
                       </Paper>,
                     ])}
