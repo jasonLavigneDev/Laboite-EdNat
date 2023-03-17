@@ -107,7 +107,7 @@ const ExternalServiceGroupPage = ({ loading, group, slug, service }) => {
       case 'polls':
         return { updatedAt: -1 };
       case 'forms':
-        return { title: -1 };
+        return { createdAt: -1 };
       default:
         return { createdAt: -1 };
     }

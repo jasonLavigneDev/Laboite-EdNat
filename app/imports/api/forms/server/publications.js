@@ -72,7 +72,7 @@ FindFromPublication.publish('groups.forms', function groupForms({ page, search, 
       fields: Forms.publicFields,
       skip: itemPerPage * (page - 1),
       limit: itemPerPage,
-      sort: { title: -1 },
+      sort: { createdAt: -1 },
       ...rest,
     });
 
