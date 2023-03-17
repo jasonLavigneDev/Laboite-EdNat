@@ -1445,7 +1445,8 @@
       "noAccess": "You don't have access to the elements of this group",
       "seeFormForEdit": "Edit your form's answers",
       "blockForm": "You have already answered to this form, and you cannot modify your answers.",
-      "dayOf": "All day of"
+      "dayOf": "All day of",
+      "daysOf": "All days of {$start} to {$end}"
     },
     "ArticlesPage": {
       "title": "Your publications",

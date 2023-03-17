@@ -212,9 +212,13 @@ const ExternalServiceGroupPage = ({ loading, group, slug, service }) => {
     const newDateStart = moment(event.start).format('DD/MM/YYYY hh:mm');
     const newDateEnd = moment(event.end).format('DD/MM/YYYY hh:mm');
 
-    const newDateOnly = newDateStart.split(' ');
+    const newDateStartAllDay = newDateStart.split(' ');
+    const newDateEndAllDay = newDateEnd.split(' ');
+
     const dateFinal = event.allDay
-      ? `${i18n.__('pages.ExtService.dayOf')} ${newDateOnly[0]}`
+      ? event.start.getDate() - event.end.getDate() === -1
+        ? `${i18n.__('pages.ExtService.dayOf')} ${newDateStartAllDay[0]}`
+        : `${i18n.__('pages.ExtService.daysOf', { start: newDateStartAllDay[0], end: newDateEndAllDay[0] })}`
       : `${newDateStart} -> ${newDateEnd}`;
 
     return dateFinal;

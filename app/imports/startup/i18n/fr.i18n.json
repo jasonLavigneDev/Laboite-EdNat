@@ -1450,7 +1450,7 @@
       "blockForm": "Vous avez déjà répondu à ce formulaire, et vous ne pouvez pas changer les réponses",
       "noForm": "Il n'y a actuellement aucun questionnaire en cours pour ce groupe.",
       "dayOf": "Sur la journée du",
-      "noEvents": "Il n'y a actuellement aucun événement en cours ou à venir pour ce groupe."
+      "daysOf": "Sur les journées du {$start} au {$end}"
     },
     "ArticlesPage": {
       "title": "Vos publications",
