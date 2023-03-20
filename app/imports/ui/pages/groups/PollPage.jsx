@@ -132,6 +132,7 @@ const PollPage = ({ loading, group, slug }) => {
                           group._id
                         }`,
                         '_blank',
+                        'noopener noreferrer',
                       )
                     }
                     size="large"

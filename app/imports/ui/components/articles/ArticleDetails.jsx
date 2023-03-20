@@ -97,7 +97,7 @@ export default function ArticleDetails({ article, publicPage }) {
           className={classes.buttonText}
           color="primary"
           variant="contained"
-          onClick={() => window.open(articleURL, '_blank')}
+          onClick={() => window.open(articleURL, '_blank', 'noreferrer,noopener')}
         >
           <OpenInNewIcon fontSize="large" />
         </Button>

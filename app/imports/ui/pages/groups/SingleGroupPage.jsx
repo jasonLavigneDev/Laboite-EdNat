@@ -305,7 +305,7 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
       if (err) {
         msg.error(err.reason);
       } else {
-        window.open(res, '_blank');
+        window.open(res, '_blank', 'noopener,noreferrer');
       }
     });
   };
@@ -319,7 +319,7 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
       .replace('[URL]', testUrl(groupPlugins[plugin].URL))
       .replace('[GROUPNAME]', encodeURIComponent(group.name))
       .replace('[GROUPSLUG]', group.slug);
-    window.open(resourceURL, '_blank');
+    window.open(resourceURL, '_blank', 'noopener,noreferrer');
   };
 
   const groupPluginsShow = (plugin) => {

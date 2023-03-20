@@ -233,6 +233,7 @@ const AddressBook = ({ loading, group, slug }) => {
                                         user.mezigName
                                       }`,
                                       '_blank',
+                                      'noopener,noreferrer',
                                     )
                                   }
                                   size="large"
@@ -249,7 +250,9 @@ const AddressBook = ({ loading, group, slug }) => {
                                 <IconButton
                                   edge="end"
                                   aria-label="comments"
-                                  onClick={() => window.open(`${authorBlogPage}${user._id}`, '_blank')}
+                                  onClick={() =>
+                                    window.open(`${authorBlogPage}${user._id}`, '_blank', 'noopener,noreferrer')
+                                  }
                                   size="large"
                                 >
                                   <LibraryBooksIcon />

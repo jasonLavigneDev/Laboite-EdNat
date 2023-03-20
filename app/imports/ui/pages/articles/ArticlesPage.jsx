@@ -219,7 +219,7 @@ function ArticlesPage({
                     className={classes.buttonOption}
                     size="medium"
                     variant="contained"
-                    onClick={() => window.open(blogPage, '_blank')}
+                    onClick={() => window.open(blogPage, '_blank', 'noreferrer,noopener')}
                   >
                     {i18n.__(`pages.${i18nCode}.openPublicPage`)}
                   </Button>

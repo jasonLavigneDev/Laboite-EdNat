@@ -141,9 +141,12 @@ const AvatarGallery = ({ open, onClose, onSendImage, i18nCode }) => {
           </CardContent>
           <Typography variant="h6" style={{ textAlign: 'center' }}>
             Icons made by
-            <a href="https://www.flaticon.com/authors/flat-icons"> Flat Icons </a>
+            <a href="https://www.flaticon.com/authors/flat-icons" target="_blank" rel="noreferrer noopener">
+              {' '}
+              Flat Icons{' '}
+            </a>
             from
-            <a href="https://www.flaticon.com/" title="Flaticon">
+            <a href="https://www.flaticon.com/" title="Flaticon" target="_blank" rel="noreferrer noopener">
               {' '}
               www.flaticon.com
             </a>
