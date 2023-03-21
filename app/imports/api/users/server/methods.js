@@ -273,40 +273,15 @@ export const unsetAdminOf = new ValidatedMethod({
 });
 
 export function RemoveAllRolesFromGroup(user, group) {
-  if (Roles.getScopesForUser(user._id, 'admin').includes(group._id)) {
-    Roles.removeUsersFromRoles(user._id, 'admin', group._id);
-    if (group.admins.indexOf(user._id) !== -1) {
-      Groups.update(group._id, {
-        $pull: { admins: user._id },
-      });
-    }
-  }
+  const roles = ['admin', 'animator', 'member', 'candidate'];
+  const rolesOfUser = roles.filter((role) => group[`${role}s`].includes(user._id));
 
-  if (Roles.getScopesForUser(user._id, 'animator').includes(group._id)) {
-    Roles.removeUsersFromRoles(user._id, 'animator', group._id);
-    if (group.animators.indexOf(user._id) !== -1) {
-      Groups.update(group._id, {
-        $pull: { animators: user._id },
-      });
-    }
-  }
+  Roles.removeUsersFromRoles(user._id, roles, group._id);
 
-  if (Roles.getScopesForUser(user._id, 'member').includes(group._id)) {
-    Roles.removeUsersFromRoles(user._id, 'member', group._id);
-    if (group.members.indexOf(user._id) !== -1) {
-      Groups.update(group._id, {
-        $pull: { members: user._id },
-      });
-    }
-  }
-
-  if (Roles.getScopesForUser(user._id, 'candidate').includes(group._id)) {
-    Roles.removeUsersFromRoles(user._id, 'candidate', group._id);
-    if (group.candidates.indexOf(user._id) !== -1) {
-      Groups.update(group._id, {
-        $pull: { candidates: user._id },
-      });
-    }
+  if (rolesOfUser.length > 0) {
+    Groups.update(group._id, {
+      $pull: rolesOfUser.reduce((mod, role) => ({ ...mod, [`${role}s`]: user._id }), {}),
+    });
   }
 }
 
