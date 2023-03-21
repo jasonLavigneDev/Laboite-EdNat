@@ -118,20 +118,17 @@ const AdminStructureTreeItem = ({
               )}
               {onClickSelectBtn && (
                 <Tooltip title={i18n.__('components.AdminStructureTreeItem.actions.choose')}>
-                  <span>
-                    <Button
-                      onClick={() => {
-                        setChoosenStructure(nodes);
-                        openConfirm();
-                      }}
-                      variant="contained"
-                      primary
-                      style={{ textTransform: 'none' }}
-                      disabled={selectedId === id}
-                    >
-                      {i18n.__('components.AdminStructureTreeItem.actions.chooseShort')}
-                    </Button>
-                  </span>
+                  <Button
+                    onClick={() => {
+                      setChoosenStructure(nodes);
+                      openConfirm();
+                    }}
+                    variant="contained"
+                    sx={{ textTransform: 'none' }}
+                    disabled={selectedId === id}
+                  >
+                    {i18n.__('components.AdminStructureTreeItem.actions.chooseShort')}
+                  </Button>
                 </Tooltip>
               )}
             </Box>
