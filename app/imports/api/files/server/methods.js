@@ -64,12 +64,11 @@ function _validatePath(path) {
   return SimpleSchema.ErrorTypes.VALUE_NOT_ALLOWED;
 }
 
+const fileNameRegex = /[*/|\\:!<>&]/;
+
 function _validateName(name) {
-  // check filename safety (should not include ..,*,/,|,\,:,!)
-  if (name.includes('..')) return SimpleSchema.ErrorTypes.VALUE_NOT_ALLOWED;
-  const regex = /[*/|\\:!<>&]/;
-  if (regex.test(name)) return SimpleSchema.ErrorTypes.VALUE_NOT_ALLOWED;
-  return undefined;
+  // check filename safety (should not include ..,*,/,|,\,:,!,<,>,&)
+  return fileNameRegex.test(name) || name.includes('..') ? SimpleSchema.ErrorTypes.VALUE_NOT_ALLOWED : undefined;
 }
 
 function validateFilePath() {
