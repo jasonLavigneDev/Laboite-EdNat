@@ -480,7 +480,7 @@ ServicesPage.defaultProps = {
 
 export default withTracker(({ match: { path } }) => {
   const structureMode = path === '/structure';
-  const structure = Meteor.user().structure || null;
+  const structure = Meteor.user()?.structure || null;
   /**
    * - Grab current user structure with the ancestors
    *
@@ -488,9 +488,11 @@ export default withTracker(({ match: { path } }) => {
    */
   const currentStructureWithAncestors = [];
   if (structure) {
-    Meteor.subscribe('structures.one');
-    const userStruct = Structures.findOne(structure);
-    if (userStruct._id) currentStructureWithAncestors.push(userStruct._id, ...userStruct.ancestorsIds);
+    const subscription = Meteor.subscribe('structures.one');
+    const loadingStruct = !subscription.ready();
+    const userStruct = loadingStruct ? null : Structures.findOne(structure);
+
+    if (userStruct?._id) currentStructureWithAncestors.push(userStruct._id, ...userStruct.ancestorsIds);
   }
   const subName = structureMode ? 'services.structure.ids' : 'services.all';
   const servicesHandle = Meteor.subscribe(subName, structureMode && { structureIds: currentStructureWithAncestors });

@@ -9,7 +9,7 @@ import { useAwaitingUsers } from '../../../api/users/hooks';
 import AdminUserValidationTable from '../../components/admin/AdminUserValidationTable';
 
 const AdminStructureUsersValidationPage = ({ structure, loadingStruct }) => {
-  const { data: users, loading } = useAwaitingUsers({ structureId: structure._id || null });
+  const { data: users, loading } = useAwaitingUsers({ structureId: structure?._id || null });
   const accept = (user) => {
     const data = { targetUserId: user._id };
     Meteor.call('users.acceptAwaitingStructure', { ...data }, (err) => {
@@ -23,7 +23,7 @@ const AdminStructureUsersValidationPage = ({ structure, loadingStruct }) => {
 
   return (
     <AdminUserValidationTable
-      title={i18n.__('pages.AdminStructureUsersValidationPage.title', { structureName: structure.name || '' })}
+      title={i18n.__('pages.AdminStructureUsersValidationPage.title', { structureName: structure?.name || '' })}
       users={users}
       loading={loading || loadingStruct}
       columnsFields={columnsFields}
@@ -50,7 +50,7 @@ export default withTracker(() => {
   if (user.structure) {
     const subscription = Meteor.subscribe('structures.one');
     const loadingStruct = !subscription.ready();
-    const structure = loadingStruct ? {} : Structures.findOne(user.structure);
+    const structure = loadingStruct ? null : Structures.findOne(user.structure);
     return { loadingStruct, structure };
   }
   return { loadingStruct: true, structure: {} };
