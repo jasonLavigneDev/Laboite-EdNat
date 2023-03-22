@@ -4,7 +4,6 @@ import { Roles } from 'meteor/alanning:roles';
 import SimpleSchema from 'simpl-schema';
 import { _ } from 'meteor/underscore';
 import Structures from '../structures';
-import { getLabel } from '../../utils';
 import { unauthorized } from '../../lib/errors';
 
 export const getStructures = new ValidatedMethod({
@@ -12,22 +11,6 @@ export const getStructures = new ValidatedMethod({
   validate: null,
   run() {
     return Structures.find().fetch();
-  },
-});
-
-export const getOneStructure = new ValidatedMethod({
-  name: 'structures.getOneStructure',
-  validate: new SimpleSchema({
-    _id: {
-      type: String,
-      optional: true,
-      regEx: SimpleSchema.RegEx.Id,
-      label: getLabel('api.structures.labels.id'),
-    },
-  }).validator(),
-  run({ _id }) {
-    const user = Meteor.users.findOne({ _id: this.userId });
-    return Structures.findOne({ _id: _id || user.structure }, { fields: Structures.publicFields });
   },
 });
 
