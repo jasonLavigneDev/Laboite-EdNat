@@ -32,6 +32,7 @@ const SingleGroupPage = lazy(() => import('../pages/groups/SingleGroupPage'));
 const AddressBook = lazy(() => import('../pages/groups/AddressBook'));
 const EventsPage = lazy(() => import('../pages/groups/EventsPage'));
 const PollPage = lazy(() => import('../pages/groups/PollPage'));
+const FormsPage = lazy(() => import('../pages/groups/FormsPage'));
 const GroupArticlesPage = lazy(() => import('../pages/groups/GroupArticlesPage'));
 const ContactPage = lazy(() => import('../pages/system/Contact'));
 const ProfilePage = lazy(() => import('../pages/system/ProfilePage'));
@@ -155,6 +156,7 @@ function MainLayout({ appsettings, ready }) {
                       )}
                       {!disabledFeatures.groups && <Route exact path="/groups/:slug/events" component={EventsPage} />}
                       {!disabledFeatures.groups && <Route exact path="/groups/:slug/poll" component={PollPage} />}
+                      {!disabledFeatures.groups && <Route exact path="/groups/:slug/forms" component={FormsPage} />}
                       {!disabledFeatures.groups && (
                         <Route exact path="/groups/:slug/bookmarks" component={BookmarksPage} />
                       )}

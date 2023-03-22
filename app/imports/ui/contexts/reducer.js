@@ -48,6 +48,11 @@ const reducer = (state, action) => {
         ...newState,
         pollPage: { ...data },
       };
+    case 'formsPage':
+      return {
+        ...newState,
+        formsPage: { ...data },
+      };
     case 'addressBookPage':
       return {
         ...newState,

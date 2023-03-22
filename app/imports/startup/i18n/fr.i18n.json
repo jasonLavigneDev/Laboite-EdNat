@@ -1142,7 +1142,8 @@
       "filterGroup": "Afficher uniquement les groupes rejoints",
       "noGroup": "Il n'y a aucun groupe à afficher.",
       "addEvent": "Ajouer un nouvel événement",
-      "addPoll": "Ajouter un nouveau sondage"
+      "addPoll": "Ajouter un nouveau sondage",
+      "addForm": "Ajouter un nouveau questionnaire"
     },
     "AdminHome": {
       "title": "Interface d'administration",
@@ -1403,6 +1404,8 @@
       "Events": "Evénements",
       "PollUsage": "Liste des sondages",
       "Polls": "Sondages",
+      "FormUsage": "Liste des questionnaires",
+      "Forms": "Questionnaires",
       "groupArticles": "Accéder aux publications",
       "BookmarksUsage": "Liste des marque-pages",
       "Bookmarks": "Marque-pages",
@@ -1443,6 +1446,15 @@
       "searchText": "Quel sondage cherchez-vous ?",
       "noPoll": "Il n'y a actuellement aucun sondage en cours ou à venir pour ce groupe.",
       "noAccess": "Vous n'avez pas accès aux sondages de ce groupe."
+    },
+    "Forms": {
+      "seeForm": "Répondre au formulaire",
+      "seeFormForEdit": "Modifier vos réponses au formulaire",
+      "blockForm": "Vous avez déjà répondu à ce formulaire, et vous ne pouvez pas changer les réponses",
+      "back": "Retour au groupe",
+      "searchText": "Quel questionnaire cherchez-vous ?",
+      "noForm": "Il n'y a actuellement aucun questionnaire en cours pour ce groupe.",
+      "noAccess": "Vous n'avez pas accès aux questionnaires de ce groupe."
     },
     "ArticlesPage": {
       "title": "Vos publications",

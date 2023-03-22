@@ -8,13 +8,14 @@ import Grid from '@mui/material/Grid';
 import Pagination from '@mui/material/Pagination';
 import SearchField from '../../components/system/SearchField';
 
-const GroupListActions = ({ url, title }) => {
+const GroupListActions = ({ url, title, disable }) => {
   return (
     <ListItemSecondaryAction>
       <Tooltip title={title} aria-label="add">
         <IconButton
           edge="end"
           aria-label="comments"
+          disabled={disable}
           onClick={() => window.open(url, '_blank', 'noreferrer,noopener')}
           size="large"
         >
@@ -25,9 +26,14 @@ const GroupListActions = ({ url, title }) => {
   );
 };
 
+GroupListActions.defaultProps = {
+  disable: false,
+};
+
 GroupListActions.propTypes = {
   url: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
+  disable: PropTypes.bool,
 };
 
 const GroupSearch = ({ update, reset, search, label }) => {

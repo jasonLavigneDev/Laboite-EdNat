@@ -64,6 +64,7 @@
       "sondagesUrl": "",
       "mezigUrl": "",
       "laboiteBlogURL": "",
+      "questionnaireURL": ""
     }
   },
   "keycloak": {

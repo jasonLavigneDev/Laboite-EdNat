@@ -21,6 +21,7 @@ import WatchLaterIcon from '@mui/icons-material/WatchLater';
 import PeopleIcon from '@mui/icons-material/People';
 import TodayIcon from '@mui/icons-material/Today';
 import PollIcon from '@mui/icons-material/Poll';
+import ListAltIcon from '@mui/icons-material/ListAlt';
 import LockIcon from '@mui/icons-material/Lock';
 import BookmarksIcon from '@mui/icons-material/Bookmarks';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -45,6 +46,7 @@ import { countMembersOfGroup } from '../../../api/groups/methods';
 import COMMON_STYLES from '../../themes/styles';
 import { getGroupName } from '../../utils/utilsFuncs';
 import { testUrl } from '../../../api/utils';
+import Forms from '../../../api/forms/forms';
 
 const useStyles = makeStyles()((theme, { member, candidate, type }) => ({
   root: {
@@ -162,7 +164,7 @@ const useStyles = makeStyles()((theme, { member, candidate, type }) => ({
   },
 }));
 
-const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks, articles }) => {
+const SingleGroupPage = ({ group = {}, ready, services, polls, forms, events, bookmarks, articles }) => {
   const { type } = group;
   const [{ userId, user }] = useAppContext();
   const [loading, setLoading] = useState(false);
@@ -560,6 +562,17 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
                 url={`/groups/${group.slug}/poll`}
               />
               <AppCard
+                id="forms"
+                usage={i18n.__('pages.SingleGroupPage.FormUsage')}
+                logo={<ListAltIcon className={classes.icon} color="primary" fontSize="large" />}
+                title={
+                  forms === undefined
+                    ? `${i18n.__('pages.SingleGroupPage.Forms')}`
+                    : `${i18n.__('pages.SingleGroupPage.Forms')} (${forms})`
+                }
+                url={`/groups/${group.slug}/forms`}
+              />
+              <AppCard
                 id="bookmarks"
                 usage={i18n.__('pages.SingleGroupPage.BookmarksUsage')}
                 logo={<BookmarksIcon className={classes.icon} color="primary" fontSize="large" />}
@@ -617,6 +630,7 @@ export default withTracker(
     const subGroup = Meteor.subscribe('groups.single', { slug });
     const group = Groups.findOne({ slug }) || {};
     const polls = Polls.find({}).count();
+    const forms = Forms.find({}).count();
     const bookmarks = Bookmarks.find({}).count();
     const events = EventsAgenda.find({}).count();
     const articles = Articles.find({}).count();
@@ -630,6 +644,7 @@ export default withTracker(
       ready,
       services,
       polls,
+      forms,
       bookmarks,
       events,
       articles,
@@ -641,6 +656,7 @@ SingleGroupPage.defaultProps = {
   group: {},
   services: [],
   polls: undefined,
+  forms: undefined,
   bookmarks: undefined,
   events: undefined,
   articles: undefined,
@@ -651,6 +667,7 @@ SingleGroupPage.propTypes = {
   ready: PropTypes.bool.isRequired,
   services: PropTypes.arrayOf(PropTypes.any),
   polls: PropTypes.number,
+  forms: PropTypes.number,
   bookmarks: PropTypes.number,
   events: PropTypes.number,
   articles: PropTypes.number,
