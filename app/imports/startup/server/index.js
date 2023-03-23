@@ -46,6 +46,7 @@ Meteor.startup(() => {
   if (Meteor.settings.public.matomo?.urlBase) scriptSrcs.push(Meteor.settings.public.matomo.urlBase);
   const imgSrcs = ['*', 'data:', 'blob:'];
   if (Meteor.settings.public.minioEndPoint) imgSrcs.push(`https://${Meteor.settings.public.minioEndPoint}`);
+  const frameAncestors = Meteor.settings.private?.cspFrameAncestors || ["'self'"];
   WebApp.connectHandlers.use(helmet());
   WebApp.connectHandlers.use(
     helmet.contentSecurityPolicy({
@@ -56,6 +57,7 @@ Meteor.startup(() => {
         imgSrc: imgSrcs,
         mediaSrc: imgSrcs,
         styleSrc: ["'self'", "'unsafe-inline'"],
+        frameAncestors,
       },
     }),
   );
