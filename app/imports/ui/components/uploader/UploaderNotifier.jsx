@@ -116,9 +116,13 @@ const SingleNotification = ({ upload }) => {
           setLoading(false);
           onFinish(url);
         } else if (err) {
+          let errMessage = err.reason || err.message;
+          if (err.error === 'validation-error') {
+            errMessage = err.details[0].message;
+          }
           setError({
             title: i18n.__('components.UploaderNotifier.errorTitle'),
-            message: err.reason,
+            message: errMessage,
           });
           onFinish(url, err);
         }
