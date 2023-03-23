@@ -181,11 +181,6 @@ Meteor.users.schema = new SimpleSchema(
       },
       label: getLabel('api.users.labels.ncloud'),
     },
-    nctoken: {
-      type: String,
-      optional: true,
-      label: getLabel('api.users.labels.ncloudToken'),
-    },
     articlesEnable: {
       type: Boolean,
       optional: true,
