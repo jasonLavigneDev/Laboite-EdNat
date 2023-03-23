@@ -5,9 +5,12 @@ import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { Roles } from 'meteor/alanning:roles';
 import i18n from 'meteor/universe:i18n';
-import { isActive, getLabel } from '../utils';
+import sanitizeHtml from 'sanitize-html';
+import { isActive, getLabel, validateString } from '../utils';
 import Groups from './groups';
 import { addGroup, removeElement } from '../personalspaces/methods';
+
+const reservedGroupNames = ['admins', 'adminStructure'];
 
 export const favGroup = new ValidatedMethod({
   name: 'groups.favGroup',
@@ -95,9 +98,11 @@ export const findGroups = new ValidatedMethod({
     groupId: {
       type: String,
       optional: true,
+      regEx: SimpleSchema.RegEx.Id,
     },
   }).validator({ clean: true }),
   run({ page, pageSize, sortColumn, sortOrder, groupId }) {
+    validateString(sortColumn, true);
     const isAdmin = Roles.userIsInRole(this.userId, 'admin');
     const user = Meteor.users.findOne({ _id: this.userId });
     // calculate number of entries to skip
@@ -187,7 +192,15 @@ export const createGroup = new ValidatedMethod({
     if (!isActive(this.userId)) {
       throw new Meteor.Error('api.groups.createGroup.notLoggedIn', i18n.__('api.users.mustBeLoggedIn'));
     }
-    return _createGroup({ name, type, content, description, plugins, avatar, userId: this.userId });
+    if (reservedGroupNames.includes(name)) {
+      throw new Meteor.Error('api.groups.createGroup.notPermitted', i18n.__('api.groups.groupAlreadyExist'));
+    }
+    validateString(name);
+    validateString(description);
+    validateString(avatar);
+    const sanitizedContent = sanitizeHtml(content);
+    validateString(sanitizedContent);
+    return _createGroup({ name, type, content: sanitizedContent, description, plugins, avatar, userId: this.userId });
   },
 });
 
@@ -291,14 +304,24 @@ export const updateGroup = new ValidatedMethod({
     if (!authorized) {
       throw new Meteor.Error('api.groups.updateGroup.notPermitted', i18n.__('api.groups.adminGroupNeeded'));
     }
+    if (reservedGroupNames.includes(data.name)) {
+      throw new Meteor.Error('api.groups.updateGroup.notPermitted', i18n.__('api.groups.groupAlreadyExist'));
+    }
+    if (data.name) validateString(data.name);
+    if (data.description) validateString(data.description);
+    if (data.avatar) validateString(data.avatar);
+    if (data.groupPadId) validateString(data.groupPadId);
+    if (data.digest) validateString(data.digest);
+    const sanitizedContent = sanitizeHtml(data.content);
+    validateString(sanitizedContent);
     let groupData = {};
     if (!Roles.userIsInRole(this.userId, 'admin', groupId)) {
       // animator can only update description and content
       if (data.description) groupData.description = data.description;
-      if (data.content) groupData.content = data.content;
+      if (data.content) groupData.content = sanitizedContent;
       if (data.avatar) groupData.avatar = data.avatar;
     } else {
-      groupData = { ...data };
+      groupData = { ...data, content: sanitizedContent };
     }
     return _updateGroup(groupId, groupData, group);
   },

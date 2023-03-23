@@ -7,7 +7,7 @@ import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { Roles } from 'meteor/alanning:roles';
 
-import { isActive, getLabel } from '../../utils';
+import { isActive, getLabel, validateString } from '../../utils';
 import Groups from '../../groups/groups';
 // initialize Meteor.users customizations
 import AppRoles from '../users';
@@ -622,7 +622,7 @@ export function AddUserToGroupOfStructure(currentUserId, user, structure) {
 export const acceptAwaitingStructure = new ValidatedMethod({
   name: 'users.acceptAwaitingStructure',
   validate: new SimpleSchema({
-    targetUserId: { type: SimpleSchema.RegEx.Id, label: getLabel('api.users.labels.id') },
+    targetUserId: validateSchema.userId,
   }).validator(),
   run({ targetUserId }) {
     // check that user is logged in
@@ -952,6 +952,7 @@ export const setLanguage = new ValidatedMethod({
     if (!this.userId) {
       throw new Meteor.Error('api.users.setLanguage.notPermitted', i18n.__('api.users.mustBeLoggedIn'));
     }
+    validateString(language, true);
     Meteor.users.update(this.userId, {
       $set: { language },
     });
@@ -968,6 +969,7 @@ export const setLogoutType = new ValidatedMethod({
     if (!this.userId) {
       throw new Meteor.Error('api.users.setLogoutType.notPermitted', i18n.__('api.users.mustBeLoggedIn'));
     }
+    validateString(logoutType, true);
     Meteor.users.update(this.userId, {
       $set: { logoutType },
     });
@@ -987,6 +989,7 @@ export const setAvatar = new ValidatedMethod({
     if (!this.userId) {
       throw new Meteor.Error('api.users.setAvatar.notPermitted', i18n.__('api.users.mustBeLoggedIn'));
     }
+    validateString(avatar);
     Meteor.users.update(this.userId, {
       $set: { avatar },
     });
@@ -1055,7 +1058,7 @@ export const setQuota = new ValidatedMethod({
   name: 'users.setQuota',
   validate: new SimpleSchema({
     quota: { type: Number },
-    userId: { type: String },
+    userId: validateSchema.userId,
   }).validator(),
 
   run({ quota, userId }) {

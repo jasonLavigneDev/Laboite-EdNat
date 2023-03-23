@@ -5,7 +5,7 @@ import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import i18n from 'meteor/universe:i18n';
 
-import { isActive } from '../utils';
+import { isActive, validateString } from '../utils';
 import PersonalSpaces from './personalspaces';
 import Groups from '../groups/groups';
 import Services from '../services/services';
@@ -124,6 +124,22 @@ export const addUserBookmark = new ValidatedMethod({
   },
 });
 
+export const checkPersonalSpaceData = (data) => {
+  const checkElement = (element) => {
+    if (element.title) validateString(element.title);
+    if (element.url) validateString(element.url);
+  };
+  if (data.unsorted) {
+    data.unsorted.forEach((elem) => checkElement(elem));
+  }
+  if (data.sorted) {
+    data.sorted.forEach((zone) => {
+      validateString(zone.name);
+      zone.elements.forEach((elem) => checkElement(elem));
+    });
+  }
+};
+
 export const updatePersonalSpace = new ValidatedMethod({
   name: 'personalspaces.updatePersonalSpace',
   validate: new SimpleSchema({
@@ -135,6 +151,7 @@ export const updatePersonalSpace = new ValidatedMethod({
     if (!isActive(this.userId)) {
       throw new Meteor.Error('api.personalspaces.updatePersonalSpace.notPermitted', i18n.__('api.users.notPermitted'));
     }
+    checkPersonalSpaceData(data);
     const currentPersonalSpace = PersonalSpaces.findOne({ userId: this.userId });
     if (currentPersonalSpace === undefined) {
       // create personalSpace if not existing

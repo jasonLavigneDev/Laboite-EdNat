@@ -60,11 +60,13 @@ describe('businessReGrouping', function () {
     let businessReGroupingId;
     let chatData;
     let chatData2;
+    let structureId;
     beforeEach(function () {
       // Clear
       Meteor.users.remove({});
-      // FIXME : find a way to reset roles collection ?
-      Roles.createRole('admin', { unlessExists: true });
+      Meteor.roles.remove({});
+      Roles.createRole('admin');
+      BusinessReGrouping.remove({});
       // Generate 'users'
       const email = faker.internet.email();
       userId = Accounts.createUser({
@@ -89,13 +91,14 @@ describe('businessReGrouping', function () {
       // set users as active
       Meteor.users.update({}, { $set: { isActive: true } }, { multi: true });
       businessReGroupingId = Factory.create('businessReGrouping')._id;
+      structureId = Random.id();
       chatData = {
         name: 'businessReGroupingName',
-        structure: 'businessReGroupingStructure',
+        structure: structureId,
       };
       chatData2 = {
         name: 'businessReGroupingName2',
-        structure: 'businessReGroupingStructure2',
+        structure: Random.id(),
       };
     });
     describe('createBusinessReGrouping', function () {
@@ -123,6 +126,7 @@ describe('businessReGrouping', function () {
       });
       it('does not create a business reGrouping if name already use', function () {
         // Throws if non admin user, or logged out user, tries to create a businessReGrouping
+        createBusinessReGrouping._execute({ userId: adminId }, chatData);
         assert.throws(
           () => {
             createBusinessReGrouping._execute({ userId: adminId }, chatData);
@@ -134,10 +138,7 @@ describe('businessReGrouping', function () {
     });
     describe('removeBusinessReGrouping', function () {
       it('does delete a business reGrouping with admin user', function () {
-        removeBusinessReGrouping._execute(
-          { userId: adminId },
-          { businessReGroupingId, structure: 'businessReGroupingStructure' },
-        );
+        removeBusinessReGrouping._execute({ userId: adminId }, { businessReGroupingId, structure: structureId });
         assert.equal(BusinessReGrouping.findOne(businessReGroupingId), undefined);
       });
       it('does remove the business reGrouping from a service', function () {
@@ -145,10 +146,7 @@ describe('businessReGrouping', function () {
           title: 'test',
           businessReGrouping: [businessReGroupingId],
         })._id;
-        removeBusinessReGrouping._execute(
-          { userId: adminId },
-          { businessReGroupingId, structure: 'businessReGroupingStructure' },
-        );
+        removeBusinessReGrouping._execute({ userId: adminId }, { businessReGroupingId, structure: structureId });
         assert.equal(BusinessReGrouping.findOne(businessReGroupingId), undefined);
         assert.equal(Services.findOne(oneServiceId).businessReGrouping.length, 0);
       });
@@ -156,17 +154,14 @@ describe('businessReGrouping', function () {
         // Throws if non admin user, or logged out user, tries to delete the businessReGrouping
         assert.throws(
           () => {
-            removeBusinessReGrouping._execute(
-              { userId },
-              { businessReGroupingId, structure: 'businessReGroupingStructure' },
-            );
+            removeBusinessReGrouping._execute({ userId }, { businessReGroupingId, structure: structureId });
           },
           Meteor.Error,
           /api.businessReGrouping.removeBusinessReGrouping.notPermitted/,
         );
         assert.throws(
           () => {
-            removeBusinessReGrouping._execute({}, { businessReGroupingId, structure: 'businessReGroupingStructure' });
+            removeBusinessReGrouping._execute({}, { businessReGroupingId, structure: structureId });
           },
           Meteor.Error,
           /api.businessReGrouping.removeBusinessReGrouping.notPermitted/,
@@ -177,7 +172,7 @@ describe('businessReGrouping', function () {
       it('does update a business reGrouping with admin user', function () {
         const data = {
           name: 'businessReGrouping',
-          structure: 'businessReGroupingStructure',
+          structure: structureId,
         };
         updateBusinessReGrouping._execute({ userId: adminId }, { businessReGroupingId, data });
         const businessReGrouping = BusinessReGrouping.findOne(businessReGroupingId);
@@ -189,7 +184,7 @@ describe('businessReGrouping', function () {
           () => {
             updateBusinessReGrouping._execute(
               { userId },
-              { businessReGroupingId, data: { name: 'businessReGrouping', structure: 'businessReGroupingStructure' } },
+              { businessReGroupingId, data: { name: 'businessReGrouping', structure: structureId } },
             );
           },
           Meteor.Error,
@@ -199,7 +194,7 @@ describe('businessReGrouping', function () {
           () => {
             updateBusinessReGrouping._execute(
               {},
-              { businessReGroupingId, data: { name: 'businessReGrouping', structure: 'businessReGroupingStructure' } },
+              { businessReGroupingId, data: { name: 'businessReGrouping', structure: structureId } },
             );
           },
           Meteor.Error,

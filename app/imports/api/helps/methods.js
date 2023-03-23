@@ -6,8 +6,15 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import i18n from 'meteor/universe:i18n';
 import { Roles } from 'meteor/alanning:roles';
 
-import { isActive, getLabel } from '../utils';
+import { isActive, getLabel, validateString } from '../utils';
 import Helps from './helps';
+
+const validateHelp = (data) => {
+  validateString(data.title);
+  if (data.description) validateString(data.description);
+  validateString(data.content);
+  validateString(data.category);
+};
 
 export const createHelp = new ValidatedMethod({
   name: 'tags.createHelp',
@@ -18,6 +25,7 @@ export const createHelp = new ValidatedMethod({
     if (!authorized) {
       throw new Meteor.Error('api.helps.createHelp.notPermitted', i18n.__('api.users.notPermitted'));
     }
+    validateHelp(data);
     return Helps.insert(data);
   },
 });
@@ -63,6 +71,7 @@ export const updateHelp = new ValidatedMethod({
     if (!authorized) {
       throw new Meteor.Error('api.helps.updateHelp.notPermitted', i18n.__('api.users.notPermitted'));
     }
+    validateHelp(data);
     return Helps.update({ _id: helpId }, { $set: data });
   },
 });
