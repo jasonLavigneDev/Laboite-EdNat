@@ -2,18 +2,13 @@ import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Meteor } from 'meteor/meteor';
 import { makeStyles } from 'tss-react/mui';
-import Container from '@mui/material/Container';
-import FilterListIcon from '@mui/icons-material/FilterList';
-import ClearIcon from '@mui/icons-material/Clear';
-import ToggleButton from '@mui/material/ToggleButton';
-import RadioButtonUncheckedRoundedIcon from '@mui/icons-material/RadioButtonUncheckedRounded';
-import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
-
-import CloseIcon from '@mui/icons-material/Close';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import Grid from '@mui/material/Grid';
 import i18n from 'meteor/universe:i18n';
 import { withTracker } from 'meteor/react-meteor-data';
+
+import Container from '@mui/material/Container';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Chip from '@mui/material/Chip';
 import Fade from '@mui/material/Fade';
@@ -29,6 +24,14 @@ import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
 import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
 import Tooltip from '@mui/material/Tooltip';
+
+import FilterListIcon from '@mui/icons-material/FilterList';
+import ClearIcon from '@mui/icons-material/Clear';
+import RadioButtonUncheckedRoundedIcon from '@mui/icons-material/RadioButtonUncheckedRounded';
+import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
+import CloseIcon from '@mui/icons-material/Close';
+
+import GroupAvatar from '../../components/groups/GroupAvatar';
 import ServiceDetails from '../../components/services/ServiceDetails';
 import ServiceDetailsList from '../../components/services/ServiceDetailsList';
 import Services from '../../../api/services/services';
@@ -294,9 +297,18 @@ export function ServicesPage({ services, categories, businessRegroupings, ready,
           <Container>
             <Grid container spacing={4}>
               <Grid item xs={12} className={isMobile ? null : classes.flex}>
-                <Typography variant={isMobile ? 'h6' : 'h4'} className={classes.flex}>
-                  {i18n.__(structureMode ? structure && structure.name : 'pages.ServicesPage.titleServices')}
-                </Typography>
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'flex-start',
+                  }}
+                >
+                  {structureMode && <GroupAvatar type={15} />}
+                  <Typography variant={isMobile ? 'h6' : 'h4'} sx={{ paddingLeft: '1vw' }}>
+                    {i18n.__(structureMode ? structure && structure.name : 'pages.ServicesPage.titleServices')}
+                  </Typography>
+                </div>
                 <div className={classes.spaceBetween}>{!isMobile && toggleButtons}</div>
               </Grid>
               {isMobile ? (
