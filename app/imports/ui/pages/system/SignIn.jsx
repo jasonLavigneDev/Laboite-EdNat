@@ -97,8 +97,8 @@ function SignIn({ loggingIn, introduction, appsettings, ready }) {
     });
     checkRememberMe();
     if (
-      (isIframed && Meteor.settings.public.keycloackLoginStyleIframe) ||
-      (!isIframed && Meteor.settings.public.keycloackLoginStyle)
+      (isIframed && Meteor.settings.public.keycloackPopupStyleIframe) ||
+      (!isIframed && Meteor.settings.public.keycloackPopupStyle)
     ) {
       keycloackLoginStyle = 'popup';
     }
