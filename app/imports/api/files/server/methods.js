@@ -13,6 +13,7 @@ import logServer from '../../logging';
 import Services from '../../services/services';
 import { hasAdminRightOnStructure } from '../../structures/utils';
 import Structures from '../../structures/structures';
+import { NOTIFICATIONS_TYPES, SCOPE_TYPES } from '../../notifications/enums';
 
 const { minioEndPoint, minioBucket, minioPort } = Meteor.settings.public;
 
@@ -276,7 +277,19 @@ export const moveFiles = new ValidatedMethod({
               `Error copying ${newFile} from ${minioBucket}/${sourcePath}/${newFile} to ${destinationPath}/${newFile}`,
               'error',
             );
-            logServer(err, 'error');
+            // logServer(err, 'error');
+            logServer(
+              `FILES - METHODS - moveFiles, 
+              Error copying ${newFile} from ${minioBucket}/${sourcePath}/${newFile} to ${destinationPath}/${newFile}`,
+              NOTIFICATIONS_TYPES.ERROR,
+              SCOPE_TYPES.SYSTEM,
+              {
+                sourcePath,
+                destinationPath,
+                files,
+                err,
+              },
+            );
           }
         },
       );
@@ -308,7 +321,18 @@ export const rename = new ValidatedMethod({
       s3Client.removeObject(minioBucket, `${path}/${oldName}`);
       if (err) {
         logServer(`Error renaming ${minioBucket}/${path}/${oldName} to ${path}/${newName}`, 'error');
-        logServer(err, 'error');
+        // logServer(err, 'error');
+        logServer(
+          `FILES - METHODS - rename, Error renaming ${minioBucket}/${path}/${oldName} to ${path}/${newName}`,
+          NOTIFICATIONS_TYPES.ERROR,
+          SCOPE_TYPES.SYSTEM,
+          {
+            path,
+            oldName,
+            newName,
+            err,
+          },
+        );
       }
     });
   },

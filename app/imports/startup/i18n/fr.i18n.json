@@ -347,7 +347,7 @@
       "removeAdminStructureError": "Keycloak : ERROR lors de la suppression de l'utilisateur {$userId} comme admin de structure`",
       "userNotFound": "Keycloak: Id de l'utilisateur {$userId} introuvable",
       "userGroupAdded": "Keycloak: groupe {$groupName} ajouté à l'utilisateur {$userId}",
-      "userGroupAddError": "Keycloak : ERREUR lors de l'ajout du groupe {$groupName} à l'utilisateur {$userId}",
+      "userGroupAddError": "Keycloak : ERREUR lors de l'ajout du groupe \"{$groupName}\" à l'utilisateur \"{$userId}\"",
       "userGroupRemoved": "Keycloak: groupe {$groupName} supprimé pour l'utilisateur {$userId}",
       "userGroupRemoveError": "Keycloak : ERREUR lors de la suppression du groupe {$groupName} pour l'utilisateur {$userId}"
     },

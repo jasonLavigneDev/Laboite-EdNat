@@ -4,6 +4,7 @@ import EventsAgenda from '../eventsAgenda';
 import { checkPaginationParams, isActive } from '../../utils';
 import logServer from '../../logging';
 import Groups from '../../groups/groups';
+import { NOTIFICATIONS_TYPES, SCOPE_TYPES } from '../../notifications/enums';
 
 // build query for all users from group
 const queryGroupEvents = ({ search, group }) => {
@@ -45,7 +46,18 @@ FindFromPublication.publish('groups.events', function groupsEvents({ page, searc
   try {
     checkPaginationParams.validate({ page, itemPerPage, search });
   } catch (err) {
-    logServer(`publish groups.events : ${err}`);
+    // logServer(`publish groups.events : ${err}`);
+    logServer(
+      `EVENTSAGENDA - PUBLICATION - groups.events, publish groups.events : ${err}`,
+      NOTIFICATIONS_TYPES.ERROR,
+      SCOPE_TYPES.SYSTEM,
+      {
+        page,
+        search,
+        slug,
+        itemPerPage,
+      },
+    );
     this.error(err);
   }
   const group = Groups.findOne(

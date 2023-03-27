@@ -9,6 +9,7 @@ import sanitizeHtml from 'sanitize-html';
 import { isActive, getLabel, validateString } from '../utils';
 import Groups from './groups';
 import { addGroup, removeElement } from '../personalspaces/methods';
+import logServer, { levels, scopes } from '../logging';
 
 const reservedGroupNames = ['admins', 'adminStructure'];
 
@@ -40,6 +41,7 @@ export const favGroup = new ValidatedMethod({
     }
     // update user personalSpace
     addGroup._execute({ userId: this.userId }, { groupId });
+    logServer(`GROUPS - favGroup - User ${this.userId} add favGroup ${groupId} `, levels.VERBOSE, scopes.USER);
   },
 });
 
@@ -62,6 +64,7 @@ export const unfavGroup = new ValidatedMethod({
     }
     // update user personalSpace
     removeElement._execute({ userId: this.userId }, { type: 'group', elementId: groupId });
+    logServer(`GROUPS - unFavGroup -User ${this.userId} unFavGroup ${groupId}`, levels.VERBOSE, scopes.USER);
   },
 });
 
@@ -143,6 +146,7 @@ export function _createGroup({ name, type, content, description, avatar, plugins
       Roles.addUsersToRoles(userId, ['admin', 'animator'], groupId);
 
       favGroup._execute({ userId }, { groupId });
+      logServer(`GROUPS - createGroup - User ${userId} create group ${groupId}`, levels.VERBOSE, scopes.USER);
 
       if (type !== 15) {
         user.groupCount += 1;
@@ -172,6 +176,9 @@ export function _createGroup({ name, type, content, description, avatar, plugins
     if (error.code === 11000) {
       throw new Meteor.Error('api.groups.createGroup.duplicateName', i18n.__('api.groups.groupAlreadyExist'));
     } else {
+      logServer(`GROUPS - createGroup - fail when user ${userId} create group`, levels.WARN, scopes.SYSTEM, {
+        errorMessage: error.message,
+      });
       throw error;
     }
   }
@@ -238,6 +245,7 @@ export function _removeGroup({ groupId, userId }) {
   Groups.remove(groupId);
   // remove from users favorite groups
   Meteor.users.update({ favGroups: { $all: [groupId] } }, { $pull: { favGroups: groupId } }, { multi: true });
+  logServer(`GROUPS - user ${userId} remove group ${groupId}`, levels.VERBOSE, scopes.USER);
   return null;
 }
 
@@ -256,11 +264,15 @@ function _updateGroup(groupId, groupData, oldGroup) {
   try {
     Groups.update({ _id: groupId }, { $set: groupData });
     // return both old and new data to allow plugins to detect changes in 'after' hook
+    logServer(`GROUPS - user update group ${groupId}`, levels.VERBOSE, scopes.USER);
     return [groupData, oldGroup];
   } catch (error) {
     if (error.code === 11000) {
       throw new Meteor.Error('api.groups.updateGroup.duplicateName', i18n.__('api.groups.groupAlreadyExist'));
     } else {
+      logServer(`GROUPS - updateGroup - error when user updateGroup`, levels.WARN, scopes.SYSTEM, {
+        errorMEssage: error.message,
+      });
       throw error;
     }
   }

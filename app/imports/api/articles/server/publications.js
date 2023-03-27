@@ -8,6 +8,7 @@ import Tags from '../../tags/tags';
 import { checkPaginationParams, getLabel, isActive } from '../../utils';
 import Articles from '../articles';
 import Groups from '../../groups/groups';
+import { NOTIFICATIONS_TYPES, SCOPE_TYPES } from '../../notifications/enums';
 
 // build query for all articles
 const queryAllArticles = ({ nodrafts, search, userId }) => {
@@ -56,7 +57,19 @@ FindFromPublication.publish(
         .extend(checkPaginationParams)
         .validate({ page, itemPerPage, userId, search });
     } catch (err) {
-      logServer(`publish articles.all : ${err}`);
+      // logServer(`publish articles.all : ${err}`);
+      logServer(
+        `ARTICLES - PUBLICATION - articles.all,publish articles.all : ${err}`,
+        NOTIFICATIONS_TYPES.ERROR,
+        SCOPE_TYPES.SYSTEM,
+        {
+          nodrafts,
+          page,
+          search,
+          itemPerPage,
+          userId,
+        },
+      );
       this.error(err);
     }
 
@@ -86,7 +99,14 @@ FindFromPublication.publish('articles.one.admin', ({ slug }) => {
       },
     }).validate({ slug });
   } catch (err) {
-    logServer(`publish articles.one : ${err}`);
+    // logServer(`publish articles.one : ${err}`);
+    logServer(
+      `ARTICLES - PUBLICATION - articles.one.admin,publish articles.one : ${err}`,
+      NOTIFICATIONS_TYPES.ERROR,
+      SCOPE_TYPES.SYSTEM,
+      { slug },
+    );
+
     this.error(err);
   }
   return Articles.find(
@@ -108,7 +128,14 @@ publishComposite('articles.one', ({ slug }) => {
       },
     }).validate({ slug });
   } catch (err) {
-    logServer(`publish articles.one : ${err}`);
+    // logServer(`publish articles.one : ${err}`);
+    logServer(
+      `ARTICLES - PUBLICATION - articles.one,publish articles.one : ${err}`,
+      NOTIFICATIONS_TYPES.ERROR,
+      SCOPE_TYPES.SYSTEM,
+      { slug },
+    );
+
     this.error(err);
   }
   return {
@@ -174,7 +201,19 @@ FindFromPublication.publish('groups.articles', function groupsArticles({ page, s
   try {
     checkPaginationParams.validate({ page, itemPerPage, search });
   } catch (err) {
-    logServer(`publish groups.articles : ${err}`);
+    // logServer(`publish groups.articles : ${err}`);
+    logServer(
+      `ARTICLES - PUBLICATION - groups.articles,publish groups.articles : ${err}`,
+      NOTIFICATIONS_TYPES.ERROR,
+      SCOPE_TYPES.SYSTEM,
+      {
+        page,
+        search,
+        slug,
+        itemPerPage,
+      },
+    );
+
     this.error(err);
   }
   const group = Groups.findOne(

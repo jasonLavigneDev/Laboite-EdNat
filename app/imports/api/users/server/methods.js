@@ -25,11 +25,18 @@ import {
   hasRightToAcceptAwaitingStructure,
   hasRightToSetStructureDirectly,
 } from '../../structures/utils';
+import { NOTIFICATIONS_TYPES, SCOPE_TYPES } from '../../notifications/enums';
 
 if (Meteor.settings.private) {
   const { whiteDomains } = Meteor.settings.private;
   if (!!whiteDomains && whiteDomains.length > 0) {
-    logServer(i18n.__('api.users.logWhiteDomains', { domains: JSON.stringify(whiteDomains) }));
+    // logServer(i18n.__('api.users.logWhiteDomains', { domains: JSON.stringify(whiteDomains) }));
+    logServer(
+      `USERS - METHODS - ${i18n.__('api.users.logWhiteDomains', { domains: JSON.stringify(whiteDomains) })}`,
+      NOTIFICATIONS_TYPES.INFO,
+      SCOPE_TYPES.SYSTEM,
+      {},
+    );
   }
 }
 
@@ -1188,10 +1195,22 @@ export const fixUsers = new ValidatedMethod({
         }
         if (!user.nclocator) updateInfos.nclocator = getRandomNCloudURL();
         Meteor.users.update({ _id: user._id }, { $set: updateInfos });
-        logServer(`- fixed user ${updateInfos.username} (email:${updateInfos.primaryEmail})`);
+        // logServer(`- fixed user ${updateInfos.username} (email:${updateInfos.primaryEmail})`);
+        logServer(
+          `USERS - METHODS - fixed user ${updateInfos.username} (email:${updateInfos.primaryEmail})`,
+          NOTIFICATIONS_TYPES.ERROR,
+          SCOPE_TYPES.SYSTEM,
+          {},
+        );
         fixedCount += 1;
       } else {
-        logServer(`- could not fix user '${user._id}', no keycloak data available`);
+        // logServer(`- could not fix user '${user._id}', no keycloak data available`);
+        logServer(
+          `USERS - METHODS - could not fix user '${user._id}', no keycloak data available`,
+          NOTIFICATIONS_TYPES.ERROR,
+          SCOPE_TYPES.SYSTEM,
+          {},
+        );
       }
     });
     return fixedCount;

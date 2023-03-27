@@ -12,6 +12,7 @@ import Services from '../services/services';
 import logServer from '../logging';
 import UserBookmarks from '../userBookmarks/userBookmarks';
 import DefaultSpaces from '../defaultspaces/defaultspaces';
+import { NOTIFICATIONS_TYPES, SCOPE_TYPES } from '../notifications/enums';
 
 export const addItem = (userId, item) => {
   const currentPersonalSpace = PersonalSpaces.findOne({ userId });
@@ -179,7 +180,13 @@ export const checkPersonalSpace = new ValidatedMethod({
     );
     if (currentPersonalSpace === undefined) {
       if (u.favServices && u.favGroups && u.favUserBookmarks) {
-        logServer(`Regen Personalspace (not found) for ${u.username}...`);
+        // logServer(`Regen Personalspace (not found) for ${u.username}...`);
+        logServer(
+          `PERSONALSPACES - METHODS - checkPersonalSpace, Regen Personalspace (not found) for ${u.username}...`,
+          NOTIFICATIONS_TYPES.ERROR,
+          SCOPE_TYPES.SYSTEM,
+          { u },
+        );
         const unsorted = [];
         u.favServices.forEach((s) => {
           unsorted.push({
@@ -261,7 +268,10 @@ export const checkPersonalSpace = new ValidatedMethod({
     if (changeMade) {
       updatePersonalSpace._execute({ userId: this.userId }, { data: currentPersonalSpace }, (err) => {
         if (err) {
-          logServer(err.reason, 'error');
+          // logServer(err.reason, 'error');
+          logServer(`PERSONALSPACES - METHODS - checkPersonalSpace`, NOTIFICATIONS_TYPES.ERROR, SCOPE_TYPES.SYSTEM, {
+            error: err.reason,
+          });
         }
       });
     }

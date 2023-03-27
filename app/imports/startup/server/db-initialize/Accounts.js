@@ -10,6 +10,7 @@ import AppRoles from '../../../api/users/users';
 import { getStructureIds } from '../../../api/users/structures';
 import fakeData from './fakeData.json';
 import { testMeteorSettingsUrl } from '../../../ui/utils/utilsFuncs';
+import { NOTIFICATIONS_TYPES, SCOPE_TYPES } from '../../../api/notifications/enums';
 
 const accountConfig = {
   loginExpirationInDays: Meteor.settings.private.loginExpirationInDays || 1,
@@ -31,7 +32,13 @@ if (Meteor.settings.keycloak) {
     },
   );
 } else {
-  logServer('No Keycloak configuration. Please invoke meteor with a settings file.');
+  // logServer('No Keycloak configuration. Please invoke meteor with a settings file.');
+  logServer(
+    'STARTUP - ACCOUNTS , No Keycloak configuration. Please invoke meteor with a settings file.',
+    NOTIFICATIONS_TYPES.INFO,
+    SCOPE_TYPES.SYSTEM,
+    {},
+  );
 }
 Accounts.config({
   ...accountConfig,
@@ -40,7 +47,19 @@ Accounts.config({
 /* eslint-disable no-console */
 
 function createUser(email, password, role, structure, firstName, lastName) {
-  logServer(`  Creating user ${email}.`);
+  // logServer(`  Creating user ${email}.`);
+  logServer(
+    `STARTUP - ACCOUNTS , CreateUser -  Creating user ${email}.`,
+    NOTIFICATIONS_TYPES.INFO,
+    SCOPE_TYPES.SYSTEM,
+    {
+      email,
+      role,
+      structure,
+      firstName,
+      lastName,
+    },
+  );
   const userID = Accounts.createUser({
     username: email,
     email,
@@ -69,7 +88,8 @@ AppRoles.forEach((role) => {
 const NUMBER_OF_FAKE_USERS = 300;
 if (Meteor.users.find().count() === 0) {
   if (Meteor.settings.private.fillWithFakeData) {
-    logServer('Creating the default user(s)');
+    // logServer('Creating the default user(s)');
+    logServer(`STARTUP - ACCOUNTS Creating the default user(s)`, NOTIFICATIONS_TYPES.INFO, SCOPE_TYPES.SYSTEM, {});
     fakeData.defaultAccounts.map(({ email, password, role, structure, firstName, lastName }) =>
       createUser(email, password, role, structure, firstName, lastName),
     );
@@ -95,7 +115,13 @@ if (Meteor.users.find().count() === 0) {
             if (error.reason && error.reason.indexOf('already exists') !== -1) {
               retries -= 1;
             } else {
-              logServer(`Error creating user: ${error.reason || error.message || error}`, 'error');
+              // logServer(`Error creating user: ${error.reason || error.message || error}`, 'error');
+              logServer(
+                `ACCOUNTS , CreateUser - Error creating user: ${error.reason || error.message || error}`,
+                NOTIFICATIONS_TYPES.INFO,
+                SCOPE_TYPES.SYSTEM,
+                {},
+              );
               retries = 0;
             }
           }
@@ -103,6 +129,12 @@ if (Meteor.users.find().count() === 0) {
       });
     }
   } else {
-    logServer('No default users to create !  Please invoke meteor with a settings file.');
+    // logServer('No default users to create !  Please invoke meteor with a settings file.');
+    logServer(
+      `STARTUP - ACCOUNTS , CreateUser - No default users to create !  Please invoke meteor with a settings file.`,
+      NOTIFICATIONS_TYPES.INFO,
+      SCOPE_TYPES.SYSTEM,
+      {},
+    );
   }
 }

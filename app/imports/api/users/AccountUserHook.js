@@ -8,6 +8,7 @@ import Structures from '../structures/structures';
 import Groups from '../groups/groups';
 import { setMemberOf } from './server/methods';
 import { generateDefaultPersonalSpace } from '../personalspaces/methods';
+import { NOTIFICATIONS_TYPES, SCOPE_TYPES } from '../notifications/enums';
 
 if (Meteor.isServer) {
   // server side login hook
@@ -65,12 +66,21 @@ if (Meteor.isServer) {
         if (!Roles.userIsInRole(details.user._id, 'admin')) {
           Roles.addUsersToRoles(details.user._id, 'admin');
           updateInfos.admin = true;
-          logServer(`${i18n.__('api.users.adminGiven')} : ${details.user.services.keycloak.email}`);
+          // logServer(`${i18n.__('api.users.adminGiven')} : ${details.user.services.keycloak.email}`);
+          logServer(
+            `USERS - ACCOUNTSUSERHOOK - ${i18n.__('api.users.adminGiven')} : ${details.user.services.keycloak.email}`,
+            NOTIFICATIONS_TYPES.ERROR,
+            SCOPE_TYPES.SYSTEM,
+            {},
+          );
         }
       }
       // signal updates to plugins
       Meteor.call('users.userUpdated', { userId: details.user._id, data: updateInfos }, (err) => {
-        if (err) logServer(`error : ${err}`);
+        if (err) {
+          // logServer(`error : ${err}`)
+          logServer(`USERS - ACCOUNTSUSERHOOK - error: `, NOTIFICATIONS_TYPES.ERROR, SCOPE_TYPES.SYSTEM, { err });
+        }
       });
 
       // check if user has a personnal space generated from structure
@@ -92,7 +102,8 @@ if (Meteor.isServer) {
               { userId: details.user._id, groupId: userStructure.groupId },
             );
           } catch (err) {
-            logServer(`error : ${err}`);
+            // logServer(`error : ${err}`);
+            logServer(`USERS - ACCOUNTSUSERHOOK - error: `, NOTIFICATIONS_TYPES.ERROR, SCOPE_TYPES.SYSTEM, { err });
           }
         }
         const structureAncestors = Structures.find({ _id: { $in: userStructure.ancestorsIds } }).fetch();
@@ -107,14 +118,23 @@ if (Meteor.isServer) {
                     { userId: details.user._id, groupId: group.groupId },
                   );
                 } catch (err) {
-                  logServer(`error : ${err}`);
+                  // logServer(`error : ${err}`);
+                  logServer(`USERS - ACCOUNTSUSERHOOK - error: `, NOTIFICATIONS_TYPES.ERROR, SCOPE_TYPES.SYSTEM, {
+                    err,
+                  });
                 }
               }
             }
           });
         }
       } else if (userGroupOfStructure === null) {
-        logServer(`There is no group attached to structure !!!`);
+        // logServer(`There is no group attached to structure !!!`);
+        logServer(
+          `USERS - ACCOUNTSUSERHOOK - There is no group attached to structure !!!: `,
+          NOTIFICATIONS_TYPES.ERROR,
+          SCOPE_TYPES.SYSTEM,
+          {},
+        );
       }
     } else {
       Meteor.users.update({ _id: details.user._id }, { $set: { lastLogin: loginDate } });

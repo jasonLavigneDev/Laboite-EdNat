@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import faker from 'faker';
 import Articles from '../../../api/articles/articles';
 import logServer from '../../../api/logging';
+import { NOTIFICATIONS_TYPES, SCOPE_TYPES } from '../../../api/notifications/enums';
 
 const users = (number) => {
   const limit = Math.floor(Math.random() * number);
@@ -19,7 +20,8 @@ if (Articles.find().count() === 0) {
   if (Meteor.settings.private.fillWithFakeData && Meteor.isDevelopment) {
     const PUBLISHERS_RANDOM = 100;
     const publishers = users(PUBLISHERS_RANDOM);
-    logServer('Creating the default articles.');
+    // logServer('Creating the default articles.');
+    logServer(`STARTUP - ARTICLES - Creating the default articles.`, NOTIFICATIONS_TYPES.INFO, SCOPE_TYPES.SYSTEM, {});
     publishers.forEach(({ userId, structure }) => {
       const array = new Array(Math.floor(Math.random() * 30));
       array.fill(0);
@@ -37,7 +39,13 @@ if (Articles.find().count() === 0) {
           });
           Meteor.users.update({ _id: userId }, { $inc: { articlesCount: 1 }, $set: { lastArticle: new Date() } });
         } catch (error) {
-          logServer(`Error creating article: ${error.reason || error.message || error}`);
+          // logServer(`Error creating article: ${error.reason || error.message || error}`);
+          logServer(
+            `STARTUP - ARTICLES - Error creating article: ${error.reason || error.message || error}`,
+            NOTIFICATIONS_TYPES.INFO,
+            SCOPE_TYPES.SYSTEM,
+            {},
+          );
         }
       });
     });

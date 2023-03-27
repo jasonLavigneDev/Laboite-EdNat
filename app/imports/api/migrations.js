@@ -10,6 +10,7 @@ import logServer from './logging';
 import AppSettings from './appsettings/appsettings';
 import { addItem } from './personalspaces/methods';
 import PersonalSpaces from './personalspaces/personalspaces';
+import { NOTIFICATIONS_TYPES, SCOPE_TYPES } from './notifications/enums';
 
 Migrations.add({
   version: 1,
@@ -140,7 +141,13 @@ Migrations.add({
           if (author) {
             updateData.structure = author.structure || '';
           } else {
-            logServer(`Migration: could not find author ${article.userId} for article ${article._id}`);
+            // logServer(`Migration: could not find author ${article.userId} for article ${article._id}`);
+            logServer(
+              `MIGRATIONS - Migration: could not find author ${article.userId} for article ${article._id}`,
+              NOTIFICATIONS_TYPES.WARN,
+              SCOPE_TYPES.SYSTEM,
+              {},
+            );
           }
         }
         // store tag name in articles instead of _id

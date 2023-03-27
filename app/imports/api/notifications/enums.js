@@ -20,3 +20,9 @@ export const notificationsTabType = [
     NOTIFICATIONS_TYPES.ERROR,
   ],
 ];
+
+export const SCOPE_TYPES = {
+  SYSTEM: 'SYSTEM',
+  ADMIN: 'ADMIN',
+  USER: 'USER',
+};

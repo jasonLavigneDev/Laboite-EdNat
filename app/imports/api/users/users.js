@@ -7,6 +7,7 @@ import Structures from '../structures/structures';
 import { getLabel } from '../utils';
 import { getRandomNCloudURL } from '../nextcloud/methods';
 import AsamExtensions from '../asamextensions/asamextensions';
+import { NOTIFICATIONS_TYPES, SCOPE_TYPES } from '../notifications/enums';
 
 const AppRoles = ['candidate', 'member', 'animator', 'admin', 'adminStructure'];
 
@@ -210,9 +211,17 @@ if (Meteor.isServer) {
     const newUser = { ...user };
     if (user.services && user.services.keycloak) {
       /* eslint no-console:off */
-      logServer('Creating new user after Keycloak authentication :');
-      logServer(`  Keycloak id: ${user.services.keycloak.id}`);
-      logServer(`  email: ${user.services.keycloak.email}`);
+      // logServer('Creating new user after Keycloak authentication :');
+      // logServer(`  Keycloak id: ${user.services.keycloak.id}`);
+      // logServer(`  email: ${user.services.keycloak.email}`);
+
+      logServer(
+        `USERS - Creating new user after Keycloak authentication :
+         Keycloak id: ${user.services.keycloak.id}, email: ${user.services.keycloak.email} `,
+        NOTIFICATIONS_TYPES.ERROR,
+        SCOPE_TYPES.SYSTEM,
+        {},
+      );
 
       // split the email in two parts
       const splittedEmail = user.services.keycloak.email.split('@');
