@@ -1,12 +1,11 @@
 import { Meteor } from 'meteor/meteor';
 import Tags from '../../../api/tags/tags';
 import fakeData from './fakeData.json';
-import logServer from '../../../api/logging';
-import { NOTIFICATIONS_TYPES, SCOPE_TYPES } from '../../../api/notifications/enums';
+import logServer, { levels, scopes } from '../../../api/logging';
 
 function createTag(tag) {
   // logServer(`  Creating tag ${tag.name}.`);
-  logServer(`STARTUP - TAGS - createTag - Creating tag ${tag.name}. `, NOTIFICATIONS_TYPES.INFO, SCOPE_TYPES.SYSTEM, {
+  logServer(`STARTUP - TAGS - createTag - Creating tag ${tag.name}. `, levels.INFO, scopes.SYSTEM, {
     tag,
   });
   Tags.insert(tag);
@@ -16,12 +15,7 @@ function createTag(tag) {
 if (Tags.find().count() === 0) {
   if (Meteor.settings.private.fillWithFakeData) {
     // logServer('Creating the default tags');
-    logServer(
-      `STARTUP - TAGS - createTag - Creating the default tags `,
-      NOTIFICATIONS_TYPES.INFO,
-      SCOPE_TYPES.SYSTEM,
-      {},
-    );
+    logServer(`STARTUP - TAGS - createTag - Creating the default tags `, levels.INFO, scopes.SYSTEM, {});
     if (fakeData.defaultTags !== undefined) {
       fakeData.defaultTags.map((tag) => createTag(tag));
     }
@@ -29,8 +23,8 @@ if (Tags.find().count() === 0) {
     // logServer('No default tags to create !  Please invoke meteor with a settings file.');
     logServer(
       `No default tags to create !  Please invoke meteor with a settings file. `,
-      NOTIFICATIONS_TYPES.ERROR,
-      SCOPE_TYPES.SYSTEM,
+      levels.ERROR,
+      scopes.SYSTEM,
       {},
     );
   }

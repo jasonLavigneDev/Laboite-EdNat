@@ -9,10 +9,10 @@ import { isActive, validateString } from '../utils';
 import PersonalSpaces from './personalspaces';
 import Groups from '../groups/groups';
 import Services from '../services/services';
-import logServer from '../logging';
+
 import UserBookmarks from '../userBookmarks/userBookmarks';
 import DefaultSpaces from '../defaultspaces/defaultspaces';
-import { NOTIFICATIONS_TYPES, SCOPE_TYPES } from '../notifications/enums';
+import logServer, { levels, scopes } from '../logging';
 
 export const addItem = (userId, item) => {
   const currentPersonalSpace = PersonalSpaces.findOne({ userId });
@@ -183,8 +183,8 @@ export const checkPersonalSpace = new ValidatedMethod({
         // logServer(`Regen Personalspace (not found) for ${u.username}...`);
         logServer(
           `PERSONALSPACES - METHODS - checkPersonalSpace, Regen Personalspace (not found) for ${u.username}...`,
-          NOTIFICATIONS_TYPES.ERROR,
-          SCOPE_TYPES.SYSTEM,
+          levels.ERROR,
+          scopes.SYSTEM,
           { u },
         );
         const unsorted = [];
@@ -269,7 +269,7 @@ export const checkPersonalSpace = new ValidatedMethod({
       updatePersonalSpace._execute({ userId: this.userId }, { data: currentPersonalSpace }, (err) => {
         if (err) {
           // logServer(err.reason, 'error');
-          logServer(`PERSONALSPACES - METHODS - checkPersonalSpace`, NOTIFICATIONS_TYPES.ERROR, SCOPE_TYPES.SYSTEM, {
+          logServer(`PERSONALSPACES - METHODS - checkPersonalSpace`, levels.ERROR, scopes.SYSTEM, {
             error: err.reason,
           });
         }

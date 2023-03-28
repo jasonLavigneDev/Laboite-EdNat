@@ -5,8 +5,7 @@ import Groups from '../../../api/groups/groups';
 import Services from '../../../api/services/services';
 import { createGroup, favGroup } from '../../../api/groups/methods';
 import fakeData from './fakeData.json';
-import logServer from '../../../api/logging';
-import { NOTIFICATIONS_TYPES, SCOPE_TYPES } from '../../../api/notifications/enums';
+import logServer, { levels, scopes } from '../../../api/logging';
 
 const users = (number) => {
   const limit = Math.floor(Math.random() * number);
@@ -24,7 +23,7 @@ const updatePersonalSpace = (usersList, groupId) => {
 if (Groups.find().count() === 0) {
   if (Meteor.settings.private.fillWithFakeData) {
     // logServer('Creating the default groups');
-    logServer(`STARTUP - Creating the default groups`, NOTIFICATIONS_TYPES.ERROR, SCOPE_TYPES.SYSTEM, {});
+    logServer(`STARTUP - Creating the default groups`, levels.ERROR, scopes.SYSTEM, {});
     fakeData.defaultGroups.map((group) => {
       // find owner userId
       const user = Meteor.users.findOne({ username: group.owner });
@@ -35,13 +34,13 @@ if (Groups.find().count() === 0) {
         // logServer(`can not create group ${group.name}: owner not found in database`);
         logServer(
           `STARTUP - can not create group ${group.name}: owner not found in database`,
-          NOTIFICATIONS_TYPES.ERROR,
-          SCOPE_TYPES.SYSTEM,
+          levels.ERROR,
+          scopes.SYSTEM,
           {},
         );
       } else {
         // logServer(`  Creating group ${group.name}.`);
-        logServer(`STARTUP - Creating group ${group.name}.`, NOTIFICATIONS_TYPES.ERROR, SCOPE_TYPES.SYSTEM, {});
+        logServer(`STARTUP - Creating group ${group.name}.`, levels.ERROR, scopes.SYSTEM, {});
 
         if (Meteor.isDevelopment) {
           const groupId = Groups.insert({
@@ -90,7 +89,7 @@ if (Groups.find().count() === 0) {
         const members = users(MEMBERS_RANDOM);
         const candidates = type === 5 ? users(CANDIDATES_RANDOM) : [];
         // logServer(`  Creating group ${name}.`);
-        logServer(`STARTUP - Creating group ${name}.`, NOTIFICATIONS_TYPES.ERROR, SCOPE_TYPES.SYSTEM, {});
+        logServer(`STARTUP - Creating group ${name}.`, levels.ERROR, scopes.SYSTEM, {});
         const groupId = Groups.insert({
           name,
           type,
@@ -118,8 +117,8 @@ if (Groups.find().count() === 0) {
     // logServer('No default groups to create !  Please invoke meteor with a settings file.');
     logServer(
       `STARTUP - No default groups to create !  Please invoke meteor with a settings file.`,
-      NOTIFICATIONS_TYPES.ERROR,
-      SCOPE_TYPES.SYSTEM,
+      levels.ERROR,
+      scopes.SYSTEM,
       {},
     );
   }

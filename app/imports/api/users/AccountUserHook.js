@@ -2,13 +2,13 @@ import { Meteor } from 'meteor/meteor';
 import i18n from 'meteor/universe:i18n';
 import { Roles } from 'meteor/alanning:roles';
 import checkDomain from '../domains';
-import logServer from '../logging';
+import logServer, { levels, scopes } from '../logging';
+
 import PersonalSpaces from '../personalspaces/personalspaces';
 import Structures from '../structures/structures';
 import Groups from '../groups/groups';
 import { setMemberOf } from './server/methods';
 import { generateDefaultPersonalSpace } from '../personalspaces/methods';
-import { NOTIFICATIONS_TYPES, SCOPE_TYPES } from '../notifications/enums';
 
 if (Meteor.isServer) {
   // server side login hook
@@ -69,8 +69,8 @@ if (Meteor.isServer) {
           // logServer(`${i18n.__('api.users.adminGiven')} : ${details.user.services.keycloak.email}`);
           logServer(
             `USERS - ACCOUNTSUSERHOOK - ${i18n.__('api.users.adminGiven')} : ${details.user.services.keycloak.email}`,
-            NOTIFICATIONS_TYPES.ERROR,
-            SCOPE_TYPES.SYSTEM,
+            levels.ERROR,
+            scopes.SYSTEM,
             {},
           );
         }
@@ -79,7 +79,7 @@ if (Meteor.isServer) {
       Meteor.call('users.userUpdated', { userId: details.user._id, data: updateInfos }, (err) => {
         if (err) {
           // logServer(`error : ${err}`)
-          logServer(`USERS - ACCOUNTSUSERHOOK - error: `, NOTIFICATIONS_TYPES.ERROR, SCOPE_TYPES.SYSTEM, { err });
+          logServer(`USERS - ACCOUNTSUSERHOOK - error: `, levels.ERROR, scopes.SYSTEM, { err });
         }
       });
 
@@ -103,7 +103,7 @@ if (Meteor.isServer) {
             );
           } catch (err) {
             // logServer(`error : ${err}`);
-            logServer(`USERS - ACCOUNTSUSERHOOK - error: `, NOTIFICATIONS_TYPES.ERROR, SCOPE_TYPES.SYSTEM, { err });
+            logServer(`USERS - ACCOUNTSUSERHOOK - error: `, levels.ERROR, scopes.SYSTEM, { err });
           }
         }
         const structureAncestors = Structures.find({ _id: { $in: userStructure.ancestorsIds } }).fetch();
@@ -119,7 +119,7 @@ if (Meteor.isServer) {
                   );
                 } catch (err) {
                   // logServer(`error : ${err}`);
-                  logServer(`USERS - ACCOUNTSUSERHOOK - error: `, NOTIFICATIONS_TYPES.ERROR, SCOPE_TYPES.SYSTEM, {
+                  logServer(`USERS - ACCOUNTSUSERHOOK - error: `, levels.ERROR, scopes.SYSTEM, {
                     err,
                   });
                 }
@@ -131,8 +131,8 @@ if (Meteor.isServer) {
         // logServer(`There is no group attached to structure !!!`);
         logServer(
           `USERS - ACCOUNTSUSERHOOK - There is no group attached to structure !!!: `,
-          NOTIFICATIONS_TYPES.ERROR,
-          SCOPE_TYPES.SYSTEM,
+          levels.ERROR,
+          scopes.SYSTEM,
           {},
         );
       }

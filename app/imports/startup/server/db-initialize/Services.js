@@ -1,18 +1,14 @@
 import { Meteor } from 'meteor/meteor';
 import Services from '../../../api/services/services';
 import fakeData from './fakeData.json';
-import logServer from '../../../api/logging';
-import { NOTIFICATIONS_TYPES, SCOPE_TYPES } from '../../../api/notifications/enums';
+import logServer, { levels, scopes } from '../../../api/logging';
 
 function createService(service) {
   const { title } = service;
   // logServer(`  Creating service ${title}.`);
-  logServer(
-    `STARTUP - SERVICES - createService -  Creating service ${title}.`,
-    NOTIFICATIONS_TYPES.INFO,
-    SCOPE_TYPES.SYSTEM,
-    { service },
-  );
+  logServer(`STARTUP - SERVICES - createService -  Creating service ${title}.`, levels.INFO, scopes.SYSTEM, {
+    service,
+  });
 
   Services.insert({ ...service, structure: '' });
 }
@@ -21,14 +17,14 @@ function createService(service) {
 if (Services.find().count() === 0) {
   if (Meteor.settings.private.fillWithFakeData) {
     // logServer('Creating the default services');
-    logServer(`STARTUP - SERVICES - Creating the default services`, NOTIFICATIONS_TYPES.INFO, SCOPE_TYPES.SYSTEM, {});
+    logServer(`STARTUP - SERVICES - Creating the default services`, levels.INFO, scopes.SYSTEM, {});
     fakeData.defaultServices.map(createService);
   } else {
     // logServer('No default services to create !  Please invoke meteor with a settings file.');
     logServer(
       `STARTUP - SERVICES - No default services to create !  Please invoke meteor with a settings file.`,
-      NOTIFICATIONS_TYPES.INFO,
-      SCOPE_TYPES.SYSTEM,
+      levels.INFO,
+      scopes.SYSTEM,
       {},
     );
   }

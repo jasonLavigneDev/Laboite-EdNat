@@ -2,12 +2,12 @@ import { Meteor } from 'meteor/meteor';
 import SimpleSchema from 'simpl-schema';
 import { Tracker } from 'meteor/tracker';
 import { Roles } from 'meteor/alanning:roles';
-import logServer from '../logging';
+import logServer, { levels, scopes } from '../logging';
+
 import Structures from '../structures/structures';
 import { getLabel } from '../utils';
 import { getRandomNCloudURL } from '../nextcloud/methods';
 import AsamExtensions from '../asamextensions/asamextensions';
-import { NOTIFICATIONS_TYPES, SCOPE_TYPES } from '../notifications/enums';
 
 const AppRoles = ['candidate', 'member', 'animator', 'admin', 'adminStructure'];
 
@@ -218,8 +218,8 @@ if (Meteor.isServer) {
       logServer(
         `USERS - Creating new user after Keycloak authentication :
          Keycloak id: ${user.services.keycloak.id}, email: ${user.services.keycloak.email} `,
-        NOTIFICATIONS_TYPES.ERROR,
-        SCOPE_TYPES.SYSTEM,
+        levels.ERROR,
+        scopes.SYSTEM,
         {},
       );
 

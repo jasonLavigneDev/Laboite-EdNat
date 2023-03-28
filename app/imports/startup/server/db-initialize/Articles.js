@@ -1,8 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import faker from 'faker';
 import Articles from '../../../api/articles/articles';
-import logServer from '../../../api/logging';
-import { NOTIFICATIONS_TYPES, SCOPE_TYPES } from '../../../api/notifications/enums';
+import logServer, { levels, scopes } from '../../../api/logging';
 
 const users = (number) => {
   const limit = Math.floor(Math.random() * number);
@@ -21,7 +20,7 @@ if (Articles.find().count() === 0) {
     const PUBLISHERS_RANDOM = 100;
     const publishers = users(PUBLISHERS_RANDOM);
     // logServer('Creating the default articles.');
-    logServer(`STARTUP - ARTICLES - Creating the default articles.`, NOTIFICATIONS_TYPES.INFO, SCOPE_TYPES.SYSTEM, {});
+    logServer(`STARTUP - ARTICLES - Creating the default articles.`, levels.INFO, scopes.SYSTEM, {});
     publishers.forEach(({ userId, structure }) => {
       const array = new Array(Math.floor(Math.random() * 30));
       array.fill(0);
@@ -42,8 +41,8 @@ if (Articles.find().count() === 0) {
           // logServer(`Error creating article: ${error.reason || error.message || error}`);
           logServer(
             `STARTUP - ARTICLES - Error creating article: ${error.reason || error.message || error}`,
-            NOTIFICATIONS_TYPES.INFO,
-            SCOPE_TYPES.SYSTEM,
+            levels.INFO,
+            scopes.SYSTEM,
             {},
           );
         }

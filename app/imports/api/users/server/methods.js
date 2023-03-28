@@ -15,7 +15,8 @@ import AppRoles from '../users';
 import { favGroup, unfavGroup } from '../../groups/methods';
 import PersonalSpaces from '../../personalspaces/personalspaces';
 import { createRoleNotification, createRequestNotification } from '../../notifications/server/notifsutils';
-import logServer from '../../logging';
+import logServer, { levels, scopes } from '../../logging';
+
 import { getRandomNCloudURL } from '../../nextcloud/methods';
 import Structures from '../../structures/structures';
 import Nextcloud from '../../nextcloud/nextcloud';
@@ -25,7 +26,6 @@ import {
   hasRightToAcceptAwaitingStructure,
   hasRightToSetStructureDirectly,
 } from '../../structures/utils';
-import { NOTIFICATIONS_TYPES, SCOPE_TYPES } from '../../notifications/enums';
 
 if (Meteor.settings.private) {
   const { whiteDomains } = Meteor.settings.private;
@@ -33,8 +33,8 @@ if (Meteor.settings.private) {
     // logServer(i18n.__('api.users.logWhiteDomains', { domains: JSON.stringify(whiteDomains) }));
     logServer(
       `USERS - METHODS - ${i18n.__('api.users.logWhiteDomains', { domains: JSON.stringify(whiteDomains) })}`,
-      NOTIFICATIONS_TYPES.INFO,
-      SCOPE_TYPES.SYSTEM,
+      levels.INFO,
+      scopes.SYSTEM,
       {},
     );
   }
@@ -1198,8 +1198,8 @@ export const fixUsers = new ValidatedMethod({
         // logServer(`- fixed user ${updateInfos.username} (email:${updateInfos.primaryEmail})`);
         logServer(
           `USERS - METHODS - fixed user ${updateInfos.username} (email:${updateInfos.primaryEmail})`,
-          NOTIFICATIONS_TYPES.ERROR,
-          SCOPE_TYPES.SYSTEM,
+          levels.ERROR,
+          scopes.SYSTEM,
           {},
         );
         fixedCount += 1;
@@ -1207,8 +1207,8 @@ export const fixUsers = new ValidatedMethod({
         // logServer(`- could not fix user '${user._id}', no keycloak data available`);
         logServer(
           `USERS - METHODS - could not fix user '${user._id}', no keycloak data available`,
-          NOTIFICATIONS_TYPES.ERROR,
-          SCOPE_TYPES.SYSTEM,
+          levels.ERROR,
+          scopes.SYSTEM,
           {},
         );
       }

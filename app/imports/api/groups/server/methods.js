@@ -54,7 +54,7 @@ export const addGroupMembersToGroup = new ValidatedMethod({
       }
     });
     logServer(
-      `GROUPS - addGroupMembersToGRoup - User ${this.userId} add members to group ${groupId} `,
+      `GROUPS - addGroupMembersToGroup - User ${this.userId} add members to group ${groupId} `,
       levels.VERBOSE,
       scopes.USER,
     );

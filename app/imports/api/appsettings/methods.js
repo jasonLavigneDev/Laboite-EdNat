@@ -7,8 +7,8 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { Roles } from 'meteor/alanning:roles';
 import i18n from 'meteor/universe:i18n';
 import sanitizeHtml from 'sanitize-html';
-import logServer from '../logging';
-import { NOTIFICATIONS_TYPES, SCOPE_TYPES } from '../notifications/enums';
+
+import logServer, { levels, scopes } from '../logging';
 
 import { isActive, getLabel, validateString } from '../utils';
 import AppSettings from './appsettings';
@@ -18,8 +18,8 @@ export function checkMigrationStatus() {
     // logServer('Migration lock detected !!!!', 'error');
     logServer(
       `APPSETTINGS - METHODS - checkMigrationStatus,Migration lock detected !!!!`,
-      NOTIFICATIONS_TYPES.ERROR,
-      SCOPE_TYPES.SYSTEM,
+      levels.ERROR,
+      scopes.SYSTEM,
       {},
     );
     AppSettings.update({}, { $set: { maintenance: true, textMaintenance: 'api.appsettings.migrationLockedText' } });

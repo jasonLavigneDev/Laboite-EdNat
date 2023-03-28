@@ -6,9 +6,9 @@ import SimpleSchema from 'simpl-schema';
 import { checkPaginationParams, isActive, getLabel } from '../../utils';
 import Groups from '../../groups/groups';
 import { getStructureIds } from '../structures';
-import logServer from '../../logging';
+import logServer, { levels, scopes } from '../../logging';
+
 import { hasAdminRightOnStructure, hasRightToAcceptAwaitingStructure } from '../../structures/utils';
-import { NOTIFICATIONS_TYPES, SCOPE_TYPES } from '../../notifications/enums';
 
 // publish additional fields for current user
 Meteor.publish('userData', function publishUserData() {
@@ -157,7 +157,7 @@ FindFromPublication.publish(
         .validate({ page, itemPerPage, slug, search, userType });
     } catch (err) {
       // logServer(`publish users.group: ${err}`);
-      logServer(`USERS - PUBLICATION - publish users.group: ${err}`, NOTIFICATIONS_TYPES.ERROR, SCOPE_TYPES.SYSTEM, {
+      logServer(`USERS - PUBLICATION - publish users.group: ${err}`, levels.ERROR, scopes.SYSTEM, {
         page,
         itemPerPage,
         search,
@@ -206,7 +206,7 @@ FindFromPublication.publish('users.publishers', ({ page, itemPerPage, search, ..
     checkPaginationParams.validate({ page, itemPerPage, search });
   } catch (err) {
     // logServer(`publish users.publishers: ${err}`);
-    logServer(`USERS - PUBLICATION - publish users.publishers: ${err}`, NOTIFICATIONS_TYPES.ERROR, SCOPE_TYPES.SYSTEM, {
+    logServer(`USERS - PUBLICATION - publish users.publishers: ${err}`, levels.ERROR, scopes.SYSTEM, {
       page,
       itemPerPage,
       search,
@@ -301,7 +301,7 @@ FindFromPublication.publish(
         .validate({ page, itemPerPage, search, userType });
     } catch (err) {
       // logServer(`publish users.admin : ${err}`);
-      logServer(`USERS - PUBLICATION - publish users.admin : ${err}`, NOTIFICATIONS_TYPES.ERROR, SCOPE_TYPES.SYSTEM, {
+      logServer(`USERS - PUBLICATION - publish users.admin : ${err}`, levels.ERROR, scopes.SYSTEM, {
         page,
         itemPerPage,
         search,
@@ -385,17 +385,12 @@ FindFromPublication.publish(
         .validate({ page, itemPerPage, search, userType });
     } catch (err) {
       // logServer(`publish users.byStructure : ${err}`);
-      logServer(
-        `USERS - PUBLICATION - publish users.byStructure : ${err}`,
-        NOTIFICATIONS_TYPES.ERROR,
-        SCOPE_TYPES.SYSTEM,
-        {
-          page,
-          itemPerPage,
-          search,
-          userType,
-        },
-      );
+      logServer(`USERS - PUBLICATION - publish users.byStructure : ${err}`, levels.ERROR, scopes.SYSTEM, {
+        page,
+        itemPerPage,
+        search,
+        userType,
+      });
       this.error(err);
     }
     try {

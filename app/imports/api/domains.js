@@ -1,7 +1,6 @@
 import { Meteor } from 'meteor/meteor';
-import logServer from './logging';
+import logServer, { levels, scopes } from './logging';
 import AsamExtensions from './asamextensions/asamextensions';
-import { NOTIFICATIONS_TYPES, SCOPE_TYPES } from './notifications/enums';
 
 // checks if the domain part of an email address matches whitelisted domains
 export default function checkDomain(email) {
@@ -14,8 +13,8 @@ export default function checkDomain(email) {
       // logServer(`  Email domain matches ${whiteDomain}: user activated`);
       logServer(
         `DOMAIN - checkDomain - Email domain matches${whiteDomain}:user activated`,
-        NOTIFICATIONS_TYPES.INFO,
-        SCOPE_TYPES.SYSTEM,
+        levels.INFO,
+        scopes.SYSTEM,
         {
           email,
         },

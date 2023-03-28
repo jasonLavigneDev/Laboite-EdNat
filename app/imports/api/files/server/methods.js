@@ -9,11 +9,10 @@ import Minio from 'minio';
 
 import s3Client from './config';
 import { isActive } from '../../utils';
-import logServer from '../../logging';
+import logServer, { levels, scopes } from '../../logging';
 import Services from '../../services/services';
 import { hasAdminRightOnStructure } from '../../structures/utils';
 import Structures from '../../structures/structures';
-import { NOTIFICATIONS_TYPES, SCOPE_TYPES } from '../../notifications/enums';
 
 const { minioEndPoint, minioBucket, minioPort } = Meteor.settings.public;
 
@@ -281,8 +280,8 @@ export const moveFiles = new ValidatedMethod({
             logServer(
               `FILES - METHODS - moveFiles, 
               Error copying ${newFile} from ${minioBucket}/${sourcePath}/${newFile} to ${destinationPath}/${newFile}`,
-              NOTIFICATIONS_TYPES.ERROR,
-              SCOPE_TYPES.SYSTEM,
+              levels.ERROR,
+              scopes.SYSTEM,
               {
                 sourcePath,
                 destinationPath,
@@ -324,8 +323,8 @@ export const rename = new ValidatedMethod({
         // logServer(err, 'error');
         logServer(
           `FILES - METHODS - rename, Error renaming ${minioBucket}/${path}/${oldName} to ${path}/${newName}`,
-          NOTIFICATIONS_TYPES.ERROR,
-          SCOPE_TYPES.SYSTEM,
+          levels.ERROR,
+          scopes.SYSTEM,
           {
             path,
             oldName,

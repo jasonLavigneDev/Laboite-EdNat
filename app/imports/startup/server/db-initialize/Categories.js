@@ -1,15 +1,14 @@
 import { Meteor } from 'meteor/meteor';
 import Categories from '../../../api/categories/categories';
 import fakeData from './fakeData.json';
-import logServer from '../../../api/logging';
-import { NOTIFICATIONS_TYPES, SCOPE_TYPES } from '../../../api/notifications/enums';
+import logServer, { levels, scopes } from '../../../api/logging';
 
 function createCategorie(categorie) {
   // logServer(`  Creating categorie ${categorie.name}.`);
   logServer(
     `STARTUP - CATEGORIE - create categorie - Creating categorie ${categorie.name}.`,
-    NOTIFICATIONS_TYPES.INFO,
-    SCOPE_TYPES.SYSTEM,
+    levels.INFO,
+    scopes.SYSTEM,
     { categorie },
   );
   Categories.insert(categorie);
@@ -21,8 +20,8 @@ if (Categories.find().count() === 0) {
     // logServer('Creating the default categories');
     logServer(
       `STARTUP - CATEGORIE - create categorie - Creating the default categories.`,
-      NOTIFICATIONS_TYPES.INFO,
-      SCOPE_TYPES.SYSTEM,
+      levels.INFO,
+      scopes.SYSTEM,
       {},
     );
     fakeData.defaultCategories.map((categorie) => createCategorie(categorie));
@@ -31,8 +30,8 @@ if (Categories.find().count() === 0) {
     logServer(
       `STARTUP - CATEGORIE - create categorie -
        No default categories to create !  Please invoke meteor with a settings file.`,
-      NOTIFICATIONS_TYPES.ERROR,
-      SCOPE_TYPES.SYSTEM,
+      levels.ERROR,
+      scopes.SYSTEM,
       {},
     );
   }

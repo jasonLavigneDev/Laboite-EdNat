@@ -4,8 +4,7 @@ import Polls from '../polls';
 import Groups from '../../groups/groups';
 
 import { checkPaginationParams, isActive } from '../../utils';
-import logServer from '../../logging';
-import { NOTIFICATIONS_TYPES, SCOPE_TYPES } from '../../notifications/enums';
+import logServer, { levels, scopes } from '../../logging';
 
 // build query for all users from group
 const queryGroupPolls = ({ search, group, onlyPublic }) => {
@@ -52,17 +51,12 @@ FindFromPublication.publish('groups.polls', function groupsPolls({ page, search,
     checkPaginationParams.validate({ page, itemPerPage, search });
   } catch (err) {
     // logServer(`publish groups.polls : ${err}`);
-    logServer(
-      `POLLS - PUBLICATION - groups.polls, publish groups.polls : ${err}`,
-      NOTIFICATIONS_TYPES.ERROR,
-      SCOPE_TYPES.SYSTEM,
-      {
-        page,
-        search,
-        slug,
-        itemPerPage,
-      },
-    );
+    logServer(`POLLS - PUBLICATION - groups.polls, publish groups.polls : ${err}`, levels.ERROR, scopes.SYSTEM, {
+      page,
+      search,
+      slug,
+      itemPerPage,
+    });
     this.error(err);
   }
   const group = Groups.findOne({ slug });

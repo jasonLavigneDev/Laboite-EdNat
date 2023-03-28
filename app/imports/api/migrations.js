@@ -6,11 +6,10 @@ import Services from './services/services';
 import Groups from './groups/groups';
 import Structures, { defaultIntroduction } from './structures/structures';
 import Tags from './tags/tags';
-import logServer from './logging';
+import logServer, { levels, scopes } from './logging';
 import AppSettings from './appsettings/appsettings';
 import { addItem } from './personalspaces/methods';
 import PersonalSpaces from './personalspaces/personalspaces';
-import { NOTIFICATIONS_TYPES, SCOPE_TYPES } from './notifications/enums';
 
 Migrations.add({
   version: 1,
@@ -144,8 +143,8 @@ Migrations.add({
             // logServer(`Migration: could not find author ${article.userId} for article ${article._id}`);
             logServer(
               `MIGRATIONS - Migration: could not find author ${article.userId} for article ${article._id}`,
-              NOTIFICATIONS_TYPES.WARN,
-              SCOPE_TYPES.SYSTEM,
+              levels.WARN,
+              scopes.SYSTEM,
               {},
             );
           }

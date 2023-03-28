@@ -5,12 +5,12 @@ import { ServiceConfiguration } from 'meteor/service-configuration';
 
 // required: loads accounts customization before initial users creation
 import faker from 'faker';
-import logServer from '../../../api/logging';
+
 import AppRoles from '../../../api/users/users';
 import { getStructureIds } from '../../../api/users/structures';
 import fakeData from './fakeData.json';
 import { testMeteorSettingsUrl } from '../../../ui/utils/utilsFuncs';
-import { NOTIFICATIONS_TYPES, SCOPE_TYPES } from '../../../api/notifications/enums';
+import logServer, { levels, scopes } from '../../../api/logging';
 
 const accountConfig = {
   loginExpirationInDays: Meteor.settings.private.loginExpirationInDays || 1,
@@ -35,8 +35,8 @@ if (Meteor.settings.keycloak) {
   // logServer('No Keycloak configuration. Please invoke meteor with a settings file.');
   logServer(
     'STARTUP - ACCOUNTS , No Keycloak configuration. Please invoke meteor with a settings file.',
-    NOTIFICATIONS_TYPES.INFO,
-    SCOPE_TYPES.SYSTEM,
+    levels.INFO,
+    scopes.SYSTEM,
     {},
   );
 }
@@ -48,18 +48,13 @@ Accounts.config({
 
 function createUser(email, password, role, structure, firstName, lastName) {
   // logServer(`  Creating user ${email}.`);
-  logServer(
-    `STARTUP - ACCOUNTS , CreateUser -  Creating user ${email}.`,
-    NOTIFICATIONS_TYPES.INFO,
-    SCOPE_TYPES.SYSTEM,
-    {
-      email,
-      role,
-      structure,
-      firstName,
-      lastName,
-    },
-  );
+  logServer(`STARTUP - ACCOUNTS , CreateUser -  Creating user ${email}.`, levels.INFO, scopes.SYSTEM, {
+    email,
+    role,
+    structure,
+    firstName,
+    lastName,
+  });
   const userID = Accounts.createUser({
     username: email,
     email,
@@ -89,7 +84,7 @@ const NUMBER_OF_FAKE_USERS = 300;
 if (Meteor.users.find().count() === 0) {
   if (Meteor.settings.private.fillWithFakeData) {
     // logServer('Creating the default user(s)');
-    logServer(`STARTUP - ACCOUNTS Creating the default user(s)`, NOTIFICATIONS_TYPES.INFO, SCOPE_TYPES.SYSTEM, {});
+    logServer(`STARTUP - ACCOUNTS Creating the default user(s)`, levels.INFO, scopes.SYSTEM, {});
     fakeData.defaultAccounts.map(({ email, password, role, structure, firstName, lastName }) =>
       createUser(email, password, role, structure, firstName, lastName),
     );
@@ -118,8 +113,8 @@ if (Meteor.users.find().count() === 0) {
               // logServer(`Error creating user: ${error.reason || error.message || error}`, 'error');
               logServer(
                 `ACCOUNTS , CreateUser - Error creating user: ${error.reason || error.message || error}`,
-                NOTIFICATIONS_TYPES.INFO,
-                SCOPE_TYPES.SYSTEM,
+                levels.INFO,
+                scopes.SYSTEM,
                 {},
               );
               retries = 0;
@@ -132,8 +127,8 @@ if (Meteor.users.find().count() === 0) {
     // logServer('No default users to create !  Please invoke meteor with a settings file.');
     logServer(
       `STARTUP - ACCOUNTS , CreateUser - No default users to create !  Please invoke meteor with a settings file.`,
-      NOTIFICATIONS_TYPES.INFO,
-      SCOPE_TYPES.SYSTEM,
+      levels.INFO,
+      scopes.SYSTEM,
       {},
     );
   }

@@ -3,12 +3,11 @@ import { Roles } from 'meteor/alanning:roles';
 import { FindFromPublication } from 'meteor/percolate:find-from-publication';
 import { publishComposite } from 'meteor/reywood:publish-composite';
 import SimpleSchema from 'simpl-schema';
-import logServer from '../../logging';
+import logServer, { levels, scopes } from '../../logging';
 import Tags from '../../tags/tags';
 import { checkPaginationParams, getLabel, isActive } from '../../utils';
 import Articles from '../articles';
 import Groups from '../../groups/groups';
-import { NOTIFICATIONS_TYPES, SCOPE_TYPES } from '../../notifications/enums';
 
 // build query for all articles
 const queryAllArticles = ({ nodrafts, search, userId }) => {
@@ -58,18 +57,13 @@ FindFromPublication.publish(
         .validate({ page, itemPerPage, userId, search });
     } catch (err) {
       // logServer(`publish articles.all : ${err}`);
-      logServer(
-        `ARTICLES - PUBLICATION - articles.all,publish articles.all : ${err}`,
-        NOTIFICATIONS_TYPES.ERROR,
-        SCOPE_TYPES.SYSTEM,
-        {
-          nodrafts,
-          page,
-          search,
-          itemPerPage,
-          userId,
-        },
-      );
+      logServer(`ARTICLES - PUBLICATION - articles.all,publish articles.all : ${err}`, levels.ERROR, scopes.SYSTEM, {
+        nodrafts,
+        page,
+        search,
+        itemPerPage,
+        userId,
+      });
       this.error(err);
     }
 
@@ -102,8 +96,8 @@ FindFromPublication.publish('articles.one.admin', ({ slug }) => {
     // logServer(`publish articles.one : ${err}`);
     logServer(
       `ARTICLES - PUBLICATION - articles.one.admin,publish articles.one : ${err}`,
-      NOTIFICATIONS_TYPES.ERROR,
-      SCOPE_TYPES.SYSTEM,
+      levels.ERROR,
+      scopes.SYSTEM,
       { slug },
     );
 
@@ -129,12 +123,9 @@ publishComposite('articles.one', ({ slug }) => {
     }).validate({ slug });
   } catch (err) {
     // logServer(`publish articles.one : ${err}`);
-    logServer(
-      `ARTICLES - PUBLICATION - articles.one,publish articles.one : ${err}`,
-      NOTIFICATIONS_TYPES.ERROR,
-      SCOPE_TYPES.SYSTEM,
-      { slug },
-    );
+    logServer(`ARTICLES - PUBLICATION - articles.one,publish articles.one : ${err}`, levels.ERROR, scopes.SYSTEM, {
+      slug,
+    });
 
     this.error(err);
   }
@@ -204,8 +195,8 @@ FindFromPublication.publish('groups.articles', function groupsArticles({ page, s
     // logServer(`publish groups.articles : ${err}`);
     logServer(
       `ARTICLES - PUBLICATION - groups.articles,publish groups.articles : ${err}`,
-      NOTIFICATIONS_TYPES.ERROR,
-      SCOPE_TYPES.SYSTEM,
+      levels.ERROR,
+      scopes.SYSTEM,
       {
         page,
         search,
