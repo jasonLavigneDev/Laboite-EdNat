@@ -6,8 +6,8 @@
     "keycloakUrl": "",
     "keycloakRealm": "",
     "theme": "laboite",
-    "keycloackLoginStyle": false,
-    "keycloackLoginStyleIframe": false,
+    "keycloackPopupStyle": false,
+    "keycloackPopupStyleIframe": false,
     "disabledFeatures": {
       "blog": false,
       "notificationsTab": false,
