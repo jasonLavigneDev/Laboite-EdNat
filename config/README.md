@@ -12,6 +12,8 @@ Copy `settings-development.json.sample` to `settings-development.json` and updat
 | theme                                    | string   | "laboite"                            | laboite or rizomo theme                                                                     |
 | appName                                  | string   | "LaBoîte"                            | Application Name                                                                            |
 | appDescription                           | string   | ""                                   | Application description, it will be displayed under the title                               |
+| keycloackPopupStyle                             | boolean  | false                                | Use popup style for keycloak authentication (non iframe)                                    |
+| keycloackPopupStyleIframe                       | boolean  | false                                | Use popup style for keycloak authentication (iframe)                                        |
 | enableBBB                                | boolean  | true                                 | If true, Big Blue Button is enabled                                                         |
 | BBBUrl                                   | string   | ""                                   | Big Blue Button URL                                                                         |
 | minioPort                                | number   | null                                 | Minio port                                                                                  |
