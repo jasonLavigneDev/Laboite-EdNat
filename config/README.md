@@ -96,12 +96,13 @@ External url for blog                                                           
 
 ## private:
 
-| Key                   | Type     | Default value                              | Description                                      |
-| --------------------- | -------- | ------------------------------------------ | ------------------------------------------------ |
-| fillWithFakeData      | boolean  | false                                      | If true, fake datas are generated at start       |
-| minioAccess           | string   | ""                                         | Minio user                                       |
-| minioSecret           | string   | ""                                         | Minio password                                   |
-| apiKeys               | [string] | [""]                                       | API access keys for external services            |
-| BBBSecret             | string   | ""                                         | Big Blue Button Secret                           |
-| whiteDomains          | [string] | ["^ac-[a-z-]_\\.fr", "^[a-z-]_\\.gouv.fr"] | Emails white domains for user account activation |
-| loginExpirationInDays | number   | 1                                          | Number of days for the token session to expire   |
+| Key                   | Type     | Default value                              | Description                                        |
+| --------------------- | -------- | ------------------------------------------ | -------------------------------------------------- |
+| fillWithFakeData      | boolean  | false                                      | If true, fake datas are generated at start         |
+| minioAccess           | string   | ""                                         | Minio user                                         |
+| minioSecret           | string   | ""                                         | Minio password                                     |
+| apiKeys               | [string] | [""]                                       | API access keys for external services              |
+| BBBSecret             | string   | ""                                         | Big Blue Button Secret                             |
+| whiteDomains          | [string] | ["^ac-[a-z-]_\\.fr", "^[a-z-]_\\.gouv.fr"] | Emails white domains for user account activation   |
+| loginExpirationInDays | number   | 1                                          | Number of days for the token session to expire     |
+| cspFrameAncestors     | [string] | ["'self'"]                                 | values for frame-ancestors directive in CSP header |

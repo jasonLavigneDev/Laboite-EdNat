@@ -1,6 +1,7 @@
 import { Migrations } from 'meteor/percolate:migrations';
 import { Meteor } from 'meteor/meteor';
 import { WebApp } from 'meteor/webapp';
+import helmet from 'helmet';
 import { NOTIFICATIONS_TYPES, SCOPE_TYPES } from '../../api/notifications/enums';
 import { checkMigrationStatus } from '../../api/appsettings/methods';
 
@@ -40,4 +41,25 @@ Meteor.startup(() => {
   checkMigrationStatus();
   // set up Default language to French in HTML attribute
   WebApp.addHtmlAttributeHook(() => ({ lang: 'fr' }));
+  // set up various security related headers
+  const scriptSrcs = ["'self'", "'unsafe-inline'", "'unsafe-eval'"];
+  if (Meteor.settings.public.matomo?.urlBase) scriptSrcs.push(Meteor.settings.public.matomo.urlBase);
+  const imgSrcs = ['*', 'data:', 'blob:'];
+  if (Meteor.settings.public.minioEndPoint) imgSrcs.push(`https://${Meteor.settings.public.minioEndPoint}`);
+  const frameAncestors = Meteor.settings.private?.cspFrameAncestors || ["'self'"];
+  WebApp.connectHandlers.use(helmet());
+  WebApp.connectHandlers.use(
+    helmet.contentSecurityPolicy({
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: scriptSrcs,
+        connectSrc: ['*'],
+        imgSrc: imgSrcs,
+        mediaSrc: imgSrcs,
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        frameAncestors,
+      },
+    }),
+  );
+  WebApp.connectHandlers.use(helmet.crossOriginEmbedderPolicy({ policy: 'credentialless' }));
 });
