@@ -3,7 +3,7 @@ import SimpleSchema from 'simpl-schema';
 import { Tracker } from 'meteor/tracker';
 import slugy from '../../ui/utils/slugy';
 import { getLabel } from '../utils';
-import logServer from '../logging';
+import logServer, { levels, scopes } from '../logging';
 
 const Services = new Mongo.Collection('services');
 
@@ -119,7 +119,8 @@ if (Meteor.isServer) {
       }
     });
   } catch (err) {
-    logServer(`Error removing old services slug index: ${err}`);
+    // logServer(`Error removing old services slug index: ${err}`);
+    logServer(`SERVICES - Error removing old services slug index: ${err}`, levels.ERROR, scopes.SYSTEM, {});
   }
 }
 

@@ -7,6 +7,7 @@
   "author": "EOLE <team@eole.education> - DINUM",
   "scripts": {
     "start": "meteor --exclude-archs 'web.browser.legacy, web.cordova' --settings ../config/settings.development.json",
+    "start-rawlogs": "meteor --raw-logs --exclude-archs 'web.browser.legacy, web.cordova' --settings ../config/settings.development.json",
     "test": "meteor test --once --exclude-archs 'web.browser.legacy, web.cordova' --driver-package meteortesting:mocha --allow-superuser",
     "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
     "lint": "eslint . --ext js,jsx",
@@ -42,7 +43,7 @@
     "connect-rest": "^3.0.33",
     "core-js": "^3.21.1",
     "cors": "^2.8.5",
-    "crypto": "^1.0.1",
+    "crypto-js": "^4.1.1",
     "dom-parser": "^0.1.6",
     "email": "^0.2.6",
     "faker": "^4.1.0",
@@ -78,6 +79,9 @@
     "tss-react": "^3.7.1",
     "validate.js": "^0.13.1",
     "webrtc-adapter": "^7.7.1",
+    "winston": "^3.8.2",
+    "winston-daily-rotate-file": "^4.7.1",
+    "winston-transport": "^4.5.0",
     "xml2js": "^0.4.23"
   },
   "meteor": {

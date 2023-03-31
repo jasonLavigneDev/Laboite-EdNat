@@ -15,7 +15,8 @@ import AppRoles from '../users';
 import { favGroup, unfavGroup } from '../../groups/methods';
 import PersonalSpaces from '../../personalspaces/personalspaces';
 import { createRoleNotification, createRequestNotification } from '../../notifications/server/notifsutils';
-import logServer from '../../logging';
+import logServer, { levels, scopes } from '../../logging';
+
 import { getRandomNCloudURL } from '../../nextcloud/methods';
 import Structures from '../../structures/structures';
 import Nextcloud from '../../nextcloud/nextcloud';
@@ -29,7 +30,13 @@ import {
 if (Meteor.settings.private) {
   const { whiteDomains } = Meteor.settings.private;
   if (!!whiteDomains && whiteDomains.length > 0) {
-    logServer(i18n.__('api.users.logWhiteDomains', { domains: JSON.stringify(whiteDomains) }));
+    // logServer(i18n.__('api.users.logWhiteDomains', { domains: JSON.stringify(whiteDomains) }));
+    logServer(
+      `USERS - METHODS - ${i18n.__('api.users.logWhiteDomains', { domains: JSON.stringify(whiteDomains) })}`,
+      levels.INFO,
+      scopes.SYSTEM,
+      {},
+    );
   }
 }
 
@@ -1188,10 +1195,22 @@ export const fixUsers = new ValidatedMethod({
         }
         if (!user.nclocator) updateInfos.nclocator = getRandomNCloudURL();
         Meteor.users.update({ _id: user._id }, { $set: updateInfos });
-        logServer(`- fixed user ${updateInfos.username} (email:${updateInfos.primaryEmail})`);
+        // logServer(`- fixed user ${updateInfos.username} (email:${updateInfos.primaryEmail})`);
+        logServer(
+          `USERS - METHODS - fixed user ${updateInfos.username} (email:${updateInfos.primaryEmail})`,
+          levels.ERROR,
+          scopes.SYSTEM,
+          {},
+        );
         fixedCount += 1;
       } else {
-        logServer(`- could not fix user '${user._id}', no keycloak data available`);
+        // logServer(`- could not fix user '${user._id}', no keycloak data available`);
+        logServer(
+          `USERS - METHODS - could not fix user '${user._id}', no keycloak data available`,
+          levels.ERROR,
+          scopes.SYSTEM,
+          {},
+        );
       }
     });
     return fixedCount;

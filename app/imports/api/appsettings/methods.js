@@ -7,14 +7,21 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { Roles } from 'meteor/alanning:roles';
 import i18n from 'meteor/universe:i18n';
 import sanitizeHtml from 'sanitize-html';
-import logServer from '../logging';
+
+import logServer, { levels, scopes } from '../logging';
 
 import { isActive, getLabel, validateString } from '../utils';
 import AppSettings from './appsettings';
 
 export function checkMigrationStatus() {
   if (Migrations._getControl().locked === true) {
-    logServer('Migration lock detected !!!!', 'error');
+    // logServer('Migration lock detected !!!!', 'error');
+    logServer(
+      `APPSETTINGS - METHODS - checkMigrationStatus,Migration lock detected !!!!`,
+      levels.ERROR,
+      scopes.SYSTEM,
+      {},
+    );
     AppSettings.update({}, { $set: { maintenance: true, textMaintenance: 'api.appsettings.migrationLockedText' } });
   }
 }

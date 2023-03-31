@@ -1,6 +1,7 @@
 import { Migrations } from 'meteor/percolate:migrations';
 import { Meteor } from 'meteor/meteor';
 import { WebApp } from 'meteor/webapp';
+import { NOTIFICATIONS_TYPES, SCOPE_TYPES } from '../../api/notifications/enums';
 import { checkMigrationStatus } from '../../api/appsettings/methods';
 
 // import i18n translation files
@@ -25,10 +26,17 @@ import './db-initialize/Groups';
 import './db-initialize/Tags';
 import './db-initialize/Articles';
 import './db-initialize/AppSettings';
+import logServer from '../../api/logging';
 // import './db-initialize/PersonalSpaces';
 
 Meteor.startup(() => {
+  logServer('STARTUP - log function works correctly', NOTIFICATIONS_TYPES.INFO, SCOPE_TYPES.SYSTEM, { itWorks: true });
+  logServer('STARTUP - log function works correctly', NOTIFICATIONS_TYPES.ERROR, SCOPE_TYPES.SYSTEM, {
+    itWorks: false,
+  });
+
   Migrations.migrateTo('latest');
+
   checkMigrationStatus();
   // set up Default language to French in HTML attribute
   WebApp.addHtmlAttributeHook(() => ({ lang: 'fr' }));

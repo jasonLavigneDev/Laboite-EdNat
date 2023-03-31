@@ -6,6 +6,7 @@ import i18n from 'meteor/universe:i18n';
 import { isActive, getLabel } from '../../utils';
 import Groups from '../groups';
 import { favGroup } from '../methods';
+import logServer, { levels, scopes } from '../../logging';
 
 export const addGroupMembersToGroup = new ValidatedMethod({
   name: 'groups.addGroupMembersToGroup',
@@ -52,6 +53,11 @@ export const addGroupMembersToGroup = new ValidatedMethod({
         nb += 1;
       }
     });
+    logServer(
+      `GROUPS - addGroupMembersToGroup - User ${this.userId} add members to group ${groupId} `,
+      levels.VERBOSE,
+      scopes.USER,
+    );
 
     return nb;
   },

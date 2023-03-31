@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import i18n from 'meteor/universe:i18n';
 import axios from 'axios';
-import logServer from '../../logging';
+import logServer, { levels, scopes } from '../../logging';
 
 export default async function getNcToken(req, content) {
   // sample use:
@@ -35,8 +35,18 @@ export default async function getNcToken(req, content) {
         );
       })
       .catch((err) => {
-        logServer(err);
-        logServer(i18n.__('api.nextcloud.getTokenError', { user: user.username }), 'error');
+        // logServer(err);
+        // logServer(i18n.__('api.nextcloud.getTokenError', { user: user.username }), 'error');
+        logServer(
+          `NEXTCLOUD - REST - getNcToken - ${i18n.__('api.nextcloud.getTokenError', { user: user.username })}`,
+          levels.ERROR,
+          scopes.SYSTEM,
+          {
+            content,
+            user,
+            err,
+          },
+        );
         throw new Meteor.Error(
           'restapi.nextcloud.getNcToken.tokenRequestError',
           i18n.__('api.nextcloud.getTokenError', { user: user.username }),

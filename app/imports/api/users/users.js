@@ -2,7 +2,8 @@ import { Meteor } from 'meteor/meteor';
 import SimpleSchema from 'simpl-schema';
 import { Tracker } from 'meteor/tracker';
 import { Roles } from 'meteor/alanning:roles';
-import logServer from '../logging';
+import logServer, { levels, scopes } from '../logging';
+
 import Structures from '../structures/structures';
 import { getLabel } from '../utils';
 import { getRandomNCloudURL } from '../nextcloud/methods';
@@ -210,9 +211,17 @@ if (Meteor.isServer) {
     const newUser = { ...user };
     if (user.services && user.services.keycloak) {
       /* eslint no-console:off */
-      logServer('Creating new user after Keycloak authentication :');
-      logServer(`  Keycloak id: ${user.services.keycloak.id}`);
-      logServer(`  email: ${user.services.keycloak.email}`);
+      // logServer('Creating new user after Keycloak authentication :');
+      // logServer(`  Keycloak id: ${user.services.keycloak.id}`);
+      // logServer(`  email: ${user.services.keycloak.email}`);
+
+      logServer(
+        `USERS - Creating new user after Keycloak authentication :
+         Keycloak id: ${user.services.keycloak.id}, email: ${user.services.keycloak.email} `,
+        levels.ERROR,
+        scopes.SYSTEM,
+        {},
+      );
 
       // split the email in two parts
       const splittedEmail = user.services.keycloak.email.split('@');

@@ -6,7 +6,7 @@ import Services from './services/services';
 import Groups from './groups/groups';
 import Structures, { defaultIntroduction } from './structures/structures';
 import Tags from './tags/tags';
-import logServer from './logging';
+import logServer, { levels, scopes } from './logging';
 import AppSettings from './appsettings/appsettings';
 import { addItem } from './personalspaces/methods';
 import PersonalSpaces from './personalspaces/personalspaces';
@@ -140,7 +140,13 @@ Migrations.add({
           if (author) {
             updateData.structure = author.structure || '';
           } else {
-            logServer(`Migration: could not find author ${article.userId} for article ${article._id}`);
+            // logServer(`Migration: could not find author ${article.userId} for article ${article._id}`);
+            logServer(
+              `MIGRATIONS - Migration: could not find author ${article.userId} for article ${article._id}`,
+              levels.WARN,
+              scopes.SYSTEM,
+              {},
+            );
           }
         }
         // store tag name in articles instead of _id

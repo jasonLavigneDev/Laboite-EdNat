@@ -2,7 +2,8 @@ import { Meteor } from 'meteor/meteor';
 import i18n from 'meteor/universe:i18n';
 import { Roles } from 'meteor/alanning:roles';
 import checkDomain from '../domains';
-import logServer from '../logging';
+import logServer, { levels, scopes } from '../logging';
+
 import PersonalSpaces from '../personalspaces/personalspaces';
 import Structures from '../structures/structures';
 import Groups from '../groups/groups';
@@ -65,12 +66,21 @@ if (Meteor.isServer) {
         if (!Roles.userIsInRole(details.user._id, 'admin')) {
           Roles.addUsersToRoles(details.user._id, 'admin');
           updateInfos.admin = true;
-          logServer(`${i18n.__('api.users.adminGiven')} : ${details.user.services.keycloak.email}`);
+          // logServer(`${i18n.__('api.users.adminGiven')} : ${details.user.services.keycloak.email}`);
+          logServer(
+            `USERS - ACCOUNTSUSERHOOK - ${i18n.__('api.users.adminGiven')} : ${details.user.services.keycloak.email}`,
+            levels.ERROR,
+            scopes.SYSTEM,
+            {},
+          );
         }
       }
       // signal updates to plugins
       Meteor.call('users.userUpdated', { userId: details.user._id, data: updateInfos }, (err) => {
-        if (err) logServer(`error : ${err}`);
+        if (err) {
+          // logServer(`error : ${err}`)
+          logServer(`USERS - ACCOUNTSUSERHOOK - error: `, levels.ERROR, scopes.SYSTEM, { err });
+        }
       });
 
       // check if user has a personnal space generated from structure
@@ -92,7 +102,8 @@ if (Meteor.isServer) {
               { userId: details.user._id, groupId: userStructure.groupId },
             );
           } catch (err) {
-            logServer(`error : ${err}`);
+            // logServer(`error : ${err}`);
+            logServer(`USERS - ACCOUNTSUSERHOOK - error: `, levels.ERROR, scopes.SYSTEM, { err });
           }
         }
         const structureAncestors = Structures.find({ _id: { $in: userStructure.ancestorsIds } }).fetch();
@@ -107,14 +118,23 @@ if (Meteor.isServer) {
                     { userId: details.user._id, groupId: group.groupId },
                   );
                 } catch (err) {
-                  logServer(`error : ${err}`);
+                  // logServer(`error : ${err}`);
+                  logServer(`USERS - ACCOUNTSUSERHOOK - error: `, levels.ERROR, scopes.SYSTEM, {
+                    err,
+                  });
                 }
               }
             }
           });
         }
       } else if (userGroupOfStructure === null) {
-        logServer(`There is no group attached to structure !!!`);
+        // logServer(`There is no group attached to structure !!!`);
+        logServer(
+          `USERS - ACCOUNTSUSERHOOK - There is no group attached to structure !!!: `,
+          levels.ERROR,
+          scopes.SYSTEM,
+          {},
+        );
       }
     } else {
       Meteor.users.update({ _id: details.user._id }, { $set: { lastLogin: loginDate } });
