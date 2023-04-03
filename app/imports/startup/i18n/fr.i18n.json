@@ -440,6 +440,11 @@
       "warning": "Avertissement serveur",
       "error": "Erreur serveur"
     },
+    "utils": {
+      "scriptDetected": "Du contenu non autorisé a été détecté",
+      "badCharsDetected": "Les caractères suivants sont interdits: < > & ' \"",
+      "stringTooLong": "Chaîne trop longue (500k maximum)"
+    },
     "rateLimitError": "Erreur, trop de requêtes. Merci de patienter {$timeToReset} secondes avant de réessayer."
   },
   "components": {

@@ -114,7 +114,7 @@ function HelpPage() {
 
       setScreencastModal(true);
     } else {
-      window.open(item.content);
+      window.open(item.content, '_blank', 'noopener,noreferrer');
     }
   };
 

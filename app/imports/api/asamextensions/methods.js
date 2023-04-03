@@ -5,6 +5,15 @@ import i18n from 'meteor/universe:i18n';
 import { Roles } from 'meteor/alanning:roles';
 import { _ } from 'meteor/underscore';
 import AsamExtensions from './asamextensions';
+import { validateString } from '../utils';
+
+const validateAsam = (extension, entiteNomCourt, entiteNomLong, familleNomCourt, familleNomLong) => {
+  if (extension) validateString(extension, true);
+  if (entiteNomCourt) validateString(entiteNomCourt, true);
+  if (entiteNomLong) validateString(entiteNomLong, true);
+  if (familleNomCourt) validateString(familleNomCourt, true);
+  if (familleNomLong) validateString(familleNomLong, true);
+};
 
 export const assignStructureToAsam = new ValidatedMethod({
   name: 'asam.assignStructureToAsam',
@@ -41,7 +50,7 @@ export const assignStructureToAsam = new ValidatedMethod({
     if (!isAdmin) {
       throw new Meteor.Error('api.asam.assignStructureToAsam.notPermitted', i18n.__('api.users.adminNeeded'));
     }
-
+    validateAsam(extension, entiteNomCourt, entiteNomLong, familleNomCourt, familleNomLong);
     return AsamExtensions.update(
       { _id: extensionId },
       { $set: { structureId, extension, entiteNomCourt, entiteNomLong, familleNomCourt, familleNomLong } },
@@ -108,7 +117,7 @@ export const addNewAsam = new ValidatedMethod({
     if (!isAdmin) {
       throw new Meteor.Error('api.asamextensions.notPermitted', i18n.__('api.users.adminNeeded'));
     }
-
+    validateAsam(extension, entiteNomCourt, entiteNomLong, familleNomCourt, familleNomLong);
     return AsamExtensions.insert({
       extension,
       entiteNomCourt,

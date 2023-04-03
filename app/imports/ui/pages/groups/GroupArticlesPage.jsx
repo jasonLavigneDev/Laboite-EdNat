@@ -70,8 +70,8 @@ export const useArticlesPageStyles = makeStyles()((theme) => ({
 const ITEM_PER_PAGE = 5;
 
 const getArticleURL = (article) => {
-  if (Meteor.settings.public.laboiteBlogURL !== '') {
-    return `${testMeteorSettingsUrl(Meteor.settings.public.laboiteBlogURL, true)}articles/${article.slug}`;
+  if (Meteor.settings.public.services.laboiteBlogURL !== '') {
+    return `${testMeteorSettingsUrl(Meteor.settings.public.services.laboiteBlogURL, true)}articles/${article.slug}`;
   }
   return `${Meteor.absoluteUrl()}public/${Meteor.userId()}/${article.slug}`;
 };
@@ -99,7 +99,7 @@ const GroupArticlesPage = ({ loading, group }) => {
   const resetSearch = () => setSearch('');
 
   const userInGroup = Roles.userIsInRole(userId, ['member', 'animator', 'admin'], group._id);
-  const blogPage = `${testMeteorSettingsUrl(Meteor.settings.public.laboiteBlogURL, true)}groups/${group.slug}`;
+  const blogPage = `${testMeteorSettingsUrl(Meteor.settings.public.services.laboiteBlogURL, true)}groups/${group.slug}`;
 
   const goBack = () => {
     history.goBack();
@@ -119,12 +119,16 @@ const GroupArticlesPage = ({ loading, group }) => {
             <Button color="primary" startIcon={<ArrowBack />} onClick={goBack}>
               {i18n.__('pages.GroupArticlesPage.back')}
             </Button>
-            {Meteor.settings.public.laboiteBlogURL ? (
+            {Meteor.settings.public.services.laboiteBlogURL ? (
               <Tooltip
                 title={i18n.__(`pages.GroupArticlesPage.openPublicPage`)}
                 aria-label={i18n.__(`pages.GroupArticlesPage.openPublicPage`)}
               >
-                <Button color="primary" startIcon={<OpenInNewIcon />} onClick={() => window.open(blogPage, '_blank')}>
+                <Button
+                  color="primary"
+                  startIcon={<OpenInNewIcon />}
+                  onClick={() => window.open(blogPage, '_blank', 'noopener,noreferrer')}
+                >
                   {i18n.__('pages.GroupArticlesPage.publicPage')}
                 </Button>
               </Tooltip>

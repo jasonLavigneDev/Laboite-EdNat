@@ -4,12 +4,12 @@ import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
 import DoneIcon from '@mui/icons-material/Done';
 
-import { propTypes as structurePropTypes } from '../../../api/structures/structures';
-import { useAppContext } from '../../contexts/context';
+import Structures, { propTypes as structurePropTypes } from '../../../api/structures/structures';
 import { useAwaitingUsers } from '../../../api/users/hooks';
 import AdminUserValidationTable from '../../components/admin/AdminUserValidationTable';
 
-const AdminStructureUsersValidationPage = ({ users, structure, loading }) => {
+const AdminStructureUsersValidationPage = ({ structure, loadingStruct }) => {
+  const { data: users, loading } = useAwaitingUsers({ structureId: structure?._id || null });
   const accept = (user) => {
     const data = { targetUserId: user._id };
     Meteor.call('users.acceptAwaitingStructure', { ...data }, (err) => {
@@ -23,9 +23,9 @@ const AdminStructureUsersValidationPage = ({ users, structure, loading }) => {
 
   return (
     <AdminUserValidationTable
-      title={i18n.__('pages.AdminStructureUsersValidationPage.title', { structureName: structure.name })}
+      title={i18n.__('pages.AdminStructureUsersValidationPage.title', { structureName: structure?.name || '' })}
       users={users}
-      loading={loading}
+      loading={loading || loadingStruct}
       columnsFields={columnsFields}
       actions={[
         {
@@ -42,12 +42,16 @@ const AdminStructureUsersValidationPage = ({ users, structure, loading }) => {
 
 AdminStructureUsersValidationPage.propTypes = {
   structure: structurePropTypes.isRequired,
-  users: PropTypes.arrayOf(PropTypes.any).isRequired,
-  loading: PropTypes.bool.isRequired,
+  loadingStruct: PropTypes.bool.isRequired,
 };
 
 export default withTracker(() => {
-  const [{ user, structure }] = useAppContext();
-  const { data, loading } = useAwaitingUsers({ structureId: structure._id || user.structure });
-  return { users: data, loading, structure };
+  const user = Meteor.user();
+  if (user.structure) {
+    const subscription = Meteor.subscribe('structures.one');
+    const loadingStruct = !subscription.ready();
+    const structure = loadingStruct ? null : Structures.findOne(user.structure);
+    return { loadingStruct, structure };
+  }
+  return { loadingStruct: true, structure: {} };
 })(AdminStructureUsersValidationPage);

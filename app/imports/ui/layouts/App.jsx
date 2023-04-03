@@ -50,7 +50,7 @@ function App() {
   useWidgetLink();
 
   const { userId, loadingUser = false, loading } = state;
-  const externalBlog = !!Meteor.settings.public.laboiteBlogURL;
+  const externalBlog = !!Meteor.settings.public.services.laboiteBlogURL;
   const { disabledFeatures = {}, minioEndPoint } = Meteor.settings.public;
   const enableBlog = !disabledFeatures.blog;
 

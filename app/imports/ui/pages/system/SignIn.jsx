@@ -17,6 +17,7 @@ import Spinner from '../../components/system/Spinner';
 import AppSettings from '../../../api/appsettings/appsettings';
 import Structures from '../../../api/structures/structures';
 import { getCurrentIntroduction } from '../../../api/utils';
+import { useAppContext } from '../../contexts/appContext';
 
 validate.options = {
   fullMessages: false,
@@ -61,6 +62,7 @@ export const checkAccessAndLogin = async (isIframed) => {
 
 function SignIn({ loggingIn, introduction, appsettings, ready }) {
   const { classes } = useStyles();
+  const [{ isIframed }] = useAppContext();
 
   const [rememberMe, setRememberMe] = useState(true);
 
@@ -73,13 +75,21 @@ function SignIn({ loggingIn, introduction, appsettings, ready }) {
 
   const handleKeycloakAuth = async () => {
     // await checkAccessAndLogin();
+    let keycloackLoginStyle = 'redirect';
+
     // trackEvent({
     //   category: 'signin-page',
     //   action: 'connexion-click',
     //   name: 'Connexion avec Keycloak', // optional
     // });
     checkRememberMe();
-    Meteor.loginWithKeycloak();
+    if (
+      (isIframed && Meteor.settings.public.keycloackPopupStyleIframe) ||
+      (!isIframed && Meteor.settings.public.keycloackPopupStyle)
+    ) {
+      keycloackLoginStyle = 'popup';
+    }
+    Meteor.loginWithKeycloak({ loginStyle: keycloackLoginStyle });
   };
 
   const RememberButton = () => (

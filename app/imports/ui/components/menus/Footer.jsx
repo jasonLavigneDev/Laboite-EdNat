@@ -52,7 +52,7 @@ const Footer = () => {
   const { classes } = useStyles();
   const [settingsData, setSettingsData] = useState([]);
   const [{ isMobile }] = useAppContext();
-  const externalBlog = Meteor.settings.public.laboiteBlogURL;
+  const externalBlog = Meteor.settings.public.services.laboiteBlogURL;
   const { disabledFeatures = {} } = Meteor.settings.public;
   const enableBlog = !disabledFeatures.blog;
   const { maintenance = {}, ready = false } = useTracker(() => {

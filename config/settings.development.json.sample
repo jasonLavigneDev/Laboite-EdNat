@@ -6,6 +6,8 @@
     "keycloakUrl": "",
     "keycloakRealm": "",
     "theme": "laboite",
+    "keycloackPopupStyle": false,
+    "keycloackPopupStyleIframe": false,
     "disabledFeatures": {
       "blog": false,
       "notificationsTab": false,
@@ -13,8 +15,8 @@
       "analytics": false,
       "introductionTab": false,
       "introductionTabStructuresInfos": true,
-      "menuAdminDefaultSpaces": true,  // THIS PARAMS IS SET FOR HIDDEN DEFAULTSPACE FUNCTIONNALITY WHICH DOESN'T WORK
-      "mediaStorageMenu": false,
+      "menuAdminDefaultSpaces": true,
+      "mediaStorageMenu": false
     },
     "ui": {
       "defaultGridViewMode": "compact",
@@ -28,7 +30,7 @@
     "countly": {
       "app_key": "lol",
       "url": "https://countly.url.fr",
-      consent: true,
+      "consent": true
     },
     "onBoarding": {
       "enabled": true,
@@ -40,11 +42,33 @@
     "minioPort": null,
     "minioEndPoint": "",
     "minioBucket": "",
-    "imageFilesTypes": ["svg", "png", "jpg", "gif", "jpeg"],
-    "audioFilesTypes": ["wav", "mp3", "ogg"],
-    "videoFilesTypes": ["mp4", "webm", "avi", "wmv"],
-    "textFilesTypes": ["pdf", "odt", "txt", "docx"],
-    "otherFilesTypes": ["csv"],
+    "imageFilesTypes": [
+      "svg",
+      "png",
+      "jpg",
+      "gif",
+      "jpeg"
+    ],
+    "audioFilesTypes": [
+      "wav",
+      "mp3",
+      "ogg"
+    ],
+    "videoFilesTypes": [
+      "mp4",
+      "webm",
+      "avi",
+      "wmv"
+    ],
+    "textFilesTypes": [
+      "pdf",
+      "odt",
+      "txt",
+      "docx"
+    ],
+    "otherFilesTypes": [
+      "csv"
+    ],
     "minioFileSize": 500000,
     "minioStorageFilesSize": 3000000,
     "maxMinioDiskPerUser": 1000000,
@@ -70,10 +94,11 @@
         "enableChangeName": false
       }
     },
-    "services":{
+    "services": {
       "agendaUrl": "",
       "sondagesUrl": "",
-      "mezigUrl": ""
+      "mezigUrl": "",
+      "laboiteBlogURL": ""
     }
   },
   "franceTransfert": {
@@ -90,15 +115,16 @@
   "nextcloud": {
     "nextcloudUser": "",
     "nextcloudPassword": "",
-    "nextcloudQuota": "1073741824"
+    "nextcloudQuota": "1073741824",
     "nextcloudApiKeys": [],
     "sessionTokenKey": "",
-    "sessionTokenAppName": "apps.education.fr"  },
+    "sessionTokenAppName": "apps.education.fr"
+  },
   "rocketChat": {
     "rocketChatUser": "",
     "rocketChatPassword": ""
   },
-  "smtp":{
+  "smtp": {
     "url": "smtps://USERNAME:PASSWORD@HOST:PORT",
     "fromEmail": "",
     "toEmail": ""

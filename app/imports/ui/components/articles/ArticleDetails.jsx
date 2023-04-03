@@ -67,8 +67,8 @@ export default function ArticleDetails({ article, publicPage }) {
   const { classes } = useStyles();
   const history = useHistory();
   let articleURL;
-  if (Meteor.settings.public.laboiteBlogURL !== '') {
-    articleURL = `${Meteor.settings.public.laboiteBlogURL}/articles/${article.slug}`;
+  if (Meteor.settings.public.services.laboiteBlogURL !== '') {
+    articleURL = `${Meteor.settings.public.services.laboiteBlogURL}/articles/${article.slug}`;
   } else {
     articleURL = `${Meteor.absoluteUrl()}public/${Meteor.userId()}/${article.slug}`;
   }
@@ -97,7 +97,7 @@ export default function ArticleDetails({ article, publicPage }) {
           className={classes.buttonText}
           color="primary"
           variant="contained"
-          onClick={() => window.open(articleURL, '_blank')}
+          onClick={() => window.open(articleURL, '_blank', 'noreferrer,noopener')}
         >
           <OpenInNewIcon fontSize="large" />
         </Button>
