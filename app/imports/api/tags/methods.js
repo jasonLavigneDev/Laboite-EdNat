@@ -6,7 +6,7 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import i18n from 'meteor/universe:i18n';
 import { Roles } from 'meteor/alanning:roles';
 
-import { isActive, getLabel } from '../utils';
+import { isActive, getLabel, validateString } from '../utils';
 import Tags from './tags';
 
 export const createTag = new ValidatedMethod({
@@ -23,6 +23,7 @@ export const createTag = new ValidatedMethod({
     if (name !== name.toLowerCase()) {
       throw new Meteor.Error('api.tags.createTag.notLowerCase', i18n.__('api.tags.notLowerCase'));
     }
+    validateString(name);
     return Tags.insert({
       name: name.toLowerCase(),
     });
@@ -71,6 +72,7 @@ export const updateTag = new ValidatedMethod({
     if (!authorized) {
       throw new Meteor.Error('api.tags.updateTag.notPermitted', i18n.__('api.users.notPermitted'));
     }
+    validateString(data.name);
     return Tags.update({ _id: tagId }, { $set: data });
   },
 });

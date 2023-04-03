@@ -44,8 +44,7 @@ function App() {
   enableLinkTracking();
 
   const { userId, loadingUser = false, loading } = state;
-  const useKeycloak = Meteor.settings.public.enableKeycloak;
-  const externalBlog = !!Meteor.settings.public.laboiteBlogURL;
+  const externalBlog = !!Meteor.settings.public.services.laboiteBlogURL;
   const { disabledFeatures = {}, minioEndPoint } = Meteor.settings.public;
   const enableBlog = !disabledFeatures.blog;
 
@@ -62,7 +61,6 @@ function App() {
           <CssBaseline />
           <Switch>
             <PublicRoute exact path="/signin" component={SignLayout} {...state} />
-            {useKeycloak ? null : <PublicRoute exact path="/signup" component={SignLayout} {...state} />}
             {externalBlog || !enableBlog ? null : <Route exact path="/public/" component={PublishersPage} />}
             {externalBlog || !enableBlog ? null : <Route exact path="/public/:userId" component={ArticlesPage} />}
             {externalBlog || !enableBlog ? null : (

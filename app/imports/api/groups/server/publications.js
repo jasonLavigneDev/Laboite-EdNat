@@ -7,7 +7,8 @@ import SimpleSchema from 'simpl-schema';
 import { checkPaginationParams, isActive, getLabel } from '../../utils';
 import Groups from '../groups';
 import AppRoles from '../../users/users';
-import logServer from '../../logging';
+import logServer, { levels, scopes } from '../../logging';
+
 import Polls from '../../polls/polls';
 import EventsAgenda from '../../eventsAgenda/eventsAgenda';
 import Bookmarks from '../../bookmarks/bookmarks';
@@ -80,7 +81,16 @@ FindFromPublication.publish('groups.one.admin', function GroupsOne({ _id }) {
       },
     }).validate({ _id });
   } catch (err) {
-    logServer(`publish groups.one.admin : ${err}`);
+    // logServer(`publish groups.one.admin : ${err}`);
+    logServer(
+      `GROUPS - PUBLICATION - groups.one.admin,publish groups.one.admin : ${err}`,
+      levels.ERROR,
+      scopes.SYSTEM,
+      {
+        _id,
+        err,
+      },
+    );
     this.error(err);
   }
   return Groups.find({ _id }, { fields: Groups.adminFields, sort: { name: 1 }, limit: 1 });
@@ -100,7 +110,12 @@ publishComposite('groups.users', function groupDetails({ groupId, role = 'member
       },
     }).validate({ groupId, role });
   } catch (err) {
-    logServer(`publish groups.users : ${err}`);
+    // logServer(`publish groups.users : ${err}`);
+    logServer(`GROUPS - PUBLICATION - groups.users,publish groups.users : ${err}`, levels.ERROR, scopes.SYSTEM, {
+      groupId,
+      role: 'member',
+      err,
+    });
     this.error(err);
   }
   if (!isActive(this.userId)) {
@@ -193,7 +208,13 @@ FindFromPublication.publish('groups.all', function groupsAll({ page, search, ite
   try {
     checkPaginationParams.validate({ page, itemPerPage, search });
   } catch (err) {
-    logServer(`publish groups.all : ${err}`);
+    // logServer(`publish groups.all : ${err}`);
+    logServer(`GROUPS - PUBLICATION - groups.all,publish groups.all : ${err}`, levels.ERROR, scopes.SYSTEM, {
+      page,
+      itemPerPage,
+      search,
+      err,
+    });
     this.error(err);
   }
 
@@ -220,7 +241,13 @@ FindFromPublication.publish('groups.memberOf', function groupsMemberOf({ page, s
   try {
     checkPaginationParams.validate({ page, itemPerPage, search });
   } catch (err) {
-    logServer(`publish groups.memberOf : ${err}`);
+    // logServer(`publish groups.memberOf : ${err}`);
+    logServer(`GROUPS - PUBLICATION - groups.memberOf,publish groups.memberOf : ${err}`, levels.ERROR, scopes.SYSTEM, {
+      page,
+      itemPerPage,
+      search,
+      err,
+    });
     this.error(err);
   }
 
@@ -254,7 +281,11 @@ FindFromPublication.publish('groups.one', function groupsOne({ slug }) {
       },
     }).validate({ slug });
   } catch (err) {
-    logServer(`publish groups.one : ${err}`);
+    // logServer(`publish groups.one : ${err}`);
+    logServer(`GROUPS - PUBLICATION - groups.one, publish groups.one : ${err}`, levels.ERROR, scopes.SYSTEM, {
+      slug,
+      err,
+    });
     this.error(err);
   }
   return Groups.find(
@@ -280,7 +311,11 @@ publishComposite('groups.single', function groupSingle({ slug }) {
       },
     }).validate({ slug });
   } catch (err) {
-    logServer(`publish groups.one : ${err}`);
+    // logServer(`publish groups.one : ${err}`);
+    logServer(`GROUPS - PUBLICATION - groups.single, publish groups.one : ${err}`, levels.ERROR, scopes.SYSTEM, {
+      slug,
+      err,
+    });
     this.error(err);
   }
 

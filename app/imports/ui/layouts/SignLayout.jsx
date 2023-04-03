@@ -6,7 +6,6 @@ import { useTheme } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
 import { useTracker } from 'meteor/react-meteor-data';
 import LanguageSwitcher from '../components/system/LanguageSwitcher';
-import SignUp from '../pages/system/SignUp';
 import SignIn from '../pages/system/SignIn';
 import Footer from '../components/menus/Footer';
 import Contact from '../pages/system/Contact';
@@ -124,7 +123,6 @@ export default function SignLayout() {
               )}
               <Switch>
                 <Route exact path="/signin" component={SignIn} />
-                <Route exact path="/signup" component={SignUp} />
                 <Route exact path="/contact" component={Contact} />
               </Switch>
               <LanguageSwitcher />

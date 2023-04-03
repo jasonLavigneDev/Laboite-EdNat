@@ -5,7 +5,7 @@ import SimpleSchema from 'simpl-schema';
 import { Roles } from 'meteor/alanning:roles';
 import { _ } from 'meteor/underscore';
 import i18n from 'meteor/universe:i18n';
-import { isActive, getLabel } from '../utils';
+import { isActive, getLabel, validateString } from '../utils';
 import Bookmarks from './bookmarks';
 
 function _updateBookmarkURL(id, url, name, tag) {
@@ -60,7 +60,9 @@ export const createBookmark = new ValidatedMethod({
         i18n.__('api.bookmarks.createBookmark.URLAlreadyExists'),
       );
     }
-
+    validateString(finalUrl);
+    validateString(name);
+    validateString(tag);
     _createBookmarkUrl(finalUrl, name, tag, groupId, this.userId);
     return finalUrl;
   },
@@ -69,10 +71,10 @@ export const createBookmark = new ValidatedMethod({
 export const updateBookmark = new ValidatedMethod({
   name: 'bookmark.updateURL',
   validate: new SimpleSchema({
-    id: { type: String, regEx: SimpleSchema.RegEx.url, label: getLabel('api.bookmarks.labels.id') },
+    id: { type: String, regEx: SimpleSchema.RegEx.Id, label: getLabel('api.bookmarks.labels.id') },
     url: { type: String, regEx: SimpleSchema.RegEx.url, label: getLabel('api.bookmarks.labels.url') },
-    name: { type: String, regEx: SimpleSchema.RegEx.url, label: getLabel('api.bookmarks.labels.name') },
-    tag: { type: String, regEx: SimpleSchema.RegEx.url, label: getLabel('api.bookmarks.labels.tag'), defaultValue: '' },
+    name: { type: String, label: getLabel('api.bookmarks.labels.name') },
+    tag: { type: String, label: getLabel('api.bookmarks.labels.tag'), defaultValue: '' },
     groupId: { type: String, regEx: SimpleSchema.RegEx.Id, label: getLabel('api.groups.labels.id') },
   }).validator({ clean: true }),
 
@@ -93,6 +95,9 @@ export const updateBookmark = new ValidatedMethod({
 
     const finalUrl = _formatURL(url);
 
+    validateString(finalUrl);
+    validateString(name);
+    validateString(tag);
     _updateBookmarkURL(id, finalUrl, name, tag);
     return finalUrl;
   },

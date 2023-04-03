@@ -6,7 +6,7 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { Roles } from 'meteor/alanning:roles';
 import i18n from 'meteor/universe:i18n';
 
-import { isActive, getLabel } from '../utils';
+import { isActive, getLabel, validateString } from '../utils';
 import BusinessReGrouping from './businessReGrouping';
 import Services from '../services/services';
 import Structures from '../structures/structures';
@@ -16,7 +16,11 @@ export const createBusinessReGrouping = new ValidatedMethod({
   structure: 'BusinessReGrouping.createBusinessReGrouping',
   validate: new SimpleSchema({
     name: { type: String, min: 1, label: getLabel('api.businessReGrouping.labels.name') },
-    structure: { type: String, min: 1, label: getLabel('api.businessReGrouping.labels.structure') },
+    structure: {
+      type: String,
+      regEx: SimpleSchema.RegEx.Id,
+      label: getLabel('api.businessReGrouping.labels.structure'),
+    },
   }).validator(),
 
   run({ name, structure }) {
@@ -51,6 +55,7 @@ export const createBusinessReGrouping = new ValidatedMethod({
         i18n.__('api.users.adminNeeded'),
       );
     }
+    validateString(name);
     BusinessReGrouping.insert({
       name,
       structure,
@@ -66,7 +71,11 @@ export const removeBusinessReGrouping = new ValidatedMethod({
       regEx: SimpleSchema.RegEx.Id,
       label: getLabel('api.businessReGrouping.labels.id'),
     },
-    structure: { type: String, min: 1, label: getLabel('api.businessReGrouping.labels.structure') },
+    structure: {
+      type: String,
+      regEx: SimpleSchema.RegEx.Id,
+      label: getLabel('api.businessReGrouping.labels.structure'),
+    },
   }).validator(),
 
   run({ businessReGroupingId, structure }) {
@@ -104,7 +113,11 @@ export const updateBusinessReGrouping = new ValidatedMethod({
     },
     data: Object,
     'data.name': { type: String, min: 1, label: getLabel('api.businessReGrouping.labels.name') },
-    'data.structure': { type: String, min: 1, label: getLabel('api.businessReGrouping.labels.structure') },
+    'data.structure': {
+      type: String,
+      regEx: SimpleSchema.RegEx.Id,
+      label: getLabel('api.businessReGrouping.labels.structure'),
+    },
   }).validator(),
 
   run({ businessReGroupingId, data }) {
@@ -126,6 +139,7 @@ export const updateBusinessReGrouping = new ValidatedMethod({
         i18n.__('api.users.adminNeeded'),
       );
     }
+    validateString(data.name);
     BusinessReGrouping.update({ _id: businessReGroupingId }, { $set: data });
   },
 });

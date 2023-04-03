@@ -437,6 +437,11 @@
       "warning": "Server warning",
       "error": "Server error"
     },
+    "utils": {
+      "scriptDetected": "Forbidden content has been detected",
+      "badCharsDetected": "Following characters are Forbidden: < > & ' \"",
+      "stringTooLong": "String is too long (max 500k)"
+    },
     "rateLimitError": "Error, too many requests. Please slow down. You must wait {$timeToReset} seconds before trying again."
   },
   "components": {
@@ -1028,18 +1033,6 @@
       "rememberMe": "Remember me",
       "maintenanceLogin": "Site in maintenance"
     },
-    "SignUp": {
-      "appDescription": "Create new account",
-      "firstNameLabel": "First name",
-      "lastNameLabel": "Last name",
-      "userNameLabel": "User name",
-      "emailLabel": "Email",
-      "pwdLabel": "Password",
-      "pwdButtonLabel": "Toggle password visibility",
-      "structureLabel": "Connection structure",
-      "submitButtonLabel": "Sign Up",
-      "createError": "Error: impossible to create this account"
-    },
     "ContactForm": {
       "appDescription": "Send contact formular",
       "firstNameLabel": "First name",
@@ -1057,6 +1050,9 @@
     },
     "ProfilePage": {
       "title": "My settings",
+      "firstNameLabel": "First name",
+      "lastNameLabel": "Last name",
+      "emailLabel": "Email",
       "useEmail": "Use my email",
       "usernameError": "Name not available",
       "emailAlreadyExists": "Email already exists",
@@ -1255,8 +1251,11 @@
       "setAdmin": "Give admin rights",
       "unsetAdmin": "Remove admin rights",
       "deleteUser": "Remove user",
+      "deleteUserFromStructure": "Remove from structure",
       "deleteUserConfirmation": "Do you really want to delete this user ?",
+      "deleteUserFromStructureConfirmation": "Do you really want to remove this user from structure ?",
       "deleteSelfConfirmation": "You are about to delete your own account. Continue ?",
+      "deleteSelfFromStructureConfirmation": "You are about to remove yourself from structure. Continue ?",
       "cancelDelete": "Cancel deletion",
       "successSetAdmin": "admin rights have been granted",
       "successUnsetAdmin": "admin rights have been revoked",

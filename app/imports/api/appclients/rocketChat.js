@@ -3,7 +3,7 @@ import { Meteor } from 'meteor/meteor';
 import i18n from 'meteor/universe:i18n';
 import { Roles } from 'meteor/alanning:roles';
 import Groups from '../groups/groups';
-import logServer from '../logging';
+import logServer, { levels, scopes } from '../logging';
 import { genRandomPassword, isActive } from '../utils';
 
 const rcPlugin = Meteor.settings.public.groupPlugins.rocketChat;
@@ -20,7 +20,13 @@ class RocketChatClient {
     // initialize client id and check that we can get tokens
     this._getToken().then((initToken) => {
       if (initToken) {
-        logServer(i18n.__('api.rocketChat.initClient'));
+        // logServer(i18n.__('api.rocketChat.initClient'));
+        logServer(
+          `APPCLIENT - ROCKETCHAT - _getToken - ${i18n.__('api.rocketChat.initClient')}`,
+          levels.INFO,
+          scopes.SYSTEM,
+          {},
+        );
       }
     });
   }
@@ -57,14 +63,37 @@ class RocketChatClient {
       )
       .then((response) => {
         if (response.data.status === 'success') {
-          logServer(i18n.__('api.rocketChat.logout'));
+          // logServer(i18n.__('api.rocketChat.logout'));
+          logServer(
+            `APPCLIENT - ROCKETCHAT - _expire - ${i18n.__('api.rocketChat.logout')}`,
+            levels.INFO,
+            scopes.SYSTEM,
+            {},
+          );
         } else {
-          logServer(i18n.__('api.rocketChat.logoutError'), 'error');
+          // logServer(i18n.__('api.rocketChat.logoutError'), 'error');
+          logServer(
+            `APPCLIENT - ROCKETCHAT - _expire - ${i18n.__('api.rocketChat.logoutError')}`,
+            levels.ERROR,
+            scopes.SYSTEM,
+            {
+              response: response.toString(),
+            },
+          );
         }
       })
       .catch((error) => {
-        logServer(i18n.__('api.rocketChat.logoutError'), 'error');
-        logServer(error.response && error.response.data ? error.response.data : error, 'error');
+        // logServer(i18n.__('api.rocketChat.logoutError'), 'error');
+        // logServer(error.response && error.response.data ? error.response.data : error, 'error');
+
+        logServer(
+          `APPCLIENT - ROCKETCHAT - _expire - ${i18n.__('api.rocketChat.logoutError')}`,
+          levels.ERROR,
+          scopes.SYSTEM,
+          {
+            error: error.response && error.response.data ? error.response.data : error,
+          },
+        );
       });
   }
 
@@ -90,8 +119,16 @@ class RocketChatClient {
     return this._checkToken()
       .then((newToken) => Promise.resolve(newToken))
       .catch((error) => {
-        logServer(i18n.__('api.rocketChat.tokenError'), 'error');
-        logServer(error.response && error.response.data ? error.response.data : error, 'error');
+        // logServer(i18n.__('api.rocketChat.tokenError'), 'error');
+        // logServer(error.response && error.response.data ? error.response.data : error, 'error');
+        logServer(
+          `APPCLIENT - ROCKETCHAT - _getToken - ${i18n.__('api.rocketChat.tokenError')}`,
+          levels.ERROR,
+          scopes.SYSTEM,
+          {
+            error: error.response && error.response.data ? error.response.data : error,
+          },
+        );
         return null;
       });
   }
@@ -147,16 +184,44 @@ class RocketChatClient {
           )
           .then((response) => {
             if (response.data && response.data.success === true) {
-              logServer(i18n.__('api.rocketChat.groupAdded', { name }));
+              // logServer(i18n.__('api.rocketChat.groupAdded', { name }));
+              logServer(
+                `APPCLIENT - ROCKETCHAT - createGroup - ${i18n.__('api.rocketChat.groupAdded', { name })}`,
+                levels.INFO,
+                scopes.USER,
+                {
+                  name,
+                  callerId,
+                },
+              );
               return response.data.group;
             }
-            logServer(`${i18n.__('api.rocketChat.groupAddError', { name })} (${response.error})`, 'error', callerId);
+            // logServer(`${i18n.__('api.rocketChat.groupAddError', { name })} (${response.error})`, 'error', callerId);
+            logServer(
+              `APPCLIENT - ROCKETCHAT - createGroup - ${i18n.__('api.rocketChat.groupAddError', { name })}`,
+              levels.ERROR,
+              scopes.USER,
+              {
+                name,
+                callerId,
+              },
+            );
             return null;
           });
       })
       .catch((error) => {
-        logServer(i18n.__('api.rocketChat.groupAddError', { name }), 'error', callerId);
-        logServer(error.response && error.response.data ? error.response.data : error, 'error');
+        // logServer(i18n.__('api.rocketChat.groupAddError', { name }), 'error', callerId);
+        // logServer(error.response && error.response.data ? error.response.data : error, 'error');
+        logServer(
+          `APPCLIENT - ROCKETCHAT - createGroup - ${i18n.__('api.rocketChat.groupAddError', { name })}`,
+          levels.ERROR,
+          scopes.USER,
+          {
+            name,
+            callerId,
+            error: error.response && error.response.data ? error.response.data : error,
+          },
+        );
         return null;
       });
   }
@@ -182,16 +247,49 @@ class RocketChatClient {
           )
           .then((response) => {
             if (response.data && response.data.success === true) {
-              logServer(i18n.__('api.rocketChat.groupRenamed', { slug }));
+              // logServer(i18n.__('api.rocketChat.groupRenamed', { slug }));
+              logServer(
+                `APPCLIENT - ROCKETCHAT - renameGroup - ${i18n.__('api.rocketChat.groupRenamed', { slug })}`,
+                levels.INFO,
+                scopes.USER,
+                {
+                  rcGroup,
+                  slug,
+                  callerId,
+                },
+              );
               return response.data.group;
             }
-            logServer(`${i18n.__('api.rocketChat.groupRenameError', { slug })} (${response.error})`, 'error', callerId);
+            // logServer(`${i18n.__('api.rocketChat.groupRenameError', { slug })} (${response.error})`, 'error', callerId);
+            logServer(
+              `APPCLIENT - ROCKETCHAT - renameGroup - ${i18n.__('api.rocketChat.groupRenameError', { slug })}`,
+              levels.ERROR,
+              scopes.USER,
+              {
+                rcGroup,
+                slug,
+                callerId,
+              },
+            );
             return null;
           });
       })
       .catch((error) => {
-        logServer(i18n.__('api.rocketChat.groupRenameError', { slug }), 'error', callerId);
-        logServer(error.response && error.response.data ? error.response.data : error, 'error');
+        // logServer(i18n.__('api.rocketChat.groupRenameError', { slug }), 'error', callerId);
+        // logServer(error.response && error.response.data ? error.response.data : error, 'error');
+
+        logServer(
+          `APPCLIENT - ROCKETCHAT - renameGroup - ${i18n.__('api.rocketChat.groupRenameError', { slug })}`,
+          levels.ERROR,
+          scopes.USER,
+          {
+            rcGroup,
+            slug,
+            callerId,
+            error: error.response && error.response.data ? error.response.data : error,
+          },
+        );
+
         return null;
       });
   }
@@ -216,20 +314,48 @@ class RocketChatClient {
           )
           .then((response) => {
             if (response.data.success === true) {
-              logServer(i18n.__('api.rocketChat.groupRemoved', { name }));
-            } else {
+              // logServer(i18n.__('api.rocketChat.groupRemoved', { name }));
               logServer(
-                `${i18n.__('api.rocketChat.groupRemoveError', { name })} (${response.error})`,
-                'error',
-                callerId,
+                `APPCLIENT - ROCKETCHAT - removeGroup - ${i18n.__('api.rocketChat.groupRemoved', { name })}`,
+                levels.INFO,
+                scopes.USER,
+                {
+                  name,
+                  callerId,
+                },
+              );
+            } else {
+              // logServer(
+              //   `${i18n.__('api.rocketChat.groupRemoveError', { name })} (${response.error})`,
+              //   'error',
+              //   callerId,
+              // );
+              logServer(
+                `APPCLIENT - ROCKETCHAT - removeGroup - ${i18n.__('api.rocketChat.groupRemoveError', { name })}`,
+                levels.ERROR,
+                scopes.USER,
+                {
+                  name,
+                  callerId,
+                },
               );
             }
             return response.data.success;
           });
       })
       .catch((error) => {
-        logServer(i18n.__('api.rocketChat.groupRemoveError', { name }), 'error', callerId);
-        logServer(error.response && error.response.data ? error.response.data : error, 'error');
+        // logServer(i18n.__('api.rocketChat.groupRemoveError', { name }), 'error', callerId);
+        // logServer(error.response && error.response.data ? error.response.data : error, 'error');
+        logServer(
+          `APPCLIENT - ROCKETCHAT - removeGroup - ${i18n.__('api.rocketChat.groupRemoveError', { name })}`,
+          levels.ERROR,
+          scopes.USER,
+          {
+            name,
+            callerId,
+            error: error.response && error.response.data ? error.response.data : error,
+          },
+        );
         return null;
       });
   }
@@ -254,13 +380,30 @@ class RocketChatClient {
               if (response.data.users.length > 0) return response.data.users[0];
               return null;
             }
-            logServer(`${i18n.__('api.rocketChat.getUserError')} (${response.error})`, 'error');
+            // logServer(`${i18n.__('api.rocketChat.getUserError')} (${response.error})`, 'error');
+            logServer(
+              `APPCLIENT - ROCKETCHAT - _getUserByUsername - ${i18n.__('api.rocketChat.getUserError')}`,
+              levels.ERROR,
+              scopes.SYSTEM,
+              {
+                username,
+              },
+            );
             return null;
           });
       })
       .catch((error) => {
-        logServer(i18n.__('api.rocketChat.getUserError'), 'error');
-        logServer(error.response && error.response.data ? error.response.data : error, 'error');
+        // logServer(i18n.__('api.rocketChat.getUserError'), 'error');
+        // logServer(error.response && error.response.data ? error.response.data : error, 'error');
+        logServer(
+          `APPCLIENT - ROCKETCHAT - _getUserByUsername - ${i18n.__('api.rocketChat.getUserError')}`,
+          levels.ERROR,
+          scopes.SYSTEM,
+          {
+            username,
+            error: error.response && error.response.data ? error.response.data : error,
+          },
+        );
         return null;
       });
   }
@@ -288,12 +431,38 @@ class RocketChatClient {
             )
             .then((response) => {
               if (response.data && response.data.success === true) {
-                logServer(i18n.__('api.rocketChat.userInvited', { groupId, username }));
-              } else {
+                // logServer(i18n.__('api.rocketChat.userInvited', { groupId, username }));
                 logServer(
-                  `${i18n.__('api.rocketChat.userInviteError', { groupId, username })} (${response.data.error})`,
-                  'error',
-                  callerId,
+                  `APPCLIENT - ROCKETCHAT - inviteUser - ${i18n.__('api.rocketChat.userInvited', {
+                    groupId,
+                    username,
+                  })}`,
+                  levels.INFO,
+                  scopes.USER,
+                  {
+                    groupId,
+                    username,
+                    callerId,
+                  },
+                );
+              } else {
+                // logServer(
+                //   `${i18n.__('api.rocketChat.userInviteError', { groupId, username })} (${response.data.error})`,
+                //   'error',
+                //   callerId,
+                // );
+                logServer(
+                  `APPCLIENT - ROCKETCHAT - inviteUser - ${i18n.__('api.rocketChat.userInviteError', {
+                    groupId,
+                    username,
+                  })}`,
+                  levels.ERROR,
+                  scopes.USER,
+                  {
+                    groupId,
+                    username,
+                    callerId,
+                  },
                 );
               }
               return response.data.success;
@@ -301,8 +470,19 @@ class RocketChatClient {
         }),
       )
       .catch((error) => {
-        logServer(i18n.__('api.rocketChat.userInviteError', { groupId, username }), 'error', callerId);
-        logServer(error.response && error.response.data ? error.response.data : error, 'error');
+        // logServer(i18n.__('api.rocketChat.userInviteError', { groupId, username }), 'error', callerId);
+        // logServer(error.response && error.response.data ? error.response.data : error, 'error');
+        logServer(
+          `APPCLIENT - ROCKETCHAT - inviteUser - ${i18n.__('api.rocketChat.userInviteError', { groupId, username })}`,
+          levels.ERROR,
+          scopes.USER,
+          {
+            groupId,
+            username,
+            callerId,
+            error: error.response && error.response.data ? error.response.data : error,
+          },
+        );
         return null;
       });
   }
@@ -331,22 +511,48 @@ class RocketChatClient {
             )
             .then((response) => {
               if (response.data && response.data.success === true) {
+                // logServer(
+                //   i18n.__(`api.rocketChat.${setMode ? 'roleSet' : 'roleUnset'}`, {
+                //     groupId,
+                //     username,
+                //     role: displayRole,
+                //   }),
+                // );
                 logServer(
-                  i18n.__(`api.rocketChat.${setMode ? 'roleSet' : 'roleUnset'}`, {
+                  `APPCLIENT - ROCKETCHAT - changeRole - ${i18n.__(`api.rocketChat`)}`,
+                  levels.INFO,
+                  scopes.USER,
+                  {
+                    APIUrl,
+                    setMode,
                     groupId,
                     username,
                     role: displayRole,
-                  }),
+                    callerId,
+                  },
                 );
               } else {
+                // logServer(
+                //   `${i18n.__(`api.rocketChat.${setMode ? 'setRoleError' : 'unsetRoleError'}`, {
+                //     groupId,
+                //     username,
+                //     role: displayRole,
+                //   })} (${response.data.error})`,
+                //   'error',
+                //   callerId,
+                // );
                 logServer(
-                  `${i18n.__(`api.rocketChat.${setMode ? 'setRoleError' : 'unsetRoleError'}`, {
+                  `APPCLIENT - ROCKETCHAT - changeRole - ${i18n.__(`api.rocketChat`)}`,
+                  levels.ERROR,
+                  scopes.USER,
+                  {
+                    APIUrl,
+                    setMode,
                     groupId,
                     username,
                     role: displayRole,
-                  })} (${response.data.error})`,
-                  'error',
-                  callerId,
+                    callerId,
+                  },
                 );
               }
               return response.data.success;
@@ -354,16 +560,25 @@ class RocketChatClient {
         }),
       )
       .catch((error) => {
-        logServer(
-          i18n.__(`api.rocketChat.${setMode ? 'setRoleError' : 'unsetRoleError'}`, {
-            groupId,
-            username,
-            role: displayRole,
-          }),
-          'error',
+        // logServer(
+        //   i18n.__(`api.rocketChat.${setMode ? 'setRoleError' : 'unsetRoleError'}`, {
+        //     groupId,
+        //     username,
+        //     role: displayRole,
+        //   }),
+        //   'error',
+        //   callerId,
+        // );
+        // logServer(error.response && error.response.data ? error.response.data : error, 'error');
+        logServer(`APPCLIENT - ROCKETCHAT - changeRole - ${i18n.__(`api.rocketChat`)}`, levels.ERROR, scopes.USER, {
+          APIUrl,
+          setMode,
+          groupId,
+          username,
+          role,
           callerId,
-        );
-        logServer(error.response && error.response.data ? error.response.data : error, 'error');
+          error: error.response && error.response.data ? error.response.data : error,
+        });
         return null;
       });
   }
@@ -402,12 +617,35 @@ class RocketChatClient {
             )
             .then((response) => {
               if (response.data && response.data.success === true) {
-                logServer(i18n.__('api.rocketChat.userKicked', { groupId, username }));
-              } else {
+                // logServer(i18n.__('api.rocketChat.userKicked', { groupId, username }));
                 logServer(
-                  `${i18n.__('api.rocketChat.userKickError', { groupId, username })} (${response.data.error})`,
-                  'error',
-                  callerId,
+                  `APPCLIENT - ROCKETCHAT - kickUser - ${i18n.__('api.rocketChat.userKicked', { groupId, username })}`,
+                  levels.INFO,
+                  scopes.USER,
+                  {
+                    groupId,
+                    username,
+                    callerId,
+                  },
+                );
+              } else {
+                // logServer(
+                //   `${i18n.__('api.rocketChat.userKickError', { groupId, username })} (${response.data.error})`,
+                //   'error',
+                //   callerId,
+                // );
+                logServer(
+                  `APPCLIENT - ROCKETCHAT - kickUser - ${i18n.__('api.rocketChat.userKickError', {
+                    groupId,
+                    username,
+                  })}`,
+                  levels.ERROR,
+                  scopes.USER,
+                  {
+                    groupId,
+                    username,
+                    callerId,
+                  },
                 );
               }
               return response.data.success;
@@ -415,8 +653,19 @@ class RocketChatClient {
         }),
       )
       .catch((error) => {
-        logServer(i18n.__('api.rocketChat.userKickError', { groupId, username }), 'error', callerId);
-        logServer(error.response && error.response.data ? error.response.data : error, 'error');
+        // logServer(i18n.__('api.rocketChat.userKickError', { groupId, username }), 'error', callerId);
+        // logServer(error.response && error.response.data ? error.response.data : error, 'error');
+        logServer(
+          `APPCLIENT - ROCKETCHAT - kickUser - ${i18n.__('api.rocketChat.userKickError', { groupId, username })}`,
+          levels.ERROR,
+          scopes.USER,
+          {
+            groupId,
+            username,
+            callerId,
+            error: error.response && error.response.data ? error.response.data : error,
+          },
+        );
         return null;
       });
   }
@@ -451,16 +700,50 @@ class RocketChatClient {
           )
           .then((response) => {
             if (response.data && response.data.success === true) {
-              logServer(i18n.__('api.rocketChat.userAdded', { username }));
+              // logServer(i18n.__('api.rocketChat.userAdded', { username }));
+              logServer(
+                `APPCLIENT - ROCKETCHAT - createUser - ${i18n.__('api.rocketChat.userAdded', { username })}`,
+                levels.INFO,
+                scopes.USER,
+                {
+                  email,
+                  name,
+                  username,
+                  callerId,
+                },
+              );
               return response.data.user;
             }
-            logServer(`${i18n.__('api.rocketChat.userAddError', { username })} (${response.error})`, 'error', callerId);
+            // logServer(`${i18n.__('api.rocketChat.userAddError', { username })} (${response.error})`, 'error', callerId);
+            logServer(
+              `APPCLIENT - ROCKETCHAT - createUser - ${i18n.__('api.rocketChat.userAddError', { username })}`,
+              levels.ERROR,
+              scopes.USER,
+              {
+                email,
+                name,
+                username,
+                callerId,
+              },
+            );
             return null;
           });
       })
       .catch((error) => {
-        logServer(i18n.__('api.rocketChat.userAddError', { username }), 'error', callerId);
-        logServer(error.response && error.response.data ? error.response.data : error, 'error');
+        // logServer(i18n.__('api.rocketChat.userAddError', { username }), 'error', callerId);
+        // logServer(error.response && error.response.data ? error.response.data : error, 'error');
+        logServer(
+          `APPCLIENT - ROCKETCHAT - createUser - ${i18n.__('api.rocketChat.userAddError', { username })}`,
+          levels.ERROR,
+          scopes.USER,
+          {
+            email,
+            name,
+            username,
+            callerId,
+            error: error.response && error.response.data ? error.response.data : error,
+          },
+        );
         return null;
       });
   }
@@ -498,11 +781,35 @@ class RocketChatClient {
             )
             .then((response) => {
               if (response.data && response.data.success === true) {
-                logServer(i18n.__('api.rocketChat.updateEmail', { username, email }));
-              } else {
+                // logServer(i18n.__('api.rocketChat.updateEmail', { username, email }));
                 logServer(
-                  `${i18n.__('api.rocketChat.updateEmailError', { username, email })} (${response.data.error})`,
-                  'error',
+                  `APPCLIENT - ROCKETCHAT - updateEmail - ${i18n.__('api.rocketChat.updateEmail', {
+                    username,
+                    email,
+                  })}`,
+                  levels.INFO,
+                  scopes.USER,
+                  {
+                    email,
+                    username,
+                  },
+                );
+              } else {
+                // logServer(
+                //   `${i18n.__('api.rocketChat.updateEmailError', { username, email })} (${response.data.error})}`,
+                //   'error',
+                // );
+                logServer(
+                  `APPCLIENT - ROCKETCHAT - updateEmail - ${i18n.__('api.rocketChat.updateEmailError', {
+                    username,
+                    email,
+                  })}`,
+                  levels.ERROR,
+                  scopes.USER,
+                  {
+                    email,
+                    username,
+                  },
                 );
               }
               return response.data.success;
@@ -510,8 +817,20 @@ class RocketChatClient {
         }),
       )
       .catch((error) => {
-        logServer(i18n.__('api.rocketChat.updateEmailError', { username, email }), 'error');
-        logServer(error.response && error.response.data ? error.response.data : error, 'error');
+        // logServer(i18n.__('api.rocketChat.updateEmailError', { username, email }), 'error');
+        // logServer(error.response && error.response.data ? error.response.data : error, 'error');
+
+        logServer(
+          `APPCLIENT - ROCKETCHAT - updateEmail - ${i18n.__('api.rocketChat.updateEmailError', { username, email })}`,
+          levels.ERROR,
+          scopes.USER,
+          {
+            email,
+            username,
+            error: error.response && error.response.data ? error.response.data : error,
+          },
+        );
+
         return false;
       });
   }

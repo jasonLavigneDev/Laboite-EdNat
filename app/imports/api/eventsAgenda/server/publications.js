@@ -2,7 +2,7 @@ import { FindFromPublication } from 'meteor/percolate:find-from-publication';
 import { Roles } from 'meteor/alanning:roles';
 import EventsAgenda from '../eventsAgenda';
 import { checkPaginationParams, isActive } from '../../utils';
-import logServer from '../../logging';
+import logServer, { levels, scopes } from '../../logging';
 import Groups from '../../groups/groups';
 
 // build query for all users from group
@@ -45,7 +45,18 @@ FindFromPublication.publish('groups.events', function groupsEvents({ page, searc
   try {
     checkPaginationParams.validate({ page, itemPerPage, search });
   } catch (err) {
-    logServer(`publish groups.events : ${err}`);
+    // logServer(`publish groups.events : ${err}`);
+    logServer(
+      `EVENTSAGENDA - PUBLICATION - groups.events, publish groups.events : ${err}`,
+      levels.ERROR,
+      scopes.SYSTEM,
+      {
+        page,
+        search,
+        slug,
+        itemPerPage,
+      },
+    );
     this.error(err);
   }
   const group = Groups.findOne(

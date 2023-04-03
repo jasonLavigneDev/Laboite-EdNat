@@ -6,7 +6,7 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import i18n from 'meteor/universe:i18n';
 
 import DefaultSpaces from './defaultspaces';
-import { generateDefaultPersonalSpace } from '../personalspaces/methods';
+import { checkPersonalSpaceData, generateDefaultPersonalSpace } from '../personalspaces/methods';
 import { hasAdminRightOnStructure } from '../structures/utils';
 
 export const updateStructureSpace = new ValidatedMethod({
@@ -21,7 +21,7 @@ export const updateStructureSpace = new ValidatedMethod({
     if (!isAdminOfStructure) {
       throw new Meteor.Error('api.defaultspaces.updateStructureSpace.notPermitted', i18n.__('api.users.notPermitted'));
     }
-    // console.log(data);
+    checkPersonalSpaceData(data);
     const currentStructureSpace = DefaultSpaces.findOne({ structureId: data.structureId });
     if (currentStructureSpace === undefined) {
       // create DefaultSpaces if not existing

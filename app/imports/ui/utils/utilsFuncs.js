@@ -28,7 +28,7 @@ export const testMeteorSettingsUrl = (settingsUrl, withSlash = false) => {
 export const getGroupName = (group) => {
   if (group.type !== 15) return group.name;
 
-  return `[STRUC] ${group.name.slice(group.name.indexOf('_') + 1, group.name.length)}`;
+  return `${group.name.slice(group.name.indexOf('_') + 1, group.name.length)}`;
 };
 
 export const compareBussinessRegrouping = (firstBussRegr, secBussRegr) => {

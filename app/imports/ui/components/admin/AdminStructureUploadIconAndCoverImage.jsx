@@ -33,7 +33,7 @@ const AdminStructureUploadIconAndCoverImage = ({ structure }) => {
 
   const updateStructureIconOrCoverImg = (iconUrlImage, coverUrlImage) => {
     Meteor.call(
-      'updateStructureIconOrCoverImage',
+      'structures.updateStructureIconOrCoverImage',
       {
         structureId: structure._id,
         iconUrlImage,
@@ -52,7 +52,7 @@ const AdminStructureUploadIconAndCoverImage = ({ structure }) => {
 
   const removeIconOrCoverImg = (iconOrCoverImgFolder) => {
     Meteor.call(
-      'deleteIconOrCoverImage',
+      'structures.deleteIconOrCoverImage',
       {
         structureId: structure._id,
         iconUrlImage: iconOrCoverImgFolder === 'iconImg' ? structure.iconUrlImage : '-1',

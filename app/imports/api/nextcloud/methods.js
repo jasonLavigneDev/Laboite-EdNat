@@ -5,7 +5,7 @@ import SimpleSchema from 'simpl-schema';
 import { Roles } from 'meteor/alanning:roles';
 import { _ } from 'meteor/underscore';
 import i18n from 'meteor/universe:i18n';
-import { isActive, getLabel } from '../utils';
+import { isActive, getLabel, validateString } from '../utils';
 import Nextcloud from './nextcloud';
 
 function _updateNextcloudURL(url, active, count) {
@@ -48,6 +48,7 @@ export const updateNextcloudURL = new ValidatedMethod({
       throw new Meteor.Error('api.nextcloud.updateNextcloudURL.notPermitted', i18n.__('api.nextcloud.adminRankNeeded'));
     }
 
+    validateString(url);
     const ncloud = Nextcloud.findOne({ url });
     if (ncloud === undefined) {
       return _createUrl(url, active);

@@ -314,7 +314,7 @@ UserBookmarksPage.propTypes = {
 };
 
 export default withTracker(() => {
-  const [{ userId }] = useAppContext();
+  const userId = Meteor.userId();
   const bookmarksHandle = Meteor.subscribe('bookmark.user.all', { userId });
   const bookmarksList = UserBookmarks.find({ userId }, { sort: { name: 1 } }).fetch();
   const loading = !bookmarksHandle.ready();
