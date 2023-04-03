@@ -43,7 +43,7 @@
     "connect-rest": "^3.0.33",
     "core-js": "^3.21.1",
     "cors": "^2.8.5",
-    "crypto-js": "^4.1.1",
+    "crypto": "^1.0.1",
     "dom-parser": "^0.1.6",
     "email": "^0.2.6",
     "faker": "^4.1.0",
@@ -81,7 +81,6 @@
     "validate.js": "^0.13.1",
     "webrtc-adapter": "^7.7.1",
     "winston": "^3.8.2",
-    "winston-daily-rotate-file": "^4.7.1",
     "winston-transport": "^4.5.0",
     "xml2js": "^0.4.23"
   },
