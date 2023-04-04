@@ -89,9 +89,6 @@
     "fromEmail": "",
     "toEmail": ""
   },
-  "logs":{
-    "logsLocation" : "/tmp"
-  },
   "private": {
     "loginExpirationInDays": 1,
     "fillWithFakeData": false,
