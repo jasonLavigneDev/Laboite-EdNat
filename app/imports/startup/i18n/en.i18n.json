@@ -114,6 +114,9 @@
       },
       "updateHelp": {
         "titleAlreadyTaken": "This title is already taken."
+      },
+      "createHelp": {
+        "alreadyExists": "This help page already exists."
       }
     },
     "structures": {
