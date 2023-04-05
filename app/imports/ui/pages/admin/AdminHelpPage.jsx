@@ -77,7 +77,6 @@ const AdminHelpPage = () => {
 
   const onRowAdd = async (newData) =>
     new Promise((resolve, reject) => {
-      console.log(newData);
       createHelp.call(
         {
           ...newData,
