@@ -67,15 +67,17 @@ export const updateHelp = new ValidatedMethod({
       throw new Meteor.Error('api.helps.updateHelp.unknownHelp', i18n.__('api.helps.unknownHelp'));
     }
 
-    const tagWithTitle = Helps.findOne({ title: data.title });
-    if (tagWithTitle) {
-      throw new Meteor.Error('api.helps.createHelp.alreadyExists', i18n.__('api.helps.createHelp.alreadyExists'));
-    }
     // check if current user is active
     const authorized = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
     if (!authorized) {
       throw new Meteor.Error('api.helps.updateHelp.notPermitted', i18n.__('api.users.notPermitted'));
     }
+
+    const tagWithTitle = Helps.findOne({ $and: [{ title: data.title }, { _id: { $ne: helpId } }] });
+    if (tagWithTitle) {
+      throw new Meteor.Error('api.helps.updateHelp.alreadyExists', i18n.__('api.helps.updateHelp.titleAlreadyTaken'));
+    }
+
     validateHelp(data);
     return Helps.update({ _id: helpId }, { $set: data });
   },
