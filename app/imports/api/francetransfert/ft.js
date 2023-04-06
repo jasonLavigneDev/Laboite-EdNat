@@ -112,6 +112,7 @@ export function initFold(sender, { data, files }) {
       motDePasse: data?.settings?.password,
       langueCourriel: data?.settings?.language,
       protectionArchive: data?.settings?.encrypt,
+      envoiMdpDestinataires: true,
     },
     fichiers: files.map((file) => ({
       idFichier: file.id,

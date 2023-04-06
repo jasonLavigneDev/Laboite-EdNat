@@ -88,6 +88,7 @@
     "react-toastify": "^6.2.0",
     "react-webcam": "^5.2.4",
     "sanitize-html": "^2.7.0",
+    "serve": "^14.1.2",
     "simpl-schema": "^1.12.0",
     "slugify": "^1.6.5",
     "sortablejs": "^1.15.0",

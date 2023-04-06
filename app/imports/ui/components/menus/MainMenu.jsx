@@ -66,6 +66,10 @@ export const userMenu = [
     path: '/upload',
     content: 'menuUpload',
   },
+  {
+    path: '/upload',
+    content: 'menuUpload',
+  },
 ];
 
 export const userGroups = [
