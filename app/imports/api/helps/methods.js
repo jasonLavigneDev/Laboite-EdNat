@@ -25,6 +25,10 @@ export const createHelp = new ValidatedMethod({
     if (!authorized) {
       throw new Meteor.Error('api.helps.createHelp.notPermitted', i18n.__('api.users.notPermitted'));
     }
+    const help = Helps.findOne({ title: data.title });
+    if (help) {
+      throw new Meteor.Error('api.helps.createHelp.alreadyExists', i18n.__('api.helps.createHelp.alreadyExists'));
+    }
     validateHelp(data);
     return Helps.insert(data);
   },
