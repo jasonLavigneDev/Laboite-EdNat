@@ -89,13 +89,12 @@ const AdminHelpPage = () => {
 
   const onRowUpdate = ({ _id, id, ...newData }) =>
     new Promise((resolve, reject) => {
+      const data = { ...newData, type: Number(newData.type) };
+      delete data.tableData;
       updateHelp.call(
         {
           helpId: _id,
-          data: {
-            ...newData,
-            type: Number(newData.type),
-          },
+          data,
         },
         handleResult(resolve, reject),
       );

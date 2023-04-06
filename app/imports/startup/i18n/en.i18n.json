@@ -111,6 +111,9 @@
       "types": {
         "external": "External link",
         "iframed": "Embed link/video"
+      },
+      "updateHelp": {
+        "titleAlreadyTaken": "This title is already taken."
       }
     },
     "structures": {
