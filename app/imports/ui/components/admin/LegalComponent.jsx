@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import ReactQuill from 'react-quill'; // ES6
 import 'react-quill/dist/quill.snow.css';
 import { makeStyles } from 'tss-react/mui';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import InputLabel from '@mui/material/InputLabel';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
@@ -14,7 +10,6 @@ import i18n from 'meteor/universe:i18n';
 import { useObjectState } from '../../utils/hooks';
 import { updateAppsettings } from '../../../api/appsettings/methods';
 import Spinner from '../system/Spinner';
-import { CustomToolbarArticle } from '../system/CustomQuill';
 import '../../utils/QuillVideo';
 
 const useStyles = makeStyles()((theme) => ({
@@ -32,19 +27,6 @@ const useStyles = makeStyles()((theme) => ({
     marginTop: theme.spacing(5),
   },
 }));
-
-const quillOptions = {
-  modules: {
-    toolbar: {
-      container: '#quill-toolbar',
-    },
-    clipboard: {
-      matchVisual: false,
-      matchers: [],
-    },
-  },
-  formats: ['header', 'bold', 'italic', 'underline', 'strike', 'blockquote', 'list', 'bullet', 'indent', 'link'],
-};
 
 const LegalComponent = ({ tabkey, ...props }) => {
   const configData = props[tabkey] || {};
@@ -66,23 +48,9 @@ const LegalComponent = ({ tabkey, ...props }) => {
     }
   }, [state]);
 
-  const onCheckExternal = (event) => {
-    const { name, checked } = event.target;
-    setState({ [name]: checked });
-  };
-
   const onUpdateField = (event) => {
     const { name, value } = event.target;
     setState({ [name]: value });
-  };
-
-  const onUpdateRichText = (html) => {
-    const content = html.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
-    if (state.external) {
-      setState({ content: state.content });
-    } else {
-      setState({ content });
-    }
   };
 
   const onSubmitUpdateconfigData = () => {
@@ -108,27 +76,15 @@ const LegalComponent = ({ tabkey, ...props }) => {
   return (
     <form className={classes.root}>
       <Typography variant="h4">{i18n.__(`components.LegalComponent.title_${tabkey}`)}</Typography>
-      <FormControlLabel
-        control={<Checkbox checked={state.external || false} onChange={onCheckExternal} name="external" />}
-        label={i18n.__(`components.LegalComponent.external_${tabkey}`)}
+      <TextField
+        onChange={onUpdateField}
+        value={state.link}
+        name="link"
+        label={i18n.__(`components.LegalComponent.link_${tabkey}`)}
+        variant="outlined"
+        fullWidth
+        margin="normal"
       />
-      {state.external ? (
-        <TextField
-          onChange={onUpdateField}
-          value={state.link}
-          name="link"
-          label={i18n.__(`components.LegalComponent.link_${tabkey}`)}
-          variant="outlined"
-          fullWidth
-          margin="normal"
-        />
-      ) : (
-        <div className={classes.wysiwyg}>
-          <InputLabel htmlFor="content">{i18n.__(`components.LegalComponent.content_${tabkey}`)}</InputLabel>
-          <CustomToolbarArticle />
-          <ReactQuill id="content" value={state.content || ''} onChange={onUpdateRichText} {...quillOptions} />
-        </div>
-      )}
       {changes && (
         <div className={classes.buttonGroup}>
           <Button variant="contained" color="grey" onClick={onCancel} disabled={loading}>
