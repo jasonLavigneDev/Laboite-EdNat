@@ -243,7 +243,7 @@ const GroupsUsersList = (props) => {
         data={data.map((row) => ({ ...row, id: row._id }))}
         options={options}
         localization={setMaterialTableLocalization('components.GroupUsersList')}
-        actions={!isAutomaticGroup ? actions : null}
+        actions={!isAutomaticGroup ? actions : []}
         editable={
           !isAutomaticGroup
             ? {
