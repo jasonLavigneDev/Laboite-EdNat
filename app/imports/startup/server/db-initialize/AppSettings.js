@@ -34,7 +34,7 @@ Meteor.startup(() => {
         content: '',
       },
       personalSpace: {
-        external: false,
+        external: true,
         link: '',
         content: '',
       },
