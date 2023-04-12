@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Meteor } from 'meteor/meteor';
 import { useTracker } from 'meteor/react-meteor-data';
@@ -35,7 +35,7 @@ import Select from '@mui/material/Select';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import { Roles } from 'meteor/alanning:roles';
-import { usePagination } from '../../utils/hooks';
+import { usePaginatedMethod } from '../../utils/hooks';
 import Spinner from '../../components/system/Spinner';
 import { useAppContext } from '../../contexts/context';
 import UserAvatar from '../../components/users/UserAvatar';
@@ -86,6 +86,7 @@ const useStyles = makeStyles()((theme) => ({
 }));
 
 const ITEM_PER_PAGE = 10;
+const userTypes = ['all', 'adminStructure', 'admin'];
 
 const AdminUsersPage = ({ match: { path } }) => {
   const [openQuota, setOpenQuota] = useState(false);
@@ -96,9 +97,6 @@ const AdminUsersPage = ({ match: { path } }) => {
   const [search, setSearch] = useState('');
   const [sortByDate, setSortByDate] = useState(false);
   const [userType, setUserType] = useState('all');
-  const userTypes = ['all', 'adminStructure', 'admin'];
-  // forceReload is used to force publication reload when removing a role
-  let forceReload = new Date();
 
   // for user structure
   const isStructureSpecific = path === '/admin/structureusers';
@@ -112,18 +110,29 @@ const AdminUsersPage = ({ match: { path } }) => {
   });
 
   // variables depending on the admin page we're in
+  const methodName = isStructureSpecific ? 'users.byStructure' : 'users.admins';
+  const sortQuery = sortByDate ? { lastLogin: -1 } : { lastName: 1, firstName: 1 };
 
-  const subscription = isStructureSpecific ? 'users.byStructure' : 'users.admin';
+  const [
+    call,
+    {
+      data: items = [],
+      page,
+      goToPage,
+      total,
+      // goToNextPage,
+      // goToPreviousPage,
+      // nbPage,
+      // loading,
+      // error,
+      // called,
+    },
+  ] = usePaginatedMethod(methodName);
 
-  const { changePage, page, items, total } = usePagination(
-    subscription,
-    { selectedStructureId, search, userType, forceReload, sort: sortByDate ? { lastLogin: -1 } : { lastName: 1 } },
-    Meteor.users,
-    {},
-    { sort: sortByDate ? { lastLogin: -1 } : { lastName: 1 } },
-    ITEM_PER_PAGE,
-    [selectedStructureId, selectedStructureId != null],
-  );
+  useEffect(() => {
+    call(search.trim(), { userType, sortQuery });
+  }, [call, search, userType, sortByDate]);
+
   // track all global admin users
   const { isLoading, admins } = useTracker(() => {
     const roleshandlers = Meteor.subscribe('roles.admin');
@@ -139,32 +148,30 @@ const AdminUsersPage = ({ match: { path } }) => {
     };
   });
   const handleChangePage = (event, value) => {
-    changePage(value);
+    goToPage(value);
+  };
+  const updateSearch = (e) => {
+    setSearch(e.target.value);
+  };
+  const onResetSearch = () => {
+    setSearch('');
   };
   const handleUserType = (evt) => {
     setUserType(evt.target.value);
   };
-  const searchRef = useRef();
-  const updateSearch = (e) => setSearch(e.target.value);
-  const resetSearch = () => setSearch('');
 
   useEffect(() => {
-    if (searchRef.current) {
-      searchRef.current.value = search;
-    }
-
     if (page !== 1) {
-      changePage(1);
+      goToPage(1);
     }
   }, [search]);
 
   const isAdmin = (user) => admins.includes(user._id);
   const changeAdmin = (user) => {
     const method = isAdmin(user) ? 'users.unsetAdmin' : 'users.setAdmin';
-    Meteor.call(method, { userId: user._id }, (error) => {
-      if (error) msg.error(error.reason);
+    Meteor.call(method, { userId: user._id }, (err) => {
+      if (err) msg.error(err.reason);
       else {
-        forceReload = new Date();
         msg.success(
           method === 'users.unsetAdmin'
             ? i18n.__('pages.AdminUsersPage.successUnsetAdmin')
@@ -189,7 +196,6 @@ const AdminUsersPage = ({ match: { path } }) => {
     Meteor.call(method, { userId: user._id }, (error) => {
       if (error) msg.error(error.reason);
       else {
-        forceReload = new Date();
         msg.success(
           method === 'users.unsetAdminStructure'
             ? i18n.__('pages.AdminUsersPage.successUnsetAdminStructure')
@@ -344,8 +350,8 @@ const AdminUsersPage = ({ match: { path } }) => {
                 <SearchField
                   updateSearch={updateSearch}
                   search={search}
-                  inputRef={searchRef}
-                  resetSearch={resetSearch}
+                  //   inputRef={searchRef}
+                  resetSearch={onResetSearch}
                   label={i18n.__('pages.AdminUsersPage.searchText')}
                 />
               </Grid>

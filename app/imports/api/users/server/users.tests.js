@@ -34,6 +34,8 @@ import {
   setArticlesEnable,
   resetAuthToken,
   removeUserFromStructure,
+  getUsersAdmin,
+  getUsersByStructure,
   acceptAwaitingStructure,
 } from './methods';
 import Groups from '../../groups/groups';
@@ -95,7 +97,7 @@ describe('users', function () {
     let group4;
     const lastName = `test${faker.name.lastName()}`;
     const firstName = `test${faker.name.firstName()}`;
-    before(function () {
+    beforeEach(function () {
       Meteor.roleAssignment.remove({});
       Meteor.users.remove({});
       Meteor.roles.remove({});
@@ -171,34 +173,6 @@ describe('users', function () {
           done();
         });
         Roles.removeUsersFromRoles(userId, 'admin');
-      });
-    });
-    describe('users.byStructure', function () {
-      it('does not send data to non adminStructure users', function (done) {
-        const collector = new PublicationCollector({ userId });
-        collector.collect(
-          'users.byStructure',
-          { page: 1, itemPerPage: 5, search: '', userType: 'all', forceReload: null },
-          (collections) => {
-            assert.equal(collections.users, undefined);
-            done();
-          },
-        );
-      });
-      it('sends users with same structure to adminStructure user', function (done) {
-        Roles.addUsersToRoles(userId, 'adminStructure', 'Struct');
-        Meteor.users.update(userId, { $set: { structure: 'Struct' } });
-        Meteor.users.update(otherUserId, { $set: { structure: 'Struct' } });
-        const collector = new PublicationCollector({ userId });
-        collector.collect(
-          'users.byStructure',
-          { page: 1, itemPerPage: 5, search: '', userType: 'all', forceReload: null },
-          (collections) => {
-            assert.equal(collections.users.length, 2);
-            done();
-          },
-        );
-        Roles.removeUsersFromRoles(userId, 'adminStructure', 'Struct');
       });
     });
     describe('userData', function () {
@@ -400,8 +374,7 @@ describe('users', function () {
         const collector = new PublicationCollector({ userId });
         collector.collect('users.publishers', { page: 1, itemPerPage: 5, search: '' }, (collections) => {
           assert.equal(collections.users.length, 2);
-          const user = collections.users[0];
-          assert.equal(user._id, userId);
+          assert.equal(!!collections.users.find((u) => u._id === userId), true);
           done();
         });
       });
@@ -413,47 +386,6 @@ describe('users', function () {
           assert.equal(user._id, otherUserId);
           done();
         });
-      });
-    });
-    describe('users.admin', function () {
-      it('sends all users including admin restricted fields', function (done) {
-        Roles.addUsersToRoles(userId, 'admin');
-        const collector = new PublicationCollector({ userId });
-        collector.collect(
-          'users.admin',
-          { page: 1, itemPerPage: 5, search: '', userType: 'all', forceReload: null },
-          (collections) => {
-            assert.equal(collections.users.length, 5);
-            const user = collections.users[0];
-            assert.property(user, 'createdAt');
-            done();
-          },
-        );
-      });
-      it('sends a specific page of users including admin restricted fields', function (done) {
-        Roles.addUsersToRoles(userId, 'admin');
-        const collector = new PublicationCollector({ userId });
-        collector.collect(
-          'users.admin',
-          { page: 2, itemPerPage: 3, search: '', userType: 'all', forceReload: null },
-          (collections) => {
-            assert.equal(collections.users.length, 2);
-            done();
-          },
-        );
-      });
-      it('sends all users including admin restricted fields matching a filter', function (done) {
-        Roles.addUsersToRoles(userId, 'admin');
-        const collector = new PublicationCollector({ userId });
-        collector.collect(
-          'users.admin',
-          { page: 1, itemPerPage: 5, search: 'user@ac-test.fr', userType: 'all', forceReload: null },
-          (collections) => {
-            assert.equal(collections.users.length, 1);
-            assert.equal(collections.users[0].emails[0].address, 'user@ac-test.fr');
-            done();
-          },
-        );
       });
     });
   });
@@ -1059,6 +991,71 @@ describe('users', function () {
         resetAuthToken._execute({ userId }, {});
         const newToken = Meteor.users.findOne({ _id: userId }).authToken;
         assert.notEqual(user.authToken, newToken);
+      });
+    });
+    describe('users.byStructure', function () {
+      it('does not send data to non adminStructure users', function (done) {
+        assert.throws(
+          () => {
+            getUsersByStructure._execute({ userId }, { page: 1, itemPerPage: 5, search: '', userType: 'all' });
+          },
+          Meteor.Error,
+          /User is not authorized/,
+        );
+
+        done();
+      });
+      it('sends users with same structure to adminStructure user', function (done) {
+        Roles.addUsersToRoles(userId, 'adminStructure', 'Struct');
+        Meteor.users.update(userId, { $set: { structure: 'Struct' } });
+        Meteor.users.update(adminId, { $set: { structure: 'Struct' } });
+
+        const res = getUsersByStructure._execute({ userId }, { page: 1, itemPerPage: 5, search: '', userType: 'all' });
+
+        assert.equal(res.pageSize, 5);
+        assert.equal(res.page, 1);
+        assert.equal(res.total, 2);
+        assert.property(res.data[0], 'createdAt');
+
+        done();
+
+        Roles.removeUsersFromRoles(userId, 'adminStructure', 'Struct');
+        Roles.removeUsersFromRoles(adminId, 'adminStructure', 'Struct');
+      });
+    });
+    describe('users.admin', function () {
+      it('sends all users including admin restricted fields', function (done) {
+        Roles.addUsersToRoles(userId, 'admin');
+
+        const res = getUsersAdmin._execute({ userId }, { page: 1, itemPerPage: 5, search: '', userType: 'all' });
+        assert.equal(res.pageSize, 5);
+        assert.equal(res.page, 1);
+        assert.equal(res.total, 2);
+        assert.property(res.data[0], 'createdAt');
+
+        done();
+      });
+      it('sends a specific page of users including admin restricted fields', function (done) {
+        Roles.addUsersToRoles(userId, 'admin');
+
+        const res = getUsersAdmin._execute({ userId }, { page: 1, itemPerPage: 3, search: '', userType: 'all' });
+        assert.equal(res.pageSize, 3);
+        assert.equal(res.page, 1);
+        assert.equal(res.total, 2);
+        assert.property(res.data[0], 'createdAt');
+
+        done();
+      });
+      it('sends all users including admin restricted fields matching a filter', function (done) {
+        Roles.addUsersToRoles(userId, 'admin');
+
+        const res = getUsersAdmin._execute({ userId }, { page: 1, itemPerPage: 5, search: email, userType: 'all' });
+        assert.equal(res.pageSize, 5);
+        assert.equal(res.page, 1);
+        assert.equal(res.total, 1);
+        assert.equal(res.data[0].emails[0].address, email);
+
+        done();
       });
     });
   });

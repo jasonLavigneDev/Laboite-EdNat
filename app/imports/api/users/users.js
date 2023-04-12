@@ -22,11 +22,13 @@ Meteor.users.schema = new SimpleSchema(
       type: String,
       optional: true,
       label: getLabel('api.users.labels.firstName'),
+      index: true,
     },
     lastName: {
       type: String,
       optional: true,
       label: getLabel('api.users.labels.lastName'),
+      index: true,
     },
     emails: {
       type: Array,
@@ -113,6 +115,7 @@ Meteor.users.schema = new SimpleSchema(
       type: SimpleSchema.RegEx.Id,
       optional: true,
       label: getLabel('api.users.labels.structure'),
+      index: true,
     },
     awaitingStructure: {
       type: SimpleSchema.RegEx.Id,
