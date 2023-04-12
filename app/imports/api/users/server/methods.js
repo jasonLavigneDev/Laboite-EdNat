@@ -1718,7 +1718,7 @@ export const getUsersAdmin = new ValidatedMethod({
     delete restCopy.sortQuery;
     delete restCopy.userType;
 
-    const data = Meteor.users
+    const users = Meteor.users
       .find(query, {
         fields: Meteor.users.adminFields,
         skip: itemPerPage * (page - 1),
@@ -1728,6 +1728,16 @@ export const getUsersAdmin = new ValidatedMethod({
       })
       .fetch();
     const total = Meteor.users.find(query).count();
+
+    const structuresById = {};
+
+    const data = users.map((user) => {
+      if (!structuresById[user.structure]) {
+        structuresById[user.structure] = Structures.findOne({ _id: user.structure }, { fields: { name: 1 } });
+      }
+
+      return { structureName: structuresById[user.structure]?.name || '', ...user };
+    });
 
     return { data, pageSize: itemPerPage, page, total };
   },
@@ -1763,7 +1773,7 @@ export const getUsersByStructure = new ValidatedMethod({
     delete restCopy.sortQuery;
     delete restCopy.userType;
 
-    const data = Meteor.users
+    const users = Meteor.users
       .find(query, {
         fields: Meteor.users.adminFields,
         skip: itemPerPage * (page - 1),
@@ -1773,6 +1783,15 @@ export const getUsersByStructure = new ValidatedMethod({
       })
       .fetch();
     const total = Meteor.users.find(query).count();
+    const structuresById = {};
+
+    const data = users.map((user) => {
+      if (!structuresById[user.structure]) {
+        structuresById[user.structure] = Structures.findOne({ _id: user.structure }, { fields: { name: 1 } });
+      }
+
+      return { structureName: structuresById[user.structure]?.name || '', ...user };
+    });
 
     return { data, pageSize: itemPerPage, page, total };
   },

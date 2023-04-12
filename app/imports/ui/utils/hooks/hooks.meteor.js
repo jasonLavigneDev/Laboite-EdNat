@@ -1,6 +1,6 @@
 import { useCallback, useState, useRef, useEffect } from 'react';
 import { useTracker } from 'meteor/react-meteor-data';
-import throttle from 'lodash.throttle';
+import debounce from 'lodash.debounce';
 import { callMethod as callAsyncMethod } from '../helpers/helpers.meteor';
 
 export const usePagination = (subName, args = {}, Collection, query = {}, options = {}, itemPerPage, deps = []) => {
@@ -114,7 +114,7 @@ export const usePaginatedMethod = (
 
   // Paginated methods should always return { data: any[], total: int, page: int, pageSize: int, nbPage: int}
   const call = useCallback(
-    throttle(async (search, otherArguments = {}) => {
+    debounce(async (search, otherArguments = {}) => {
       lastSearchRef.current = search;
       lastOtherArgs.current = otherArguments;
 
@@ -133,7 +133,7 @@ export const usePaginatedMethod = (
 
         return res;
       });
-    }, 1000),
+    }, 500),
     [page, pageSize],
   );
 

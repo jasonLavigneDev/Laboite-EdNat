@@ -42,7 +42,7 @@ import UserAvatar from '../../components/users/UserAvatar';
 import AdminGroupQuota from '../../components/users/AdminGroupQuota';
 import SearchField from '../../components/system/SearchField';
 import AdminSendNotification from '../../components/users/AdminSendNotification';
-import { getStructure, useAdminSelectedStructure, useStructure } from '../../../api/structures/hooks';
+import { useAdminSelectedStructure, useStructure } from '../../../api/structures/hooks';
 import StructureSelect from '../../components/structures/StructureSelect';
 
 let userData = {};
@@ -172,6 +172,7 @@ const AdminUsersPage = ({ match: { path } }) => {
     Meteor.call(method, { userId: user._id }, (err) => {
       if (err) msg.error(err.reason);
       else {
+        call(search.trim(), { userType, sortQuery });
         msg.success(
           method === 'users.unsetAdmin'
             ? i18n.__('pages.AdminUsersPage.successUnsetAdmin')
@@ -181,21 +182,13 @@ const AdminUsersPage = ({ match: { path } }) => {
     });
   };
   const isStructureAdmin = (user) => Roles.userIsInRole(user._id, 'adminStructure', user.structure);
-  useTracker(() => {
-    const structuresIds = [];
-    items.forEach((item) => {
-      if (item.structure && structuresIds.indexOf(structuresIds) === -1) {
-        structuresIds.push(item.structure);
-      }
-    });
-    Meteor.subscribe('structures.ids', { ids: structuresIds });
-  });
 
   const changeAdminStructure = (user) => {
     const method = isStructureAdmin(user) ? 'users.unsetAdminStructure' : 'users.setAdminStructure';
     Meteor.call(method, { userId: user._id }, (error) => {
       if (error) msg.error(error.reason);
       else {
+        call(search.trim(), { userType, sortQuery });
         msg.success(
           method === 'users.unsetAdminStructure'
             ? i18n.__('pages.AdminUsersPage.successUnsetAdminStructure')
@@ -381,7 +374,6 @@ const AdminUsersPage = ({ match: { path } }) => {
                 <List className={classes.list} disablePadding>
                   {items.map((user, i) => {
                     const userEmail = user.emails ? user.emails[0].address : '';
-                    const userStructure = getStructure(user.structure);
 
                     return [
                       <ListItem alignItems="flex-start" key={`user-${userEmail}`}>
@@ -416,7 +408,7 @@ const AdminUsersPage = ({ match: { path } }) => {
                               >
                                 {userEmail}
                               </Typography>
-                              {` - ${userStructure ? userStructure.name : i18n.__('pages.AdminUsersPage.undefined')}`}
+                              {` - ${user.structureName || i18n.__('pages.AdminUsersPage.undefined')}`}
                             </>
                           }
                         />
