@@ -55,10 +55,14 @@ const checkUserAdminRights = (path, userId) => {
 function _validatePath(path) {
   const allowedTypes = ['users', 'groups', 'services', 'structures'];
   const parts = path.split('/');
-  if (parts.length === 2) {
+  if (parts.length >= 2) {
     if (allowedTypes.includes(parts[0])) {
       // don't allow .. or * as second part of path
-      if (parts[1] !== '..' && parts[1] !== '*') return undefined;
+      let partsOk = true;
+      parts.slice(1).forEach((part) => {
+        if (part === '..' || part === '*') partsOk = false;
+      });
+      if (partsOk) return undefined;
     }
   }
   return SimpleSchema.ErrorTypes.VALUE_NOT_ALLOWED;
