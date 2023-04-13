@@ -46,6 +46,7 @@ export const LEGAL_ROUTES = {
   personalData: 'personal-data',
   accessibility: 'accessibility',
   gcu: 'conditions',
+  personalSpace: 'personal-space',
 };
 
 const Footer = () => {
@@ -80,17 +81,13 @@ const Footer = () => {
               )}
             </li>
           ) : external ? (
-            link && (
-              <a key={key} className={classes.link} href={link} target="_blank" rel="noreferrer noopener">
-                {i18n.__(`components.Footer.${text}`)}
-              </a>
-            )
+            <a key={key} className={classes.link} href={link} target="_blank" rel="noreferrer noopener">
+              {i18n.__(`components.Footer.${text}`)}
+            </a>
           ) : (
-            link && (
-              <Link key={key} className={classes.link} to={`/legal/${link}`}>
-                {i18n.__(`components.Footer.${text}`)}
-              </Link>
-            )
+            <Link key={key} className={classes.link} to={`/legal/${link}`}>
+              {i18n.__(`components.Footer.${text}`)}
+            </Link>
           );
         })}
       </>

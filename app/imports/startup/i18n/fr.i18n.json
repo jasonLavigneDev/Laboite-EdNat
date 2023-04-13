@@ -996,7 +996,8 @@
       "personalData": "Données Personnelles",
       "gcu": "Conditions générales d'utilisation",
       "accessibility": "Accessibilité",
-      "legal": "Mentions légales"
+      "legal": "Mentions légales",
+      "personalSpace": "Introduction à l'espace personnel"
     },
     "AdminSettingsPage": {
       "edition": "Edition des réglages de l'application",
