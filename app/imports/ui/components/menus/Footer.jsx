@@ -46,6 +46,7 @@ export const LEGAL_ROUTES = {
   personalData: 'personal-data',
   accessibility: 'accessibility',
   gcu: 'conditions',
+  personalSpace: 'personal-space',
 };
 
 const Footer = () => {

@@ -42,6 +42,12 @@ Meteor.publish('appsettings.personalData', () => {
   return AppSettings.find({ _id: 'settings' }, { fields: personalData, sort: { _id: 1 }, limit: 1 });
 });
 
+// publish personal space intro settings
+Meteor.publish('appsettings.personalSpace', () => {
+  const { personalSpace } = AppSettings;
+  return AppSettings.find({ _id: 'settings' }, { fields: personalSpace, sort: { _id: 1 }, limit: 1 });
+});
+
 // publish maintenance settings
 Meteor.publish('appsettings.maintenance', () => {
   const { maintenance } = AppSettings;

@@ -992,7 +992,8 @@
       "personalData": "Personal Data",
       "gcu": "General Conditions of Use",
       "accessibility": "Accessibility",
-      "legal": "Legal notice"
+      "legal": "Legal notice",
+      "personalSpace": "Introduction to personal space"
     },
     "AdminSettingsPage": {
       "edition": "Edition of the App's settings",

@@ -167,6 +167,20 @@ describe('appsettings', function () {
         });
       });
     });
+    describe('appsettings.personalSpace', function () {
+      it('sends the appsetting personalSpace', function (done) {
+        const collector = new PublicationCollector({});
+        collector.collect('appsettings.personalSpace', {}, (collections) => {
+          const apppersData = collections.appsettings[0];
+          assert.property(apppersData, 'personalSpace');
+          assert.typeOf(apppersData.personalSpace, 'object');
+          assert.property(apppersData.personalSpace, 'external');
+          assert.property(apppersData.personalSpace, 'link');
+          assert.property(apppersData.personalSpace, 'content');
+          done();
+        });
+      });
+    });
   });
   describe('methods', function () {
     let adminId;
