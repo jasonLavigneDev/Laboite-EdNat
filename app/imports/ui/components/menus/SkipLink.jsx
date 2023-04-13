@@ -11,6 +11,7 @@ const useStyles = makeStyles()((theme) => ({
     color: theme.palette.tertiary.main,
     fontWeight: 500,
     height: 48,
+    top: 0,
     left: '50%',
     borderRadius: theme.shape.borderRadius,
     padding: 8,
