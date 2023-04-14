@@ -158,7 +158,7 @@ const ProfilePage = () => {
         ];
 
     return {
-      isUserStructureValidationMandatory: appSettings.userStructureValidationMandatory,
+      isUserStructureValidationMandatory: appSettings?.userStructureValidationMandatory,
       isNewStructCorrespondingToDomainStructure: !isNewStructCorrespondingToDomainStruct,
       ready: handle.ready() && handleAsamExt.ready(),
     };
