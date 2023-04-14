@@ -51,7 +51,7 @@ Meteor.startup(() => {
   WebApp.connectHandlers.use(
     helmet.contentSecurityPolicy({
       directives: {
-        defaultSrc: ["'self'"],
+        defaultSrc: ['*'],
         scriptSrc: scriptSrcs,
         connectSrc: ['*'],
         imgSrc: imgSrcs,
