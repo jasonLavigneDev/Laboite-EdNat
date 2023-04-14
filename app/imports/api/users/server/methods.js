@@ -310,7 +310,7 @@ export function RemoveUserFromGroupsOfOldStructure(user) {
             const gr = Groups.findOne({ _id: st.groupId });
             if (gr) {
               RemoveAllRolesFromGroup(user, gr);
-              unfavGroup._execute({ userId: user._id }, { groupId: gr.groupId });
+              unfavGroup._execute({ userId: user._id }, { groupId: st.groupId });
             }
           }
         });
