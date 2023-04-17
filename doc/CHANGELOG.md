@@ -1,5 +1,87 @@
 # Changelog
 
+# [5.3.0](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/5.2.2...release/5.3.0) (2023-04-17)
+
+
+### Bug Fixes
+
+* **400:** modification after review ([cab9db7](https://gitlab.mim-libre.fr/alphabet/laboite/commit/cab9db759bd05984210a86e814ea13a3f526d885))
+* **adminUsers:** change text for removing user from structure ([6d43ea8](https://gitlab.mim-libre.fr/alphabet/laboite/commit/6d43ea8d3e29204a975f92e294630e1fb60e89ef))
+* **article:** escape space on image url when insert in markdown article ([692205f](https://gitlab.mim-libre.fr/alphabet/laboite/commit/692205f6bc4bf3b4b04a2c35fad343c8cbf23c94))
+* **asam:** delete unwanted caracter in modal title ([32b547e](https://gitlab.mim-libre.fr/alphabet/laboite/commit/32b547ea714bccdd5b8592ba1960b878700a0482))
+* **auth:** remove irrelevant code now that keycloak is the only option ([7866f82](https://gitlab.mim-libre.fr/alphabet/laboite/commit/7866f822a402fab479d3c4a9f0fe3e4ea67747c0))
+* **auth:** remove local authentification code ([3a388c8](https://gitlab.mim-libre.fr/alphabet/laboite/commit/3a388c8df12f28e122d23b068081b229a474bb40))
+* **auth:** signin render ([1d88259](https://gitlab.mim-libre.fr/alphabet/laboite/commit/1d88259e658fae4877f8bc4510bee8547952fe84))
+* **bookmarks:** update validation regexes in updateBookmark method ([cd9cb1e](https://gitlab.mim-libre.fr/alphabet/laboite/commit/cd9cb1eb3fae5eb40ceb372feb8770881614928d))
+* **config:** move blog url from public to public.services ([b38a2f8](https://gitlab.mim-libre.fr/alphabet/laboite/commit/b38a2f8f89dd71348335bd2696ecbf703a8d4f01))
+* **csp headers:** temporarily allow '*' for CSP default-src ([3c1cbe8](https://gitlab.mim-libre.fr/alphabet/laboite/commit/3c1cbe83b20525d4b8452fa76bdf32e79291d0ad))
+* **file upload:** allow file paths with more than one subfolder ([ceecb74](https://gitlab.mim-libre.fr/alphabet/laboite/commit/ceecb7454d694251f5e82d64b180529a3be498dc))
+* **file uploader:** additional forbidden characters in filename ([244648b](https://gitlab.mim-libre.fr/alphabet/laboite/commit/244648bd649f9566525516a1480ff8f1f33a036f))
+* **file uploader:** check paths and filenames ([d302cce](https://gitlab.mim-libre.fr/alphabet/laboite/commit/d302ccee410c4385166a00b1dde1f4912485ff9a))
+* **file uploader:** optimize function _validateName ([8ae4596](https://gitlab.mim-libre.fr/alphabet/laboite/commit/8ae4596d30df38333e76a98c327db2b6b90e6fc1))
+* **footer:** fix personal space intro display as text ([e8be4d6](https://gitlab.mim-libre.fr/alphabet/laboite/commit/e8be4d68a40980e1e6177d96f98c900db474db04))
+* **group:** link from settings for blog ([4440571](https://gitlab.mim-libre.fr/alphabet/laboite/commit/4440571d178a16023b0eee80c12b87ca489476e4))
+* **group:** rebase on dev ([ec07255](https://gitlab.mim-libre.fr/alphabet/laboite/commit/ec07255cc1309f22e7aed2e598af06f94bface76))
+* **groups:** change value in material table in struc groups ([e416b06](https://gitlab.mim-libre.fr/alphabet/laboite/commit/e416b064e381331acb93630721568cf284bddcda))
+* **groups:** delete struc prefix and add logo in struc page ([fb23ec6](https://gitlab.mim-libre.fr/alphabet/laboite/commit/fb23ec6d72af6e809f0523436e3f64c2ba839650))
+* **header:** fix icon size in topbar ([c6ace81](https://gitlab.mim-libre.fr/alphabet/laboite/commit/c6ace818c1c2e6c22f1471b780fcd740f0fc9ef1))
+* **headers:** test header https ([2ee379a](https://gitlab.mim-libre.fr/alphabet/laboite/commit/2ee379a7f7c5f659ca3a2b451ee1a9da4a8c980a))
+* **help:** check title already use on update method ([6808d2f](https://gitlab.mim-libre.fr/alphabet/laboite/commit/6808d2f77b35174a6021386261eabcaab032a466))
+* **help:** error message for already created help ([1e80d9d](https://gitlab.mim-libre.fr/alphabet/laboite/commit/1e80d9d914be2df2af191b19ee4d7e23d97b6a5a))
+* **help:** remove console log on data ([9f60a82](https://gitlab.mim-libre.fr/alphabet/laboite/commit/9f60a821e130a00b5a9b103ee6c62046f23d3414))
+* **help:** update method and call ([0d0e40a](https://gitlab.mim-libre.fr/alphabet/laboite/commit/0d0e40ad25343f4e67301ef25ad22151bbfb113a))
+* **libraries:** fix npm dependencies and remove unwanted import ([ad2248a](https://gitlab.mim-libre.fr/alphabet/laboite/commit/ad2248a928c727bc5099b7cdb363f4714eff966d))
+* **library:** compatibility with react-meteor-data > 2.4.0 ([5feca9a](https://gitlab.mim-libre.fr/alphabet/laboite/commit/5feca9a40b7ae28812270d20fe6f713516c59e6e))
+* **library:** hook should not be called in withTracker HOC ([dd10fde](https://gitlab.mim-libre.fr/alphabet/laboite/commit/dd10fde58ac42bf722b73910b91a61f5bb0c23f4))
+* **libs:** downgrade meteor-react-data to 2.4.0 ([e7438b9](https://gitlab.mim-libre.fr/alphabet/laboite/commit/e7438b9716c61721fdc3233c48b1a2075634e329))
+* **link:** add noopener,noreferrer options to window.open with _blank ([9f5b26d](https://gitlab.mim-libre.fr/alphabet/laboite/commit/9f5b26dbe935622b98731bf5ad0d4e7a94a761ba))
+* **link:** add rel attribute on a html tags ([cd94842](https://gitlab.mim-libre.fr/alphabet/laboite/commit/cd948420dde7e0f46a8127844f1d2a20a5bd715b))
+* **links:** add missing target and rel on links ([6014bcb](https://gitlab.mim-libre.fr/alphabet/laboite/commit/6014bcb57005d897b5374b8e945fff4e242be2df))
+* **minio:** delete minio SSL option ([4cf8a89](https://gitlab.mim-libre.fr/alphabet/laboite/commit/4cf8a89aa1d27d949628f94007781e98b481c636))
+* **nextcloud token:** don't store nctoken after retrieval ([8d7c6f0](https://gitlab.mim-libre.fr/alphabet/laboite/commit/8d7c6f0c39af1ffb1f559cffb14f909796cd93b4))
+* **package:** fix package lock version to v2 ([0628665](https://gitlab.mim-libre.fr/alphabet/laboite/commit/0628665592344c2f142a676863e4dd7552f458d3))
+* **package:** update material-table/core lib to 6.1.13 ([8c327b3](https://gitlab.mim-libre.fr/alphabet/laboite/commit/8c327b3f715a25099692f1e5110608f52ec84193))
+* **profile:** validation-error appears when changing structure ([371ecb7](https://gitlab.mim-libre.fr/alphabet/laboite/commit/371ecb70daab7df66acd14388a8612857c1d884e))
+* **sample:** delete unwanted settings ([d4a13a9](https://gitlab.mim-libre.fr/alphabet/laboite/commit/d4a13a96e1b6059926177147f9876339e1559a45))
+* **settings:** add missing translate in struc opt ([11bbd23](https://gitlab.mim-libre.fr/alphabet/laboite/commit/11bbd23ab582e3dde09d89efdad3b1f524d92c1a))
+* **settings:** reduce time of meteor session ([6917e7a](https://gitlab.mim-libre.fr/alphabet/laboite/commit/6917e7a26c5b69e312ef727a983d66f7134690a7))
+* **startup:** add http headers with helmet lib ([7a2366b](https://gitlab.mim-libre.fr/alphabet/laboite/commit/7a2366bca138729f17fdd4752d5dca227d5d7337))
+* **startup:** configure helmet http headers ([b3cef0f](https://gitlab.mim-libre.fr/alphabet/laboite/commit/b3cef0fce5fca09aef3fe4cd0827ec09be1ce52d))
+* **structure:** admin removal of a user from the structure ([639e9e4](https://gitlab.mim-libre.fr/alphabet/laboite/commit/639e9e4e8f6caabd90d2b77b1f030658561854d7))
+* **structure:** reduce loading on validating page ([00d0dce](https://gitlab.mim-libre.fr/alphabet/laboite/commit/00d0dcedfbcf9c4bc3eec4c07d7fcfab499205a5))
+* **structure:** roles removal after leaving structure ([57131f0](https://gitlab.mim-libre.fr/alphabet/laboite/commit/57131f04eb72035bbf12cca55ca9b5207ed16993))
+* **structures:** add missing parameters validation on two methods ([946fe25](https://gitlab.mim-libre.fr/alphabet/laboite/commit/946fe252dc70262e3872b0d8deada7721f2973d3))
+* **structures:** apply code review recommendations ([e552a03](https://gitlab.mim-libre.fr/alphabet/laboite/commit/e552a03d1492f9c693e189f3c9d9ff8bdbf5c15a))
+* **upload notifier:** check that file extension is allowed ([28d3421](https://gitlab.mim-libre.fr/alphabet/laboite/commit/28d3421385e21f1ee2a581d136ef93dd06e21091))
+
+
+### Build System
+
+* **meteor:** update meteor 2.9.1 ([7bfa6e1](https://gitlab.mim-libre.fr/alphabet/laboite/commit/7bfa6e1cdf58efabeec14d69cb0c9d4d03dd2a3b))
+
+
+### Code Refactoring
+
+* **logs:** use logging enum in place of notifications enum ([404d48d](https://gitlab.mim-libre.fr/alphabet/laboite/commit/404d48dbddff8128afa36185b87f95fe21c63883))
+
+
+### Features
+
+* **headers:** csp frame-ancestors can be overriden in settings ([f777d4f](https://gitlab.mim-libre.fr/alphabet/laboite/commit/f777d4fa2ac25244a771007d48fb22af628504c3))
+* **help:** add an anchor to each help category zone ([7b94062](https://gitlab.mim-libre.fr/alphabet/laboite/commit/7b94062db4eab6b14b82b8bc320d17fed26c9e1b))
+* **input validation:** add a maximum length for string user inputs ([fa62a2f](https://gitlab.mim-libre.fr/alphabet/laboite/commit/fa62a2fa64c07060e7163d144702b506ac8ddb9d))
+* **input validation:** add string inputs validation in all methods ([b036093](https://gitlab.mim-libre.fr/alphabet/laboite/commit/b0360936c2449f14324ae4d9aa182301e87c5606))
+* **input validation:** sanitize html user input with sanitize-html ([87e305f](https://gitlab.mim-libre.fr/alphabet/laboite/commit/87e305f76a9451c5439c02fab98d483547ac2f70))
+* **input validation:** start adding input validation ([6beb16d](https://gitlab.mim-libre.fr/alphabet/laboite/commit/6beb16d5c7d70c1cf35b09a1f57087c6aca460b4))
+* **log:** add log for group methods ([d621035](https://gitlab.mim-libre.fr/alphabet/laboite/commit/d62103569f5935a4f4637d171694a28e05b2fdc2))
+* **Signin:** add doc and fix settings name in sample file ([fe39a42](https://gitlab.mim-libre.fr/alphabet/laboite/commit/fe39a426c961fa0a4be6e76f8c49e5213fc4d7e2))
+* **SignIn:** add popup possibility ([082239c](https://gitlab.mim-libre.fr/alphabet/laboite/commit/082239cbf9ca45573797befa956f9612ffd63c12))
+
+
+### Performance Improvements
+
+* **roles:** optimize roles removal method ([3cf8b01](https://gitlab.mim-libre.fr/alphabet/laboite/commit/3cf8b011ecfa6c0fe6240e3c7186167b9764ba52))
+
 ## [5.2.2](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/5.2.1...release/5.2.2) (2023-03-06)
 
 
