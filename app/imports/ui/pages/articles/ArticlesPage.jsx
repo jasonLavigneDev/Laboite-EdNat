@@ -151,11 +151,11 @@ function ArticlesPage({
 
   const mapList = (func) => items.filter((article) => filterServices(article)).map(func);
   const blogPage =
-    testMeteorSettingsUrl(Meteor.settings.public.laboiteBlogURL, true) || `${Meteor.absoluteUrl()}public/`;
+    testMeteorSettingsUrl(Meteor.settings.public.services.laboiteBlogURL, true) || `${Meteor.absoluteUrl()}public/`;
 
   const handleCopyURL = () => {
     let myPublicPublicationURL;
-    if (Meteor.settings.public.laboiteBlogURL) {
+    if (Meteor.settings.public.services.laboiteBlogURL) {
       myPublicPublicationURL = `${blogPage}authors/${Meteor.userId()}`;
     } else {
       myPublicPublicationURL = `${blogPage}${Meteor.userId()}`;
@@ -219,7 +219,7 @@ function ArticlesPage({
                     className={classes.buttonOption}
                     size="medium"
                     variant="contained"
-                    onClick={() => window.open(blogPage, '_blank')}
+                    onClick={() => window.open(blogPage, '_blank', 'noreferrer,noopener')}
                   >
                     {i18n.__(`pages.${i18nCode}.openPublicPage`)}
                   </Button>

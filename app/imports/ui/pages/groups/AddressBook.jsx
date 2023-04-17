@@ -120,8 +120,8 @@ const AddressBook = ({ loading, group, slug }) => {
 
   const { disabledFeatures = {} } = Meteor.settings.public;
   const enableBlog = !disabledFeatures.blog;
-  const authorBlogPage = Meteor.settings.public.laboiteBlogURL
-    ? `${testMeteorSettingsUrl(Meteor.settings.public.laboiteBlogURL)}/authors/`
+  const authorBlogPage = Meteor.settings.public.services.laboiteBlogURL
+    ? `${testMeteorSettingsUrl(Meteor.settings.public.services.laboiteBlogURL)}/authors/`
     : `${Meteor.absoluteUrl()}public/`;
 
   return (
@@ -233,6 +233,7 @@ const AddressBook = ({ loading, group, slug }) => {
                                         user.mezigName
                                       }`,
                                       '_blank',
+                                      'noopener,noreferrer',
                                     )
                                   }
                                   size="large"
@@ -249,7 +250,9 @@ const AddressBook = ({ loading, group, slug }) => {
                                 <IconButton
                                   edge="end"
                                   aria-label="comments"
-                                  onClick={() => window.open(`${authorBlogPage}${user._id}`, '_blank')}
+                                  onClick={() =>
+                                    window.open(`${authorBlogPage}${user._id}`, '_blank', 'noopener,noreferrer')
+                                  }
                                   size="large"
                                 >
                                   <LibraryBooksIcon />

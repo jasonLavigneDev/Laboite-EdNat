@@ -4,14 +4,14 @@ import Minio from 'minio';
 // and access keys as shown below.
 
 let client = null;
-const { minioEndPoint, minioPort, minioSSL } = Meteor.settings.public;
+const { minioEndPoint, minioPort } = Meteor.settings.public;
 if (!Meteor.isTest && !!minioEndPoint) {
   const { minioAccess } = Meteor.settings.private;
   client = minioEndPoint
     ? new Minio.Client({
         endPoint: minioEndPoint,
         port: minioPort,
-        useSSL: minioSSL,
+        useSSL: true,
         accessKey: minioAccess,
         secretKey: Meteor.settings.private.minioSecret,
       })

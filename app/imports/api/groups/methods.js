@@ -5,9 +5,13 @@ import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { Roles } from 'meteor/alanning:roles';
 import i18n from 'meteor/universe:i18n';
-import { isActive, getLabel } from '../utils';
+import sanitizeHtml from 'sanitize-html';
+import { isActive, getLabel, validateString } from '../utils';
 import Groups from './groups';
 import { addGroup, removeElement } from '../personalspaces/methods';
+import logServer, { levels, scopes } from '../logging';
+
+const reservedGroupNames = ['admins', 'adminStructure'];
 
 export const favGroup = new ValidatedMethod({
   name: 'groups.favGroup',
@@ -37,6 +41,7 @@ export const favGroup = new ValidatedMethod({
     }
     // update user personalSpace
     addGroup._execute({ userId: this.userId }, { groupId });
+    logServer(`GROUPS - favGroup - User ${this.userId} add favGroup ${groupId} `, levels.VERBOSE, scopes.USER);
   },
 });
 
@@ -59,6 +64,7 @@ export const unfavGroup = new ValidatedMethod({
     }
     // update user personalSpace
     removeElement._execute({ userId: this.userId }, { type: 'group', elementId: groupId });
+    logServer(`GROUPS - unFavGroup -User ${this.userId} unFavGroup ${groupId}`, levels.VERBOSE, scopes.USER);
   },
 });
 
@@ -95,9 +101,11 @@ export const findGroups = new ValidatedMethod({
     groupId: {
       type: String,
       optional: true,
+      regEx: SimpleSchema.RegEx.Id,
     },
   }).validator({ clean: true }),
   run({ page, pageSize, sortColumn, sortOrder, groupId }) {
+    validateString(sortColumn, true);
     const isAdmin = Roles.userIsInRole(this.userId, 'admin');
     const user = Meteor.users.findOne({ _id: this.userId });
     // calculate number of entries to skip
@@ -138,6 +146,7 @@ export function _createGroup({ name, type, content, description, avatar, plugins
       Roles.addUsersToRoles(userId, ['admin', 'animator'], groupId);
 
       favGroup._execute({ userId }, { groupId });
+      logServer(`GROUPS - createGroup - User ${userId} create group ${groupId}`, levels.VERBOSE, scopes.USER);
 
       if (type !== 15) {
         user.groupCount += 1;
@@ -148,16 +157,15 @@ export function _createGroup({ name, type, content, description, avatar, plugins
 
       // move group temp avatar from user minio to group minio and update avatar link
       if (avatar !== '' && avatar.includes('groupAvatar.png')) {
+        const { minioEndPoint, minioBucket, minioPort } = Meteor.settings.public;
+        const HOST = `https://${minioEndPoint}${minioPort ? `:${minioPort}` : ''}/${minioBucket}/`;
         Meteor.call('files.move', {
           sourcePath: `users/${userId}`,
           destinationPath: `groups/${groupId}`,
-          files: ['groupAvatar.png'],
+          files: [`${HOST}users/${userId}/groupAvatar.png`],
         });
 
-        const { minioSSL, minioEndPoint, minioBucket, minioPort } = Meteor.settings.public;
-        const avatarLink = `http${minioSSL ? 's' : ''}://${minioEndPoint}${
-          minioPort ? `:${minioPort}` : ''
-        }/${minioBucket}/groups/${groupId}/groupAvatar.png?${new Date().getTime()}`;
+        const avatarLink = `${HOST}groups/${groupId}/groupAvatar.png?${new Date().getTime()}`;
 
         Groups.update({ _id: groupId }, { $set: { avatar: avatarLink } });
       }
@@ -168,6 +176,9 @@ export function _createGroup({ name, type, content, description, avatar, plugins
     if (error.code === 11000) {
       throw new Meteor.Error('api.groups.createGroup.duplicateName', i18n.__('api.groups.groupAlreadyExist'));
     } else {
+      logServer(`GROUPS - createGroup - fail when user ${userId} create group`, levels.WARN, scopes.SYSTEM, {
+        errorMessage: error.message,
+      });
       throw error;
     }
   }
@@ -188,7 +199,15 @@ export const createGroup = new ValidatedMethod({
     if (!isActive(this.userId)) {
       throw new Meteor.Error('api.groups.createGroup.notLoggedIn', i18n.__('api.users.mustBeLoggedIn'));
     }
-    return _createGroup({ name, type, content, description, plugins, avatar, userId: this.userId });
+    if (reservedGroupNames.includes(name)) {
+      throw new Meteor.Error('api.groups.createGroup.notPermitted', i18n.__('api.groups.groupAlreadyExist'));
+    }
+    validateString(name);
+    validateString(description);
+    validateString(avatar);
+    const sanitizedContent = sanitizeHtml(content);
+    validateString(sanitizedContent);
+    return _createGroup({ name, type, content: sanitizedContent, description, plugins, avatar, userId: this.userId });
   },
 });
 
@@ -226,6 +245,7 @@ export function _removeGroup({ groupId, userId }) {
   Groups.remove(groupId);
   // remove from users favorite groups
   Meteor.users.update({ favGroups: { $all: [groupId] } }, { $pull: { favGroups: groupId } }, { multi: true });
+  logServer(`GROUPS - user ${userId} remove group ${groupId}`, levels.VERBOSE, scopes.USER);
   return null;
 }
 
@@ -244,11 +264,15 @@ function _updateGroup(groupId, groupData, oldGroup) {
   try {
     Groups.update({ _id: groupId }, { $set: groupData });
     // return both old and new data to allow plugins to detect changes in 'after' hook
+    logServer(`GROUPS - user update group ${groupId}`, levels.VERBOSE, scopes.USER);
     return [groupData, oldGroup];
   } catch (error) {
     if (error.code === 11000) {
       throw new Meteor.Error('api.groups.updateGroup.duplicateName', i18n.__('api.groups.groupAlreadyExist'));
     } else {
+      logServer(`GROUPS - updateGroup - error when user updateGroup`, levels.WARN, scopes.SYSTEM, {
+        errorMEssage: error.message,
+      });
       throw error;
     }
   }
@@ -292,14 +316,24 @@ export const updateGroup = new ValidatedMethod({
     if (!authorized) {
       throw new Meteor.Error('api.groups.updateGroup.notPermitted', i18n.__('api.groups.adminGroupNeeded'));
     }
+    if (reservedGroupNames.includes(data.name)) {
+      throw new Meteor.Error('api.groups.updateGroup.notPermitted', i18n.__('api.groups.groupAlreadyExist'));
+    }
+    if (data.name) validateString(data.name);
+    if (data.description) validateString(data.description);
+    if (data.avatar) validateString(data.avatar);
+    if (data.groupPadId) validateString(data.groupPadId);
+    if (data.digest) validateString(data.digest);
+    const sanitizedContent = sanitizeHtml(data.content);
+    validateString(sanitizedContent);
     let groupData = {};
     if (!Roles.userIsInRole(this.userId, 'admin', groupId)) {
       // animator can only update description and content
       if (data.description) groupData.description = data.description;
-      if (data.content) groupData.content = data.content;
+      if (data.content) groupData.content = sanitizedContent;
       if (data.avatar) groupData.avatar = data.avatar;
     } else {
-      groupData = { ...data };
+      groupData = { ...data, content: sanitizedContent };
     }
     return _updateGroup(groupId, groupData, group);
   },

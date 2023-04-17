@@ -4,7 +4,7 @@ import { Roles } from 'meteor/alanning:roles';
 import i18n from 'meteor/universe:i18n';
 import crypto from 'crypto';
 import { parseStringPromise } from 'xml2js';
-import logServer from '../logging';
+import logServer, { levels, scopes } from '../logging';
 import Groups from '../groups/groups';
 import { testMeteorSettingsUrl } from '../../ui/utils/utilsFuncs';
 
@@ -76,6 +76,16 @@ class BigBlueButtonClient {
               },
             });
             // logServer(`meeting created: ${JSON.stringify(meetingData)}`);
+            logServer(
+              `APPCLIENT - BBBCLIENT - createMeeting - meeting created: ${JSON.stringify(meetingData)}`,
+              levels.INFO,
+              scopes.SYSTEM,
+              {
+                meetingData,
+                slug,
+                userId,
+              },
+            );
             return Promise.resolve(this.getJoinURL(slug, userId));
           }
           if (result.response.messageKey[0] === 'idNotUnique') {
@@ -87,7 +97,12 @@ class BigBlueButtonClient {
         }),
       )
       .catch((err) => {
-        logServer(`BBB create error: ${err}`, 'error');
+        // logServer(`BBB create error: ${err}`, 'error');
+        logServer(`APPCLIENT - BBBCLIENT - createMeeting - BBB create error: ${err}`, levels.ERROR, scopes.SYSTEM, {
+          slug,
+          userId,
+          meetingParams,
+        });
         throw new Meteor.Error('api.BBBClient.createMeeting.error', i18n.__('api.bbb.createError'));
       });
   }
@@ -136,7 +151,16 @@ class BigBlueButtonClient {
         }),
       )
       .catch((err) => {
-        logServer(`BBB checkRunning Error: ${JSON.stringify(err)}`);
+        // logServer(`BBB checkRunning Error: ${JSON.stringify(err)}`);
+        logServer(
+          `APPCLIENT - BBBCLIENT - checkRunning - BBB checkRunning Error: ${JSON.stringify(err)}`,
+          levels.ERROR,
+          scopes.SYSTEM,
+          {
+            slug,
+            groupId,
+          },
+        );
         return Promise.resolve(null);
       });
   }
@@ -161,7 +185,13 @@ class BigBlueButtonClient {
         }),
       )
       .catch((err) => {
-        logServer(`BBB getMeetings Error: ${JSON.stringify(err)}`);
+        // logServer(`BBB getMeetings Error: ${JSON.stringify(err)}`);
+        logServer(
+          `APPCLIENT - BBBCLIENT - getMeetings - BBB getMeetings Error: ${JSON.stringify(err)}`,
+          levels.ERROR,
+          scopes.SYSTEM,
+          {},
+        );
         return Promise.resolve(null);
       });
   }
@@ -170,10 +200,21 @@ class BigBlueButtonClient {
 let Client = null;
 if (Meteor.isServer && bbbEnabled) {
   Client = new BigBlueButtonClient();
-  logServer(i18n.__('api.bbb.checkConfig', { URL: Client.bbbURL }));
+  // logServer(i18n.__('api.bbb.checkConfig', { URL: Client.bbbURL }));
+  logServer(
+    `APPCLIENT - BBBCLIENT - ${i18n.__('api.bbb.checkConfig', { URL: Client.bbbURL })}`,
+    levels.INFO,
+    scopes.SYSTEM,
+    {
+      URL: Client.bbbURL,
+    },
+  );
   Client.getMeetings().then(() => {
     // console.log('*** ALL MEETINGS : ', JSON.stringify(response));
-    logServer(i18n.__('api.bbb.configOk'));
+    // logServer(i18n.__('api.bbb.configOk'));
+    logServer(`APPCLIENT - BBBCLIENT - ${i18n.__('api.bbb.configOk')}`, levels.INFO, scopes.SYSTEM, {
+      URL: Client.bbbURL,
+    });
   });
 }
 const BBBClient = Client;

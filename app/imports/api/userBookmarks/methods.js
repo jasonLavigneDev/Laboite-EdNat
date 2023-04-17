@@ -5,7 +5,7 @@ import SimpleSchema from 'simpl-schema';
 import { Roles } from 'meteor/alanning:roles';
 import { _ } from 'meteor/underscore';
 import i18n from 'meteor/universe:i18n';
-import { isActive, getLabel } from '../utils';
+import { isActive, getLabel, validateString } from '../utils';
 import UserBookmarks from './userBookmarks';
 import { addUserBookmark, removeElement } from '../personalspaces/methods';
 
@@ -37,7 +37,9 @@ export const createUserBookmark = new ValidatedMethod({
         i18n.__('api.bookmarks.createBookmark.URLAlreadyExists'),
       );
     }
-
+    validateString(url);
+    validateString(name);
+    validateString(tag);
     UserBookmarks.insert({ url: finalUrl, name, tag, userId: this.userId });
     return finalUrl;
   },
@@ -67,6 +69,9 @@ export const updateUserBookmark = new ValidatedMethod({
     }
 
     const finalUrl = _formatURL(url);
+    validateString(url);
+    validateString(name);
+    validateString(tag);
     UserBookmarks.update({ _id: id }, { $set: { url: finalUrl, name, tag } });
     return finalUrl;
   },

@@ -58,9 +58,10 @@ import { testMeteorSettingsUrl, getGroupName } from '../../utils/utilsFuncs';
 
 Quill.register('modules/ImageResize', ImageResize);
 
-const { minioEndPoint, minioPort, minioBucket, minioSSL, laboiteBlogURL } = Meteor.settings.public;
+const { minioEndPoint, minioPort, minioBucket } = Meteor.settings.public;
+const { laboiteBlogURL } = Meteor.settings.public.services;
 
-const HOST = `http${minioSSL ? 's' : ''}://${minioEndPoint}${minioPort ? `:${minioPort}` : ''}/${minioBucket}/`;
+const HOST = `https://${minioEndPoint}${minioPort ? `:${minioPort}` : ''}/${minioBucket}/`;
 
 const useStyles = makeStyles()((theme, isTablet) => ({
   flex: {
@@ -350,7 +351,10 @@ function EditArticlePage({
             if (isImage || data.markdown) {
               newHTML = newContent.replace(imgData, url);
             } else if (!data.markdown) {
-              newHTML = newContent.replace(imgTag, `<a target="_blank" href="${url}">${url}</a>`);
+              newHTML = newContent.replace(
+                imgTag,
+                `<a target="_blank" href="${url}" rel="noopener noreferrer" >${url}</a>`,
+              );
             }
             if (data.markdown) {
               toastRef.current.getInstance().setMarkdown(newHTML);
@@ -369,7 +373,7 @@ function EditArticlePage({
     } else {
       const stringToAdd = toastInstance.isMarkdownMode()
         ? `[${videoUrl}](${videoUrl})`
-        : `<a target="_blank" href="${videoUrl}">${videoUrl}</a>`;
+        : `<a target="_blank" href="${videoUrl}" rel="noopener noreferrer">${videoUrl}</a>`;
       toastInstance.insertText(stringToAdd);
     }
     toggleWebcam(false);
@@ -381,7 +385,7 @@ function EditArticlePage({
     } else {
       const stringToAdd = toastInstance.isMarkdownMode()
         ? `[${audioUrl}](${audioUrl})`
-        : `<a target="_blank" href="${audioUrl}">${audioUrl}</a>`;
+        : `<a target="_blank" href="${audioUrl}" rel="noopener noreferrer" >${audioUrl}</a>`;
       toastInstance.insertText(stringToAdd);
     }
     toggleAudio(false);
@@ -420,11 +424,13 @@ function EditArticlePage({
     } else {
       let stringToAdd = '';
       if (format === 'image') {
-        stringToAdd = toastInstance.isMarkdownMode() ? `![${url}](${url})` : `<img src="${url}" />`;
+        stringToAdd = toastInstance.isMarkdownMode()
+          ? `![${url}](${url.replaceAll(' ', '%20')})`
+          : `<img src="${url}" />`;
       } else {
         stringToAdd = toastInstance.isMarkdownMode()
           ? `[${url}](${url})`
-          : `<a target="_blank" href="${url}">${url}</a>`;
+          : `<a target="_blank" href="${url}" rel="noopener noreferrer" >${url}</a>`;
       }
       toastInstance.insertText(stringToAdd);
     }
@@ -635,7 +641,12 @@ function EditArticlePage({
           </FormControl>
           <Paper className={classes.licencePaper}>
             {i18n.__('pages.EditArticlePage.licenceInfo')}{' '}
-            <a href="https://creativecommons.org/licenses/" target="_blank" style={{ color: 'blue' }} rel="noreferrer">
+            <a
+              href="https://creativecommons.org/licenses/"
+              target="_blank"
+              style={{ color: 'blue' }}
+              rel="noopener noreferrer"
+            >
               https://creativecommons.org/licenses/
             </a>
           </Paper>

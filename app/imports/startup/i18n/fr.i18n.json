@@ -111,6 +111,12 @@
       "types": {
         "external": "Lien externe",
         "iframed": "Lien/Vidéo intégré"
+      },
+      "updateHelp": {
+        "titleAlreadyTaken": "Ce titre est déjà pris."
+      },
+      "createHelp": {
+        "alreadyExists": "Cette page d'aide existe déjà."
       }
     },
     "structures": {
@@ -347,7 +353,7 @@
       "removeAdminStructureError": "Keycloak : ERROR lors de la suppression de l'utilisateur {$userId} comme admin de structure`",
       "userNotFound": "Keycloak: Id de l'utilisateur {$userId} introuvable",
       "userGroupAdded": "Keycloak: groupe {$groupName} ajouté à l'utilisateur {$userId}",
-      "userGroupAddError": "Keycloak : ERREUR lors de l'ajout du groupe {$groupName} à l'utilisateur {$userId}",
+      "userGroupAddError": "Keycloak : ERREUR lors de l'ajout du groupe \"{$groupName}\" à l'utilisateur \"{$userId}\"",
       "userGroupRemoved": "Keycloak: groupe {$groupName} supprimé pour l'utilisateur {$userId}",
       "userGroupRemoveError": "Keycloak : ERREUR lors de la suppression du groupe {$groupName} pour l'utilisateur {$userId}"
     },
@@ -436,6 +442,11 @@
       "info": "Information serveur",
       "warning": "Avertissement serveur",
       "error": "Erreur serveur"
+    },
+    "utils": {
+      "scriptDetected": "Du contenu non autorisé a été détecté",
+      "badCharsDetected": "Les caractères suivants sont interdits: < > & ' \"",
+      "stringTooLong": "Chaîne trop longue (500k maximum)"
     },
     "rateLimitError": "Erreur, trop de requêtes. Merci de patienter {$timeToReset} secondes avant de réessayer."
   },
@@ -985,7 +996,8 @@
       "personalData": "Données Personnelles",
       "gcu": "Conditions générales d'utilisation",
       "accessibility": "Accessibilité",
-      "legal": "Mentions légales"
+      "legal": "Mentions légales",
+      "personalSpace": "Introduction à l'espace personnel"
     },
     "AdminSettingsPage": {
       "edition": "Edition des réglages de l'application",
@@ -1032,18 +1044,6 @@
       "rememberMe": "Rester connecté(e)",
       "maintenanceLogin": "Site en maintenance"
     },
-    "SignUp": {
-      "appDescription": "Création de votre compte",
-      "firstNameLabel": "Prénom",
-      "lastNameLabel": "Nom",
-      "userNameLabel": "Identifiant",
-      "emailLabel": "Courriel",
-      "pwdLabel": "Mot de passe",
-      "pwdButtonLabel": "Afficher ou masquer le mot de passe",
-      "structureLabel": "Structure de rattachement",
-      "submitButtonLabel": "Inscription",
-      "createError": "Erreur: problème lors de la création du compte"
-    },
     "ContactForm": {
       "appDescription": "Formulaire de contact",
       "firstNameLabel": "Prénom",
@@ -1061,6 +1061,9 @@
     },
     "ProfilePage": {
       "title": "Mes préférences",
+      "firstNameLabel": "Prénom",
+      "lastNameLabel": "Nom",
+      "emailLabel": "Courriel",
       "useEmail": "Utiliser mon email",
       "usernameError": "Ce pseudonyme n'est pas disponible",
       "emailAlreadyExists": "Cette adresse électronique est déjà utilisée",
@@ -1259,8 +1262,11 @@
       "setAdmin": "Donner les droits d'administrateur",
       "unsetAdmin": "Enlever les droits d'administrateur",
       "deleteUser": "Supprimer l'utilisateur",
+      "deleteUserFromStructure": "Supprimer de la structure",
       "deleteUserConfirmation": "Souhaitez vous réellement supprimer cet utilisateur ?",
+      "deleteUserFromStructureConfirmation": "Souhaitez vous réellement supprimer cet utilisateur de la structure ?",
       "deleteSelfConfirmation": "Vous allez supprimer votre propre compte. Continuer ?",
+      "deleteSelfFromStructureConfirmation": "Vous allez vous supprimer de la structure. Continuer ?",
       "cancelDelete": "Annuler la suppression",
       "successSetAdmin": "Droits d'administrateur donnés",
       "successUnsetAdmin": "Droits d'administateur révoqués",

@@ -2,11 +2,12 @@
   "public": {
     "appName": "LaBoîte",
     "appDescription": "Sac à dos numérique de l’agent public",
-    "enableKeycloak": false,
     "offlinePage": false,
     "keycloakUrl": "",
     "keycloakRealm": "",
     "theme": "laboite",
+    "keycloackPopupStyle": false,
+    "keycloackPopupStyleIframe": false,
     "disabledFeatures": {
       "blog": false,
       "notificationsTab": false,
@@ -24,10 +25,8 @@
       "siteId": 1,
       "urlBase": "https://URL.fr"
     },
-    "laboiteBlogURL": "",
     "enableBBB": false,
     "BBBUrl": "",
-    "minioSSL": false,
     "minioPort": null,
     "minioEndPoint": "",
     "minioBucket": "",
@@ -63,7 +62,8 @@
     "services":{
       "agendaUrl": "",
       "sondagesUrl": "",
-      "mezigUrl": ""
+      "mezigUrl": "",
+      "laboiteBlogURL": "",
     }
   },
   "keycloak": {
@@ -90,7 +90,7 @@
     "toEmail": ""
   },
   "private": {
-    "loginExpirationInDays": 90,
+    "loginExpirationInDays": 1,
     "fillWithFakeData": false,
     "minioAccess": "",
     "minioSecret": "",
@@ -102,6 +102,7 @@
       "^ac-[a-z-]*\\.fr",
       "^[a-z-]*\\.gouv.fr"
     ],
+    "cspFrameAncestors": ["'self'"],
     "checkKeyCloakWhiteListDomain": false
   }
 }

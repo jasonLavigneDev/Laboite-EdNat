@@ -4,7 +4,7 @@ import { _ } from 'meteor/underscore';
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import i18n from 'meteor/universe:i18n';
-import { isActive, getLabel } from '../utils';
+import { isActive, getLabel, validateString } from '../utils';
 import Notifications from './notifications';
 
 export function addExpiration(data) {
@@ -47,6 +47,9 @@ export const createNotification = new ValidatedMethod({
     if (!authorized) {
       throw new Meteor.Error('api.notifications.createNotification.notPermitted', i18n.__('api.users.adminNeeded'));
     }
+    if (data.title) validateString(data.title);
+    if (data.content) validateString(data.content);
+    if (data.link) validateString(data.link);
     Notifications.insert(addExpiration(data));
   },
 });

@@ -3,7 +3,7 @@ import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import i18n from 'meteor/universe:i18n';
 import { Roles } from 'meteor/alanning:roles';
-import { isActive } from '../../utils';
+import { isActive, validateString } from '../../utils';
 import { createGroupNotification } from './notifsutils';
 
 export const createNotificationForGroup = new ValidatedMethod({
@@ -23,7 +23,8 @@ export const createNotificationForGroup = new ValidatedMethod({
     if (!authorized) {
       throw new Meteor.Error('api.notifications.createNotification.notPermitted', i18n.__('api.users.adminNeeded'));
     }
-
+    validateString(data.title);
+    validateString(data.content);
     createGroupNotification(this.userId, data.groupId, data.title, data.content);
   },
 });

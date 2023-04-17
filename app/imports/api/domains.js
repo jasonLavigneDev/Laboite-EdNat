@@ -1,5 +1,5 @@
 import { Meteor } from 'meteor/meteor';
-import logServer from './logging';
+import logServer, { levels, scopes } from './logging';
 import AsamExtensions from './asamextensions/asamextensions';
 
 // checks if the domain part of an email address matches whitelisted domains
@@ -10,7 +10,15 @@ export default function checkDomain(email) {
   const checkKeyCloakWhiteListDomain = Meteor.settings.private.checkKeyCloakWhiteListDomain || false;
   whiteDomains.forEach((whiteDomain) => {
     if (new RegExp(whiteDomain).test(domainMail)) {
-      logServer(`  Email domain matches ${whiteDomain}: user activated`);
+      // logServer(`  Email domain matches ${whiteDomain}: user activated`);
+      logServer(
+        `DOMAIN - checkDomain - Email domain matches${whiteDomain}:user activated`,
+        levels.INFO,
+        scopes.SYSTEM,
+        {
+          email,
+        },
+      );
       res = true;
     }
   });

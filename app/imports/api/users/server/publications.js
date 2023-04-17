@@ -6,7 +6,8 @@ import SimpleSchema from 'simpl-schema';
 import { checkPaginationParams, isActive, getLabel } from '../../utils';
 import Groups from '../../groups/groups';
 import { getStructureIds } from '../structures';
-import logServer from '../../logging';
+import logServer, { levels, scopes } from '../../logging';
+
 import { hasAdminRightOnStructure, hasRightToAcceptAwaitingStructure } from '../../structures/utils';
 
 // publish additional fields for current user
@@ -155,7 +156,14 @@ FindFromPublication.publish(
         .extend(checkPaginationParams)
         .validate({ page, itemPerPage, slug, search, userType });
     } catch (err) {
-      logServer(`publish users.group: ${err}`);
+      // logServer(`publish users.group: ${err}`);
+      logServer(`USERS - PUBLICATION - publish users.group: ${err}`, levels.ERROR, scopes.SYSTEM, {
+        page,
+        itemPerPage,
+        search,
+        slug,
+        userType,
+      });
       this.error(err);
     }
     const group = Groups.findOne({ slug });
@@ -197,7 +205,12 @@ FindFromPublication.publish('users.publishers', ({ page, itemPerPage, search, ..
   try {
     checkPaginationParams.validate({ page, itemPerPage, search });
   } catch (err) {
-    logServer(`publish users.publishers: ${err}`);
+    // logServer(`publish users.publishers: ${err}`);
+    logServer(`USERS - PUBLICATION - publish users.publishers: ${err}`, levels.ERROR, scopes.SYSTEM, {
+      page,
+      itemPerPage,
+      search,
+    });
     this.error(err);
   }
   const pubFields = { ...Meteor.users.publicFields };
@@ -287,7 +300,13 @@ FindFromPublication.publish(
         .extend(checkPaginationParams)
         .validate({ page, itemPerPage, search, userType });
     } catch (err) {
-      logServer(`publish users.admin : ${err}`);
+      // logServer(`publish users.admin : ${err}`);
+      logServer(`USERS - PUBLICATION - publish users.admin : ${err}`, levels.ERROR, scopes.SYSTEM, {
+        page,
+        itemPerPage,
+        search,
+        userType,
+      });
       this.error(err);
     }
 
@@ -365,7 +384,13 @@ FindFromPublication.publish(
         .extend(checkPaginationParams)
         .validate({ page, itemPerPage, search, userType });
     } catch (err) {
-      logServer(`publish users.byStructure : ${err}`);
+      // logServer(`publish users.byStructure : ${err}`);
+      logServer(`USERS - PUBLICATION - publish users.byStructure : ${err}`, levels.ERROR, scopes.SYSTEM, {
+        page,
+        itemPerPage,
+        search,
+        userType,
+      });
       this.error(err);
     }
     try {

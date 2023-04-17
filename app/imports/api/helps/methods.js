@@ -6,8 +6,15 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import i18n from 'meteor/universe:i18n';
 import { Roles } from 'meteor/alanning:roles';
 
-import { isActive, getLabel } from '../utils';
+import { isActive, getLabel, validateString } from '../utils';
 import Helps from './helps';
+
+const validateHelp = (data) => {
+  validateString(data.title);
+  if (data.description) validateString(data.description);
+  validateString(data.content);
+  validateString(data.category);
+};
 
 export const createHelp = new ValidatedMethod({
   name: 'tags.createHelp',
@@ -18,6 +25,11 @@ export const createHelp = new ValidatedMethod({
     if (!authorized) {
       throw new Meteor.Error('api.helps.createHelp.notPermitted', i18n.__('api.users.notPermitted'));
     }
+    const help = Helps.findOne({ title: data.title });
+    if (help) {
+      throw new Meteor.Error('api.helps.createHelp.alreadyExists', i18n.__('api.helps.createHelp.alreadyExists'));
+    }
+    validateHelp(data);
     return Helps.insert(data);
   },
 });
@@ -58,11 +70,19 @@ export const updateHelp = new ValidatedMethod({
     if (tag === undefined) {
       throw new Meteor.Error('api.helps.updateHelp.unknownHelp', i18n.__('api.helps.unknownHelp'));
     }
+
     // check if current user is active
     const authorized = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
     if (!authorized) {
       throw new Meteor.Error('api.helps.updateHelp.notPermitted', i18n.__('api.users.notPermitted'));
     }
+
+    const tagWithTitle = Helps.findOne({ $and: [{ title: data.title }, { _id: { $ne: helpId } }] });
+    if (tagWithTitle) {
+      throw new Meteor.Error('api.helps.updateHelp.alreadyExists', i18n.__('api.helps.updateHelp.titleAlreadyTaken'));
+    }
+
+    validateHelp(data);
     return Helps.update({ _id: helpId }, { $set: data });
   },
 });

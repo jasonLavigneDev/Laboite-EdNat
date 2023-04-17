@@ -4,12 +4,10 @@ import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
 import DoneIcon from '@mui/icons-material/Done';
 
-import { propTypes as structurePropTypes } from '../../../api/structures/structures';
-import { useAppContext } from '../../contexts/context';
-import { useAwaitingUsers } from '../../../api/users/hooks';
+import Structures, { propTypes as structurePropTypes } from '../../../api/structures/structures';
 import AdminUserValidationTable from '../../components/admin/AdminUserValidationTable';
 
-const AdminStructureUsersValidationPage = ({ users, structure, loading }) => {
+const AdminStructureUsersValidationPage = ({ structure, loading, users }) => {
   const accept = (user) => {
     const data = { targetUserId: user._id };
     Meteor.call('users.acceptAwaitingStructure', { ...data }, (err) => {
@@ -23,7 +21,7 @@ const AdminStructureUsersValidationPage = ({ users, structure, loading }) => {
 
   return (
     <AdminUserValidationTable
-      title={i18n.__('pages.AdminStructureUsersValidationPage.title', { structureName: structure.name })}
+      title={i18n.__('pages.AdminStructureUsersValidationPage.title', { structureName: structure?.name || '' })}
       users={users}
       loading={loading}
       columnsFields={columnsFields}
@@ -47,7 +45,14 @@ AdminStructureUsersValidationPage.propTypes = {
 };
 
 export default withTracker(() => {
-  const [{ user, structure }] = useAppContext();
-  const { data, loading } = useAwaitingUsers({ structureId: structure._id || user.structure });
-  return { users: data, loading, structure };
+  const user = Meteor.user();
+  if (user.structure) {
+    const subscription = Meteor.subscribe('structures.one');
+    const structure = Structures.findOne(user.structure);
+    const subUsers = Meteor.subscribe('users.awaitingForStructure', { structureId: user.structure });
+    const users = Meteor.users.find({ awaitingStructure: user.structure }).fetch();
+    const loading = !subscription.ready() && !subUsers.ready();
+    return { loading, structure, users };
+  }
+  return { loading: true, structure: {} };
 })(AdminStructureUsersValidationPage);

@@ -7,7 +7,8 @@ import SimpleSchema from 'simpl-schema';
 import { getLabel, isActive } from '../../utils';
 import Services from '../services';
 import Categories from '../../categories/categories';
-import logServer from '../../logging';
+import logServer, { levels, scopes } from '../../logging';
+
 import { hasAdminRightOnStructure } from '../../structures/utils';
 
 // publish available services not attached to a structure
@@ -61,7 +62,13 @@ FindFromPublication.publish('services.one.admin', function servicesOne({ _id }) 
       },
     }).validate({ _id });
   } catch (err) {
-    logServer(`publish services.one.admin : ${err}`);
+    // logServer(`publish services.one.admin : ${err}`);
+    logServer(
+      `SERVICES - PUBLICATION - services.one.admin, publish services.one.admin : ${err}`,
+      levels.ERROR,
+      scopes.SYSTEM,
+      { _id },
+    );
     this.error(err);
   }
   const service = Services.findOne(_id);
@@ -89,7 +96,10 @@ publishComposite('services.one', ({ slug }) => {
       },
     }).validate({ slug });
   } catch (err) {
-    logServer(`publish services.one : ${err}`);
+    // logServer(`publish services.one : ${err}`);
+    logServer(`SERVICES - PUBLICATION - services.one, publish services.one : ${err}`, levels.ERROR, scopes.SYSTEM, {
+      slug,
+    });
     this.error(err);
   }
   return {

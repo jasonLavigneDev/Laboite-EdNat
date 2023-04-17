@@ -1,24 +1,45 @@
-import { Meteor } from 'meteor/meteor';
-import i18n from 'meteor/universe:i18n';
-import { createNotification } from './notifications/methods';
-import { NOTIFICATIONS_TYPES } from './notifications/enums';
+import * as winston from 'winston';
 
-const levels = [NOTIFICATIONS_TYPES.INFO, NOTIFICATIONS_TYPES.WARNING, NOTIFICATIONS_TYPES.ERROR];
+export const levels = {
+  ERROR: 'error',
+  WARN: 'warn',
+  INFO: 'info',
+  HTTP: 'http',
+  VERBOSE: 'verbose',
+  DEBUG: 'debug',
+  SILLY: 'silly',
+};
 
-function logServer(message, level = NOTIFICATIONS_TYPES.INFO, userNotify = null) {
-  if (!levels.includes(level)) throw new Meteor.Error('api.logging.logServer', i18n.__('api.logging.unknownLogLevel'));
-  console.log(message);
-  if (userNotify) {
-    const user = Meteor.users.findOne(userNotify);
-    if (user) {
-      const notifData = {
-        userId: userNotify,
-        title: i18n.__(`api.logging.${level}`),
-        content: message,
-        type: level,
-      };
-      createNotification._execute({}, { data: notifData });
-    }
+export const scopes = {
+  SYSTEM: 'SYSTEM',
+  ADMIN: 'ADMIN',
+  USER: 'USER',
+};
+
+const { combine, timestamp, printf, colorize, align, padLevels, label } = winston.format;
+
+function logServer(message, level = 'info', scope = 'USER', params = {}) {
+  if (Meteor.isServer) {
+    const fileFormat = combine(
+      timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSS' }),
+      align(),
+      padLevels(),
+      label({ label: scope, message: true }),
+      printf((info) => `${info.timestamp} [${info.level}] ${info.message} ${JSON.stringify({ ...params })}`),
+    );
+
+    const logger = winston.createLogger({
+      transports: [
+        new winston.transports.Console({
+          // level: process.env.LOG_LEVEL,
+          level: levels.VERBOSE,
+
+          format: combine(colorize({ all: true }), fileFormat),
+        }),
+      ],
+    });
+
+    logger.log(level, message.toString());
   }
 }
 

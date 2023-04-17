@@ -9,14 +9,14 @@ import Minio from 'minio';
 
 import s3Client from './config';
 import { isActive } from '../../utils';
-import logServer from '../../logging';
+import logServer, { levels, scopes } from '../../logging';
 import Services from '../../services/services';
 import { hasAdminRightOnStructure } from '../../structures/utils';
 import Structures from '../../structures/structures';
 
-const { minioSSL, minioEndPoint, minioBucket, minioPort } = Meteor.settings.public;
+const { minioEndPoint, minioBucket, minioPort } = Meteor.settings.public;
 
-const HOST = `http${minioSSL ? 's' : ''}://${minioEndPoint}${minioPort ? `:${minioPort}` : ''}/${minioBucket}/`;
+const HOST = `https://${minioEndPoint}${minioPort ? `:${minioPort}` : ''}/${minioBucket}/`;
 
 const checkUserAdminRights = (path, userId) => {
   // check if current user has admin rights
@@ -52,18 +52,86 @@ const checkUserAdminRights = (path, userId) => {
   }
 };
 
+function _validatePath(path) {
+  const allowedTypes = ['users', 'groups', 'services', 'structures'];
+  const parts = path.split('/');
+  if (parts.length >= 2) {
+    if (allowedTypes.includes(parts[0])) {
+      // don't allow .. or * as second part of path
+      let partsOk = true;
+      parts.slice(1).forEach((part) => {
+        if (part === '..' || part === '*') partsOk = false;
+      });
+      if (partsOk) return undefined;
+    }
+  }
+  return SimpleSchema.ErrorTypes.VALUE_NOT_ALLOWED;
+}
+
+const fileNameRegex = /[*/|\\:!<>&]/;
+
+function _validateName(name) {
+  // check filename safety (should not include ..,*,/,|,\,:,!,<,>,&)
+  return fileNameRegex.test(name) || name.includes('..') ? SimpleSchema.ErrorTypes.VALUE_NOT_ALLOWED : undefined;
+}
+
+function validateFilePath() {
+  const path = this.value;
+  return _validatePath(path);
+}
+
+function validateFileName() {
+  const name = this.value;
+  return _validateName(name);
+}
+
+function validateFileFull() {
+  const fullName = this.value.replace(HOST, '');
+  // validate path part and file part
+  const parts = fullName.split('/');
+  if (parts.length === 3) {
+    const path = parts.slice(0, 2).join('/');
+    if (_validatePath(path) === undefined && _validateName(parts[2]) === undefined) return undefined;
+  }
+  return SimpleSchema.ErrorTypes.VALUE_NOT_ALLOWED;
+}
+
+function checkExtension(name) {
+  const fileTypes = [
+    ...Meteor.settings.public.imageFilesTypes,
+    ...Meteor.settings.public.audioFilesTypes,
+    ...Meteor.settings.public.videoFilesTypes,
+    ...Meteor.settings.public.textFilesTypes,
+    ...Meteor.settings.public.otherFilesTypes,
+  ];
+  const extension = name.split('.').pop();
+  if (!fileTypes.includes(extension)) {
+    throw new Meteor.Error(
+      'components.UploadNotifier.ExtensionNotAllowed',
+      i18n.__('components.UploaderNotifier.formatNotAcceptedTitle'),
+    );
+  }
+}
+
 export const filesupload = new ValidatedMethod({
   name: 'files.upload',
   validate: new SimpleSchema({
     file: String,
-    name: String,
-    path: String,
+    name: {
+      type: String,
+      custom: validateFileName,
+    },
+    path: {
+      type: String,
+      custom: validateFilePath,
+    },
     fileType: String,
     storage: Boolean,
   }).validator(),
   async run({ file, path, name, fileType, storage }) {
     try {
       checkUserAdminRights(path, this.userId);
+      checkExtension(name);
       const { minioFileSize, minioStorageFilesSize } = Meteor.settings.public;
       const size = storage ? minioStorageFilesSize : minioFileSize;
       if (file.length < size) {
@@ -116,13 +184,22 @@ export const removeSelectedFiles = new ValidatedMethod({
       type: Array,
       optional: true,
     },
-    'toRemove.$': String,
+    'toRemove.$': {
+      type: String,
+      custom: validateFileFull,
+    },
     toKeep: {
       type: Array,
       optional: true,
     },
-    'toKeep.$': String,
-    path: String,
+    'toKeep.$': {
+      type: String,
+      custom: validateFileFull,
+    },
+    path: {
+      type: String,
+      custom: validateFilePath,
+    },
   }).validator(),
   async run({ path, toRemove = [], toKeep = [] }) {
     checkUserAdminRights(path, this.userId);
@@ -170,10 +247,19 @@ export const removeSelectedFiles = new ValidatedMethod({
 export const moveFiles = new ValidatedMethod({
   name: 'files.move',
   validate: new SimpleSchema({
-    sourcePath: String,
-    destinationPath: String,
+    sourcePath: {
+      type: String,
+      custom: validateFilePath,
+    },
+    destinationPath: {
+      type: String,
+      custom: validateFilePath,
+    },
     files: Array,
-    'files.$': String,
+    'files.$': {
+      type: String,
+      custom: validateFileFull,
+    },
   }).validator(),
   async run({ sourcePath, destinationPath, files }) {
     checkUserAdminRights(destinationPath, this.userId);
@@ -194,7 +280,19 @@ export const moveFiles = new ValidatedMethod({
               `Error copying ${newFile} from ${minioBucket}/${sourcePath}/${newFile} to ${destinationPath}/${newFile}`,
               'error',
             );
-            logServer(err, 'error');
+            // logServer(err, 'error');
+            logServer(
+              `FILES - METHODS - moveFiles, 
+              Error copying ${newFile} from ${minioBucket}/${sourcePath}/${newFile} to ${destinationPath}/${newFile}`,
+              levels.ERROR,
+              scopes.SYSTEM,
+              {
+                sourcePath,
+                destinationPath,
+                files,
+                err,
+              },
+            );
           }
         },
       );
@@ -205,19 +303,39 @@ export const moveFiles = new ValidatedMethod({
 export const rename = new ValidatedMethod({
   name: 'files.rename',
   validate: new SimpleSchema({
-    path: String,
-    oldName: String,
-    newName: String,
+    path: {
+      type: String,
+      custom: validateFilePath,
+    },
+    oldName: {
+      type: String,
+      custom: validateFileName,
+    },
+    newName: {
+      type: String,
+      custom: validateFileName,
+    },
   }).validator(),
   async run({ path, oldName, newName }) {
     checkUserAdminRights(path, this.userId);
-
+    checkExtension(newName);
     const conds = new Minio.CopyConditions();
     s3Client.copyObject(minioBucket, `${path}/${newName}`, `${minioBucket}/${path}/${oldName}`, conds, (err) => {
       s3Client.removeObject(minioBucket, `${path}/${oldName}`);
       if (err) {
         logServer(`Error renaming ${minioBucket}/${path}/${oldName} to ${path}/${newName}`, 'error');
-        logServer(err, 'error');
+        // logServer(err, 'error');
+        logServer(
+          `FILES - METHODS - rename, Error renaming ${minioBucket}/${path}/${oldName} to ${path}/${newName}`,
+          levels.ERROR,
+          scopes.SYSTEM,
+          {
+            path,
+            oldName,
+            newName,
+            err,
+          },
+        );
       }
     });
   },
