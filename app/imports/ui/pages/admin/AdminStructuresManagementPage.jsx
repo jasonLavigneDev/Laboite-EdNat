@@ -230,7 +230,7 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
                     name="structureName"
                     fullWidth
                     onChange={(e) => {
-                      setSelectedStructure({ name: e.target.value });
+                      setSelectedStructure({ name: e.target.value.trim() });
                     }}
                     autoFocus
                   />
