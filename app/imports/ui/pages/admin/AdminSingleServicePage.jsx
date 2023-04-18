@@ -334,7 +334,6 @@ const AdminSingleServicePage = ({ categories, businessReGrouping, service, ready
                 variant="outlined"
                 fullWidth
                 margin="normal"
-                className={classes.topSpacing}
               />
             </Tooltip>
             <TextField
@@ -346,10 +345,9 @@ const AdminSingleServicePage = ({ categories, businessReGrouping, service, ready
               fullWidth
               margin="normal"
               disabled
-              className={classes.topSpacing}
             />
             <Tooltip title={i18n.__('pages.AdminSingleServicePage.StateFieldHelperText')} arrow key="tooTipState">
-              <FormControl variant="outlined" fullWidth margin="normal" className={classes.topSpacing}>
+              <FormControl variant="outlined" fullWidth margin="normal">
                 <InputLabel htmlFor="state" id="state-label">
                   {i18n.__('pages.AdminSingleServicePage.state')}
                 </InputLabel>
@@ -378,7 +376,6 @@ const AdminSingleServicePage = ({ categories, businessReGrouping, service, ready
                 variant="outlined"
                 fullWidth
                 margin="normal"
-                className={classes.topSpacing}
               />
             </Tooltip>
             <Tooltip title={i18n.__('pages.AdminSingleServicePage.usageFieldHelperText')} arrow key="toolTipUsage">
@@ -390,11 +387,10 @@ const AdminSingleServicePage = ({ categories, businessReGrouping, service, ready
                 variant="outlined"
                 fullWidth
                 margin="normal"
-                className={classes.topSpacing}
               />
             </Tooltip>
             <div className={classes.logoWrapper}>
-              <div className={classes.topSpacing}>{i18n.__('pages.AdminSingleServicePage.logo')}</div>
+              <div>{i18n.__('pages.AdminSingleServicePage.logo')}</div>
               <ImageAdminUploader
                 onImageChange={onUpdateLogo}
                 name="logo"
@@ -414,7 +410,6 @@ const AdminSingleServicePage = ({ categories, businessReGrouping, service, ready
                   variant="outlined"
                   fullWidth
                   margin="normal"
-                  className={classes.topSpacing}
                 />
               )}
             </div>
@@ -433,7 +428,6 @@ const AdminSingleServicePage = ({ categories, businessReGrouping, service, ready
                 fullWidth
                 multiline
                 margin="normal"
-                className={classes.topSpacing}
               />
             </Tooltip>
             <TextField
@@ -444,7 +438,6 @@ const AdminSingleServicePage = ({ categories, businessReGrouping, service, ready
               variant="outlined"
               fullWidth
               margin="normal"
-              className={classes.topSpacing}
             />
             {offlinePage && !structureMode && (
               <FormControlLabel
@@ -457,7 +450,6 @@ const AdminSingleServicePage = ({ categories, businessReGrouping, service, ready
                   />
                 }
                 label={i18n.__('pages.AdminSingleServicePage.offlineService')}
-                className={classes.topSpacing}
               />
             )}
             <div className={`${classes.wysiwyg} ${classes.topSpacing}`}>
@@ -465,9 +457,7 @@ const AdminSingleServicePage = ({ categories, businessReGrouping, service, ready
               <CustomToolbarArticle />
               <ReactQuill id="content" value={content} onChange={onUpdateRichText} modules={quillOptions} />
             </div>
-            <InputLabel id="categories-label" className={classes.topSpacing}>
-              {i18n.__('pages.AdminSingleServicePage.categories')}
-            </InputLabel>
+            <InputLabel id="categories-label">{i18n.__('pages.AdminSingleServicePage.categories')}</InputLabel>
             <div className={`${classes.chipWrapper}`}>
               {categories.map((categ) => {
                 const isActive = serviceData.categories && Boolean(serviceData.categories.find((c) => c === categ._id));
@@ -485,7 +475,7 @@ const AdminSingleServicePage = ({ categories, businessReGrouping, service, ready
               })}
             </div>
             {structureMode && isBusinessRegroupingMode && businessReGrouping.length > 0 && (
-              <InputLabel id="businessReGrouping-label" className={classes.topSpacing}>
+              <InputLabel id="businessReGrouping-label">
                 {i18n.__('pages.AdminSingleServicePage.businessReGrouping')}
               </InputLabel>
             )}
@@ -510,7 +500,7 @@ const AdminSingleServicePage = ({ categories, businessReGrouping, service, ready
               </div>
             )}
             {minioEndPoint && (
-              <div style={{ display: 'flex', alignItems: 'center', marginTop: '20px' }}>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
                 <InputLabel>
                   {i18n.__('pages.AdminSingleServicePage.screenshots')} (
                   {(serviceData.screenshots && serviceData.screenshots.length) || 0})
@@ -552,16 +542,11 @@ const AdminSingleServicePage = ({ categories, businessReGrouping, service, ready
               </Grid>
             )}
             <div className={classes.buttonGroup}>
-              <Button variant="contained" color="grey" onClick={onCancel} className={classes.topSpacing}>
+              <Button variant="contained" color="grey" onClick={onCancel}>
                 {i18n.__('pages.AdminSingleServicePage.cancel')}
               </Button>
 
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={onSubmitUpdateService}
-                className={classes.topSpacing}
-              >
+              <Button variant="contained" color="primary" onClick={onSubmitUpdateService}>
                 {params._id
                   ? i18n.__('pages.AdminSingleServicePage.update')
                   : i18n.__('pages.AdminSingleServicePage.save')}
