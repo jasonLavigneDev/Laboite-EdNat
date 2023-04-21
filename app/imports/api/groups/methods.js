@@ -184,14 +184,14 @@ export function _createGroup({ name, type, content, description, avatar, plugins
 
         Groups.update({ _id: groupId }, { $set: { avatar: avatarLink } });
       }
-    } else {
-      logServer(
-        `GROUPS - METHODS - METEOR ERROR - _createGroup - ${i18n.__('api.groups.toManyGroup')}`,
-        levels.VERBOSE,
-        scopes.SYSTEM,
-      );
-      throw new Meteor.Error('api.groups.createGroup.toManyGroup', i18n.__('api.groups.toManyGroup'));
+      return groupId;
     }
+    logServer(
+      `GROUPS - METHODS - METEOR ERROR - _createGroup - ${i18n.__('api.groups.toManyGroup')}`,
+      levels.VERBOSE,
+      scopes.SYSTEM,
+    );
+    throw new Meteor.Error('api.groups.createGroup.toManyGroup', i18n.__('api.groups.toManyGroup'));
   } catch (error) {
     if (error.code === 11000) {
       logServer(

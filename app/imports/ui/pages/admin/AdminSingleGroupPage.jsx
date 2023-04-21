@@ -316,25 +316,22 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
     .reduce((acculator, currentValue) => acculator && currentValue, true);
 
   const groupPluginsShow = (plugin) => {
-    // FIXME: nextcloud group synchronization is disabled until functional
-    if (plugin !== 'nextcloud') {
-      if (groupPlugins[plugin].enable) {
-        return (
-          <FormGroup key={plugin}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={plugins[plugin] || false}
-                  onChange={(event) => onChangePlugins(event, plugin)}
-                  name={plugin}
-                  disabled={!!params._id}
-                />
-              }
-              label={i18n.__(`api.${plugin}.enablePluginForGroup`)}
-            />
-          </FormGroup>
-        );
-      }
+    if (groupPlugins[plugin].enable) {
+      return (
+        <FormGroup key={plugin}>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={plugins[plugin] || false}
+                onChange={(event) => onChangePlugins(event, plugin)}
+                name={plugin}
+                disabled={!!params._id}
+              />
+            }
+            label={i18n.__(`api.${plugin}.enablePluginForGroup`)}
+          />
+        </FormGroup>
+      );
     }
     return null;
   };

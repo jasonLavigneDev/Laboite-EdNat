@@ -142,6 +142,14 @@ Groups.schema = new SimpleSchema(
     'meeting.attendeePW': { type: String, defaultValue: '' },
     'meeting.moderatorPW': { type: String, defaultValue: '' },
     'meeting.createTime': { type: String, defaultValue: '' },
+    circleId: {
+      type: String,
+      optional: true,
+    },
+    shareId: {
+      type: String,
+      optional: true,
+    },
   },
   { tracker: Tracker },
 );
