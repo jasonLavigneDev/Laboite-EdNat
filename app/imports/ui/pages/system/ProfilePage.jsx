@@ -126,6 +126,8 @@ const ProfilePage = () => {
   const [expandedPublicationDl, setExpandedPublicationDl] = useState(false);
   const [expandDefaultSpaceApplied, setExpandDefaultSpaceApplied] = useState(true);
 
+  const userHaveNcLocator = userData?.username && userData?.nclocator;
+
   const handleExpandAuthToken = () => {
     setExpandedAuthToken(!expandedAuthToken);
   };
@@ -219,7 +221,7 @@ const ProfilePage = () => {
       advancedPersonalPage:
         userData.advancedPersonalPage === false || reset ? data.advancedPersonalPage : userData.advancedPersonalPage,
       articlesEnable: userData.articlesEnable === false || reset ? data.articlesEnable : userData.articlesEnable,
-      nclocator: data.nclocator || '',
+      nclocator: data.nclocator || userData.nclocator,
     });
     if (reset === true) {
       setErrors(defaultState);
@@ -238,7 +240,8 @@ const ProfilePage = () => {
       userData.logoutType === user.logoutType &&
       userData.avatar === user.avatar &&
       userData.advancedPersonalPage === user.advancedPersonalPage &&
-      userData.articlesEnable === user.articlesEnable
+      userData.articlesEnable === user.articlesEnable &&
+      userData.nclocator === user.nclocator
     ) {
       msg.success(i18n.__('pages.ProfilePage.updateSuccess'));
       setSubmitted(false);
@@ -583,7 +586,9 @@ const ProfilePage = () => {
                       fullWidth
                       type="text"
                       value={
-                        `${userData?.username}@${userData?.nclocator}` || i18n.__('pages.ProfilePage.emptyNcLocator')
+                        userHaveNcLocator
+                          ? `${userData.username}@${userData.nclocator}`
+                          : i18n.__('pages.ProfilePage.emptyNcLocator')
                       }
                       variant="outlined"
                     />
