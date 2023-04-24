@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import ReactQuill from 'react-quill'; // ES6
 import 'react-quill/dist/quill.snow.css';
@@ -11,7 +11,6 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
 import i18n from 'meteor/universe:i18n';
-import { useObjectState } from '../../utils/hooks';
 import { updateAppsettings } from '../../../api/appsettings/methods';
 import Spinner from '../system/Spinner';
 import { CustomToolbarArticle } from '../system/CustomQuill';
@@ -49,45 +48,33 @@ const quillOptions = {
 const LegalComponent = ({ tabkey, ...props }) => {
   const configData = props[tabkey] || {};
   const { classes } = useStyles();
-  const [state, setState] = useObjectState(configData);
-  const [loading, setLoading] = useState(true);
-  const [changes, setChanges] = useState(false);
+  const [config, setConfig] = useState({ ...configData });
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    setState({ ...configData });
-    setLoading(false);
-  }, []);
-
-  useEffect(() => {
-    if (JSON.stringify(state) !== JSON.stringify(configData)) {
-      setChanges(true);
-    } else {
-      setChanges(false);
-    }
-  }, [state]);
+  const changes = config.content !== configData.content;
 
   const onCheckExternal = (event) => {
     const { name, checked } = event.target;
-    setState({ [name]: checked });
+    setConfig({ ...config, [name]: checked });
   };
 
   const onUpdateField = (event) => {
     const { name, value } = event.target;
-    setState({ [name]: value });
+    setConfig({ ...config, [name]: value });
   };
 
   const onUpdateRichText = (html) => {
     const content = html.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
-    if (state.external) {
-      setState({ content: state.content });
+    if (config.external) {
+      setConfig({ ...config, content: config.content });
     } else {
-      setState({ content });
+      setConfig({ ...config, content });
     }
   };
 
   const onSubmitUpdateconfigData = () => {
     setLoading(true);
-    updateAppsettings.call({ ...state, key: tabkey }, (error) => {
+    updateAppsettings.call({ ...config, key: tabkey }, (error) => {
       setLoading(false);
       if (error) {
         msg.error(error.message);
@@ -98,10 +85,10 @@ const LegalComponent = ({ tabkey, ...props }) => {
   };
 
   const onCancel = () => {
-    setState({ ...configData });
+    setConfig({ ...configData });
   };
 
-  if (loading && !!state) {
+  if (loading && !!config) {
     return <Spinner full />;
   }
 
@@ -109,13 +96,13 @@ const LegalComponent = ({ tabkey, ...props }) => {
     <form className={classes.root}>
       <Typography variant="h4">{i18n.__(`components.LegalComponent.title_${tabkey}`)}</Typography>
       <FormControlLabel
-        control={<Checkbox checked={state.external || false} onChange={onCheckExternal} name="external" />}
+        control={<Checkbox checked={config.external || false} onChange={onCheckExternal} name="external" />}
         label={i18n.__(`components.LegalComponent.external_${tabkey}`)}
       />
-      {state.external ? (
+      {config.external ? (
         <TextField
           onChange={onUpdateField}
-          value={state.link}
+          value={config.link}
           name="link"
           label={i18n.__(`components.LegalComponent.link_${tabkey}`)}
           variant="outlined"
@@ -126,7 +113,7 @@ const LegalComponent = ({ tabkey, ...props }) => {
         <div className={classes.wysiwyg}>
           <InputLabel htmlFor="content">{i18n.__(`components.LegalComponent.content_${tabkey}`)}</InputLabel>
           <CustomToolbarArticle />
-          <ReactQuill id="content" value={state.content || ''} onChange={onUpdateRichText} {...quillOptions} />
+          <ReactQuill id="content" value={config.content || ''} onChange={onUpdateRichText} {...quillOptions} />
         </div>
       )}
       {changes && (
