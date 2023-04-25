@@ -325,7 +325,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
                 checked={plugins[plugin] || false}
                 onChange={(event) => onChangePlugins(event, plugin)}
                 name={plugin}
-                disabled={!!params._id}
+                disabled={plugin !== 'nextcloud' && !!params._id}
               />
             }
             label={i18n.__(`api.${plugin}.enablePluginForGroup`)}

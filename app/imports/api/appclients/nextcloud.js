@@ -268,6 +268,7 @@ class NextcloudClient {
                 circleId: group.circleId,
               },
             );
+            Groups.update({ _id: group._id }, { $unset: { circleId: 1 } });
           } else {
             logServer(
               `APPCLIENT - NEXTCLOUD - deleteCircle - ${i18n.__('api.nextcloud.circleDeleteError')}`,
@@ -311,6 +312,7 @@ class NextcloudClient {
             path: shareName,
           },
         );
+        Groups.update({ _id: group._id }, { $unset: { shareId: 1 } });
       })
       .catch((error) => {
         logServer(
@@ -332,16 +334,29 @@ class NextcloudClient {
       const params = { type: 1, userId: `${user.username}@${user.nclocator}` };
       axios
         .post(`${this.appsURL}/circles/circles/${circleId}/members`, params, { headers: this.ocsPostHeaders })
-        .then(() => {
-          logServer(
-            `APPCLIENT - NEXTCLOUD - inviteUser - ${i18n.__('api.nextcloud.userInvited')}`,
-            levels.INFO,
-            scopes.SYSTEM,
-            {
-              username: user.username,
-              circleId,
-            },
-          );
+        .then((response) => {
+          const infos = response.data.ocs.meta;
+          if (infos.status === 'ok') {
+            logServer(
+              `APPCLIENT - NEXTCLOUD - inviteUser - ${i18n.__('api.nextcloud.userInvited')}`,
+              levels.INFO,
+              scopes.SYSTEM,
+              {
+                username: user.username,
+                circleId,
+              },
+            );
+          } else {
+            logServer(
+              `APPCLIENT - NEXTCLOUD - inviteUser - ${i18n.__('api.nextcloud.userInviteError')}`,
+              levels.ERROR,
+              scopes.SYSTEM,
+              {
+                circleId: group.circleId,
+                error: infos.message,
+              },
+            );
+          }
         })
         .catch((error) => {
           logServer(
@@ -355,6 +370,110 @@ class NextcloudClient {
           );
         });
     }
+  }
+
+  inviteMembers(group, circleId) {
+    const userIds = [...group.members, ...group.animators];
+    const allUsers = Meteor.users.find({ _id: { $in: userIds } }, { fields: { username: 1, nclocator: 1 } }).fetch();
+    const params = {
+      members: allUsers.map((user) => {
+        return { type: 1, id: `${user.username}@${user.nclocator}` };
+      }),
+    };
+    axios
+      .post(`${this.appsURL}/circles/circles/${circleId}/members/multi`, params, { headers: this.ocsPostHeaders })
+      .then((response) => {
+        const infos = response.data.ocs.meta;
+        if (infos.status !== 'ok') {
+          logServer(
+            `APPCLIENT - NEXTCLOUD - inviteMembers - ${i18n.__('api.nextcloud.userInviteError')}`,
+            levels.ERROR,
+            scopes.SYSTEM,
+            {
+              groupId: group._id,
+              error: infos.message,
+            },
+          );
+        }
+      })
+      .catch((error) => {
+        logServer(
+          `APPCLIENT - NEXTCLOUD - inviteMembers - ${i18n.__('api.nextcloud.userInviteError')}`,
+          levels.ERROR,
+          scopes.SYSTEM,
+          {
+            groupId: group._id,
+            error: error.response && error.response.data ? error.response.data : error,
+          },
+        );
+      });
+  }
+
+  kickUser(userId, group) {
+    const user = Meteor.users.findOne(userId);
+    const { circleId } = group;
+    axios
+      .get(`${this.appsURL}/circles/circles/${circleId}/members`, { headers: this.ocsHeaders })
+      .then((response) => {
+        const infos = response.data.ocs.meta;
+        if (infos.status !== 'ok') {
+          logServer(
+            `APPCLIENT - NEXTCLOUD - kickUser - ${i18n.__('api.nextcloud.userKickError')}`,
+            levels.ERROR,
+            scopes.SYSTEM,
+            {
+              user: user.username,
+              error: infos.message,
+            },
+          );
+        } else {
+          // find user memberId in circle
+          // XXX FIXME: check on a federated instance if match is for username or username@nclocator
+          const member = response.data.ocs.data.find((item) => item.userId === user.username);
+          if (member !== undefined) {
+            // remove member from circle
+            axios
+              .delete(`${this.appsURL}/circles/circles/${circleId}/members/${member.id}`, {
+                headers: this.ocsHeaders,
+              })
+              .then((resp) => {
+                const respInfos = resp.data.ocs.meta;
+                if (respInfos.status !== 'ok') {
+                  logServer(
+                    `APPCLIENT - NEXTCLOUD - kickUser - ${i18n.__('api.nextcloud.userKickError')}`,
+                    levels.ERROR,
+                    scopes.SYSTEM,
+                    {
+                      user: user.username,
+                      error: respInfos.message,
+                    },
+                  );
+                } else {
+                  logServer(
+                    `APPCLIENT - NEXTCLOUD - kickUser - ${i18n.__('api.nextcloud.userKicked')}`,
+                    levels.INFO,
+                    scopes.SYSTEM,
+                    {
+                      username: user.username,
+                      circleId,
+                    },
+                  );
+                }
+              });
+          }
+        }
+      })
+      .catch((error) => {
+        logServer(
+          `APPCLIENT - NEXTCLOUD - kickUser - ${i18n.__('api.nextcloud.userKickError')}`,
+          levels.ERROR,
+          scopes.SYSTEM,
+          {
+            user: user.username,
+            error: error.response && error.response.data ? error.response.data : error,
+          },
+        );
+      });
   }
 
   addUser(userId) {
@@ -464,21 +583,62 @@ if (Meteor.isServer && nextcloudPlugin && nextcloudPlugin.enable) {
     }
   });
 
-  // Meteor.afterMethod('groups.updateGroup', function nextUpdateGroup({ groupId }) {
-  //   if (!this.error) {
-  //     // create nextcloud group if needed
-  //     const group = Groups.findOne({ _id: groupId });
-  //     if (group.plugins.nextcloud === true) {
-  //     }
-  //   }
-  // });
+  Meteor.afterMethod('groups.updateGroup', function nextUpdateGroup({ groupId }) {
+    if (!this.error) {
+      const group = Groups.findOne({ _id: groupId });
+      if (group.plugins.nextcloud === true && !group.circleId) {
+        // create nextcloud circle and share if needed
+        nextClient.ensureCircle(groupId).then((circleId) => {
+          if (circleId) {
+            nextClient.ensureShare(groupId, circleId);
+            // add all group members to circle
+            nextClient.inviteMembers(group, circleId);
+          }
+        });
+      } else if (group.plugins.nextcloud === false && group.circleId) {
+        // remove circle and share from nextcloud
+        nextClient.deleteCircle(group);
+        nextClient.deleteFolder(group);
+      }
+    }
+  });
 
-  Meteor.afterMethod('users.setMemberOf', function nextAddUser({ userId, groupId }) {
+  Meteor.afterMethod('users.setMemberOf', function nextSetMember({ userId, groupId }) {
     if (!this.error) {
       // invite user to group circle if needed
       const group = Groups.findOne({ _id: groupId });
       if (group.plugins.nextcloud === true) {
         nextClient.inviteUser(userId, group);
+      }
+    }
+  });
+
+  Meteor.afterMethod('users.unsetMemberOf', function nextUnsetMember({ userId, groupId }) {
+    if (!this.error) {
+      // remove user from circle if needed
+      const group = Groups.findOne({ _id: groupId });
+      if (group.plugins.nextcloud === true) {
+        if (!group.animators.includes(userId)) nextClient.kickUser(userId, group);
+      }
+    }
+  });
+
+  Meteor.afterMethod('users.setAnimatorOf', function nextSetAnimator({ userId, groupId }) {
+    if (!this.error) {
+      // invite user to group circle if needed
+      const group = Groups.findOne({ _id: groupId });
+      if (group.plugins.nextcloud === true) {
+        nextClient.inviteUser(userId, group);
+      }
+    }
+  });
+
+  Meteor.afterMethod('users.unsetAnimatorOf', function nextUnsetAnimator({ userId, groupId }) {
+    if (!this.error) {
+      // invite user from circle if needed
+      const group = Groups.findOne({ _id: groupId });
+      if (group.plugins.nextcloud === true) {
+        if (!group.members.includes(userId)) nextClient.kickUser(userId, group);
       }
     }
   });
