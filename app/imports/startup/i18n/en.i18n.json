@@ -164,6 +164,7 @@
       "notPermitted": "You don't have sufficient rights.",
       "lastAdminError": "Can not remove rights on last admin user",
       "managedByKeycloak": "This information must be managed in Keycloak",
+      "insertError": "Error while creating user {$user}",
       "logWhiteDomains": "Users matching these domains will be activated when logging in: {$domains}",
       "labels": {
         "id": "User Id",

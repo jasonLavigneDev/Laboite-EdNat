@@ -62,9 +62,15 @@ curl -X  POST -H "X-API-KEY: XXXXX-XXXXX-XXXXX-XXXXX-XXXXX" \
 
 ---
 
-- **Condition** : If user already exists.
+- **Condition** : If user with the same email already exists.
 - **Code** : `500 Internal Server Error`
-- **Content** : `Error: user already exists [restapi.users.createuser.alreadyExists]`
+- **Content** : `Error: user already exists with this email: xxx@xxx [restapi.users.createuser.emailExists]`
+
+---
+
+- **Condition** : If user with the same username already exists.
+- **Code** : `500 Internal Server Error`
+- **Content** : `Error: username already exists [restapi.users.createuser.alreadyExists]`
 
 ---
 
