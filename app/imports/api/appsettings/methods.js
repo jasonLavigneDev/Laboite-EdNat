@@ -17,7 +17,7 @@ export function checkMigrationStatus() {
   if (Migrations._getControl().locked === true) {
     // logServer('Migration lock detected !!!!', 'error');
     logServer(
-      `APPSETTINGS - METHODS - checkMigrationStatus,Migration lock detected !!!!`,
+      `APPSETTINGS - METHODS - UPDATE - checkMigrationStatus,Migration lock detected !!!!`,
       levels.ERROR,
       scopes.SYSTEM,
       {},
@@ -64,6 +64,7 @@ export const updateAppsettings = new ValidatedMethod({
         throw new Meteor.Error('api.appsettings.updateAppsettings.notPermitted', i18n.__('api.users.adminNeeded'));
       }
       const args = { content: sanitizedContent, external, link };
+      logServer(`APPSETTINGS - METHODS - UPDATE - updateAppsettings - args: ${args}`, levels.INFO, scopes.SYSTEM);
       return AppSettings.update({ _id: 'settings' }, { $set: { [key]: args } });
     } catch (error) {
       throw new Meteor.Error(error, error);
@@ -101,6 +102,11 @@ export const switchMaintenanceStatus = new ValidatedMethod({
         checkMigrationStatus();
         return AppSettings.update({ _id: 'settings' }, { $set: { maintenance: newValue, textMaintenance: '' } });
       }
+      logServer(
+        `APPSETTINGS - METHODS - UPDATE - switchMaintenanceStatus - Maintenance: ${newValue}`,
+        levels.INFO,
+        scopes.SYSTEM,
+      );
       return AppSettings.update({ _id: 'settings' }, { $set: { maintenance: newValue } });
     } catch (error) {
       throw new Meteor.Error(error, error);
@@ -120,6 +126,12 @@ export const setUserStructureValidationMandatoryStatus = new ValidatedMethod({
           i18n.__('api.users.admineeded'),
         );
       }
+      logServer(
+        `APPSETTINGS - METHODS - UPDATE - setUserStructureValidationMandatoryStatus - 
+        isValidationMandatory: ${isValidationMandatory}`,
+        levels.INFO,
+        scopes.SYSTEM,
+      );
       return AppSettings.update(
         { _id: 'settings' },
         { $set: { userStructureValidationMandatory: isValidationMandatory } },
@@ -148,6 +160,11 @@ export const updateTextMaintenance = new ValidatedMethod({
       if (!authorized) {
         throw new Meteor.Error('api.appsettings.updateTextMaintenance.notPermitted', i18n.__('api.users.adminNeeded'));
       }
+      logServer(
+        `APPSETTINGS - METHODS - UPDATE - updateTextMaintenance - text maintenance: ${text}`,
+        levels.INFO,
+        scopes.SYSTEM,
+      );
       return AppSettings.update({ _id: 'settings' }, { $set: { textMaintenance: text } });
     } catch (error) {
       throw new Meteor.Error(error, error);
@@ -210,7 +227,11 @@ export const updateTextInfoLanguage = new ValidatedMethod({
       } else {
         newInfo.push({ language, content: sanitizedContent });
       }
-
+      logServer(
+        `APPSETTINGS - METHODS - UPDATE - updateTextInfoLanguage - new settings: ${{ [tabkey]: newInfo }}`,
+        levels.INFO,
+        scopes.SYSTEM,
+      );
       return AppSettings.update({ _id: 'settings' }, { $set: { [tabkey]: newInfo } });
     } catch (error) {
       throw new Meteor.Error(error, error);
