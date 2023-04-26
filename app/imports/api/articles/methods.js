@@ -5,6 +5,7 @@ import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import i18n from 'meteor/universe:i18n';
 import sanitizeHtml from 'sanitize-html';
+import logServer, { levels, scopes } from '../logging';
 
 import { isActive, getLabel, validateString } from '../utils';
 import Articles from './articles';
@@ -34,6 +35,13 @@ export const createArticle = new ValidatedMethod({
     validateString(sanitizedContent);
     Meteor.users.update({ _id: this.userId }, { $inc: { articlesCount: 1 }, $set: { lastArticle: new Date() } });
     const structure = Meteor.users.findOne(this.userId, { fields: { structure: 1 } }).structure || '';
+    logServer(
+      `ARTICLES - METHODS - INSERT - createArticle - data: ${data} / content: ${sanitizedContent} 
+      / userId: ${this.userId} / structure: ${structure}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
+
     return Articles.insert({ ...data, content: sanitizedContent, userId: this.userId, structure });
   },
 });
@@ -53,7 +61,14 @@ export const removeArticle = new ValidatedMethod({
     if (!authorized) {
       throw new Meteor.Error('api.articles.removeArticle.notPermitted', i18n.__('api.articles.adminArticleNeeded'));
     }
+    logServer(
+      `ARTICLES - METHODS - UPDATE - removeArticle - Article remove for userID: ${this.userId}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     Meteor.users.update({ _id: this.userId }, { $inc: { articlesCount: -1 } });
+
+    logServer(`ARTICLES - METHODS - REMOVE - removeArticle - Article remove: ${articleId}`, levels.INFO, scopes.SYSTEM);
     return Articles.remove(articleId);
   },
 });
@@ -84,6 +99,11 @@ export const updateArticle = new ValidatedMethod({
     Meteor.users.update({ _id: this.userId }, { $set: { lastArticle: new Date() } });
     const updateData = { ...data, content: sanitizedContent, userId: this.userId };
     if (updateStructure) updateData.structure = userStructure;
+    logServer(
+      `ARTICLES - METHODS - UPDATE - updateArticle - Article update: ${articleId} / data update: ${updateData}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     return Articles.update({ _id: articleId }, { $set: updateData });
   },
 });
@@ -100,6 +120,11 @@ export const visitArticle = new ValidatedMethod({
     if (article === undefined) {
       throw new Meteor.Error('api.articles.visitArticle.unknownArticle', i18n.__('api.articles.unknownArticle'));
     }
+    logServer(
+      `ARTICLES - METHODS - UPDATE - visitArticle - add visite on article: ${articleId}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     return Articles.update({ _id: articleId }, { $inc: { visits: 1 } });
   },
 });
@@ -145,6 +170,12 @@ export const uploadBackupPublications = new ValidatedMethod({
       return articles.map((article) => {
         const sanitizedContent = article.markdown ? article.content : sanitizeHtml(article.content);
         validateString(sanitizedContent);
+        logServer(
+          `ARTICLES - METHODS - INSERT - uploadBackupPublications - article: ${article} / content: ${sanitizedContent} 
+          / user: ${this.userId} / update structure: ${updateStructure}`,
+          levels.INFO,
+          scopes.SYSTEM,
+        );
         return Articles.insert({
           ...article,
           content: sanitizedContent,
