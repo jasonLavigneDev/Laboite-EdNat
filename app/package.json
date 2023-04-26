@@ -14,7 +14,8 @@
     "lintfix": "eslint --fix . --ext js,jsx",
     "visualize": "meteor --production --extra-packages bundle-visualizer --settings ../config/settings.development.json",
     "preinstall": "npx npm-force-resolutions",
-    "prepare": "cd .. && npx husky install"
+    "prepare": "cd .. && npx husky install",
+    "check-lang": "node ./scripts/lang-check.js imports/startup/i18n/*.json"
   },
   "dependencies": {
     "@babel/runtime": "^7.17.8",
@@ -49,6 +50,7 @@
     "faker": "^4.1.0",
     "fbjs": "^2.0.0",
     "helmet": "^6.0.1",
+    "glob": "^8.0.3",
     "html2canvas": "^1.4.1",
     "html2pdf.js": "^0.10.1",
     "jspdf": "^2.5.1",
