@@ -452,6 +452,73 @@
     "rateLimitError": "Error, too many requests. Please slow down. You must wait {$timeToReset} seconds before trying again."
   },
   "components": {
+    "onBoarding": {
+      "actions": {
+        "doneLabel": "Done",
+        "nextLabel": "Next",
+        "prevLabel": "Prev",
+        "skipLabel": "Skip",
+        "hintButtonLabel": "Got it",
+        "cancelConfirm": "Are you sure you want to ignore the introduction?"
+      },
+      "steps": {
+        "intro": {
+          "title": "Welcome to your space!",
+          "text": "A new space is opening up for state employees. 👋"
+        },
+        "mySpace": {
+          "title": "Your Space!",
+          "text": "This is where it all happens!"
+        },
+        "services": {
+          "title": "The interdepartmental applications",
+          "text": "The application store available to all government employees"
+        },
+        "structure": {
+          "title": "The ministerial applications",
+          "text": "The application store available for your department or organization"
+        },
+        "bookMark": {
+          "title": "Manage your bookmarks",
+          "text": "Access the links you have saved in the application"
+        },
+        "addBookMark": {
+          "title": "Add a bookmark",
+          "text": "Add a web link in 5 seconds!"
+        },
+        "editMySpace": {
+          "title": "Edit your space",
+          "text": "Add application areas or bookmarks here!"
+        },
+        "menu": {
+          "title": "Menu",
+          "text": "Find your profile and all options here!"
+        },
+        "zone": {
+          "title": "Zone",
+          "text": "Find your personalized zones allowing quick access to the links you (or your structure) have chosen"
+        },
+        "zone-old": {
+          "title": "Zone",
+          "text": "Add, modify or delete zones and customize your space"
+        },
+        "link": {
+          "title": "Link",
+          "text": "You can add a line from interdepartmental or departmental applications or bookmarks"
+        },
+        "help": {
+          "title": "Need help?",
+          "text": "Here you will find additional help on the different applications available"
+        },
+        "replay": {
+          "title": "A memory lapse?",
+          "text": "You can always replay this help sequence with this button"
+        },
+        "end": {
+          "title": "Thank you!"
+        }
+      }
+    },
     "AdminGroupDelete": {
       "subtitle": "Group deletion",
       "mainText": "Do you really want to remove this group? this action is irreversible.",
@@ -585,6 +652,7 @@
       "menuProfileLabel": "Profile",
       "menuHelpLabel": "Help",
       "menuFeedbackLabel": "Give feedback",
+      "menuOnboardingLabel": "How to use this service?",
       "menuLogoutLabel": "Logout",
       "menuMedias": "Medias Storage",
       "menuAdminApp": "Administration",

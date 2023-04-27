@@ -585,6 +585,7 @@
       "menuProfileLabel": "Profil",
       "menuHelpLabel": "Aide",
       "menuFeedbackLabel": "Partager mon avis",
+      "menuOnboardingLabel": "Comment utiliser ce service ?",
       "menuLogoutLabel": "Se déconnecter",
       "menuMedias": "Stockage de Médias",
       "menuAdminApp": "Administration",
@@ -946,6 +947,73 @@
         "body_emptyDataSourceMessage": "Aucun utilisateur à valider",
         "body_deleteTooltip": "Supprimer l'utilisateur",
         "body_editRow_deleteText": "Souhaitez vous réellement supprimer cet utilisateur ?"
+      }
+    }
+  },
+  "onBoarding": {
+    "actions": {
+      "doneLabel": "Terminer",
+      "nextLabel": "Suivant",
+      "prevLabel": "Précedent",
+      "skipLabel": "Passer",
+      "hintButtonLabel": "OK",
+      "cancelConfirm": "Êtes-vous sûr de vouloir ignorer l'introduction ?"
+    },
+    "steps": {
+      "intro": {
+        "title": "Bienvenue sur votre espace !",
+        "text": "Un nouvel espace s'ouvre aux agents de l'État. 👋"
+      },
+      "mySpace": {
+        "title": "Votre espace",
+        "text": "C'est là que tout se passe !"
+      },
+      "services": {
+        "title": "Les applications interministérielles",
+        "text": "Le magasin d'applications disponibles pour tous les agents de l'État"
+      },
+      "structure": {
+        "title": "Les applications ministérielles",
+        "text": "Le magasin d'applications mises à disposition pour votre ministère ou organisation"
+      },
+      "bookMark": {
+        "title": "Gérez vos marque-pages",
+        "text": "Accédez aux liens que vous avez sauvegardés dans l'application"
+      },
+      "addBookMark": {
+        "title": "Ajouter un marque-page",
+        "text": "Ajouter un lien web en 5 secondes chrono !"
+      },
+      "editMySpace": {
+        "title": "Éditez votre espace",
+        "text": "Ajoutez des zones d'applications ou des marque-pages ici !"
+      },
+      "menu": {
+        "title": "Menu",
+        "text": "Retrouvez votre profil et l'ensemble des options ici !"
+      },
+      "zone": {
+        "title": "Zone",
+        "text": "Retrouvez vos zones personnalisées permettant d'accéder rapidement aux liens que vous (ou votre structure) avez choisis"
+      },
+      "zone-old": {
+        "title": "Zone",
+        "text": "Ajoutez, modifiez ou supprimez des zones et personnalisez votre espace"
+      },
+      "link": {
+        "title": "Lien",
+        "text": "Vous pouvez ajouter un line à partir des applications interministérielles ou ministrérielles ou encore des marque-pages"
+      },
+      "help": {
+        "title": "Besoin d'aide ?",
+        "text": "Vous trouverez ici de l'aide supplémentaire sur les différentes applications disponibles"
+      },
+      "replay": {
+        "title": "Un trou de mémoire ?",
+        "text": "Vous pouvez toujours rejouer cette séquence d'aide grâce à ce bouton"
+      },
+      "end": {
+        "title": "Merci !"
       }
     }
   },

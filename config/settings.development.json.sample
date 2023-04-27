@@ -26,6 +26,14 @@
       "siteId": 1,
       "urlBase": "https://URL.fr"
     },
+<<<<<<< HEAD
+=======
+    "onBoarding": {
+      "enabled": true,
+      "appDesignation": "Laboîte"
+    },
+    "laboiteBlogURL": "",
+>>>>>>> dc72de8b (feat: add introjs react wrapper)
     "enableBBB": false,
     "BBBUrl": "",
     "minioPort": null,

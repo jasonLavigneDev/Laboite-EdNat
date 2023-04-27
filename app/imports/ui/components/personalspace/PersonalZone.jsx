@@ -231,7 +231,11 @@ const PersonalZone = ({
   };
 
   return (
-    <Accordion className={classes.expansionpanel} expanded={isSorted ? isExpanded : localIsExpanded}>
+    <Accordion
+      className={classes.expansionpanel}
+      expanded={isSorted ? isExpanded : localIsExpanded}
+      data-tour-id="zone"
+    >
       <AccordionSummary
         expandIcon={<ExpandMoreIcon className={classes.cursorPointer} />}
         aria-controls={`zone-${title}-${index}`}

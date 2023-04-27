@@ -122,6 +122,19 @@ const EventsPage = ({ loading, group }) => {
 
   const items2 = items.filter((item) => checkDate(item));
 
+  const InputPropsContentStart = (
+    <InputAdornment position="start">
+      <SearchIcon />
+    </InputAdornment>
+  );
+  const InputPropsContentEnd = (
+    <InputAdornment position="end">
+      <IconButton onClick={resetSearch} size="large">
+        <ClearIcon />
+      </IconButton>
+    </InputAdornment>
+  );
+
   return (
     <Fade in>
       <Container className={classes.root}>
@@ -147,18 +160,8 @@ const EventsPage = ({ loading, group }) => {
                   value={search}
                   variant="outlined"
                   InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SearchIcon />
-                      </InputAdornment>
-                    ),
-                    endAdornment: search ? (
-                      <InputAdornment position="end">
-                        <IconButton onClick={resetSearch} size="large">
-                          <ClearIcon />
-                        </IconButton>
-                      </InputAdornment>
-                    ) : null,
+                    startAdornment: { InputPropsContentStart },
+                    endAdornment: search ? { InputPropsContentEnd } : null,
                   }}
                 />
                 {userInGroup && (

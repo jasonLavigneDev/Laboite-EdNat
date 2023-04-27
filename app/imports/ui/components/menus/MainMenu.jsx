@@ -16,6 +16,7 @@ import LogoutDialog from '../system/LogoutDialog';
 import UserAvatar from '../users/UserAvatar';
 import updateDocumentTitle from '../../utils/updateDocumentTitle';
 import { testMeteorSettingsUrl } from '../../utils/utilsFuncs';
+import { useOnBoarding } from '../../contexts/onboardingContext';
 
 const { disabledFeatures = {} } = Meteor.settings.public;
 
@@ -57,6 +58,9 @@ export const userMenu = [
   {
     path: '/userBookmarks',
     content: 'menuUserBookmarks',
+    props: {
+      'data-tour-id': 'bookMark',
+    },
   },
 ];
 
@@ -76,6 +80,7 @@ const MainMenu = ({ user = {} }) => {
   const { pathname } = useLocation();
   const isAdmin = Roles.userIsInRole(user._id, 'admin');
   const isAdminStructure = Roles.userIsInRole(user._id, 'adminStructure', user.structure);
+  const { openTour } = useOnBoarding();
 
   const [hasUserOnRequest, setHasUserOnRequest] = useState(false);
   const [hasUserOnAwaitingStructure, setHasUserOnAwaitingStructure] = useState(false);
@@ -142,6 +147,8 @@ const MainMenu = ({ user = {} }) => {
   return (
     <>
       <Button
+        id="main-menu-button"
+        data-tour-id="menu"
         aria-controls="main-menu"
         aria-haspopup="true"
         onClick={handleClick}
@@ -182,6 +189,7 @@ const MainMenu = ({ user = {} }) => {
             <Divider key={item.path} />
           ) : (
             <MenuItem
+              {...(item.props ?? {})}
               className={classes.menuItem}
               key={item.path}
               onClick={() => handleMenuClick(item)}
@@ -205,6 +213,7 @@ const MainMenu = ({ user = {} }) => {
           className={classes.menuItem}
           onClick={() => handleMenuClick({ path: '/help', content: 'menuHelpLabel' })}
           selected={pathname === '/help'}
+          data-tour-id="help"
         >
           {i18n.__('components.MainMenu.menuHelpLabel')}
         </MenuItem>
@@ -219,6 +228,20 @@ const MainMenu = ({ user = {} }) => {
             }
           >
             {i18n.__('components.MainMenu.menuFeedbackLabel')}
+          </MenuItem>
+        )}
+        {Meteor.settings.public?.onBoarding?.enabled && (
+          <MenuItem
+            className={classes.menuItem}
+            onClick={() => {
+              handleClose();
+              openTour();
+            }}
+            data-tour-id="replay"
+          >
+            {i18n.__('components.MainMenu.menuOnboardingLabel', {
+              appDesignation: Meteor.settings.public.onBoarding.appDesignation,
+            })}
           </MenuItem>
         )}
         <Divider />
