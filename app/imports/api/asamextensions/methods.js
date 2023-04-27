@@ -7,6 +7,8 @@ import { _ } from 'meteor/underscore';
 import AsamExtensions from './asamextensions';
 import { validateString } from '../utils';
 
+import logServer, { levels, scopes } from '../logging';
+
 const validateAsam = (extension, entiteNomCourt, entiteNomLong, familleNomCourt, familleNomLong) => {
   if (extension) validateString(extension, true);
   if (entiteNomCourt) validateString(entiteNomCourt, true);
@@ -51,6 +53,13 @@ export const assignStructureToAsam = new ValidatedMethod({
       throw new Meteor.Error('api.asam.assignStructureToAsam.notPermitted', i18n.__('api.users.adminNeeded'));
     }
     validateAsam(extension, entiteNomCourt, entiteNomLong, familleNomCourt, familleNomLong);
+    logServer(
+      `ASAM - METHOD - UPDATE - assignStructureToAsam - extensionID: ${extensionId} / data: ${
+        (structureId, extension, entiteNomCourt, entiteNomLong, familleNomCourt, familleNomLong)
+      }`,
+      levels.VERBOSE,
+      scopes.ADMIN,
+    );
     return AsamExtensions.update(
       { _id: extensionId },
       { $set: { structureId, extension, entiteNomCourt, entiteNomLong, familleNomCourt, familleNomLong } },
@@ -66,7 +75,11 @@ export const unassignStructureToAsam = new ValidatedMethod({
     if (!isAdmin) {
       throw new Meteor.Error('api.asam.assignStructureToAsam.notPermitted', i18n.__('api.users.adminNeeded'));
     }
-
+    logServer(
+      `ASAM - METHOD - UPDATE - unassignStructureToAsam - extensionID: ${extensionId}`,
+      levels.VERBOSE,
+      scopes.ADMIN,
+    );
     return AsamExtensions.update({ _id: extensionId }, { $set: { structureId: null } });
   },
 });
@@ -79,7 +92,7 @@ export const deleteAsam = new ValidatedMethod({
     if (!isAdmin) {
       throw new Meteor.Error('api.asam.assignStructureToAsam.notPermitted', i18n.__('api.users.adminNeeded'));
     }
-
+    logServer(`ASAM - METHOD - REMOVE - deleteAsam - extensionID: ${extensionId}`, levels.VERBOSE, scopes.ADMIN);
     return AsamExtensions.remove({ _id: extensionId });
   },
 });
@@ -118,6 +131,13 @@ export const addNewAsam = new ValidatedMethod({
       throw new Meteor.Error('api.asamextensions.notPermitted', i18n.__('api.users.adminNeeded'));
     }
     validateAsam(extension, entiteNomCourt, entiteNomLong, familleNomCourt, familleNomLong);
+    logServer(
+      `ASAM - METHOD - REMOVE - deleteAsam - data: ${
+        (extension, entiteNomCourt, entiteNomLong, familleNomCourt, familleNomLong, structureId)
+      }`,
+      levels.VERBOSE,
+      scopes.ADMIN,
+    );
     return AsamExtensions.insert({
       extension,
       entiteNomCourt,
