@@ -9,6 +9,7 @@ import i18n from 'meteor/universe:i18n';
 import { isActive, getLabel, validateString } from '../utils';
 import Categories from './categories';
 import Services from '../services/services';
+import logServer, { levels, scopes } from '../logging';
 
 export const createCategorie = new ValidatedMethod({
   name: 'categories.createCategorie',
@@ -30,6 +31,7 @@ export const createCategorie = new ValidatedMethod({
       throw new Meteor.Error('api.categories.createCategorie.notPermitted', i18n.__('api.users.adminNeeded'));
     }
     validateString(name);
+    logServer(`CATEGORIES - METHOD - INSERT - createCategorie - category name: ${name}`, levels.VERBOSE, scopes.ADMIN);
     Categories.insert({
       name,
     });
@@ -58,6 +60,11 @@ export const removeCategorie = new ValidatedMethod({
     }
     // remove categorie from services
     Services.update({}, { $pull: { categories: categoryId } }, { multi: true });
+    logServer(
+      `CATEGORIES - METHOD - REMOVE - removeCategorie - category ID: ${categoryId}`,
+      levels.VERBOSE,
+      scopes.ADMIN,
+    );
     Categories.remove(categoryId);
   },
 });
@@ -85,6 +92,11 @@ export const updateCategorie = new ValidatedMethod({
       throw new Meteor.Error('api.categories.updateCategorie.notPermitted', i18n.__('api.users.adminNeeded'));
     }
     validateString(data.name);
+    logServer(
+      `CATEGORIES - METHOD - UPDATE - updateCategorie - category ID: ${categoryId} / data: ${data}`,
+      levels.VERBOSE,
+      scopes.ADMIN,
+    );
     Categories.update({ _id: categoryId }, { $set: data });
   },
 });
