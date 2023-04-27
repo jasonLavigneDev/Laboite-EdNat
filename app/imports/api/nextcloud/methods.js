@@ -7,13 +7,24 @@ import { _ } from 'meteor/underscore';
 import i18n from 'meteor/universe:i18n';
 import { isActive, getLabel, validateString } from '../utils';
 import Nextcloud from './nextcloud';
+import logServer, { levels, scopes } from '../logging';
 
 function _updateNextcloudURL(url, active, count) {
+  logServer(
+    `NEXTCLOUD - METHOD - REMOVE - _updateNextcloudURL - url: ${url} / active: ${active} / count: ${count}`,
+    levels.VERBOSE,
+    scopes.SYSTEM,
+  );
   Nextcloud.update({ url }, { $set: { active, count } });
 }
 
 function _createUrl(url, active) {
   try {
+    logServer(
+      `NEXTCLOUD - METHOD - INSERT - _createUrl - url: ${url} / active: ${active}`,
+      levels.VERBOSE,
+      scopes.SYSTEM,
+    );
     Nextcloud.insert({ url, active });
   } catch (error) {
     if (error.code === 11000) {
@@ -80,7 +91,7 @@ export const removeNextcloudURL = new ValidatedMethod({
     if (ncloud.count > 0) {
       throw new Meteor.Error('api.nextcloud.removeNextcloudURL.notPermitted', i18n.__('api.nextcloud.mustNotBeUsed'));
     }
-
+    logServer(`NEXTCLOUD - METHOD - REMOVE - removeNextcloudURL - url: ${url}`, levels.VERBOSE, scopes.SYSTEM);
     Nextcloud.remove({ url });
 
     return null;
