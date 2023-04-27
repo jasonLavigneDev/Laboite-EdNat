@@ -14,6 +14,10 @@ function ocsUrl(ncURL) {
   return new URL('/ocs/v1.php/cloud', origin).href;
 }
 
+function getInstance(user) {
+  return new URL(user.nclocator).host;
+}
+
 function checkCirclesActive(response) {
   // checks that 'Circles' API is responding
   if (response.data === undefined || response.data.ocs === undefined) {
@@ -131,8 +135,8 @@ class NextcloudClient {
       });
   }
 
-  ensureCircle(groupId) {
-    const group = Groups.findOne(groupId);
+  ensureCircle(group) {
+    const groupId = group._id;
     if (!group.circleId) {
       const params = { name: group.name, personal: false, local: false };
       return axios
@@ -183,9 +187,9 @@ class NextcloudClient {
     return group.circleId;
   }
 
-  ensureShare(groupId, circleId) {
+  ensureShare(group, circleId) {
     // ensures that a group share exists and is associated to group circle
-    const group = Groups.findOne(groupId);
+    const groupId = group._id;
     if (!group.shareId) {
       const shareName = `groupe_${group.name}`;
       return axios({
@@ -330,8 +334,9 @@ class NextcloudClient {
   inviteUser(userId, group) {
     const user = Meteor.users.findOne(userId);
     const { circleId } = group;
+    const instance = getInstance(user);
     if (user.nclocator) {
-      const params = { type: 1, userId: `${user.username}@${user.nclocator}` };
+      const params = { type: 1, userId: `${user.username}@${instance}` };
       axios
         .post(`${this.appsURL}/circles/circles/${circleId}/members`, params, { headers: this.ocsPostHeaders })
         .then((response) => {
@@ -364,7 +369,7 @@ class NextcloudClient {
             levels.ERROR,
             scopes.SYSTEM,
             {
-              user: `${user.username}@${user.nclocator}`,
+              user: `${user.username}@${instance}`,
               error: error.response && error.response.data ? error.response.data : error,
             },
           );
@@ -377,7 +382,7 @@ class NextcloudClient {
     const allUsers = Meteor.users.find({ _id: { $in: userIds } }, { fields: { username: 1, nclocator: 1 } }).fetch();
     const params = {
       members: allUsers.map((user) => {
-        return { type: 1, id: `${user.username}@${user.nclocator}` };
+        return { type: 1, id: `${user.username}@${getInstance(user)}` };
       }),
     };
     axios
@@ -428,7 +433,6 @@ class NextcloudClient {
           );
         } else {
           // find user memberId in circle
-          // XXX FIXME: check on a federated instance if match is for username or username@nclocator
           const member = response.data.ocs.data.find((item) => item.userId === user.username);
           if (member !== undefined) {
             // remove member from circle
@@ -562,8 +566,13 @@ if (Meteor.isServer && nextcloudPlugin && nextcloudPlugin.enable) {
     if (!this.error) {
       if (plugins.nextcloud === true) {
         const groupId = this.result;
-        nextClient.ensureCircle(groupId).then((circleId) => {
-          if (circleId) nextClient.ensureShare(groupId, circleId);
+        const group = Groups.findOne({ _id: groupId });
+        // create nextcloud circle and share, invite group members/animators to circle
+        nextClient.ensureCircle(group).then((circleId) => {
+          if (circleId) {
+            nextClient.ensureShare(group, circleId);
+            nextClient.inviteMembers(group, circleId);
+          }
         });
       }
     }
@@ -588,9 +597,9 @@ if (Meteor.isServer && nextcloudPlugin && nextcloudPlugin.enable) {
       const group = Groups.findOne({ _id: groupId });
       if (group.plugins.nextcloud === true && !group.circleId) {
         // create nextcloud circle and share if needed
-        nextClient.ensureCircle(groupId).then((circleId) => {
+        nextClient.ensureCircle(group).then((circleId) => {
           if (circleId) {
-            nextClient.ensureShare(groupId, circleId);
+            nextClient.ensureShare(group, circleId);
             // add all group members to circle
             nextClient.inviteMembers(group, circleId);
           }
