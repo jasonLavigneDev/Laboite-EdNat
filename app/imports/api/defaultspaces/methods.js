@@ -8,6 +8,7 @@ import i18n from 'meteor/universe:i18n';
 import DefaultSpaces from './defaultspaces';
 import { checkPersonalSpaceData, generateDefaultPersonalSpace } from '../personalspaces/methods';
 import { hasAdminRightOnStructure } from '../structures/utils';
+import logServer, { levels, scopes } from '../logging';
 
 export const updateStructureSpace = new ValidatedMethod({
   name: 'defaultspaces.updateStructureSpace',
@@ -25,8 +26,15 @@ export const updateStructureSpace = new ValidatedMethod({
     const currentStructureSpace = DefaultSpaces.findOne({ structureId: data.structureId });
     if (currentStructureSpace === undefined) {
       // create DefaultSpaces if not existing
+      logServer(`DEFAULTSPACE - METHOD - INSERT - updateStructureSpace - data: ${data}`, levels.VERBOSE, scopes.SYSTEM);
       DefaultSpaces.insert({ ...data });
     } else {
+      logServer(
+        `DEFAULTSPACE - METHOD - UPDATE - updateStructureSpace - current space id: ${currentStructureSpace._id} 
+        / data: ${data}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       DefaultSpaces.update({ _id: currentStructureSpace._id }, { $set: data });
     }
   },
