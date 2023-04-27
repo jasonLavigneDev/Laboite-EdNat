@@ -7,10 +7,15 @@ import { _ } from 'meteor/underscore';
 import i18n from 'meteor/universe:i18n';
 import { isActive, getLabel, validateString } from '../utils';
 import Bookmarks from './bookmarks';
+import logServer, { levels, scopes } from '../logging';
 
 function _updateBookmarkURL(id, url, name, tag) {
+  logServer(
+    `BOOKMARKS - METHOD - UPDATE - _updateBookmarkURL - id: ${id} / data: ${(url, name, tag)}`,
+    levels.VERBOSE,
+    scopes.SYSTEM,
+  );
   Bookmarks.update({ _id: id }, { $set: { url, name, tag } });
-  // Meteor.call('bookmark.getFavicon', { url });
 }
 
 function _formatURL(name) {
@@ -24,8 +29,12 @@ function _formatURL(name) {
 
 function _createBookmarkUrl(url, name, tag, groupId, author) {
   try {
+    logServer(
+      `BOOKMARKS - METHOD - INSERT - _createBookmarkUrl - data: ${(url, name, tag, groupId, author)}`,
+      levels.VERBOSE,
+      scopes.SYSTEM,
+    );
     Bookmarks.insert({ url, name, tag, groupId, author });
-    // Meteor.call('bookmark.getFavicon', { url });
   } catch (error) {
     if (error.code === 11000) {
       throw new Meteor.Error(
@@ -126,6 +135,7 @@ export const removeBookmark = new ValidatedMethod({
     if (!isAllowed) {
       throw new Meteor.Error('api.bookmarks.notPermitted', i18n.__('api.bookmarks.adminRankNeeded'));
     }
+    logServer(`BOOKMARKS - METHOD - REMOVE - removeBookmark - url: ${url}`, levels.VERBOSE, scopes.SYSTEM);
     Bookmarks.remove({ url });
 
     return null;
