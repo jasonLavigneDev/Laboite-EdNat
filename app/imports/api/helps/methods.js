@@ -8,6 +8,7 @@ import { Roles } from 'meteor/alanning:roles';
 
 import { isActive, getLabel, validateString } from '../utils';
 import Helps from './helps';
+import logServer, { levels, scopes } from '../logging';
 
 const validateHelp = (data) => {
   validateString(data.title);
@@ -30,6 +31,7 @@ export const createHelp = new ValidatedMethod({
       throw new Meteor.Error('api.helps.createHelp.alreadyExists', i18n.__('api.helps.createHelp.alreadyExists'));
     }
     validateHelp(data);
+    logServer(`HELPS - METHOD - INSERT - createHelp - data: ${data}`, levels.VERBOSE, scopes.ADMIN);
     return Helps.insert(data);
   },
 });
@@ -53,6 +55,7 @@ export const removeHelp = new ValidatedMethod({
     }
     // changed: do not remove tag from existing articles
     // Articles.update({}, { $pull: { tags: tag.name } }, { multi: true });
+    logServer(`HELPS - METHOD - REMOVE - removeHelp - help id: ${helpId}`, levels.VERBOSE, scopes.ADMIN);
     return Helps.remove(helpId);
   },
 });
@@ -83,6 +86,7 @@ export const updateHelp = new ValidatedMethod({
     }
 
     validateHelp(data);
+    logServer(`HELPS - METHOD - UPDATE - updateHelp - id: ${helpId} / data: ${data}`, levels.VERBOSE, scopes.ADMIN);
     return Helps.update({ _id: helpId }, { $set: data });
   },
 });
