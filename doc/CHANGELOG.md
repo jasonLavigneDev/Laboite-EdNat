@@ -1,5 +1,19 @@
 # Changelog
 
+# [5.4.0](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/5.3.0...release/5.4.0) (2023-04-28)
+
+
+### Bug Fixes
+
+* **createuser:** logserver syntax, error if email already exists ([cca3858](https://gitlab.mim-libre.fr/alphabet/laboite/commit/cca3858a59c085a6a9195d2ca34c4f8c40387331))
+* **user creation api:** add missing async declaration ([fedceb6](https://gitlab.mim-libre.fr/alphabet/laboite/commit/fedceb66d96ed7d26ee7e06db4c995cd6853f522))
+* **user creation api:** fix route in doc, add settings sample ([13f235b](https://gitlab.mim-libre.fr/alphabet/laboite/commit/13f235b4c1691768018dc8a571df6174d777c9e6))
+
+
+### Features
+
+* **api:** add endpoint for user creation through API ([640fd40](https://gitlab.mim-libre.fr/alphabet/laboite/commit/640fd4097c6e27894d7f8353325278caaf2a5fc8))
+
 # [5.3.0](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/5.2.2...release/5.3.0) (2023-04-17)
 
 
