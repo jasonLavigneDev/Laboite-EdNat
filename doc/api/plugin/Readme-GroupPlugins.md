@@ -23,7 +23,7 @@ Par exemple :
       "nextcloud": {
         "enable": true,
         "URL": "https://nextcloud.appseducation.fr",
-        "groupURL": "[URL]/apps/files/?dir=/[GROUPNAME]",
+        "groupURL": "[NCLOCATOR]/apps/files/?dir=/&view=shareoverview",
         "enableChangeName": false
       }
     }
@@ -33,6 +33,7 @@ Par exemple :
   - la partie `[URL]` sera remplacée par l'`URL` du plugin.
   - la partie `[GROUPNAME]` sera remplacée par le nom du groupe.
   - la partie `[GROUPSLUG]` sera remplacée par le slug du groupe.
+  - la partie `[NCLOCATOR]` sera remplacée par l'adresse de l'instance nextcloud de l'utilisateur.
 - `enableChangeName` détermine si on peut renommer le nom d'un goupe qui utilise ce plugin. Si plusieurs plugins sont associés à un groupe, la possibilité de changer le nom du groupe sera calculée à partir de tous les `enableChangeName` concernés.
 - TODO: envisager d'avoir une icone spécifique pour le bouton d'accès au plugin
 
