@@ -205,6 +205,18 @@ Meteor.users.schema = new SimpleSchema(
   { clean: { removeEmptyStrings: false }, tracker: Tracker },
 );
 
+export const findStructureByEmail = (email) => {
+  // split the email in two parts
+  const splittedEmail = email.split('@');
+  // remove first part to keep extension
+  splittedEmail.shift();
+  const emailExtension = AsamExtensions.findOne({ extension: splittedEmail.join('') });
+  if (typeof emailExtension !== 'undefined' && typeof emailExtension.structureId === 'string') {
+    return Structures.findOne({ _id: emailExtension.structureId });
+  }
+  return undefined;
+};
+
 if (Meteor.isServer) {
   Accounts.onCreateUser((options, user) => {
     // pass the structure name in the options
@@ -223,18 +235,11 @@ if (Meteor.isServer) {
         {},
       );
 
-      // split the email in two parts
-      const splittedEmail = user.services.keycloak.email.split('@');
-      // remove first part to keep extension
-      splittedEmail.shift();
-      const emailExtension = AsamExtensions.findOne({ extension: splittedEmail.join('') });
-      if (typeof emailExtension !== 'undefined' && typeof emailExtension.structureId === 'string') {
-        const structure = Structures.findOne({ _id: emailExtension.structureId });
+      const structure = findStructureByEmail(user.services.keycloak.email);
+      if (structure) {
         // If we have a structure, assign it to user and make them directly active
-        if (typeof structure !== 'undefined') {
-          newUser.structure = structure._id;
-          newUser.isActive = true;
-        }
+        newUser.structure = structure._id;
+        newUser.isActive = true;
       }
 
       newUser.emails = [{ address: user.services.keycloak.email, verified: true }];
@@ -245,6 +250,14 @@ if (Meteor.isServer) {
     if (options.profile) newUser.profile = options.profile;
 
     return newUser;
+  });
+
+  Accounts.setAdditionalFindUserOnExternalLogin(({ serviceName, serviceData }) => {
+    if (serviceName === 'keycloak') {
+      const user = Accounts.findUserByUsername(serviceData.preferred_username);
+      if (user) return user;
+    }
+    return undefined;
   });
 }
 

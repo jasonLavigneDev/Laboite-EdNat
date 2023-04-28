@@ -19,9 +19,12 @@ In order to work, it also requires the two following settings :
 
 **Data constraints**
 
+This API call requires either a username or an email to identify user
+
 ```json
 {
   "username": "[string : user login name]",
+  "email": "[string : user email]",
 }
 ```
 
@@ -45,7 +48,7 @@ curl -X  POST -H "X-API-KEY: XXXXX-XXXXX-XXXXX-XXXXX-XXXXX" \
 ## Success Response
 
 - **Code** : `200 OK`
-- **Content example** : `{"nclocator":"https://nuage03.pp.appseducation.org","nctoken":"XXXXX-XXXXX-XXXXX-XXXXX-XXXXX"}` (newly created notification ID)
+- **Content example** : `{"nclocator":"https://nuage03.pp.appseducation.org","nctoken":"XXXXX-XXXXX-XXXXX-XXXXX-XXXXX"}`
 
 ## Error Responses
 
@@ -63,7 +66,7 @@ curl -X  POST -H "X-API-KEY: XXXXX-XXXXX-XXXXX-XXXXX-XXXXX" \
 
 - **Condition** : If unknown username.
 - **Code** : `500 Internal Server Error`
-- **Content** : `Error: request sent to API with no username [restapi.nextcloud.getNcToken.dataWithoutUsername]`
+- **Content** : `Error: request sent to API with no username or email [restapi.nextcloud.getNcToken.dataWithoutUsername]`
 
 ---
 
