@@ -6,6 +6,7 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import i18n from 'meteor/universe:i18n';
 import { isActive, getLabel, validateString } from '../utils';
 import Notifications from './notifications';
+import logServer, { levels, scopes } from '../logging';
 
 export function addExpiration(data) {
   const finalData = { ...data };
@@ -23,7 +24,7 @@ export function addExpiration(data) {
     const numDays = Meteor.settings.public.NotificationsExpireDays[dataType];
     if (numDays || numDays === 0) {
       if (typeof numDays !== 'number') {
-        console.log(i18n.__('api.notifications.badConfig', { type: dataType }));
+        console.log(i18n.__('api.notifications.badConfig', { type: dataType })); // FIXME
       } else if (numDays > 0) {
         // if delay is set to 0 or negative number,
         // no expiration is set (allows to ignore default delay)
@@ -50,6 +51,7 @@ export const createNotification = new ValidatedMethod({
     if (data.title) validateString(data.title);
     if (data.content) validateString(data.content);
     if (data.link) validateString(data.link);
+    logServer(`NOTIFICATIONS - METHODS - INSERT - createNotification - data: ${data}`, levels.INFO, scopes.SYSTEM);
     Notifications.insert(addExpiration(data));
   },
 });
@@ -75,6 +77,11 @@ export const removeNotification = new ValidatedMethod({
         i18n.__('api.notifications.adminArticleNeeded'),
       );
     }
+    logServer(
+      `NOTIFICATIONS - METHODS - REMOVE - removeNotification - id: ${notificationId}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     return Notifications.remove(notificationId);
   },
 });
@@ -90,6 +97,11 @@ export const removeAllNotification = new ValidatedMethod({
         i18n.__('api.notifications.mustBeLoggedIn'),
       );
     }
+    logServer(
+      `NOTIFICATIONS - METHODS - REMOVE - removeAllNotification - user id: ${this.userId}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     return Notifications.remove({ userId: this.userId });
   },
 });
@@ -105,6 +117,11 @@ export const removeAllNotificationRead = new ValidatedMethod({
         i18n.__('api.notifications.mustBeLoggedIn'),
       );
     }
+    logServer(
+      `NOTIFICATIONS - METHODS - REMOVE - removeAllNotificationRead - user id: ${this.userId}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     return Notifications.remove({ userId: this.userId, read: true });
   },
 });
@@ -130,6 +147,11 @@ export const markNotificationAsRead = new ValidatedMethod({
         i18n.__('api.notifications.adminArticleNeeded'),
       );
     }
+    logServer(
+      `NOTIFICATIONS - METHODS - UPDATE - markNotificationAsRead - id: ${notificationId}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     return Notifications.update({ _id: notificationId }, { $set: { read: true } });
   },
 });
@@ -145,6 +167,11 @@ export const markAllNotificationAsRead = new ValidatedMethod({
         i18n.__('api.notifications.mustBeLoggedIn'),
       );
     }
+    logServer(
+      `NOTIFICATIONS - METHODS - UPDATE - markAllNotificationAsRead - user id: ${this.userId}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     return Notifications.update({ userId: this.userId }, { $set: { read: true } }, { multi: true });
   },
 });
@@ -162,6 +189,11 @@ export const markAllTypeNotificationAsRead = new ValidatedMethod({
         i18n.__('api.notifications.mustBeLoggedIn'),
       );
     }
+    logServer(
+      `NOTIFICATIONS - METHODS - UPDATE - markAllTypeNotificationAsRead - user id: ${this.userId} / type: ${type}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     return Notifications.update(
       { userId: this.userId, type: { $in: type } },
       { $set: { read: true } },
@@ -184,6 +216,11 @@ export const removeAllTypeNotification = new ValidatedMethod({
         i18n.__('api.notifications.mustBeLoggedIn'),
       );
     }
+    logServer(
+      `NOTIFICATIONS - METHODS - REMOVE - removeAllTypeNotification - user id: ${this.userId} / type: ${type}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     return Notifications.remove({ userId: this.userId, type: { $in: type } });
   },
 });
