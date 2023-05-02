@@ -19,6 +19,7 @@ export const addItem = (userId, item) => {
   let alreadyExists = false;
   if (currentPersonalSpace === undefined) {
     // create personalSpace if not existing
+    logServer(`PERSONALSPACES - METHODS - INSERT - addItem - user id: ${this.userId}`, levels.INFO, scopes.SYSTEM);
     PersonalSpaces.insert({ userId, unsorted: [], sorted: [] });
   } else {
     // check that item is not already present
@@ -37,7 +38,14 @@ export const addItem = (userId, item) => {
         ],
       }) !== undefined;
   }
-  if (!alreadyExists) PersonalSpaces.update({ userId }, { $push: { unsorted: item } });
+  if (!alreadyExists) {
+    logServer(
+      `PERSONALSPACES - METHODS - UPDATE - addItem - user id: ${this.userId} / unsorted: ${item}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
+    PersonalSpaces.update({ userId }, { $push: { unsorted: item } });
+  }
 };
 
 export const removeElement = new ValidatedMethod({
@@ -53,6 +61,12 @@ export const removeElement = new ValidatedMethod({
       throw new Meteor.Error('api.personalspaces.addService.notPermitted', i18n.__('api.users.notPermitted'));
     }
     // remove all entries matching item type and element_id
+    logServer(
+      `PERSONALSPACES - METHODS - UPDATE - removeElement - user id: ${this.userId} / type: ${type} 
+      / element_id: ${elementId}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     PersonalSpaces.update(
       { userId: this.userId },
       {
@@ -156,8 +170,19 @@ export const updatePersonalSpace = new ValidatedMethod({
     const currentPersonalSpace = PersonalSpaces.findOne({ userId: this.userId });
     if (currentPersonalSpace === undefined) {
       // create personalSpace if not existing
+      logServer(
+        `PERSONALSPACES - METHODS - INSERT - updatePersonalSpace - user id: ${this.userId} / data: ${data}`,
+        levels.INFO,
+        scopes.SYSTEM,
+      );
       PersonalSpaces.insert({ ...data, userId: this.userId });
     } else {
+      logServer(
+        `PERSONALSPACES - METHODS - UPDATE - updatePersonalSpace - user id: ${currentPersonalSpace._id} 
+        / data: ${data}`,
+        levels.INFO,
+        scopes.SYSTEM,
+      );
       PersonalSpaces.update({ _id: currentPersonalSpace._id }, { $set: data });
     }
   },
@@ -291,6 +316,12 @@ export const backToDefaultElement = new ValidatedMethod({
       throw new Meteor.Error('api.personalspaces.backToDefaultElement.notPermitted', i18n.__('api.users.notPermitted'));
     }
     // remove all entries matching item type and element_id
+    logServer(
+      `PERSONALSPACES - METHODS - UPDATE - backToDefaultElement - user id: ${this.userId} / type: ${type} 
+      / element_id: ${elementId}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     PersonalSpaces.update(
       { userId: this.userId },
       {
@@ -354,10 +385,22 @@ export const generateDefaultPersonalSpace = new ValidatedMethod({
         }
       });
     }
+    logServer(
+      `PERSONALSPACES - METHODS - UPDATE - generateDefaultPersonalSpace meteor users update - user id: ${userId} 
+      / favServices: ${servicesAdded}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     Meteor.users.update(userId, {
       $set: { favServices: servicesAdded },
     });
 
+    logServer(
+      `PERSONALSPACES - METHODS - UPDATE - generateDefaultPersonalSpace - user id: ${userId} 
+      / defaultSpace: ${defaultSpace}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     // Copy the personal space from the default structure one
     return PersonalSpaces.update(
       { userId },
