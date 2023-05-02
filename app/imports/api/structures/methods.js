@@ -13,6 +13,7 @@ import Articles from '../articles/articles';
 import Groups from '../groups/groups';
 import { _createGroup, _removeGroup } from '../groups/methods';
 import { removeFilesFolder } from '../files/server/methods';
+import logServer, { levels, scopes } from '../logging';
 
 export const createStructure = new ValidatedMethod({
   name: 'structures.createStructure',
@@ -45,6 +46,11 @@ export const createStructure = new ValidatedMethod({
     });
 
     if (parentId) {
+      logServer(
+        `STRUCTURE - METHODS - UPDATE - createStructure - id: ${structureId} / ancestorsIds: ${parentId}`,
+        levels.INFO,
+        scopes.SYSTEM,
+      );
       // Update ancestorsId with only direct parent
       Structures.update({ _id: structureId }, { $set: { ancestorsIds: [parentId] } });
 
@@ -55,8 +61,20 @@ export const createStructure = new ValidatedMethod({
 
         // Add structure to the parent childrenIds
         directParentStructureChildrenIds.push(structureId);
+        logServer(
+          `STRUCTURE - METHODS - UPDATE - createStructure - id: ${structureId} 
+          / childrenIds: ${directParentStructureChildrenIds}`,
+          levels.INFO,
+          scopes.SYSTEM,
+        );
         Structures.update({ _id: parentId }, { $set: { childrenIds: [...new Set(directParentStructureChildrenIds)] } });
 
+        logServer(
+          `STRUCTURE - METHODS - UPDATE - createStructure - id: ${structureId} 
+          / ancestorsIds: ${parentId} / directParentStructureAncestorIds: ${directParentStructureAncestorIds}`,
+          levels.INFO,
+          scopes.SYSTEM,
+        );
         // Update structure ancestors with parent structure's ancestors too
         Structures.update(
           { _id: structureId },
@@ -83,6 +101,11 @@ export const createStructure = new ValidatedMethod({
       const group = Groups.findOne({ name: strucName });
       if (group) {
         structure.groupId = group._id;
+        logServer(
+          `STRUCTURE - METHODS - UPDATE - createStructure - id: ${structureId} / groupId: ${group._id}`,
+          levels.INFO,
+          scopes.SYSTEM,
+        );
         Structures.update({ _id: structureId }, { $set: { groupId: group._id } });
       }
     }
@@ -134,6 +157,11 @@ export const updateStructure = new ValidatedMethod({
       group.name = `${structure._id}_${name}`;
       Groups.update({ _id: group._id }, { $set: { name: `${structure._id}_${name}` } });
     }
+    logServer(
+      `STRUCTURE - METHODS - UPDATE - updateStructure - id: ${structureId} / name: ${name}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     return Structures.update({ _id: structureId }, { $set: { name } });
   },
 });
@@ -168,6 +196,12 @@ export const setUserStructureAdminValidationMandatoryStatus = new ValidatedMetho
       );
     }
 
+    logServer(
+      `STRUCTURE - METHODS - UPDATE - setUserStructureAdminValidationMandatoryStatus - id: ${structureId} 
+      / user validation: ${userStructureValidationMandatory}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     return Structures.update({ _id: structureId }, { $set: { userStructureValidationMandatory } });
   },
 });
@@ -224,6 +258,11 @@ export const removeStructure = new ValidatedMethod({
       throw new Meteor.Error('api.structures.removeStructure.hasUsers', i18n.__('api.structures.hasUsers'));
     }
 
+    logServer(
+      `STRUCTURE - METHODS - REMOVE - removeStructure - structure id: ${structureId}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     // If there are any article attached to this structure, delete them
     Articles.rawCollection().deleteMany({ structure: structureId });
 
@@ -233,6 +272,12 @@ export const removeStructure = new ValidatedMethod({
       const ancestorsCursor = Structures.find({ _id: { $in: ancestorsIds } });
       if (ancestorsCursor.count() > 0) {
         ancestorsCursor.forEach((ancestor) => {
+          logServer(
+            `STRUCTURE - METHODS - UPDATE - removeStructure - ancestor id: ${ancestor._id}
+             / structureid: ${structureId}`,
+            levels.INFO,
+            scopes.SYSTEM,
+          );
           Structures.update(
             { _id: ancestor._id },
             {
@@ -252,6 +297,11 @@ export const removeStructure = new ValidatedMethod({
     // If there are icon or cover images ==> delete them from minio
     structureRemoveIconOrCoverImagesFromMinio(structure, true, true);
 
+    logServer(
+      `STRUCTURE - METHODS - REMOVE - removeStructure - structure id: ${structureId}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     return Structures.remove(structureId);
   },
 });
@@ -307,6 +357,12 @@ export const updateStructureContactEmail = new ValidatedMethod({
       throw new Meteor.Error('api.structures.updateContactEmail.notPermitted', i18n.__('api.users.notPermitted'));
     }
     validateString(contactEmail);
+    logServer(
+      `STRUCTURE - METHODS - UPDATE - updateStructureContactEmail - structure id: ${structureId}
+      / contact email: ${contactEmail}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     return Structures.update({ _id: structureId }, { $set: { contactEmail } });
   },
 });
@@ -357,6 +413,12 @@ export const updateStructureIntroduction = new ValidatedMethod({
       return entry;
     });
 
+    logServer(
+      `STRUCTURE - METHODS - UPDATE - updateStructureIntroduction - structure id: ${structureId} 
+      / introduction: ${newIntroductionArray}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     return Structures.update({ _id: structureId }, { $set: { introduction: newIntroductionArray } });
   },
 });
