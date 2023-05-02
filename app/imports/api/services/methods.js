@@ -13,6 +13,8 @@ import { hasAdminRightOnStructure } from '../structures/utils';
 import Services from './services';
 import { addService, removeElement } from '../personalspaces/methods';
 
+import logServer, { levels, scopes } from '../logging';
+
 const checkService = (data) => {
   validateString(data.title);
   validateString(data.team);
@@ -50,8 +52,18 @@ export const createService = new ValidatedMethod({
     checkService(data);
     const sanitizedContent = sanitizeHtml(data.content);
     validateString(sanitizedContent);
+    logServer(
+      `SERVICES - METHODS - INSERT - createService - data: ${data} / content: ${sanitizedContent}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     const serviceId = Services.insert({ ...data, content: sanitizedContent });
 
+    logServer(
+      `SERVICES - METHODS - UPDATE - createService - service id: ${serviceId} / data: ${data}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     Services.update(serviceId, {
       $set: {
         logo: data.logo.replace('/undefined/', `/${serviceId}/`),
@@ -98,6 +110,12 @@ export const updateService = new ValidatedMethod({
     checkService(data);
     const sanitizedContent = sanitizeHtml(data.content);
     validateString(sanitizedContent);
+    logServer(
+      `SERVICES - METHODS - UPDATE - updateService - service id: ${serviceId} / data: ${data}
+       / content: ${sanitizedContent} / structure: ${currentService.structure}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     // update service data, making sure that structure is not modified
     Services.update(
       { _id: serviceId },
@@ -137,6 +155,11 @@ export const favService = new ValidatedMethod({
       });
     }
     // update user personalSpace
+    logServer(
+      `SERVICES - METHODS - EXECUTE - favService - user id: ${this.userId} / service id: ${serviceId}}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     addService._execute({ userId: this.userId }, { serviceId });
   },
 });
@@ -158,6 +181,11 @@ export const unfavService = new ValidatedMethod({
         $pull: { favServices: serviceId },
       });
     }
+    logServer(
+      `SERVICES - METHODS - EXECUTE - unfavService - user id: ${this.userId} / service id: ${serviceId}}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     // update user personalSpace
     removeElement._execute({ userId: this.userId }, { type: 'service', elementId: serviceId });
   },
