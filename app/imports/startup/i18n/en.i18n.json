@@ -1011,6 +1011,9 @@
       "toggleMaintenance": "Put the site in maintenance",
       "textMaintenance": "Maintenance reason",
       "buttonTextMaintenance": "Validate message",
+      "sendMailToParentStructure": "Redirect mails to parent structure.",
+      "sendMailToAdminStructure": "Send mails to administrators of the structure",
+      "externalUrl": "External URL link",
       "unlockMigration": {
         "title": "Migration unlocking",
         "mainText": "Database migration is currently locked.",
