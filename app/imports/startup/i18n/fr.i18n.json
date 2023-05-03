@@ -1355,7 +1355,7 @@
       "title": "Titre",
       "slug": "Slug",
       "state": "État",
-      "team": "Equipe",
+      "team": "Équipe",
       "usage": "Utilisation du service",
       "logo": "Logo du service",
       "description": "Courte description",
@@ -1369,7 +1369,12 @@
       "update": "Mettre à jour",
       "cancel": "Annuler",
       "logo_url": "URL du logo",
-      "offlineService": "Activer ce service sur la page non connectée"
+      "offlineService": "Activer ce service sur la page non connectée",
+      "titleFieldHelperText": "Titre du service",
+      "StateFieldHelperText": "État du service",
+      "teamFieldHelperText": "Équipe qui gère le service",
+      "usageFieldHelperText": "Dans quel cadre allez-vous utiliser le service",
+      "descriptionFieldHelperText": "Ajouter une courte description"
     },
     "AdminSingleGroupPage": {
       "edition": "Édition du groupe",
