@@ -59,21 +59,17 @@ Adresse mail: ${email}
                  
 ${cleanText}`;
 
-    const tabTo = Meteor.roleAssignment
-      .find({ 'role._id': 'adminStructure', scope: structureId })
-      .fetch()
-      .map((role) => Meteor.users.findOne({ _id: role.user._id }).emails[0].address);
-
     const from = Meteor.settings.smtp.fromEmail;
-    const structureTargetMail = getTargetMail({ structure });
+    const structureTargetMail = getTargetMail({ structure }) || [];
     // if a structure contact mail if found, use it
     // if not, use settings one
-    const to = structureTargetMail || Meteor.settings.smtp.toEmail;
+    const tabTo = structureTargetMail;
+    const to = structureTargetMail[0] || Meteor.settings.smtp.toEmail;
 
     this.unblock();
 
     if (tabTo.length > 0) {
-      Email.send({ to: tabTo, cc: to, from, subject: object, text: msg });
+      Email.send({ to, cc: tabTo, from, subject: object, text: msg });
     } else {
       Email.send({ to, from, subject: object, text: msg });
     }

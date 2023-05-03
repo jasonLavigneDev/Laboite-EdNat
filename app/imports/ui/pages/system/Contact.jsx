@@ -94,6 +94,29 @@ const Contact = ({ structures, loading }) => {
     return null;
   }, [user]);
 
+  const redirectOnExternalService = (struc) => {
+    if (struc.externalUrl) {
+      let url = struc.externalUrl;
+      if (!url.startsWith('http://') && !url.startsWith('https://')) url = `http://${url}`;
+      window.open(`${url}`, '_blank', 'noopener,noreferrer');
+      history.push('/');
+      return null;
+    }
+    if (struc.sendMailToParent) {
+      if (struc.parentId) {
+        const ancestor = structures.find((st) => st._id === struc.parentId);
+        if (ancestor) {
+          return redirectOnExternalService(ancestor);
+        }
+      }
+    }
+    return null;
+  };
+
+  if (userStructure) {
+    redirectOnExternalService(userStructure);
+  }
+
   const hasError = (field) => !!(formState.touched[field] && formState.errors[field]);
 
   const [captchaIsValid, setCaptchaIsValid] = useState(true);

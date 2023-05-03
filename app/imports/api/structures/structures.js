@@ -130,12 +130,14 @@ Structures.schema = new SimpleSchema(
     },
     sendMailToParent: {
       type: Boolean,
-      optional: false,
+      optional: true,
+      defaultValue: false,
       label: getLabel('api.appsettings.label.sendMailToParent'),
     },
     sendMailToStructureAdmin: {
       type: Boolean,
-      optional: false,
+      optional: true,
+      defaultValue: false,
       label: getLabel('api.appsettings.label.sendMailToStructureAdmin'),
     },
   },
