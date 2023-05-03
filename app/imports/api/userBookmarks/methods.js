@@ -20,12 +20,24 @@ function _formatURL(name) {
 
 export const createUserBookmark = new ValidatedMethod({
   name: 'userBookmark.create',
-  validate: UserBookmarks.schema.omit('userId', 'icon').validator({ clean: true }),
-  run({ url, name, tag }) {
+  validate: new SimpleSchema({
+    url: { type: String, regEx: SimpleSchema.RegEx.url, label: getLabel('api.bookmarks.labels.url') },
+    name: { type: String, label: getLabel('api.bookmarks.labels.name') },
+    tag: { type: String, label: getLabel('api.bookmarks.labels.tag'), defaultValue: '' },
+    favUserBookmarkDirectry: {
+      type: Boolean,
+      label: getLabel('api.users.labels.favUserBookmarks'),
+      defaultValue: false,
+    },
+  }).validator({ clean: true }),
+  run({ url, name, tag, favUserBookmarkDirectry = false }) {
     const isAllowed = isActive(this.userId);
     if (!isAllowed) {
       throw new Meteor.Error('api.userBookmarks.createUserBookmark.notPermitted', i18n.__('api.users.notPermitted'));
     }
+    validateString(url);
+    validateString(name);
+    validateString(tag);
 
     const finalUrl = _formatURL(url);
 
@@ -37,10 +49,18 @@ export const createUserBookmark = new ValidatedMethod({
         i18n.__('api.bookmarks.createBookmark.URLAlreadyExists'),
       );
     }
-    validateString(url);
-    validateString(name);
-    validateString(tag);
-    UserBookmarks.insert({ url: finalUrl, name, tag, userId: this.userId });
+
+    const bookmarkId = UserBookmarks.insert({ url: finalUrl, name, tag, userId: this.userId });
+    if (favUserBookmarkDirectry) {
+      if (bookmarkId && bookmarkId !== undefined) {
+        Meteor.users.update(this.userId, {
+          $push: { favUserBookmarks: bookmarkId },
+        });
+
+        // update user personalSpace
+        addUserBookmark._execute({ userId: this.userId }, { bookmarkId });
+      }
+    }
     return finalUrl;
   },
 });

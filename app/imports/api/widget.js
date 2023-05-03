@@ -211,6 +211,7 @@ export const widget = () => `
     iframeContainer.setAttribute('class', 'lb_iframe-widget');
     iframeContainer.setAttribute('iframe-state', 'closed');
     iframeContainer.setAttribute('src', '${process.env.ROOT_URL}');
+    iframeContainer.setAttribute('allow', 'clipboard-read; clipboard-write');
   
     // Create Container for Widget
     const widgetContainer = document.createElement('div');
