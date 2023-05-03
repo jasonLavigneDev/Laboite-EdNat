@@ -180,6 +180,11 @@ export const removeUser = new ValidatedMethod({
     // delete role assignements and remove from groups
     const groups = Roles.getScopesForUser(userId);
     groups.forEach((groupId) => {
+      logServer(
+        `USERS - METHODS - UPDATE - removeUser (group update) - groupId: ${groupId} / userID: ${userId}`,
+        levels.INFO,
+        scopes.SYSTEM,
+      );
       Groups.update(
         { _id: groupId },
         {
@@ -192,7 +197,9 @@ export const removeUser = new ValidatedMethod({
         },
       );
     });
+    logServer(`USERS - METHODS - REMOVE - removeUser (meteor role) - userId: ${userId}`, levels.INFO, scopes.SYSTEM);
     Meteor.roleAssignment.remove({ 'user._id': userId });
+    logServer(`USERS - METHODS - REMOVE - removeUser (personal space) - userId: ${userId}`, levels.INFO, scopes.SYSTEM);
     PersonalSpaces.remove({ userId });
 
     const element = Nextcloud.findOne({ url: user.nclocator });
@@ -201,6 +208,7 @@ export const removeUser = new ValidatedMethod({
       element.count -= 1;
       Nextcloud.update({ url: user.nclocator }, { $set: { count: element.count } });
     }
+    logServer(`USERS - METHODS - REMOVE - removeUser (meteor) - userId: ${userId}`, levels.INFO, scopes.SYSTEM);
     Meteor.users.remove({ _id: userId });
   },
 });
@@ -230,6 +238,11 @@ export const unsetMemberOf = new ValidatedMethod({
     Roles.removeUsersFromRoles(userId, 'member', groupId);
     // update info in group collection
     if (group.members.indexOf(userId) !== -1) {
+      logServer(
+        `USERS - METHODS - UPDATE - unsetMemberOf - groupId: ${groupId} members: ${userId}`,
+        levels.INFO,
+        scopes.SYSTEM,
+      );
       Groups.update(groupId, {
         $pull: { members: userId },
       });
@@ -268,6 +281,11 @@ export const unsetAdminOf = new ValidatedMethod({
     Roles.removeUsersFromRoles(userId, 'admin', groupId);
     // update info in group collection
     if (group.admins.indexOf(userId) !== -1) {
+      logServer(
+        `USERS - METHODS - UPDATE - unsetMemberOf - groupId: ${groupId} admins: ${userId}`,
+        levels.INFO,
+        scopes.SYSTEM,
+      );
       Groups.update(groupId, { $pull: { admins: userId } });
     }
     // if user has no longer roles, remove group from personalspace
@@ -286,6 +304,7 @@ export function RemoveAllRolesFromGroup(user, group) {
   Roles.removeUsersFromRoles(user._id, roles, group._id);
 
   if (rolesOfUser.length > 0) {
+    logServer(`USERS - METHODS - UPDATE - RemoveAllRolesFromGroup - groupId: ${group._id}`, levels.INFO, scopes.SYSTEM);
     Groups.update(group._id, {
       $pull: rolesOfUser.reduce((mod, role) => ({ ...mod, [`${role}s`]: user._id }), {}),
     });
@@ -342,6 +361,11 @@ export const removeUserFromStructure = new ValidatedMethod({
       Roles.removeUsersFromRoles(userId, 'adminStructure', user.structure);
     }
     RemoveUserFromGroupsOfOldStructure(user);
+    logServer(
+      `USERS - METHODS - UPDATE - removeUserFromStructure (meteor) - userId: ${userId}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     Meteor.users.update({ _id: userId }, { $set: { structure: null } });
   },
 });
@@ -392,6 +416,11 @@ export const setAdminOf = new ValidatedMethod({
     Roles.addUsersToRoles(userId, 'admin', groupId);
     // store info in group collection
     if (group.admins.indexOf(userId) === -1) {
+      logServer(
+        `USERS - METHODS - UPDATE - setAdminOf (groups) - groupId: ${groupId} / admins: ${userId}`,
+        levels.INFO,
+        scopes.SYSTEM,
+      );
       Groups.update(groupId, { $push: { admins: userId } });
     }
     // Notify user
@@ -425,6 +454,11 @@ export const setAnimatorOf = new ValidatedMethod({
     Roles.addUsersToRoles(userId, 'animator', groupId);
     // store info in group collection
     if (group.animators.indexOf(userId) === -1) {
+      logServer(
+        `USERS - METHODS - UPDATE - setAnimatorOf (groups) - groupId: ${groupId} / animators: ${userId}`,
+        levels.INFO,
+        scopes.SYSTEM,
+      );
       Groups.update(groupId, { $push: { animators: userId } });
     }
     // update user personalSpace
@@ -459,6 +493,11 @@ export const unsetAnimatorOf = new ValidatedMethod({
     Roles.removeUsersFromRoles(userId, 'animator', groupId);
     // update info in group collection
     if (group.animators.indexOf(userId) !== -1) {
+      logServer(
+        `USERS - METHODS - UPDATE - unsetAnimatorOf (groups) - groupId: ${groupId} / animators: ${userId}`,
+        levels.INFO,
+        scopes.SYSTEM,
+      );
       Groups.update(groupId, { $pull: { animators: userId } });
     }
     // if user has no longer roles, remove group from personalspace
@@ -506,6 +545,11 @@ export const setMemberOf = new ValidatedMethod({
     }
     // store info in group collection
     if (group.members.indexOf(userId) === -1) {
+      logServer(
+        `USERS - METHODS - UPDATE - setMemberOf (groups) - groupId: ${groupId} / members: ${userId}`,
+        levels.INFO,
+        scopes.SYSTEM,
+      );
       Groups.update(groupId, {
         $push: { members: userId },
         $pull: { candidates: userId },
@@ -516,6 +560,11 @@ export const setMemberOf = new ValidatedMethod({
 
     const insertUser = { email: user.emails[0].address, _id: userId, groupId, status: 1 };
 
+    logServer(
+      `USERS - METHODS - UPDATE MANY - setMemberOf (event) - groupId: ${groupId} / participants: ${insertUser}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     // update Events
     EventsAgenda.rawCollection().updateMany(
       { groups: { $elemMatch: { _id: groupId } } },
@@ -557,6 +606,11 @@ export const setCandidateOf = new ValidatedMethod({
     Roles.addUsersToRoles(userId, 'candidate', groupId);
     // store info in group collection
     if (group.candidates.indexOf(userId) === -1) {
+      logServer(
+        `USERS - METHODS - UPDATE - setCandidateOf (groups) - groupId: ${groupId} candidats: ${userId}`,
+        levels.INFO,
+        scopes.SYSTEM,
+      );
       Groups.update(groupId, {
         $push: { candidates: userId },
       });
@@ -595,6 +649,11 @@ export const unsetCandidateOf = new ValidatedMethod({
     Roles.removeUsersFromRoles(userId, 'candidate', groupId);
     // remove info from group collection
     if (group.candidates.indexOf(userId) !== -1) {
+      logServer(
+        `USERS - METHODS - UPDATE - unsetCandidateOf (groups) - groupId: ${groupId} candidats: ${userId}`,
+        levels.INFO,
+        scopes.SYSTEM,
+      );
       Groups.update(groupId, {
         $pull: { candidates: userId },
       });
@@ -658,7 +717,12 @@ export const acceptAwaitingStructure = new ValidatedMethod({
     }
 
     RemoveUserFromGroupsOfOldStructure(targetUser);
-
+    logServer(
+      `USERS - METHODS - UPDATE - acceptAwaitingStructure (user meteor) - userId: ${targetUserId} 
+      / awaitingStructure: ${awaitingStructure}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     Meteor.users.update(
       { _id: targetUserId },
       {
@@ -723,6 +787,12 @@ export const setStructure = new ValidatedMethod({
       }
     } // will throw error if username already taken
 
+    logServer(
+      `USERS - METHODS - UPDATE - setStructure (user meteor) - userId: ${this.userId} 
+      / awaitingStructure: ${structure} / useer struc: ${user.structure}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     Meteor.users.update(
       { _id: this.userId },
       {
@@ -841,6 +911,7 @@ export const setActive = new ValidatedMethod({
     if (user === undefined) {
       throw new Meteor.Error('api.users.setActive.unknownUser', i18n.__('api.users.unknownUser'));
     }
+    logServer(`USERS - METHODS - UPDATE - setActive (user meteor) - userId: ${userId}`, levels.INFO, scopes.SYSTEM);
     Meteor.users.update(userId, { $set: { isActive: true, isRequest: false } });
   },
 });
@@ -859,6 +930,12 @@ export const setArticlesEnable = new ValidatedMethod({
       throw new Meteor.Error('api.users.toggleAdvancedPersonalPage.unknownUser', i18n.__('api.users.unknownUser'));
     }
     const newValue = !(user.articlesEnable || false);
+    logServer(
+      `USERS - METHODS - UPDATE - setArticlesEnable (user meteor) - userId: ${this.userId} 
+      / articlesEnable: ${newValue}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     Meteor.users.update(this.userId, { $set: { articlesEnable: newValue } });
   },
 });
@@ -880,6 +957,7 @@ export const unsetActive = new ValidatedMethod({
     if (user === undefined) {
       throw new Meteor.Error('api.users.unsetActive.unknownUser', i18n.__('api.users.unknownUser'));
     }
+    logServer(`USERS - METHODS - UPDATE - unsetActive (user meteor) - userId: ${userId}`, levels.INFO, scopes.SYSTEM);
     Meteor.users.update(userId, { $set: { isActive: false } });
   },
 });
@@ -960,6 +1038,11 @@ export const setLanguage = new ValidatedMethod({
       throw new Meteor.Error('api.users.setLanguage.notPermitted', i18n.__('api.users.mustBeLoggedIn'));
     }
     validateString(language, true);
+    logServer(
+      `USERS - METHODS - UPDATE - setLanguage (user meteor) - userId: ${this.userId} / language: ${language}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     Meteor.users.update(this.userId, {
       $set: { language },
     });
@@ -977,6 +1060,11 @@ export const setLogoutType = new ValidatedMethod({
       throw new Meteor.Error('api.users.setLogoutType.notPermitted', i18n.__('api.users.mustBeLoggedIn'));
     }
     validateString(logoutType, true);
+    logServer(
+      `USERS - METHODS - UPDATE - setLogoutType (user meteor) - userId: ${this.userId} / logoutType: ${logoutType}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     Meteor.users.update(this.userId, {
       $set: { logoutType },
     });
@@ -997,6 +1085,11 @@ export const setAvatar = new ValidatedMethod({
       throw new Meteor.Error('api.users.setAvatar.notPermitted', i18n.__('api.users.mustBeLoggedIn'));
     }
     validateString(avatar);
+    logServer(
+      `USERS - METHODS - UPDATE - setAvatar (user meteor) - userId: ${this.userId} / avatar: ${avatar}`,
+      levels.INFO,
+      scopes.USER,
+    );
     Meteor.users.update(this.userId, {
       $set: { avatar },
     });
@@ -1022,6 +1115,11 @@ export const setKeycloakId = new ValidatedMethod({
     }
     const user = Accounts.findUserByEmail(email);
     if (user) {
+      logServer(
+        `USERS - METHODS - UPDATE - setKeycloakId (user meteor) - userId: ${user._id} / keycloakId: ${keycloakId}`,
+        levels.INFO,
+        scopes.USER,
+      );
       Meteor.users.update({ _id: user._id }, { $set: { services: { keycloak: { id: keycloakId } } } });
       return user._id;
     }
@@ -1075,6 +1173,11 @@ export const setQuota = new ValidatedMethod({
       // this should be run by server side code only
       throw new Meteor.Error('api.users.userUpdated.notPermitted', i18n.__('api.users.notPermitted'));
     }
+    logServer(
+      `USERS - METHODS - UPDATE - setQuota (user meteor) - userId: ${userId} / groupQuota: ${quota}`,
+      levels.INFO,
+      scopes.ADMIN,
+    );
     Meteor.users.update(
       { _id: userId },
       {
@@ -1100,6 +1203,12 @@ export const toggleAdvancedPersonalPage = new ValidatedMethod({
       throw new Meteor.Error('api.users.toggleAdvancedPersonalPage.unknownUser', i18n.__('api.users.unknownUser'));
     }
     const newValue = !(user.advancedPersonalPage || false);
+    logServer(
+      `USERS - METHODS - UPDATE - toggleAdvancedPersonalPage (user meteor) - userId: ${this.userId} 
+      / advancedPersonalPage: ${newValue}`,
+      levels.INFO,
+      scopes.USER,
+    );
     Meteor.users.update(this.userId, { $set: { advancedPersonalPage: newValue } });
   },
 });
@@ -1133,6 +1242,12 @@ export const resetAuthToken = new ValidatedMethod({
       throw new Meteor.Error('api.users.resetAuthToken.unknownUser', i18n.__('api.users.unknownUser'));
     }
     const newToken = Random.secret(150);
+    logServer(
+      `USERS - METHODS - UPDATE - resetAuthToken (user meteor) - userId: ${user._id} 
+      / authToken: ${newToken}`,
+      levels.INFO,
+      scopes.USER,
+    );
     Meteor.users.update({ _id: user._id }, { $set: { authToken: newToken } });
     return newToken;
   },
@@ -1194,13 +1309,18 @@ export const fixUsers = new ValidatedMethod({
           updateInfos.username = user.services.keycloak.preferred_username;
         }
         if (!user.nclocator) updateInfos.nclocator = getRandomNCloudURL();
+        logServer(
+          `USERS - METHODS - UPDATE - fixUsers (user meteor) - userId: ${user._id} 
+      / updateInfos: ${updateInfos}`,
+          levels.INFO,
+          scopes.USER,
+        );
         Meteor.users.update({ _id: user._id }, { $set: updateInfos });
         // logServer(`- fixed user ${updateInfos.username} (email:${updateInfos.primaryEmail})`);
         logServer(
           `USERS - METHODS - fixed user ${updateInfos.username} (email:${updateInfos.primaryEmail})`,
           levels.ERROR,
           scopes.SYSTEM,
-          {},
         );
         fixedCount += 1;
       } else {
@@ -1209,7 +1329,6 @@ export const fixUsers = new ValidatedMethod({
           `USERS - METHODS - could not fix user '${user._id}', no keycloak data available`,
           levels.ERROR,
           scopes.SYSTEM,
-          {},
         );
       }
     });
