@@ -122,6 +122,22 @@ Structures.schema = new SimpleSchema(
       label: getLabel('api.structures.labels.coverUrlImage'),
       optional: true,
     },
+    externalUrl: {
+      type: String,
+      label: getLabel('api.structures.labels.externalUrl'),
+      optional: true,
+      defaultValue: null,
+    },
+    sendMailToParent: {
+      type: Boolean,
+      optional: false,
+      label: getLabel('api.appsettings.label.sendMailToParent'),
+    },
+    sendMailToStructureAdmin: {
+      type: Boolean,
+      optional: false,
+      label: getLabel('api.appsettings.label.sendMailToStructureAdmin'),
+    },
   },
   {
     tracker: Tracker,
@@ -140,6 +156,9 @@ Structures.publicFields = {
   userStructureValidationMandatory: 1,
   iconUrlImage: 1,
   coverUrlImage: 1,
+  externalUrl: 1,
+  sendMailToParent: 1,
+  sendMailToStructureAdmin: 1,
 };
 
 Structures.attachSchema(Structures.schema);

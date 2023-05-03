@@ -407,15 +407,23 @@ export const getAllChilds = new ValidatedMethod({
 });
 
 export const updateStructureContactEmail = new ValidatedMethod({
-  name: 'structures.updateContactEmail',
+  name: 'structures.updateContactData',
   validate: new SimpleSchema({
     contactEmail: {
       type: String,
-      regEx: SimpleSchema.RegEx.Email,
+    },
+    externalUrl: {
+      type: String,
+    },
+    sendMailToParent: {
+      type: Boolean,
+    },
+    sendMailToStructureAdmin: {
+      type: Boolean,
     },
     structureId: { type: String, regEx: SimpleSchema.RegEx.Id, label: getLabel('api.structures.labels.id') },
   }).validator(),
-  run({ structureId, contactEmail }) {
+  run({ structureId, contactEmail, externalUrl, sendMailToParent, sendMailToStructureAdmin }) {
     const structure = Structures.findOne({ _id: structureId });
 
     if (structure === undefined) {
@@ -442,14 +450,19 @@ export const updateStructureContactEmail = new ValidatedMethod({
       );
       throw new Meteor.Error('api.structures.updateContactEmail.notPermitted', i18n.__('api.users.notPermitted'));
     }
-    validateString(contactEmail);
+    if (contactEmail) {
+      validateString(contactEmail);
+    }
     logServer(
       `STRUCTURE - METHODS - UPDATE - updateStructureContactEmail - structure id: ${structureId}
       / contact email: ${contactEmail}`,
       levels.VERBOSE,
       scopes.SYSTEM,
     );
-    return Structures.update({ _id: structureId }, { $set: { contactEmail } });
+    return Structures.update(
+      { _id: structureId },
+      { $set: { contactEmail, externalUrl, sendMailToParent, sendMailToStructureAdmin } },
+    );
   },
 });
 

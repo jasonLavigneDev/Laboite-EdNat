@@ -22,10 +22,13 @@ const AdminStructureChangeEmailContact = ({ structure }) => {
   const onEmailSubmit = (e) => {
     e.preventDefault();
     Meteor.call(
-      'structures.updateContactEmail',
+      'structures.updateContactData',
       {
         structureId: structure._id,
-        contactEmail: e.target.contactEmail.value,
+        contactEmail: email,
+        externalUrl,
+        sendMailToParent,
+        sendMailToStructureAdmin,
       },
       (err) => {
         if (err) {

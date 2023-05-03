@@ -142,7 +142,10 @@
         "contactEmail": "Email de contact de la structure",
         "asamExtensionsIds": "Ids des extensions d'email",
         "iconUrlImage": "Url de l'image de l'icône",
-        "coverUrlImage": "Url de l'image de la couverture"
+        "coverUrlImage": "Url de l'image de la couverture",
+        "externalUrl": "Url externe",
+        "sendMailToParent": "Envoie de mails à la structure parente",
+        "sendMailToStructureAdmin": "Envoie de mails aux administrateurs de structure"
       }
     },
     "asamextensions": {
