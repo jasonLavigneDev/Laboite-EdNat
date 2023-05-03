@@ -1107,7 +1107,11 @@
       "onlyActiveUserOption": "Seuls les utilisateurs actifs peuvent définir une structure",
       "awaitingForStructure": "Vous êtes en attente de validation pour :",
       "nclocator": "ID de Fédération Nextcloud",
-      "emptyNcLocator": "Aucun Nextcloud renseigné"
+      "emptyNcLocator": "Aucun Nextcloud renseigné",
+      "ApplyDefaultSpace": "Appliquer l'espace par default de la structure '{$structName}'",
+      "ApplyDefaultSpaceMessage": "Cela appliquera les changements sur votre espace personnel",
+      "ApplyDefaultSpaceBtn": "Appliquer l'espace par default",
+      "ApplyDefaultSpaceWarning": "On ne peut pas appliquer l'espace par défaut si l'option 'espace personnel avancé' est activé"
     },
     "NotFound": {
       "backButtonLabel": "Retour",

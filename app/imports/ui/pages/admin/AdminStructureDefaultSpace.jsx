@@ -6,7 +6,6 @@ import Container from '@mui/material/Container';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
-import Button from '@mui/material/Button';
 import { makeStyles } from 'tss-react/mui';
 import Fade from '@mui/material/Fade';
 import FormControl from '@mui/material/FormControl';
@@ -170,11 +169,11 @@ const AdminStructureSpace = () => {
             <br />
             <br />
             <Grid container>
-              <Grid item xs={12} md={3} className={classes.flexCenter}>
+              {/* <Grid item xs={12} md={3} className={classes.flexCenter}>
                 <Button disabled={isSaving} fullWidth onClick={toggleConfirm} variant="contained" color="primary">
                   {i18n.__('pages.AdminDefaultSpacesPage.applyToEveryone')}
                 </Button>
-              </Grid>
+              </Grid> */}
               <Grid item xs={12} md={9} className={classes.flexCenter}>
                 <ListItem alignItems="center" className={classes.flexCenter}>
                   {isSaving ? (

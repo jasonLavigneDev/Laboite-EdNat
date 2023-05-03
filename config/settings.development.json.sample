@@ -14,7 +14,7 @@
       "groups": false,
       "introductionTab": false,
       "introductionTabStructuresInfos": true,
-      "menuAdminDefaultSpaces": true,  // THIS PARAMS IS SET FOR HIDDEN DEFAULTSPACE FUNCTIONNALITY WHICH DOESN'T WORK
+      "menuAdminDefaultSpaces": false,  // THIS PARAMS IS SET FOR HIDDEN DEFAULTSPACE FUNCTIONNALITY
       "mediaStorageMenu": false
     },
     "ui": {
