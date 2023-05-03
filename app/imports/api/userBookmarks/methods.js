@@ -8,6 +8,7 @@ import i18n from 'meteor/universe:i18n';
 import { isActive, getLabel, validateString } from '../utils';
 import UserBookmarks from './userBookmarks';
 import { addUserBookmark, removeElement } from '../personalspaces/methods';
+import logServer, { levels, scopes } from '../logging';
 
 function _formatURL(name) {
   let finalName = name;
@@ -40,6 +41,12 @@ export const createUserBookmark = new ValidatedMethod({
     validateString(url);
     validateString(name);
     validateString(tag);
+    logServer(
+      `USERBOOKMARKS - METHODS - INSERT - createUserBookmark - user id: ${this.userId} / url: ${finalUrl} 
+      / name: ${name} / tag: ${tag}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     UserBookmarks.insert({ url: finalUrl, name, tag, userId: this.userId });
     return finalUrl;
   },
@@ -72,6 +79,12 @@ export const updateUserBookmark = new ValidatedMethod({
     validateString(url);
     validateString(name);
     validateString(tag);
+    logServer(
+      `USERBOOKMARKS - METHODS - UPDATE - updateUserBookmark - id: ${id} / url: ${finalUrl} 
+      / name: ${name} / tag: ${tag}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     UserBookmarks.update({ _id: id }, { $set: { url: finalUrl, name, tag } });
     return finalUrl;
   },
@@ -98,6 +111,11 @@ export const favUserBookmark = new ValidatedMethod({
     Meteor.users.update(this.userId, {
       $push: { favUserBookmarks: bookmarkId },
     });
+    logServer(
+      `USERBOOKMARKS - METHODS - EXECUTE - favUserBookmark - user id: ${this.userId} / bookmarkId: ${bookmarkId}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     // update user personalSpace
     addUserBookmark._execute({ userId: this.userId }, { bookmarkId });
   },
@@ -120,6 +138,11 @@ export const unfavUserBookmark = new ValidatedMethod({
         $pull: { favUserBookmarks: bookmarkId },
       });
     }
+    logServer(
+      `USERBOOKMARKS - METHODS - EXECUTE - unfavUserBookmark - user id: ${this.userId} / bookmarkId: ${bookmarkId}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     // update user personalSpace
     removeElement._execute({ userId: this.userId }, { type: 'link', elementId: bookmarkId });
   },
@@ -146,11 +169,21 @@ export const removeUserBookmark = new ValidatedMethod({
     if (!isAllowed) {
       throw new Meteor.Error('api.userBookmarks.removeUserBookmark.notPermitted', i18n.__('api.users.notPermitted'));
     }
+    logServer(
+      `USERBOOKMARKS - METHODS - METEOR UPDATE - removeUserBookmark - favUserBookmarks id: ${id}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     // remove bookmark from users favorites
     Meteor.users.update({ favUserBookmarks: { $all: [id] } }, { $pull: { favUserBookmarks: id } }, { multi: true });
 
     unfavUserBookmark._execute({ userId: this.userId }, { bookmarkId: id });
 
+    logServer(
+      `USERBOOKMARKS - METHODS - REMOVE - removeUserBookmark - bookmarks id: ${id}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     UserBookmarks.remove(id);
 
     return null;
