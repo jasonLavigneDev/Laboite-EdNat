@@ -53,14 +53,14 @@ export const createService = new ValidatedMethod({
     const sanitizedContent = sanitizeHtml(data.content);
     validateString(sanitizedContent);
     logServer(
-      `SERVICES - METHODS - INSERT - createService - data: ${data} / content: ${sanitizedContent}`,
+      `SERVICES - METHODS - INSERT - createService - data: ${JSON.stringify(data)} / content: ${sanitizedContent}`,
       levels.INFO,
       scopes.SYSTEM,
     );
     const serviceId = Services.insert({ ...data, content: sanitizedContent });
 
     logServer(
-      `SERVICES - METHODS - UPDATE - createService - service id: ${serviceId} / data: ${data}`,
+      `SERVICES - METHODS - UPDATE - createService - service id: ${serviceId} / data: ${JSON.stringify(data)}`,
       levels.INFO,
       scopes.SYSTEM,
     );
@@ -111,7 +111,7 @@ export const updateService = new ValidatedMethod({
     const sanitizedContent = sanitizeHtml(data.content);
     validateString(sanitizedContent);
     logServer(
-      `SERVICES - METHODS - UPDATE - updateService - service id: ${serviceId} / data: ${data}
+      `SERVICES - METHODS - UPDATE - updateService - service id: ${serviceId} / data: ${JSON.stringify(data)}
        / content: ${sanitizedContent} / structure: ${currentService.structure}`,
       levels.INFO,
       scopes.SYSTEM,

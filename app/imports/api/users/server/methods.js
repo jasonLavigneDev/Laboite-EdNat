@@ -561,7 +561,9 @@ export const setMemberOf = new ValidatedMethod({
     const insertUser = { email: user.emails[0].address, _id: userId, groupId, status: 1 };
 
     logServer(
-      `USERS - METHODS - UPDATE MANY - setMemberOf (event) - groupId: ${groupId} / participants: ${insertUser}`,
+      `USERS - METHODS - UPDATE MANY - setMemberOf (event) - groupId: ${groupId} / participants: ${JSON.stringify(
+        insertUser,
+      )}`,
       levels.INFO,
       scopes.SYSTEM,
     );

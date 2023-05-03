@@ -51,7 +51,11 @@ export const createNotification = new ValidatedMethod({
     if (data.title) validateString(data.title);
     if (data.content) validateString(data.content);
     if (data.link) validateString(data.link);
-    logServer(`NOTIFICATIONS - METHODS - INSERT - createNotification - data: ${data}`, levels.INFO, scopes.SYSTEM);
+    logServer(
+      `NOTIFICATIONS - METHODS - INSERT - createNotification - data: ${JSON.stringify(addExpiration(data))}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     Notifications.insert(addExpiration(data));
   },
 });

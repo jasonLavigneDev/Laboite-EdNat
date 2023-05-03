@@ -75,7 +75,11 @@ export const updateTag = new ValidatedMethod({
       throw new Meteor.Error('api.tags.updateTag.notPermitted', i18n.__('api.users.notPermitted'));
     }
     validateString(data.name);
-    logServer(`TAGS - METHODS - UPDATE - updateTag - id: ${tagId} / data: ${data}`, levels.INFO, scopes.SYSTEM);
+    logServer(
+      `TAGS - METHODS - UPDATE - updateTag - id: ${tagId} / data: ${JSON.stringify(data)}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     return Tags.update({ _id: tagId }, { $set: data });
   },
 });

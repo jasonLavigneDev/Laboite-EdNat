@@ -40,7 +40,7 @@ export const addItem = (userId, item) => {
   }
   if (!alreadyExists) {
     logServer(
-      `PERSONALSPACES - METHODS - UPDATE - addItem - user id: ${this.userId} / unsorted: ${item}`,
+      `PERSONALSPACES - METHODS - UPDATE - addItem - user id: ${this.userId} / unsorted: ${JSON.stringify(item)}`,
       levels.INFO,
       scopes.SYSTEM,
     );
@@ -171,7 +171,9 @@ export const updatePersonalSpace = new ValidatedMethod({
     if (currentPersonalSpace === undefined) {
       // create personalSpace if not existing
       logServer(
-        `PERSONALSPACES - METHODS - INSERT - updatePersonalSpace - user id: ${this.userId} / data: ${data}`,
+        `PERSONALSPACES - METHODS - INSERT - updatePersonalSpace - user id: ${this.userId} / data: ${JSON.stringify(
+          data,
+        )}`,
         levels.INFO,
         scopes.SYSTEM,
       );

@@ -86,7 +86,11 @@ export const updateHelp = new ValidatedMethod({
     }
 
     validateHelp(data);
-    logServer(`HELPS - METHOD - UPDATE - updateHelp - id: ${helpId} / data: ${data}`, levels.VERBOSE, scopes.ADMIN);
+    logServer(
+      `HELPS - METHOD - UPDATE - updateHelp - id: ${helpId} / data: ${JSON.stringify(data)}`,
+      levels.VERBOSE,
+      scopes.ADMIN,
+    );
     return Helps.update({ _id: helpId }, { $set: data });
   },
 });

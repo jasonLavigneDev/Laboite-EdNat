@@ -36,7 +36,7 @@ export const createArticle = new ValidatedMethod({
     Meteor.users.update({ _id: this.userId }, { $inc: { articlesCount: 1 }, $set: { lastArticle: new Date() } });
     const structure = Meteor.users.findOne(this.userId, { fields: { structure: 1 } }).structure || '';
     logServer(
-      `ARTICLES - METHODS - INSERT - createArticle - data: ${data} / content: ${sanitizedContent} 
+      `ARTICLES - METHODS - INSERT - createArticle - data: ${JSON.stringify(data)} / content: ${sanitizedContent} 
       / userId: ${this.userId} / structure: ${structure}`,
       levels.INFO,
       scopes.SYSTEM,
@@ -100,7 +100,9 @@ export const updateArticle = new ValidatedMethod({
     const updateData = { ...data, content: sanitizedContent, userId: this.userId };
     if (updateStructure) updateData.structure = userStructure;
     logServer(
-      `ARTICLES - METHODS - UPDATE - updateArticle - Article update: ${articleId} / data update: ${updateData}`,
+      `ARTICLES - METHODS - UPDATE - updateArticle - Article update: ${articleId} / data update: ${JSON.stringify(
+        updateData,
+      )}`,
       levels.INFO,
       scopes.SYSTEM,
     );
@@ -171,7 +173,9 @@ export const uploadBackupPublications = new ValidatedMethod({
         const sanitizedContent = article.markdown ? article.content : sanitizeHtml(article.content);
         validateString(sanitizedContent);
         logServer(
-          `ARTICLES - METHODS - INSERT - uploadBackupPublications - article: ${article} / content: ${sanitizedContent} 
+          `ARTICLES - METHODS - INSERT - uploadBackupPublications - article: ${JSON.stringify(
+            article,
+          )} / content: ${sanitizedContent} 
           / user: ${this.userId} / update structure: ${updateStructure}`,
           levels.INFO,
           scopes.SYSTEM,
