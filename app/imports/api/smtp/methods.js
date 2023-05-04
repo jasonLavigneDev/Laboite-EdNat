@@ -63,7 +63,7 @@ ${cleanText}`;
     const structureTargetMail = getTargetMail({ structure }) || [];
     // if a structure contact mail if found, use it
     // if not, use settings one
-    const tabTo = structureTargetMail;
+    const tabTo = structureTargetMail.subarray(1);
     const to = structureTargetMail[0] || Meteor.settings.smtp.toEmail;
 
     this.unblock();
