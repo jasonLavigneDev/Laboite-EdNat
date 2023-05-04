@@ -8,20 +8,20 @@ import Structures from '../structures/structures';
  * - If not, send to global admins
  */
 export const getTargetMail = ({ structure }) => {
-  const { contactEmail, sendMailToAdminStructure, sendMailToParent } = structure;
-  if (contactEmail !== null) return [contactEmail];
-  if (sendMailToAdminStructure) {
+  const { contactEmail, sendMailToStructureAdmin, sendMailToParent } = structure;
+  if (contactEmail) return { mails: [contactEmail], admin: false };
+  if (sendMailToStructureAdmin) {
     const mails = Meteor.users
       .find({})
       .fetch()
       .filter((user) => Roles.userIsInRole(user._id, 'adminStructure', structure._id));
-    return mails;
+    return { mails, admin: false };
   }
   if (sendMailToParent) {
     if (structure.parentId) {
-      const ancestor = Structures.findOne({ _id: { $in: structure.parentId } });
+      const ancestor = Structures.findOne({ _id: structure.parentId });
       if (ancestor) {
-        return getTargetMail(ancestor);
+        return getTargetMail({ structure: ancestor });
       }
     }
   }
@@ -29,5 +29,5 @@ export const getTargetMail = ({ structure }) => {
     .find({})
     .fetch()
     .filter((user) => Roles.userIsInRole(user._id, 'admin'));
-  return mails;
+  return { mails, admin: true };
 };

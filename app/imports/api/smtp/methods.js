@@ -52,7 +52,7 @@ export const sendContactEmail = new ValidatedMethod({
       allowedTags: ['b', 'i', 'strong', 'em'],
     });
 
-    const msg = `Message de: ${firstName} ${lastName}
+    let msg = `Message de: ${firstName} ${lastName}
 Structure de rattachement: ${structure.name}
 Adresse mail: ${email}
                  
@@ -61,10 +61,20 @@ ${cleanText}`;
 
     const from = Meteor.settings.smtp.fromEmail;
     const structureTargetMail = getTargetMail({ structure }) || [];
-    // if a structure contact mail if found, use it
-    // if not, use settings one
-    const tabTo = structureTargetMail.subarray(1);
-    const to = structureTargetMail[0] || Meteor.settings.smtp.toEmail;
+
+    if (structureTargetMail.admin) {
+      msg = `Message de: ${firstName} ${lastName}
+      Structure de rattachement: ${structure.name}
+      Adresse mail: ${email}   
+      
+      ${cleanText}
+      
+      ATTENTION: Vous recevez ce mail car la configuration des contacts de la structure cible n'est pas valide.
+      Veuillez vous rapprocher des administrateurs de celle-ci afin de faire suivre le message.`;
+    }
+
+    const tabTo = structureTargetMail.mails.subarray(1);
+    const to = structureTargetMail.mails[0] || Meteor.settings.smtp.toEmail;
 
     this.unblock();
 
