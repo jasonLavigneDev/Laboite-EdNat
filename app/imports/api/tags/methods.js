@@ -25,6 +25,7 @@ export const createTag = new ValidatedMethod({
       throw new Meteor.Error('api.tags.createTag.notLowerCase', i18n.__('api.tags.notLowerCase'));
     }
     validateString(name);
+    logServer(`TAGS - METHODS - INSERT - createTag - name: ${name}`, levels.INFO, scopes.SYSTEM);
     return Tags.insert({
       name: name.toLowerCase(),
     });

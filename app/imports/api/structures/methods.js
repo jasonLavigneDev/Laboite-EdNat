@@ -40,6 +40,11 @@ export const createStructure = new ValidatedMethod({
       );
     }
     validateString(name);
+    logServer(
+      `STRUCTURE - METHODS - INSERT - createStructure - name: ${name} / parent id: ${parentId}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     const structureId = Structures.insert({
       name,
       parentId,

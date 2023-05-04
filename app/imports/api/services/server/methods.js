@@ -10,6 +10,7 @@ import { isActive, getLabel } from '../../utils';
 import Services from '../services';
 import { removeFilesFolder } from '../../files/server/methods';
 import { hasAdminRightOnStructure } from '../../structures/utils';
+import logServer, { levels, scopes } from '../../logging';
 
 export const removeService = new ValidatedMethod({
   name: 'services.removeService',
@@ -29,8 +30,18 @@ export const removeService = new ValidatedMethod({
     if (!authorized) {
       throw new Meteor.Error('api.services.removeService.notPermitted', i18n.__('api.users.adminNeeded'));
     }
+    logServer(
+      `SERVICES - METHOD - UPDATE - removeService (meteor user) - serviceId: ${serviceId}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     // remove service from users favorites
     Meteor.users.update({ favServices: { $all: [serviceId] } }, { $pull: { favServices: serviceId } }, { multi: true });
+    logServer(
+      `SERVICES - METHOD - REMOVE - removeService (from fav) - serviceId: ${serviceId}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     Services.remove(serviceId);
     if (Meteor.isServer && !Meteor.isTest && Meteor.settings.public.minioEndPoint) {
       removeFilesFolder(`services/${service._id}`);

@@ -242,6 +242,7 @@ export function _removeGroup({ groupId, userId }) {
 
   // remove all roles set on this group
   Roles.removeScope(groupId);
+  logServer(`GROUPS - REMOVE - _removeGroup - groupId: ${groupId}`, levels.INFO, scopes.USER);
   Groups.remove(groupId);
   // remove from users favorite groups
   Meteor.users.update({ favGroups: { $all: [groupId] } }, { $pull: { favGroups: groupId } }, { multi: true });
