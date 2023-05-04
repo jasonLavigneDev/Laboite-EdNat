@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor';
 import * as winston from 'winston';
 
 export const levels = {
@@ -16,7 +17,37 @@ export const scopes = {
   USER: 'USER',
 };
 
+let logger = 0;
+
 const { combine, timestamp, printf, colorize, align, padLevels, label } = winston.format;
+
+// const makeWinstonLogger = (label) => {
+//   const fileFormat = combine(
+//     timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSS' }),
+//     align(),
+//     padLevels(),
+//     label({ label, message: true }),
+//     printf((info) => `${info.timestamp} [${info.level}] ${info.message}`),
+//   );
+
+//   const logger = winston.createLogger({
+//     transports: [
+//       new winston.transports.Console({
+//         level: levels.VERBOSE,
+//         format: combine(colorize({ all: true }), fileFormat),
+//         silent: Meteor.isTest,
+//       }),
+//     ],
+//   });
+
+//   return logger;
+// };
+
+// export const logger = {
+//   system: makeWinstonLogger('SYSTEM'),
+//   admin: makeWinstonLogger('ADMIN'),
+//   user: makeWinstonLogger('USER'),
+// };
 
 function logServer(message, level = 'info', scope = 'USER', params = {}) {
   if (Meteor.isServer) {
@@ -28,17 +59,20 @@ function logServer(message, level = 'info', scope = 'USER', params = {}) {
       printf((info) => `${info.timestamp} [${info.level}] ${info.message} ${JSON.stringify({ ...params })}`),
     );
 
-    const logger = winston.createLogger({
-      transports: [
-        new winston.transports.Console({
-          // level: process.env.LOG_LEVEL,
-          level: levels.VERBOSE,
+    if (logger === 0) {
+      console.log('Initialize logger');
+      logger = winston.createLogger({
+        transports: [
+          new winston.transports.Console({
+            // level: process.env.LOG_LEVEL,
+            level: levels.VERBOSE,
 
-          format: combine(colorize({ all: true }), fileFormat),
-        }),
-      ],
-    });
-
+            format: combine(colorize({ all: true }), fileFormat),
+            // silent: Meteor.isTest,
+          }),
+        ],
+      });
+    }
     logger.log(level, message.toString());
   }
 }
