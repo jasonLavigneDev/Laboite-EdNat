@@ -57,6 +57,10 @@ External url for blog                                                           
 | matomo                                   | object   | null                                 | matomo settings                                                                             |
 | matomo.id                                | string   | null                                 | id of the website                                                                           |
 | matomo.urlBase                           | string   | null                                 | url of the matomo instance                                                                  |
+| countly                                  | object   | null                                 | countly settings                                                                            |
+| countly.app_key                          | string   | null                                 | id of the website                                                                           |
+| countly.url                              | string   | null                                 | url of the countly instance                                                                 |
+| countly.consent                          | boolean  | null                                 | trigger the consent verification                                                            |
 
 ## keycloak:
 

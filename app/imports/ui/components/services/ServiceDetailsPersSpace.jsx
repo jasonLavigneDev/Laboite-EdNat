@@ -18,6 +18,8 @@ import PublishIcon from '@mui/icons-material/Publish';
 import i18n from 'meteor/universe:i18n';
 
 import { isUrlExternal } from '../../utils/utilsFuncs';
+import { eventTracking } from '../../../api/analyticsEvents/eventsTracking';
+import AnalyticsEvents from '../../../api/analyticsEvents/analyticsEvents';
 
 const useStyles = makeStyles()((theme) => ({
   card: {
@@ -79,6 +81,10 @@ function ServiceDetailsPersSpace({ service, customDrag, isMobile, isSorted, need
   };
 
   const handleClick = () => {
+    eventTracking({
+      target: AnalyticsEvents.targets.SERVICE,
+      content: service.title,
+    });
     if (isUrlExternal(service.url)) {
       window.open(service.url, '_blank', 'noreferrer,noopener');
     } else {

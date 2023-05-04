@@ -9,7 +9,6 @@ import CardMedia from '@mui/material/CardMedia';
 import CardActionArea from '@mui/material/CardActionArea';
 import Badge from '@mui/material/Badge';
 import Avatar from '@mui/material/Avatar';
-import { useMatomo } from '@datapunt/matomo-tracker-react';
 
 import Tooltip from '@mui/material/Tooltip';
 import BlockIcon from '@mui/icons-material/Block';
@@ -18,6 +17,8 @@ import Box from '@mui/material/Box';
 import FavButton from './FavButton';
 import { isUrlExternal } from '../../utils/utilsFuncs';
 import { useAppContext } from '../../contexts/context';
+import { eventTracking } from '../../../api/analyticsEvents/eventsTracking';
+import AnalyticsEvents from '../../../api/analyticsEvents/analyticsEvents';
 
 const useStyles = makeStyles()((theme) => ({
   action: {
@@ -70,15 +71,13 @@ export default function ServiceDetails({ service, favAction, noIconMode = false 
   const isDisabled = service.state === 5 || service.state === 15;
 
   const [{ isMobile }] = useAppContext();
-  const { trackEvent } = useMatomo();
   const favorite = favAction === 'fav';
 
   const isExternal = isUrlExternal(service.url);
   const launchService = () => {
-    trackEvent({
-      category: 'signin-page',
-      action: 'open-service',
-      name: `Ouverture de ${service.title}`, // optional
+    eventTracking({
+      target: AnalyticsEvents.targets.SERVICE,
+      content: service.title,
     });
     if (isExternal) {
       window.open(service.url, '_blank', 'noreferrer,noopener');

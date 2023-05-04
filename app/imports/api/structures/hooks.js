@@ -5,6 +5,40 @@ import i18n from 'meteor/universe:i18n';
 import Structures from './structures';
 import { useAppContext } from '../../ui/contexts/context';
 import { getCurrentIntroduction } from '../utils';
+import { useMethod } from '../../ui/utils/hooks/hooks.meteor';
+
+export const useStructureCall = (_id = '') => {
+  const [
+    {
+      user: { structure },
+    },
+  ] = useAppContext();
+
+  const [call, { loading, result, error }] = useMethod('structures.getOneStructure');
+
+  useEffect(() => {
+    call({ _id: _id || structure });
+  }, [structure, _id]);
+
+  return { loading, structure: result, error };
+};
+
+export const useAdminSelectedStructureCall = ({
+  /** Should be a state */
+  selectedStructureId,
+  /** Trigger all the structures or not */
+  allStructures = false,
+}) => {
+  const [call, { loading, result, error }] = useMethod('structures.getStructureAndAllChilds');
+  useEffect(() => {
+    call({
+      structureId: selectedStructureId,
+      allStructures,
+    });
+  }, [allStructures, selectedStructureId]);
+
+  return { loading, structures: result, error };
+};
 
 export const useStructure = (_id) => {
   const [
@@ -30,15 +64,18 @@ export const useAdminSelectedStructure = ({
   selectedStructureId,
   /** Should be the state mutato */
   setSelectedStructureId,
+  /** Trigger all the structures or not */
+  isStructureAdminMode = true,
 }) => {
-  const subName = 'structures.with.all.childs';
+  const subName = !isStructureAdminMode ? 'structures.all' : 'structures.with.all.childs';
 
   // Grab current user structure
   const currentUserStructure = useStructure();
 
   // Use this as a starting point and update it when user change structure
   useEffect(() => {
-    if (currentUserStructure && currentUserStructure._id) setSelectedStructureId(currentUserStructure._id);
+    if (currentUserStructure && currentUserStructure._id && isStructureAdminMode)
+      setSelectedStructureId(currentUserStructure._id);
   }, [currentUserStructure]);
 
   return useTracker(() => {

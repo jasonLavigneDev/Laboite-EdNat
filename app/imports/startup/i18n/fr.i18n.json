@@ -622,11 +622,13 @@
       "menuAdminBackHome": "Retour à l'espace perso",
       "menuUserStructure": "Gestion des Structures",
       "menuAdminOfStructures": "Gestion des sous-structures",
-      "menuAdminStructureSettings": "Réglages de structure",
       "menuAdminStructureIntroduction": "Introduction de structure",
       "menuAdminOfStructureUsersValidation": "Utilisateurs en attente",
       "menuAdminDefaultSpaces": "Espaces par défaut",
-      "menuAdminAsam": "Gestion des extensions d'email"
+      "menuAdminAsam": "Gestion des extensions d'email",
+      "menuAdminAnalytics": "Analytiques",
+      "menuAdminStructureAnalytics": "Analytiques de structure",
+      "menuAdminStructureSettings": "Réglages de structure"
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Votre compte n'a pas été activé",
@@ -1677,6 +1679,35 @@
         "famillyLongName": "Nom long de l'entité famille correspondant s'il existe",
         "confirmMsg": "Êtes vous sûr de vouloir supprimer l'extension d'email ",
         "deleteExtensionEmailTitle": "Extension d'email "
+      }
+    },
+    "AdminAnalytics": {
+      "title": "Données Analytiques",
+      "usersTabs": "Utilisateurs",
+      "actionsTabs": "Actions",
+      "viewsTabs": "Pages vues",
+      "usersTitle": "Utilisateurs connectés en temps réél",
+      "status": "Status",
+      "number": "Nombre",
+      "usersByStructure": "Connectés par structure",
+      "rows": {
+        "usersLogged": "Utilisateurs",
+        "newAccounts": "Nouveaux comptes",
+        "usersNotLogged": "Visiteurs",
+        "usersIdle": "Inactif",
+        "usersActive": "Actif"
+      },
+      "pageViewsTitle": "Pages Vues",
+      "actionsClickTitle": "Actions des utilisateurs",
+      "columnRoute": "Route",
+      "columnNumberConnected": "Utilisateurs",
+      "columnNumberNotConnected": "Visiteurs",
+      "columnActionsTarget": "Cible",
+      "columnContent": "Contenu",
+      "materialTableLocalization": {
+        "pagination_labelRowsSelect": "évènements par page",
+        "toolbar_searchPlaceholder": "Rechercher",
+        "body_emptyDataSourceMessage": "Aucun resultats"
       }
     }
   },

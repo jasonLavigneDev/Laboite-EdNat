@@ -9,6 +9,8 @@ import { Link } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
 import { isUrlExternal } from '../../utils/utilsFuncs';
+import { eventTracking } from '../../../api/analyticsEvents/eventsTracking';
+import AnalyticsEvents from '../../../api/analyticsEvents/analyticsEvents';
 
 const useStyles = makeStyles()((theme) => ({
   buttonText: {
@@ -26,6 +28,16 @@ const useStyles = makeStyles()((theme) => ({
 function DisplayButton({ service }) {
   const { classes } = useStyles();
 
+  const onLaunchService = (external) => {
+    if (external) {
+      window.open(service.url, '_blank', 'noreferrer,noopener');
+    }
+    eventTracking({
+      target: AnalyticsEvents.targets.SERVICE,
+      content: service.title,
+    });
+  };
+
   const isExternalService = isUrlExternal(service.url);
   const openButton = (
     <Button
@@ -38,7 +50,7 @@ function DisplayButton({ service }) {
     </Button>
   );
   const linkButton = (
-    <Link to={service.url.replace(Meteor.absoluteUrl(), '/')} tabIndex={-1}>
+    <Link to={service.url.replace(Meteor.absoluteUrl(), '/')} tabIndex={-1} onClick={onLaunchService}>
       <Button size="large" className={classes.buttonText} variant="contained">
         {i18n.__('components.ServiceDetails.runServiceButtonLabel')}
       </Button>

@@ -82,21 +82,73 @@ export const deleteIconOrCoverImage = new ValidatedMethod({
   },
 });
 
-// Get list of all method names on Structures
-const LISTS_METHODS = _.pluck([updateStructureIconOrCoverImage, deleteIconOrCoverImage], 'name');
-
-// Only allow 5 list operations per connection per second
-DDPRateLimiter.addRule(
-  {
-    name(name) {
-      return _.contains(LISTS_METHODS, name);
-    },
-
-    // Rate limit per connection ID
-    connectionId() {
-      return true;
-    },
+export const getStructures = new ValidatedMethod({
+  name: 'structures.getStructures',
+  validate: null,
+  run() {
+    return Structures.find().fetch();
   },
-  5,
-  1000,
+});
+
+export const getOneStructure = new ValidatedMethod({
+  name: 'structures.getOneStructure',
+  validate: new SimpleSchema({
+    _id: {
+      type: String,
+      optional: true,
+      regEx: SimpleSchema.RegEx.Id,
+      label: getLabel('api.structures.labels.id'),
+    },
+  }).validator(),
+  run({ _id }) {
+    const user = Meteor.users.findOne({ _id: this.userId });
+    return Structures.findOne({ _id: _id || user.structure }, { fields: Structures.publicFields });
+  },
+});
+
+export const getStructureAndAllChilds = new ValidatedMethod({
+  name: 'structures.getStructureAndAllChilds',
+  validate: new SimpleSchema({
+    structureId: {
+      type: String,
+      optional: true,
+      label: getLabel('api.structures.labels.id'),
+    },
+    allStructures: {
+      type: Boolean,
+      optional: true,
+    },
+  }).validator(),
+  run({ structureId, allStructures }) {
+    const query = allStructures ? {} : { $or: [{ ancestorsIds: structureId || '' }, { _id: structureId || '' }] };
+    return Structures.find(query, {
+      fields: Structures.publicFields,
+      sort: { name: 1 },
+      limit: 10000,
+    }).fetch();
+  },
+});
+
+// Get list of all method names on Structures
+const LISTS_METHODS = _.pluck(
+  [updateStructureIconOrCoverImage, deleteIconOrCoverImage, getStructures, getOneStructure],
+  'name',
 );
+
+if (Meteor.isServer) {
+  // Only allow 5 list operations per connection per second
+  DDPRateLimiter.addRule(
+    {
+      name(name) {
+        return _.contains(LISTS_METHODS, name);
+      },
+
+      // Rate limit per connection ID
+      connectionId() {
+        return true;
+      },
+    },
+    5,
+    1000,
+  );
+}

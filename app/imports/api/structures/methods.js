@@ -361,25 +361,6 @@ export const updateStructureIntroduction = new ValidatedMethod({
   },
 });
 
-export const getStructures = new ValidatedMethod({
-  name: 'structures.getStructures',
-  validate: null,
-  run() {
-    return Structures.find().fetch();
-  },
-});
-
-export const getOneStructure = new ValidatedMethod({
-  name: 'structures.getOneStructure',
-  validate: new SimpleSchema({
-    structureId: { type: String, regEx: SimpleSchema.RegEx.Id, label: getLabel('api.structures.labels.id') },
-  }).validator(),
-  run({ structureId }) {
-    const structure = Structures.findOne({ _id: structureId });
-    return structure;
-  },
-});
-
 if (Meteor.isServer) {
   // Get list of all method names on Structures
   const LISTS_METHODS = _.pluck(
@@ -390,8 +371,6 @@ if (Meteor.isServer) {
       getAllChilds,
       updateStructureIntroduction,
       updateStructureContactEmail,
-      getStructures,
-      getOneStructure,
       setUserStructureAdminValidationMandatoryStatus,
     ],
     'name',

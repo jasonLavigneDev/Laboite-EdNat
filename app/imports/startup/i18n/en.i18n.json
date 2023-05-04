@@ -692,7 +692,9 @@
       "menuAdminStructureIntroduction": "Structure introduction",
       "menuAdminOfStructureUsersValidation": "Awaiting users",
       "menuAdminDefaultSpaces": "Default Personal Spaces",
-      "menuAdminAsam": "Email extensions Management"
+      "menuAdminAsam": "Email extensions Management",
+      "menuAdminAnalytics": "Analytics",
+      "menuAdminStructureAnalytics": "Structure Analytics"
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Your account has not been activated",
@@ -1641,7 +1643,8 @@
     },
     "AdminStructureSettingsPage": {
       "title": "Structure settings",
-      "userStructureValidationMandatory": "Mandatoriness of attachment status for this structure"
+      "userStructureValidationMandatory": "Mandatoriness of attachment status for this structure",
+      "selectIconAndCoverImage": "Choose icon and/or cover image"
     },
     "AdminAsamExtensionsManagementPage": {
       "title": "Email extensions management",
@@ -1672,6 +1675,35 @@
         "famillyLongName": "Corresponding familly long name if exists",
         "confirmMsg": "Are you sure you want to delete email extension ",
         "deleteExtensionEmailTitle": "Email extension "
+      }
+    },
+    "AdminAnalytics": {
+      "title": "Analytics Data",
+      "usersTabs": "Users",
+      "actionsTabs": "Actions",
+      "viewsTabs": "Pages View",
+      "usersTitle": "Real time connected users",
+      "status": "Status",
+      "number": "Number",
+      "usersByStructure": "Connected by structure",
+      "rows": {
+        "usersLogged": "Users",
+        "newAccounts": "New accounts",
+        "usersNotLogged": "Visitors",
+        "usersIdle": "Idle",
+        "usersActive": "Active"
+      },
+      "pageViewsTitle": "Pages View",
+      "actionsClickTitle": "Users actions",
+      "columnRoute": "Route",
+      "columnNumberConnected": "Users",
+      "columnNumberNotConnected": "Visitors",
+      "columnActionsTarget": "Target",
+      "columnContent": "Content",
+      "materialTableLocalization": {
+        "pagination_labelRowsSelect": "events per page",
+        "toolbar_searchPlaceholder": "Search",
+        "body_emptyDataSourceMessage": "No results"
       }
     }
   },
