@@ -755,6 +755,12 @@ Migrations.add({
             updatedGroups.push({ _id: group._id, name: group.name, type: group.type });
           }
         });
+        logServer(
+          `MIGRATIONS - 30 Add group type to articles with groups 
+          - ARTICLES - UPDATE - articleId: ${articleId} / groups: ${JSON.stringify(updatedGroups)}`,
+          levels.INFO,
+          scopes.SYSTEM,
+        );
         Articles.update({ _id: articleId }, { $set: { groups: updatedGroups } });
       }
     });
@@ -768,6 +774,11 @@ Migrations.add({
   version: 31,
   name: 'Update structure.groupId default value',
   up: () => {
+    logServer(
+      `MIGRATIONS - 31 Update structure.groupId default value - STRUCTURE - UPDATE`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     Structures.update({ groupId: '' }, { $set: { groupId: null } });
   },
   down: () => {
