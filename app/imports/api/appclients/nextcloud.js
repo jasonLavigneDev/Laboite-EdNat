@@ -1,4 +1,4 @@
-import axios from 'axios';
+import fetch from 'node-fetch';
 import { Meteor } from 'meteor/meteor';
 import i18n from 'meteor/universe:i18n';
 import { Roles } from 'meteor/alanning:roles';
@@ -18,18 +18,10 @@ function getInstance(user) {
   return new URL(user.nclocator).host;
 }
 
-function checkCirclesActive(response) {
-  // checks that 'Circles' API is responding
-  if (response.data === undefined || response.data.ocs === undefined) {
-    logServer(
-      `APPCLIENT - NEXTCLOUD - checkFolderActive - ${i18n.__('api.nextcloud.circlesInactive')}`,
-      levels.ERROR,
-      scopes.SYSTEM,
-      {},
-    );
-    return false;
+function checkResponse(response) {
+  if (!response.ok) {
+    throw new Error(`status: ${response.status}, message: ${response.statusText}, url: ${response.url}`);
   }
-  return true;
 }
 
 class NextcloudClient {
@@ -52,33 +44,56 @@ class NextcloudClient {
     };
   }
 
-  userExists(userId, ncURL = this.ncURL) {
-    return axios
-      .get(`${ocsUrl(ncURL)}/users`, {
-        params: {
-          search: userId,
-        },
-        headers: this.ocsHeaders,
-      })
-      .then((response) => {
-        return response.data.ocs.data.users.includes(userId);
-      })
-      .catch((error) => {
-        logServer(
-          `APPCLIENT - NEXTCLOUD - userExists - ${i18n.__('api.nextcloud.apiError', { groupName: userId })}`,
-          levels.ERROR,
-          scopes.SYSTEM,
-          {
-            groupName: userId,
-            ncURL,
-            error: error.response && error.response.data ? error.response.data : error,
-          },
-        );
-        return false;
-      });
+  async userExists(username, ncURL = this.ncURL) {
+    const params = new URLSearchParams({ search: username });
+    const response = await fetch(`${ocsUrl(ncURL)}/users?${params.toString()}`, {
+      method: 'GET',
+      headers: this.ocsHeaders,
+    });
+    if (response.ok) {
+      const respJson = await response.json();
+      return respJson.ocs.data.users.includes(username);
+    }
+    logServer(
+      `APPCLIENT - NEXTCLOUD - userExists - ${i18n.__('api.nextcloud.apiError', { groupName: username })}`,
+      levels.ERROR,
+      scopes.SYSTEM,
+      {
+        groupName: username,
+        ncURL,
+        error: `status: ${response.status}, message: ${response.statusText}, url: ${response.url}`,
+      },
+    );
+    return false;
   }
 
-  checkConfig() {
+  async _checkConfig() {
+    // checks that 'Circles' API is responding
+    const response = await fetch(`${this.appsURL}/circles/circles`, {
+      method: 'GET',
+      headers: this.ocsHeaders,
+    });
+    checkResponse(response);
+    const data = await response.json();
+    if (data === undefined || data.ocs === undefined) {
+      logServer(
+        `APPCLIENT - NEXTCLOUD - checkFolderActive - ${i18n.__('api.nextcloud.circlesInactive')}`,
+        levels.ERROR,
+        scopes.SYSTEM,
+        {},
+      );
+      return false;
+    }
+    logServer(
+      `APPCLIENT - NEXTCLOUD - checkConfig - ${i18n.__('api.nextcloud.configOk')}`,
+      levels.INFO,
+      scopes.SYSTEM,
+      {},
+    );
+    return true;
+  }
+
+  async checkConfig() {
     logServer(
       `APPCLIENT - NEXTCLOUD - checkConfig - ${i18n.__('api.nextcloud.checkConfig', { URL: this.nextURL })}`,
       levels.INFO,
@@ -87,297 +102,299 @@ class NextcloudClient {
         URL: this.nextURL,
       },
     );
-    return axios
-      .get(`${this.appsURL}/circles/circles`, {
-        headers: this.ocsHeaders,
-      })
-      .then((response) => {
-        if (checkCirclesActive(response) === true) {
-          logServer(
-            `APPCLIENT - NEXTCLOUD - checkConfig - ${i18n.__('api.nextcloud.configOk')}`,
-            levels.INFO,
-            scopes.SYSTEM,
-            {},
-          );
-          return true;
-        }
-        return false;
-      })
-      .catch((error) => {
-        logServer(
-          `APPCLIENT - NEXTCLOUD - checkConfig - ${i18n.__('api.nextcloud.badConfig')}`,
-          levels.ERROR,
-          scopes.SYSTEM,
-          {
-            error: error.response && error.response.data ? error.response.data : error,
-          },
-        );
-
-        return false;
-      });
+    return this._checkConfig().catch((error) => {
+      logServer(
+        `APPCLIENT - NEXTCLOUD - checkConfig - ${i18n.__('api.nextcloud.badConfig')}`,
+        levels.ERROR,
+        scopes.SYSTEM,
+        {
+          error: error.reason || error.message || error,
+        },
+      );
+      return false;
+    });
   }
 
-  _configureCircle(circleId) {
+  async _configureCircle(circleId) {
     const params = { value: 40960 };
-    return axios
-      .put(`${this.appsURL}/circles/circles/${circleId}/config`, params, { headers: this.ocsPostHeaders })
-      .then((response) => {
-        const infos = response.data.ocs.meta;
-        if (infos.status !== 'ok') {
-          logServer(
-            `APPCLIENT - NEXTCLOUD - _configureCircle - ${i18n.__('api.nextcloud.configureCircleError')}`,
-            levels.ERROR,
-            scopes.SYSTEM,
-            { circleId },
-          );
-        }
-        return circleId;
-      });
+    const response = await fetch(`${this.appsURL}/circles/circles/${circleId}/config`, {
+      method: 'PUT',
+      headers: this.ocsPostHeaders,
+      body: JSON.stringify(params),
+    });
+    checkResponse(response);
+    const respJson = await response.json();
+    if (respJson.ocs.meta.status !== 'ok') {
+      logServer(
+        `APPCLIENT - NEXTCLOUD - _configureCircle - ${i18n.__('api.nextcloud.configureCircleError')}`,
+        levels.ERROR,
+        scopes.SYSTEM,
+        { circleId },
+      );
+    }
+    return circleId;
   }
 
-  ensureCircle(group) {
+  async _ensureCircle(group) {
     const groupId = group._id;
     if (!group.circleId) {
       const params = { name: group.name, personal: false, local: false };
-      return axios
-        .post(`${this.appsURL}/circles/circles`, params, { headers: this.ocsPostHeaders })
-        .then((response) => {
-          const infos = response.data.ocs.meta;
-          if (infos.status === 'ok') {
-            const circleId = response.data.ocs.data.id;
-            logServer(
-              `APPCLIENT - NEXTCLOUD - ensureCircle - ${i18n.__('api.nextcloud.circleAdded')}`,
-              levels.INFO,
-              scopes.SYSTEM,
-              {
-                name: group.name,
-                groupId,
-                circleId,
-              },
-            );
-            // store circleId in group
-            Groups.update({ _id: groupId }, { $set: { circleId } });
-            // configure circle as a federated circle
-            return this._configureCircle(circleId);
-          }
-          logServer(
-            `APPCLIENT - NEXTCLOUD - ensureCircle - ${i18n.__('api.nextcloud.circleAddError', { groupId })}`,
-            levels.ERROR,
-            scopes.SYSTEM,
-            {
-              name: group.name,
-              error: infos.message,
-            },
-          );
-          return null;
-        })
-        .catch((error) => {
-          logServer(
-            `APPCLIENT - NEXTCLOUD - ensureCircle - ${i18n.__('api.nextcloud.circleAddError', { groupId })}`,
-            levels.ERROR,
-            scopes.SYSTEM,
-            {
-              name: group.name,
-              error: error.response && error.response.data ? error.response.data : error,
-            },
-          );
-          return null;
-        });
+      const response = await fetch(`${this.appsURL}/circles/circles`, {
+        method: 'POST',
+        headers: this.ocsPostHeaders,
+        body: JSON.stringify(params),
+      });
+      checkResponse(response);
+      const respJson = await response.json();
+      const infos = respJson.ocs.meta;
+      if (infos.status === 'ok') {
+        const circleId = respJson.ocs.data.id;
+        logServer(
+          `APPCLIENT - NEXTCLOUD - ensureCircle - ${i18n.__('api.nextcloud.circleAdded')}`,
+          levels.INFO,
+          scopes.SYSTEM,
+          {
+            name: group.name,
+            groupId,
+            circleId,
+          },
+        );
+        // store circleId in group
+        Groups.update({ _id: groupId }, { $set: { circleId } });
+        // configure circle as a federated circle
+        return this._configureCircle(circleId);
+      }
+      logServer(
+        `APPCLIENT - NEXTCLOUD - ensureCircle - ${i18n.__('api.nextcloud.circleAddError', { groupId })}`,
+        levels.ERROR,
+        scopes.SYSTEM,
+        {
+          name: group.name,
+          error: infos.message,
+        },
+      );
+      return null;
     }
     return group.circleId;
   }
 
-  ensureShare(group, circleId) {
+  async ensureCircle(group) {
+    return this._ensureCircle(group).catch((error) => {
+      logServer(
+        `APPCLIENT - NEXTCLOUD - ensureCircle - ${i18n.__('api.nextcloud.circleAddError', { groupId: group._id })}`,
+        levels.ERROR,
+        scopes.SYSTEM,
+        {
+          name: group.name,
+          error: error.reason || error.message || error,
+        },
+      );
+      return null;
+    });
+  }
+
+  async _ensureShare(group, circleId) {
     // ensures that a group share exists and is associated to group circle
     const groupId = group._id;
     if (!group.shareId) {
       const shareName = `groupe_${group.name}`;
-      return axios({
-        method: 'mkcol',
-        url: `${this.ncURL}/remote.php/dav/files/${this.ncUser}/${shareName}`,
+      const resp = await fetch(`${this.ncURL}/remote.php/dav/files/${this.ncUser}/${shareName}`, {
+        method: 'MKCOL',
         headers: this.ocsHeaders,
-      })
-        .then((resp) => {
-          if (resp.statusText !== 'Created') {
-            logServer(
-              `APPCLIENT - NEXTCLOUD - ensureShare - ${i18n.__('api.nextcloud.shareCreateError', { groupId })}`,
-              levels.ERROR,
-              scopes.SYSTEM,
-              {
-                name: shareName,
-                error: resp.error ? resp.error : resp,
-              },
-            );
-          }
-          const params = { password: null, path: shareName, permissions: 31, shareType: 7, shareWith: circleId };
-          return axios
-            .post(`${this.appsURL}/files_sharing/api/v1/shares`, params, { headers: this.ocsPostHeaders })
-            .then((response) => {
-              const infos = response.data.ocs.meta;
-              if (infos.status === 'ok') {
-                const shareId = response.data.ocs.data.id;
-                logServer(
-                  `APPCLIENT - NEXTCLOUD - ensureShare - ${i18n.__('api.nextcloud.shareAdded', { groupId })}`,
-                  levels.INFO,
-                  scopes.SYSTEM,
-                  {
-                    path: shareName,
-                    groupId,
-                    circleId,
-                  },
-                );
-                // store shareId in group
-                Groups.update({ _id: groupId }, { $set: { shareId } });
-                return shareId;
-              }
-              logServer(
-                `APPCLIENT - NEXTCLOUD - ensureShare - ${i18n.__('api.nextcloud.shareAddError', { groupId })}`,
-                levels.ERROR,
-                scopes.SYSTEM,
-                {
-                  error: infos.message,
-                },
-              );
-              return null;
-            });
-        })
-        .catch((error) => {
-          logServer(
-            `APPCLIENT - NEXTCLOUD - ensureShare - ${i18n.__('api.nextcloud.shareAddError', { groupId })}`,
-            levels.ERROR,
-            scopes.SYSTEM,
-            {
-              error: error.response && error.response.data ? error.response.data : error,
-            },
-          );
-          return null;
-        });
-    }
-    return group.shareId;
-  }
-
-  deleteCircle(group) {
-    if (group.circleId) {
-      axios
-        .delete(`${this.appsURL}/circles/circles/${group.circleId}`, { headers: this.ocsHeaders })
-        .then((response) => {
-          const infos = response.data.ocs.meta;
-          if (infos.status === 'ok') {
-            logServer(
-              `APPCLIENT - NEXTCLOUD - deleteCircle - ${i18n.__('api.nextcloud.circleDeleted')}`,
-              levels.INFO,
-              scopes.SYSTEM,
-              {
-                groupId: group._id,
-                circleId: group.circleId,
-              },
-            );
-            Groups.update({ _id: group._id }, { $unset: { circleId: 1 } });
-          } else {
-            logServer(
-              `APPCLIENT - NEXTCLOUD - deleteCircle - ${i18n.__('api.nextcloud.circleDeleteError')}`,
-              levels.ERROR,
-              scopes.SYSTEM,
-              {
-                circleId: group.circleId,
-                error: infos.message,
-              },
-            );
-          }
-        })
-        .catch((error) => {
-          logServer(
-            `APPCLIENT - NEXTCLOUD - deleteCircle - ${i18n.__('api.nextcloud.circleDeleteError')}`,
-            levels.ERROR,
-            scopes.SYSTEM,
-            {
-              circleId: group.circleId,
-              error: error.response && error.response.data ? error.response.data : error,
-            },
-          );
-          return null;
-        });
-    }
-  }
-
-  deleteFolder(group) {
-    const shareName = `groupe_${group.name}`;
-    return axios({
-      method: 'delete',
-      url: `${this.ncURL}/remote.php/dav/files/${this.ncUser}/${shareName}`,
-      headers: this.ocsHeaders,
-    })
-      .then(() => {
+      });
+      if (resp.statusText !== 'Created') {
         logServer(
-          `APPCLIENT - NEXTCLOUD - deleteFolder - ${i18n.__('api.nextcloud.folderDeleted')}`,
+          `APPCLIENT - NEXTCLOUD - ensureShare - ${i18n.__('api.nextcloud.shareCreateError', { groupId })}`,
+          levels.ERROR,
+          scopes.SYSTEM,
+          {
+            name: shareName,
+            error: `status: ${resp.status}, message: ${resp.statusText}, url: ${resp.url}`,
+          },
+        );
+      }
+      const params = { password: null, path: shareName, permissions: 31, shareType: 7, shareWith: circleId };
+      const response = await fetch(`${this.appsURL}/files_sharing/api/v1/shares`, {
+        method: 'POST',
+        headers: this.ocsPostHeaders,
+        body: JSON.stringify(params),
+      });
+      checkResponse(response);
+      const respJson = await response.json();
+      if (respJson.ocs.meta.status === 'ok') {
+        const shareId = respJson.ocs.data.id;
+        logServer(
+          `APPCLIENT - NEXTCLOUD - ensureShare - ${i18n.__('api.nextcloud.shareAdded', { groupId })}`,
           levels.INFO,
           scopes.SYSTEM,
           {
             path: shareName,
+            groupId,
+            circleId,
           },
         );
-        Groups.update({ _id: group._id }, { $unset: { shareId: 1 } });
-      })
-      .catch((error) => {
-        logServer(
-          `APPCLIENT - NEXTCLOUD - deleteFolder - ${i18n.__('api.nextcloud.folderDeleteError')}`,
-          levels.ERROR,
-          scopes.SYSTEM,
-          {
-            path: shareName,
-            error: error.response && error.response.data ? error.response.data : error,
-          },
-        );
-      });
+        // store shareId in group
+        Groups.update({ _id: groupId }, { $set: { shareId } });
+        return shareId;
+      }
+      logServer(
+        `APPCLIENT - NEXTCLOUD - ensureShare - ${i18n.__('api.nextcloud.shareAddError', { groupId })}`,
+        levels.ERROR,
+        scopes.SYSTEM,
+        {
+          error: respJson.ocs.meta.message,
+        },
+      );
+      return null;
+    }
+    return group.shareId;
   }
 
-  inviteUser(userId, group) {
-    const user = Meteor.users.findOne(userId);
-    const { circleId } = group;
-    const instance = getInstance(user);
-    if (user.nclocator) {
-      const params = { type: 1, userId: `${user.username}@${instance}` };
-      axios
-        .post(`${this.appsURL}/circles/circles/${circleId}/members`, params, { headers: this.ocsPostHeaders })
-        .then((response) => {
-          const infos = response.data.ocs.meta;
-          if (infos.status === 'ok') {
-            logServer(
-              `APPCLIENT - NEXTCLOUD - inviteUser - ${i18n.__('api.nextcloud.userInvited')}`,
-              levels.INFO,
-              scopes.SYSTEM,
-              {
-                username: user.username,
-                circleId,
-              },
-            );
-          } else {
-            logServer(
-              `APPCLIENT - NEXTCLOUD - inviteUser - ${i18n.__('api.nextcloud.userInviteError')}`,
-              levels.ERROR,
-              scopes.SYSTEM,
-              {
-                circleId: group.circleId,
-                error: infos.message,
-              },
-            );
-          }
-        })
-        .catch((error) => {
-          logServer(
-            `APPCLIENT - NEXTCLOUD - inviteUser - ${i18n.__('api.nextcloud.userInviteError')}`,
-            levels.ERROR,
-            scopes.SYSTEM,
-            {
-              user: `${user.username}@${instance}`,
-              error: error.response && error.response.data ? error.response.data : error,
-            },
-          );
-        });
+  async ensureShare(group, circleId) {
+    return this._ensureShare(group, circleId).catch((error) => {
+      logServer(
+        `APPCLIENT - NEXTCLOUD - ensureShare - ${i18n.__('api.nextcloud.shareAddError', { groupId: group._id })}`,
+        levels.ERROR,
+        scopes.SYSTEM,
+        {
+          error: error.reason || error.message || error,
+        },
+      );
+      return null;
+    });
+  }
+
+  async _deleteCircle(group) {
+    const response = await fetch(`${this.appsURL}/circles/circles/${group.circleId}`, {
+      method: 'DELETE',
+      headers: this.ocsHeaders,
+    });
+    checkResponse(response);
+    const respJson = await response.json();
+    if (respJson.ocs.meta.status === 'ok') {
+      logServer(
+        `APPCLIENT - NEXTCLOUD - deleteCircle - ${i18n.__('api.nextcloud.circleDeleted')}`,
+        levels.INFO,
+        scopes.SYSTEM,
+        {
+          groupId: group._id,
+          circleId: group.circleId,
+        },
+      );
+      Groups.update({ _id: group._id }, { $unset: { circleId: 1 } });
+    } else {
+      logServer(
+        `APPCLIENT - NEXTCLOUD - deleteCircle - ${i18n.__('api.nextcloud.circleDeleteError')}`,
+        levels.ERROR,
+        scopes.SYSTEM,
+        {
+          circleId: group.circleId,
+          error: respJson.ocs.meta.message,
+        },
+      );
     }
   }
 
-  inviteMembers(group, circleId) {
+  async deleteCircle(group) {
+    if (group.circleId) {
+      await this._deleteCircle(group).catch((error) => {
+        logServer(
+          `APPCLIENT - NEXTCLOUD - deleteCircle - ${i18n.__('api.nextcloud.circleDeleteError')}`,
+          levels.ERROR,
+          scopes.SYSTEM,
+          {
+            circleId: group.circleId,
+            error: error.reason || error.message || error,
+          },
+        );
+      });
+    }
+  }
+
+  async _deleteFolder(group, shareName) {
+    const response = await fetch(`${this.ncURL}/remote.php/dav/files/${this.ncUser}/${shareName}`, {
+      method: 'DELETE',
+      headers: this.ocsHeaders,
+    });
+    checkResponse(response);
+    logServer(
+      `APPCLIENT - NEXTCLOUD - deleteFolder - ${i18n.__('api.nextcloud.folderDeleted')}`,
+      levels.INFO,
+      scopes.SYSTEM,
+      {
+        path: shareName,
+      },
+    );
+    Groups.update({ _id: group._id }, { $unset: { shareId: 1 } });
+  }
+
+  async deleteFolder(group) {
+    const shareName = `groupe_${group.name}`;
+    await this._deleteFolder(group, shareName).catch((error) => {
+      logServer(
+        `APPCLIENT - NEXTCLOUD - deleteFolder - ${i18n.__('api.nextcloud.folderDeleteError')}`,
+        levels.ERROR,
+        scopes.SYSTEM,
+        {
+          path: shareName,
+          error: error.reason || error.message || error,
+        },
+      );
+    });
+  }
+
+  async _inviteUser(user, group) {
+    const { circleId } = group;
+    if (user.nclocator) {
+      const params = { type: 1, userId: `${user.username}@${getInstance(user)}` };
+      const response = await fetch(`${this.appsURL}/circles/circles/${circleId}/members`, {
+        method: 'POST',
+        body: JSON.stringify(params),
+        headers: this.ocsPostHeaders,
+      });
+      checkResponse(response);
+      const respJson = await response.json();
+      if (respJson.ocs.meta.status === 'ok') {
+        logServer(
+          `APPCLIENT - NEXTCLOUD - inviteUser - ${i18n.__('api.nextcloud.userInvited')}`,
+          levels.INFO,
+          scopes.SYSTEM,
+          {
+            username: user.username,
+            circleId,
+          },
+        );
+      } else {
+        logServer(
+          `APPCLIENT - NEXTCLOUD - inviteUser - ${i18n.__('api.nextcloud.userInviteError')}`,
+          levels.ERROR,
+          scopes.SYSTEM,
+          {
+            username: user.username,
+            circleId: group.circleId,
+            error: respJson.ocs.meta.message,
+          },
+        );
+      }
+    }
+  }
+
+  async inviteUser(userId, group) {
+    const user = Meteor.users.findOne(userId);
+    await this._inviteUser(user, group).catch((error) => {
+      logServer(
+        `APPCLIENT - NEXTCLOUD - inviteUser - ${i18n.__('api.nextcloud.userInviteError')}`,
+        levels.ERROR,
+        scopes.SYSTEM,
+        {
+          user: `${user.username}@${getInstance(user)}`,
+          error: error.reason || error.message || error,
+        },
+      );
+    });
+  }
+
+  async _inviteMembers(group, circleId) {
     const userIds = [...group.members, ...group.animators];
     const allUsers = Meteor.users.find({ _id: { $in: userIds } }, { fields: { username: 1, nclocator: 1 } }).fetch();
     const params = {
@@ -385,102 +402,110 @@ class NextcloudClient {
         return { type: 1, id: `${user.username}@${getInstance(user)}` };
       }),
     };
-    axios
-      .post(`${this.appsURL}/circles/circles/${circleId}/members/multi`, params, { headers: this.ocsPostHeaders })
-      .then((response) => {
-        const infos = response.data.ocs.meta;
-        if (infos.status !== 'ok') {
-          logServer(
-            `APPCLIENT - NEXTCLOUD - inviteMembers - ${i18n.__('api.nextcloud.userInviteError')}`,
-            levels.ERROR,
-            scopes.SYSTEM,
-            {
-              groupId: group._id,
-              error: infos.message,
-            },
-          );
-        }
-      })
-      .catch((error) => {
-        logServer(
-          `APPCLIENT - NEXTCLOUD - inviteMembers - ${i18n.__('api.nextcloud.userInviteError')}`,
-          levels.ERROR,
-          scopes.SYSTEM,
-          {
-            groupId: group._id,
-            error: error.response && error.response.data ? error.response.data : error,
-          },
-        );
-      });
+    const response = await fetch(`${this.appsURL}/circles/circles/${circleId}/members/multi`, {
+      method: 'POST',
+      body: JSON.stringify(params),
+      headers: this.ocsPostHeaders,
+    });
+    checkResponse(response);
+    const respJson = await response.json();
+    if (respJson.ocs.meta.status !== 'ok') {
+      logServer(
+        `APPCLIENT - NEXTCLOUD - inviteMembers - ${i18n.__('api.nextcloud.userInviteError')}`,
+        levels.ERROR,
+        scopes.SYSTEM,
+        {
+          groupId: group._id,
+          error: respJson.ocs.meta.message,
+        },
+      );
+    }
   }
 
-  kickUser(userId, group) {
-    const user = Meteor.users.findOne(userId);
+  async inviteMembers(group, circleId) {
+    await this._inviteMembers(group, circleId).catch((error) => {
+      logServer(
+        `APPCLIENT - NEXTCLOUD - inviteMembers - ${i18n.__('api.nextcloud.userInviteError')}`,
+        levels.ERROR,
+        scopes.SYSTEM,
+        {
+          groupId: group._id,
+          error: error.reason || error.message || error,
+        },
+      );
+    });
+  }
+
+  async _kickUser(user, group) {
     const { circleId } = group;
-    axios
-      .get(`${this.appsURL}/circles/circles/${circleId}/members`, { headers: this.ocsHeaders })
-      .then((response) => {
-        const infos = response.data.ocs.meta;
-        if (infos.status !== 'ok') {
+    const response = await fetch(`${this.appsURL}/circles/circles/${circleId}/members`, {
+      method: 'GET',
+      headers: this.ocsHeaders,
+    });
+    checkResponse(response);
+    const respJson = await response.json();
+    if (respJson.ocs.meta.status !== 'ok') {
+      logServer(
+        `APPCLIENT - NEXTCLOUD - kickUser - ${i18n.__('api.nextcloud.userKickError')}`,
+        levels.ERROR,
+        scopes.SYSTEM,
+        {
+          user: user.username,
+          error: respJson.ocs.meta.message,
+        },
+      );
+    } else {
+      // find user memberId in circle
+      const member = respJson.ocs.data.find((item) => item.userId === user.username);
+      if (member !== undefined) {
+        // remove member from circle
+        const respDelete = await fetch(`${this.appsURL}/circles/circles/${circleId}/members/${member.id}`, {
+          method: 'DELETE',
+          headers: this.ocsHeaders,
+        });
+        checkResponse(respDelete);
+        const respDelJson = await respDelete.json();
+        if (respDelJson.ocs.meta.status !== 'ok') {
           logServer(
             `APPCLIENT - NEXTCLOUD - kickUser - ${i18n.__('api.nextcloud.userKickError')}`,
             levels.ERROR,
             scopes.SYSTEM,
             {
               user: user.username,
-              error: infos.message,
+              error: respDelJson.ocs.meta.message,
             },
           );
         } else {
-          // find user memberId in circle
-          const member = response.data.ocs.data.find((item) => item.userId === user.username);
-          if (member !== undefined) {
-            // remove member from circle
-            axios
-              .delete(`${this.appsURL}/circles/circles/${circleId}/members/${member.id}`, {
-                headers: this.ocsHeaders,
-              })
-              .then((resp) => {
-                const respInfos = resp.data.ocs.meta;
-                if (respInfos.status !== 'ok') {
-                  logServer(
-                    `APPCLIENT - NEXTCLOUD - kickUser - ${i18n.__('api.nextcloud.userKickError')}`,
-                    levels.ERROR,
-                    scopes.SYSTEM,
-                    {
-                      user: user.username,
-                      error: respInfos.message,
-                    },
-                  );
-                } else {
-                  logServer(
-                    `APPCLIENT - NEXTCLOUD - kickUser - ${i18n.__('api.nextcloud.userKicked')}`,
-                    levels.INFO,
-                    scopes.SYSTEM,
-                    {
-                      username: user.username,
-                      circleId,
-                    },
-                  );
-                }
-              });
-          }
+          logServer(
+            `APPCLIENT - NEXTCLOUD - kickUser - ${i18n.__('api.nextcloud.userKicked')}`,
+            levels.INFO,
+            scopes.SYSTEM,
+            {
+              username: user.username,
+              circleId,
+            },
+          );
         }
-      })
-      .catch((error) => {
-        logServer(
-          `APPCLIENT - NEXTCLOUD - kickUser - ${i18n.__('api.nextcloud.userKickError')}`,
-          levels.ERROR,
-          scopes.SYSTEM,
-          {
-            user: user.username,
-            error: error.response && error.response.data ? error.response.data : error,
-          },
-        );
-      });
+      }
+    }
   }
 
-  addUser(userId) {
+  async kickUser(userId, group) {
+    const user = Meteor.users.findOne(userId);
+    await this._kickUser(user, group).catch((error) => {
+      logServer(
+        `APPCLIENT - NEXTCLOUD - kickUser - ${i18n.__('api.nextcloud.userKickError')}`,
+        levels.ERROR,
+        scopes.SYSTEM,
+        {
+          user: user.username,
+          error: error.reason || error.message || error,
+        },
+      );
+    });
+  }
+
+  async addUser(userId) {
     const user = Meteor.users.findOne(userId);
     if (!user.nclocator) {
       logServer(
@@ -491,69 +516,65 @@ class NextcloudClient {
           userId,
         },
       );
-    } else {
-      this.userExists(user.username, user.nclocator).then((resExists) => {
-        if (resExists === false) {
-          const ncData = {
-            userid: user.username,
-            password: '',
-            email: user.emails ? user.emails[0].address : '',
-            displayName: `${user.firstName} ${user.lastName}`,
-            language: user.language,
-          };
-          this._addUser(ncData, user.nclocator);
-        }
-      });
     }
-  }
-
-  _addUser(userData, ncURL = this.ncURL) {
-    const userId = userData.userid;
-    return axios
-      .post(`${ocsUrl(ncURL)}/users`, userData, {
-        headers: this.ocsPostHeaders,
-      })
-      .then((response) => {
-        const infos = response.data.ocs.meta;
-        if (infos.status === 'ok') {
-          logServer(
-            `APPCLIENT - NEXTCLOUD - _addUser - ${i18n.__('api.nextcloud.userAdded', { userId, ncURL })}`,
-            levels.INFO,
-            scopes.SYSTEM,
-            {
-              userData,
-              userId,
-              ncURL,
-            },
-          );
-        } else {
-          logServer(
-            `APPCLIENT - NEXTCLOUD - _addUser - ${i18n.__('api.nextcloud.userAddError', { userId })}`,
-            levels.ERROR,
-            scopes.SYSTEM,
-            {
-              userData,
-              userId,
-              ncURL,
-            },
-          );
-        }
-        return infos.status === 'ok' ? infos.status : infos.message;
-      })
-      .catch((error) => {
+    const resExists = await this.userExists(user.username, user.nclocator);
+    if (resExists === false) {
+      const ncData = {
+        userid: user.username,
+        password: '',
+        email: user.emails ? user.emails[0].address : '',
+        displayName: `${user.firstName} ${user.lastName}`,
+        language: user.language,
+      };
+      this._addUser(ncData, user.nclocator).catch((error) => {
         logServer(
           `APPCLIENT - NEXTCLOUD - _addUser - ${i18n.__('api.nextcloud.userAddError', { userId })}`,
           levels.ERROR,
           scopes.SYSTEM,
           {
-            userData,
+            userData: ncData,
             userId,
-            ncURL,
-            error: error.response && error.response.data ? error.response.data : error,
+            ncURL: user.nclocator,
+            error: error.reason || error.message || error,
           },
         );
-        return i18n.__('api.nextcloud.userAddError', { userId });
       });
+    }
+  }
+
+  async _addUser(userData, ncURL = this.ncURL) {
+    const userId = userData.userid;
+    const response = await fetch(`${ocsUrl(ncURL)}/users`, {
+      method: 'POST',
+      body: JSON.stringify(userData),
+      headers: this.ocsPostHeaders,
+    });
+    checkResponse(response);
+    const respJson = await response.json();
+    const infos = respJson.ocs.meta;
+    if (infos.status === 'ok') {
+      logServer(
+        `APPCLIENT - NEXTCLOUD - _addUser - ${i18n.__('api.nextcloud.userAdded', { userId, ncURL })}`,
+        levels.INFO,
+        scopes.SYSTEM,
+        {
+          userData,
+          userId,
+          ncURL,
+        },
+      );
+    } else {
+      logServer(
+        `APPCLIENT - NEXTCLOUD - _addUser - ${i18n.__('api.nextcloud.userAddError', { userId })}`,
+        levels.ERROR,
+        scopes.SYSTEM,
+        {
+          userData,
+          userId,
+          ncURL,
+        },
+      );
+    }
   }
 }
 
@@ -562,18 +583,17 @@ if (Meteor.isServer && nextcloudPlugin && nextcloudPlugin.enable) {
   // check that api is accessible and circles application is active
   nextClient.checkConfig();
 
-  Meteor.afterMethod('groups.createGroup', function nextCreateGroup({ plugins }) {
+  Meteor.afterMethod('groups.createGroup', async function nextCreateGroup({ plugins }) {
     if (!this.error) {
       if (plugins.nextcloud === true) {
         const groupId = this.result;
         const group = Groups.findOne({ _id: groupId });
         // create nextcloud circle and share, invite group members/animators to circle
-        nextClient.ensureCircle(group).then((circleId) => {
-          if (circleId) {
-            nextClient.ensureShare(group, circleId);
-            nextClient.inviteMembers(group, circleId);
-          }
-        });
+        const circleId = await nextClient.ensureCircle(group);
+        if (circleId) {
+          nextClient.ensureShare(group, circleId);
+          nextClient.inviteMembers(group, circleId);
+        }
       }
     }
   });
@@ -592,18 +612,17 @@ if (Meteor.isServer && nextcloudPlugin && nextcloudPlugin.enable) {
     }
   });
 
-  Meteor.afterMethod('groups.updateGroup', function nextUpdateGroup({ groupId }) {
+  Meteor.afterMethod('groups.updateGroup', async function nextUpdateGroup({ groupId }) {
     if (!this.error) {
       const group = Groups.findOne({ _id: groupId });
       if (group.plugins.nextcloud === true && !group.circleId) {
         // create nextcloud circle and share if needed
-        nextClient.ensureCircle(group).then((circleId) => {
-          if (circleId) {
-            nextClient.ensureShare(group, circleId);
-            // add all group members to circle
-            nextClient.inviteMembers(group, circleId);
-          }
-        });
+        const circleId = await nextClient.ensureCircle(group);
+        if (circleId) {
+          nextClient.ensureShare(group, circleId);
+          // add all group members to circle
+          nextClient.inviteMembers(group, circleId);
+        }
       } else if (group.plugins.nextcloud === false && group.circleId) {
         // remove circle and share from nextcloud
         nextClient.deleteCircle(group);
