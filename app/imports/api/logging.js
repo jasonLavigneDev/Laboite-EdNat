@@ -21,34 +21,6 @@ let logger = 0;
 
 const { combine, timestamp, printf, colorize, align, padLevels, label } = winston.format;
 
-// const makeWinstonLogger = (label) => {
-//   const fileFormat = combine(
-//     timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSS' }),
-//     align(),
-//     padLevels(),
-//     label({ label, message: true }),
-//     printf((info) => `${info.timestamp} [${info.level}] ${info.message}`),
-//   );
-
-//   const logger = winston.createLogger({
-//     transports: [
-//       new winston.transports.Console({
-//         level: levels.VERBOSE,
-//         format: combine(colorize({ all: true }), fileFormat),
-//         silent: Meteor.isTest,
-//       }),
-//     ],
-//   });
-
-//   return logger;
-// };
-
-// export const logger = {
-//   system: makeWinstonLogger('SYSTEM'),
-//   admin: makeWinstonLogger('ADMIN'),
-//   user: makeWinstonLogger('USER'),
-// };
-
 function logServer(message, level = 'info', scope = 'USER', params = {}) {
   if (Meteor.isServer) {
     const fileFormat = combine(
@@ -68,7 +40,7 @@ function logServer(message, level = 'info', scope = 'USER', params = {}) {
             level: levels.VERBOSE,
 
             format: combine(colorize({ all: true }), fileFormat),
-            // silent: Meteor.isTest,
+            silent: Meteor.isTest,
           }),
         ],
       });
