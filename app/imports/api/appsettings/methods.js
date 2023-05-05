@@ -64,7 +64,11 @@ export const updateAppsettings = new ValidatedMethod({
         throw new Meteor.Error('api.appsettings.updateAppsettings.notPermitted', i18n.__('api.users.adminNeeded'));
       }
       const args = { content: sanitizedContent, external, link };
-      logServer(`APPSETTINGS - METHODS - UPDATE - updateAppsettings - args: ${args}`, levels.INFO, scopes.SYSTEM);
+      logServer(
+        `APPSETTINGS - METHODS - UPDATE - updateAppsettings - args: ${JSON.stringify(args)}`,
+        levels.INFO,
+        scopes.SYSTEM,
+      );
       return AppSettings.update({ _id: 'settings' }, { $set: { [key]: args } });
     } catch (error) {
       throw new Meteor.Error(error, error);
@@ -228,7 +232,7 @@ export const updateTextInfoLanguage = new ValidatedMethod({
         newInfo.push({ language, content: sanitizedContent });
       }
       logServer(
-        `APPSETTINGS - METHODS - UPDATE - updateTextInfoLanguage - new settings: ${{ [tabkey]: newInfo }}`,
+        `APPSETTINGS - METHODS - UPDATE - updateTextInfoLanguage - new settings: ${JSON.stringify(newInfo)}`,
         levels.INFO,
         scopes.SYSTEM,
       );
