@@ -66,11 +66,12 @@ export const updateAppsettings = new ValidatedMethod({
       const args = { content: sanitizedContent, external, link };
       logServer(
         `APPSETTINGS - METHODS - UPDATE - updateAppsettings - args: ${JSON.stringify(args)}`,
-        levels.INFO,
+        levels.VERBOSE,
         scopes.SYSTEM,
       );
       return AppSettings.update({ _id: 'settings' }, { $set: { [key]: args } });
     } catch (error) {
+      logServer(`APPSETTINGS - METHODS - METEOR ERROR - updateAppsettings`, levels.INFO, scopes.SYSTEM, { error });
       throw new Meteor.Error(error, error);
     }
   },
@@ -108,11 +109,14 @@ export const switchMaintenanceStatus = new ValidatedMethod({
       }
       logServer(
         `APPSETTINGS - METHODS - UPDATE - switchMaintenanceStatus - Maintenance: ${newValue}`,
-        levels.INFO,
+        levels.VERBOSE,
         scopes.SYSTEM,
       );
       return AppSettings.update({ _id: 'settings' }, { $set: { maintenance: newValue } });
     } catch (error) {
+      logServer(`APPSETTINGS - METHODS - METEOR ERROR - switchMaintenanceStatus`, levels.INFO, scopes.SYSTEM, {
+        error,
+      });
       throw new Meteor.Error(error, error);
     }
   },
@@ -125,6 +129,12 @@ export const setUserStructureValidationMandatoryStatus = new ValidatedMethod({
     try {
       const authorized = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
       if (!authorized) {
+        logServer(
+          `APPSETTINGS - METHODS - METEOR ERROR - setUserStructureValidationMandatoryStatus - 
+        authorized: ${authorized}`,
+          levels.VERBOSE,
+          scopes.SYSTEM,
+        );
         throw new Meteor.Error(
           'api.appsettings.setUserStructureValidationMandatoryStatus.notPermitted',
           i18n.__('api.users.admineeded'),
@@ -133,7 +143,7 @@ export const setUserStructureValidationMandatoryStatus = new ValidatedMethod({
       logServer(
         `APPSETTINGS - METHODS - UPDATE - setUserStructureValidationMandatoryStatus - 
         isValidationMandatory: ${isValidationMandatory}`,
-        levels.INFO,
+        levels.VERBOSE,
         scopes.SYSTEM,
       );
       return AppSettings.update(
@@ -141,6 +151,12 @@ export const setUserStructureValidationMandatoryStatus = new ValidatedMethod({
         { $set: { userStructureValidationMandatory: isValidationMandatory } },
       );
     } catch (error) {
+      logServer(
+        `APPSETTINGS - METHODS - METEOR ERROR - setUserStructureValidationMandatoryStatus`,
+        levels.INFO,
+        scopes.SYSTEM,
+        { error },
+      );
       throw new Meteor.Error(error, error);
     }
   },
@@ -171,6 +187,7 @@ export const updateTextMaintenance = new ValidatedMethod({
       );
       return AppSettings.update({ _id: 'settings' }, { $set: { textMaintenance: text } });
     } catch (error) {
+      logServer(`APPSETTINGS - METHODS - METEOR ERROR - updateTextMaintenance`, levels.INFO, scopes.SYSTEM, { error });
       throw new Meteor.Error(error, error);
     }
   },
@@ -208,6 +225,11 @@ export const updateTextInfoLanguage = new ValidatedMethod({
       // check if current user is admin
       const authorized = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
       if (!authorized) {
+        logServer(
+          `APPSETTINGS - METHODS - METEOR ERROR - updateTextInfoLanguage - authorized: ${authorized}`,
+          levels.VERBOSE,
+          scopes.SYSTEM,
+        );
         throw new Meteor.Error(
           'api.appsettings.updateIntroductionLanguage.notPermitted',
           i18n.__('api.users.adminNeeded'),
@@ -233,11 +255,12 @@ export const updateTextInfoLanguage = new ValidatedMethod({
       }
       logServer(
         `APPSETTINGS - METHODS - UPDATE - updateTextInfoLanguage - new settings: ${JSON.stringify(newInfo)}`,
-        levels.INFO,
+        levels.VERBOSE,
         scopes.SYSTEM,
       );
       return AppSettings.update({ _id: 'settings' }, { $set: { [tabkey]: newInfo } });
     } catch (error) {
+      logServer(`APPSETTINGS - METHODS - METEOR ERROR - updateTextInfoLanguage`, levels.INFO, scopes.SYSTEM, { error });
       throw new Meteor.Error(error, error);
     }
   },
