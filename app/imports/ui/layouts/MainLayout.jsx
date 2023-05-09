@@ -1,5 +1,6 @@
 import React, { useEffect, lazy, Suspense } from 'react';
-import { useLocation, Route, Switch } from 'react-router-dom';
+import { useLocation, Route, Switch, useHistory } from 'react-router-dom';
+// import { useHistory } from 'react-router-dom/cjs/react-router-dom';
 import { withTracker } from 'meteor/react-meteor-data';
 import { makeStyles } from 'tss-react/mui';
 import i18n from 'meteor/universe:i18n';
@@ -7,6 +8,7 @@ import Alert from '@mui/material/Alert';
 import { Roles } from 'meteor/alanning:roles';
 import PropTypes from 'prop-types';
 import AppSettings from '../../api/appsettings/appsettings';
+import { getAppSettingsGlobalInfo } from '../../api/appsettings/methods';
 
 // components
 import SkipLink from '../components/menus/SkipLink';
@@ -93,14 +95,14 @@ export const useLayoutStyles = makeStyles()((theme, isMobile) => ({
 }));
 
 function MainLayout({ appsettings, ready }) {
-  const [{ userId, user, loadingUser, isMobile }] = useAppContext();
+  const [{ userId, user, loadingUser, isMobile, language }] = useAppContext();
   const { classes } = useLayoutStyles(isMobile, {
     props: isMobile,
   });
   const location = useLocation();
   const { disabledFeatures = {} } = Meteor.settings.public;
-
   const isAdmin = Roles.userIsInRole(userId, 'admin');
+  const history = useHistory();
 
   useEffect(() => {
     // Reset focus on all location changes
@@ -108,6 +110,22 @@ function MainLayout({ appsettings, ready }) {
       document.getElementById('root').focus();
     }
   }, [location]);
+
+  useEffect(() => {
+    getAppSettingsGlobalInfo.call(null, (error, result) => {
+      const { globalInfo } = { ...result };
+      // Si user n'est pas validé par admin ou incomplet on lui set pas les messages commes lu
+      if (!user.isActive || !user.structure) return null;
+      // Si user a des messages non lu , on enregistre le dernier message comme lu
+      const globalInfoInUserLanguage = globalInfo.find((info) => info.language === language);
+      if (!user.lastGlobalInfoReadId || user.lastGlobalInfoReadId !== globalInfoInUserLanguage.id) {
+        Meteor.call('users.setLastGlobalInfoRead', { lastGlobalInfoReadId: globalInfoInUserLanguage.id });
+        return null;
+      }
+      // Si user a pas de messages non lu on le redirige sur son espace
+      return history.push('/personal');
+    });
+  }, []);
 
   return (
     <>
@@ -129,7 +147,8 @@ function MainLayout({ appsettings, ready }) {
                 user.isActive ? (
                   user.structure ? (
                     <Switch>
-                      <Route exact path="/" component={PersonalPage} />
+                      <Route exact path="/" component={IntroductionPage} />
+                      <Route exact path="/personal" component={PersonalPage} />
                       <Route exact path="/profile" component={ProfilePage} />
                       <Route exact path="/contact" component={ContactPage} />
                       <Route exact path="/profilestructureselection" component={StructureSelectionPage} />

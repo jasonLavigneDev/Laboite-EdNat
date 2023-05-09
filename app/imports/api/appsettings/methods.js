@@ -200,6 +200,65 @@ export const updateTextMaintenance = new ValidatedMethod({
     }
   },
 });
+// If we want modified UI and dataModel for push new text in pace of update one text
+// export const createGeneralInfo = new ValidatedMethod({
+//   name: 'appSettings.createGeneralInfo',
+//   validate: new SimpleSchema({
+//     language: {
+//       type: String,
+//       label: getLabel('api.appsettings.labels.external'),
+//       optional: true,
+//     },
+//     content: {
+//       type: String,
+//       label: getLabel('api.appsettings.labels.content'),
+//       optional: true,
+//     },
+//     tabkey: {
+//       type: String,
+//       label: getLabel('api.appsettings.labels.tabkey'),
+//       optional: true,
+//     },
+//     expirationDate: {
+//       type: Date,
+//       label: getLabel('api.appsettings.labels.createdAt'),
+//       optional: true,
+//       defaultValue: null,
+//     },
+//   }).validator({ clean: true }),
+
+//   run({ language, content, tabkey, expirationDate = null }) {
+//     if (language) validateString(language, true);
+//     if (tabkey) validateString(tabkey, true);
+//     let sanitizedContent = '';
+//     if (content) {
+//       sanitizedContent = sanitizeHtml(content);
+//       validateString(sanitizedContent);
+//     }
+//     try {
+//       // check if current user is admin
+//       const authorized = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
+//       if (!authorized) {
+//         throw new Meteor.Error(
+//           'api.appsettings.updateIntroductionLanguage.notPermitted',
+//           i18n.__('api.users.adminNeeded'),
+//         );
+//       }
+//       const appsettings = AppSettings.findOne({});
+//       const { globalInfo } = appsettings;
+
+//       globalInfo.push({
+//         language,
+//         content: sanitizedContent,
+//         expirationDate,
+//       });
+
+//       return AppSettings.update({ _id: 'settings' }, { $set: { globalInfo } });
+//     } catch (error) {
+//       throw new Meteor.Error(error, error);
+//     }
+//   },
+// });
 
 export const updateTextInfoLanguage = new ValidatedMethod({
   name: 'appSettings.updateTextInfoLanguage',
@@ -289,9 +348,23 @@ export const getAppSettingsLinks = new ValidatedMethod({
   },
 });
 
+export const getAppSettingsGlobalInfo = new ValidatedMethod({
+  name: 'appSettings.getAppSettingsGlobalInfo',
+  validate: null,
+  run() {
+    try {
+      return AppSettings.findOne({ _id: 'settings' }, { fields: AppSettings.globalInfo });
+    } catch (error) {
+      throw new Meteor.Error(error, error);
+    }
+  },
+});
+
 // Get list of all method names on User
 const LISTS_METHODS = _.pluck(
   [
+    // createGeneralInfo,
+    getAppSettingsGlobalInfo,
     updateAppsettings,
     updateTextMaintenance,
     updateTextInfoLanguage,

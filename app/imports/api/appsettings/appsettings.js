@@ -61,6 +61,37 @@ const GlobalInfoI18n = new SimpleSchema({
     label: getLabel('api.appsettings.labels.content_globalInfo'),
     optional: true,
   },
+  // createdAt: {
+  //   type: Date,
+  //   label: getLabel('api.appsettings.labels.createdAt'),
+  //   optional: false,
+  //   autoValue() {
+  //     if ((this.isInsert && this.field('draft').value === false) || (!this.isInsert && !this.value)) {
+  //       return new Date();
+  //     }
+  //     return this.value;
+  //   },
+  // },
+  // expirationDate: {
+  //   type: Date,
+  //   label: getLabel('api.appsettings.labels.createdAt'),
+  //   optional: true,
+  //   defaultValue: null,
+  // },
+  id: {
+    type: String,
+    label: getLabel('api.appsettings.labels.id'),
+    autoValue() {
+      return Random.id();
+    },
+  },
+  // updatedAt: {
+  //   type: Date,
+  //   label: getLabel('api.appsettings.labels.updatedAt'),
+  //   autoValue() {
+  //     return new Date();
+  //   },
+  // },
 });
 
 AppSettings.schema = new SimpleSchema(
@@ -137,6 +168,8 @@ AppSettings.introduction = {
 AppSettings.globalInfo = {
   'globalInfo.content': 1,
   'globalInfo.language': 1,
+  // 'globalInfo.updatedAt': 1,
+  'globalInfo.id': 1,
 };
 AppSettings.links = {
   'legal.link': 1,

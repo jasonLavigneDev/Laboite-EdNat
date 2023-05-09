@@ -13,6 +13,10 @@ const AppRoles = ['candidate', 'member', 'animator', 'admin', 'adminStructure'];
 
 Meteor.users.schema = new SimpleSchema(
   {
+    lastGlobalInfoReadId: {
+      type: String,
+      defaultValue: '',
+    },
     username: {
       type: String,
       optional: true,
@@ -299,6 +303,7 @@ Meteor.users.selfFields = {
   nclocator: 1,
   advancedPersonalPage: 1,
   articlesEnable: 1,
+  lastGlobalInfoReadId: 1,
 };
 
 Meteor.users.adminFields = {
@@ -317,6 +322,7 @@ Meteor.users.adminFields = {
   groupQuota: 1,
   nclocator: 1,
   articlesEnable: 1,
+  lastGlobalInfoReadId: 1,
 };
 
 Meteor.users.publicFields = {
