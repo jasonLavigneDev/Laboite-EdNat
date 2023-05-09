@@ -11,10 +11,7 @@ export const getTargetMail = ({ structure }) => {
   const { contactEmail, sendMailToStructureAdmin, sendMailToParent } = structure;
   if (contactEmail) return { mails: [contactEmail], admin: false };
   if (sendMailToStructureAdmin) {
-    const mails = Meteor.users
-      .find({})
-      .fetch()
-      .filter((user) => Roles.userIsInRole(user._id, 'adminStructure', structure._id));
+    const mails = Roles.userIsInRole('adminStructure', { scope: structure._id }).fetch();
     return { mails, admin: false };
   }
   if (sendMailToParent) {
@@ -25,9 +22,6 @@ export const getTargetMail = ({ structure }) => {
       }
     }
   }
-  const mails = Meteor.users
-    .find({})
-    .fetch()
-    .filter((user) => Roles.userIsInRole(user._id, 'admin'));
+  const mails = Roles.userIsInRole('admin').fetch();
   return { mails, admin: true };
 };
