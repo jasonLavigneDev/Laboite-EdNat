@@ -144,8 +144,8 @@
         "iconUrlImage": "Url de l'image de l'icône",
         "coverUrlImage": "Url de l'image de la couverture",
         "externalUrl": "Url externe",
-        "sendMailToParent": "Envoie de mails à la structure parente",
-        "sendMailToStructureAdmin": "Envoie de mails aux administrateurs de structure"
+        "sendMailToParent": "Envoi de mails à la structure parente",
+        "sendMailToStructureAdmin": "Envoi de mails aux administrateurs de structure"
       }
     },
     "asamextensions": {
@@ -1019,7 +1019,7 @@
       "textMaintenance": "Raison de la maintenance",
       "buttonTextMaintenance": "Valider le message",
       "sendMailToParentStructure": "Redirection des mails vers la structure parente",
-      "sendMailToAdminStructure": "Envoie des mails aux administrateurs de structure",
+      "sendMailToAdminStructure": "Envoi des mails aux administrateurs de structure",
       "externalUrl": "Lien de redirection externe",
       "unlockMigration": {
         "title": "Déblocage de la migration",
