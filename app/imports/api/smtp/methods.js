@@ -60,7 +60,7 @@ Adresse mail: ${email}
 ${cleanText}`;
 
     const from = Meteor.settings.smtp.fromEmail;
-    const structureTargetMail = getTargetMail({ structure }) || [];
+    const structureTargetMail = getTargetMail({ structure }) || { mails: [], admin: true };
 
     if (structureTargetMail.admin) {
       msg = `Message de: ${firstName} ${lastName}
@@ -73,7 +73,7 @@ ${cleanText}`;
       Veuillez vous rapprocher des administrateurs de celle-ci afin de faire suivre le message.`;
     }
 
-    const tabTo = structureTargetMail.mails.subarray(1);
+    const tabTo = structureTargetMail.mails.slice(1) || [];
     const to = structureTargetMail.mails[0] || Meteor.settings.smtp.toEmail;
 
     this.unblock();
