@@ -453,12 +453,17 @@ export const updateStructureContactEmail = new ValidatedMethod({
     if (contactEmail) {
       validateString(contactEmail);
     }
+    if (externalUrl) {
+      validateString(externalUrl);
+    }
     logServer(
       `STRUCTURE - METHODS - UPDATE - updateStructureContactEmail - structure id: ${structureId}
-      / contact email: ${contactEmail}`,
+      / contact email: ${contactEmail} / externalUrl: ${externalUrl} / sendMailToParent: ${sendMailToParent}
+      / sendMailToStructureAdmin: ${sendMailToStructureAdmin}`,
       levels.VERBOSE,
       scopes.SYSTEM,
     );
+
     return Structures.update(
       { _id: structureId },
       { $set: { contactEmail, externalUrl, sendMailToParent, sendMailToStructureAdmin } },
