@@ -15,6 +15,9 @@ import DynamicStore, { useAppContext } from '../contexts/context';
 import lightTheme from '../themes/light';
 import { OnBoardingContext } from '../contexts';
 import { instance } from '../utils/analyticsServices';
+import LocalizationLayout from './locales/LocalizationLayout';
+// import useAppTransfert from '../utils/appTransfert';
+import useWidgetLink from '../utils/widgetLink';
 
 // dynamic imports
 const MainLayout = lazy(() => import('./MainLayout'));
@@ -43,8 +46,11 @@ function App() {
   const theme = useTheme();
   const { enableLinkTracking } = useMatomo();
   enableLinkTracking();
+  // useAppTransfert();
+  useWidgetLink();
 
   const { userId, loadingUser = false, loading } = state;
+  const useKeycloak = Meteor.settings.public.enableKeycloak;
   const externalBlog = !!Meteor.settings.public.services.laboiteBlogURL;
   const { disabledFeatures = {}, minioEndPoint } = Meteor.settings.public;
   const enableBlog = !disabledFeatures.blog;
@@ -62,6 +68,7 @@ function App() {
           <CssBaseline />
           <Switch>
             <PublicRoute exact path="/signin" component={SignLayout} {...state} />
+            {useKeycloak ? null : <PublicRoute exact path="/signup" component={SignLayout} {...state} />}
             {externalBlog || !enableBlog ? null : <Route exact path="/public/" component={PublishersPage} />}
             {externalBlog || !enableBlog ? null : <Route exact path="/public/:userId" component={ArticlesPage} />}
             {externalBlog || !enableBlog ? null : (
@@ -94,7 +101,9 @@ export default () => (
         <BrowserRouter>
           <DynamicStore>
             <OnBoardingContext.Provider>
-              <App />
+              <LocalizationLayout>
+                <App />
+              </LocalizationLayout>
             </OnBoardingContext.Provider>
           </DynamicStore>
         </BrowserRouter>

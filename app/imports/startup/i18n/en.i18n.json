@@ -649,6 +649,7 @@
     "MainMenu": {
       "menuAdminGroups": "Groups Management",
       "menuUserBookmarks": "Bookmarks",
+      "menuUpload": "Transfer files",
       "menuProfileLabel": "Profile",
       "menuHelpLabel": "Help",
       "menuFeedbackLabel": "Give feedback",
@@ -1028,6 +1029,48 @@
     "body_editRow_saveTooltip": "Confirm"
   },
   "pages": {
+    "UploadPage": {
+      "description": "You can send large, non-sensitive files securely to a government agent or between agents using France transfert.",
+      "fileCount": "{$count} elements",
+      "fileAlreadyExists": "The file {$name} is already imported.",
+      "emailFold": "Email",
+      "linkFold": "Link",
+      "totalSize": "{$totalSize} / {$maxSize}",
+      "addFilesLabel": "Add your files and folders",
+      "recipientsLabel": "Recipients",
+      "recipientsPlaceholder": "The email addresses of the recipients",
+      "recipientsHelp": "If the sender is a government official, the recipient(s) may be a government official or an individual. If the sender is a private individual, the addressee(s) can only be a government official.",
+      "subjectLabel": "Subjet",
+      "messageLabel": "Message",
+      "linkNameLabel": "Name of the transfer",
+      "wrongEmailFormat": "A valid email address is required (john.doe@email.com).",
+      "tosLabel": {
+        "a": "I have read the ",
+        "b": "TOS",
+        "c": " and I do not send sensitive data, as defined in article 4.2, not encrypted beforehand."
+      },
+      "settings": {
+        "expiryDateLabel": "Validity period",
+        "passwordLabel": "Password",
+        "passwordConditions": {
+          "minMaxChars": "12 characters minimum - 64 characters maximum",
+          "lowercase": "At least 3 lower case letters (unaccented a-z)",
+          "uppercase": "At least 3 capital letters (unaccented A-Z)",
+          "numbers": "At least 3 digits",
+          "specialChars": "At least 3 special characters (!@#$%^&*()_-:+)",
+          "supported": "No special characters not supported"
+        },
+        "languageLabel": "Email display language",
+        "encryptLabel": "Password protect the zip archive of my fold",
+        "cancel": "Cancel",
+        "save": "Save"
+      },
+      "settingsBtn": "Settings",
+      "send": "Send",
+      "pause": "Pause",
+      "resume": "Resume",
+      "abort": "Abort"
+    },
     "UserBookmarksPage": {
       "back": "Go back",
       "favoriteBookmark": "Add to your personal space",
