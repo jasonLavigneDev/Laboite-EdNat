@@ -50,6 +50,11 @@ export const assignStructureToAsam = new ValidatedMethod({
   run({ extensionId, extension, entiteNomCourt, entiteNomLong, familleNomCourt, familleNomLong, structureId = null }) {
     const isAdmin = Roles.userIsInRole(this.userId, 'admin');
     if (!isAdmin) {
+      logServer(
+        `ASAM - METHOD - METEOR ERROR - assignStructureToAsam - ${i18n.__('api.users.adminNeeded')}`,
+        levels.VERBOSE,
+        scopes.ADMIN,
+      );
       throw new Meteor.Error('api.asam.assignStructureToAsam.notPermitted', i18n.__('api.users.adminNeeded'));
     }
     validateAsam(extension, entiteNomCourt, entiteNomLong, familleNomCourt, familleNomLong);
@@ -73,6 +78,11 @@ export const unassignStructureToAsam = new ValidatedMethod({
   run({ extensionId }) {
     const isAdmin = Roles.userIsInRole(this.userId, 'admin');
     if (!isAdmin) {
+      logServer(
+        `ASAM - METHOD - METEOR ERROR - unassignStructureToAsam - ${i18n.__('api.users.adminNeeded')}`,
+        levels.VERBOSE,
+        scopes.ADMIN,
+      );
       throw new Meteor.Error('api.asam.assignStructureToAsam.notPermitted', i18n.__('api.users.adminNeeded'));
     }
     logServer(
@@ -90,6 +100,11 @@ export const deleteAsam = new ValidatedMethod({
   run({ extensionId }) {
     const isAdmin = Roles.userIsInRole(this.userId, 'admin');
     if (!isAdmin) {
+      logServer(
+        `ASAM - METHOD - METEOR ERROR - deleteAsam - ${i18n.__('api.users.adminNeeded')}`,
+        levels.VERBOSE,
+        scopes.ADMIN,
+      );
       throw new Meteor.Error('api.asam.assignStructureToAsam.notPermitted', i18n.__('api.users.adminNeeded'));
     }
     logServer(`ASAM - METHOD - REMOVE - deleteAsam - extensionID: ${extensionId}`, levels.VERBOSE, scopes.ADMIN);
@@ -128,6 +143,11 @@ export const addNewAsam = new ValidatedMethod({
   run({ extension, entiteNomCourt, entiteNomLong, familleNomCourt, familleNomLong, structureId }) {
     const isAdmin = Roles.userIsInRole(this.userId, 'admin');
     if (!isAdmin) {
+      logServer(
+        `ASAM - METHOD - METEOR ERROR - deleteAsam - ${i18n.__('api.users.adminNeeded')}}`,
+        levels.VERBOSE,
+        scopes.ADMIN,
+      );
       throw new Meteor.Error('api.asamextensions.notPermitted', i18n.__('api.users.adminNeeded'));
     }
     validateAsam(extension, entiteNomCourt, entiteNomLong, familleNomCourt, familleNomLong);
