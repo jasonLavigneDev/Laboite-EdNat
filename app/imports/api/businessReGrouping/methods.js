@@ -36,6 +36,13 @@ export const createBusinessReGrouping = new ValidatedMethod({
       structure: { $in: currStructure?.ancestorsIds },
     }).fetch();
     if (businessRegr !== undefined) {
+      logServer(
+        `BUISINESS - METHOD - METEOR ERROR - createBusinessReGrouping - ${i18n.__(
+          'api.businessReGrouping.createBusinessReGrouping.nameAlreadyUse',
+        )}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error(
         'api.businessReGrouping.createBusinessReGrouping.alreadyExists',
         i18n.__('api.businessReGrouping.createBusinessReGrouping.nameAlreadyUse'),
@@ -45,12 +52,24 @@ export const createBusinessReGrouping = new ValidatedMethod({
       businessRegrForStructureAncestors.length > 0 &&
       businessRegrForStructureAncestors.some((rg) => rg.name === name)
     ) {
+      logServer(
+        `BUISINESS - METHOD - METEOR ERROR - createBusinessReGrouping - 
+        ${i18n.__('api.businessReGrouping.createBusinessReGrouping.nameAlreadyUsedForOneOfStructureAncestors')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error(
         'api.businessReGrouping.createBusinessReGrouping.nameAlreadyUsedForOneOfStructureAncestors',
         i18n.__('api.businessReGrouping.createBusinessReGrouping.nameAlreadyUsedForOneOfStructureAncestors'),
       );
     }
     if (!authorized) {
+      logServer(
+        `BUISINESS - METHOD - METEOR ERROR - createBusinessReGrouping - 
+        ${i18n.__('api.users.adminNeeded')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error(
         'api.businessReGrouping.createBusinessReGrouping.notPermitted',
         i18n.__('api.users.adminNeeded'),
@@ -88,6 +107,13 @@ export const removeBusinessReGrouping = new ValidatedMethod({
     // check businessReGrouping existence
     const businessReGrouping = BusinessReGrouping.findOne(businessReGroupingId);
     if (businessReGrouping === undefined) {
+      logServer(
+        `BUSINESS - METHOD - METEOR ERROR - removeBusinessReGrouping - ${i18n.__(
+          'api.businessReGrouping.unknownBusinessReGrouping',
+        )}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error(
         'api.businessReGrouping.removeBusinessReGrouping.unknownBusinessReGrouping',
         i18n.__('api.businessReGrouping.unknownBusinessReGrouping'),
@@ -98,6 +124,11 @@ export const removeBusinessReGrouping = new ValidatedMethod({
       isActive(this.userId) &&
       (Roles.userIsInRole(this.userId, 'admin') || Roles.userIsInRole(this.userId, 'adminStructure', structure));
     if (!authorized) {
+      logServer(
+        `BUSINESS - METHOD - METEOR ERROR - removeBusinessReGrouping - ${i18n.__('api.users.adminNeeded')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error(
         'api.businessReGrouping.removeBusinessReGrouping.notPermitted',
         i18n.__('api.users.adminNeeded'),
@@ -140,6 +171,13 @@ export const updateBusinessReGrouping = new ValidatedMethod({
     // check businessReGrouping existence
     const businessReGrouping = BusinessReGrouping.findOne({ _id: businessReGroupingId });
     if (businessReGrouping === undefined) {
+      logServer(
+        `BUISINESS - METHOD - METEOR ERROR - updateBusinessReGrouping - ${i18n.__(
+          'api.businessReGrouping.unknownBusinessReGrouping',
+        )}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error(
         'api.businessReGrouping.updateBusinessReGrouping.unknownBusinessReGrouping',
         i18n.__('api.businessReGrouping.unknownBusinessReGrouping'),
@@ -150,6 +188,11 @@ export const updateBusinessReGrouping = new ValidatedMethod({
       isActive(this.userId) &&
       (Roles.userIsInRole(this.userId, 'admin') || Roles.userIsInRole(this.userId, 'adminStructure', data.structure));
     if (!authorized) {
+      logServer(
+        `BUISINESS - METHOD - METEOR ERROR - updateBusinessReGrouping - ${i18n.__('api.users.adminNeeded')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error(
         'api.businessReGrouping.updateBusinessReGrouping.notPermitted',
         i18n.__('api.users.adminNeeded'),
