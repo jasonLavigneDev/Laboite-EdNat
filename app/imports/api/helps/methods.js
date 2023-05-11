@@ -24,10 +24,20 @@ export const createHelp = new ValidatedMethod({
   run(data) {
     const authorized = isActive(this.userId); // && Roles.userIsInRole(this.userId, 'admin');
     if (!authorized) {
+      logServer(
+        `HELPS - METHOD - METEOR ERROR - createHelp - ${i18n.__('api.users.notPermitted')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error('api.helps.createHelp.notPermitted', i18n.__('api.users.notPermitted'));
     }
     const help = Helps.findOne({ title: data.title });
     if (help) {
+      logServer(
+        `HELPS - METHOD - METEOR ERROR - createHelp - ${i18n.__('api.helps.createHelp.alreadyExists')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error('api.helps.createHelp.alreadyExists', i18n.__('api.helps.createHelp.alreadyExists'));
     }
     validateHelp(data);
@@ -46,11 +56,21 @@ export const removeHelp = new ValidatedMethod({
     // check tag existence
     const tag = Helps.findOne(helpId);
     if (tag === undefined) {
+      logServer(
+        `HELPS - METHOD - METEOR ERROR - removeHelp - ${i18n.__('api.helps.unknownHelp')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error('api.helps.removeHelp.unknownHelp', i18n.__('api.helps.unknownHelp'));
     }
     // check if current user is active
     const authorized = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
     if (!authorized) {
+      logServer(
+        `HELPS - METHOD - METEOR ERROR - removeHelp - ${i18n.__('api.users.notPermitted')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error('api.helps.removeHelp.notPermitted', i18n.__('api.users.notPermitted'));
     }
     // changed: do not remove tag from existing articles
@@ -71,17 +91,32 @@ export const updateHelp = new ValidatedMethod({
     // check tag existence
     const tag = Helps.findOne({ _id: helpId });
     if (tag === undefined) {
+      logServer(
+        `HELPS - METHOD - METEOR ERROR - updateHelp - ${i18n.__('api.helps.unknownHelp')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error('api.helps.updateHelp.unknownHelp', i18n.__('api.helps.unknownHelp'));
     }
 
     // check if current user is active
     const authorized = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
     if (!authorized) {
+      logServer(
+        `HELPS - METHOD - METEOR ERROR - updateHelp - ${i18n.__('api.users.notPermitted')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error('api.helps.updateHelp.notPermitted', i18n.__('api.users.notPermitted'));
     }
 
     const tagWithTitle = Helps.findOne({ $and: [{ title: data.title }, { _id: { $ne: helpId } }] });
     if (tagWithTitle) {
+      logServer(
+        `HELPS - METHOD - METEOR ERROR - updateHelp - ${i18n.__('api.helps.updateHelp.titleAlreadyTaken')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error('api.helps.updateHelp.alreadyExists', i18n.__('api.helps.updateHelp.titleAlreadyTaken'));
     }
 
