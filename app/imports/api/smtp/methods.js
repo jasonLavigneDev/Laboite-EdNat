@@ -7,6 +7,7 @@ import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import Structures from '../structures/structures';
 import { getTargetMail } from './utils';
+import logServer, { levels, scopes } from '../logging';
 
 Meteor.startup(function startSmtp() {
   process.env.MAIL_URL = Meteor.settings.smtp.url;
@@ -36,6 +37,11 @@ export const sendContactEmail = new ValidatedMethod({
   run({ firstName, lastName, email, text, structureId }) {
     const structure = Structures.findOne({ _id: structureId });
     if (structure === undefined) {
+      logServer(
+        `SMTP - METHODS - METEOR ERROR - sendContactEmail - ${i18n.__('api.structures.unknownStructure')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error('api.smtp.sendContactEmail.unknownStructure', i18n.__('api.structures.unknownStructure'));
     }
 
