@@ -19,7 +19,7 @@ export const addItem = (userId, item) => {
   let alreadyExists = false;
   if (currentPersonalSpace === undefined) {
     // create personalSpace if not existing
-    logServer(`PERSONALSPACES - METHODS - INSERT - addItem - user id: ${this.userId}`, levels.INFO, scopes.SYSTEM);
+    logServer(`PERSONALSPACES - METHODS - INSERT - addItem - user id: ${this.userId}`, levels.VERBOSE, scopes.SYSTEM);
     PersonalSpaces.insert({ userId, unsorted: [], sorted: [] });
   } else {
     // check that item is not already present
@@ -41,7 +41,7 @@ export const addItem = (userId, item) => {
   if (!alreadyExists) {
     logServer(
       `PERSONALSPACES - METHODS - UPDATE - addItem - user id: ${this.userId} / unsorted: ${JSON.stringify(item)}`,
-      levels.INFO,
+      levels.VERBOSE,
       scopes.SYSTEM,
     );
     PersonalSpaces.update({ userId }, { $push: { unsorted: item } });
@@ -58,13 +58,18 @@ export const removeElement = new ValidatedMethod({
   run({ elementId, type }) {
     // check if active and logged in
     if (!isActive(this.userId)) {
+      logServer(
+        `PERSONALSPACES - METHODS - METEOR ERROR - removeElement - ${i18n.__('api.users.notPermitted')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error('api.personalspaces.addService.notPermitted', i18n.__('api.users.notPermitted'));
     }
     // remove all entries matching item type and element_id
     logServer(
       `PERSONALSPACES - METHODS - UPDATE - removeElement - user id: ${this.userId} / type: ${type} 
       / element_id: ${elementId}`,
-      levels.INFO,
+      levels.VERBOSE,
       scopes.SYSTEM,
     );
     PersonalSpaces.update(
@@ -88,10 +93,20 @@ export const addService = new ValidatedMethod({
   run({ serviceId }) {
     // check if active and logged in
     if (!isActive(this.userId)) {
+      logServer(
+        `PERSONALSPACES - METHODS - METEOR ERROR - addService - ${i18n.__('api.users.notPermitted')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error('api.personalspaces.addService.notPermitted', i18n.__('api.users.notPermitted'));
     }
     const service = Services.findOne(serviceId);
     if (service === undefined) {
+      logServer(
+        `PERSONALSPACES - METHODS - METEOR ERROR - addService - ${i18n.__('api.services.unknownService')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error('api.personalspaces.addService.unknownService', i18n.__('api.services.unknownService'));
     }
     addItem(this.userId, { type: 'service', element_id: serviceId });
@@ -107,10 +122,20 @@ export const addGroup = new ValidatedMethod({
   run({ groupId }) {
     // check if active and logged in
     if (!isActive(this.userId)) {
+      logServer(
+        `PERSONALSPACES - METHODS - METEOR ERROR - addGroup - ${i18n.__('api.users.notPermitted')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error('api.personalspaces.addGroup.notPermitted', i18n.__('api.users.notPermitted'));
     }
     const group = Groups.findOne(groupId);
     if (group === undefined) {
+      logServer(
+        `PERSONALSPACES - METHODS - METEOR ERROR - addGroup - ${i18n.__('api.groups.unknownGroup')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error('api.personalspaces.addGroup.unknownGroup', i18n.__('api.groups.unknownGroup'));
     }
     addItem(this.userId, { type: 'group', element_id: groupId });
@@ -126,10 +151,20 @@ export const addUserBookmark = new ValidatedMethod({
   run({ bookmarkId }) {
     // check if active and logged in
     if (!isActive(this.userId)) {
+      logServer(
+        `PERSONALSPACES - METHODS - METEOR ERROR - addUserBookmark - ${i18n.__('api.users.notPermitted')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error('api.personalspaces.addBookmark.notPermitted', i18n.__('api.users.notPermitted'));
     }
     const bookmark = UserBookmarks.findOne(bookmarkId);
     if (bookmark === undefined) {
+      logServer(
+        `PERSONALSPACES - METHODS - METEOR ERROR - addUserBookmark - ${i18n.__('api.bookmarks.unknownBookmark')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error(
         'api.personalspaces.addBookmark.unknownBookmark',
         i18n.__('api.bookmarks.unknownBookmark'),
@@ -164,6 +199,11 @@ export const updatePersonalSpace = new ValidatedMethod({
   run({ data }) {
     // check if active and logged in
     if (!isActive(this.userId)) {
+      logServer(
+        `PERSONALSPACES - METHODS - METEOR ERROR - updatePersonalSpace - ${i18n.__('api.users.notPermitted')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error('api.personalspaces.updatePersonalSpace.notPermitted', i18n.__('api.users.notPermitted'));
     }
     checkPersonalSpaceData(data);
@@ -174,7 +214,7 @@ export const updatePersonalSpace = new ValidatedMethod({
         `PERSONALSPACES - METHODS - INSERT - updatePersonalSpace - user id: ${this.userId} / data: ${JSON.stringify(
           data,
         )}`,
-        levels.INFO,
+        levels.VERBOSE,
         scopes.SYSTEM,
       );
       PersonalSpaces.insert({ ...data, userId: this.userId });
@@ -182,7 +222,7 @@ export const updatePersonalSpace = new ValidatedMethod({
       logServer(
         `PERSONALSPACES - METHODS - UPDATE - updatePersonalSpace - user id: ${currentPersonalSpace._id} 
         / data: ${data}`,
-        levels.INFO,
+        levels.VERBOSE,
         scopes.SYSTEM,
       );
       PersonalSpaces.update({ _id: currentPersonalSpace._id }, { $set: data });
@@ -198,6 +238,11 @@ export const checkPersonalSpace = new ValidatedMethod({
     // check integrity of personal space datas (no duplicate card and check if groups still exists)
 
     if (!isActive(this.userId)) {
+      logServer(
+        `PERSONALSPACES - METHODS - METEOR ERROR - checkPersonalSpace - ${i18n.__('api.users.notPermitted')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error('api.personalspaces.updatePersonalSpace.notPermitted', i18n.__('api.users.notPermitted'));
     }
     const currentPersonalSpace = PersonalSpaces.findOne({ userId: this.userId });
@@ -315,13 +360,18 @@ export const backToDefaultElement = new ValidatedMethod({
   run({ elementId, type }) {
     // check if active and logged in
     if (!isActive(this.userId)) {
+      logServer(
+        `PERSONALSPACES - METHODS - METEOR ERROR - backToDefaultElement - ${i18n.__('api.users.notPermitted')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error('api.personalspaces.backToDefaultElement.notPermitted', i18n.__('api.users.notPermitted'));
     }
     // remove all entries matching item type and element_id
     logServer(
       `PERSONALSPACES - METHODS - UPDATE - backToDefaultElement - user id: ${this.userId} / type: ${type} 
       / element_id: ${elementId}`,
-      levels.INFO,
+      levels.VERBOSE,
       scopes.SYSTEM,
     );
     PersonalSpaces.update(
@@ -362,6 +412,11 @@ export const generateDefaultPersonalSpace = new ValidatedMethod({
   run({ userId }) {
     // check if active and logged in
     if (!isActive(userId)) {
+      logServer(
+        `PERSONALSPACES - METHODS - METEOR ERROR - generateDefaultPersonalSpace - ${i18n.__('api.users.notPermitted')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error(
         'api.personalspaces.generateDefaultPersonalSpace.notPermitted',
         i18n.__('api.users.notPermitted'),
@@ -390,7 +445,7 @@ export const generateDefaultPersonalSpace = new ValidatedMethod({
     logServer(
       `PERSONALSPACES - METHODS - UPDATE - generateDefaultPersonalSpace meteor users update - user id: ${userId} 
       / favServices: ${servicesAdded}`,
-      levels.INFO,
+      levels.VERBOSE,
       scopes.SYSTEM,
     );
     Meteor.users.update(userId, {
@@ -400,7 +455,7 @@ export const generateDefaultPersonalSpace = new ValidatedMethod({
     logServer(
       `PERSONALSPACES - METHODS - UPDATE - generateDefaultPersonalSpace - user id: ${userId} 
       / defaultSpace: ${defaultSpace}`,
-      levels.INFO,
+      levels.VERBOSE,
       scopes.SYSTEM,
     );
     // Copy the personal space from the default structure one
