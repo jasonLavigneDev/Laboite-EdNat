@@ -11,7 +11,9 @@ export const getTargetMail = ({ structure }) => {
   const { contactEmail, sendMailToStructureAdmin, sendMailToParent } = structure;
   if (contactEmail) return { mails: [contactEmail], admin: false };
   if (sendMailToStructureAdmin) {
-    const mails = Roles.getUsersInRole('adminStructure', { scope: structure._id }).fetch();
+    const mails = Roles.getUsersInRole('adminStructure', { scope: structure._id })
+      .fetch()
+      .map((user) => user.emails[0].address);
     return { mails, admin: false };
   }
   if (sendMailToParent) {
@@ -22,6 +24,8 @@ export const getTargetMail = ({ structure }) => {
       }
     }
   }
-  const mails = Roles.getUsersInRole('admin').fetch();
+  const mails = Roles.getUsersInRole('admin')
+    .fetch()
+    .map((user) => user.emails[0].address);
   return { mails, admin: true };
 };
