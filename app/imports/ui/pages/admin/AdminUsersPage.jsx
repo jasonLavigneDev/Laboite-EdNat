@@ -257,7 +257,7 @@ const AdminUsersPage = ({ match: { path } }) => {
         hidden: isDeleting,
       },
       {
-        label: i18n.__('pages.AdminUsersPage.copyNcLocator'),
+        label: `${i18n.__('pages.AdminUsersPage.copyNcLocator')}: ${user.username}@${user.nclocator}`,
         onclick: copyNcLocator,
         icon: <CloudIcon />,
         hidden: isDeleting || !haveNcLocator,
