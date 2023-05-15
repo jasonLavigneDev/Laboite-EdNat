@@ -3,6 +3,7 @@ import i18n from 'meteor/universe:i18n';
 import Groups from '../../groups/groups';
 import { createNotification } from '../methods';
 import { NOTIFICATIONS_TYPES } from '../enums';
+import { getGroupName } from '../../../ui/utils/utilsFuncs';
 
 /**
  * Send a notification for role change of user in a group
@@ -23,7 +24,7 @@ export function createRoleNotification(currentUser, userId, groupId, role, setRo
       title: i18n.__(`api.notifications.${type}NotifTitle`),
       content: i18n.__(`api.notifications.${type}NotifContent`, {
         role: roleLabel,
-        group: group.name,
+        group: getGroupName(group),
       }),
       link: `/groups/${group.slug}`,
       type,
@@ -48,7 +49,7 @@ export function createRequestNotification(currentUser, userId, groupId) {
       title: i18n.__('api.notifications.requestNotifTitle'),
       content: i18n.__('api.notifications.requestNotifContent', {
         name: user.username,
-        group: group.name,
+        group: getGroupName(group),
       }),
       link: `/admingroups/${groupId}`,
       type: NOTIFICATIONS_TYPES.REQUEST,
