@@ -1,0 +1,42 @@
+{
+  "count": 27,
+  "files": {
+    "imports/startup/i18n/en.i18n.json": {
+      "count": 16,
+      "missmatches": [
+        "components.LegalComponent.content_globalInfo",
+        "components.AdminNextCloudUrlEdit.subtitle",
+        "components.AdminNextCloudUrlEdit.labelUrl",
+        "components.AdminNextCloudUrlEdit.cancel",
+        "components.AdminNextCloudUrlEdit.mainText",
+        "components.AdminNextCloudUrlEdit.ValidateForm",
+        "components.UserFinder.selectTag",
+        "components.UserFinder.CreateTag",
+        "components.UserFinder.addTag",
+        "components.UserFinder.tagLabel",
+        "components.GroupFinder.noTag",
+        "components.GroupFinder.userLabel",
+        "pages.AdminNextcloudUrlPage.materialTableLocalization.body_activeTooltip",
+        "pages.AdminStructureUsersPage.cancelDelete",
+        "pages.AdminStructureSettingsPage.selectIconAndCoverImage",
+        "pages.AdminDefaultSpacesPage.applyText"
+      ]
+    },
+    "imports/startup/i18n/fr.i18n.json": {
+      "count": 11,
+      "missmatches": [
+        "components.AdminNextcloudUrlEdit.subtitle",
+        "components.AdminNextcloudUrlEdit.labelUrl",
+        "components.AdminNextcloudUrlEdit.cancel",
+        "components.AdminNextcloudUrlEdit.mainText",
+        "components.AdminNextcloudUrlEdit.ValidateForm",
+        "components.UserFinder.userLabel",
+        "components.GroupFinder.addGroup",
+        "components.GroupFinder.noGroup",
+        "pages.AdminNextcloudUrlPage.materialTableLocalization.body_editTooltip",
+        "pages.SingleGroupPage.moderateGroup",
+        "pages.AdminStructureUsersPage.successDeleteUser"
+      ]
+    }
+  }
+}

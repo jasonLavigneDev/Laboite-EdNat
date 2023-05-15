@@ -1106,7 +1106,11 @@
       "onlyActiveUserOption": "Only actives users can select a structure",
       "awaitingForStructure": "You are awaiting for structure:",
       "nclocator": "Nextcloud Federation ID",
-      "emptyNcLocator": "No Nextcloud given"
+      "emptyNcLocator": "No Nextcloud given",
+      "ApplyDefaultSpace": "Apply '{$structName}' structure default space",
+      "ApplyDefaultSpaceMessage": "This will apply the changes to your personal space",
+      "ApplyDefaultSpaceBtn": "Apply default space",
+      "ApplyDefaultSpaceWarning": "Can not apply default space if advanced personal page is activated"
     },
     "NotFound": {
       "backButtonLabel": "Back",
