@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { FindFromPublication } from 'meteor/percolate:find-from-publication';
-import { isActive } from '../../utils';
+import { accentInsensitive, isActive } from '../../utils';
 import Structures from '../structures';
 
 // publish all structures
@@ -52,7 +52,7 @@ FindFromPublication.publish(
     const query = {};
 
     if (searchText.length > 2) {
-      const regex = new RegExp(searchText, 'i');
+      const regex = new RegExp(accentInsensitive(searchText), 'i');
       const searchResult = Structures.find({ name: { $regex: regex } }).fetch();
 
       const ids = searchResult.reduce((acc, struct) => {
