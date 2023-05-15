@@ -23,7 +23,7 @@ const initialState = {
   articlePage: {},
   publishersPage: {},
   notificationPage: {},
-  pollPage: {},
+  extServicePage: {},
   addressBookPage: {},
   roles: [],
   uploads: [],

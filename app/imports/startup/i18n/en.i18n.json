@@ -987,9 +987,6 @@
         "body_actionTooltip": "Open bookmark's URL"
       }
     },
-    "EventsPage": {
-      "noAccess": "You don't have access to events of this group"
-    },
     "LegalPage": {
       "personalData": "Personal Data",
       "gcu": "General Conditions of Use",
@@ -1138,7 +1135,8 @@
       "filterGroup": "Show only joined groups",
       "noGroup": "There is no group to display.",
       "addEvent": "Add new event",
-      "addPoll": "Add new poll"
+      "addPoll": "Add new poll",
+      "addNewForm": "Add new Form"
     },
     "AdminHome": {
       "title": "Administration Page",
@@ -1400,6 +1398,8 @@
       "Events": "Events",
       "PollUsage": "Polls list",
       "Polls": "Polls",
+      "FormUsage": "Forms list",
+      "Forms": "Forms",
       "groupArticles": "Access blog's articles",
       "BookmarksUsage": "Bookmarks list",
       "Bookmarks": "Bookmarks",
@@ -1418,13 +1418,6 @@
       "userType": "Users type",
       "noStructure": "No Structure assigned"
     },
-    "Events": {
-      "seeEvent": "See event",
-      "back": "Back to the group",
-      "searchText": "Which event are you looking for ?",
-      "dayOf": "All day of",
-      "noEvents": "No current or upcoming polls were found for this group"
-    },
     "GroupArticlesPage": {
       "seeArticle": "See article",
       "back": "Back to the group",
@@ -1434,12 +1427,26 @@
       "publicPage": "Public page",
       "openPublicPage": "Open this group's public page"
     },
-    "Polls": {
+    "ExtService": {
+      "title":{
+        "polls": "Polls",
+        "events": "Events",
+        "forms": "Forms"
+      },
+      "back": "Go back to group",
       "seePoll": "See poll",
-      "back": "Back to the group",
-      "searchText": "Which poll are you looking for ?",
-      "noPoll": "No current or upcoming polls were found for this group",
-      "noAccess": "You don't have access to polls of this group"
+      "seeForm": "Replie to form",
+      "seeEvent": "See event",
+      "addPoll": "Add new poll",
+      "addEvent": "Add new event",
+      "addForm": "Add new form",
+      "searchText": "What are you looking for ?",
+      "noElements": "There is nothing to display.",
+      "noAccess": "You don't have access to the elements of this group",
+      "seeFormForEdit": "Edit your form's answers",
+      "blockForm": "You have already answered to this form, and you cannot modify your answers.",
+      "dayOf": "All day of",
+      "daysOf": "All days of {$start} to {$end}"
     },
     "ArticlesPage": {
       "title": "Your publications",

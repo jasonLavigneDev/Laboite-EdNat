@@ -991,9 +991,6 @@
         "body_actionTooltip": "Ouvrir le lien du marque-page"
       }
     },
-    "EventsPage": {
-      "noAccess": "Vous n'avez pas accès aux évènements de ce groupe."
-    },
     "LegalPage": {
       "personalData": "Données Personnelles",
       "gcu": "Conditions générales d'utilisation",
@@ -1142,7 +1139,8 @@
       "filterGroup": "Afficher uniquement les groupes rejoints",
       "noGroup": "Il n'y a aucun groupe à afficher.",
       "addEvent": "Ajouer un nouvel événement",
-      "addPoll": "Ajouter un nouveau sondage"
+      "addPoll": "Ajouter un nouveau sondage",
+      "addForm": "Ajouter un nouveau questionnaire"
     },
     "AdminHome": {
       "title": "Interface d'administration",
@@ -1403,10 +1401,12 @@
       "Events": "Evénements",
       "PollUsage": "Liste des sondages",
       "Polls": "Sondages",
+      "FormUsage": "Liste des questionnaires",
+      "Forms": "Questionnaires",
       "groupArticles": "Accéder aux publications",
       "BookmarksUsage": "Liste des marque-pages",
       "Bookmarks": "Marque-pages",
-      "ArticlesUsage": "liste des publications",
+      "ArticlesUsage": "Liste des publications",
       "Articles": "Publications",
       "GroupNotExist": "Le groupe {$groupTitle} n'existe pas"
     },
@@ -1421,13 +1421,6 @@
       "userType": "Type d'utilisateurs",
       "noStructure": "Aucune structure assignée"
     },
-    "Events": {
-      "seeEvent": "Voir l'événement",
-      "back": "Retour au groupe",
-      "searchText": "Quel événement cherchez-vous ?",
-      "dayOf": "Sur la journée du",
-      "noEvents": "Il n'y a actuellement aucun événement en cours ou à venir pour ce groupe."
-    },
     "GroupArticlesPage": {
       "seeArticle": "Consulter la publication",
       "back": "Retour au groupe",
@@ -1437,12 +1430,27 @@
       "publicPage": "Page publique",
       "openPublicPage": "Ouvrir la page publique de ce groupe"
     },
-    "Polls": {
-      "seePoll": "Voir le sondage",
+    "ExtService": {
+      "title":{
+        "polls": "Sondages",
+        "events": "Evénements",
+        "forms": "Questionnaires"
+      },
       "back": "Retour au groupe",
-      "searchText": "Quel sondage cherchez-vous ?",
-      "noPoll": "Il n'y a actuellement aucun sondage en cours ou à venir pour ce groupe.",
-      "noAccess": "Vous n'avez pas accès aux sondages de ce groupe."
+      "seePoll": "Voir le sondage",
+      "seeForm": "Répondre au formulaire",
+      "seeEvent": "Voir l'événement",
+      "addPoll": "Ajouter un nouveau sondage",
+      "addEvent": "Ajouter un nouvel événement",
+      "addForm": "Ajouter un nouveau questionnaire",
+      "searchText": "Que recherchez-vous ?",
+      "noElements": "Il n'y a aucun élément à afficher sur cette page.",
+      "noAccess": "Vous n'avez pas accès à cette page.",
+      "seeFormForEdit": "Modifier vos réponses au formulaire",
+      "blockForm": "Vous avez déjà répondu à ce formulaire, et vous ne pouvez pas changer les réponses",
+      "noForm": "Il n'y a actuellement aucun questionnaire en cours pour ce groupe.",
+      "dayOf": "Sur la journée du",
+      "daysOf": "Sur les journées du {$start} au {$end}"
     },
     "ArticlesPage": {
       "title": "Vos publications",

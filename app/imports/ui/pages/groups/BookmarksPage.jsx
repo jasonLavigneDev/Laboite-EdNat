@@ -106,7 +106,7 @@ function BookmarksPage({ loading, bookmarksList, group }) {
         <Grid container spacing={4}>
           <Grid item xs={12} sm={12} md={12}>
             <Button color="primary" startIcon={<ArrowBack />} onClick={goBack}>
-              {i18n.__('pages.Polls.back')}
+              {i18n.__('pages.ExtService.back')}
             </Button>
           </Grid>
         </Grid>
