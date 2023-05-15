@@ -4,6 +4,7 @@ import Notifications from '../notifications';
 import Groups from '../../groups/groups';
 import { addExpiration } from '../methods';
 import { createGroupNotification } from './notifsutils';
+import logServer, { levels, scopes } from '../../logging';
 
 // export async function getNotifications(req, content) {
 //   let query = {};
@@ -44,6 +45,11 @@ export default async function addNotification(req, content) {
       throw new Meteor.Error('restapi.notifications.addNotifications.unknownUser', i18n.__('api.users.unknownUser'));
     }
 
+    logServer(
+      `NOTIFICATION REST - METHOD - INSERT - addNotification - user data: ${JSON.stringify(userData)}`,
+      levels.VERBOSE,
+      scopes.SYSTEM,
+    );
     return Notifications.insert(userData);
   }
   if ('groupId' in content) {

@@ -301,6 +301,7 @@
       "requestNotifTitle": "Group request",
       "requestNotifContent": "{$name} is candidate for group {$group}.",
       "badConfig": "Bad configuration for notifications of type {$type} (expiration delay in days)",
+      "expirationNotNumber": "numDays is not a number",
       "labels": {
         "id": "Notification Id",
         "userId": "Owner ID",

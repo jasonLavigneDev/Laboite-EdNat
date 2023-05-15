@@ -7,10 +7,15 @@ import { _ } from 'meteor/underscore';
 import i18n from 'meteor/universe:i18n';
 import { isActive, getLabel, validateString } from '../utils';
 import Bookmarks from './bookmarks';
+import logServer, { levels, scopes } from '../logging';
 
 function _updateBookmarkURL(id, url, name, tag) {
+  logServer(
+    `BOOKMARKS - METHOD - UPDATE - _updateBookmarkURL - id: ${id} / data: ${(url, name, tag)}`,
+    levels.VERBOSE,
+    scopes.SYSTEM,
+  );
   Bookmarks.update({ _id: id }, { $set: { url, name, tag } });
-  // Meteor.call('bookmark.getFavicon', { url });
 }
 
 function _formatURL(name) {
@@ -24,15 +29,27 @@ function _formatURL(name) {
 
 function _createBookmarkUrl(url, name, tag, groupId, author) {
   try {
+    logServer(
+      `BOOKMARKS - METHOD - INSERT - _createBookmarkUrl - data: ${(url, name, tag, groupId, author)}`,
+      levels.VERBOSE,
+      scopes.SYSTEM,
+    );
     Bookmarks.insert({ url, name, tag, groupId, author });
-    // Meteor.call('bookmark.getFavicon', { url });
   } catch (error) {
     if (error.code === 11000) {
+      logServer(
+        `BOOKMARKS - METHOD - METEOR ERROR - _createBookmarkUrl - ${i18n.__(
+          'api.bookmarks.createBookmark.URLAlreadyExists',
+        )}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error(
         'api.bookmarks.createBookmark.URLAlreadyExists',
         i18n.__('api.bookmarks.createBookmark.URLAlreadyExists'),
       );
     } else {
+      logServer(`BOOKMARKS - METHOD - ERROR - _createBookmarkUrl`, levels.INFO, scopes.SYSTEM, { error });
       throw error;
     }
   }
@@ -48,6 +65,11 @@ export const createBookmark = new ValidatedMethod({
       (Roles.userIsInRole(this.userId, ['member', 'animator', 'admin'], groupId) ||
         Roles.userIsInRole(this.userId, 'admin'));
     if (!isAllowed) {
+      logServer(
+        `BOOKMARKS - METHOD - METEOR ERROR - createBookmark - ${i18n.__('api.bookmarks.groupRankNeeded')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error('api.bookmarks.notPermitted', i18n.__('api.bookmarks.groupRankNeeded'));
     }
 
@@ -55,6 +77,13 @@ export const createBookmark = new ValidatedMethod({
 
     const bk = Bookmarks.findOne({ url: finalUrl, groupId });
     if (bk !== undefined) {
+      logServer(
+        `BOOKMARKS - METHOD - METEOR ERROR - createBookmark - ${i18n.__(
+          'api.bookmarks.createBookmark.URLAlreadyExists',
+        )}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error(
         'api.bookmarks.createBookmark.URLAlreadyExists',
         i18n.__('api.bookmarks.createBookmark.URLAlreadyExists'),
@@ -81,6 +110,11 @@ export const updateBookmark = new ValidatedMethod({
   run({ id, url, name, groupId, tag }) {
     const bk = Bookmarks.findOne({ _id: id });
     if (bk === undefined) {
+      logServer(
+        `BOOKMARKS - METHOD - METEOR ERROR - updateBookmark - ${i18n.__('api.bookmarks.UnknownURL')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error('api.bookmarks.UnknownURL', i18n.__('api.bookmarks.UnknownURL'));
     }
 
@@ -90,6 +124,11 @@ export const updateBookmark = new ValidatedMethod({
         Roles.userIsInRole(this.userId, 'admin') ||
         bk.author === this.userId);
     if (!isAllowed) {
+      logServer(
+        `BOOKMARKS - METHOD - METEOR ERROR - updateBookmark - ${i18n.__('api.bookmarks.adminRankNeeded')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error('api.bookmarks.notPermitted', i18n.__('api.bookmarks.adminRankNeeded'));
     }
 
@@ -114,6 +153,11 @@ export const removeBookmark = new ValidatedMethod({
     // check group existence
     const bk = Bookmarks.findOne({ url });
     if (bk === undefined) {
+      logServer(
+        `BOOKMARKS - METHOD - METEOR ERROR - removeBookmark - ${i18n.__('api.bookmarks.UnknownURL')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error('api.bookmarks.UnknownURL', i18n.__('api.bookmarks.UnknownURL'));
     }
 
@@ -124,8 +168,14 @@ export const removeBookmark = new ValidatedMethod({
         bk.author === this.userId);
 
     if (!isAllowed) {
+      logServer(
+        `BOOKMARKS - METHOD - METEOR ERROR - removeBookmark - ${i18n.__('api.bookmarks.adminRankNeeded')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error('api.bookmarks.notPermitted', i18n.__('api.bookmarks.adminRankNeeded'));
     }
+    logServer(`BOOKMARKS - METHOD - REMOVE - removeBookmark - url: ${url}`, levels.VERBOSE, scopes.SYSTEM);
     Bookmarks.remove({ url });
 
     return null;

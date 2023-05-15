@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import i18n from 'meteor/universe:i18n';
 import SimpleSchema from 'simpl-schema';
 import { testMeteorSettingsUrl } from '../ui/utils/utilsFuncs';
+import logServer, { levels, scopes } from './logging';
 
 export function isActive(userId) {
   if (!userId) return false;
@@ -193,12 +194,22 @@ const regValidate = /((<|%3C|&lt;)script)|(('|"|%22|%27) *on[a-z_]+ *(=|%3D))/gi
 /** Check a string for malicious content */
 export const validateString = (content, strict = false) => {
   if (content.length > 500000) {
+    logServer(
+      `UTILS - METHODS - METEOR ERROR - validateString - ${i18n.__('api.utils.stringTooLong')}`,
+      levels.VERBOSE,
+      scopes.SYSTEM,
+    );
     throw new Meteor.Error('api.utils.validateString.stringTooLong', i18n.__('api.utils.stringTooLong'));
   }
   /** strict forbids any of the following characters : < > " ' &
       otherwise, forbid script tags and pattern like " onload=... */
   const scriptRegex = strict ? regValidateStrict : regValidate;
   if (content.match(scriptRegex) !== null) {
+    logServer(
+      `UTILS - METHODS - METEOR ERROR - validateString - ${i18n.__('api.utils.scriptDetected')}`,
+      levels.VERBOSE,
+      scopes.SYSTEM,
+    );
     throw new Meteor.Error(
       'api.utils.validateString.error',
       i18n.__(strict ? 'api.utils.badCharsDetected' : 'api.utils.scriptDetected'),

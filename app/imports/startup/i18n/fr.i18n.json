@@ -301,6 +301,7 @@
       "requestNotifTitle": "Demande de candidature",
       "requestNotifContent": "{$name} est candidat pour le groupe {$group}.",
       "badConfig": "Mauvaise configuration pour les notifications de type {$type} (expiration en jours)",
+      "expirationNotNumber": "numDays n'est pas un nombre",
       "labels": {
         "id": "Id de la notification",
         "userId": "ID du destinataire",

@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor';
 import * as winston from 'winston';
 
 export const levels = {
@@ -16,6 +17,8 @@ export const scopes = {
   USER: 'USER',
 };
 
+let logger = 0;
+
 const { combine, timestamp, printf, colorize, align, padLevels, label } = winston.format;
 
 function logServer(message, level = 'info', scope = 'USER', params = {}) {
@@ -28,17 +31,20 @@ function logServer(message, level = 'info', scope = 'USER', params = {}) {
       printf((info) => `${info.timestamp} [${info.level}] ${info.message} ${JSON.stringify({ ...params })}`),
     );
 
-    const logger = winston.createLogger({
-      transports: [
-        new winston.transports.Console({
-          // level: process.env.LOG_LEVEL,
-          level: levels.VERBOSE,
+    if (logger === 0) {
+      console.log('Initialize logger');
+      logger = winston.createLogger({
+        transports: [
+          new winston.transports.Console({
+            // level: process.env.LOG_LEVEL,
+            level: levels.VERBOSE,
 
-          format: combine(colorize({ all: true }), fileFormat),
-        }),
-      ],
-    });
-
+            format: combine(colorize({ all: true }), fileFormat),
+            silent: Meteor.isTest,
+          }),
+        ],
+      });
+    }
     logger.log(level, message.toString());
   }
 }

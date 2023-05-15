@@ -4,6 +4,7 @@ import { _ } from 'meteor/underscore';
 import { DDPRateLimiter } from 'meteor/ddp-rate-limiter';
 import getFavicon from '../../getFavicon';
 import Bookmarks from '../bookmarks';
+import logServer, { levels, scopes } from '../../logging';
 
 const getWebSiteFavicons = new ValidatedMethod({
   name: 'bookmark.getFavicon',
@@ -14,8 +15,14 @@ const getWebSiteFavicons = new ValidatedMethod({
     try {
       const icon = await getFavicon(url);
       if (icon === undefined) {
+        logServer(`BOOKMARK - METHODS - UPDATE - getWebSiteFavicons - url: ${url}`, levels.INFO, scopes.SYSTEM);
         Bookmarks.update({ url }, { $set: { icon: '' } });
       } else {
+        logServer(
+          `BOOKMARK - METHODS - UPDATE - getWebSiteFavicons - url: ${url} / icon: ${icon}`,
+          levels.INFO,
+          scopes.SYSTEM,
+        );
         Bookmarks.update({ url }, { $set: { icon } });
       }
     } catch (err) {

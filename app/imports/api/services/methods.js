@@ -13,6 +13,8 @@ import { hasAdminRightOnStructure } from '../structures/utils';
 import Services from './services';
 import { addService, removeElement } from '../personalspaces/methods';
 
+import logServer, { levels, scopes } from '../logging';
+
 const checkService = (data) => {
   validateString(data.title);
   validateString(data.team);
@@ -38,10 +40,20 @@ export const createService = new ValidatedMethod({
     const isAdmin = Roles.userIsInRole(this.userId, 'admin');
     const authorized = isActive(this.userId) && (isAdmin || isStructureAdmin);
     if (!authorized) {
+      logServer(
+        `SERVICES - METHODS - METEOR ERROR - createService - ${i18n.__('api.users.adminNeeded')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error('api.services.createService.notPermitted', i18n.__('api.users.adminNeeded'));
     }
     const sv = Services.findOne({ slug: slugy(data.title), structure: data.structure });
     if (sv !== undefined) {
+      logServer(
+        `SERVICES - METHODS - METEOR ERROR - createService - ${i18n.__('api.services.ServiceAlreadyExists')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error(
         'api.services.createService.ServiceAlreadyExists',
         i18n.__('api.services.ServiceAlreadyExists'),
@@ -50,8 +62,18 @@ export const createService = new ValidatedMethod({
     checkService(data);
     const sanitizedContent = sanitizeHtml(data.content);
     validateString(sanitizedContent);
+    logServer(
+      `SERVICES - METHODS - INSERT - createService - data: ${JSON.stringify(data)} / content: ${sanitizedContent}`,
+      levels.VERBOSE,
+      scopes.SYSTEM,
+    );
     const serviceId = Services.insert({ ...data, content: sanitizedContent });
 
+    logServer(
+      `SERVICES - METHODS - UPDATE - createService - service id: ${serviceId} / data: ${JSON.stringify(data)}`,
+      levels.VERBOSE,
+      scopes.SYSTEM,
+    );
     Services.update(serviceId, {
       $set: {
         logo: data.logo.replace('/undefined/', `/${serviceId}/`),
@@ -68,6 +90,11 @@ export const createService = new ValidatedMethod({
           files,
         });
       } catch (error) {
+        logServer(
+          `SERVICES - METHODS - METEOR ERROR - createService - ${error.message}`,
+          levels.VERBOSE,
+          scopes.SYSTEM,
+        );
         throw new Meteor.Error('api.services.createService.moveError', error.message);
       }
     }
@@ -85,6 +112,11 @@ export const updateService = new ValidatedMethod({
     // check service existence
     const currentService = Services.findOne({ _id: serviceId });
     if (currentService === undefined) {
+      logServer(
+        `SERVICES - METHODS - METEOR ERROR - updateService - ${i18n.__('api.services.unknownService')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error('api.services.updateService.unknownGroup', i18n.__('api.services.unknownService'));
     }
     // check if current user has admin or structureAdmin rights (structure can not be changed)
@@ -93,11 +125,22 @@ export const updateService = new ValidatedMethod({
       hasAdminRightOnStructure({ userId: this.userId, structureId: currentService.structure });
     const authorized = isActive(this.userId) && (Roles.userIsInRole(this.userId, 'admin') || isStructureAdmin);
     if (!authorized) {
+      logServer(
+        `SERVICES - METHODS - METEOR ERROR - updateService - ${i18n.__('api.users.adminNeeded')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error('api.services.updateService.notPermitted', i18n.__('api.users.adminNeeded'));
     }
     checkService(data);
     const sanitizedContent = sanitizeHtml(data.content);
     validateString(sanitizedContent);
+    logServer(
+      `SERVICES - METHODS - UPDATE - updateService - service id: ${serviceId} / data: ${JSON.stringify(data)}
+       / content: ${sanitizedContent} / structure: ${currentService.structure}`,
+      levels.VERBOSE,
+      scopes.SYSTEM,
+    );
     // update service data, making sure that structure is not modified
     Services.update(
       { _id: serviceId },
@@ -122,11 +165,21 @@ export const favService = new ValidatedMethod({
 
   run({ serviceId }) {
     if (!this.userId) {
+      logServer(
+        `SERVICES - METHODS - METEOR ERROR - favService - ${i18n.__('api.users.mustBeLoggedIn')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error('api.services.favService.notPermitted', i18n.__('api.users.mustBeLoggedIn'));
     }
     // check service existence
     const service = Services.findOne(serviceId);
     if (service === undefined) {
+      logServer(
+        `SERVICES - METHODS - METEOR ERROR - favService - ${i18n.__('api.services.unknownService')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error('api.services.favService.unknownService', i18n.__('api.services.unknownService'));
     }
     const user = Meteor.users.findOne(this.userId);
@@ -137,6 +190,11 @@ export const favService = new ValidatedMethod({
       });
     }
     // update user personalSpace
+    logServer(
+      `SERVICES - METHODS - EXECUTE - favService - user id: ${this.userId} / service id: ${serviceId}}`,
+      levels.VERBOSE,
+      scopes.SYSTEM,
+    );
     addService._execute({ userId: this.userId }, { serviceId });
   },
 });
@@ -149,6 +207,11 @@ export const unfavService = new ValidatedMethod({
 
   run({ serviceId }) {
     if (!this.userId) {
+      logServer(
+        `SERVICES - METHODS - METEOR ERROR - unfavService - ${i18n.__('api.users.mustBeLoggedIn')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error('api.services.unfavService.notPermitted', i18n.__('api.users.mustBeLoggedIn'));
     }
     const user = Meteor.users.findOne(this.userId);
@@ -158,6 +221,11 @@ export const unfavService = new ValidatedMethod({
         $pull: { favServices: serviceId },
       });
     }
+    logServer(
+      `SERVICES - METHODS - EXECUTE - unfavService - user id: ${this.userId} / service id: ${serviceId}}`,
+      levels.VERBOSE,
+      scopes.SYSTEM,
+    );
     // update user personalSpace
     removeElement._execute({ userId: this.userId }, { type: 'service', elementId: serviceId });
   },
