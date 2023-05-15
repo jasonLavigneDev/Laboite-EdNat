@@ -22,7 +22,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import SearchIcon from '@mui/icons-material/Search';
 import Button from '@mui/material/Button';
 import PollIcon from '@mui/icons-material/Poll';
-import { useHistory } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 import moment from 'moment';
 import { makeStyles } from 'tss-react/mui';
 import { usePagination } from '../../utils/hooks';
@@ -83,6 +83,17 @@ const ITEM_PER_PAGE = 10;
 const ExternalServiceGroupPage = ({ loading, group, slug, service }) => {
   const { classes } = useExtServicePageStyles();
   const history = useHistory();
+
+  if (service === 'polls' && !Meteor.settings.public.services.sondagesUrl) {
+    return <Redirect to={{ pathname: '/' }} />;
+  }
+  if (service === 'events' && !Meteor.settings.public.services.agendaUrl) {
+    return <Redirect to={{ pathname: '/' }} />;
+  }
+  if (service === 'forms' && !Meteor.settings.public.services.questionnaireURL) {
+    return <Redirect to={{ pathname: '/' }} />;
+  }
+
   const [{ userId, extServicePage }, dispatch] = useAppContext();
 
   const getCollectionToCheck = () => {
