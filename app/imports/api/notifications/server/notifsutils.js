@@ -81,6 +81,31 @@ export function createGroupNotification(currentUser, groupId, title, content, li
 }
 
 /**
+ * Send a notification to all members/animators/admins of an array groups with no duplication
+ * @param currentUser {string} User ID who ask to send notification
+ * @param groupsId {array} Groups ID concerned
+ * @param title {string} Notification title to be send
+ * @param content {string} Notification content to be send
+ * @param link {string optionnal} Destination link of notification, default link to group page
+ */
+export function createMultiGroupsNotification(currentUser, groupsId, title, content, link = '') {
+  let usersToSend = [];
+  groupsId.forEach((gId) => {
+    const group = Groups.findOne({ _id: gId }, { fields: Groups.adminFields });
+    if (group) {
+      usersToSend = [...new Set([...usersToSend, ...group.admins, ...group.animators, ...group.members])]; // Concats arrays and removes duplicate user ids
+    }
+  });
+  const notifLink = link || '';
+  usersToSend.forEach((uid) => {
+    if (currentUser !== uid) {
+      const newNotif = { userId: uid, title, content, link: notifLink, type: NOTIFICATIONS_TYPES.GROUP };
+      createNotification._execute({ userId: currentUser }, { data: newNotif });
+    }
+  });
+}
+
+/**
  * Send a notification to a pull of users
  * @param currentUser {string} User ID who ask to send notification
  * @param users {array} Users ID to send notification
