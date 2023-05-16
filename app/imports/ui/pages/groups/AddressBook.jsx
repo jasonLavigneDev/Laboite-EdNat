@@ -219,7 +219,7 @@ const AddressBook = ({ loading, group, slug }) => {
                                 </IconButton>
                               </Tooltip>
                             )}
-                            {user.mezigName ? (
+                            {user.mezigName && Meteor.settings.public.services.mezigUrl ? (
                               <Tooltip
                                 title={`${i18n.__('pages.AddressBook.goToMezig')} ${user.firstName}`}
                                 aria-label="add"
@@ -242,7 +242,9 @@ const AddressBook = ({ loading, group, slug }) => {
                                 </IconButton>
                               </Tooltip>
                             ) : null}
-                            {enableBlog && user.articlesCount !== 0 ? (
+                            {enableBlog &&
+                            user.articlesCount !== 0 &&
+                            Meteor.settings.public.services.laboiteBlogURL ? (
                               <Tooltip
                                 title={`${i18n.__('pages.AddressBook.goToBlog')} ${user.firstName}`}
                                 aria-label="add"

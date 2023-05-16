@@ -539,39 +539,45 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, forms, events, bo
                 title={`${i18n.__('pages.SingleGroupPage.addressBook')} (${countUser})`}
                 url={`/groups/${group.slug}/addressbook`}
               />
-              <AppCard
-                id="events"
-                usage={i18n.__('pages.SingleGroupPage.EventsUsage')}
-                logo={<TodayIcon className={classes.icon} color="primary" fontSize="large" />}
-                title={
-                  events === undefined
-                    ? `${i18n.__('pages.SingleGroupPage.Events')}`
-                    : `${i18n.__('pages.SingleGroupPage.Events')} (${events})`
-                }
-                url={`/groups/${group.slug}/services/events`}
-              />
-              <AppCard
-                id="polls"
-                usage={i18n.__('pages.SingleGroupPage.PollUsage')}
-                logo={<PollIcon className={classes.icon} color="primary" fontSize="large" />}
-                title={
-                  polls === undefined
-                    ? `${i18n.__('pages.SingleGroupPage.Polls')}`
-                    : `${i18n.__('pages.SingleGroupPage.Polls')} (${polls})`
-                }
-                url={`/groups/${group.slug}/services/polls`}
-              />
-              <AppCard
-                id="forms"
-                usage={i18n.__('pages.SingleGroupPage.FormUsage')}
-                logo={<ListAltIcon className={classes.icon} color="primary" fontSize="large" />}
-                title={
-                  forms === undefined
-                    ? `${i18n.__('pages.SingleGroupPage.Forms')}`
-                    : `${i18n.__('pages.SingleGroupPage.Forms')} (${forms})`
-                }
-                url={`/groups/${group.slug}/services/forms`}
-              />
+              {Meteor.settings.public.services.agendaUrl ? (
+                <AppCard
+                  id="events"
+                  usage={i18n.__('pages.SingleGroupPage.EventsUsage')}
+                  logo={<TodayIcon className={classes.icon} color="primary" fontSize="large" />}
+                  title={
+                    events === undefined
+                      ? `${i18n.__('pages.SingleGroupPage.Events')}`
+                      : `${i18n.__('pages.SingleGroupPage.Events')} (${events})`
+                  }
+                  url={`/groups/${group.slug}/services/events`}
+                />
+              ) : null}
+              {Meteor.settings.public.services.sondagesUrl ? (
+                <AppCard
+                  id="polls"
+                  usage={i18n.__('pages.SingleGroupPage.PollUsage')}
+                  logo={<PollIcon className={classes.icon} color="primary" fontSize="large" />}
+                  title={
+                    polls === undefined
+                      ? `${i18n.__('pages.SingleGroupPage.Polls')}`
+                      : `${i18n.__('pages.SingleGroupPage.Polls')} (${polls})`
+                  }
+                  url={`/groups/${group.slug}/services/polls`}
+                />
+              ) : null}
+              {Meteor.settings.public.services.questionnaireURL ? (
+                <AppCard
+                  id="forms"
+                  usage={i18n.__('pages.SingleGroupPage.FormUsage')}
+                  logo={<ListAltIcon className={classes.icon} color="primary" fontSize="large" />}
+                  title={
+                    forms === undefined
+                      ? `${i18n.__('pages.SingleGroupPage.Forms')}`
+                      : `${i18n.__('pages.SingleGroupPage.Forms')} (${forms})`
+                  }
+                  url={`/groups/${group.slug}/services/forms`}
+                />
+              ) : null}
               <AppCard
                 id="bookmarks"
                 usage={i18n.__('pages.SingleGroupPage.BookmarksUsage')}
@@ -583,17 +589,19 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, forms, events, bo
                 }
                 url={`/groups/${group.slug}/bookmarks`}
               />
-              <AppCard
-                id="articles"
-                usage={i18n.__('pages.SingleGroupPage.ArticlesUsage')}
-                logo={<LibraryBooksIcon className={classes.icon} color="primary" fontSize="large" />}
-                title={
-                  articles === undefined
-                    ? `${i18n.__('pages.SingleGroupPage.Articles')}`
-                    : `${i18n.__('pages.SingleGroupPage.Articles')} (${articles})`
-                }
-                url={`/groups/${group.slug}/articles`}
-              />
+              {Meteor.settings.public.services.laboiteBlogURL ? (
+                <AppCard
+                  id="articles"
+                  usage={i18n.__('pages.SingleGroupPage.ArticlesUsage')}
+                  logo={<LibraryBooksIcon className={classes.icon} color="primary" fontSize="large" />}
+                  title={
+                    articles === undefined
+                      ? `${i18n.__('pages.SingleGroupPage.Articles')}`
+                      : `${i18n.__('pages.SingleGroupPage.Articles')} (${articles})`
+                  }
+                  url={`/groups/${group.slug}/articles`}
+                />
+              ) : null}
             </>
           ) : null}
           <Grid item xs={12} sm={12} md={12} className={classes.cardGrid}>
