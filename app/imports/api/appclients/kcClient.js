@@ -197,11 +197,7 @@ class KeyCloakClient {
       if (groupId) {
         return groupId;
       }
-      return this._addGroup('adminStructure', token)
-        .then(() => this._getGroupId('adminStructure', token))
-        .then((newGroupId) => {
-          return newGroupId;
-        });
+      return this._addGroup('adminStructure', token).then(() => this._getGroupId('adminStructure', token));
     });
   }
 
