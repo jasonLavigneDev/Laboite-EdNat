@@ -54,3 +54,4 @@ import '../../api/defaultspaces/server/publications';
 import '../../api/asamextensions/methods';
 import '../../api/asamextensions/server/publications';
 import '../../api/migration/server/methods';
+import '../../api/globalinfos/server/methods';

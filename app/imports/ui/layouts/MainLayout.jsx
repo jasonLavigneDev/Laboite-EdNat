@@ -8,7 +8,6 @@ import Alert from '@mui/material/Alert';
 import { Roles } from 'meteor/alanning:roles';
 import PropTypes from 'prop-types';
 import AppSettings from '../../api/appsettings/appsettings';
-import { getAppSettingsGlobalInfo } from '../../api/appsettings/methods';
 
 // components
 import SkipLink from '../components/menus/SkipLink';
@@ -112,18 +111,21 @@ function MainLayout({ appsettings, ready }) {
   }, [location]);
 
   useEffect(() => {
-    getAppSettingsGlobalInfo.call(null, (error, result) => {
-      const { globalInfo } = { ...result };
-      // Si user n'est pas validé par admin ou incomplet on lui set pas les messages commes lu
-      if (!user.isActive || !user.structure) return null;
-      // Si user a des messages non lu , on enregistre le dernier message comme lu
-      const globalInfoInUserLanguage = globalInfo.find((info) => info.language === language);
-      if (!user.lastGlobalInfoReadId || user.lastGlobalInfoReadId !== globalInfoInUserLanguage.id) {
-        Meteor.call('users.setLastGlobalInfoRead', { lastGlobalInfoReadId: globalInfoInUserLanguage.id });
-        return null;
+    if (!user.isActive || !user.structure) return;
+
+    Meteor.call('globalInfos.getGlobalInfoByLanguageAndNotExpired', { language, date: new Date() }, (error, res) => {
+      if (error) {
+        console.log('error', error);
+        return;
       }
-      // Si user a pas de messages non lu on le redirige sur son espace
-      return history.push('/personal');
+
+      if (!res.length) return;
+
+      if (!user.lastGlobalInfoReadDate || user.lastGlobalInfoReadDate.getDate() < res[0].updatedAt.getDate()) {
+        Meteor.call('users.setLastGlobalInfoRead', { lastGlobalInfoReadDate: new Date() });
+        return;
+      }
+      history.push('/personal');
     });
   }, []);
 
