@@ -235,7 +235,10 @@
         "all": "All",
         "applications": "Applications ID",
         "nextcloud": "Create groupe in Nextcloud",
-        "plugins": "Related services managing groups"
+        "plugins": "Related services managing groups",
+        "circleId": "Nextcloud Circle Id",
+        "shareName": "Nextcloud share name",
+        "shareId": "Nextcloud share Id"
       }
     },
     "services": {
@@ -1379,7 +1382,10 @@
       "update": "Update",
       "cancel": "Cancel",
       "groupRemoved": "Group deleted",
-      "invalidName": "Nom invalide"
+      "invalidName": "Nom invalide",
+      "shareName": "Nextcloud share name",
+      "invalidCharacters": "Invalid characters",
+      "shareNameExists": "This share name already exists"
     },
     "SingleGroupPage": {
       "backToList": "Back to the list",

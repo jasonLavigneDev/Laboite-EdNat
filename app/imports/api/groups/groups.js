@@ -145,10 +145,19 @@ Groups.schema = new SimpleSchema(
     circleId: {
       type: String,
       optional: true,
+      label: getLabel('api.groups.labels.circleId'),
+    },
+    shareName: {
+      type: String,
+      optional: true,
+      index: true,
+      unique: true,
+      label: getLabel('api.groups.labels.shareName'),
     },
     shareId: {
       type: String,
       optional: true,
+      label: getLabel('api.groups.labels.shareId'),
     },
   },
   { tracker: Tracker },
@@ -194,6 +203,8 @@ Groups.adminFields = {
   animators: 1,
   members: 1,
   candidates: 1,
+  circleId: 1,
+  shareName: 1,
   ...Groups.allPublicFields,
 };
 

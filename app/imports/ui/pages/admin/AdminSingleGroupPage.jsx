@@ -20,6 +20,7 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Grid from '@mui/material/Grid';
+import InputAdornment from '@mui/material/InputAdornment';
 
 import PropTypes from 'prop-types';
 import slugify from 'slugify';
@@ -38,6 +39,7 @@ import '../../utils/QuillVideo';
 import AvatarPicker from '../../components/users/AvatarPicker';
 import AdminGroupDelete from '../../components/admin/AdminGroupDelete';
 import { getGroupName } from '../../utils/utilsFuncs';
+import debounceFunc from '../../utils/debounce';
 
 const useStyles = makeStyles()((theme) => ({
   root: {
@@ -64,6 +66,10 @@ const useStyles = makeStyles()((theme) => ({
   flex: {
     display: 'flex',
     justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  shareName: {
+    display: 'flex',
     alignItems: 'center',
   },
 }));
@@ -97,6 +103,7 @@ const defaultState = {
   content: '',
   avatar: '',
   type: Number(Object.keys(Groups.typeLabels)[0]),
+  shareName: '',
 };
 
 const quillOptions = {
@@ -129,6 +136,8 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
   const [, dispatch] = useAppContext();
   const [groupData, setGroupData] = useState(defaultState);
   const [loading, setLoading] = useState(!!params._id);
+  const [errorShareText, setErrorShareText] = useState('');
+  const [errorShare, setErrorShare] = useState(false);
   const [tabId, setTabId] = React.useState(0);
   const [content, setContent] = useState('');
   const isAutomaticGroup = group.type === 15;
@@ -147,6 +156,35 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
   const typeLabel = React.useRef(null);
   const { minioEndPoint } = Meteor.settings.public;
 
+  function calcShareName(value) {
+    return value.replace('/', '_').replace('\\', '_');
+  }
+
+  function _checkShareName() {
+    const value = groupData.shareName;
+    if (value) {
+      if (value.includes('/') || value.includes('\\')) {
+        setErrorShareText(`${i18n.__('pages.AdminSingleGroupPage.invalidCharacters')}: /, \\`);
+        setErrorShare(true);
+        return true;
+      }
+      // check unicity of share name
+      Meteor.call('groups.checkShareName', { shareName: value, groupId: params._id }, (err, res) => {
+        if (err) {
+          msg.error(err.reason);
+        } else if (res === false) {
+          setErrorShareText(i18n.__('pages.AdminSingleGroupPage.shareNameExists'));
+          setErrorShare(true);
+        }
+      });
+    }
+    setErrorShareText('');
+    setErrorShare(false);
+    return false;
+  }
+
+  const checkShareName = debounceFunc(_checkShareName, 1000);
+
   useEffect(() => {
     if (params._id && group._id && loading) {
       setLoading(false);
@@ -155,6 +193,10 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
       setPlugins(group.plugins || {});
     }
   }, [group]);
+
+  useEffect(() => {
+    checkShareName();
+  }, [groupData.shareName]);
 
   const handleChangeTab = (event, newValue) => {
     setTabId(newValue);
@@ -171,6 +213,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
           remove: null, // regex to remove characters
           lower: true, // result in lower case
         }),
+        shareName: calcShareName(value),
       });
     } else if (name === 'type') {
       setGroupData({ ...groupData, [name]: Number(value) });
@@ -325,7 +368,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
                 checked={plugins[plugin] || false}
                 onChange={(event) => onChangePlugins(event, plugin)}
                 name={plugin}
-                disabled={plugin !== 'nextcloud' && !!params._id}
+                disabled={(!isAdmin && params._id) || (plugin !== 'nextcloud' && !!params._id)}
               />
             }
             label={i18n.__(`api.${plugin}.enablePluginForGroup`)}
@@ -375,6 +418,23 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
                   disabled
                 />
                 {Object.keys(groupPlugins).map((p) => groupPluginsShow(p))}
+                {plugins.nextcloud === true ? (
+                  <TextField
+                    onChange={onUpdateField}
+                    value={groupData.shareName || calcShareName(groupData.name)}
+                    name="shareName"
+                    label={i18n.__('pages.AdminSingleGroupPage.shareName')}
+                    variant="outlined"
+                    margin="normal"
+                    error={errorShare}
+                    helperText={errorShareText}
+                    fullWidth
+                    InputProps={{
+                      startAdornment: <InputAdornment position="start">groupe-</InputAdornment>,
+                    }}
+                    disabled={(!isAdmin && !!params._id) || (!!params._id && !!group?.circleId)}
+                  />
+                ) : null}
                 <FormControl variant="outlined" fullWidth margin="normal">
                   <InputLabel htmlFor="type" id="type-label" ref={typeLabel}>
                     {i18n.__('pages.AdminSingleGroupPage.type')}
@@ -470,7 +530,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
                 variant="contained"
                 color="primary"
                 onClick={submitUpdateGroup}
-                disabled={nameIsInvalid() || typeIsInvalid()}
+                disabled={nameIsInvalid() || typeIsInvalid() || errorShare}
                 className={classes.button}
               >
                 {params._id ? i18n.__('pages.AdminSingleGroupPage.update') : i18n.__('pages.AdminSingleGroupPage.save')}

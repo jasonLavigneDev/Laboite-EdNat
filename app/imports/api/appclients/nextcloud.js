@@ -24,6 +24,10 @@ function checkResponse(response) {
   }
 }
 
+function getShareName(name) {
+  return `groupe-${name}`;
+}
+
 class NextcloudClient {
   constructor() {
     this.ncURL = (nextcloudPlugin && nextcloudPlugin.URL) || '';
@@ -137,8 +141,9 @@ class NextcloudClient {
 
   async _ensureCircle(group) {
     const groupId = group._id;
+    const shareName = getShareName(group.shareName);
     if (!group.circleId) {
-      const params = { name: group.name, personal: false, local: false };
+      const params = { name: shareName, personal: false, local: false };
       const response = await fetch(`${this.appsURL}/circles/circles`, {
         method: 'POST',
         headers: this.ocsPostHeaders,
@@ -154,7 +159,7 @@ class NextcloudClient {
           levels.INFO,
           scopes.SYSTEM,
           {
-            name: group.name,
+            name: shareName,
             groupId,
             circleId,
           },
@@ -169,7 +174,7 @@ class NextcloudClient {
         levels.ERROR,
         scopes.SYSTEM,
         {
-          name: group.name,
+          name: shareName,
           error: infos.message,
         },
       );
@@ -185,7 +190,7 @@ class NextcloudClient {
         levels.ERROR,
         scopes.SYSTEM,
         {
-          name: group.name,
+          name: getShareName(group.shareName),
           error: error.reason || error.message || error,
         },
       );
@@ -197,7 +202,7 @@ class NextcloudClient {
     // ensures that a group share exists and is associated to group circle
     const groupId = group._id;
     if (!group.shareId) {
-      const shareName = `groupe_${group.name}`;
+      const shareName = getShareName(group.shareName);
       const resp = await fetch(`${this.ncURL}/remote.php/dav/files/${this.ncUser}/${shareName}`, {
         method: 'MKCOL',
         headers: this.ocsHeaders,
@@ -329,7 +334,7 @@ class NextcloudClient {
   }
 
   async deleteFolder(group) {
-    const shareName = `groupe_${group.name}`;
+    const shareName = getShareName(group.shareName);
     await this._deleteFolder(group, shareName).catch((error) => {
       logServer(
         `APPCLIENT - NEXTCLOUD - deleteFolder - ${i18n.__('api.nextcloud.folderDeleteError')}`,

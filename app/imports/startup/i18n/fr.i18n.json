@@ -235,7 +235,10 @@
         "all": "Tous",
         "applications": "ID de l'application",
         "nextcloud": "Créer le groupe dans Nextcloud",
-        "plugins": "Services liés gérant les groupes"
+        "plugins": "Services liés gérant les groupes",
+        "circleId": "Id du cercle Nextcloud",
+        "shareName": "Nom du partage Nextcloud",
+        "shareId": "Id du partage Nextcloud"
       }
     },
     "services": {
@@ -1383,7 +1386,10 @@
       "update": "Mettre à jour",
       "cancel": "Annuler",
       "groupRemoved": "Groupe supprimé",
-      "invalidName": "Nom invalide"
+      "invalidName": "Nom invalide",
+      "shareName": "Nom du partage Nextcloud",
+      "invalidCharacters": "caractères invalides",
+      "shareNameExists": "Ce nom de partage existe déjà"
     },
     "SingleGroupPage": {
       "backToList": "Retour à la liste",
