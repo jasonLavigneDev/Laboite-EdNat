@@ -9,7 +9,7 @@ import logServer, { levels, scopes } from '../../logging';
 // build query for all users from group
 const queryGroupPolls = ({ search, group, onlyPublic }) => {
   const regex = new RegExp(search, 'i');
-  const fieldsToSearch = ['title', 'description'];
+  const fieldsToSearch = ['title', 'description', 'updatedAt'];
   const searchQuery = fieldsToSearch.map((field) => ({
     [field]: { $regex: regex },
     groups: group._id,
