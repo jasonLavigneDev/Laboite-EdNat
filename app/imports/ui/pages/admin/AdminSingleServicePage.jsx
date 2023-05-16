@@ -9,6 +9,7 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import InputLabel from '@mui/material/InputLabel';
+import Tooltip from '@mui/material/Tooltip';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -82,6 +83,9 @@ const useStyles = makeStyles()((theme) => ({
     justifyContent: 'space-between',
     marginTop: theme.spacing(5),
   },
+  topSpacing: {
+    marginTop: theme.spacing(4),
+  },
   screenshotWrapper: {
     marginTop: 30,
     position: 'relative',
@@ -130,6 +134,7 @@ const AdminSingleServicePage = ({ categories, businessReGrouping, service, ready
   const [content, setContent] = useState('');
   const history = useHistory();
   const { classes } = useStyles();
+
   const structureMode = path.startsWith('/admin/structureservices');
   const {
     minioEndPoint,
@@ -320,15 +325,17 @@ const AdminSingleServicePage = ({ categories, businessReGrouping, service, ready
             <b> {serviceData.title}</b> {`${structureMode && structure != null ? `(${structure.name})` : ''}`}
           </Typography>
           <form noValidate autoComplete="off">
-            <TextField
-              onChange={onUpdateField}
-              value={serviceData.title}
-              name="title"
-              label={i18n.__('pages.AdminSingleServicePage.title')}
-              variant="outlined"
-              fullWidth
-              margin="normal"
-            />
+            <Tooltip title={i18n.__('pages.AdminSingleServicePage.titleFieldHelperText')} arrow key="tooTipTitle">
+              <TextField
+                onChange={onUpdateField}
+                value={serviceData.title}
+                name="title"
+                label={i18n.__('pages.AdminSingleServicePage.title')}
+                variant="outlined"
+                fullWidth
+                margin="normal"
+              />
+            </Tooltip>
             <TextField
               onChange={onUpdateField}
               value={serviceData.slug}
@@ -339,49 +346,55 @@ const AdminSingleServicePage = ({ categories, businessReGrouping, service, ready
               margin="normal"
               disabled
             />
-            <FormControl variant="outlined" fullWidth margin="normal">
-              <InputLabel htmlFor="state" id="state-label">
-                {i18n.__('pages.AdminSingleServicePage.state')}
-              </InputLabel>
-              <Select
-                labelId="state-label"
-                id="state"
-                name="state"
-                value={serviceData.state}
+            <Tooltip title={i18n.__('pages.AdminSingleServicePage.StateFieldHelperText')} arrow key="tooTipState">
+              <FormControl variant="outlined" fullWidth margin="normal">
+                <InputLabel htmlFor="state" id="state-label">
+                  {i18n.__('pages.AdminSingleServicePage.state')}
+                </InputLabel>
+                <Select
+                  labelId="state-label"
+                  id="state"
+                  name="state"
+                  value={serviceData.state}
+                  onChange={onUpdateField}
+                  label={i18n.__('pages.AdminSingleServicePage.state')}
+                >
+                  {Object.keys(Services.stateLabels).map((val) => (
+                    <MenuItem key={val} value={val}>
+                      {i18n.__(Services.stateLabels[val])}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Tooltip>
+            <Tooltip title={i18n.__('pages.AdminSingleServicePage.teamFieldHelperText')} arrow key="toolTipTeam">
+              <TextField
                 onChange={onUpdateField}
-                label={i18n.__('pages.AdminSingleServicePage.state')}
-              >
-                {Object.keys(Services.stateLabels).map((val) => (
-                  <MenuItem key={val} value={val}>
-                    {i18n.__(Services.stateLabels[val])}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <TextField
-              onChange={onUpdateField}
-              value={serviceData.team}
-              name="team"
-              label={i18n.__('pages.AdminSingleServicePage.team')}
-              variant="outlined"
-              fullWidth
-              margin="normal"
-            />
-            <TextField
-              onChange={onUpdateField}
-              value={serviceData.usage}
-              name="usage"
-              label={i18n.__('pages.AdminSingleServicePage.usage')}
-              variant="outlined"
-              fullWidth
-              margin="normal"
-            />
+                value={serviceData.team}
+                name="team"
+                label={i18n.__('pages.AdminSingleServicePage.team')}
+                variant="outlined"
+                fullWidth
+                margin="normal"
+              />
+            </Tooltip>
+            <Tooltip title={i18n.__('pages.AdminSingleServicePage.usageFieldHelperText')} arrow key="toolTipUsage">
+              <TextField
+                onChange={onUpdateField}
+                value={serviceData.usage}
+                name="usage"
+                label={i18n.__('pages.AdminSingleServicePage.usage')}
+                variant="outlined"
+                fullWidth
+                margin="normal"
+              />
+            </Tooltip>
             <div className={classes.logoWrapper}>
               <div>{i18n.__('pages.AdminSingleServicePage.logo')}</div>
               <ImageAdminUploader
                 onImageChange={onUpdateLogo}
                 name="logo"
-                className={classes.logo}
+                className={`${classes.logo}`}
                 alt={`logo for ${serviceData.title}`}
                 src={serviceData.logo}
                 path={`services/${params._id}`}
@@ -400,17 +413,23 @@ const AdminSingleServicePage = ({ categories, businessReGrouping, service, ready
                 />
               )}
             </div>
-            <TextField
-              onChange={onUpdateField}
-              value={serviceData.description}
-              name="description"
-              label={i18n.__('pages.AdminSingleServicePage.description')}
-              variant="outlined"
-              inputProps={{ maxLength: 64 }}
-              fullWidth
-              multiline
-              margin="normal"
-            />
+            <Tooltip
+              title={i18n.__('pages.AdminSingleServicePage.descriptionFieldHelperText')}
+              arrow
+              key="toolTipDescription"
+            >
+              <TextField
+                onChange={onUpdateField}
+                value={serviceData.description}
+                name="description"
+                label={i18n.__('pages.AdminSingleServicePage.description')}
+                variant="outlined"
+                inputProps={{ maxLength: 64 }}
+                fullWidth
+                multiline
+                margin="normal"
+              />
+            </Tooltip>
             <TextField
               onChange={onUpdateField}
               value={serviceData.url}
@@ -433,13 +452,13 @@ const AdminSingleServicePage = ({ categories, businessReGrouping, service, ready
                 label={i18n.__('pages.AdminSingleServicePage.offlineService')}
               />
             )}
-            <div className={classes.wysiwyg}>
+            <div className={`${classes.wysiwyg} ${classes.topSpacing}`}>
               <InputLabel htmlFor="content">{i18n.__('pages.AdminSingleServicePage.content')}</InputLabel>
               <CustomToolbarArticle />
               <ReactQuill id="content" value={content} onChange={onUpdateRichText} modules={quillOptions} />
             </div>
             <InputLabel id="categories-label">{i18n.__('pages.AdminSingleServicePage.categories')}</InputLabel>
-            <div className={classes.chipWrapper}>
+            <div className={`${classes.chipWrapper}`}>
               {categories.map((categ) => {
                 const isActive = serviceData.categories && Boolean(serviceData.categories.find((c) => c === categ._id));
                 return (
