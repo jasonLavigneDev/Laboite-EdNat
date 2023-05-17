@@ -34,7 +34,7 @@ const AdminServicesTable = ({ tableTitle, structureMode, urlStruct, urlNew, serv
         const { url } = rowData;
         // const shortUrl = url.substring(0, 20) + (url.length > 20 ? '...' : '');
         return (
-          <a href={url} target="_blank" rel="noreferrer noopener" className="no-overflow">
+          <a href={url} title={url} target="_blank" rel="noreferrer noopener" className="no-overflow">
             {url}
           </a>
         );
