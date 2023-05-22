@@ -36,8 +36,7 @@ function logServer(message, level = 'info', scope = 'USER') {
       logger = winston.createLogger({
         transports: [
           new winston.transports.Console({
-            // level: process.env.LOG_LEVEL,
-            level: levels.VERBOSE,
+            level: process.env.LOG_LEVEL || levels.INFO,
 
             format: combine(colorize({ all: true }), fileFormat),
             silent: Meteor.isTest,
