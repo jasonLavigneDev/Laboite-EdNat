@@ -21,7 +21,7 @@ let logger = 0;
 
 const { combine, timestamp, printf, colorize, align, padLevels, label } = winston.format;
 
-function logServer(message, level = 'info', scope = 'USER') {
+function logServer(message, level = 'info', scope = 'USER', params = {}) {
   if (Meteor.isServer) {
     const fileFormat = combine(
       timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSS' }),
@@ -44,7 +44,7 @@ function logServer(message, level = 'info', scope = 'USER') {
         ],
       });
     }
-    logger.log(level, message.toString());
+    logger.log(level, `${message.toString()} ${JSON.stringify({ ...params })}`);
   }
 }
 
