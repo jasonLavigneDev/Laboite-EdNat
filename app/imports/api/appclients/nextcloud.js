@@ -31,24 +31,38 @@ function getShareName(name) {
 class NextcloudClient {
   constructor() {
     this.ncURL = (nextcloudPlugin && nextcloudPlugin.URL) || '';
-    this.ncUser = (nextcloud && nextcloud.nextcloudUser) || '';
+    const ncUser = (nextcloud && nextcloud.nextcloudUser) || '';
     const ncPassword = (nextcloud && nextcloud.nextcloudPassword) || '';
-    this.nextURL = ocsUrl(this.ncURL);
+    this.circlesUser = (nextcloud && nextcloud.circlesUser) || '';
+    const circlesPassword = (nextcloud && nextcloud.circlesPassword) || '';
     this.appsURL = testUrl(`${this.ncURL}/ocs/v2.php/apps`);
-    this.basicAuth = Buffer.from(`${this.ncUser}:${ncPassword}`, 'binary').toString('base64');
-    this.ocsHeaders = {
+    this.baseHeaders = {
       Accept: 'application/json',
-      Authorization: `Basic ${this.basicAuth}`,
       'OCS-APIRequest': true,
     };
-
+    // headers for user management
+    this.basicAuth = Buffer.from(`${ncUser}:${ncPassword}`, 'binary').toString('base64');
+    this.ocsHeaders = {
+      ...this.baseHeaders,
+      Authorization: `Basic ${this.basicAuth}`,
+    };
     this.ocsPostHeaders = {
       ...this.ocsHeaders,
       'Content-Type': 'application/json',
     };
+    // headers for circles and shares management
+    this.circlesAuth = Buffer.from(`${this.circlesUser}:${circlesPassword}`, 'binary').toString('base64');
+    this.circlesHeaders = {
+      ...this.baseHeaders,
+      Authorization: `Basic ${this.circlesAuth}`,
+    };
+    this.circlesPostHeaders = {
+      ...this.circlesHeaders,
+      'Content-Type': 'application/json',
+    };
   }
 
-  async userExists(username, ncURL = this.ncURL) {
+  async userExists(username, ncURL) {
     const params = new URLSearchParams({ search: username });
     const response = await fetch(`${ocsUrl(ncURL)}/users?${params.toString()}`, {
       method: 'GET',
@@ -75,7 +89,7 @@ class NextcloudClient {
     // checks that 'Circles' API is responding
     const response = await fetch(`${this.appsURL}/circles/circles`, {
       method: 'GET',
-      headers: this.ocsHeaders,
+      headers: this.circlesHeaders,
     });
     checkResponse(response);
     const data = await response.json();
@@ -99,11 +113,11 @@ class NextcloudClient {
 
   async checkConfig() {
     logServer(
-      `APPCLIENT - NEXTCLOUD - checkConfig - ${i18n.__('api.nextcloud.checkConfig', { URL: this.nextURL })}`,
+      `APPCLIENT - NEXTCLOUD - checkConfig - ${i18n.__('api.nextcloud.checkConfig', { URL: this.appsURL })}`,
       levels.INFO,
       scopes.SYSTEM,
       {
-        URL: this.nextURL,
+        URL: this.appsURL,
       },
     );
     return this._checkConfig().catch((error) => {
@@ -123,7 +137,7 @@ class NextcloudClient {
     const params = { value: 40960 };
     const response = await fetch(`${this.appsURL}/circles/circles/${circleId}/config`, {
       method: 'PUT',
-      headers: this.ocsPostHeaders,
+      headers: this.circlesPostHeaders,
       body: JSON.stringify(params),
     });
     checkResponse(response);
@@ -146,7 +160,7 @@ class NextcloudClient {
       const params = { name: shareName, personal: false, local: false };
       const response = await fetch(`${this.appsURL}/circles/circles`, {
         method: 'POST',
-        headers: this.ocsPostHeaders,
+        headers: this.circlesPostHeaders,
         body: JSON.stringify(params),
       });
       checkResponse(response);
@@ -203,9 +217,9 @@ class NextcloudClient {
     const groupId = group._id;
     if (!group.shareId) {
       const shareName = getShareName(group.shareName);
-      const resp = await fetch(`${this.ncURL}/remote.php/dav/files/${this.ncUser}/${shareName}`, {
+      const resp = await fetch(`${this.ncURL}/remote.php/dav/files/${this.circlesUser}/${shareName}`, {
         method: 'MKCOL',
-        headers: this.ocsHeaders,
+        headers: this.circlesHeaders,
       });
       if (resp.statusText !== 'Created') {
         logServer(
@@ -221,7 +235,7 @@ class NextcloudClient {
       const params = { password: null, path: shareName, permissions: 31, shareType: 7, shareWith: circleId };
       const response = await fetch(`${this.appsURL}/files_sharing/api/v1/shares`, {
         method: 'POST',
-        headers: this.ocsPostHeaders,
+        headers: this.circlesPostHeaders,
         body: JSON.stringify(params),
       });
       checkResponse(response);
@@ -272,7 +286,7 @@ class NextcloudClient {
   async _deleteCircle(group) {
     const response = await fetch(`${this.appsURL}/circles/circles/${group.circleId}`, {
       method: 'DELETE',
-      headers: this.ocsHeaders,
+      headers: this.circlesHeaders,
     });
     checkResponse(response);
     const respJson = await response.json();
@@ -317,9 +331,9 @@ class NextcloudClient {
   }
 
   async _deleteFolder(group, shareName) {
-    const response = await fetch(`${this.ncURL}/remote.php/dav/files/${this.ncUser}/${shareName}`, {
+    const response = await fetch(`${this.ncURL}/remote.php/dav/files/${this.circlesUser}/${shareName}`, {
       method: 'DELETE',
-      headers: this.ocsHeaders,
+      headers: this.circlesHeaders,
     });
     checkResponse(response);
     logServer(
@@ -355,7 +369,7 @@ class NextcloudClient {
       const response = await fetch(`${this.appsURL}/circles/circles/${circleId}/members`, {
         method: 'POST',
         body: JSON.stringify(params),
-        headers: this.ocsPostHeaders,
+        headers: this.circlesPostHeaders,
       });
       checkResponse(response);
       const respJson = await response.json();
@@ -410,7 +424,7 @@ class NextcloudClient {
     const response = await fetch(`${this.appsURL}/circles/circles/${circleId}/members/multi`, {
       method: 'POST',
       body: JSON.stringify(params),
-      headers: this.ocsPostHeaders,
+      headers: this.circlesPostHeaders,
     });
     checkResponse(response);
     const respJson = await response.json();
@@ -445,7 +459,7 @@ class NextcloudClient {
     const { circleId } = group;
     const response = await fetch(`${this.appsURL}/circles/circles/${circleId}/members`, {
       method: 'GET',
-      headers: this.ocsHeaders,
+      headers: this.circlesHeaders,
     });
     checkResponse(response);
     const respJson = await response.json();
@@ -466,7 +480,7 @@ class NextcloudClient {
         // remove member from circle
         const respDelete = await fetch(`${this.appsURL}/circles/circles/${circleId}/members/${member.id}`, {
           method: 'DELETE',
-          headers: this.ocsHeaders,
+          headers: this.circlesHeaders,
         });
         checkResponse(respDelete);
         const respDelJson = await respDelete.json();
@@ -491,6 +505,16 @@ class NextcloudClient {
             },
           );
         }
+      } else {
+        logServer(
+          `APPCLIENT - NEXTCLOUD - kickUser - ${i18n.__('api.nextcloud.notMember')}`,
+          levels.ERROR,
+          scopes.SYSTEM,
+          {
+            username: user.username,
+            circleId,
+          },
+        );
       }
     }
   }
@@ -521,33 +545,34 @@ class NextcloudClient {
           userId,
         },
       );
-    }
-    const resExists = await this.userExists(user.username, user.nclocator);
-    if (resExists === false) {
-      const ncData = {
-        userid: user.username,
-        password: '',
-        email: user.emails ? user.emails[0].address : '',
-        displayName: `${user.firstName} ${user.lastName}`,
-        language: user.language,
-      };
-      this._addUser(ncData, user.nclocator).catch((error) => {
-        logServer(
-          `APPCLIENT - NEXTCLOUD - _addUser - ${i18n.__('api.nextcloud.userAddError', { userId })}`,
-          levels.ERROR,
-          scopes.SYSTEM,
-          {
-            userData: ncData,
-            userId,
-            ncURL: user.nclocator,
-            error: error.reason || error.message || error,
-          },
-        );
-      });
+    } else {
+      const resExists = await this.userExists(user.username, user.nclocator);
+      if (resExists === false) {
+        const ncData = {
+          userid: user.username,
+          password: '',
+          email: user.emails ? user.emails[0].address : '',
+          displayName: `${user.firstName} ${user.lastName}`,
+          language: user.language,
+        };
+        this._addUser(ncData, user.nclocator).catch((error) => {
+          logServer(
+            `APPCLIENT - NEXTCLOUD - _addUser - ${i18n.__('api.nextcloud.userAddError', { userId })}`,
+            levels.ERROR,
+            scopes.SYSTEM,
+            {
+              userData: ncData,
+              userId,
+              ncURL: user.nclocator,
+              error: error.reason || error.message || error,
+            },
+          );
+        });
+      }
     }
   }
 
-  async _addUser(userData, ncURL = this.ncURL) {
+  async _addUser(userData, ncURL) {
     const userId = userData.userid;
     const response = await fetch(`${ocsUrl(ncURL)}/users`, {
       method: 'POST',

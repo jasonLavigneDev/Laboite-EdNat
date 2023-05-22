@@ -391,6 +391,7 @@
       "userInviteError": "ERREUR à l'ajout de l'utilisateur au cercle",
       "userKicked": "Utilisateur supprimé du cercle",
       "userKickError": "ERREUR à la suppression de l'utilisateur du cercle",
+      "notMember": "L'utilisateur n'est pas membre du cercle",
       "configureCircleError": "ERREUR lors de la configuration du cercle",
       "enablePluginForGroup": "Associer un partage dans Nextcloud",
       "buttonLinkPlugin": "Accéder au partage Nextcloud",
@@ -1442,7 +1443,7 @@
       "openPublicPage": "Ouvrir la page publique de ce groupe"
     },
     "ExtService": {
-      "title":{
+      "title": {
         "polls": "Sondages",
         "events": "Evénements",
         "forms": "Questionnaires"

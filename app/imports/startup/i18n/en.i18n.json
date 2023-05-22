@@ -391,6 +391,7 @@
       "userInviteError": "ERROR inviting user to circle",
       "userKicked": "User has been removed from circle",
       "userKickError": "ERROR removing user from circle",
+      "notMember": "User is not member of the circle",
       "configureCircleError": "ERROR configuring circle",
       "enablePluginForGroup": "Associate a shared folder in Nextcloud",
       "buttonLinkPlugin": "Access shared files in Nextcloud",
@@ -1439,7 +1440,7 @@
       "openPublicPage": "Open this group's public page"
     },
     "ExtService": {
-      "title":{
+      "title": {
         "polls": "Polls",
         "events": "Events",
         "forms": "Forms"

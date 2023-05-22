@@ -77,6 +77,8 @@
   "nextcloud": {
     "nextcloudUser": "",
     "nextcloudPassword": "",
+    "circlesUser": "",
+    "circlesPassword": "",
     "nextcloudQuota": "1073741824"
     "nextcloudApiKeys": [],
     "sessionTokenKey": "",
