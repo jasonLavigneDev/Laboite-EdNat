@@ -21,14 +21,14 @@ let logger = 0;
 
 const { combine, timestamp, printf, colorize, align, padLevels, label } = winston.format;
 
-function logServer(message, level = 'info', scope = 'USER', params = {}) {
+function logServer(message, level = 'info', scope = 'USER') {
   if (Meteor.isServer) {
     const fileFormat = combine(
       timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSS' }),
       align(),
       padLevels(),
       label({ label: scope, message: true }),
-      printf((info) => `${info.timestamp} [${info.level}] ${info.message} ${JSON.stringify({ ...params })}`),
+      printf((info) => `${info.timestamp} [${info.level}] ${info.message}`),
     );
 
     if (logger === 0) {
