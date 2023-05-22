@@ -142,7 +142,10 @@
         "contactEmail": "Structure contact email",
         "asamExtensionsIds": "Related email extensions ids",
         "iconUrlImage": "Icon url image",
-        "coverUrlImage": "Cover url image"
+        "coverUrlImage": "Cover url image",
+        "externalUrl": "External URL link",
+        "sendMailToParent": "Send mails to parent structure",
+        "sendMailToStructureAdmin": "Send mails to structure admins"
       }
     },
     "asamextensions": {
@@ -1008,6 +1011,9 @@
       "toggleMaintenance": "Put the site in maintenance",
       "textMaintenance": "Maintenance reason",
       "buttonTextMaintenance": "Validate message",
+      "sendMailToParentStructure": "Redirect mails to parent structure.",
+      "sendMailToAdminStructure": "Send mails to administrators of the structure",
+      "externalUrl": "External URL link",
       "unlockMigration": {
         "title": "Migration unlocking",
         "mainText": "Database migration is currently locked.",

@@ -142,7 +142,10 @@
         "contactEmail": "Email de contact de la structure",
         "asamExtensionsIds": "Ids des extensions d'email",
         "iconUrlImage": "Url de l'image de l'icône",
-        "coverUrlImage": "Url de l'image de la couverture"
+        "coverUrlImage": "Url de l'image de la couverture",
+        "externalUrl": "Url externe",
+        "sendMailToParent": "Envoi de mails à la structure parente",
+        "sendMailToStructureAdmin": "Envoi de mails aux administrateurs de structure"
       }
     },
     "asamextensions": {
@@ -1012,6 +1015,9 @@
       "errorMongo": "Une erreur MongoDB est survenue lors de la migration.",
       "textMaintenance": "Raison de la maintenance",
       "buttonTextMaintenance": "Valider le message",
+      "sendMailToParentStructure": "Redirection des mails vers la structure parente",
+      "sendMailToAdminStructure": "Envoi des mails aux administrateurs de structure",
+      "externalUrl": "Lien de redirection externe",
       "unlockMigration": {
         "title": "Déblocage de la migration",
         "mainText": "La migration de la base de données est actuellement vérouillée.",
