@@ -191,6 +191,7 @@ Groups.publicFields = {
   numCandidates: 1,
   plugins: 1,
   articles: 1,
+  shareName: 1,
 };
 Groups.allPublicFields = {
   content: 1,
@@ -204,7 +205,6 @@ Groups.adminFields = {
   members: 1,
   candidates: 1,
   circleId: 1,
-  shareName: 1,
   ...Groups.allPublicFields,
 };
 

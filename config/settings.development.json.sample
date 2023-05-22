@@ -55,7 +55,7 @@
       "nextcloud": {
         "enable": false,
         "URL": "",
-        "groupURL": "[NCLOCATOR]/apps/files/?dir=/&view=shareoverview",
+        "groupURL": "[NCLOCATOR]/apps/files/?dir=/[NCSHARENAME]",
         "enableChangeName": false
       }
     },

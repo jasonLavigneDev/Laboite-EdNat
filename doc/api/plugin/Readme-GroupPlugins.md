@@ -34,6 +34,7 @@ Par exemple :
   - la partie `[GROUPNAME]` sera remplacée par le nom du groupe.
   - la partie `[GROUPSLUG]` sera remplacée par le slug du groupe.
   - la partie `[NCLOCATOR]` sera remplacée par l'adresse de l'instance nextcloud de l'utilisateur.
+  - la partie `[NCSHARENAME]` sera remplacée par le nom de partage nextcloud associé au groupe
 - `enableChangeName` détermine si on peut renommer le nom d'un goupe qui utilise ce plugin. Si plusieurs plugins sont associés à un groupe, la possibilité de changer le nom du groupe sera calculée à partir de tous les `enableChangeName` concernés.
 - TODO: envisager d'avoir une icone spécifique pour le bouton d'accès au plugin
 

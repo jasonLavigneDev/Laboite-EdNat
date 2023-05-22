@@ -313,11 +313,13 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, forms, events, bo
   };
 
   const openGroupFolder = (plugin) => {
+    const shareName = group.shareName ? `groupe-${encodeURIComponent(group.shareName)}` : '';
     const resourceURL = groupPlugins[plugin].groupURL
       .replace('[URL]', testUrl(groupPlugins[plugin].URL))
       .replace('[GROUPNAME]', encodeURIComponent(group.name))
       .replace('[GROUPSLUG]', group.slug)
-      .replace('[NCLOCATOR]', user.nclocator);
+      .replace('[NCLOCATOR]', user.nclocator)
+      .replace('[NCSHARENAME]', shareName);
     window.open(resourceURL, '_blank', 'noopener,noreferrer');
   };
 
