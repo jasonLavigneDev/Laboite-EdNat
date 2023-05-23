@@ -551,14 +551,16 @@
       "ValidateForm": "Valider"
     },
     "MenuBar": {
-      "menuMyspace": "Mon Espace Personnel",
+      "menuMyspace": "Mon Espace",
       "menuMyspaceMobile": "Mon Espace",
       "menuArticles": "Mes publications",
       "menuArticlesMobile": "Publications",
       "menuHelp": "Aide",
-      "menuServices": "Applications",
+      "menuServices": "Les services",
+      "menuServicesMobile": "Services",
       "menuStructure": "Ma Structure",
-      "menuGroupes": "Les Groupes",
+      "menuStructureMobile": "Structure",
+      "menuGroupes": "Les groupes",
       "menuGroupesMobile": "Groupes",
       "menuNotifications": "Mes Notifications",
       "menuAdminServices": "Gestion des Services",
@@ -1442,7 +1444,7 @@
       "openPublicPage": "Ouvrir la page publique de ce groupe"
     },
     "ExtService": {
-      "title":{
+      "title": {
         "polls": "Sondages",
         "events": "Evénements",
         "forms": "Questionnaires"

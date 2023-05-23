@@ -555,8 +555,10 @@
       "menuArticles": "My publications",
       "menuArticlesMobile": "Publications",
       "menuHelp": "Help",
-      "menuServices": "Applications",
+      "menuServices": "All Services",
+      "menuServicesMobile": "Services",
       "menuStructure": "My Structure",
+      "menuStructureMobile": "Structure",
       "menuGroupes": "All Groups",
       "menuGroupesMobile": "Groups",
       "menuNotifications": "My Alerts",
@@ -1439,7 +1441,7 @@
       "openPublicPage": "Open this group's public page"
     },
     "ExtService": {
-      "title":{
+      "title": {
         "polls": "Polls",
         "events": "Events",
         "forms": "Forms"

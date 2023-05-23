@@ -12,6 +12,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import BusinessIcon from '@mui/icons-material/Business';
 import AppsIcon from '@mui/icons-material/Apps';
 import InfoIcon from '@mui/icons-material/Info';
+import Divider from '@mui/material/Divider';
 import { useAppContext } from '../../contexts/context';
 import updateDocumentTitle from '../../utils/updateDocumentTitle';
 
@@ -58,25 +59,15 @@ const MenuBar = ({ mobile }) => {
       hidden: disabledFeatures.introductionTab || mobile,
     },
     {
+      separator: true,
+      hidden: disabledFeatures.introductionTab || mobile,
+    },
+    {
       path: '/',
       content: 'menuMyspace',
       contentMobile: 'menuMyspaceMobile',
       icon: <HomeIcon />,
       hidden: false,
-    },
-    {
-      path: '/groups',
-      content: 'menuGroupes',
-      contentMobile: 'menuGroupesMobile',
-      icon: <GroupIcon />,
-      hidden: disabledFeatures.groups,
-    },
-    {
-      path: '/services',
-      content: 'menuServices',
-      icon: <AppsIcon />,
-      hidden: false,
-      tooltip: 'tooltipServices',
     },
     {
       path: '/publications',
@@ -88,9 +79,29 @@ const MenuBar = ({ mobile }) => {
     {
       path: '/structure',
       content: 'menuStructure',
+      contentMobile: 'menuStructureMobile',
       icon: <BusinessIcon />,
       hidden: false,
       tooltip: 'tooltipStructure',
+    },
+    {
+      separator: true,
+      hidden: false,
+    },
+    {
+      path: '/services',
+      content: 'menuServices',
+      contentMobile: 'menuServicesMobile',
+      icon: <AppsIcon />,
+      hidden: false,
+      tooltip: 'tooltipServices',
+    },
+    {
+      path: '/groups',
+      content: 'menuGroupes',
+      contentMobile: 'menuGroupesMobile',
+      icon: <GroupIcon />,
+      hidden: disabledFeatures.groups,
     },
   ];
   const T = i18n.createComponent('components.MenuBar');
@@ -151,21 +162,27 @@ const MenuBar = ({ mobile }) => {
       centered={finalLinks.length < 4 && mobile}
       allowScrollButtonsMobile
     >
-      {finalLinks.map((link, index) => (
-        <Tab
-          {...a11yProps(index)}
-          key={link.path}
-          value={link.path}
-          to={link.path}
-          title={link.tooltip ? i18n.__(`components.MenuBar.${link.tooltip}`) : ''}
-          disableFocusRipple={mobile}
-          disableRipple={mobile}
-          className={mobile ? classes.mobileTabs : classes.elementTab}
-          icon={mobile ? link.chip ? <Chip size="small" label={link.chip} color="secondary" /> : link.icon : undefined}
-          label={<T>{link.contentMobile || link.content}</T>}
-          onClick={() => handleClick(link)}
-        />
-      ))}
+      {finalLinks.map((link, index) =>
+        link.separator === true ? (
+          <Divider orientation="vertical" variant="middle" flexItem />
+        ) : (
+          <Tab
+            {...a11yProps(index)}
+            key={link.path}
+            value={link.path}
+            to={link.path}
+            title={link.tooltip ? i18n.__(`components.MenuBar.${link.tooltip}`) : ''}
+            disableFocusRipple={mobile}
+            disableRipple={mobile}
+            className={mobile ? classes.mobileTabs : classes.elementTab}
+            icon={
+              mobile ? link.chip ? <Chip size="small" label={link.chip} color="secondary" /> : link.icon : undefined
+            }
+            label={<T>{mobile && link.contentMobile ? link.contentMobile : link.content}</T>}
+            onClick={() => handleClick(link)}
+          />
+        ),
+      )}
     </Tabs>
   );
 };
