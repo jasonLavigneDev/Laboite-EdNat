@@ -43,6 +43,14 @@ const useStyles = makeStyles()((theme, mobile) => ({
     borderBottomLeftRadius: !mobile ? 0 : theme.shape.borderRadius,
     borderBottomRightRadius: !mobile ? 0 : theme.shape.borderRadius,
   },
+  divider: {
+    minWidth: 0,
+    padding: '0px 0px',
+  },
+  dividerIcon: {
+    marginTop: mobile ? '0px' : '8px',
+    marginBottom: mobile ? '0px' : '8px',
+  },
 }));
 
 const MenuBar = ({ mobile }) => {
@@ -59,6 +67,7 @@ const MenuBar = ({ mobile }) => {
       hidden: disabledFeatures.introductionTab || mobile,
     },
     {
+      path: '/divider1',
       separator: true,
       hidden: disabledFeatures.introductionTab || mobile,
     },
@@ -85,6 +94,7 @@ const MenuBar = ({ mobile }) => {
       tooltip: 'tooltipStructure',
     },
     {
+      path: '/divider2',
       separator: true,
       hidden: false,
     },
@@ -164,7 +174,14 @@ const MenuBar = ({ mobile }) => {
     >
       {finalLinks.map((link, index) =>
         link.separator === true ? (
-          <Divider orientation="vertical" variant="middle" flexItem />
+          <Tab
+            className={classes.divider}
+            key={link.path}
+            value={link.path}
+            label=""
+            icon={<Divider className={classes.dividerIcon} orientation="vertical" variant="middle" flexItem />}
+            disabled
+          />
         ) : (
           <Tab
             {...a11yProps(index)}
