@@ -125,7 +125,7 @@ class KeyCloakClient {
           levels.ERROR,
           scopes.SYSTEM,
           {
-            error: error.response && error.response.data ? error.response.data : error,
+            error: error.response && error.response.data ? error.response.data : error.message,
           },
         );
         return null;
