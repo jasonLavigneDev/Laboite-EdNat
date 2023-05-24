@@ -45,9 +45,8 @@ FindFromPublication.publish('groups.events', function groupsEvents({ page, searc
   try {
     checkPaginationParams.validate({ page, itemPerPage, search });
   } catch (err) {
-    // logServer(`publish groups.events : ${err}`);
     logServer(
-      `EVENTSAGENDA - PUBLICATION - groups.events, publish groups.events : ${err}`,
+      `EVENTSAGENDA - PUBLICATION - ERROR - groups.events, publish groups.events : ${err}`,
       levels.ERROR,
       scopes.SYSTEM,
       {

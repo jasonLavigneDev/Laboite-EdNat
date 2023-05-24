@@ -62,6 +62,7 @@ class NextcloudClient {
     };
   }
 
+<<<<<<< HEAD
   async userExists(username, ncURL) {
     const params = new URLSearchParams({ search: username });
     const response = await fetch(`${ocsUrl(ncURL)}/users?${params.toString()}`, {
@@ -114,6 +115,70 @@ class NextcloudClient {
   async checkConfig() {
     logServer(
       `APPCLIENT - NEXTCLOUD - checkConfig - ${i18n.__('api.nextcloud.checkConfig', { URL: this.appsURL })}`,
+=======
+  groupExists(groupName) {
+    return axios
+      .get(`${this.nextURL}/groups`, {
+        params: {
+          search: groupName,
+        },
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Basic ${this.basicAuth}`,
+          'OCS-APIRequest': true,
+        },
+      })
+      .then((response) => {
+        return response.data.ocs.data.groups.includes(groupName);
+      })
+      .catch((error) => {
+        logServer(
+          `APPCLIENT - NEXTCLOUD - ERROR - groupExists - ${i18n.__('api.nextcloud.groupNotFound', { groupName })}`,
+          levels.ERROR,
+          scopes.SYSTEM,
+          {
+            groupName,
+            error: error.response && error.response.data ? error.response.data : error,
+          },
+        );
+        return false;
+      });
+  }
+
+  userExists(userId, ncURL = this.ncURL) {
+    return axios
+      .get(`${ocsUrl(ncURL)}/users`, {
+        params: {
+          search: userId,
+        },
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Basic ${this.basicAuth}`,
+          'OCS-APIRequest': true,
+        },
+      })
+      .then((response) => {
+        return response.data.ocs.data.users.includes(userId);
+      })
+      .catch((error) => {
+        logServer(
+          `APPCLIENT - NEXTCLOUD - ERROR - userExists - ${i18n.__('api.nextcloud.apiError', { groupName: userId })}`,
+          levels.ERROR,
+          scopes.SYSTEM,
+          {
+            groupName: userId,
+            ncURL,
+            error: error.response && error.response.data ? error.response.data : error,
+          },
+        );
+        return false;
+      });
+  }
+
+  checkConfig() {
+    logServer(
+      `APPCLIENT - NEXTCLOUD - AXIOS - checkConfig - ${i18n.__('api.nextcloud.checkConfig', { URL: this.nextURL })}`,
+>>>>>>> 728da50d (feat(logs): rework logs and delete unwanted comments)
       levels.INFO,
       scopes.SYSTEM,
       {
@@ -128,6 +193,7 @@ class NextcloudClient {
         {
           error: error.reason || error.message,
         },
+<<<<<<< HEAD
       );
       return false;
     });
@@ -224,6 +290,24 @@ class NextcloudClient {
       if (resp.statusText !== 'Created') {
         logServer(
           `APPCLIENT - NEXTCLOUD - ensureShare - ${i18n.__('api.nextcloud.shareCreateError', { groupId })}`,
+=======
+      })
+      .then((response) => {
+        if (checkFolderActive(response) === true) {
+          logServer(
+            `APPCLIENT - NEXTCLOUD - THEN - checkConfig - ${i18n.__('api.nextcloud.configOk')}`,
+            levels.INFO,
+            scopes.SYSTEM,
+            {},
+          );
+          return true;
+        }
+        return false;
+      })
+      .catch((error) => {
+        logServer(
+          `APPCLIENT - NEXTCLOUD - ERROR - checkConfig - ${i18n.__('api.nextcloud.badConfig')}`,
+>>>>>>> 728da50d (feat(logs): rework logs and delete unwanted comments)
           levels.ERROR,
           scopes.SYSTEM,
           {
@@ -358,6 +442,7 @@ class NextcloudClient {
           path: shareName,
           error: error.reason || error.message,
         },
+<<<<<<< HEAD
       );
     });
   }
@@ -492,12 +577,335 @@ class NextcloudClient {
             {
               user: user.username,
               error: respDelJson.ocs.meta.message,
+=======
+      )
+      .then((response) => {
+        const infos = response.data.ocs.meta;
+        if (infos.status === 'ok') {
+          logServer(
+            `APPCLIENT - NEXTCLOUD - THEN - addGroup - ${i18n.__('api.nextcloud.groupAdded', { groupName })}`,
+            levels.INFO,
+            scopes.SYSTEM,
+            {
+              groupName,
             },
           );
         } else {
           logServer(
+            `APPCLIENT - NEXTCLOUD - ERROR - addGroup - ${i18n.__('api.nextcloud.groupAddError', { groupName })} (${
+              infos.statuscode
+            } - ${infos.message})}`,
+            levels.ERROR,
+            scopes.SYSTEM,
+            {
+              groupName,
+              infos,
+            },
+          );
+        }
+        return infos.status === 'ok' ? infos.status : infos.message;
+      })
+      .catch((error) => {
+        logServer(
+          `APPCLIENT - NEXTCLOUD - ERROR - addGroup - ${i18n.__('api.nextcloud.groupAddError', { groupName })}`,
+          levels.ERROR,
+          scopes.SYSTEM,
+          {
+            groupName,
+            error: error.response && error.response.data ? error.response.data : error,
+          },
+        );
+        return i18n.__('api.nextcloud.groupAddError', { groupName });
+      });
+  }
+
+  _addGroupToFolder(groupName, folderName, folderId) {
+    return axios
+      .post(
+        `${this.appsURL}/groupfolders/folders/${folderId}/groups`,
+        {
+          group: groupName,
+        },
+        {
+          params: { format: 'json' },
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Basic ${this.basicAuth}`,
+            'OCS-APIRequest': true,
+          },
+        },
+      )
+      .then((response) => {
+        if (response.data.ocs.meta.status === 'ok') {
+          return axios
+            .post(
+              `${this.appsURL}/groupfolders/folders/${folderId}/groups/${groupName}`,
+              {
+                // set permissions to : create, read, update, delete (not share)
+                permissions: 15,
+              },
+              {
+                params: { format: 'json' },
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: `Basic ${this.basicAuth}`,
+                  'OCS-APIRequest': true,
+                },
+              },
+            )
+            .then((resp) => resp.data.ocs.meta.status === 'ok');
+        }
+        logServer(
+          `APPCLIENT - NEXTCLOUD - ERROR - _addGroupToFolder - ${i18n.__('api.nextcloud.groupFolderAssignError', {
+            groupName,
+            folderName,
+          })}`,
+          levels.ERROR,
+          scopes.SYSTEM,
+          {
+            groupName,
+            folderName,
+          },
+        );
+        return false;
+      });
+  }
+
+  _addQuotaToFolder(folderId) {
+    // get quota (in bytes) from settings, or -3 if not set (unlimited)
+    const quota = nextcloud.nextcloudQuota || -3;
+    return axios
+      .post(
+        `${this.appsURL}/groupfolders/folders/${folderId}/quota`,
+        {
+          quota,
+        },
+        {
+          params: { format: 'json' },
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Basic ${this.basicAuth}`,
+            'OCS-APIRequest': true,
+          },
+        },
+      )
+      .then((response) => {
+        const infos = response.data.ocs.meta;
+        if (checkFolderActive(response) && infos.status === 'ok') {
+          return true;
+        }
+        return false;
+      });
+  }
+
+  addGroupFolder(groupName, folderName) {
+    // creates a new group folder and configure access for group users
+    return axios
+      .post(
+        `${this.appsURL}/groupfolders/folders`,
+        {
+          mountpoint: folderName,
+        },
+        {
+          params: { format: 'json' },
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Basic ${this.basicAuth}`,
+            'OCS-APIRequest': true,
+          },
+        },
+      )
+      .then((response) => {
+        const infos = response.data.ocs.meta;
+        if (checkFolderActive(response) && infos.status === 'ok') {
+          logServer(
+            `APPCLIENT - NEXTCLOUD - THEN - addGroupFolder -
+            ${i18n.__('api.nextcloud.groupFolderAdded', { folderName })}`,
+            levels.INFO,
+            scopes.SYSTEM,
+            {
+              groupName,
+              folderName,
+            },
+          );
+          return this._addGroupToFolder(groupName, folderName, response.data.ocs.data.id).then((resp) => {
+            if (resp === true) {
+              logServer(
+                `APPCLIENT - NEXTCLOUD - ADD - addGroupFolder -
+                ${i18n.__('api.nextcloud.permissionsSet', { folderName })}`,
+                levels.INFO,
+                scopes.SYSTEM,
+                {
+                  groupName,
+                  folderName,
+                },
+              );
+              return this._addQuotaToFolder(response.data.ocs.data.id).then((respQuota) => {
+                if (respQuota) {
+                  logServer(
+                    `APPCLIENT - NEXTCLOUD - ADD - addGroupFolder -
+                    ${i18n.__('api.nextcloud.quotaSet', { folderName })}`,
+                    levels.INFO,
+                    scopes.SYSTEM,
+                    {
+                      groupName,
+                      folderName,
+                      respQuota,
+                    },
+                  );
+                } else {
+                  logServer(
+                    `APPCLIENT - NEXTCLOUD - ERROR - addGroupFolder - ${i18n.__('api.nextcloud.quotaSetError', {
+                      folderName,
+                    })}`,
+                    levels.ERROR,
+                    scopes.SYSTEM,
+                    {
+                      groupName,
+                      folderName,
+                      respQuota,
+                    },
+                  );
+                }
+                return respQuota;
+              });
+            }
+            logServer(
+              `APPCLIENT - NEXTCLOUD - ERROR - addGroupFolder -
+              ${i18n.__('api.nextcloud.permissionSetError', { folderName })}`,
+              levels.ERROR,
+              scopes.SYSTEM,
+              {
+                groupName,
+                folderName,
+              },
+            );
+            return resp;
+          });
+        }
+        logServer(
+          `APPCLIENT - NEXTCLOUD - ERROR - addGroupFolder - ${i18n.__('api.nextcloud.folderAddError', { folderName })}`,
+          levels.ERROR,
+          scopes.SYSTEM,
+          {
+            groupName,
+            folderName,
+          },
+        );
+        return false;
+      })
+      .catch((error) => {
+        logServer(
+          `APPCLIENT - NEXTCLOUD - ERROR - addGroupFolder - ${i18n.__('api.nextcloud.folderAddError', { folderName })}`,
+          levels.ERROR,
+          scopes.SYSTEM,
+          {
+            groupName,
+            folderName,
+            error: error.response && error.response.data ? error.response.data : error,
+          },
+        );
+        return false;
+      });
+  }
+
+  removeGroupFolder(groupName) {
+    return axios
+      .get(`${this.appsURL}/groupfolders/folders`, {
+        params: { format: 'json' },
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Basic ${this.basicAuth}`,
+          'OCS-APIRequest': true,
+        },
+      })
+      .then((response) => {
+        if (checkFolderActive(response) && response.data.ocs.meta.status === 'ok') {
+          // find groupFolder ID for groupName
+          const folders = Object.values(response.data.ocs.data).filter((entry) => {
+            return entry.mount_point === groupName && Object.keys(entry.groups).includes(groupName);
+          });
+          return Promise.all(
+            folders.map((folder) => {
+              // check that folder is linked to group
+              return axios
+                .delete(`${this.appsURL}/groupfolders/folders/${folder.id}`, {
+                  params: { format: 'json' },
+                  headers: {
+                    Accept: 'application/json',
+                    Authorization: `Basic ${this.basicAuth}`,
+                    'OCS-APIRequest': true,
+                  },
+                })
+                .then((resp) => {
+                  const infos = resp.data.ocs.meta;
+                  if (infos.status === 'ok') {
+                    logServer(
+                      `APPCLIENT - NEXTCLOUD - REMOVE - removeGroupFolder - ${i18n.__('api.nextcloud.folderRemoved', {
+                        id: folder.id,
+                        mount_point: folder.mount_point,
+                      })}`,
+                      levels.INFO,
+                      scopes.SYSTEM,
+                      {
+                        id: folder.id,
+                        mount_point: folder.mount_point,
+                        groupName,
+                      },
+                    );
+                    return true;
+                  }
+                  logServer(
+                    `APPCLIENT - NEXTCLOUD - ERROR - removeGroupFolder - ${i18n.__('api.nextcloud.folderRemoveError', {
+                      id: folder.id,
+                      message: infos.message,
+                    })}`,
+                    levels.ERROR,
+                    scopes.SYSTEM,
+                    {
+                      id: folder.id,
+                      groupName,
+                      message: infos.message,
+                    },
+                  );
+                  return false;
+                });
+            }),
+          ).then((responses) => !responses.includes(false));
+        }
+        return false;
+      });
+  }
+
+  removeGroup(groupName) {
+    return axios
+      .delete(`${this.nextURL}/groups/${groupName}`, {
+        headers: {
+          Authorization: `Basic ${this.basicAuth}`,
+          'OCS-APIRequest': true,
+        },
+      })
+      .then((response) => {
+        const infos = response.data.ocs.meta;
+        if (infos.status === 'ok') {
+          logServer(
+            `APPCLIENT - NEXTCLOUD - REMOVE - removeGroup - ${i18n.__('api.nextcloud.groupRemoved', { groupName })}`,
+            levels.INFO,
+            scopes.SYSTEM,
+            {
+              groupName,
+>>>>>>> 728da50d (feat(logs): rework logs and delete unwanted comments)
+            },
+          );
+        } else {
+          logServer(
+<<<<<<< HEAD
             `APPCLIENT - NEXTCLOUD - kickUser - ${i18n.__('api.nextcloud.userKicked')}`,
             levels.INFO,
+=======
+            `APPCLIENT - NEXTCLOUD - ERROR - removeGroup - ${i18n.__('api.nextcloud.groupRemoved', { groupName })}`,
+            levels.ERROR,
+>>>>>>> 728da50d (feat(logs): rework logs and delete unwanted comments)
             scopes.SYSTEM,
             {
               username: user.username,
@@ -505,9 +913,17 @@ class NextcloudClient {
             },
           );
         }
+<<<<<<< HEAD
       } else {
         logServer(
           `APPCLIENT - NEXTCLOUD - kickUser - ${i18n.__('api.nextcloud.notMember')}`,
+=======
+        return infos.status === 'ok';
+      })
+      .catch((error) => {
+        logServer(
+          `APPCLIENT - NEXTCLOUD - ERROR - removeGroup - ${i18n.__('api.nextcloud.groupRemoveError', { groupName })}`,
+>>>>>>> 728da50d (feat(logs): rework logs and delete unwanted comments)
           levels.ERROR,
           scopes.SYSTEM,
           {
@@ -538,7 +954,7 @@ class NextcloudClient {
     const user = Meteor.users.findOne(userId);
     if (!user.nclocator) {
       logServer(
-        `APPCLIENT - NEXTCLOUD - addUser - ${i18n.__('api.nextcloud.misingNCLocator')}`,
+        `APPCLIENT - NEXTCLOUD - ERROR - addUser - ${i18n.__('api.nextcloud.misingNCLocator')}`,
         levels.ERROR,
         scopes.SYSTEM,
         {
@@ -546,6 +962,7 @@ class NextcloudClient {
         },
       );
     } else {
+<<<<<<< HEAD
       const resExists = await this.userExists(user.username, user.nclocator);
       if (resExists === false) {
         const ncData = {
@@ -556,8 +973,49 @@ class NextcloudClient {
           language: user.language,
         };
         this._addUser(ncData, user.nclocator).catch((error) => {
+=======
+      this.userExists(user.username, user.nclocator).then((resExists) => {
+        if (resExists === false) {
+          const ncData = {
+            userid: user.username,
+            password: '',
+            email: user.emails ? user.emails[0].address : '',
+            displayName: `${user.firstName} ${user.lastName}`,
+            language: user.language,
+          };
+          this._addUser(ncData, user.nclocator);
+        }
+      });
+    }
+  }
+
+  _addUser(userData, ncURL = this.ncURL) {
+    const userId = userData.userid;
+    return axios
+      .post(`${ocsUrl(ncURL)}/users`, userData, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Basic ${this.basicAuth}`,
+          'OCS-APIRequest': true,
+        },
+      })
+      .then((response) => {
+        const infos = response.data.ocs.meta;
+        if (infos.status === 'ok') {
           logServer(
-            `APPCLIENT - NEXTCLOUD - _addUser - ${i18n.__('api.nextcloud.userAddError', { userId })}`,
+            `APPCLIENT - NEXTCLOUD - ADD - _addUser - ${i18n.__('api.nextcloud.userAdded', { userId, ncURL })}`,
+            levels.INFO,
+            scopes.SYSTEM,
+            {
+              userData,
+              userId,
+              ncURL,
+            },
+          );
+        } else {
+>>>>>>> 728da50d (feat(logs): rework logs and delete unwanted comments)
+          logServer(
+            `APPCLIENT - NEXTCLOUD - ERROR - _addUser - ${i18n.__('api.nextcloud.userAddError', { userId })}`,
             levels.ERROR,
             scopes.SYSTEM,
             {
@@ -567,6 +1025,7 @@ class NextcloudClient {
               error: error.reason || error.message,
             },
           );
+<<<<<<< HEAD
         });
       }
     }
@@ -605,6 +1064,25 @@ class NextcloudClient {
         },
       );
     }
+=======
+        }
+        return infos.status === 'ok' ? infos.status : infos.message;
+      })
+      .catch((error) => {
+        logServer(
+          `APPCLIENT - NEXTCLOUD - ERROR - _addUser - ${i18n.__('api.nextcloud.userAddError', { userId })}`,
+          levels.ERROR,
+          scopes.SYSTEM,
+          {
+            userData,
+            userId,
+            ncURL,
+            error: error.response && error.response.data ? error.response.data : error,
+          },
+        );
+        return i18n.__('api.nextcloud.userAddError', { userId });
+      });
+>>>>>>> 728da50d (feat(logs): rework logs and delete unwanted comments)
   }
 }
 
@@ -616,6 +1094,7 @@ if (Meteor.isServer && nextcloudPlugin && nextcloudPlugin.enable) {
   Meteor.afterMethod('groups.createGroup', async function nextCreateGroup({ plugins }) {
     if (!this.error) {
       if (plugins.nextcloud === true) {
+<<<<<<< HEAD
         const groupId = this.result;
         const group = Groups.findOne({ _id: groupId });
         // create nextcloud circle and share, invite group members/animators to circle
@@ -624,6 +1103,29 @@ if (Meteor.isServer && nextcloudPlugin && nextcloudPlugin.enable) {
           nextClient.ensureShare(group, circleId);
           nextClient.inviteMembers(group, circleId);
         }
+=======
+        // create associated group in Nextcloud
+        nextClient.addGroup(name).then((response) => {
+          if (response === 'ok') {
+            nextClient.addGroupFolder(name, name).then((res) => {
+              if (res === false) logServer(i18n.__('api.nextcloud.addGroupFolderError'), 'error', this.userId);
+            });
+          } else {
+            const msg =
+              response === 'group exists'
+                ? i18n.__('api.nextcloud.groupExists')
+                : i18n.__('api.nextcloud.addGroupError');
+            logServer(
+              `APPCLIENT - NEXTCLOUD - ERROR - groups.createGroup - ${i18n.__(msg)}`,
+              levels.ERROR,
+              scopes.SYSTEM,
+              {
+                userId: this.userId,
+              },
+            );
+          }
+        });
+>>>>>>> 728da50d (feat(logs): rework logs and delete unwanted comments)
       }
     }
   });
@@ -634,9 +1136,48 @@ if (Meteor.isServer && nextcloudPlugin && nextcloudPlugin.enable) {
       const isAdmin = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin', groupId);
       if (isAdmin || this.userId === groupData.owner) {
         if (groupData.plugins.nextcloud === true) {
+<<<<<<< HEAD
           // remove circle and share folder group from nextcloud
           nextClient.deleteCircle(groupData);
           nextClient.deleteFolder(groupData);
+=======
+          // remove group from nextcloud if it exists
+          nextClient.groupExists(groupData.name).then((resExists) => {
+            if (resExists) {
+              nextClient.removeGroupFolder(groupData.name).then((response) => {
+                if (response)
+                  nextClient.removeGroup(groupData.name).then((res) => {
+                    if (res === false) {
+                      logServer(
+                        `APPCLIENT - NEXTCLOUD - ERROR - groups.removeGroup - ${i18n.__(
+                          'api.nextcloud.removeGroupError',
+                        )}`,
+                        levels.ERROR,
+                        scopes.SYSTEM,
+                        {
+                          groupId,
+                          userId: this.userId,
+                        },
+                      );
+                    }
+                  });
+                else {
+                  logServer(
+                    `APPCLIENT - NEXTCLOUD - ERROR - groups.removeGroup - ${i18n.__(
+                      'api.nextcloud.removeGroupFolderError',
+                    )}`,
+                    levels.ERROR,
+                    scopes.SYSTEM,
+                    {
+                      groupId,
+                      userId: this.userId,
+                    },
+                  );
+                }
+              });
+            }
+          });
+>>>>>>> 728da50d (feat(logs): rework logs and delete unwanted comments)
         }
       }
     }
@@ -666,6 +1207,7 @@ if (Meteor.isServer && nextcloudPlugin && nextcloudPlugin.enable) {
       // invite user to group circle if needed
       const group = Groups.findOne({ _id: groupId });
       if (group.plugins.nextcloud === true) {
+<<<<<<< HEAD
         nextClient.inviteUser(userId, group);
       }
     }
@@ -697,6 +1239,33 @@ if (Meteor.isServer && nextcloudPlugin && nextcloudPlugin.enable) {
       const group = Groups.findOne({ _id: groupId });
       if (group.plugins.nextcloud === true) {
         if (!group.members.includes(userId)) nextClient.kickUser(userId, group);
+=======
+        nextClient.groupExists(groupName).then((resExists) => {
+          if (resExists === false) {
+            nextClient.addGroup(groupName).then((response) => {
+              if (response === 'ok') {
+                nextClient.addGroupFolder(groupName, groupName).then((res) => {
+                  if (res === false) logServer(i18n.__('api.nextcloud.addGroupFolderError'), 'error', this.userId);
+                });
+              } else {
+                const msg =
+                  response === 'group exists'
+                    ? i18n.__('api.nextcloud.groupExists')
+                    : i18n.__('api.nextcloud.addGroupError');
+                logServer(
+                  `APPCLIENT - NEXTCLOUD - ERROR - groups.updateGroup - ${i18n.__(msg)}`,
+                  levels.ERROR,
+                  scopes.SYSTEM,
+                  {
+                    userId: this.userId,
+                    response,
+                  },
+                );
+              }
+            });
+          }
+        });
+>>>>>>> 728da50d (feat(logs): rework logs and delete unwanted comments)
       }
     }
   });

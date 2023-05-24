@@ -28,6 +28,18 @@ export const updateStructureIconOrCoverImage = new ValidatedMethod({
     const structure = Structures.findOne({ _id: structureId });
 
     if (structure === undefined) {
+      logServer(
+        `STRUCTURES - METHOD - METEOR ERROR - updateStructureIconOrCoverImage - ${i18n.__(
+          'api.structures.unknownStructure',
+        )}`,
+        levels.ERROR,
+        scopes.SYSTEM,
+        {
+          structureId,
+          iconUrlImage,
+          coverUrlImage,
+        },
+      );
       throw new Meteor.Error(
         'api.structures.updateIconOrCoverImage.unknownStructure',
         i18n.__('api.structures.unknownStructure'),
@@ -37,6 +49,16 @@ export const updateStructureIconOrCoverImage = new ValidatedMethod({
     const authorized = isActive(this.userId) && hasAdminRightOnStructure({ userId: this.userId, structureId });
 
     if (!authorized) {
+      logServer(
+        `STRUCTURES - METHOD - METEOR ERROR - updateStructureIconOrCoverImage - ${i18n.__('api.users.notPermitted')}`,
+        levels.ERROR,
+        scopes.SYSTEM,
+        {
+          structureId,
+          iconUrlImage,
+          coverUrlImage,
+        },
+      );
       throw new Meteor.Error('api.structures.updateIconOrCoverImage.notPermitted', i18n.__('api.users.notPermitted'));
     }
     if (iconUrlImage) validateString(iconUrlImage);
@@ -47,12 +69,11 @@ export const updateStructureIconOrCoverImage = new ValidatedMethod({
 
     if (coverUrlImage !== '-1') res = Structures.update({ _id: structureId }, { $set: { coverUrlImage } });
 
-    logServer(
-      `STRUCTURES - METHOD - UPDATE - updateStructureIconOrCoverImage - structureId: ${structureId} 
-      / iconUrlImage: ${iconUrlImage} / coverUrlImage: ${coverUrlImage}`,
-      levels.INFO,
-      scopes.SYSTEM,
-    );
+    logServer(`STRUCTURES - METHOD - UPDATE - updateStructureIconOrCoverImage`, levels.INFO, scopes.SYSTEM, {
+      structureId,
+      iconUrlImage,
+      coverUrlImage,
+    });
     return res;
   },
 });
@@ -64,6 +85,16 @@ export const deleteIconOrCoverImage = new ValidatedMethod({
     const structure = Structures.findOne({ _id: structureId });
 
     if (structure === undefined) {
+      logServer(
+        `STRUCTURES - METHOD - METEOR ERROR - deleteIconOrCoverImage - ${i18n.__('api.structures.unknownStructure')}`,
+        levels.ERROR,
+        scopes.SYSTEM,
+        {
+          structureId,
+          iconUrlImage,
+          coverUrlImage,
+        },
+      );
       throw new Meteor.Error(
         'api.structures.updateIconOrCoverImage.unknownStructure',
         i18n.__('api.structures.unknownStructure'),
@@ -73,6 +104,16 @@ export const deleteIconOrCoverImage = new ValidatedMethod({
     const authorized = isActive(this.userId) && hasAdminRightOnStructure({ userId: this.userId, structureId });
 
     if (!authorized) {
+      logServer(
+        `STRUCTURES - METHOD - METEOR ERROR - deleteIconOrCoverImage - ${i18n.__('api.users.notPermitted')}`,
+        levels.ERROR,
+        scopes.SYSTEM,
+        {
+          structureId,
+          iconUrlImage,
+          coverUrlImage,
+        },
+      );
       throw new Meteor.Error('api.structures.deleteIconOrCoverImage.notPermitted', i18n.__('api.users.notPermitted'));
     }
 
@@ -85,12 +126,11 @@ export const deleteIconOrCoverImage = new ValidatedMethod({
 
     if (coverUrlImage !== '-1') res = Structures.update({ _id: structureId }, { $unset: { coverUrlImage: '' } });
 
-    logServer(
-      `STRUCTURES - METHOD - UPDATE - deleteIconOrCoverImage - structureId: ${structureId} 
-      / iconUrlImage: ${iconUrlImage} / coverUrlImage: ${coverUrlImage}`,
-      levels.INFO,
-      scopes.SYSTEM,
-    );
+    logServer(`STRUCTURES - METHOD - UPDATE - deleteIconOrCoverImage`, levels.INFO, scopes.SYSTEM, {
+      structureId,
+      iconUrlImage,
+      coverUrlImage,
+    });
     return res;
   },
 });

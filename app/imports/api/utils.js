@@ -195,9 +195,10 @@ const regValidate = /((<|%3C|&lt;)script)|(('|"|%22|%27) *on[a-z_]+ *(=|%3D))/gi
 export const validateString = (content, strict = false) => {
   if (content.length > 500000) {
     logServer(
-      `UTILS - METHODS - METEOR ERROR - validateString - ${i18n.__('api.utils.stringTooLong')}`,
-      levels.VERBOSE,
+      `UTILS - API - METEOR ERROR - validateString - ${i18n.__('api.utils.stringTooLong')}`,
+      levels.ERROR,
       scopes.SYSTEM,
+      { content, strict },
     );
     throw new Meteor.Error('api.utils.validateString.stringTooLong', i18n.__('api.utils.stringTooLong'));
   }
@@ -206,9 +207,10 @@ export const validateString = (content, strict = false) => {
   const scriptRegex = strict ? regValidateStrict : regValidate;
   if (content.match(scriptRegex) !== null) {
     logServer(
-      `UTILS - METHODS - METEOR ERROR - validateString - ${i18n.__('api.utils.scriptDetected')}`,
-      levels.VERBOSE,
+      `UTILS - API - METEOR ERROR - validateString - ${i18n.__('api.utils.scriptDetected')}`,
+      levels.ERROR,
       scopes.SYSTEM,
+      { content, strict },
     );
     throw new Meteor.Error(
       'api.utils.validateString.error',

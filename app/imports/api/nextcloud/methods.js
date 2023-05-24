@@ -30,8 +30,9 @@ function _createUrl(url, active) {
     if (error.code === 11000) {
       logServer(
         `NEXTCLOUD - METHOD - METEOR ERROR - _createUrl - ${i18n.__('api.nextcloud.urlAlreadyExists')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { error },
       );
       throw new Meteor.Error('api.nextcloud._createUrl.urlAlreadyExists', i18n.__('api.nextcloud.urlAlreadyExists'));
     } else {
@@ -63,8 +64,9 @@ export const updateNextcloudURL = new ValidatedMethod({
     if (!isAllowed) {
       logServer(
         `NEXTCLOUD - METHOD - METEOR ERROR - removeNextcloudURL - ${i18n.__('api.nextcloud.adminRankNeeded')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { url, active },
       );
       throw new Meteor.Error('api.nextcloud.updateNextcloudURL.notPermitted', i18n.__('api.nextcloud.adminRankNeeded'));
     }
@@ -91,8 +93,9 @@ export const removeNextcloudURL = new ValidatedMethod({
     if (ncloud === undefined) {
       logServer(
         `NEXTCLOUD - METHOD - METEOR ERROR - removeNextcloudURL - ${i18n.__('api.nextcloud.unknownURL')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { url },
       );
       throw new Meteor.Error('api.nextcloud.removeNextcloudURL.unknownURL', i18n.__('api.nextcloud.unknownURL'));
     }
@@ -100,8 +103,9 @@ export const removeNextcloudURL = new ValidatedMethod({
     if (!isActive(this.userId) || !Roles.userIsInRole(this.userId, 'admin')) {
       logServer(
         `NEXTCLOUD - METHOD - METEOR ERROR - removeNextcloudURL - ${i18n.__('api.nextcloud.adminGroupNeeded')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { url },
       );
       throw new Meteor.Error(
         'api.nextcloud.removeNextcloudURL.notPermitted',
@@ -111,8 +115,9 @@ export const removeNextcloudURL = new ValidatedMethod({
     if (ncloud.count > 0) {
       logServer(
         `NEXTCLOUD - METHOD - METEOR ERROR - removeNextcloudURL - ${i18n.__('api.nextcloud.mustNotBeUsed')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { url },
       );
       throw new Meteor.Error('api.nextcloud.removeNextcloudURL.notPermitted', i18n.__('api.nextcloud.mustNotBeUsed'));
     }

@@ -22,7 +22,7 @@ Si je souhaite ajouter un log dans une méthode au niveau des structures (`api/s
 
 ```javascript
 logServer(
-  `STRUCTURE - METHODS - UPDATE - createStructure`,
+  `STRUCTURE - METHODS - UPDATE - createStructure - message`,
   levels.INFO,
   scopes.SYSTEM,
   { structureId, structureId, directParentStructureAncestorIds }
@@ -35,6 +35,7 @@ Si on doit résumer cette notation dans l'ordre on retrouve:
 - _METHODS_ - fichier dans lequel on se trouve en relation avec le cadre
 - _UPDATE_ - représente l'action faite en base de donnée
 - _createStructure_ - nom de la méthod concerné
+- _message_ - message complémentaire pour expliquer le log
 - _levels.INFO_ - représente l'importance du log cf. [levels](#levels)
 - _scopes.SYSTEM_ - représente l'entité qui déclanche le log cf. [scopes](#scopes)
 - _{`vars`}_ - représente les/la variables passées dans la méthods qui appel le log

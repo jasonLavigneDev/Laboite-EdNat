@@ -30,15 +30,21 @@ export const createArticle = new ValidatedMethod({
     if (!isActive(this.userId)) {
       logServer(
         `ARTICLES - METHODS - METEOR ERROR - createArticle - ${i18n.__('api.users.mustBeLoggedIn')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { data },
       );
       throw new Meteor.Error('api.articles.createArticle.notLoggedIn', i18n.__('api.users.mustBeLoggedIn'));
     }
     validateData(data);
     const sanitizedContent = data.markdown ? data.content : sanitizeHtml(data.content);
     validateString(sanitizedContent);
-    logServer(`ARTICLES - METHODS - METEOR UPDATE - createArticle - id: ${this.userId}`, levels.VERBOSE, scopes.SYSTEM);
+    logServer(
+      `ARTICLES - METHODS - METEOR UPDATE - createArticle - id: ${this.userId}`,
+      levels.VERBOSE,
+      scopes.SYSTEM,
+      { data },
+    );
     Meteor.users.update({ _id: this.userId }, { $inc: { articlesCount: 1 }, $set: { lastArticle: new Date() } });
     const structure = Meteor.users.findOne(this.userId, { fields: { structure: 1 } }).structure || '';
     logServer(
@@ -62,8 +68,9 @@ export const removeArticle = new ValidatedMethod({
     if (!isActive(this.userId)) {
       logServer(
         `ARTICLES - METHODS - METEOR ERROR - removeArticle - ${i18n.__('api.users.mustBeLoggedIn')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { articleId },
       );
       throw new Meteor.Error('api.articles.removeArticle.notLoggedIn', i18n.__('api.users.mustBeLoggedIn'));
     }
@@ -72,8 +79,9 @@ export const removeArticle = new ValidatedMethod({
     if (!authorized) {
       logServer(
         `ARTICLES - METHODS - METEOR ERROR - removeArticle - ${i18n.__('api.articles.adminArticleNeeded')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { articleId },
       );
       throw new Meteor.Error('api.articles.removeArticle.notPermitted', i18n.__('api.articles.adminArticleNeeded'));
     }
@@ -81,6 +89,7 @@ export const removeArticle = new ValidatedMethod({
       `ARTICLES - METHODS - UPDATE - removeArticle - Article remove for userID: ${this.userId}`,
       levels.INFO,
       scopes.SYSTEM,
+      { articleId },
     );
     Meteor.users.update({ _id: this.userId }, { $inc: { articlesCount: -1 } });
 
@@ -103,8 +112,9 @@ export const updateArticle = new ValidatedMethod({
     if (article === undefined) {
       logServer(
         `ARTICLES - METHODS - METEOR ERROR - updateArticle - ${i18n.__('api.articles.unknownArticle')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { data, articleId, updateStructure },
       );
       throw new Meteor.Error('api.articles.updateArticle.unknownArticle', i18n.__('api.articles.unknownArticle'));
     }
@@ -113,8 +123,9 @@ export const updateArticle = new ValidatedMethod({
     if (!authorized) {
       logServer(
         `ARTICLES - METHODS - METEOR ERROR - updateArticle - ${i18n.__('api.articles.adminArticleNeeded')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { data, articleId, updateStructure },
       );
       throw new Meteor.Error('api.articles.updateArticle.notPermitted', i18n.__('api.articles.adminArticleNeeded'));
     }
@@ -126,6 +137,7 @@ export const updateArticle = new ValidatedMethod({
       `ARTICLES - METHODS - METEOR USER UPDATE - updateArticle - user id: ${this.userId}`,
       levels.VERBOSE,
       scopes.SYSTEM,
+      { data, articleId, updateStructure },
     );
     Meteor.users.update({ _id: this.userId }, { $set: { lastArticle: new Date() } });
     const updateData = { ...data, content: sanitizedContent, userId: this.userId };
@@ -153,8 +165,9 @@ export const visitArticle = new ValidatedMethod({
     if (article === undefined) {
       logServer(
         `ARTICLES - METHODS - METEOR ERROR - visitArticle - ${i18n.__('api.articles.unknownArticle')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { articleId },
       );
       throw new Meteor.Error('api.articles.visitArticle.unknownArticle', i18n.__('api.articles.unknownArticle'));
     }
@@ -175,7 +188,7 @@ export const downloadBackupPublications = new ValidatedMethod({
     if (!authorized) {
       logServer(
         `ARTICLES - METHODS - METEOR ERROR - downloadBackupPublications - ${i18n.__('api.users.mustBeLoggedIn')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
       );
       throw new Meteor.Error(
@@ -205,8 +218,9 @@ export const uploadBackupPublications = new ValidatedMethod({
       if (!authorized) {
         logServer(
           `ARTICLES - METHODS - METEOR ERROR - uploadBackupPublications - ${i18n.__('api.users.mustBeLoggedIn')}`,
-          levels.VERBOSE,
+          levels.ERROR,
           scopes.SYSTEM,
+          { articles, updateStructure },
         );
         throw new Meteor.Error(
           'api.articles.uploadBackupPublications.notLoggedIn',
@@ -234,7 +248,7 @@ export const uploadBackupPublications = new ValidatedMethod({
         });
       });
     } catch (error) {
-      logServer(`ARTICLES - METHODS - METEOR ERROR - uploadBackupPublications`, levels.INFO, scopes.SYSTEM, { error });
+      logServer(`ARTICLES - METHODS - METEOR ERROR - uploadBackupPublications`, levels.ERROR, scopes.SYSTEM, { error });
       throw new Meteor.Error(error, error);
     }
   },

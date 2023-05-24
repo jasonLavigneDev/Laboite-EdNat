@@ -42,8 +42,9 @@ export const createService = new ValidatedMethod({
     if (!authorized) {
       logServer(
         `SERVICES - METHODS - METEOR ERROR - createService - ${i18n.__('api.users.adminNeeded')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { data },
       );
       throw new Meteor.Error('api.services.createService.notPermitted', i18n.__('api.users.adminNeeded'));
     }
@@ -51,8 +52,9 @@ export const createService = new ValidatedMethod({
     if (sv !== undefined) {
       logServer(
         `SERVICES - METHODS - METEOR ERROR - createService - ${i18n.__('api.services.ServiceAlreadyExists')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { data },
       );
       throw new Meteor.Error(
         'api.services.createService.ServiceAlreadyExists',
@@ -63,17 +65,16 @@ export const createService = new ValidatedMethod({
     const sanitizedContent = sanitizeHtml(data.content);
     validateString(sanitizedContent);
     logServer(
-      `SERVICES - METHODS - INSERT - createService - data: ${JSON.stringify(data)} / content: ${sanitizedContent}`,
+      `SERVICES - METHODS - INSERT - createService - content: ${sanitizedContent}`,
       levels.VERBOSE,
       scopes.SYSTEM,
+      { data },
     );
     const serviceId = Services.insert({ ...data, content: sanitizedContent });
 
-    logServer(
-      `SERVICES - METHODS - UPDATE - createService - service id: ${serviceId} / data: ${JSON.stringify(data)}`,
-      levels.VERBOSE,
-      scopes.SYSTEM,
-    );
+    logServer(`SERVICES - METHODS - UPDATE - createService - service id: ${serviceId}`, levels.VERBOSE, scopes.SYSTEM, {
+      data,
+    });
     Services.update(serviceId, {
       $set: {
         logo: data.logo.replace('/undefined/', `/${serviceId}/`),
@@ -90,11 +91,9 @@ export const createService = new ValidatedMethod({
           files,
         });
       } catch (error) {
-        logServer(
-          `SERVICES - METHODS - METEOR ERROR - createService - ${error.message}`,
-          levels.VERBOSE,
-          scopes.SYSTEM,
-        );
+        logServer(`SERVICES - METHODS - METEOR ERROR - createService - ${error.message}`, levels.ERROR, scopes.SYSTEM, {
+          data,
+        });
         throw new Meteor.Error('api.services.createService.moveError', error.message);
       }
     }
@@ -114,8 +113,9 @@ export const updateService = new ValidatedMethod({
     if (currentService === undefined) {
       logServer(
         `SERVICES - METHODS - METEOR ERROR - updateService - ${i18n.__('api.services.unknownService')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { data, serviceId },
       );
       throw new Meteor.Error('api.services.updateService.unknownGroup', i18n.__('api.services.unknownService'));
     }
@@ -127,8 +127,9 @@ export const updateService = new ValidatedMethod({
     if (!authorized) {
       logServer(
         `SERVICES - METHODS - METEOR ERROR - updateService - ${i18n.__('api.users.adminNeeded')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { data, serviceId },
       );
       throw new Meteor.Error('api.services.updateService.notPermitted', i18n.__('api.users.adminNeeded'));
     }
@@ -167,8 +168,9 @@ export const favService = new ValidatedMethod({
     if (!this.userId) {
       logServer(
         `SERVICES - METHODS - METEOR ERROR - favService - ${i18n.__('api.users.mustBeLoggedIn')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { serviceId },
       );
       throw new Meteor.Error('api.services.favService.notPermitted', i18n.__('api.users.mustBeLoggedIn'));
     }
@@ -177,8 +179,9 @@ export const favService = new ValidatedMethod({
     if (service === undefined) {
       logServer(
         `SERVICES - METHODS - METEOR ERROR - favService - ${i18n.__('api.services.unknownService')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { serviceId },
       );
       throw new Meteor.Error('api.services.favService.unknownService', i18n.__('api.services.unknownService'));
     }
@@ -190,11 +193,9 @@ export const favService = new ValidatedMethod({
       });
     }
     // update user personalSpace
-    logServer(
-      `SERVICES - METHODS - EXECUTE - favService - user id: ${this.userId} / service id: ${serviceId}}`,
-      levels.VERBOSE,
-      scopes.SYSTEM,
-    );
+    logServer(`SERVICES - METHODS - EXECUTE - favService - user id: ${this.userId}`, levels.VERBOSE, scopes.SYSTEM, {
+      serviceId,
+    });
     addService._execute({ userId: this.userId }, { serviceId });
   },
 });
@@ -209,8 +210,9 @@ export const unfavService = new ValidatedMethod({
     if (!this.userId) {
       logServer(
         `SERVICES - METHODS - METEOR ERROR - unfavService - ${i18n.__('api.users.mustBeLoggedIn')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { serviceId },
       );
       throw new Meteor.Error('api.services.unfavService.notPermitted', i18n.__('api.users.mustBeLoggedIn'));
     }
@@ -221,11 +223,9 @@ export const unfavService = new ValidatedMethod({
         $pull: { favServices: serviceId },
       });
     }
-    logServer(
-      `SERVICES - METHODS - EXECUTE - unfavService - user id: ${this.userId} / service id: ${serviceId}}`,
-      levels.VERBOSE,
-      scopes.SYSTEM,
-    );
+    logServer(`SERVICES - METHODS - UPDATE - unfavService - user id: ${this.userId}`, levels.VERBOSE, scopes.SYSTEM, {
+      serviceId,
+    });
     // update user personalSpace
     removeElement._execute({ userId: this.userId }, { type: 'service', elementId: serviceId });
   },

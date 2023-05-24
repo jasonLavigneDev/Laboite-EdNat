@@ -20,6 +20,12 @@ export const addGroupMembersToGroup = new ValidatedMethod({
     const group = Groups.findOne({ _id: groupId });
     const group2 = Groups.findOne({ _id: otherGroupId });
     if (group === undefined || group2 === undefined) {
+      logServer(
+        `GROUPS - METHODS - METEOR ERROR - addGroupMembersToGroup - ${i18n.__('api.groups.unknownGroup')}`,
+        levels.ERROR,
+        scopes.USER,
+        { groupId, otherGroupId },
+      );
       throw new Meteor.Error('api.groups.addGroupMemberToGroup.unknownGroup', i18n.__('api.groups.unknownGroup'));
     }
     // check if current user has admin rights on group (or global admin)
@@ -27,6 +33,12 @@ export const addGroupMembersToGroup = new ValidatedMethod({
       (isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin', groupId)) ||
       (this.userId === group.owner && this.userId === group2.owner);
     if (!authorized) {
+      logServer(
+        `GROUPS - METHODS - METEOR ERROR - addGroupMembersToGroup - ${i18n.__('api.groups.adminGroupNeeded')}`,
+        levels.ERROR,
+        scopes.USER,
+        { groupId, otherGroupId },
+      );
       throw new Meteor.Error('api.groups.addGroupMemberToGroup.notPermitted', i18n.__('api.groups.adminGroupNeeded'));
     }
 
@@ -54,7 +66,7 @@ export const addGroupMembersToGroup = new ValidatedMethod({
       }
     });
     logServer(
-      `GROUPS - addGroupMembersToGroup - User ${this.userId} add members to group ${groupId} `,
+      `GROUPS - METHODS - ADD - addGroupMembersToGroup - User ${this.userId} add members to group ${groupId} `,
       levels.VERBOSE,
       scopes.USER,
     );

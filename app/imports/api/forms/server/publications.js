@@ -2,7 +2,7 @@ import { FindFromPublication } from 'meteor/percolate:find-from-publication';
 import { Roles } from 'meteor/alanning:roles';
 import Forms from '../forms';
 import { checkPaginationParams, isActive } from '../../utils';
-import logServer from '../../logging';
+import logServer, { levels, scopes } from '../../logging';
 import Groups from '../../groups/groups';
 
 // build query for all users from group
@@ -34,6 +34,7 @@ Meteor.methods({
       const query = queryGroupForms({ search, form });
       return Forms.find(query).count();
     } catch (error) {
+      logServer(`FORMS - METHODS - ERROR - get_groups.forms_count`, levels.ERROR, scopes.SYSTEM, { error });
       return 0;
     }
   },
@@ -47,7 +48,7 @@ FindFromPublication.publish('groups.forms', function groupForms({ page, search, 
   try {
     checkPaginationParams.validate({ page, itemPerPage, search });
   } catch (err) {
-    logServer(`publish groups.forms : ${err}`);
+    logServer(`FORMS - METHODS - ERROR - groups.forms`, levels.ERROR, scopes.SYSTEM, { err });
     this.error(err);
   }
   const group = Groups.findOne(

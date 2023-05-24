@@ -47,11 +47,17 @@ export default async function addNotification(req, content) {
     }
     // check that user exists
     if (user === undefined) {
+      logServer(
+        `NOTIFICATION - REST - METEOR ERROR - addNotification - ${i18n.__('api.users.unknownUser')}`,
+        levels.ERROR,
+        scopes.SYSTEM,
+        { req, content },
+      );
       throw new Meteor.Error('restapi.notifications.addNotifications.unknownUser', i18n.__('api.users.unknownUser'));
     }
 
     logServer(
-      `NOTIFICATION REST - METHOD - INSERT - addNotification - user data: ${JSON.stringify(userData)}`,
+      `NOTIFICATION - REST - INSERT - addNotification - user data: ${JSON.stringify(userData)}`,
       levels.VERBOSE,
       scopes.SYSTEM,
     );
@@ -61,6 +67,12 @@ export default async function addNotification(req, content) {
     // Group notification
     const group = Groups.findOne({ _id: content.groupId }, { fields: Groups.adminFields });
     if (!group) {
+      logServer(
+        `NOTIFICATION - REST - METEOR ERROR - addNotification - ${i18n.__('api.groups.unknownGroup')}`,
+        levels.ERROR,
+        scopes.SYSTEM,
+        { req, content },
+      );
       throw new Meteor.Error('restapi.notifications.addNotifications.unknownGroup', i18n.__('api.groups.unknownGroup'));
     }
     createGroupNotification({}, content.groupId, content.title, content.content, content.link || '');
@@ -70,6 +82,12 @@ export default async function addNotification(req, content) {
     createMultiGroupsNotification({}, content.groupsId, content.title, content.content, content.link || '');
     return `Multi Group Notification sent by API`;
   }
+  logServer(
+    `NOTIFICATION - REST - METEOR ERROR - addNotification - Notification sent by API with neither userId nor groupId`,
+    levels.ERROR,
+    scopes.SYSTEM,
+    { req, content },
+  );
   throw new Meteor.Error(
     'restapi.notifications.addNotifications.dataWithoutuserIdNorGroupId',
     'Notification sent by API with neither userId nor groupId',

@@ -40,8 +40,9 @@ export const createBusinessReGrouping = new ValidatedMethod({
         `BUISINESS - METHOD - METEOR ERROR - createBusinessReGrouping - ${i18n.__(
           'api.businessReGrouping.createBusinessReGrouping.nameAlreadyUse',
         )}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { name, structure },
       );
       throw new Meteor.Error(
         'api.businessReGrouping.createBusinessReGrouping.alreadyExists',
@@ -55,8 +56,9 @@ export const createBusinessReGrouping = new ValidatedMethod({
       logServer(
         `BUISINESS - METHOD - METEOR ERROR - createBusinessReGrouping - 
         ${i18n.__('api.businessReGrouping.createBusinessReGrouping.nameAlreadyUsedForOneOfStructureAncestors')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { name, structure },
       );
       throw new Meteor.Error(
         'api.businessReGrouping.createBusinessReGrouping.nameAlreadyUsedForOneOfStructureAncestors',
@@ -67,8 +69,9 @@ export const createBusinessReGrouping = new ValidatedMethod({
       logServer(
         `BUISINESS - METHOD - METEOR ERROR - createBusinessReGrouping - 
         ${i18n.__('api.users.adminNeeded')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { name, structure },
       );
       throw new Meteor.Error(
         'api.businessReGrouping.createBusinessReGrouping.notPermitted',
@@ -76,11 +79,10 @@ export const createBusinessReGrouping = new ValidatedMethod({
       );
     }
     validateString(name);
-    logServer(
-      `BUISINESS - METHOD - INSERT - createBusinessReGrouping - name: ${name} / struture: ${structure}`,
-      levels.VERBOSE,
-      scopes.ADMIN,
-    );
+    logServer(`BUISINESS - METHOD - INSERT - createBusinessReGrouping`, levels.VERBOSE, scopes.ADMIN, {
+      name,
+      structure,
+    });
     BusinessReGrouping.insert({
       name,
       structure,
@@ -111,8 +113,9 @@ export const removeBusinessReGrouping = new ValidatedMethod({
         `BUSINESS - METHOD - METEOR ERROR - removeBusinessReGrouping - ${i18n.__(
           'api.businessReGrouping.unknownBusinessReGrouping',
         )}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { businessReGroupingId, structure },
       );
       throw new Meteor.Error(
         'api.businessReGrouping.removeBusinessReGrouping.unknownBusinessReGrouping',
@@ -126,8 +129,9 @@ export const removeBusinessReGrouping = new ValidatedMethod({
     if (!authorized) {
       logServer(
         `BUSINESS - METHOD - METEOR ERROR - removeBusinessReGrouping - ${i18n.__('api.users.adminNeeded')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { businessReGroupingId, structure },
       );
       throw new Meteor.Error(
         'api.businessReGrouping.removeBusinessReGrouping.notPermitted',
@@ -175,8 +179,9 @@ export const updateBusinessReGrouping = new ValidatedMethod({
         `BUISINESS - METHOD - METEOR ERROR - updateBusinessReGrouping - ${i18n.__(
           'api.businessReGrouping.unknownBusinessReGrouping',
         )}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { businessReGroupingId, data },
       );
       throw new Meteor.Error(
         'api.businessReGrouping.updateBusinessReGrouping.unknownBusinessReGrouping',
@@ -190,8 +195,9 @@ export const updateBusinessReGrouping = new ValidatedMethod({
     if (!authorized) {
       logServer(
         `BUISINESS - METHOD - METEOR ERROR - updateBusinessReGrouping - ${i18n.__('api.users.adminNeeded')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { businessReGroupingId, data },
       );
       throw new Meteor.Error(
         'api.businessReGrouping.updateBusinessReGrouping.notPermitted',

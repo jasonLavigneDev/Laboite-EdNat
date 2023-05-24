@@ -22,8 +22,9 @@ export const updateStructureSpace = new ValidatedMethod({
     if (!isAdminOfStructure) {
       logServer(
         `DEFAULTSPACE - METHOD - METEOR ERROR - updateStructureSpace - ${i18n.__('api.users.notPermitted')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { data },
       );
       throw new Meteor.Error('api.defaultspaces.updateStructureSpace.notPermitted', i18n.__('api.users.notPermitted'));
     }
@@ -57,8 +58,9 @@ export const applyDefaultSpaceToAllUsers = new ValidatedMethod({
     if (!isAdminOfStructure) {
       logServer(
         `DEFAULTSPACE - METHOD - METEOR ERROR - applyDefaultSpaceToAllUsers - ${i18n.__('api.users.notPermitted')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { structureId },
       );
       throw new Meteor.Error(
         'api.defaultspaces.applyDefaultSpaceToAllUsers.notPermitted',

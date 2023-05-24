@@ -30,9 +30,8 @@ import {
 if (Meteor.settings.private) {
   const { whiteDomains } = Meteor.settings.private;
   if (!!whiteDomains && whiteDomains.length > 0) {
-    // logServer(i18n.__('api.users.logWhiteDomains', { domains: JSON.stringify(whiteDomains) }));
     logServer(
-      `USERS - METHODS - ${i18n.__('api.users.logWhiteDomains', { domains: JSON.stringify(whiteDomains) })}`,
+      `USERS - METHODS - INFO - ${i18n.__('api.users.logWhiteDomains', { domains: JSON.stringify(whiteDomains) })}`,
       levels.INFO,
       scopes.SYSTEM,
       {},
@@ -172,8 +171,9 @@ export const removeUser = new ValidatedMethod({
     if (!authorized) {
       logServer(
         `USERS - METHODS - METEOR ERROR - removeUseR - ${i18n.__('api.users.notPermitted')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { userId },
       );
       throw new Meteor.Error('api.users.removeUser.notPermitted', i18n.__('api.users.notPermitted'));
     }
@@ -182,8 +182,9 @@ export const removeUser = new ValidatedMethod({
     if (user === undefined) {
       logServer(
         `USERS - METHODS - METEOR ERROR - removeUseR - ${i18n.__('api.users.unknownUser')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { userId },
       );
       throw new Meteor.Error('api.users.removeUser.unknownUser', i18n.__('api.users.unknownUser'));
     }
@@ -191,9 +192,10 @@ export const removeUser = new ValidatedMethod({
     const groups = Roles.getScopesForUser(userId);
     groups.forEach((groupId) => {
       logServer(
-        `USERS - METHODS - UPDATE - removeUser (group update) - groupId: ${groupId} / userID: ${userId}`,
+        `USERS - METHODS - UPDATE - removeUser (group update) - groupId: ${groupId}`,
         levels.VERBOSE,
         scopes.SYSTEM,
+        { userId },
       );
       Groups.update(
         { _id: groupId },
@@ -207,9 +209,9 @@ export const removeUser = new ValidatedMethod({
         },
       );
     });
-    logServer(`USERS - METHODS - REMOVE - removeUser (meteor role) - userId: ${userId}`, levels.INFO, scopes.SYSTEM);
+    logServer(`USERS - METHODS - REMOVE - removeUser (meteor role)`, levels.INFO, scopes.SYSTEM, { userId });
     Meteor.roleAssignment.remove({ 'user._id': userId });
-    logServer(`USERS - METHODS - REMOVE - removeUser (personal space) - userId: ${userId}`, levels.INFO, scopes.SYSTEM);
+    logServer(`USERS - METHODS - REMOVE - removeUser (personal space)`, levels.INFO, scopes.SYSTEM, { userId });
     PersonalSpaces.remove({ userId });
 
     const element = Nextcloud.findOne({ url: user.nclocator });
@@ -218,7 +220,7 @@ export const removeUser = new ValidatedMethod({
       element.count -= 1;
       Nextcloud.update({ url: user.nclocator }, { $set: { count: element.count } });
     }
-    logServer(`USERS - METHODS - REMOVE - removeUser (meteor) - userId: ${userId}`, levels.INFO, scopes.SYSTEM);
+    logServer(`USERS - METHODS - REMOVE - removeUser (meteor)`, levels.INFO, scopes.SYSTEM, { userId });
     Meteor.users.remove({ _id: userId });
   },
 });
@@ -236,8 +238,9 @@ export const unsetMemberOf = new ValidatedMethod({
     if (!isActive(this.userId) || !authorized) {
       logServer(
         `USERS - METHODS - METEOR ERROR - unsetMemberOf - ${i18n.__('api.users.notPermitted')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { userId, groupId },
       );
       throw new Meteor.Error('api.users.unsetMemberOf.notPermitted', i18n.__('api.users.notPermitted'));
     }
@@ -246,16 +249,18 @@ export const unsetMemberOf = new ValidatedMethod({
     if (group === undefined) {
       logServer(
         `USERS - METHODS - METEOR ERROR - unsetMemberOf - ${i18n.__('api.groups.unknownGroup')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { userId, groupId },
       );
       throw new Meteor.Error('api.users.unsetMemberOf.unknownGroup', i18n.__('api.groups.unknownGroup'));
     }
     if (group.members.indexOf(userId) === -1) {
       logServer(
         `USERS - METHODS - METEOR ERROR - unsetMemberOf - ${i18n.__('api.users.unknownUser')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { userId, groupId },
       );
       throw new Meteor.Error('api.users.unsetMemberOf.unknownUser', i18n.__('api.users.unknownUser'));
     }
@@ -263,11 +268,7 @@ export const unsetMemberOf = new ValidatedMethod({
     Roles.removeUsersFromRoles(userId, 'member', groupId);
     // update info in group collection
     if (group.members.indexOf(userId) !== -1) {
-      logServer(
-        `USERS - METHODS - UPDATE - unsetMemberOf - groupId: ${groupId} members: ${userId}`,
-        levels.VERBOSE,
-        scopes.SYSTEM,
-      );
+      logServer(`USERS - METHODS - UPDATE - unsetMemberOf`, levels.VERBOSE, scopes.SYSTEM, { userId, groupId });
       Groups.update(groupId, {
         $pull: { members: userId },
       });
@@ -294,8 +295,9 @@ export const unsetAdminOf = new ValidatedMethod({
     if (!authorized) {
       logServer(
         `USERS - METHODS - METEOR ERROR - unsetAdminOf - ${i18n.__('api.groups.adminGroupNeeded')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { userId, groupId },
       );
       throw new Meteor.Error('api.users.unsetAdminOf.notPermitted', i18n.__('api.groups.adminGroupNeeded'));
     }
@@ -304,16 +306,18 @@ export const unsetAdminOf = new ValidatedMethod({
     if (group === undefined) {
       logServer(
         `USERS - METHODS - METEOR ERROR - unsetAdminOf - ${i18n.__('api.groups.unknownGroup')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { userId, groupId },
       );
       throw new Meteor.Error('api.users.unsetAdminOf.unknownGroup', i18n.__('api.groups.unknownGroup'));
     }
     if (group.admins.indexOf(userId) === -1) {
       logServer(
         `USERS - METHODS - METEOR ERROR - unsetAdminOf - ${i18n.__('api.users.unknownUser')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { userId, groupId },
       );
       throw new Meteor.Error('api.users.unsetAdminOf.unknownUser', i18n.__('api.users.unknownUser'));
     }
@@ -321,11 +325,7 @@ export const unsetAdminOf = new ValidatedMethod({
     Roles.removeUsersFromRoles(userId, 'admin', groupId);
     // update info in group collection
     if (group.admins.indexOf(userId) !== -1) {
-      logServer(
-        `USERS - METHODS - UPDATE - unsetAdminOf - groupId: ${groupId} admins: ${userId}`,
-        levels.VERBOSE,
-        scopes.SYSTEM,
-      );
+      logServer(`USERS - METHODS - UPDATE - unsetAdminOf`, levels.VERBOSE, scopes.SYSTEM, { userId, groupId });
       Groups.update(groupId, { $pull: { admins: userId } });
     }
     // if user has no longer roles, remove group from personalspace
@@ -393,8 +393,9 @@ export const removeUserFromStructure = new ValidatedMethod({
     if (!authorized) {
       logServer(
         `USERS - METHODS - METEOR ERROR - removeUserFromStructure - ${i18n.__('api.users.notPermitted')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { userId },
       );
       throw new Meteor.Error('api.users.removeUserFromStructure.notPermitted', i18n.__('api.users.notPermitted'));
     }
@@ -402,8 +403,9 @@ export const removeUserFromStructure = new ValidatedMethod({
     if (user === undefined) {
       logServer(
         `USERS - METHODS - METEOR ERROR - removeUserFromStructure - ${i18n.__('api.users.unknownUser')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { userId },
       );
       throw new Meteor.Error('api.users.removeUserFromStructure.unknownUser', i18n.__('api.users.unknownUser'));
     }
@@ -411,11 +413,7 @@ export const removeUserFromStructure = new ValidatedMethod({
       Roles.removeUsersFromRoles(userId, 'adminStructure', user.structure);
     }
     RemoveUserFromGroupsOfOldStructure(user);
-    logServer(
-      `USERS - METHODS - UPDATE - removeUserFromStructure (meteor) - userId: ${userId}`,
-      levels.VERBOSE,
-      scopes.SYSTEM,
-    );
+    logServer(`USERS - METHODS - UPDATE - removeUserFromStructure (meteor)`, levels.VERBOSE, scopes.SYSTEM, { userId });
     Meteor.users.update({ _id: userId }, { $set: { structure: null } });
   },
 });
@@ -431,8 +429,9 @@ export const checkUsername = new ValidatedMethod({
     if (!this.userId) {
       logServer(
         `USERS - METHODS - METEOR ERROR - checkUsername - ${i18n.__('api.users.mustBeLoggedIn')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { username },
       );
       throw new Meteor.Error('api.users.checkUsername.notLoggedIn', i18n.__('api.users.mustBeLoggedIn'));
     }
@@ -458,8 +457,9 @@ export const setAdminOf = new ValidatedMethod({
     if (!authorized) {
       logServer(
         `USERS - METHODS - METEOR ERROR - setAdminOf (groups) - ${i18n.__('api.groups.adminGroupNeeded')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { userId, groupId },
       );
       throw new Meteor.Error('api.users.setAdminOf.notPermitted', i18n.__('api.groups.adminGroupNeeded'));
     }
@@ -468,8 +468,9 @@ export const setAdminOf = new ValidatedMethod({
     if (group === undefined) {
       logServer(
         `USERS - METHODS - METEOR ERROR - setAdminOf (groups) - ${i18n.__('api.groups.unknownGroup')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { userId, groupId },
       );
       throw new Meteor.Error('api.users.setAdminOf.unknownGroup', i18n.__('api.groups.unknownGroup'));
     }
@@ -477,8 +478,9 @@ export const setAdminOf = new ValidatedMethod({
     if (user === undefined) {
       logServer(
         `USERS - METHODS - METEOR ERROR - setAdminOf (groups) - ${i18n.__('api.users.unknownUser')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { userId, groupId },
       );
       throw new Meteor.Error('api.users.setAdminOf.unknownUser', i18n.__('api.users.unknownUser'));
     }
@@ -486,11 +488,7 @@ export const setAdminOf = new ValidatedMethod({
     Roles.addUsersToRoles(userId, 'admin', groupId);
     // store info in group collection
     if (group.admins.indexOf(userId) === -1) {
-      logServer(
-        `USERS - METHODS - UPDATE - setAdminOf (groups) - groupId: ${groupId} / admins: ${userId}`,
-        levels.VERBOSE,
-        scopes.SYSTEM,
-      );
+      logServer(`USERS - METHODS - UPDATE - setAdminOf (groups)`, levels.VERBOSE, scopes.SYSTEM, { userId, groupId });
       Groups.update(groupId, { $push: { admins: userId } });
     }
     // Notify user
@@ -511,8 +509,9 @@ export const setAnimatorOf = new ValidatedMethod({
     if (!authorized) {
       logServer(
         `USERS - METHODS - METEOR ERROR - setAnimatorOf - ${i18n.__('api.groups.adminGroupNeeded')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { userId, groupId },
       );
       throw new Meteor.Error('api.users.setAnimatorOf.notPermitted', i18n.__('api.groups.adminGroupNeeded'));
     }
@@ -521,8 +520,9 @@ export const setAnimatorOf = new ValidatedMethod({
     if (group === undefined) {
       logServer(
         `USERS - METHODS - METEOR ERROR - setAnimatorOf - ${i18n.__('api.groups.unknownGroup')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { userId, groupId },
       );
       throw new Meteor.Error('api.users.setAnimatorOf.unknownGroup', i18n.__('api.groups.unknownGroup'));
     }
@@ -530,8 +530,9 @@ export const setAnimatorOf = new ValidatedMethod({
     if (user === undefined) {
       logServer(
         `USERS - METHODS - METEOR ERROR - setAnimatorOf - ${i18n.__('api.users.unknownUser')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { userId, groupId },
       );
       throw new Meteor.Error('api.users.setAnimatorOf.unknownUser', i18n.__('api.users.unknownUser'));
     }
@@ -539,11 +540,10 @@ export const setAnimatorOf = new ValidatedMethod({
     Roles.addUsersToRoles(userId, 'animator', groupId);
     // store info in group collection
     if (group.animators.indexOf(userId) === -1) {
-      logServer(
-        `USERS - METHODS - UPDATE - setAnimatorOf (groups) - groupId: ${groupId} / animators: ${userId}`,
-        levels.VERBOSE,
-        scopes.SYSTEM,
-      );
+      logServer(`USERS - METHODS - UPDATE - setAnimatorOf (groups)`, levels.VERBOSE, scopes.SYSTEM, {
+        userId,
+        groupId,
+      });
       Groups.update(groupId, { $push: { animators: userId } });
     }
     // update user personalSpace
@@ -566,8 +566,9 @@ export const unsetAnimatorOf = new ValidatedMethod({
     if (!isActive(this.userId) || !authorized) {
       logServer(
         `USERS - METHODS - METEOR ERROR - unsetAnimatorOf - ${i18n.__('api.groups.adminGroupNeeded')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { userId, groupId },
       );
       throw new Meteor.Error('api.users.unsetAnimatorOf.notPermitted', i18n.__('api.groups.adminGroupNeeded'));
     }
@@ -576,16 +577,18 @@ export const unsetAnimatorOf = new ValidatedMethod({
     if (group === undefined) {
       logServer(
         `USERS - METHODS - METEOR ERROR - unsetAnimatorOf - ${i18n.__('api.groups.unknownGroup')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { userId, groupId },
       );
       throw new Meteor.Error('api.users.unsetAnimatorOf.unknownGroup', i18n.__('api.groups.unknownGroup'));
     }
     if (group.animators.indexOf(userId) === -1) {
       logServer(
         `USERS - METHODS - METEOR ERROR - unsetAnimatorOf - ${i18n.__('api.users.unknownUser')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { userId, groupId },
       );
       throw new Meteor.Error('api.users.unsetAnimatorOf.unknownUser', i18n.__('api.users.unknownUser'));
     }
@@ -593,11 +596,10 @@ export const unsetAnimatorOf = new ValidatedMethod({
     Roles.removeUsersFromRoles(userId, 'animator', groupId);
     // update info in group collection
     if (group.animators.indexOf(userId) !== -1) {
-      logServer(
-        `USERS - METHODS - UPDATE - unsetAnimatorOf (groups) - groupId: ${groupId} / animators: ${userId}`,
-        levels.VERBOSE,
-        scopes.SYSTEM,
-      );
+      logServer(`USERS - METHODS - UPDATE - unsetAnimatorOf (groups)`, levels.VERBOSE, scopes.SYSTEM, {
+        userId,
+        groupId,
+      });
       Groups.update(groupId, { $pull: { animators: userId } });
     }
     // if user has no longer roles, remove group from personalspace
@@ -622,8 +624,9 @@ export const setMemberOf = new ValidatedMethod({
     if (group === undefined) {
       logServer(
         `USERS - METHODS - METEOR ERROR - setMemberOf - ${i18n.__('api.groups.unknownGroup')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { userId, groupId },
       );
       throw new Meteor.Error('api.users.setMemberOf.unknownGroup', i18n.__('api.groups.unknownGroup'));
     }
@@ -631,8 +634,9 @@ export const setMemberOf = new ValidatedMethod({
     if (user === undefined) {
       logServer(
         `USERS - METHODS - METEOR ERROR - setMemberOf - ${i18n.__('api.users.unknownUser')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { userId, groupId },
       );
       throw new Meteor.Error('api.users.setMemberOf.unknownUser', i18n.__('api.users.unknownUser'));
     }
@@ -647,8 +651,9 @@ export const setMemberOf = new ValidatedMethod({
     if (!isActive(this.userId) || !authorized) {
       logServer(
         `USERS - METHODS - METEOR ERROR - setMemberOf - ${i18n.__('api.users.notPermitted')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { userId, groupId },
       );
       throw new Meteor.Error('api.users.setMemberOf.notPermitted', i18n.__('api.users.notPermitted'));
     }
@@ -660,11 +665,7 @@ export const setMemberOf = new ValidatedMethod({
     }
     // store info in group collection
     if (group.members.indexOf(userId) === -1) {
-      logServer(
-        `USERS - METHODS - UPDATE - setMemberOf (groups) - groupId: ${groupId} / members: ${userId}`,
-        levels.VERBOSE,
-        scopes.SYSTEM,
-      );
+      logServer(`USERS - METHODS - UPDATE - setMemberOf (groups)`, levels.VERBOSE, scopes.SYSTEM, { userId, groupId });
       Groups.update(groupId, {
         $push: { members: userId },
         $pull: { candidates: userId },
@@ -706,8 +707,9 @@ export const setCandidateOf = new ValidatedMethod({
     if (!isActive(this.userId) || !authorized) {
       logServer(
         `USERS - METHODS - METEOR ERROR - setCandidateOf - ${i18n.__('api.users.notPermitted')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { userId, groupId },
       );
       throw new Meteor.Error('api.users.setCandidateOf.notPermitted', i18n.__('api.users.notPermitted'));
     }
@@ -716,8 +718,9 @@ export const setCandidateOf = new ValidatedMethod({
     if (group === undefined) {
       logServer(
         `USERS - METHODS - METEOR ERROR - setCandidateOf - ${i18n.__('api.groups.unknownGroup')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { userId, groupId },
       );
       throw new Meteor.Error('api.users.setCandidateOf.unknownGroup', i18n.__('api.groups.unknownGroup'));
     }
@@ -725,8 +728,9 @@ export const setCandidateOf = new ValidatedMethod({
     if (group.type !== 5) {
       logServer(
         `USERS - METHODS - METEOR ERROR - setCandidateOf - ${i18n.__('api.groups.moderatedGroupOnly')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { userId, groupId },
       );
       throw new Meteor.Error('api.users.setCandidateOf.moderatedGroupOnly', i18n.__('api.groups.moderatedGroupOnly'));
     }
@@ -734,8 +738,9 @@ export const setCandidateOf = new ValidatedMethod({
     if (user === undefined) {
       logServer(
         `USERS - METHODS - METEOR ERROR - setCandidateOf - ${i18n.__('api.users.unknownUser')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { userId, groupId },
       );
       throw new Meteor.Error('api.users.setCandidateOf.unknownUser', i18n.__('api.users.unknownUser'));
     }
@@ -743,11 +748,10 @@ export const setCandidateOf = new ValidatedMethod({
     Roles.addUsersToRoles(userId, 'candidate', groupId);
     // store info in group collection
     if (group.candidates.indexOf(userId) === -1) {
-      logServer(
-        `USERS - METHODS - UPDATE - setCandidateOf (groups) - groupId: ${groupId} candidats: ${userId}`,
-        levels.VERBOSE,
-        scopes.SYSTEM,
-      );
+      logServer(`USERS - METHODS - UPDATE - setCandidateOf (groups)`, levels.VERBOSE, scopes.SYSTEM, {
+        userId,
+        groupId,
+      });
       Groups.update(groupId, {
         $push: { candidates: userId },
       });
@@ -774,8 +778,9 @@ export const unsetCandidateOf = new ValidatedMethod({
     if (!isActive(this.userId) || !authorized) {
       logServer(
         `USERS - METHODS - METEOR ERROR - unsetCandidateOf - ${i18n.__('api.users.notPermitted')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { userId, groupId },
       );
       throw new Meteor.Error('api.users.unsetCandidateOf.notPermitted', i18n.__('api.users.notPermitted'));
     }
@@ -784,16 +789,18 @@ export const unsetCandidateOf = new ValidatedMethod({
     if (group === undefined) {
       logServer(
         `USERS - METHODS - METEOR ERROR - unsetCandidateOf - ${i18n.__('api.groups.unknownGroup')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { userId, groupId },
       );
       throw new Meteor.Error('api.users.unsetCandidateOf.unknownGroup', i18n.__('api.groups.unknownGroup'));
     }
     if (group.candidates.indexOf(userId) === -1) {
       logServer(
         `USERS - METHODS - METEOR ERROR - unsetCandidateOf - ${i18n.__('api.users.unknownUser')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { userId, groupId },
       );
       throw new Meteor.Error('api.users.unsetCandidateOf.unknownUser', i18n.__('api.users.unknownUser'));
     }
@@ -801,11 +808,10 @@ export const unsetCandidateOf = new ValidatedMethod({
     Roles.removeUsersFromRoles(userId, 'candidate', groupId);
     // remove info from group collection
     if (group.candidates.indexOf(userId) !== -1) {
-      logServer(
-        `USERS - METHODS - UPDATE - unsetCandidateOf (groups) - groupId: ${groupId} candidats: ${userId}`,
-        levels.VERBOSE,
-        scopes.SYSTEM,
-      );
+      logServer(`USERS - METHODS - UPDATE - unsetCandidateOf (groups)`, levels.VERBOSE, scopes.SYSTEM, {
+        userId,
+        groupId,
+      });
       Groups.update(groupId, {
         $pull: { candidates: userId },
       });
@@ -847,8 +853,9 @@ export const acceptAwaitingStructure = new ValidatedMethod({
     if (!this.userId) {
       logServer(
         `USERS - METHODS - METEOR ERROR - acceptAwaitingStructure - ${i18n.__('api.users.mustBeLoggedIn')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { targetUserId },
       );
       throw new Meteor.Error('api.users.acceptAwaitingStructure.notLoggedIn', i18n.__('api.users.mustBeLoggedIn'));
     }
@@ -860,8 +867,9 @@ export const acceptAwaitingStructure = new ValidatedMethod({
     if (structure === undefined) {
       logServer(
         `USERS - METHODS - METEOR ERROR - acceptAwaitingStructure - ${i18n.__('api.users.mustBeLoggedIn')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { targetUserId },
       );
       throw new Meteor.Error(
         'api.users.acceptAwaitingStructure.unknownStructure',
@@ -877,8 +885,9 @@ export const acceptAwaitingStructure = new ValidatedMethod({
     if (!authorized) {
       logServer(
         `USERS - METHODS - METEOR ERROR - acceptAwaitingStructure - ${i18n.__('api.users.notPermitted')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { targetUserId },
       );
       throw new Meteor.Error('api.users.acceptAwaitingStructure.notPermitted', i18n.__('api.users.notPermitted'));
     }
@@ -923,8 +932,9 @@ export const setStructure = new ValidatedMethod({
     if (!this.userId) {
       logServer(
         `USERS - METHODS - METEOR ERROR - setStructure - ${i18n.__('api.users.mustBeLoggedIn')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { structure },
       );
       throw new Meteor.Error('api.users.setStructure.notLoggedIn', i18n.__('api.users.mustBeLoggedIn'));
     }
@@ -934,8 +944,9 @@ export const setStructure = new ValidatedMethod({
     if (!structureToFind) {
       logServer(
         `USERS - METHODS - METEOR ERROR - setStructure - ${i18n.__('SimpleSchema.notAllowed', structure)}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { structure },
       );
       throw new Meteor.Error(`${structure} is not an allowed value`, i18n.__('SimpleSchema.notAllowed', structure));
     }
@@ -993,7 +1004,7 @@ export const setNcloudUrlAll = new ValidatedMethod({
     if (!this.userId) {
       logServer(
         `USERS - METHODS - METEOR ERROR - setNcloudUrlAll - ${i18n.__('api.users.mustBeLoggedIn')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
       );
       throw new Meteor.Error('api.users.setNcloudUrlAll.notLoggedIn', i18n.__('api.users.mustBeLoggedIn'));
@@ -1003,7 +1014,7 @@ export const setNcloudUrlAll = new ValidatedMethod({
     if (!authorized) {
       logServer(
         `USERS - METHODS - METEOR ERROR - setNcloudUrlAll - ${i18n.__('api.users.adminNeeded')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
       );
       throw new Meteor.Error('api.users.setNcloudUrlAll.notPermitted', i18n.__('api.users.adminNeeded'));
@@ -1035,7 +1046,7 @@ export const setAdmin = new ValidatedMethod({
     if (!authorized) {
       logServer(
         `USERS - METHODS - METEOR ERROR - setAdmin - ${i18n.__('api.users.adminNeeded')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
       );
       throw new Meteor.Error('api.users.setAdmin.notPermitted', i18n.__('api.users.adminNeeded'));
@@ -1045,7 +1056,7 @@ export const setAdmin = new ValidatedMethod({
     if (user === undefined) {
       logServer(
         `USERS - METHODS - METEOR ERROR - setAdmin - ${i18n.__('api.users.unknownUser')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
       );
       throw new Meteor.Error('api.users.setAdmin.unknownUser', i18n.__('api.users.unknownUser'));
@@ -1067,8 +1078,9 @@ export const setAdminStructure = new ValidatedMethod({
     if (user === undefined) {
       logServer(
         `USERS - METHODS - METEOR ERROR - setAdminStructure - ${i18n.__('api.users.unknownUser')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { userId },
       );
       throw new Meteor.Error('api.users.setAdminStructure.unknownUser', i18n.__('api.users.unknownUser'));
     }
@@ -1080,8 +1092,9 @@ export const setAdminStructure = new ValidatedMethod({
     if (!authorized) {
       logServer(
         `USERS - METHODS - METEOR ERROR - setAdminStructure - ${i18n.__('api.users.adminNeeded')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { userId },
       );
       throw new Meteor.Error('api.users.setAdminStructure.notPermitted', i18n.__('api.users.adminNeeded'));
     }
@@ -1113,8 +1126,9 @@ export const setActive = new ValidatedMethod({
     if (!authorized) {
       logServer(
         `USERS - METHODS - METEOR ERROR - setActive - ${i18n.__('api.users.adminNeeded')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { userId },
       );
       throw new Meteor.Error('api.users.setActive.notPermitted', i18n.__('api.users.adminNeeded'));
     }
@@ -1123,12 +1137,13 @@ export const setActive = new ValidatedMethod({
     if (user === undefined) {
       logServer(
         `USERS - METHODS - METEOR ERROR - setActive - ${i18n.__('api.users.unknownUser')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { userId },
       );
       throw new Meteor.Error('api.users.setActive.unknownUser', i18n.__('api.users.unknownUser'));
     }
-    logServer(`USERS - METHODS - UPDATE - setActive (user meteor) - userId: ${userId}`, levels.INFO, scopes.SYSTEM);
+    logServer(`USERS - METHODS - UPDATE - setActive (user meteor)`, levels.INFO, scopes.SYSTEM, { userId });
     Meteor.users.update(userId, { $set: { isActive: true, isRequest: false } });
   },
 });
@@ -1141,7 +1156,7 @@ export const setArticlesEnable = new ValidatedMethod({
     if (!this.userId) {
       logServer(
         `USERS - METHODS - METEOR ERROR - setArticlesEnable - ${i18n.__('api.users.mustBeLoggedIn')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
       );
       throw new Meteor.Error('api.users.toggleAdvancedPersonalPage.notPermitted', i18n.__('api.users.mustBeLoggedIn'));
@@ -1151,7 +1166,7 @@ export const setArticlesEnable = new ValidatedMethod({
     if (user === undefined) {
       logServer(
         `USERS - METHODS - METEOR ERROR - setArticlesEnable - ${i18n.__('api.users.unknownUser')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
       );
       throw new Meteor.Error('api.users.toggleAdvancedPersonalPage.unknownUser', i18n.__('api.users.unknownUser'));
@@ -1179,8 +1194,9 @@ export const unsetActive = new ValidatedMethod({
     if (!authorized) {
       logServer(
         `USERS - METHODS - METEOR ERROR - unsetActive - ${i18n.__('api.users.adminNeeded')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { userId },
       );
       throw new Meteor.Error('api.users.unsetActive.notPermitted', i18n.__('api.users.adminNeeded'));
     }
@@ -1189,12 +1205,13 @@ export const unsetActive = new ValidatedMethod({
     if (user === undefined) {
       logServer(
         `USERS - METHODS - METEOR ERROR - unsetActive - ${i18n.__('api.users.unknownUser')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { userId },
       );
       throw new Meteor.Error('api.users.unsetActive.unknownUser', i18n.__('api.users.unknownUser'));
     }
-    logServer(`USERS - METHODS - UPDATE - unsetActive (user meteor) - userId: ${userId}`, levels.INFO, scopes.SYSTEM);
+    logServer(`USERS - METHODS - UPDATE - unsetActive (user meteor)`, levels.INFO, scopes.SYSTEM, { userId });
     Meteor.users.update(userId, { $set: { isActive: false } });
   },
 });
@@ -1211,8 +1228,9 @@ export const unsetAdmin = new ValidatedMethod({
     if (!authorized) {
       logServer(
         `USERS - METHODS - METEOR ERROR - unsetAdmin - ${i18n.__('api.users.adminNeeded')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { userId },
       );
       throw new Meteor.Error('api.users.unsetAdmin.notPermitted', i18n.__('api.users.adminNeeded'));
     }
@@ -1221,8 +1239,9 @@ export const unsetAdmin = new ValidatedMethod({
     if (admins.length === 1) {
       logServer(
         `USERS - METHODS - METEOR ERROR - unsetAdmin - ${i18n.__('api.users.lastAdminError')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { userId },
       );
       throw new Meteor.Error('api.users.unsetAdmin.lastAdmin', i18n.__('api.users.lastAdminError'));
     }
@@ -1231,8 +1250,9 @@ export const unsetAdmin = new ValidatedMethod({
     if (user === undefined) {
       logServer(
         `USERS - METHODS - METEOR ERROR - unsetAdmin - ${i18n.__('api.users.unknownUser')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { userId },
       );
       throw new Meteor.Error('api.users.setAdmin.unknownUser', i18n.__('api.users.unknownUser'));
     }
@@ -1253,8 +1273,9 @@ export const unsetAdminStructure = new ValidatedMethod({
     if (user === undefined) {
       logServer(
         `USERS - METHODS - METEOR ERROR - unsetAdminStructure - ${i18n.__('api.users.unknownUser')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { userId },
       );
       throw new Meteor.Error('api.users.unsetAdminStructure.unknownUser', i18n.__('api.users.unknownUser'));
     }
@@ -1265,8 +1286,9 @@ export const unsetAdminStructure = new ValidatedMethod({
     if (!authorized) {
       logServer(
         `USERS - METHODS - METEOR ERROR - unsetAdminStructure - ${i18n.__('api.users.adminNeeded')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { userId },
       );
       throw new Meteor.Error('api.users.unsetAdminStructure.notPermitted', i18n.__('api.users.adminNeeded'));
     }
@@ -1299,16 +1321,18 @@ export const setLanguage = new ValidatedMethod({
     if (!this.userId) {
       logServer(
         `USERS - METHODS - METEOR ERROR - setLanguage - ${i18n.__('api.users.mustBeLoggedIn')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { language },
       );
       throw new Meteor.Error('api.users.setLanguage.notPermitted', i18n.__('api.users.mustBeLoggedIn'));
     }
     validateString(language, true);
     logServer(
-      `USERS - METHODS - UPDATE - setLanguage (user meteor) - userId: ${this.userId} / language: ${language}`,
+      `USERS - METHODS - UPDATE - setLanguage (user meteor) - userId: ${this.userId}`,
       levels.VERBOSE,
       scopes.SYSTEM,
+      { language },
     );
     Meteor.users.update(this.userId, {
       $set: { language },
@@ -1325,17 +1349,19 @@ export const setLogoutType = new ValidatedMethod({
   run({ logoutType }) {
     if (!this.userId) {
       logServer(
-        `USERS - METHODS - UPDATE - setLogoutType - ${i18n.__('api.users.mustBeLoggedIn')}`,
+        `USERS - METHODS - METEOR ERROR - setLogoutType - ${i18n.__('api.users.mustBeLoggedIn')}`,
         levels.VERBOSE,
         scopes.SYSTEM,
+        { logoutType },
       );
       throw new Meteor.Error('api.users.setLogoutType.notPermitted', i18n.__('api.users.mustBeLoggedIn'));
     }
     validateString(logoutType, true);
     logServer(
-      `USERS - METHODS - UPDATE - setLogoutType (user meteor) - userId: ${this.userId} / logoutType: ${logoutType}`,
+      `USERS - METHODS - UPDATE - setLogoutType (user meteor) - userId: ${this.userId}`,
       levels.VERBOSE,
       scopes.SYSTEM,
+      { logoutType },
     );
     Meteor.users.update(this.userId, {
       $set: { logoutType },
@@ -1355,17 +1381,19 @@ export const setAvatar = new ValidatedMethod({
   run({ avatar }) {
     if (!this.userId) {
       logServer(
-        `USERS - METHODS - UPDATE - setAvatar - ${i18n.__('api.users.mustBeLoggedIn')}`,
-        levels.VERBOSE,
+        `USERS - METHODS - METEOR ERROR - setAvatar - ${i18n.__('api.users.mustBeLoggedIn')}`,
+        levels.ERROR,
         scopes.SYSTEM,
+        { avatar },
       );
       throw new Meteor.Error('api.users.setAvatar.notPermitted', i18n.__('api.users.mustBeLoggedIn'));
     }
     validateString(avatar);
     logServer(
-      `USERS - METHODS - UPDATE - setAvatar (user meteor) - userId: ${this.userId} / avatar: ${avatar}`,
+      `USERS - METHODS - UPDATE - setAvatar (user meteor) - userId: ${this.userId}`,
       levels.VERBOSE,
       scopes.USER,
+      { avatar },
     );
     Meteor.users.update(this.userId, {
       $set: { avatar },
@@ -1390,8 +1418,9 @@ export const setKeycloakId = new ValidatedMethod({
     if (!authorized) {
       logServer(
         `USERS - METHODS - METEOR ERROR - setKeycloakId - ${i18n.__('api.users.adminNeeded')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { email, keycloakId },
       );
       throw new Meteor.Error('api.users.setKeycloakId.notPermitted', i18n.__('api.users.adminNeeded'));
     }
@@ -1407,8 +1436,9 @@ export const setKeycloakId = new ValidatedMethod({
     }
     logServer(
       `USERS - METHODS - METEOR ERROR - setKeycloakId - ${i18n.__('api.users.unknownUser')}`,
-      levels.VERBOSE,
+      levels.ERROR,
       scopes.SYSTEM,
+      { email, keycloakId },
     );
     throw new Meteor.Error('api.users.setKeycloakId.unknownUser', i18n.__('api.users.unknownUser'));
   },
@@ -1442,8 +1472,9 @@ export const userUpdated = new ValidatedMethod({
       // this should be run by server side code only
       logServer(
         `USERS - METHODS - METEOR ERROR - userUpdated - ${i18n.__('api.users.notPermitted')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { userId, data },
       );
       throw new Meteor.Error('api.users.userUpdated.notPermitted', i18n.__('api.users.notPermitted'));
     }
@@ -1465,16 +1496,13 @@ export const setQuota = new ValidatedMethod({
       // this should be run by server side code only
       logServer(
         `USERS - METHODS - METEOR ERROR - setQuota - ${i18n.__('api.users.notPermitted')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { quota, userId },
       );
       throw new Meteor.Error('api.users.userUpdated.notPermitted', i18n.__('api.users.notPermitted'));
     }
-    logServer(
-      `USERS - METHODS - UPDATE - setQuota (user meteor) - userId: ${userId} / groupQuota: ${quota}`,
-      levels.VERBOSE,
-      scopes.ADMIN,
-    );
+    logServer(`USERS - METHODS - UPDATE - setQuota (user meteor)`, levels.VERBOSE, scopes.ADMIN, { quota, userId });
     Meteor.users.update(
       { _id: userId },
       {
@@ -1494,7 +1522,7 @@ export const toggleAdvancedPersonalPage = new ValidatedMethod({
     if (!this.userId) {
       logServer(
         `USERS - METHODS - METEOR ERROR - toggleAdvancedPersonalPage - ${i18n.__('api.users.mustBeLoggedIn')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
       );
       throw new Meteor.Error('api.users.toggleAdvancedPersonalPage.notPermitted', i18n.__('api.users.mustBeLoggedIn'));
@@ -1504,7 +1532,7 @@ export const toggleAdvancedPersonalPage = new ValidatedMethod({
     if (user === undefined) {
       logServer(
         `USERS - METHODS - METEOR ERROR - toggleAdvancedPersonalPage - ${i18n.__('api.users.unknownUser')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
       );
       throw new Meteor.Error('api.users.toggleAdvancedPersonalPage.unknownUser', i18n.__('api.users.unknownUser'));
@@ -1527,7 +1555,7 @@ export const getAuthToken = new ValidatedMethod({
     if (!this.userId) {
       logServer(
         `USERS - METHODS - METEOR ERROR - getAuthToken - ${i18n.__('api.users.mustBeLoggedIn')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
       );
       throw new Meteor.Error('api.users.getAuthToken.notPermitted', i18n.__('api.users.mustBeLoggedIn'));
@@ -1537,7 +1565,7 @@ export const getAuthToken = new ValidatedMethod({
     if (user === undefined) {
       logServer(
         `USERS - METHODS - METEOR ERROR - getAuthToken - ${i18n.__('api.users.unknownUser')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
       );
       throw new Meteor.Error('api.users.getAuthToken.unknownUser', i18n.__('api.users.unknownUser'));
@@ -1553,7 +1581,7 @@ export const resetAuthToken = new ValidatedMethod({
     if (!this.userId) {
       logServer(
         `USERS - METHODS - METEOR ERROR - resetAuthToken - ${i18n.__('api.users.mustBeLoggedIn')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
       );
       throw new Meteor.Error('api.users.resetAuthToken.notPermitted', i18n.__('api.users.mustBeLoggedIn'));
@@ -1563,7 +1591,7 @@ export const resetAuthToken = new ValidatedMethod({
     if (user === undefined) {
       logServer(
         `USERS - METHODS - METEOR ERROR - resetAuthToken - ${i18n.__('api.users.unknownUser')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
       );
       throw new Meteor.Error('api.users.resetAuthToken.unknownUser', i18n.__('api.users.unknownUser'));
@@ -1610,7 +1638,7 @@ export const fixUsers = new ValidatedMethod({
     if (!this.userId) {
       logServer(
         `USERS - METHODS - METEOR ERROR - fixUsers - ${i18n.__('api.users.mustBeLoggedIn')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
       );
       throw new Meteor.Error('api.users.fixUsers.notPermitted', i18n.__('api.users.mustBeLoggedIn'));
@@ -1620,7 +1648,7 @@ export const fixUsers = new ValidatedMethod({
     if (!authorized) {
       logServer(
         `USERS - METHODS - METEOR ERROR - fixUsers - ${i18n.__('api.users.adminNeeded')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
       );
       throw new Meteor.Error('api.users.fixUsers.notPermitted', i18n.__('api.users.adminNeeded'));
@@ -1648,22 +1676,15 @@ export const fixUsers = new ValidatedMethod({
         if (!user.nclocator) updateInfos.nclocator = getRandomNCloudURL();
         logServer(
           `USERS - METHODS - UPDATE - fixUsers (user meteor) - userId: ${user._id} 
-      / updateInfos: ${updateInfos}`,
+      / updateInfos: ${updateInfos.primaryEmail}`,
           levels.INFO,
           scopes.USER,
         );
         Meteor.users.update({ _id: user._id }, { $set: updateInfos });
-        // logServer(`- fixed user ${updateInfos.username} (email:${updateInfos.primaryEmail})`);
-        logServer(
-          `USERS - METHODS - fixed user ${updateInfos.username} (email:${updateInfos.primaryEmail})`,
-          levels.ERROR,
-          scopes.SYSTEM,
-        );
         fixedCount += 1;
       } else {
-        // logServer(`- could not fix user '${user._id}', no keycloak data available`);
         logServer(
-          `USERS - METHODS - could not fix user '${user._id}', no keycloak data available`,
+          `USERS - METHODS - ERROR - fixUsers - could not fix user '${user._id}', no keycloak data available`,
           levels.ERROR,
           scopes.SYSTEM,
         );
