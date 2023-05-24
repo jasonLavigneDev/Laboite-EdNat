@@ -8,7 +8,6 @@ import { PropTypes } from 'prop-types';
 import HomeIcon from '@mui/icons-material/Home';
 import AppsIcon from '@mui/icons-material/Apps';
 import HelpIcon from '@mui/icons-material/Help';
-import { useMatomo } from '@datapunt/matomo-tracker-react';
 import { useAppContext } from '../../contexts/context';
 
 export const links = [
@@ -66,7 +65,6 @@ const useStyles = makeStyles()((theme, isMobile) => ({
 const OfflineMenu = ({ state: [selectedTab, setTab] }) => {
   const [{ isMobile }] = useAppContext();
   const { classes } = useStyles(isMobile);
-  const { trackEvent } = useMatomo();
 
   function a11yProps(index) {
     return {
@@ -76,11 +74,6 @@ const OfflineMenu = ({ state: [selectedTab, setTab] }) => {
   }
 
   const handleChangeMenu = (menuItem) => {
-    trackEvent({
-      category: 'signin-page',
-      action: 'click-menu',
-      name: `Sélectionne la page ${menuItem}`,
-    });
     setTab(menuItem);
   };
 

@@ -253,6 +253,7 @@ export const widget = () => `
         widgetContainer.setAttribute('class', 'lb_widget-container opened');
         iframeContainer.setAttribute('iframe-state', 'opened');
         openButton.setAttribute('class', 'lb_widget opened');
+        iframeContainer.contentWindow.postMessage('openWidget', '*' )
       }
       dragged = false
     };

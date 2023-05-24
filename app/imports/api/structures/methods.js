@@ -356,14 +356,6 @@ export const updateStructureIntroduction = new ValidatedMethod({
   },
 });
 
-export const getStructures = new ValidatedMethod({
-  name: 'structures.getStructures',
-  validate: null,
-  run() {
-    return Structures.find().fetch();
-  },
-});
-
 // Get list of all method names on Structures
 const LISTS_METHODS = _.pluck(
   [
@@ -373,7 +365,6 @@ const LISTS_METHODS = _.pluck(
     getAllChilds,
     updateStructureIntroduction,
     updateStructureContactEmail,
-    getStructures,
     setUserStructureAdminValidationMandatoryStatus,
   ],
   'name',

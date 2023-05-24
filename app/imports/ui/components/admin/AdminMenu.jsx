@@ -15,6 +15,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import RestorePageIcon from '@mui/icons-material/RestorePage';
+import EqualizerIcon from '@mui/icons-material/Equalizer';
 import HttpIcon from '@mui/icons-material/Http';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import EmailIcon from '@mui/icons-material/Email';
@@ -88,6 +89,12 @@ export default function AdminMenu() {
 
   const adminMenu = [
     {
+      path: '/admin/analytics',
+      content: 'menuAdminAnalytics',
+      icon: <EqualizerIcon />,
+      hidden: !isAdmin,
+    },
+    {
       path: '/admin/groups',
       content: 'menuAdminGroups',
       icon: <GroupWorkIcon />,
@@ -157,7 +164,13 @@ export default function AdminMenu() {
       path: '/admin/businessRegrouping',
       content: 'menuAdminBusinessRegrouping',
       icon: <CategoryIcon />,
-      hidden: !isAdminStructure || !isBusinessRegroupingMode,
+      hidden: !(isAdminStructure && isBusinessRegroupingMode),
+    },
+    {
+      path: '/admin/structureanalytics',
+      content: 'menuAdminStructureAnalytics',
+      icon: <EqualizerIcon />,
+      hidden: !isAdminStructure,
     },
     {
       path: '/admin/structureservices',

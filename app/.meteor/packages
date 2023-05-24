@@ -46,3 +46,6 @@ eoleteam:accounts-keycloak
 mexar:mdt
 random@1.2.0
 server-render@0.4.0
+mizzao:user-status
+littledata:synced-cron
+sakulstra:aggregate
