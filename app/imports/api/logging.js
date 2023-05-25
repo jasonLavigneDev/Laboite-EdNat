@@ -28,7 +28,7 @@ function logServer(message, level = 'info', scope = 'USER', params = {}) {
       align(),
       padLevels(),
       label({ label: scope, message: true }),
-      printf((info) => `${info.timestamp} [${info.level}] ${info.message} ${JSON.stringify({ ...params })}`),
+      printf((info) => `${info.timestamp} [${info.level}] ${info.message}`),
     );
 
     if (logger === 0) {
@@ -36,8 +36,7 @@ function logServer(message, level = 'info', scope = 'USER', params = {}) {
       logger = winston.createLogger({
         transports: [
           new winston.transports.Console({
-            // level: process.env.LOG_LEVEL,
-            level: levels.VERBOSE,
+            level: process.env.LOG_LEVEL || levels.INFO,
 
             format: combine(colorize({ all: true }), fileFormat),
             silent: Meteor.isTest,
@@ -45,7 +44,7 @@ function logServer(message, level = 'info', scope = 'USER', params = {}) {
         ],
       });
     }
-    logger.log(level, message.toString());
+    logger.log(level, `${message.toString()} ${JSON.stringify({ ...params })}`);
   }
 }
 
