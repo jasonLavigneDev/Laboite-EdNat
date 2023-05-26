@@ -126,7 +126,7 @@ class NextcloudClient {
         levels.ERROR,
         scopes.SYSTEM,
         {
-          error: error.reason || error.message || error,
+          error: error.reason || error.message,
         },
       );
       return false;
@@ -205,7 +205,7 @@ class NextcloudClient {
         scopes.SYSTEM,
         {
           name: getShareName(group.shareName),
-          error: error.reason || error.message || error,
+          error: error.reason || error.message,
         },
       );
       return null;
@@ -276,7 +276,7 @@ class NextcloudClient {
         levels.ERROR,
         scopes.SYSTEM,
         {
-          error: error.reason || error.message || error,
+          error: error.reason || error.message,
         },
       );
       return null;
@@ -323,7 +323,7 @@ class NextcloudClient {
           scopes.SYSTEM,
           {
             circleId: group.circleId,
-            error: error.reason || error.message || error,
+            error: error.reason || error.message,
           },
         );
       });
@@ -356,7 +356,7 @@ class NextcloudClient {
         scopes.SYSTEM,
         {
           path: shareName,
-          error: error.reason || error.message || error,
+          error: error.reason || error.message,
         },
       );
     });
@@ -407,7 +407,7 @@ class NextcloudClient {
         scopes.SYSTEM,
         {
           user: `${user.username}@${getInstance(user)}`,
-          error: error.reason || error.message || error,
+          error: error.reason || error.message,
         },
       );
     });
@@ -449,7 +449,7 @@ class NextcloudClient {
         scopes.SYSTEM,
         {
           groupId: group._id,
-          error: error.reason || error.message || error,
+          error: error.reason || error.message,
         },
       );
     });
@@ -528,7 +528,7 @@ class NextcloudClient {
         scopes.SYSTEM,
         {
           user: user.username,
-          error: error.reason || error.message || error,
+          error: error.reason || error.message,
         },
       );
     });
@@ -564,7 +564,7 @@ class NextcloudClient {
               userData: ncData,
               userId,
               ncURL: user.nclocator,
-              error: error.reason || error.message || error,
+              error: error.reason || error.message,
             },
           );
         });
