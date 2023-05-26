@@ -10,6 +10,7 @@ import logServer, { levels, scopes } from './logging';
 import AppSettings from './appsettings/appsettings';
 import { addItem } from './personalspaces/methods';
 import PersonalSpaces from './personalspaces/personalspaces';
+import EventsAgenda from './eventsAgenda/eventsAgenda';
 
 Migrations.add({
   version: 1,
@@ -780,6 +781,19 @@ Migrations.add({
       scopes.SYSTEM,
     );
     Structures.update({ groupId: '' }, { $set: { groupId: null } });
+  },
+  down: () => {
+    // no rollback on this step
+  },
+});
+
+Migrations.add({
+  version: 32,
+  name: 'Fix incomplete events',
+  up: () => {
+    logServer(`MIGRATIONS - 32 Fix incomplete events - EVENTSAGENDA - UPDATE`, levels.INFO, scopes.SYSTEM);
+    const now = new Date();
+    EventsAgenda.update({ updatedAt: null }, { $set: { updatedAt: now, createdAt: now } });
   },
   down: () => {
     // no rollback on this step
