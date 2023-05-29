@@ -40,7 +40,7 @@ export const createBusinessReGrouping = new ValidatedMethod({
         `BUISINESS - METHOD - METEOR ERROR - createBusinessReGrouping - ${i18n.__(
           'api.businessReGrouping.createBusinessReGrouping.nameAlreadyUse',
         )}`,
-        levels.ERROR,
+        levels.WARN,
         scopes.SYSTEM,
         { name, structure },
       );
@@ -56,7 +56,7 @@ export const createBusinessReGrouping = new ValidatedMethod({
       logServer(
         `BUISINESS - METHOD - METEOR ERROR - createBusinessReGrouping - 
         ${i18n.__('api.businessReGrouping.createBusinessReGrouping.nameAlreadyUsedForOneOfStructureAncestors')}`,
-        levels.ERROR,
+        levels.WARN,
         scopes.SYSTEM,
         { name, structure },
       );

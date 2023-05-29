@@ -84,7 +84,7 @@ export const removeNotification = new ValidatedMethod({
     if (!isActive(this.userId)) {
       logServer(
         `NOTIFICATIONS - METHODS - METEOR ERROR - removeNotification - ${i18n.__('api.notifications.mustBeLoggedIn')}`,
-        levels.ERROR,
+        levels.WARN,
         scopes.SYSTEM,
         { notificationId },
       );
@@ -128,7 +128,7 @@ export const removeAllNotification = new ValidatedMethod({
         `NOTIFICATIONS - METHODS - METEOR ERROR - removeAllNotification - ${i18n.__(
           'api.notifications.mustBeLoggedIn',
         )}`,
-        levels.ERROR,
+        levels.WARN,
         scopes.SYSTEM,
       );
       throw new Meteor.Error(
@@ -155,7 +155,7 @@ export const removeAllNotificationRead = new ValidatedMethod({
         `NOTIFICATIONS - METHODS - METEOR ERROR - removeAllNotificationRead - ${i18n.__(
           'api.notifications.mustBeLoggedIn',
         )}`,
-        levels.ERROR,
+        levels.WARN,
         scopes.SYSTEM,
       );
       throw new Meteor.Error(
@@ -184,7 +184,7 @@ export const markNotificationAsRead = new ValidatedMethod({
         `NOTIFICATIONS - METHODS - METEOR ERROR - markNotificationAsRead - ${i18n.__(
           'api.notifications.mustBeLoggedIn',
         )}`,
-        levels.ERROR,
+        levels.WARN,
         scopes.SYSTEM,
         { notificationId },
       );
@@ -228,7 +228,7 @@ export const markAllNotificationAsRead = new ValidatedMethod({
         `NOTIFICATIONS - METHODS - METEOR ERROR - markAllNotificationAsRead - ${i18n.__(
           'api.notifications.mustBeLoggedIn',
         )}`,
-        levels.ERROR,
+        levels.WARN,
         scopes.SYSTEM,
       );
       throw new Meteor.Error(
@@ -257,7 +257,7 @@ export const markAllTypeNotificationAsRead = new ValidatedMethod({
         `NOTIFICATIONS - METHODS - METEOR ERROR - markAllTypeNotificationAsRead - ${i18n.__(
           'api.notifications.mustBeLoggedIn',
         )}`,
-        levels.ERROR,
+        levels.WARN,
         scopes.SYSTEM,
         { type },
       );
@@ -292,7 +292,7 @@ export const removeAllTypeNotification = new ValidatedMethod({
         `NOTIFICATIONS - METHODS - METEOR ERROR - removeAllTypeNotification - ${i18n.__(
           'api.notifications.mustBeLoggedIn',
         )}`,
-        levels.ERROR,
+        levels.WARN,
         scopes.SYSTEM,
         { type },
       );

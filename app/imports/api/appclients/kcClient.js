@@ -353,7 +353,7 @@ class KeyCloakClient {
             logServer(
               `APPCLIENT - KcCLIENT - ERROR - _updateGroup -
               ${i18n.__('api.keycloak.groupNotFound', { groupName: oldName })}`,
-              levels.ERROR,
+              levels.WARN,
               scopes.USER,
               {
                 groupName,
@@ -436,7 +436,7 @@ class KeyCloakClient {
           if (groupId === undefined) {
             logServer(
               `APPCLIENT - KcCLIENT - ERROR - _removeGroup - ${i18n.__('api.keycloak.groupNotFound', { groupName })}`,
-              levels.ERROR,
+              levels.WARN,
               scopes.USER,
               {
                 groupName,
@@ -555,7 +555,7 @@ class KeyCloakClient {
     } else {
       logServer(
         `APPCLIENT - KcCLIENT - ERROR - setAdmin - ${i18n.__('api.keycloak.userNotFound', { userId })}`,
-        levels.ERROR,
+        levels.WARN,
         scopes.USER,
         {
           userId,
@@ -625,7 +625,7 @@ class KeyCloakClient {
     } else {
       logServer(
         `APPCLIENT - KcCLIENT - ERROR - unsetAdmin - ${i18n.__('api.keycloak.userNotFound', { userId })}`,
-        levels.ERROR,
+        levels.WARN,
         scopes.USER,
         {
           userId,
@@ -733,7 +733,7 @@ class KeyCloakClient {
     } else {
       logServer(
         `APPCLIENT - KcCLIENT - ERROR - unsetRole - ${i18n.__('api.keycloak.userNotFound', { userId })}`,
-        levels.ERROR,
+        levels.WARN,
         scopes.USER,
         {
           userId,

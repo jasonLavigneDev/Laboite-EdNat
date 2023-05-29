@@ -39,7 +39,7 @@ function _createBookmarkUrl(url, name, tag, groupId, author) {
         `BOOKMARKS - METHOD - METEOR ERROR - _createBookmarkUrl - ${i18n.__(
           'api.bookmarks.createBookmark.URLAlreadyExists',
         )}`,
-        levels.ERROR,
+        levels.WARN,
         scopes.SYSTEM,
         { url, name, tag, groupId, author },
       );
@@ -81,7 +81,7 @@ export const createBookmark = new ValidatedMethod({
         `BOOKMARKS - METHOD - METEOR ERROR - createBookmark - ${i18n.__(
           'api.bookmarks.createBookmark.URLAlreadyExists',
         )}`,
-        levels.ERROR,
+        levels.WARN,
         scopes.SYSTEM,
         { url, name, groupId, tag },
       );

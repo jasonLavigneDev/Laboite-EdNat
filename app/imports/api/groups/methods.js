@@ -23,7 +23,7 @@ export const favGroup = new ValidatedMethod({
     if (!isActive(this.userId)) {
       logServer(
         `GROUPS - METHODS - METEOR ERROR - favGroup - ${i18n.__('api.users.mustBeLoggedIn')}`,
-        levels.ERROR,
+        levels.WARN,
         scopes.SYSTEM,
         { groupId },
       );
@@ -67,7 +67,7 @@ export const unfavGroup = new ValidatedMethod({
     if (!isActive(this.userId)) {
       logServer(
         `GROUPS - METHODS - METEOR ERROR - unfavGroup - ${i18n.__('api.users.mustBeLoggedIn')}`,
-        levels.ERROR,
+        levels.WARN,
         scopes.SYSTEM,
         { groupId },
       );
@@ -256,7 +256,7 @@ export const createGroup = new ValidatedMethod({
     if (!isActive(this.userId)) {
       logServer(
         `GROUPS - METHODS - METEOR ERROR - createGroup - ${i18n.__('api.users.mustBeLoggedIn')}`,
-        levels.ERROR,
+        levels.WARN,
         scopes.SYSTEM,
         { name, type, content, description, avatar, plugins },
       );

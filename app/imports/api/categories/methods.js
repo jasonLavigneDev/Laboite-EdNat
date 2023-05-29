@@ -26,7 +26,7 @@ export const createCategorie = new ValidatedMethod({
         `CATEGORIES - METHOD - METEOR ERROR - createCategorie - ${i18n.__(
           'api.categories.createCategorie.nameAlreadyUse',
         )}`,
-        levels.ERROR,
+        levels.WARN,
         scopes.SYSTEM,
         { name },
       );

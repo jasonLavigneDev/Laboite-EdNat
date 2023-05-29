@@ -13,7 +13,7 @@ export default async function createUser(req, content) {
   if ('username' in content && 'firstname' in content && 'lastname' in content && 'email' in content) {
     const emailUser = Accounts.findUserByEmail(content.email);
     if (emailUser) {
-      logServer(`USERS - REST - ERROR - createUser - user already exists with this email`, levels.ERROR, scopes.USER, {
+      logServer(`USERS - REST - ERROR - createUser - user already exists with this email`, levels.WARN, scopes.USER, {
         emailUser,
       });
       throw new Meteor.Error(
@@ -55,7 +55,7 @@ export default async function createUser(req, content) {
       }
       return { response: 'user created' };
     }
-    logServer(`USERS - REST - ERROR - createUser - username already exists`, levels.ERROR, scopes.USER, {
+    logServer(`USERS - REST - ERROR - createUser - username already exists`, levels.WARN, scopes.USER, {
       user: content.username,
     });
     throw new Meteor.Error('restapi.users.createuser.alreadyExists', 'username already exists');

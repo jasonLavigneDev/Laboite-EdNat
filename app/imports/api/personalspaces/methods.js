@@ -261,7 +261,7 @@ export const checkPersonalSpace = new ValidatedMethod({
       if (u.favServices && u.favGroups && u.favUserBookmarks) {
         logServer(
           `PERSONALSPACES - METHODS - ERROR - checkPersonalSpace, Regen Personalspace (not found) for ${u.username}...`,
-          levels.ERROR,
+          levels.WARN,
           scopes.SYSTEM,
           { u },
         );

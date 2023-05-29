@@ -30,7 +30,7 @@ function _createUrl(url, active) {
     if (error.code === 11000) {
       logServer(
         `NEXTCLOUD - METHOD - METEOR ERROR - _createUrl - ${i18n.__('api.nextcloud.urlAlreadyExists')}`,
-        levels.ERROR,
+        levels.WARN,
         scopes.SYSTEM,
         { error },
       );
@@ -115,7 +115,7 @@ export const removeNextcloudURL = new ValidatedMethod({
     if (ncloud.count > 0) {
       logServer(
         `NEXTCLOUD - METHOD - METEOR ERROR - removeNextcloudURL - ${i18n.__('api.nextcloud.mustNotBeUsed')}`,
-        levels.ERROR,
+        levels.WARN,
         scopes.SYSTEM,
         { url },
       );

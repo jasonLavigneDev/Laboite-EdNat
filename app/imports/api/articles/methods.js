@@ -30,7 +30,7 @@ export const createArticle = new ValidatedMethod({
     if (!isActive(this.userId)) {
       logServer(
         `ARTICLES - METHODS - METEOR ERROR - createArticle - ${i18n.__('api.users.mustBeLoggedIn')}`,
-        levels.ERROR,
+        levels.WARN,
         scopes.SYSTEM,
         { data },
       );
@@ -68,7 +68,7 @@ export const removeArticle = new ValidatedMethod({
     if (!isActive(this.userId)) {
       logServer(
         `ARTICLES - METHODS - METEOR ERROR - removeArticle - ${i18n.__('api.users.mustBeLoggedIn')}`,
-        levels.ERROR,
+        levels.WARN,
         scopes.SYSTEM,
         { articleId },
       );
@@ -188,7 +188,7 @@ export const downloadBackupPublications = new ValidatedMethod({
     if (!authorized) {
       logServer(
         `ARTICLES - METHODS - METEOR ERROR - downloadBackupPublications - ${i18n.__('api.users.mustBeLoggedIn')}`,
-        levels.ERROR,
+        levels.WARN,
         scopes.SYSTEM,
       );
       throw new Meteor.Error(
@@ -218,7 +218,7 @@ export const uploadBackupPublications = new ValidatedMethod({
       if (!authorized) {
         logServer(
           `ARTICLES - METHODS - METEOR ERROR - uploadBackupPublications - ${i18n.__('api.users.mustBeLoggedIn')}`,
-          levels.ERROR,
+          levels.WARN,
           scopes.SYSTEM,
           { articles, updateStructure },
         );

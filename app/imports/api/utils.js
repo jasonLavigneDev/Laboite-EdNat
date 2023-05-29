@@ -196,7 +196,7 @@ export const validateString = (content, strict = false) => {
   if (content.length > 500000) {
     logServer(
       `UTILS - API - METEOR ERROR - validateString - ${i18n.__('api.utils.stringTooLong')}`,
-      levels.ERROR,
+      levels.WARN,
       scopes.SYSTEM,
       { content, strict },
     );

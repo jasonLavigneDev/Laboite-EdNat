@@ -43,7 +43,7 @@ export const createUserBookmark = new ValidatedMethod({
         `USERBOOKMARKS - METHODS - METEOR ERROR - createUserBookmark - ${i18n.__(
           'api.bookmarks.createBookmark.URLAlreadyExists',
         )}`,
-        levels.ERROR,
+        levels.WARN,
         scopes.SYSTEM,
         { url, name, tag },
       );
@@ -126,7 +126,7 @@ export const favUserBookmark = new ValidatedMethod({
     if (!this.userId) {
       logServer(
         `USERBOOKMARKS - METHODS - METEOR ERROR - favUserBookmark - ${i18n.__('api.users.mustBeLoggedIn')}`,
-        levels.ERROR,
+        levels.WARN,
         scopes.SYSTEM,
         { bookmarkId },
       );
@@ -169,7 +169,7 @@ export const unfavUserBookmark = new ValidatedMethod({
     if (!this.userId) {
       logServer(
         `USERBOOKMARKS - METHODS - METEOR ERROR - unfavUserBookmark - ${i18n.__('api.users.mustBeLoggedIn')}`,
-        levels.ERROR,
+        levels.WARN,
         scopes.SYSTEM,
         { bookmarkId },
       );

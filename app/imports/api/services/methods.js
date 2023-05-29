@@ -52,7 +52,7 @@ export const createService = new ValidatedMethod({
     if (sv !== undefined) {
       logServer(
         `SERVICES - METHODS - METEOR ERROR - createService - ${i18n.__('api.services.ServiceAlreadyExists')}`,
-        levels.ERROR,
+        levels.WARN,
         scopes.SYSTEM,
         { data },
       );
@@ -168,7 +168,7 @@ export const favService = new ValidatedMethod({
     if (!this.userId) {
       logServer(
         `SERVICES - METHODS - METEOR ERROR - favService - ${i18n.__('api.users.mustBeLoggedIn')}`,
-        levels.ERROR,
+        levels.WARN,
         scopes.SYSTEM,
         { serviceId },
       );
@@ -210,7 +210,7 @@ export const unfavService = new ValidatedMethod({
     if (!this.userId) {
       logServer(
         `SERVICES - METHODS - METEOR ERROR - unfavService - ${i18n.__('api.users.mustBeLoggedIn')}`,
-        levels.ERROR,
+        levels.WARN,
         scopes.SYSTEM,
         { serviceId },
       );

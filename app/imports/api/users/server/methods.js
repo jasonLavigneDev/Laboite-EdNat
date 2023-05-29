@@ -429,7 +429,7 @@ export const checkUsername = new ValidatedMethod({
     if (!this.userId) {
       logServer(
         `USERS - METHODS - METEOR ERROR - checkUsername - ${i18n.__('api.users.mustBeLoggedIn')}`,
-        levels.ERROR,
+        levels.WARN,
         scopes.SYSTEM,
         { username },
       );
@@ -728,7 +728,7 @@ export const setCandidateOf = new ValidatedMethod({
     if (group.type !== 5) {
       logServer(
         `USERS - METHODS - METEOR ERROR - setCandidateOf - ${i18n.__('api.groups.moderatedGroupOnly')}`,
-        levels.ERROR,
+        levels.WARN,
         scopes.SYSTEM,
         { userId, groupId },
       );
@@ -853,7 +853,7 @@ export const acceptAwaitingStructure = new ValidatedMethod({
     if (!this.userId) {
       logServer(
         `USERS - METHODS - METEOR ERROR - acceptAwaitingStructure - ${i18n.__('api.users.mustBeLoggedIn')}`,
-        levels.ERROR,
+        levels.WARN,
         scopes.SYSTEM,
         { targetUserId },
       );
@@ -867,7 +867,7 @@ export const acceptAwaitingStructure = new ValidatedMethod({
     if (structure === undefined) {
       logServer(
         `USERS - METHODS - METEOR ERROR - acceptAwaitingStructure - ${i18n.__('api.users.mustBeLoggedIn')}`,
-        levels.ERROR,
+        levels.WARN,
         scopes.SYSTEM,
         { targetUserId },
       );
@@ -932,7 +932,7 @@ export const setStructure = new ValidatedMethod({
     if (!this.userId) {
       logServer(
         `USERS - METHODS - METEOR ERROR - setStructure - ${i18n.__('api.users.mustBeLoggedIn')}`,
-        levels.ERROR,
+        levels.WARN,
         scopes.SYSTEM,
         { structure },
       );
@@ -1004,7 +1004,7 @@ export const setNcloudUrlAll = new ValidatedMethod({
     if (!this.userId) {
       logServer(
         `USERS - METHODS - METEOR ERROR - setNcloudUrlAll - ${i18n.__('api.users.mustBeLoggedIn')}`,
-        levels.ERROR,
+        levels.WARN,
         scopes.SYSTEM,
       );
       throw new Meteor.Error('api.users.setNcloudUrlAll.notLoggedIn', i18n.__('api.users.mustBeLoggedIn'));
@@ -1156,7 +1156,7 @@ export const setArticlesEnable = new ValidatedMethod({
     if (!this.userId) {
       logServer(
         `USERS - METHODS - METEOR ERROR - setArticlesEnable - ${i18n.__('api.users.mustBeLoggedIn')}`,
-        levels.ERROR,
+        levels.WARN,
         scopes.SYSTEM,
       );
       throw new Meteor.Error('api.users.toggleAdvancedPersonalPage.notPermitted', i18n.__('api.users.mustBeLoggedIn'));
@@ -1321,7 +1321,7 @@ export const setLanguage = new ValidatedMethod({
     if (!this.userId) {
       logServer(
         `USERS - METHODS - METEOR ERROR - setLanguage - ${i18n.__('api.users.mustBeLoggedIn')}`,
-        levels.ERROR,
+        levels.WARN,
         scopes.SYSTEM,
         { language },
       );
@@ -1382,7 +1382,7 @@ export const setAvatar = new ValidatedMethod({
     if (!this.userId) {
       logServer(
         `USERS - METHODS - METEOR ERROR - setAvatar - ${i18n.__('api.users.mustBeLoggedIn')}`,
-        levels.ERROR,
+        levels.WARN,
         scopes.SYSTEM,
         { avatar },
       );
@@ -1522,7 +1522,7 @@ export const toggleAdvancedPersonalPage = new ValidatedMethod({
     if (!this.userId) {
       logServer(
         `USERS - METHODS - METEOR ERROR - toggleAdvancedPersonalPage - ${i18n.__('api.users.mustBeLoggedIn')}`,
-        levels.ERROR,
+        levels.WARN,
         scopes.SYSTEM,
       );
       throw new Meteor.Error('api.users.toggleAdvancedPersonalPage.notPermitted', i18n.__('api.users.mustBeLoggedIn'));
@@ -1555,7 +1555,7 @@ export const getAuthToken = new ValidatedMethod({
     if (!this.userId) {
       logServer(
         `USERS - METHODS - METEOR ERROR - getAuthToken - ${i18n.__('api.users.mustBeLoggedIn')}`,
-        levels.ERROR,
+        levels.WARN,
         scopes.SYSTEM,
       );
       throw new Meteor.Error('api.users.getAuthToken.notPermitted', i18n.__('api.users.mustBeLoggedIn'));
@@ -1581,7 +1581,7 @@ export const resetAuthToken = new ValidatedMethod({
     if (!this.userId) {
       logServer(
         `USERS - METHODS - METEOR ERROR - resetAuthToken - ${i18n.__('api.users.mustBeLoggedIn')}`,
-        levels.ERROR,
+        levels.WARN,
         scopes.SYSTEM,
       );
       throw new Meteor.Error('api.users.resetAuthToken.notPermitted', i18n.__('api.users.mustBeLoggedIn'));
@@ -1638,7 +1638,7 @@ export const fixUsers = new ValidatedMethod({
     if (!this.userId) {
       logServer(
         `USERS - METHODS - METEOR ERROR - fixUsers - ${i18n.__('api.users.mustBeLoggedIn')}`,
-        levels.ERROR,
+        levels.WARN,
         scopes.SYSTEM,
       );
       throw new Meteor.Error('api.users.fixUsers.notPermitted', i18n.__('api.users.mustBeLoggedIn'));

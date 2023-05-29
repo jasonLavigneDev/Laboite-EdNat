@@ -120,7 +120,7 @@ export const updateHelp = new ValidatedMethod({
     if (tagWithTitle) {
       logServer(
         `HELPS - METHOD - METEOR ERROR - updateHelp - ${i18n.__('api.helps.updateHelp.titleAlreadyTaken')}`,
-        levels.ERROR,
+        levels.WARN,
         scopes.SYSTEM,
         { helpId, data },
       );

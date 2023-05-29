@@ -36,7 +36,7 @@ export const createStructure = new ValidatedMethod({
     if (structuresWithSameNameOnSameLevel) {
       logServer(
         `STRUCTURE - METHODS - METEOR ERROR - createStructure - ${i18n.__('api.structures.nameAlreadyTaken')}`,
-        levels.ERROR,
+        levels.WARN,
         scopes.SYSTEM,
         { name, parentId },
       );
@@ -170,7 +170,7 @@ export const updateStructure = new ValidatedMethod({
     if (structuresWithSameNameOnSameLevel) {
       logServer(
         `STRUCTURE - METHODS - METEOR ERROR - updateStructure - ${i18n.__('api.structures.nameAlreadyTaken')}}`,
-        levels.ERROR,
+        levels.WARN,
         scopes.SYSTEM,
         { structureId, name },
       );

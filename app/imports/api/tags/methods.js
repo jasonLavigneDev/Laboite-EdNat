@@ -30,7 +30,7 @@ export const createTag = new ValidatedMethod({
     if (name !== name.toLowerCase()) {
       logServer(
         `TAGS - METHODS - METEOR ERROR - createTag - ${i18n.__('api.tags.notLowerCase')}`,
-        levels.ERROR,
+        levels.WARN,
         scopes.SYSTEM,
         { name },
       );

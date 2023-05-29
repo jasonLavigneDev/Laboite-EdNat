@@ -204,7 +204,7 @@ class BigBlueButtonClient {
           logServer(
             `APPCLIENT - BBBCLIENT - METEOR ERROR - getMeetings - 
             BBB message missing: ${result.response.messageKey[0]}`,
-            levels.ERROR,
+            levels.WARN,
             scopes.SYSTEM,
           );
           // use messageKey if translation needed

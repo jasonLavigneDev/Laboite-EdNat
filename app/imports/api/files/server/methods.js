@@ -167,7 +167,7 @@ export const filesupload = new ValidatedMethod({
       }
       logServer(
         `FILES - METHODS - METEOR ERROR - filesupload - ${i18n.__('components.UploaderNotifier.fileTooLarge')}`,
-        levels.ERROR,
+        levels.WARN,
         scopes.SYSTEM,
         { file, path, name, fileType, storage },
       );
