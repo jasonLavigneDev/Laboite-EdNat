@@ -29,6 +29,7 @@ import Animation from '../screencast/Animation';
 import { useAppContext } from '../../contexts/context';
 import UserBookmarks from '../../../api/userBookmarks/userBookmarks';
 import CollapsingSearch from '../system/CollapsingSearch';
+import Bookmarks from '../../../api/bookmarks/bookmarks';
 
 const { disabledFeatures } = Meteor.settings.public;
 
@@ -183,6 +184,11 @@ function PersonalZoneUpdater({
         searchText = userBookmark !== undefined ? `${userBookmark.name} ${userBookmark.url}` : '';
         break;
       }
+      case 'groupLink': {
+        const Bookmark = Bookmarks.findOne(element.element_id);
+        searchText = Bookmark !== undefined ? `${Bookmark.name} ${Bookmark.url}` : '';
+        break;
+      }
       default:
         searchText = '';
         break;
@@ -193,6 +199,10 @@ function PersonalZoneUpdater({
 
   const filterLink = (element) => {
     return element.type === 'link';
+  };
+
+  const filterGroupLink = (element) => {
+    return element.type === 'groupLink';
   };
 
   const filterGroup = (element) => {
@@ -303,17 +313,43 @@ function PersonalZoneUpdater({
     } else if (type === 'service') {
       setLocalPS({
         ...localPS,
-        unsorted: [...list, ...localPS.unsorted.filter(filterGroup), ...localPS.unsorted.filter(filterLink)],
+        unsorted: [
+          ...list,
+          ...localPS.unsorted.filter(filterGroupLink),
+          ...localPS.unsorted.filter(filterGroup),
+          ...localPS.unsorted.filter(filterLink),
+        ],
       });
     } else if (type === 'link') {
       setLocalPS({
         ...localPS,
-        unsorted: [...list, ...localPS.unsorted.filter(filterGroup), ...localPS.unsorted.filter(filterService)],
+        unsorted: [
+          ...list,
+          ...localPS.unsorted.filter(filterGroupLink),
+          ...localPS.unsorted.filter(filterGroup),
+          ...localPS.unsorted.filter(filterService),
+        ],
+      });
+    } else if (type === 'groupLink') {
+      setLocalPS({
+        ...localPS,
+        unsorted: [
+          ...list,
+          ...localPS.unsorted.filter(filterLink),
+          ...localPS.unsorted.filter(filterGroup),
+          ...localPS.unsorted.filter(filterService),
+        ],
       });
     } else {
       setLocalPS({
         ...localPS,
-        unsorted: [...list, ...localPS.unsorted.filter(filterService), ...localPS.unsorted.filter(filterLink)],
+        unsorted: [
+          ...list,
+          ...localPS.unsorted.filter(filterGroupLink),
+          ...localPS.unsorted.filter(filterService),
+          ...localPS.unsorted.filter(filterGroup),
+          ...localPS.unsorted.filter(filterLink),
+        ],
       });
     }
   };
@@ -514,6 +550,20 @@ function PersonalZoneUpdater({
                     elements={localPS.unsorted.filter(filterSearch).filter(filterLink)}
                     title={i18n.__('pages.PersonalPage.unsortedLinks')}
                     setList={setZoneList('link')}
+                    suspendUpdate={suspendUpdate}
+                    updateList={updateList}
+                    customDrag={customDrag}
+                    needUpdate={handleNeedUpdate}
+                  />,
+                ]
+              : null}
+            {!edition && localPS.unsorted.filter(filterGroupLink).length !== 0
+              ? [
+                  <PersonalZone
+                    key="zone-favGroupBookmark-000000000000"
+                    elements={localPS.unsorted.filter(filterSearch).filter(filterGroupLink)}
+                    title={i18n.__('pages.PersonalPage.unsortedLinks')}
+                    setList={setZoneList('groupLink')}
                     suspendUpdate={suspendUpdate}
                     updateList={updateList}
                     customDrag={customDrag}

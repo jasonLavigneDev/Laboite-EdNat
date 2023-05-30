@@ -13,6 +13,7 @@ import Services from '../services/services';
 import UserBookmarks from '../userBookmarks/userBookmarks';
 import DefaultSpaces from '../defaultspaces/defaultspaces';
 import logServer, { levels, scopes } from '../logging';
+import Bookmarks from '../bookmarks/bookmarks';
 
 export const addItem = (userId, item) => {
   const currentPersonalSpace = PersonalSpaces.findOne({ userId });
@@ -151,9 +152,10 @@ export const addUserBookmark = new ValidatedMethod({
   name: 'personalspaces.addBookmark',
   validate: new SimpleSchema({
     bookmarkId: { type: String, regEx: SimpleSchema.RegEx.Id },
+    type: { type: String, regEx: SimpleSchema.RegEx.Id },
   }).validator(),
 
-  run({ bookmarkId }) {
+  run({ bookmarkId, type }) {
     // check if active and logged in
     if (!isActive(this.userId)) {
       logServer(
@@ -164,7 +166,9 @@ export const addUserBookmark = new ValidatedMethod({
       );
       throw new Meteor.Error('api.personalspaces.addBookmark.notPermitted', i18n.__('api.users.notPermitted'));
     }
-    const bookmark = UserBookmarks.findOne(bookmarkId);
+    let bookmark;
+    if (type === 'link') bookmark = UserBookmarks.findOne(bookmarkId);
+    else bookmark = Bookmarks.findOne(bookmarkId);
     if (bookmark === undefined) {
       logServer(
         `PERSONALSPACES - METHODS - METEOR ERROR - addUserBookmark - ${i18n.__('api.bookmarks.unknownBookmark')}`,
@@ -177,7 +181,7 @@ export const addUserBookmark = new ValidatedMethod({
         i18n.__('api.bookmarks.unknownBookmark'),
       );
     }
-    addItem(this.userId, { type: 'link', element_id: bookmarkId });
+    addItem(this.userId, { type, element_id: bookmarkId });
   },
 });
 
@@ -400,7 +404,11 @@ export const backToDefaultElement = new ValidatedMethod({
         break;
 
       case 'link':
-        addUserBookmark._execute({ userId: this.userId }, { bookmarkId: elementId });
+        addUserBookmark._execute({ userId: this.userId }, { bookmarkId: elementId, type: 'link' });
+        break;
+
+      case 'groupLink':
+        addUserBookmark._execute({ userId: this.userId }, { bookmarkId: elementId, type: 'groupLink' });
         break;
 
       default:

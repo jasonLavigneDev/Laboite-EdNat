@@ -8,6 +8,7 @@ import i18n from 'meteor/universe:i18n';
 import { isActive, getLabel, validateString } from '../utils';
 import Bookmarks from './bookmarks';
 import logServer, { levels, scopes } from '../logging';
+import { addUserBookmark, removeElement } from '../personalspaces/methods';
 
 function _updateBookmarkURL(id, url, name, tag) {
   logServer(`BOOKMARKS - METHOD - UPDATE - _updateBookmarkURL`, levels.VERBOSE, scopes.SYSTEM, { id, url, name, tag });
@@ -186,6 +187,80 @@ export const removeBookmark = new ValidatedMethod({
     Bookmarks.remove({ url });
 
     return null;
+  },
+});
+
+export const favGroupBookmark = new ValidatedMethod({
+  name: 'bookmarks.favGroupBookmark',
+  validate: new SimpleSchema({
+    bookmarkId: { type: String, regEx: SimpleSchema.RegEx.Id, label: getLabel('api.bookmarks.labels.id') },
+  }).validator(),
+
+  run({ bookmarkId }) {
+    if (!this.userId) {
+      logServer(
+        `USERBOOKMARKS - METHODS - METEOR ERROR - favUserBookmark - ${i18n.__('api.users.mustBeLoggedIn')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
+      throw new Meteor.Error('api.userBookmarks.favUserBookmark.mustBeLoggedIn', i18n.__('api.users.mustBeLoggedIn'));
+    }
+    // check bookmark existence
+    const bookmark = Bookmarks.findOne({ _id: bookmarkId });
+    if (bookmark === undefined) {
+      logServer(
+        `USERBOOKMARKS - METHODS - METEOR ERROR - favUserBookmark - ${i18n.__('api.bookmarks.unknownBookmark')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
+      throw new Meteor.Error(
+        'api.userBookmarks.favUserBookmark.unknownBookmark',
+        i18n.__('api.bookmarks.unknownBookmark'),
+      );
+    }
+    Meteor.users.update(this.userId, {
+      $push: { favUserBookmarks: bookmarkId },
+    });
+    logServer(
+      `USERBOOKMARKS - METHODS - EXECUTE - favUserBookmark - user id: ${this.userId} / bookmarkId: ${bookmarkId}`,
+      levels.VERBOSE,
+      scopes.SYSTEM,
+    );
+    // update user personalSpace
+    addUserBookmark._execute({ userId: this.userId }, { bookmarkId, type: 'groupLink' });
+  },
+});
+
+export const unfavGroupBookmark = new ValidatedMethod({
+  name: 'bookmarks.unfavGroupBookmark',
+  validate: new SimpleSchema({
+    bookmarkId: { type: String, regEx: SimpleSchema.RegEx.Id, label: getLabel('api.bookmarks.labels.id') },
+  }).validator(),
+
+  run({ bookmarkId }) {
+    if (!this.userId) {
+      logServer(
+        `USERBOOKMARKS - METHODS - METEOR ERROR - unfavUserBookmark - ${i18n.__('api.users.mustBeLoggedIn')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
+      throw new Meteor.Error('api.userBookmarks.unfavUserBookmark.mustBeLoggedIn', i18n.__('api.users.mustBeLoggedIn'));
+    }
+    const user = Meteor.users.findOne(this.userId);
+    // remove bookmark from user favorite bookmarks
+    if (user.favUserBookmarks.indexOf(bookmarkId) !== -1) {
+      Meteor.users.update(this.userId, {
+        $pull: { favUserBookmarks: bookmarkId },
+      });
+    }
+    logServer(
+      `USERBOOKMARKS - METHODS - METEOR ERROR - unfavUserBookmark - user id: ${this.userId} 
+      / bookmarkId: ${bookmarkId}`,
+      levels.VERBOSE,
+      scopes.SYSTEM,
+    );
+    // update user personalSpace
+    removeElement._execute({ userId: this.userId }, { type: 'link', elementId: bookmarkId });
   },
 });
 
