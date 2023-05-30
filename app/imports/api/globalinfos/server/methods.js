@@ -28,7 +28,7 @@ export const createGlobalInfo = new ValidatedMethod({
     },
   }).validator({ clean: true }),
 
-  run({ content, language, expirationDays = DEFAULT_EXPIRATION_IN_DAYS }) {
+  run({ content, language, expirationDays }) {
     if (language) validateString(language, true);
     let sanitizedContent = '';
     if (content) {
@@ -55,6 +55,19 @@ export const createGlobalInfo = new ValidatedMethod({
 
       const newId = GlobalInfos.insert(newGlobalInfo);
       return GlobalInfos.findOne({ _id: newId });
+    } catch (error) {
+      throw new Meteor.Error(error, error);
+    }
+  },
+});
+
+export const getAllGlobalInfo = new ValidatedMethod({
+  name: 'globalInfos.getAllGlobalInfo',
+  validate: new SimpleSchema({}).validator({ clean: true }),
+
+  run() {
+    try {
+      return GlobalInfos.find({}).fetch();
     } catch (error) {
       throw new Meteor.Error(error, error);
     }

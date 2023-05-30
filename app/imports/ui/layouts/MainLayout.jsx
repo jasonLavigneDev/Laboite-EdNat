@@ -45,6 +45,8 @@ const StructureSelectionPage = lazy(() => import('../pages/system/StructureSelec
 const TabbedNotificationsDisplay = lazy(() => import('../components/notifications/TabbedNotificationsDisplay'));
 const IntroductionPage = lazy(() => import('../pages/IntroductionPage'));
 
+const NewInroductionPage = lazy(() => import('./Test'));
+
 // dynamic imports
 const AdminGroupsPage = lazy(() => import('../pages/admin/AdminGroupsPage'));
 const AdminSingleGroupPage = lazy(() => import('../pages/admin/AdminSingleGroupPage'));
@@ -149,7 +151,9 @@ function MainLayout({ appsettings, ready }) {
                 user.isActive ? (
                   user.structure ? (
                     <Switch>
-                      <Route exact path="/" component={IntroductionPage} />
+                      <Route exact path="/" component={NewInroductionPage} />
+
+                      {/* <Route exact path="/" component={IntroductionPage} /> */}
                       <Route exact path="/personal" component={PersonalPage} />
                       <Route exact path="/profile" component={ProfilePage} />
                       <Route exact path="/contact" component={ContactPage} />
