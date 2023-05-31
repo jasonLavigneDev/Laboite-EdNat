@@ -236,6 +236,7 @@ const AdminStructureSpace = () => {
                     allServices={services}
                     allGroups={[]}
                     allLinks={[]}
+                    allGroupLinks={[]}
                     appSettingsValues={[]}
                     handleEditionData={handleEditionData}
                     edition

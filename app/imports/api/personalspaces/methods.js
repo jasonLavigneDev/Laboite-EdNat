@@ -152,7 +152,7 @@ export const addUserBookmark = new ValidatedMethod({
   name: 'personalspaces.addBookmark',
   validate: new SimpleSchema({
     bookmarkId: { type: String, regEx: SimpleSchema.RegEx.Id },
-    type: { type: String, regEx: SimpleSchema.RegEx.Id },
+    type: { type: String },
   }).validator(),
 
   run({ bookmarkId, type }) {
@@ -259,10 +259,11 @@ export const checkPersonalSpace = new ValidatedMethod({
     const currentPersonalSpace = PersonalSpaces.findOne({ userId: this.userId });
     const u = Meteor.users.findOne(
       { _id: this.userId },
-      { fields: { username: 1, favServices: 1, favGroups: 1, favUserBookmarks: 1 } },
+      { fields: { username: 1, favServices: 1, favGroups: 1, favUserBookmarks: 1, favGroupBookmarks: 1 } },
     );
     if (currentPersonalSpace === undefined) {
-      if (u.favServices && u.favGroups && u.favUserBookmarks) {
+      if (u.favServices && u.favGroups && u.favUserBookmarks && u.favGroupBookmarks) {
+        // logServer(`Regen Personalspace (not found) for ${u.username}...`);
         logServer(
           `PERSONALSPACES - METHODS - ERROR - checkPersonalSpace, Regen Personalspace (not found) for ${u.username}...`,
           levels.WARN,
@@ -288,12 +289,18 @@ export const checkPersonalSpace = new ValidatedMethod({
             type: 'link',
           });
         });
+        u.favGroupBookmarks.forEach((b) => {
+          unsorted.push({
+            element_id: b,
+            type: 'groupLink',
+          });
+        });
         updatePersonalSpace._execute({ userId: this.userId }, { data: { userId: this.userId, unsorted, sorted: [] } });
       }
       return; // No need to go further
     }
     let changeMade = false;
-    const elementIds = { service: [], group: [], link: [] };
+    const elementIds = { service: [], group: [], link: [], groupLink: [] };
 
     const checkZone = (zone) => {
       // Loop zone elements backward so we can delete items by index
@@ -330,6 +337,16 @@ export const checkPersonalSpace = new ValidatedMethod({
           // Check if service still exists
           const service = Services.findOne(elem.element_id);
           if (service === undefined) {
+            // service no more exists so delete element
+            zone.splice(index, 1);
+            changeMade = true;
+            // eslint-disable-next-line
+            continue; // continue to next element
+          }
+        } else if (elem.type === 'groupLink') {
+          // Check if service still exists
+          const bookmark = Bookmarks.findOne(elem.element_id);
+          if (bookmark === undefined) {
             // service no more exists so delete element
             zone.splice(index, 1);
             changeMade = true;

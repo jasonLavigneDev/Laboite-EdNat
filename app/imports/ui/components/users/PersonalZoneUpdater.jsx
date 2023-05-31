@@ -140,6 +140,7 @@ function PersonalZoneUpdater({
   allServices,
   allGroups,
   allLinks,
+  allGroupLinks,
   appSettingsValues,
   edition,
   handleEditionData,
@@ -221,7 +222,7 @@ function PersonalZoneUpdater({
   };
 
   const doNotDisplayHidenServices = (element) => {
-    return filterService(element) || filterGroup(element) || filterLink(element);
+    return filterService(element) || filterGroup(element) || filterLink(element) || filterGroupLink(element);
   };
   // focus on search input when it appears
   useEffect(() => {
@@ -240,7 +241,7 @@ function PersonalZoneUpdater({
 
   const [localPS, setLocalPS] = useState(personalspace);
   useEffect(() => {
-    if (personalspace && allServices && allGroups && allLinks) {
+    if (personalspace && allServices && allGroups && allLinks && allGroupLinks) {
       // Called once
       Meteor.call('personalspaces.checkPersonalSpace', {}, (err) => {
         if (err) {
@@ -251,7 +252,7 @@ function PersonalZoneUpdater({
   }, []);
 
   useEffect(() => {
-    if (personalspace && allServices && allGroups && allLinks) {
+    if (personalspace && allServices && allGroups && allLinks && allGroupLinks) {
       setLocalPS(personalspace);
     }
   }, [personalspace]);
@@ -639,6 +640,7 @@ PersonalZoneUpdater.propTypes = {
   allServices: PropTypes.arrayOf(PropTypes.object).isRequired,
   allGroups: PropTypes.arrayOf(PropTypes.object).isRequired,
   allLinks: PropTypes.arrayOf(PropTypes.object).isRequired,
+  allGroupLinks: PropTypes.arrayOf(PropTypes.object).isRequired,
   appSettingsValues: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 

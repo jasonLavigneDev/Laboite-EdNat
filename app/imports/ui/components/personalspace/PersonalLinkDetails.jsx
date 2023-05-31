@@ -91,7 +91,8 @@ const useStyles = makeStyles()((theme) => ({
   },
 }));
 
-function PersonalLinkDetails({ link, globalEdit, isMobile, isSorted, needUpdate }) {
+function PersonalLinkDetails({ link, globalEdit, isMobile, isSorted, needUpdate, type }) {
+  console.log(type);
   const { name = '', url = '', tag = '', _id = Random.id(), icon = '' } = link;
   const { classes } = useStyles();
   const [localEdit, setLocalEdit] = useState(name === '');
@@ -103,24 +104,39 @@ function PersonalLinkDetails({ link, globalEdit, isMobile, isSorted, needUpdate 
     setLocalEdit(!localEdit);
     if (!event.target.checked) {
       if (state.name !== name || state.url !== url) {
-        Meteor.call('userBookmark.updateURL', { id: _id, url: state.url, name: state.name, tag: link.tag });
-        Meteor.call('userBookmark.getFavicon', { url: state.url });
+        if (type === 'link') {
+          Meteor.call('userBookmark.updateURL', { id: _id, url: state.url, name: state.name, tag: link.tag });
+          Meteor.call('userBookmark.getFavicon', { url: state.url });
+        } else if (type === 'groupLink') {
+          Meteor.call('bookmark.updateURL', { id: _id, url: state.url, name: state.name, tag: link.tag });
+          Meteor.call('bookmark.getFavicon', { url: state.url });
+        }
       }
     }
   };
 
   const handleFavorite = () => {
-    Meteor.call('userBookmarks.unfavUserBookmark', { bookmarkId: link._id }, (err) => {
-      if (err) {
-        msg.error(err.reason);
-      } else {
-        msg.success(i18n.__('components.PersonalLinkDetails.unfavSuccessMsg'));
-      }
-    });
+    if (type === 'link') {
+      Meteor.call('userBookmarks.unfavUserBookmark', { bookmarkId: link._id }, (err) => {
+        if (err) {
+          msg.error(err.reason);
+        } else {
+          msg.success(i18n.__('components.PersonalLinkDetails.unfavSuccessMsg'));
+        }
+      });
+    } else if (type === 'groupLink') {
+      Meteor.call('bookmarks.unfavGroupBookmark', { bookmarkId: link._id }, (err) => {
+        if (err) {
+          msg.error(err.reason);
+        } else {
+          msg.success(i18n.__('components.PersonalLinkDetails.unfavSuccessMsg'));
+        }
+      });
+    }
   };
 
   const handleBackToDefault = () => {
-    Meteor.call('personalspaces.backToDefaultElement', { elementId: link._id, type: 'link' }, (err) => {
+    Meteor.call('personalspaces.backToDefaultElement', { elementId: link._id, type }, (err) => {
       if (err) {
         msg.error(err.reason);
       } else {
@@ -241,6 +257,7 @@ PersonalLinkDetails.propTypes = {
   isMobile: PropTypes.bool.isRequired,
   isSorted: PropTypes.bool.isRequired,
   needUpdate: PropTypes.func.isRequired,
+  type: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 export default PersonalLinkDetails;

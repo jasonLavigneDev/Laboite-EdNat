@@ -409,6 +409,7 @@ const PersonalZone = ({
                             globalEdit={customDrag}
                             isSorted={isSorted}
                             needUpdate={handleNeedUpdate}
+                            type={elem.type}
                           />
                         </Grid>
                       );
@@ -432,6 +433,7 @@ const PersonalZone = ({
                             globalEdit={customDrag}
                             isSorted={isSorted}
                             needUpdate={handleNeedUpdate}
+                            type={elem.type}
                           />
                         </Grid>
                       );
