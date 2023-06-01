@@ -260,13 +260,16 @@ export const unfavGroupBookmark = new ValidatedMethod({
       scopes.SYSTEM,
     );
     // update user personalSpace
-    removeElement._execute({ userId: this.userId }, { type: 'link', elementId: bookmarkId });
+    removeElement._execute({ userId: this.userId }, { type: 'groupLink', elementId: bookmarkId });
   },
 });
 
 if (Meteor.isServer) {
   // Get list of all method names on User
-  const LISTS_METHODS = _.pluck([createBookmark, updateBookmark, removeBookmark], 'name');
+  const LISTS_METHODS = _.pluck(
+    [createBookmark, updateBookmark, removeBookmark, unfavGroupBookmark, favGroupBookmark],
+    'name',
+  );
   // Only allow 5 list operations per connection per second
   DDPRateLimiter.addRule(
     {

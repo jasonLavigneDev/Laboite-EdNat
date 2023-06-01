@@ -563,7 +563,7 @@ function PersonalZoneUpdater({
                   <PersonalZone
                     key="zone-favGroupBookmark-000000000000"
                     elements={localPS.unsorted.filter(filterSearch).filter(filterGroupLink)}
-                    title={i18n.__('pages.PersonalPage.unsortedLinks')}
+                    title={i18n.__('pages.PersonalPage.unsortedGroupLinks')}
                     setList={setZoneList('groupLink')}
                     suspendUpdate={suspendUpdate}
                     updateList={updateList}
