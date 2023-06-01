@@ -56,7 +56,7 @@ Bookmarks.publicFields = {
   url: 1,
   name: 1,
   author: 1,
-  group: 1,
+  groupId: 1,
   icon: 1,
 };
 

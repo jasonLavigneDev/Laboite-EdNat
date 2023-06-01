@@ -21,6 +21,7 @@ import Zoom from '@mui/material/Zoom';
 import Button from '@mui/material/Button';
 import i18n from 'meteor/universe:i18n';
 import { useObjectState } from '../../utils/hooks';
+import { useAppContext } from '../../contexts/context';
 
 const linkColor = 'brown';
 const useStyles = makeStyles()((theme) => ({
@@ -92,9 +93,9 @@ const useStyles = makeStyles()((theme) => ({
 }));
 
 function PersonalLinkDetails({ link, globalEdit, isMobile, isSorted, needUpdate, type }) {
-  console.log(type);
   const { name = '', url = '', tag = '', _id = Random.id(), icon = '' } = link;
   const { classes } = useStyles();
+  const [{ userId }] = useAppContext();
   const [localEdit, setLocalEdit] = useState(name === '');
   const [state, setState] = useObjectState({ name, url, tag });
   const favButtonLabel = i18n.__('components.PersonalLinkDetails.favButtonLabelNoFav');
@@ -108,7 +109,21 @@ function PersonalLinkDetails({ link, globalEdit, isMobile, isSorted, needUpdate,
           Meteor.call('userBookmark.updateURL', { id: _id, url: state.url, name: state.name, tag: link.tag });
           Meteor.call('userBookmark.getFavicon', { url: state.url });
         } else if (type === 'groupLink') {
-          Meteor.call('bookmark.updateURL', { id: _id, url: state.url, name: state.name, tag: link.tag });
+          Meteor.call(
+            'bookmark.updateURL',
+            {
+              id: _id,
+              url: state.url,
+              name: state.name,
+              tag: link.tag,
+              groupId: link.groupId,
+            },
+            (err) => {
+              if (err) {
+                msg.error(err.reason);
+              }
+            },
+          );
           Meteor.call('bookmark.getFavicon', { url: state.url });
         }
       }
@@ -159,6 +174,12 @@ function PersonalLinkDetails({ link, globalEdit, isMobile, isSorted, needUpdate,
         <LaunchIcon />
       </Avatar>
     );
+  };
+
+  const canEdit = () => {
+    if (type === 'link') return true;
+    if (type === 'groupLink' && link.author === userId) return true;
+    return false;
   };
 
   const showData = () => {
@@ -223,7 +244,7 @@ function PersonalLinkDetails({ link, globalEdit, isMobile, isSorted, needUpdate,
   return (
     <Card className={classes.card}>
       {showData()}
-      {globalEdit ? (
+      {globalEdit && canEdit() ? (
         <CardActions className={classes.cardActions}>
           <Tooltip
             title={i18n.__(`components.PersonalLinkDetails.${localEdit ? 'saveLink' : 'modifyLink'}`)}
