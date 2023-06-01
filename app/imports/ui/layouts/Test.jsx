@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { Button, Input, InputLabel, TextField, Typography } from '@mui/material';
 import { useAppContext } from '../contexts/context';
+import InfoEditionComponent from '../components/admin/InfoEditionComponent';
 
 export const GlobalInfoTest = () => {
   const [messages, setMessages] = useState([]);
@@ -82,6 +83,11 @@ export const GlobalInfoTest = () => {
     });
   };
 
+  const paperStyle = {
+    padding: '2vh 2vw',
+    width: '60vw',
+  };
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
       <div style={{ display: 'flex', justifyContent: 'space-evenly', margin: '2vh' }}>
@@ -102,7 +108,11 @@ export const GlobalInfoTest = () => {
       </div>
 
       <h1>CREER MESSAGE</h1>
-      <InputLabel htmlFor="newMessage">texte du message</InputLabel>
+      <Paper style={paperStyle}>
+        <InfoEditionComponent tabkey="introduction" />
+      </Paper>
+
+      {/* <InputLabel htmlFor="newMessage">texte du message</InputLabel>
       <TextField id="newMessage" value={newMessage} onChange={(e) => setNewMessage(e.target.value)} name="newMessage" />
       <InputLabel htmlFor="validity">validité du message en jours</InputLabel>
       <TextField id="validity" value={validity} onChange={(e) => setValidity(e.target.value)} name="validity" />
@@ -114,7 +124,7 @@ export const GlobalInfoTest = () => {
       </select>
       <Button type="button" onClick={handleSubmit}>
         Envoyer
-      </Button>
+      </Button> */}
 
       <div>
         <Button type="button" onClick={getAllMessages}>
