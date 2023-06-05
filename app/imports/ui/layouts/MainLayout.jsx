@@ -122,6 +122,7 @@ function MainLayout({ appsettings, ready }) {
       }
 
       if (!res.length) return;
+      // TODO : change date to compare for compare timestamps
 
       if (!user.lastGlobalInfoReadDate || user.lastGlobalInfoReadDate.getDate() < res[0].updatedAt.getDate()) {
         Meteor.call('users.setLastGlobalInfoRead', { lastGlobalInfoReadDate: new Date() });

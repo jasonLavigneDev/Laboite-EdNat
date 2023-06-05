@@ -9,8 +9,6 @@ import { isActive, validateString } from '../../utils';
 
 import GlobalInfos from '../globalInfo';
 
-export const DEFAULT_EXPIRATION_IN_DAYS = 30;
-
 export const createGlobalInfo = new ValidatedMethod({
   name: 'globalInfos.createGlobalInfo',
   validate: new SimpleSchema({
@@ -20,15 +18,13 @@ export const createGlobalInfo = new ValidatedMethod({
     content: {
       type: String,
     },
-    expirationDays: {
-      type: Number,
-      min: 1,
-      max: 90,
-      optional: true,
+    expirationDate: {
+      type: Date,
+      optional: false,
     },
   }).validator({ clean: true }),
 
-  run({ content, language, expirationDays }) {
+  run({ content, language, expirationDate }) {
     if (language) validateString(language, true);
     let sanitizedContent = '';
     if (content) {
@@ -43,9 +39,6 @@ export const createGlobalInfo = new ValidatedMethod({
           i18n.__('api.users.adminNeeded'),
         );
       }
-      const today = new Date();
-      const expirationTimestamp = today.setDate(today.getDate() + expirationDays);
-      const expirationDate = new Date(expirationTimestamp);
 
       const newGlobalInfo = {
         language,
@@ -108,7 +101,7 @@ export const getGlobalInfoByLanguageAndNotExpired = new ValidatedMethod({
     try {
       return GlobalInfos.find(
         { $and: [{ language }, { expirationDate: { $gt: date } }] },
-        { sort: { expirationDate: 1 } },
+        { sort: { updatedAt: -1 } },
       ).fetch();
     } catch (error) {
       throw new Meteor.Error(error, error);
@@ -134,6 +127,55 @@ export const deleteGlobalInfo = new ValidatedMethod({
         );
       }
       return GlobalInfos.remove(messageId);
+    } catch (error) {
+      throw new Meteor.Error(error, error);
+    }
+  },
+});
+
+export const updateGlobalInfo = new ValidatedMethod({
+  name: 'globalInfos.updateGlobalInfo',
+  validate: new SimpleSchema({
+    language: {
+      type: String,
+    },
+    content: {
+      type: String,
+    },
+    expirationDate: {
+      type: Date,
+      optional: true,
+    },
+    id: {
+      type: String,
+    },
+  }).validator({ clean: true }),
+
+  run({ language, content, expirationDate, id }) {
+    if (language) validateString(language, true);
+    let sanitizedContent = '';
+    if (content) {
+      sanitizedContent = sanitizeHtml(content);
+      validateString(sanitizedContent);
+    }
+    try {
+      const authorized = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
+      if (!authorized) {
+        throw new Meteor.Error(
+          'api.appsettings.updateIntroductionLanguage.notPermitted',
+          i18n.__('api.users.adminNeeded'),
+        );
+      }
+
+      console.log('expirationDate', expirationDate);
+
+      const updatedGlobalInfo = {
+        language,
+        content,
+        expirationDate,
+      };
+      GlobalInfos.update({ _id: id }, { $set: updatedGlobalInfo });
+      return GlobalInfos.findOne({ _id: id });
     } catch (error) {
       throw new Meteor.Error(error, error);
     }

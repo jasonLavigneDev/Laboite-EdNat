@@ -31,7 +31,7 @@ GlobalInfos.schema = new SimpleSchema(
       },
     },
     expirationDate: {
-      type: Date || null,
+      type: Date,
     },
     content: {
       type: String,
