@@ -27,6 +27,7 @@ import {
   hasRightToAcceptAwaitingStructure,
   hasRightToSetStructureDirectly,
 } from '../../structures/utils';
+import { isFeatureEnabled } from '../../../ui/utils/features';
 
 if (Meteor.settings.private) {
   const { whiteDomains } = Meteor.settings.private;
@@ -895,7 +896,7 @@ export const acceptAwaitingStructure = new ValidatedMethod({
 
     RemoveUserFromGroupsOfOldStructure(targetUser);
     logServer(
-      `USERS - METHODS - UPDATE - acceptAwaitingStructure (user meteor) - userId: ${targetUserId} 
+      `USERS - METHODS - UPDATE - acceptAwaitingStructure (user meteor) - userId: ${targetUserId}
       / awaitingStructure: ${awaitingStructure}`,
       levels.VERBOSE,
       scopes.SYSTEM,
@@ -977,7 +978,7 @@ export const setStructure = new ValidatedMethod({
     } // will throw error if username already taken
 
     logServer(
-      `USERS - METHODS - UPDATE - setStructure (user meteor) - userId: ${this.userId} 
+      `USERS - METHODS - UPDATE - setStructure (user meteor) - userId: ${this.userId}
       / awaitingStructure: ${structure} / useer struc: ${user.structure}`,
       levels.INFO,
       scopes.SYSTEM,
@@ -1523,7 +1524,7 @@ export const toggleAdvancedPersonalPage = new ValidatedMethod({
     }
     const newValue = !(user.advancedPersonalPage || false);
     logServer(
-      `USERS - METHODS - UPDATE - toggleAdvancedPersonalPage (user meteor) - userId: ${this.userId} 
+      `USERS - METHODS - UPDATE - toggleAdvancedPersonalPage (user meteor) - userId: ${this.userId}
       / advancedPersonalPage: ${newValue}`,
       levels.INFO,
       scopes.USER,
@@ -1557,7 +1558,7 @@ export const toggleBetaServices = new ValidatedMethod({
     }
     const newValue = !(user.betaServices || false);
     logServer(
-      `USERS - METHODS - UPDATE - toggleBetaServices (user meteor) - userId: ${this.userId} 
+      `USERS - METHODS - UPDATE - toggleBetaServices (user meteor) - userId: ${this.userId}
       / betaServices: ${newValue}`,
       levels.INFO,
       scopes.USER,
@@ -1616,7 +1617,7 @@ export const resetAuthToken = new ValidatedMethod({
     }
     const newToken = Random.secret(150);
     logServer(
-      `USERS - METHODS - UPDATE - resetAuthToken (user meteor) - userId: ${user._id} 
+      `USERS - METHODS - UPDATE - resetAuthToken (user meteor) - userId: ${user._id}
       / authToken: ${newToken}`,
       levels.INFO,
       scopes.USER,
@@ -1693,7 +1694,7 @@ export const fixUsers = new ValidatedMethod({
         }
         if (!user.nclocator) updateInfos.nclocator = getRandomNCloudURL();
         logServer(
-          `USERS - METHODS - UPDATE - fixUsers (user meteor) - userId: ${user._id} 
+          `USERS - METHODS - UPDATE - fixUsers (user meteor) - userId: ${user._id}
       / updateInfos: ${updateInfos.primaryEmail}`,
           levels.INFO,
           scopes.USER,
@@ -1863,6 +1864,47 @@ export const getUsersByStructure = new ValidatedMethod({
     return { data, pageSize: itemPerPage, page, total };
   },
 });
+
+if (isFeatureEnabled('usersExport')) {
+  // eslint-disable-next-line no-unused-vars
+  const getUsersForExport = new ValidatedMethod({
+    name: 'users.getUsersForExport',
+    validate: new SimpleSchema({
+      structureId: {
+        type: String,
+        regEx: SimpleSchema.RegEx.Id,
+        label: getLabel('api.structures.labels.id'),
+        optional: true,
+      },
+    }).validator(),
+
+    run({ structureId = '' }) {
+      let structureToCheck;
+      const projection = { fields: { firstName: 1, lastName: 1, structure: 1, emails: 1 } };
+      const queryUser = structureId ? { structure: structureId } : {};
+      const queryStructure = structureId ? { _id: structureId } : {};
+      const usersToExport = Meteor.users.find(queryUser, projection).fetch();
+      const allStructures = Structures.find(queryStructure).fetch();
+
+      const structuresAfterReduce = allStructures.reduce((result, structure) => {
+        const resultObject = result;
+        resultObject[structure._id] = structure.name;
+        return resultObject;
+      }, {});
+
+      return usersToExport.map((user) => {
+        const userToCheck = user;
+        if (user.structure) {
+          structureToCheck = structuresAfterReduce[user.structure];
+          userToCheck.structureName = structureToCheck || 'Pas de structures';
+        } else {
+          userToCheck.structureName = 'Pas de structures';
+        }
+        return userToCheck;
+      });
+    },
+  });
+}
 
 // Get list of all method names on User
 const LISTS_METHODS = _.pluck(
