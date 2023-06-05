@@ -142,7 +142,15 @@ export const findGroups = new ValidatedMethod({
   },
 });
 
-export function _createGroup({ name, type, content, description, avatar, plugins, userId }) {
+function validateShareName() {
+  const name = this.value;
+  if (this.value) {
+    return name.includes('/') || name.includes('\\') ? SimpleSchema.ErrorTypes.VALUE_NOT_ALLOWED : undefined;
+  }
+  return undefined;
+}
+
+export function _createGroup({ name, type, content, description, avatar, plugins, userId, shareName }) {
   try {
     const user = Meteor.users.findOne(userId);
     if (user.groupCount < user.groupQuota) {
@@ -157,6 +165,7 @@ export function _createGroup({ name, type, content, description, avatar, plugins
         admins: [userId],
         active: true,
         plugins,
+        shareName,
       });
       Roles.addUsersToRoles(userId, ['admin', 'animator'], groupId);
 
@@ -184,14 +193,14 @@ export function _createGroup({ name, type, content, description, avatar, plugins
 
         Groups.update({ _id: groupId }, { $set: { avatar: avatarLink } });
       }
-    } else {
-      logServer(
-        `GROUPS - METHODS - METEOR ERROR - _createGroup - ${i18n.__('api.groups.toManyGroup')}`,
-        levels.VERBOSE,
-        scopes.SYSTEM,
-      );
-      throw new Meteor.Error('api.groups.createGroup.toManyGroup', i18n.__('api.groups.toManyGroup'));
+      return groupId;
     }
+    logServer(
+      `GROUPS - METHODS - METEOR ERROR - _createGroup - ${i18n.__('api.groups.toManyGroup')}`,
+      levels.VERBOSE,
+      scopes.SYSTEM,
+    );
+    throw new Meteor.Error('api.groups.createGroup.toManyGroup', i18n.__('api.groups.toManyGroup'));
   } catch (error) {
     if (error.code === 11000) {
       logServer(
@@ -218,9 +227,15 @@ export const createGroup = new ValidatedMethod({
     content: { type: String, defaultValue: '', label: getLabel('api.groups.labels.content') },
     avatar: { type: String, defaultValue: '', label: getLabel('api.groups.labels.avatar') },
     plugins: { type: Object, optional: true, blackbox: true, label: getLabel('api.groups.labels.plugins') },
+    shareName: {
+      type: String,
+      optional: true,
+      label: getLabel('api.groups.labels.shareName'),
+      custom: validateShareName,
+    },
   }).validator({ clean: true }),
 
-  run({ name, type, content, description, avatar, plugins }) {
+  run({ name, type, content, description, avatar, plugins, shareName }) {
     if (!isActive(this.userId)) {
       logServer(
         `GROUPS - METHODS - METEOR ERROR - createGroup - ${i18n.__('api.users.mustBeLoggedIn')}`,
@@ -240,9 +255,19 @@ export const createGroup = new ValidatedMethod({
     validateString(name);
     validateString(description);
     validateString(avatar);
+    if (shareName) validateString(shareName);
     const sanitizedContent = sanitizeHtml(content);
     validateString(sanitizedContent);
-    return _createGroup({ name, type, content: sanitizedContent, description, plugins, avatar, userId: this.userId });
+    return _createGroup({
+      name,
+      type,
+      content: sanitizedContent,
+      description,
+      plugins,
+      avatar,
+      userId: this.userId,
+      shareName,
+    });
   },
 });
 
@@ -353,6 +378,12 @@ export const updateGroup = new ValidatedMethod({
     'data.groupPadId': { type: String, optional: true, label: getLabel('api.groups.labels.groupPadId') },
     'data.digest': { type: String, optional: true, label: getLabel('api.groups.labels.digest') },
     'data.plugins': { type: Object, optional: true, blackbox: true, label: getLabel('api.groups.labels.plugins') },
+    'data.shareName': {
+      type: String,
+      optional: true,
+      label: getLabel('api.groups.labels.shareName'),
+      custom: validateShareName,
+    },
   }).validator({ clean: true }),
 
   run({ groupId, data }) {
@@ -390,6 +421,7 @@ export const updateGroup = new ValidatedMethod({
     if (data.avatar) validateString(data.avatar);
     if (data.groupPadId) validateString(data.groupPadId);
     if (data.digest) validateString(data.digest);
+    if (data.shareName) validateString(data.shareName);
     const sanitizedContent = sanitizeHtml(data.content);
     validateString(sanitizedContent);
     let groupData = {};
@@ -421,9 +453,31 @@ export const countMembersOfGroup = new ValidatedMethod({
   },
 });
 
+export const checkShareName = new ValidatedMethod({
+  name: 'groups.checkShareName',
+  validate: new SimpleSchema({
+    shareName: { type: String, label: getLabel('api.groups.labels.shareName') },
+    groupId: { type: String, regEx: SimpleSchema.RegEx.Id, optional: true, label: getLabel('api.groups.labels.id') },
+  }).validator(),
+
+  run({ shareName, groupId }) {
+    if (!isActive(this.userId)) {
+      throw new Meteor.Error('api.groups.checkShareName.notLoggedIn', i18n.__('api.users.mustBeLoggedIn'));
+    }
+    const query = { shareName };
+    if (groupId) query._id = { $ne: groupId };
+    const group = Groups.findOne(query);
+    if (group) return false;
+    return true;
+  },
+});
+
 if (Meteor.isServer) {
   // Get list of all method names on User
-  const LISTS_METHODS = _.pluck([favGroup, unfavGroup, createGroup, removeGroup, updateGroup], 'name');
+  const LISTS_METHODS = _.pluck(
+    [favGroup, unfavGroup, createGroup, removeGroup, updateGroup, countMembersOfGroup, checkShareName],
+    'name',
+  );
   // Only allow 5 list operations per connection per second
   DDPRateLimiter.addRule(
     {

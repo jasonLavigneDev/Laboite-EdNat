@@ -142,6 +142,23 @@ Groups.schema = new SimpleSchema(
     'meeting.attendeePW': { type: String, defaultValue: '' },
     'meeting.moderatorPW': { type: String, defaultValue: '' },
     'meeting.createTime': { type: String, defaultValue: '' },
+    circleId: {
+      type: String,
+      optional: true,
+      label: getLabel('api.groups.labels.circleId'),
+    },
+    shareName: {
+      type: String,
+      optional: true,
+      index: true,
+      unique: true,
+      label: getLabel('api.groups.labels.shareName'),
+    },
+    shareId: {
+      type: String,
+      optional: true,
+      label: getLabel('api.groups.labels.shareId'),
+    },
   },
   { tracker: Tracker },
 );
@@ -174,6 +191,7 @@ Groups.publicFields = {
   numCandidates: 1,
   plugins: 1,
   articles: 1,
+  shareName: 1,
 };
 Groups.allPublicFields = {
   content: 1,
@@ -186,6 +204,7 @@ Groups.adminFields = {
   animators: 1,
   members: 1,
   candidates: 1,
+  circleId: 1,
   ...Groups.allPublicFields,
 };
 

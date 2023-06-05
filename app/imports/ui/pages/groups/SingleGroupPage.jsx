@@ -312,15 +312,14 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, forms, events, bo
     });
   };
 
-  const openBlog = () => {
-    window.open(`${Meteor.settings.public.services.laboiteBlogURL}/groups/${group.slug}`, '_blank');
-  };
-
   const openGroupFolder = (plugin) => {
+    const shareName = group.shareName ? `groupe-${encodeURIComponent(group.shareName)}` : '';
     const resourceURL = groupPlugins[plugin].groupURL
       .replace('[URL]', testUrl(groupPlugins[plugin].URL))
       .replace('[GROUPNAME]', encodeURIComponent(group.name))
-      .replace('[GROUPSLUG]', group.slug);
+      .replace('[GROUPSLUG]', group.slug)
+      .replace('[NCLOCATOR]', user.nclocator)
+      .replace('[NCSHARENAME]', shareName);
     window.open(resourceURL, '_blank', 'noopener,noreferrer');
   };
 
@@ -496,19 +495,6 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, forms, events, bo
                       onClick={() => openMeeting()}
                     >
                       {i18n.__(`api.bbb.joinMeeting`)}
-                    </Button>
-                  </Grid>
-                ) : null}
-                {Meteor.settings.public.services.laboiteBlogURL ? (
-                  <Grid item key={`groupblog_${group._id}`} className={classes.cardGrid}>
-                    <Button
-                      startIcon={<LibraryBooksIcon />}
-                      className={classes.buttonAdmin}
-                      size="large"
-                      variant="contained"
-                      onClick={() => openBlog()}
-                    >
-                      {i18n.__(`pages.SingleGroupPage.groupArticles`)}
                     </Button>
                   </Grid>
                 ) : null}
