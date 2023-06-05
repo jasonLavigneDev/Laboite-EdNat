@@ -2,9 +2,12 @@ import Paper from '@mui/material/Paper';
 import Chip from '@mui/material/Chip';
 import React, { useEffect, useState } from 'react';
 // eslint-disable-next-line no-restricted-imports
-import { Button, Input, InputLabel, TextField, Typography } from '@mui/material';
+import { Button, Input, InputLabel, TextField, Typography, Select, Option, MenuItem, FormControl } from '@mui/material';
 import PropTypes from 'prop-types';
+import ReactQuill from 'react-quill';
 import { useAppContext } from '../contexts/context';
+import { CustomToolbarArticle } from '../components/system/CustomQuill';
+import { quillOptions } from '../components/admin/InfoEditionComponent';
 
 export const OnlyForTestRedirect = () => {
   const [{ user }] = useAppContext();
@@ -71,13 +74,28 @@ export const MessageForm = ({ createMessage, initialMessage, isOnUpdateMessage, 
     setExpirationDate(defaultExpiration);
   };
 
+  const onUpdateRichText = (html) => {
+    const strippedHTML = html.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+    setContent(strippedHTML);
+  };
+
+  console.log('language', language);
   return (
-    <>
-      <h1>{title}</h1>
-      <form>
-        <InputLabel htmlFor="newMessage">texte du message</InputLabel>
-        <TextField id="newMessage" value={content} onChange={(e) => setContent(e.target.value)} name="newMessage" />
-        <InputLabel htmlFor="expirationDate">date d expiration</InputLabel>
+    <div style={{ display: 'flex', flexDirection: 'column', width: '50%' }}>
+      <Typography variant="h5">{title}</Typography>
+      <form style={{ display: 'flex', gap: '1vh', flexDirection: 'column' }}>
+        <div>
+          <CustomToolbarArticle />
+          <ReactQuill
+            id="content"
+            value={content || ''}
+            onChange={onUpdateRichText}
+            {...quillOptions}
+            style={{ height: '20vh' }}
+          />
+        </div>
+
+        <Typography variant="h6">date d expiration</Typography>
         <Input
           type="date"
           name=""
@@ -89,19 +107,16 @@ export const MessageForm = ({ createMessage, initialMessage, isOnUpdateMessage, 
           }}
         />
         <InputLabel htmlFor="lang">language</InputLabel>
-        <select name="language" id="" onChange={(e) => setLanguage(e.target.value)}>
-          <option selected={language === 'fr'} value="fr">
-            fr
-          </option>
-          <option selected={language === 'en'} value="en">
-            en
-          </option>
+        <select value={language} name="language" id="" onChange={(e) => setLanguage(e.target.value)}>
+          <option value="fr">fr</option>
+          <option value="en">en</option>
         </select>
-        <Button type="button" onClick={handleSubmit}>
+
+        <Button variant="contained" onClick={handleSubmit} style={{ width: '10vw', marginTop: '2vh' }}>
           {action}
         </Button>
       </form>
-    </>
+    </div>
   );
 };
 
@@ -125,8 +140,17 @@ MessageForm.defaultProps = {
 
 export const ListOfMessages = ({ messages, deleteMessage, selectMessageLanguage, selectMessageToUpdate }) => {
   return (
-    <>
-      <h1>Liste des messages en base</h1>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        maxHeight: '70vh',
+        overflow: 'scroll',
+        overflowX: 'hidden',
+        gap: '1vh',
+      }}
+    >
       <InputLabel htmlFor="lang">langue des messages</InputLabel>
       <select name="language" id="" onChange={(e) => selectMessageLanguage(e.target.value)}>
         <option value="all">all</option>
@@ -140,10 +164,12 @@ export const ListOfMessages = ({ messages, deleteMessage, selectMessageLanguage,
           style={{
             display: 'flex',
             flexDirection: 'column',
-            width: '80%',
-            alignItems: 'start',
+            width: '30vw',
             marginBottom: '1vh',
-            padding: '2vh 10vw',
+            padding: '2vh 2vw',
+            border: '1px solid rgba(0,0,0,0.2)',
+            borderBottom: 'unset',
+            borderRadius: '20px',
           }}
         >
           <p style={{ height: '1vh' }}>Crée le : {message?.createdAt?.toLocaleDateString()}</p>
@@ -151,9 +177,9 @@ export const ListOfMessages = ({ messages, deleteMessage, selectMessageLanguage,
 
           <p>Expire le : {message?.expirationDate?.toLocaleDateString()}</p>
           <p>Langue du message : {message?.language}</p>
-          <Chip label="Ma super structure" color="primary" />
+          <Chip style={{ width: '30%' }} label="Ma super structure" color="primary" />
           <p>Message : {message?.content}</p>
-          <div style={{ display: 'flex', alignSelf: 'center', justifyContent: 'space-between', width: '80%' }}>
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
             <Button type="button" onClick={() => selectMessageToUpdate(message._id)}>
               Modifier le message
             </Button>
@@ -163,7 +189,7 @@ export const ListOfMessages = ({ messages, deleteMessage, selectMessageLanguage,
           </div>
         </Paper>
       ))}
-    </>
+    </div>
   );
 };
 
@@ -269,7 +295,6 @@ export const GlobalInfoTest = () => {
       <div>
         <OnlyForTestRedirect />
       </div>
-      <h1 style={{ textAlign: 'center' }}>ADMIN PANNEL</h1>
       <MessageForm
         createMessage={createMessage}
         initialMessage={keysOfMessageToUpdate}

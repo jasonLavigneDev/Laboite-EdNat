@@ -28,6 +28,7 @@ import Drawer from '@mui/material/Drawer';
 import Typography from '@mui/material/Typography';
 import Toolbar from '@mui/material/Toolbar';
 import Divider from '@mui/material/Divider';
+import InfoIcon from '@mui/icons-material/Info';
 import { useHistory, useLocation } from 'react-router-dom';
 import updateDocumentTitle from '../../utils/updateDocumentTitle';
 import { useAppContext } from '../../contexts/context';
@@ -149,6 +150,12 @@ export default function AdminMenu() {
       hidden: !isAdmin,
     },
     { path: '/admin/asam', content: 'menuAdminAsam', icon: <EmailIcon />, hidden: !isAdmin },
+    {
+      path: '/admin/globalinfos',
+      content: 'adminGlobalInfo',
+      icon: <InfoIcon />,
+      hidden: !isAdmin,
+    },
     {
       path: 'adminDivider',
       content: 'Divider',
