@@ -23,10 +23,10 @@
     "appsettings": {
       "labels": {
         "external": "Use an external link",
-        "createdAt" : "Created at",
-        "expirationDate" : "Expire at",
-        "id" : "Id",
-        "updatedAt" : "Updated at",
+        "createdAt": "Created at",
+        "expirationDate": "Expire at",
+        "id": "Id",
+        "updatedAt": "Updated at",
         "link": "Link to the page",
         "content": "Content",
         "introduction": "Introduction",
@@ -633,7 +633,8 @@
       "menuAdminStructureIntroduction": "Structure introduction",
       "menuAdminOfStructureUsersValidation": "Awaiting users",
       "menuAdminDefaultSpaces": "Default Personal Spaces",
-      "menuAdminAsam": "Email extensions management"
+      "menuAdminAsam": "Email extensions Management",
+      "adminGlobalInfo": "Global informations"
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Your account has not been activated",
