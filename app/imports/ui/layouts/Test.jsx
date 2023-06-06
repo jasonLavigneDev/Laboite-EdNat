@@ -2,7 +2,7 @@ import Paper from '@mui/material/Paper';
 import Chip from '@mui/material/Chip';
 import React, { useEffect, useState } from 'react';
 // eslint-disable-next-line no-restricted-imports
-import { Button, Input, InputLabel, TextField, Typography, Select, Option, MenuItem, FormControl } from '@mui/material';
+import { Button, Input, InputLabel, Typography, Select, MenuItem, FormControl } from '@mui/material';
 import PropTypes from 'prop-types';
 import ReactQuill from 'react-quill';
 import { useAppContext } from '../contexts/context';
@@ -19,21 +19,21 @@ export const OnlyForTestRedirect = () => {
   };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-evenly', margin: '2vh' }}>
+    <div
+      style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly', margin: '2vh', gap: '2vh' }}
+    >
       <Typography>INFOS USER : dernier message lu : {user?.lastGlobalInfoReadDate?.toLocaleDateString()}</Typography>
-      <div>
-        <Typography>Definir la date du dernier message lu</Typography>
-        <Input
-          type="date"
-          name=""
-          id=""
-          value={userDateOfLastMessage}
-          onChange={(e) => setUserDateOfLastMessage(e.target.value)}
-        />
-        <Button style={{ height: '30px' }} type="button" onClick={modifyLastMessageRead}>
-          Definir la date du dernier message lu
-        </Button>
-      </div>
+      <Typography>Definir la date du dernier message lu</Typography>
+      <Input
+        type="date"
+        name=""
+        id=""
+        value={userDateOfLastMessage}
+        onChange={(e) => setUserDateOfLastMessage(e.target.value)}
+      />
+      <Button style={{ height: '30px' }} type="button" onClick={modifyLastMessageRead}>
+        Definir la date du dernier message lu
+      </Button>
     </div>
   );
 };
@@ -79,9 +79,13 @@ export const MessageForm = ({ createMessage, initialMessage, isOnUpdateMessage, 
     setContent(strippedHTML);
   };
 
+  const handleChange = (e) => {
+    setLanguage(e.target.value);
+  };
+
   console.log('language', language);
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', width: '50%' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', width: '50%', gap: '1vh' }}>
       <Typography variant="h5">{title}</Typography>
       <form style={{ display: 'flex', gap: '1vh', flexDirection: 'column' }}>
         <div>
@@ -106,11 +110,20 @@ export const MessageForm = ({ createMessage, initialMessage, isOnUpdateMessage, 
             setExpirationDate(e.target.value);
           }}
         />
-        <InputLabel htmlFor="lang">language</InputLabel>
-        <select value={language} name="language" id="" onChange={(e) => setLanguage(e.target.value)}>
-          <option value="fr">fr</option>
-          <option value="en">en</option>
-        </select>
+        <FormControl fullWidth>
+          <InputLabel id="demo-simple-select-label">Language</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={language}
+            label="language"
+            placeholder="language"
+            onChange={handleChange}
+          >
+            <MenuItem value="fr">fr</MenuItem>
+            <MenuItem value="en">en</MenuItem>
+          </Select>
+        </FormControl>
 
         <Button variant="contained" onClick={handleSubmit} style={{ width: '10vw', marginTop: '2vh' }}>
           {action}
@@ -138,25 +151,36 @@ MessageForm.defaultProps = {
   },
 };
 
-export const ListOfMessages = ({ messages, deleteMessage, selectMessageLanguage, selectMessageToUpdate }) => {
+export const ListOfMessages = ({ messages, deleteMessage, selectMessageLanguage, selectMessageToUpdate, user }) => {
+  const handleChangeMessageLanguage = (e) => {
+    selectMessageLanguage(e.target.value);
+  };
   return (
     <div
       style={{
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        maxHeight: '70vh',
-        overflow: 'scroll',
+        maxHeight: user ? '' : '70vh',
+        overflow: user ? 'hidden' : 'scroll',
         overflowX: 'hidden',
         gap: '1vh',
+        width: user ? '80%' : '40%',
       }}
     >
-      <InputLabel htmlFor="lang">langue des messages</InputLabel>
-      <select name="language" id="" onChange={(e) => selectMessageLanguage(e.target.value)}>
-        <option value="all">all</option>
-        <option value="fr">fr</option>
-        <option value="en">en</option>
-      </select>
+      <FormControl fullWidth>
+        <InputLabel id="demo-simple-select-label">langue des messages</InputLabel>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          label="language"
+          onChange={handleChangeMessageLanguage}
+        >
+          <MenuItem value="all">all</MenuItem>
+          <MenuItem value="fr">fr</MenuItem>
+          <MenuItem value="en">en</MenuItem>
+        </Select>
+      </FormControl>
 
       {messages?.map((message) => (
         <Paper
@@ -164,7 +188,7 @@ export const ListOfMessages = ({ messages, deleteMessage, selectMessageLanguage,
           style={{
             display: 'flex',
             flexDirection: 'column',
-            width: '30vw',
+            width: user ? '60vw' : '30vw',
             marginBottom: '1vh',
             padding: '2vh 2vw',
             border: '1px solid rgba(0,0,0,0.2)',
@@ -198,6 +222,7 @@ ListOfMessages.propTypes = {
   deleteMessage: PropTypes.func,
   selectMessageToUpdate: PropTypes.func,
   selectMessageLanguage: PropTypes.string,
+  user: PropTypes.bool,
 };
 
 ListOfMessages.defaultProps = {
@@ -205,6 +230,7 @@ ListOfMessages.defaultProps = {
   deleteMessage: undefined,
   selectMessageLanguage: undefined,
   selectMessageToUpdate: undefined,
+  user: false,
 };
 
 export const GlobalInfoTest = () => {
@@ -291,21 +317,13 @@ export const GlobalInfoTest = () => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <div>
-        <OnlyForTestRedirect />
-      </div>
-      <MessageForm
-        createMessage={createMessage}
-        initialMessage={keysOfMessageToUpdate}
-        isOnUpdateMessage={isOnUpdateMessage}
-        updateMessage={updateMessage}
-      />
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1vh' }}>
       <ListOfMessages
         messages={messages}
         deleteMessage={deleteMessage}
         selectMessageLanguage={selectMessageLanguage}
         selectMessageToUpdate={selectMessageToUpdate}
+        user
       />
     </div>
   );
