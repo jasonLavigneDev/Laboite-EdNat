@@ -24,11 +24,11 @@ export const AdminMessagesList = ({
         overflow: user ? 'hidden' : 'scroll',
         overflowX: 'hidden',
         gap: '1vh',
-        width: user ? '80%' : '40%',
+        width: user ? '80%' : '50%',
       }}
     >
       {!isNotInAdminPanel && (
-        <FormControl fullWidth>
+        <FormControl sx={{ width: '92%', paddingBottom: '1vh' }}>
           <InputLabel id="demo-simple-select-label">langue des messages</InputLabel>
           <Select
             labelId="demo-simple-select-label"
@@ -48,14 +48,13 @@ export const AdminMessagesList = ({
         .map((message) => (
           <Paper
             key={message._id}
-            style={{
+            sx={{
               display: 'flex',
               flexDirection: 'column',
               width: user ? '60vw' : '30vw',
               marginBottom: '1vh',
-              padding: '2vh 2vw',
-              border: '1px solid rgba(0,0,0,0.2)',
-              borderBottom: 'unset',
+              padding: '1vh 2vw',
+              border: '1px solid black',
               borderRadius: '20px',
             }}
           >
@@ -64,14 +63,14 @@ export const AdminMessagesList = ({
 
             <p>Expire le : {message?.expirationDate?.toLocaleDateString()}</p>
             <p>Langue du message : {message?.language}</p>
-            <Chip style={{ width: '30%' }} label="Ma super structure" color="primary" />
+            <Chip style={{ width: '40%' }} label="Ma super structure" color="primary" />
             <p>Message : {message?.content}</p>
             {!isNotInAdminPanel && (
-              <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <Button type="button" onClick={() => selectMessageToUpdate(message._id)}>
+              <div style={{ display: 'flex', justifyContent: 'center', gap: '1vw' }}>
+                <Button variant="contained" onClick={() => selectMessageToUpdate(message._id)}>
                   Modifier le message
                 </Button>
-                <Button type="button" onClick={() => deleteMessage(message._id)}>
+                <Button variant="contained" onClick={() => deleteMessage(message._id)}>
                   Supprimer le message
                 </Button>
               </div>

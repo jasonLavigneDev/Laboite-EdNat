@@ -52,7 +52,7 @@ export const AdminMessageForm = ({ createMessage, initialMessage, isOnUpdateMess
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', width: '50%', gap: '1vh' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', width: '45%', gap: '1vh' }}>
       <Typography variant="h5">{title}</Typography>
       <form style={{ display: 'flex', gap: '1vh', flexDirection: 'column' }}>
         <div>
