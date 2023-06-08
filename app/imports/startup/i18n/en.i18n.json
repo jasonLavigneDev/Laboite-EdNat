@@ -558,7 +558,7 @@
       "menuGroupes": "All Groups",
       "menuGroupesMobile": "Groups",
       "menuNotifications": "My Alerts",
-      "menuAdminServices": "Service Management",
+      "menuAdminServices": "Service management",
       "menuAdminUserValidation": "User validation",
       "tooltipServices": "SNP apps",
       "tooltipStructure": "Resources from your structure",
@@ -582,7 +582,7 @@
       "inputSearchLabel": "Search..."
     },
     "MainMenu": {
-      "menuAdminGroups": "Groups Management",
+      "menuAdminGroups": "Groups management",
       "menuUserBookmarks": "Bookmarks",
       "menuProfileLabel": "Profile",
       "menuHelpLabel": "Help",
@@ -590,42 +590,42 @@
       "menuMedias": "Medias Storage",
       "menuAdminApp": "Administration",
       "menuAdminAppSettings": "Admin Settings",
-      "menuAdminServices": "Service Management",
-      "menuAdminUsers": "Users Management",
+      "menuAdminServices": "Service management",
+      "menuAdminUsers": "Users management",
       "menuAdminNextcloudUrl": "Nextcloud URL management",
       "menuAdminUserValidation": "User validation",
-      "menuAdminCategories": "Categories Management",
-      "menuAdminBusinessRegrouping": "Business regrouping Management",
-      "menuAdminTags": "Tags Management",
+      "menuAdminCategories": "Categories management",
+      "menuAdminBusinessRegrouping": "Business regrouping management",
+      "menuAdminTags": "Tags management",
       "menuAdminStructureUsers": "Structure Users",
       "menuAdminStructureServices": "Structure Services",
-      "menuUserStructure": "Structures Management",
+      "menuUserStructure": "Structures management",
       "menuAdminHelpPage": "Help page management",
       "menuAdminBackHome": "Back to Personnal Space",
       "menuContact": "Contact"
     },
     "AdminMenu": {
       "title": "Administration",
-      "menuAdminAppSettings": "Admin Settings",
+      "menuAdminAppSettings": "Global settings",
       "menuAdminHelpPage": "Help page management",
-      "menuAdminServices": "Service Management",
-      "menuAdminUsers": "Users Management",
+      "menuAdminServices": "Service management",
+      "menuAdminUsers": "Users management",
       "menuAdminNextcloudUrl": "Nextcloud URL management",
       "menuAdminUserValidation": "User validation",
-      "menuAdminCategories": "Categories Management",
-      "menuAdminBusinessRegrouping": "Business regrouping Management",
-      "menuAdminTags": "Tags Management",
-      "menuAdminGroups": "Groups Management",
+      "menuAdminCategories": "Categories management",
+      "menuAdminBusinessRegrouping": "Business regrouping management",
+      "menuAdminTags": "Tags management",
+      "menuAdminGroups": "Groups management",
       "menuAdminStructureUsers": "Structure Users",
       "menuAdminStructureServices": "Structure Services",
       "menuAdminBackHome": "Back to Personnal Space",
-      "menuUserStructure": "Structures Management",
-      "menuAdminOfStructures": "Sub structures Management",
+      "menuUserStructure": "Structures management",
+      "menuAdminOfStructures": "Sub structures management",
       "menuAdminStructureSettings": "Structure settings",
       "menuAdminStructureIntroduction": "Structure introduction",
       "menuAdminOfStructureUsersValidation": "Awaiting users",
       "menuAdminDefaultSpaces": "Default Personal Spaces",
-      "menuAdminAsam": "Email extensions Management"
+      "menuAdminAsam": "Email extensions management"
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Your account has not been activated",
@@ -976,7 +976,7 @@
       "disableFilter": "Show all bookmarks",
       "enableFilter": "Show only my bookmarks",
       "noAccess": "You don't have access to bookmarks of this group",
-      "title": "Bookmarks Management",
+      "title": "Bookmarks management",
       "materialTableLocalization": {
         "body_addTooltip": "Add new bookmark",
         "body_editTooltip": "Edit this bookmark",
@@ -1147,7 +1147,7 @@
       "subtitle": "Choose a setting to change"
     },
     "AdminServicesPage": {
-      "title": "Service Management",
+      "title": "Service management",
       "columnLogo": "Logo",
       "columnTitle": "Name",
       "columnUsage": "Usage",
@@ -1166,7 +1166,7 @@
       }
     },
     "AdminCategoriesPage": {
-      "title": "Categories Management",
+      "title": "Categories management",
       "columnName": "Name",
       "structure": "structure",
       "materialTableLocalization": {
@@ -1193,7 +1193,7 @@
       }
     },
     "AdminTagsPage": {
-      "title": "Tags Management",
+      "title": "Tags management",
       "columnName": "Name",
       "materialTableLocalization": {
         "toolbar_searchPlaceholder": "Find a tag",
@@ -1206,7 +1206,7 @@
       }
     },
     "AdminStructuresManagementPage": {
-      "title": "Structure Management",
+      "title": "Structure management",
       "helpText": "Click on a structure to reveal its children.",
       "columnName": "Name",
       "modal": {
@@ -1219,7 +1219,7 @@
       }
     },
     "AdminGroupsPage": {
-      "title": "Groups Management",
+      "title": "Groups management",
       "columnName": "Logo",
       "columnInfo": "Description",
       "columnType": "Type",
@@ -1256,7 +1256,7 @@
       }
     },
     "AdminUsersPage": {
-      "title": "Users Management",
+      "title": "Users management",
       "searchText": "Which user are you looking for ?",
       "admin": "Administrator",
       "setAdmin": "Give admin rights",
@@ -1294,7 +1294,7 @@
       "title": "User validation"
     },
     "AdminHelpPage": {
-      "title": "Helps Management",
+      "title": "Help page management",
       "columnTitle": "Title",
       "columnDescription": "Description",
       "columnCategory": "Category",
@@ -1540,7 +1540,7 @@
       "objectUsedText": "This file is used in a publication (title under this text), if you delete it, it will result as an empty link in your article. If you click again on delete, be aware that it will not be possible to restore it."
     },
     "AdminStructureUsersPage": {
-      "title": "Structure Users Management",
+      "title": "Structure users management",
       "searchText": "Which user are you looking for ?",
       "structureAdmin": "Structure Administrator",
       "setStructureAdmin": "Give structure admin rights",
@@ -1554,14 +1554,14 @@
       "sortByLastLogin": "Sort by last login date"
     },
     "AdminStructureUsersValidationPage": {
-      "title": "Users structure validation page for {$structureName}",
+      "title": "Users awaiting validation for structure {$structureName}",
       "successSetStructure": "User successfuly added in structure",
       "actions": {
         "validate": "Validate user"
       }
     },
     "AdminServicesByStructurePage": {
-      "title": "Services management for structure"
+      "title": "Structure Services"
     },
     "AdminDefaultSpacesPage": {
       "chooseStructure": "Choose the structure",

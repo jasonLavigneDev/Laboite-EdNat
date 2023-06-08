@@ -96,7 +96,7 @@ const AdminStructureValidationMandatory = ({
           label={
             structure === null
               ? i18n.__(`pages.AdminSettingsPage.toggleUserStructureValidationMandatory`)
-              : i18n.__(`pages.AdminSettingsPage.userStructureAdminValidationMandatory`)
+              : i18n.__(`pages.AdminSettingsPage.toggleUserStructureAdminValidationMandatory`)
           }
         />
       </Grid>

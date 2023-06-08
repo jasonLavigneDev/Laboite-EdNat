@@ -607,20 +607,20 @@
     },
     "AdminMenu": {
       "title": "Administration",
-      "menuAdminServices": "Gestion des Services",
+      "menuAdminServices": "Gestion des services",
       "menuAdminUserValidation": "Validation des utilisateurs",
       "menuAdminNextcloudUrl": "Gestion des URL Nextcloud",
-      "menuAdminCategories": "Gestion des categories",
+      "menuAdminCategories": "Gestion des catégories",
       "menuAdminBusinessRegrouping": "Gestion des regroupements métiers",
-      "menuAdminTags": "Gestion des mots clé",
-      "menuAdminGroups": "Gestion des Groupes",
+      "menuAdminTags": "Gestion des mots clés",
+      "menuAdminGroups": "Gestion des groupes",
       "menuAdminUsers": "Gestion des utilisateurs",
-      "menuAdminAppSettings": "Réglages Administrateurs",
+      "menuAdminAppSettings": "Réglages globaux",
       "menuAdminHelpPage": "Gestion de la page d'aide",
       "menuAdminStructureUsers": "Utilisateurs de la structure",
       "menuAdminStructureServices": "Services de la structure",
       "menuAdminBackHome": "Retour à l'espace perso",
-      "menuUserStructure": "Gestion des Structures",
+      "menuUserStructure": "Gestion des structures",
       "menuAdminOfStructures": "Gestion des sous-structures",
       "menuAdminStructureSettings": "Réglages de structure",
       "menuAdminStructureIntroduction": "Introduction de structure",
@@ -1000,7 +1000,7 @@
       "personalSpace": "Introduction à l'espace personnel"
     },
     "AdminSettingsPage": {
-      "edition": "Edition des réglages de l'application",
+      "edition": "Réglages de l'application",
       "introduction": "Introduction",
       "legal": "Mentions légales",
       "gcu": "C.G.U",
@@ -1151,7 +1151,7 @@
       "subtitle": "Choisissez un paramètre à modifier"
     },
     "AdminServicesPage": {
-      "title": "Gestion des Services",
+      "title": "Gestion des services",
       "columnLogo": "Logo",
       "columnTitle": "Nom",
       "columnUsage": "Usage",
@@ -1170,7 +1170,7 @@
       }
     },
     "AdminCategoriesPage": {
-      "title": "Gestion des Catégories",
+      "title": "Gestion des catégories",
       "columnName": "Nom",
       "structure": "structure",
       "materialTableLocalization": {
@@ -1197,7 +1197,7 @@
       }
     },
     "AdminTagsPage": {
-      "title": "Gestion des Mots clé",
+      "title": "Gestion des mots clés",
       "columnName": "Nom",
       "materialTableLocalization": {
         "toolbar_searchPlaceholder": "Rechercher un Mot clé",
@@ -1298,7 +1298,7 @@
       "title": "Utilisateurs en attente de validation"
     },
     "AdminHelpPage": {
-      "title": "Gestion de l'aide",
+      "title": "Gestion de la page d'aide",
       "columnTitle": "Titre",
       "columnDescription": "Description",
       "columnCategory": "Catégorie",
@@ -1558,14 +1558,14 @@
       "sortByLastLogin": "Trier par date de dernière connexion"
     },
     "AdminStructureUsersValidationPage": {
-      "title": "Validation des demandeurs de la structure {$structureName}",
+      "title": "Utilisateurs en attente de validation pour la structure {$structureName}",
       "successSetStructure": "L'utilisateur a bien été ajouté à la structure",
       "actions": {
         "validate": "Valider l'utilisateur"
       }
     },
     "AdminServicesByStructurePage": {
-      "title": "Gestion des services de la structure"
+      "title": "Services de la structure"
     },
     "StructureSelectionPage": {
       "backToProfile": "Retourner au profil"
@@ -1578,7 +1578,7 @@
       "titleStructures": "Informations de structures"
     },
     "AdminStructureSettingsPage": {
-      "title": "Paramétrage de la structure",
+      "title": "Informations de la structure",
       "userStructureValidationMandatory": "Validation obligatoire de cette structure",
       "selectIconAndCoverImage": "Choisir une image d'icône et/ou de couverture"
     },

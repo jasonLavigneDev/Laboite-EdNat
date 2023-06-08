@@ -47,6 +47,9 @@ const useStyles = makeStyles()((theme) => ({
     display: 'block',
     width: '100%',
   },
+  title: {
+    marginBottom: theme.spacing(2),
+  },
 }));
 
 const AdminSettingsPage = ({ appsettings }) => {
@@ -188,6 +191,9 @@ const AdminSettingsPage = ({ appsettings }) => {
   ) : (
     <Fade in>
       <Container>
+        <Typography className={classes.title} variant={isMobile ? 'h6' : 'h4'}>
+          {i18n.__('components.AdminMenu.menuAdminAppSettings')}
+        </Typography>
         <TabbedForms tabs={tabs} globalTitle={i18n.__('pages.AdminSettingsPage.edition')} />
         <Paper className={classes.root}>
           <Grid container spacing={4}>
