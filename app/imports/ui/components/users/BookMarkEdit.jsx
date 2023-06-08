@@ -45,7 +45,7 @@ const BookMarkEdit = ({ data, group, onEdit, open, onClose, method }) => {
     if (isValid) {
       Meteor.call(`${method}.updateURL`, args, function callbackQuota(error) {
         if (error) {
-          msg.error(i18n.__('api.bookmarks.creationFailed'));
+          msg.error(error.reason || error.message);
         } else {
           msg.success(i18n.__('api.methods.operationSuccessMsg'));
           onClose();
@@ -60,7 +60,7 @@ const BookMarkEdit = ({ data, group, onEdit, open, onClose, method }) => {
     if (isValid) {
       Meteor.call(`${method}.create`, args, function callbackQuota(error, urlFinal) {
         if (error) {
-          msg.error(i18n.__('api.bookmarks.creationFailed'));
+          msg.error(error.reason || error.message);
         } else {
           msg.success(i18n.__('api.methods.operationSuccessMsg'));
           Meteor.call(`${method}.getFavicon`, { url: urlFinal });
