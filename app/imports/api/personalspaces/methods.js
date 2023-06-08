@@ -436,7 +436,7 @@ export const generateDefaultPersonalSpace = new ValidatedMethod({
       defaultSpace.sorted.forEach(({ elements = [] }) => {
         if (elements) {
           servicesAdded = [
-            ...servicesAdded,
+            ...servicesAdded.filter((item) => item.type === 'service').map((service) => service.element_id),
             ...elements.filter((item) => item.type === 'service').map((service) => service.element_id),
           ];
         }
