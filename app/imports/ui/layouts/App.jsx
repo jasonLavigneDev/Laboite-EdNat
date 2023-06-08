@@ -14,7 +14,6 @@ import MsgHandler from '../components/system/MsgHandler';
 import DynamicStore, { useAppContext } from '../contexts/context';
 import lightTheme from '../themes/light';
 import { instance } from '../utils/matomo';
-import Test from './Test';
 
 // dynamic imports
 const MainLayout = lazy(() => import('./MainLayout'));
@@ -69,7 +68,6 @@ function App() {
             )}
             <ProtectedRoute exact path="/logout" component={Logout} {...state} />
             <Route exact path="/legal/:legalKey" component={LegalPage} />
-            <Route exact path="/test" component={Test} />
 
             {!userId && <Route exact path="/contact" component={SignLayout} {...state} />}
             <ProtectedRoute

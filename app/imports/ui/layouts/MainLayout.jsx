@@ -45,7 +45,7 @@ const StructureSelectionPage = lazy(() => import('../pages/system/StructureSelec
 const TabbedNotificationsDisplay = lazy(() => import('../components/notifications/TabbedNotificationsDisplay'));
 const IntroductionPage = lazy(() => import('../pages/IntroductionPage'));
 
-const NewInroductionPage = lazy(() => import('./Test'));
+const NewInroductionPage = lazy(() => import('./NewInroductionPage'));
 
 // dynamic imports
 const AdminGroupsPage = lazy(() => import('../pages/admin/AdminGroupsPage'));

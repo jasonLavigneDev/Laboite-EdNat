@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import Divider from '@mui/material/Divider';
 import Paper from '@mui/material/Paper';
-import { ListOfMessages, MessageForm } from '../../layouts/Test';
+
+import { AdminMessageForm } from '../../components/admin/AdminMessagesForm';
+import { AdminMessagesList } from '../../components/admin/AdminMessagesList';
 
 const AdminGlobalInfos = () => {
   const [messages, setMessages] = useState([]);
@@ -20,7 +22,6 @@ const AdminGlobalInfos = () => {
       return console.log('error', error);
     });
   }, []);
-
   const selectMessageLanguage = (language) => {
     if (language === 'all') {
       Meteor.call('globalInfos.getAllGlobalInfo', {}, (error, res) => {
@@ -95,14 +96,14 @@ const AdminGlobalInfos = () => {
         justifyContent: 'space-between',
       }}
     >
-      <MessageForm
+      <AdminMessageForm
         createMessage={createMessage}
         initialMessage={keysOfMessageToUpdate}
         isOnUpdateMessage={isOnUpdateMessage}
         updateMessage={updateMessage}
       />
       <Divider orientation="vertical" flexItem />
-      <ListOfMessages
+      <AdminMessagesList
         messages={messages}
         deleteMessage={deleteMessage}
         selectMessageLanguage={selectMessageLanguage}
