@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Meteor } from 'meteor/meteor';
 import { useTracker } from 'meteor/react-meteor-data';
@@ -129,9 +129,13 @@ const AdminUsersPage = ({ match: { path } }) => {
     },
   ] = usePaginatedMethod(methodName);
 
-  useEffect(() => {
+  const fetchUsers = useCallback(() => {
     call(search.trim(), { userType, sortQuery });
   }, [call, search, userType, sortByDate]);
+
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
 
   // track all global admin users
   const { isLoading, admins } = useTracker(() => {
@@ -172,7 +176,7 @@ const AdminUsersPage = ({ match: { path } }) => {
     Meteor.call(method, { userId: user._id }, (err) => {
       if (err) msg.error(err.reason);
       else {
-        call(search.trim(), { userType, sortQuery });
+        fetchUsers();
         msg.success(
           method === 'users.unsetAdmin'
             ? i18n.__('pages.AdminUsersPage.successUnsetAdmin')
@@ -188,7 +192,7 @@ const AdminUsersPage = ({ match: { path } }) => {
     Meteor.call(method, { userId: user._id }, (error) => {
       if (error) msg.error(error.reason);
       else {
-        call(search.trim(), { userType, sortQuery });
+        fetchUsers();
         msg.success(
           method === 'users.unsetAdminStructure'
             ? i18n.__('pages.AdminUsersPage.successUnsetAdminStructure')
@@ -200,7 +204,10 @@ const AdminUsersPage = ({ match: { path } }) => {
   const deleteUser = (user) => {
     Meteor.call(`users.removeUser${isStructureSpecific ? 'FromStructure' : ''}`, { userId: user._id }, (error) => {
       if (error) msg.error(error.reason);
-      else msg.success(i18n.__('pages.AdminUsersPage.successDeleteUser'));
+      else {
+        fetchUsers();
+        msg.success(i18n.__('pages.AdminUsersPage.successDeleteUser'));
+      }
     });
   };
   const loginInfo = (user) =>
