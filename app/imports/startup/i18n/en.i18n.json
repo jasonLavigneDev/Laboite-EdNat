@@ -1368,7 +1368,9 @@
       "addZoneHere": "Add a zone here",
       "toggleEdition": "Toggle edition mode",
       "coverImage": "Cover image",
-      "iconImage": "Icon image"
+      "iconImage": "Icon image",
+      "newBookMarkWithCtrV": "New bookmark from clipboard Ctrl+V ",
+      "newBookMarkWithCtrVOrButton": "or below button"
     },
     "HelpPage": {
       "title": "Find here all the help you need",

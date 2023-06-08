@@ -17,6 +17,7 @@ import {
   removeElement,
   checkPersonalSpace,
   backToDefaultElement,
+  addUserBookmark,
 } from '../methods';
 import PersonalSpaces from '../personalspaces';
 import './publications';
@@ -179,6 +180,18 @@ describe('personalspaces', function () {
         assert.lengthOf(ps.unsorted, 1);
         assert.equal(ps.unsorted[0].type, 'group');
         assert.equal(ps.unsorted[0].element_id, groupId);
+      });
+    });
+    describe('addUserBookmark', function () {
+      it("does add a bookmark to the current user's personalspace", function () {
+        const urlFinal = createUserBookmark._execute({ userId }, { url: 'toto.com', name: 'Test', tag: 'Tag' });
+        const bookmarkId = UserBookmarks.findOne({ url: urlFinal, userId })._id;
+        addUserBookmark._execute({ userId }, { bookmarkId });
+        const ps = PersonalSpaces.findOne({ userId });
+        assert.typeOf(ps.unsorted, 'array');
+        assert.lengthOf(ps.unsorted, 1);
+        assert.equal(ps.unsorted[0].type, 'link');
+        assert.equal(ps.unsorted[0].element_id, bookmarkId);
       });
     });
     describe('removeElement', function () {

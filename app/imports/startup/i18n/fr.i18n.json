@@ -1372,7 +1372,9 @@
       "addZoneHere": "Ajouter une zone ici",
       "toggleEdition": "Activer/Désactiver le mode édition",
       "coverImage": "Image de couverture",
-      "iconImage": "Image de l'icône"
+      "iconImage": "Image de l'icône",
+      "newBookMarkWithCtrV": "Nouveau marque-page à partir du presse-papiers Ctrl+V ",
+      "newBookMarkWithCtrVOrButton": "ou bouton ci-dessous"
     },
     "HelpPage": {
       "title": "Retrouvez ici toute l'aide nécessaire",
