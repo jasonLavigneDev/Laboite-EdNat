@@ -207,7 +207,7 @@ export const favGroupBookmark = new ValidatedMethod({
     }
     // check bookmark existence
     const bookmark = Bookmarks.findOne({ _id: bookmarkId });
-    if (bookmark === undefined) {
+    if (!bookmark) {
       logServer(
         `USERBOOKMARKS - METHODS - METEOR ERROR - favUserBookmark - ${i18n.__('api.bookmarks.unknownBookmark')}`,
         levels.VERBOSE,

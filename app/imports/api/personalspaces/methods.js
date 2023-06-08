@@ -169,7 +169,7 @@ export const addUserBookmark = new ValidatedMethod({
     let bookmark;
     if (type === 'link') bookmark = UserBookmarks.findOne(bookmarkId);
     else bookmark = Bookmarks.findOne(bookmarkId);
-    if (bookmark === undefined) {
+    if (!bookmark) {
       logServer(
         `PERSONALSPACES - METHODS - METEOR ERROR - addUserBookmark - ${i18n.__('api.bookmarks.unknownBookmark')}`,
         levels.ERROR,
@@ -316,7 +316,7 @@ export const checkPersonalSpace = new ValidatedMethod({
         if (elem.type === 'group') {
           // Check if group still exists
           const group = Groups.findOne(elem.element_id);
-          if (group === undefined) {
+          if (!group) {
             // group no more exists so delete element
             zone.splice(index, 1);
             changeMade = true;
@@ -326,7 +326,7 @@ export const checkPersonalSpace = new ValidatedMethod({
         } else if (elem.type === 'link') {
           // Check if link still exists
           const link = UserBookmarks.findOne(elem.element_id);
-          if (link === undefined) {
+          if (!link) {
             // link no more exists so delete element
             zone.splice(index, 1);
             changeMade = true;
@@ -336,7 +336,7 @@ export const checkPersonalSpace = new ValidatedMethod({
         } else if (elem.type === 'service') {
           // Check if service still exists
           const service = Services.findOne(elem.element_id);
-          if (service === undefined) {
+          if (!service) {
             // service no more exists so delete element
             zone.splice(index, 1);
             changeMade = true;
@@ -346,7 +346,7 @@ export const checkPersonalSpace = new ValidatedMethod({
         } else if (elem.type === 'groupLink') {
           // Check if service still exists
           const bookmark = Bookmarks.findOne(elem.element_id);
-          if (bookmark === undefined) {
+          if (!bookmark) {
             // service no more exists so delete element
             zone.splice(index, 1);
             changeMade = true;
