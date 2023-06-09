@@ -13,7 +13,7 @@ export const getVersion = new ValidatedMethod({
     if (!this.userId) {
       logServer(
         `MIGRATION - METHOD - METEOR ERROR - getVersion - ${i18n.__('api.users.mustBeLoggedIn')}`,
-        levels.VERBOSE,
+        levels.WARN,
         scopes.SYSTEM,
       );
       throw new Meteor.Error('api.migration.getVersion.mustBeLoggedIn', i18n.__('api.users.mustBeLoggedIn'));

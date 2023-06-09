@@ -26,8 +26,9 @@ export const createHelp = new ValidatedMethod({
     if (!authorized) {
       logServer(
         `HELPS - METHOD - METEOR ERROR - createHelp - ${i18n.__('api.users.notPermitted')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { data },
       );
       throw new Meteor.Error('api.helps.createHelp.notPermitted', i18n.__('api.users.notPermitted'));
     }
@@ -35,13 +36,14 @@ export const createHelp = new ValidatedMethod({
     if (help) {
       logServer(
         `HELPS - METHOD - METEOR ERROR - createHelp - ${i18n.__('api.helps.createHelp.alreadyExists')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { help },
       );
       throw new Meteor.Error('api.helps.createHelp.alreadyExists', i18n.__('api.helps.createHelp.alreadyExists'));
     }
     validateHelp(data);
-    logServer(`HELPS - METHOD - INSERT - createHelp - data: ${data}`, levels.VERBOSE, scopes.ADMIN);
+    logServer(`HELPS - METHOD - INSERT - createHelp `, levels.VERBOSE, scopes.ADMIN, { data });
     return Helps.insert(data);
   },
 });
@@ -58,8 +60,9 @@ export const removeHelp = new ValidatedMethod({
     if (tag === undefined) {
       logServer(
         `HELPS - METHOD - METEOR ERROR - removeHelp - ${i18n.__('api.helps.unknownHelp')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { helpId },
       );
       throw new Meteor.Error('api.helps.removeHelp.unknownHelp', i18n.__('api.helps.unknownHelp'));
     }
@@ -68,8 +71,9 @@ export const removeHelp = new ValidatedMethod({
     if (!authorized) {
       logServer(
         `HELPS - METHOD - METEOR ERROR - removeHelp - ${i18n.__('api.users.notPermitted')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { helpId },
       );
       throw new Meteor.Error('api.helps.removeHelp.notPermitted', i18n.__('api.users.notPermitted'));
     }
@@ -93,8 +97,9 @@ export const updateHelp = new ValidatedMethod({
     if (tag === undefined) {
       logServer(
         `HELPS - METHOD - METEOR ERROR - updateHelp - ${i18n.__('api.helps.unknownHelp')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { helpId, data },
       );
       throw new Meteor.Error('api.helps.updateHelp.unknownHelp', i18n.__('api.helps.unknownHelp'));
     }
@@ -104,8 +109,9 @@ export const updateHelp = new ValidatedMethod({
     if (!authorized) {
       logServer(
         `HELPS - METHOD - METEOR ERROR - updateHelp - ${i18n.__('api.users.notPermitted')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { helpId, data },
       );
       throw new Meteor.Error('api.helps.updateHelp.notPermitted', i18n.__('api.users.notPermitted'));
     }
@@ -114,18 +120,15 @@ export const updateHelp = new ValidatedMethod({
     if (tagWithTitle) {
       logServer(
         `HELPS - METHOD - METEOR ERROR - updateHelp - ${i18n.__('api.helps.updateHelp.titleAlreadyTaken')}`,
-        levels.VERBOSE,
+        levels.WARN,
         scopes.SYSTEM,
+        { helpId, data },
       );
       throw new Meteor.Error('api.helps.updateHelp.alreadyExists', i18n.__('api.helps.updateHelp.titleAlreadyTaken'));
     }
 
     validateHelp(data);
-    logServer(
-      `HELPS - METHOD - UPDATE - updateHelp - id: ${helpId} / data: ${JSON.stringify(data)}`,
-      levels.VERBOSE,
-      scopes.ADMIN,
-    );
+    logServer(`HELPS - METHOD - UPDATE - updateHelp - id: ${helpId}`, levels.VERBOSE, scopes.ADMIN, { data });
     return Helps.update({ _id: helpId }, { $set: data });
   },
 });

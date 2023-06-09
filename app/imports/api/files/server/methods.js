@@ -49,8 +49,9 @@ const checkUserAdminRights = (path, userId) => {
     if (!isUserPath && !isGroupAdmin && !isStructureAdmin) {
       logServer(
         `FILES - METHODS - METEOR ERROR - checkUserAdminRights - ${i18n.__('api.users.adminNeeded')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { path, userId },
       );
       throw new Meteor.Error('api.users.notPermitted', i18n.__('api.users.adminNeeded'));
     }
@@ -115,8 +116,9 @@ function checkExtension(name) {
       `FILES - METHODS - METEOR ERROR - checkExtension - ${i18n.__(
         'components.UploaderNotifier.formatNotAcceptedTitle',
       )}`,
-      levels.VERBOSE,
+      levels.ERROR,
       scopes.SYSTEM,
+      { name },
     );
     throw new Meteor.Error(
       'components.UploadNotifier.ExtensionNotAllowed',
@@ -165,15 +167,16 @@ export const filesupload = new ValidatedMethod({
       }
       logServer(
         `FILES - METHODS - METEOR ERROR - filesupload - ${i18n.__('components.UploaderNotifier.fileTooLarge')}`,
-        levels.VERBOSE,
+        levels.WARN,
         scopes.SYSTEM,
+        { file, path, name, fileType, storage },
       );
       throw new Meteor.Error(
         i18n.__('components.UploaderNotifier.fileTooLargeTitle'),
         `${i18n.__('components.UploaderNotifier.fileTooLarge')} ${size / 1000}ko`,
       );
     } catch (error) {
-      logServer(`FILES - METHODS - METEOR ERROR - filesupload`, levels.VERBOSE, scopes.SYSTEM, { error });
+      logServer(`FILES - METHODS - METEOR ERROR - filesupload`, levels.ERROR, scopes.SYSTEM, { error });
       throw new Meteor.Error(error.typeError, error.message);
     }
   },
@@ -295,12 +298,7 @@ export const moveFiles = new ValidatedMethod({
           s3Client.removeObject(minioBucket, `${sourcePath}/${newFile}`);
           if (err) {
             logServer(
-              `Error copying ${newFile} from ${minioBucket}/${sourcePath}/${newFile} to ${destinationPath}/${newFile}`,
-              'error',
-            );
-            // logServer(err, 'error');
-            logServer(
-              `FILES - METHODS - moveFiles, 
+              `FILES - METHODS - ERROR - moveFiles - 
               Error copying ${newFile} from ${minioBucket}/${sourcePath}/${newFile} to ${destinationPath}/${newFile}`,
               levels.ERROR,
               scopes.SYSTEM,
@@ -341,10 +339,8 @@ export const rename = new ValidatedMethod({
     s3Client.copyObject(minioBucket, `${path}/${newName}`, `${minioBucket}/${path}/${oldName}`, conds, (err) => {
       s3Client.removeObject(minioBucket, `${path}/${oldName}`);
       if (err) {
-        logServer(`Error renaming ${minioBucket}/${path}/${oldName} to ${path}/${newName}`, 'error');
-        // logServer(err, 'error');
         logServer(
-          `FILES - METHODS - rename, Error renaming ${minioBucket}/${path}/${oldName} to ${path}/${newName}`,
+          `FILES - METHODS - ERROR - rename - Error renaming ${minioBucket}/${path}/${oldName} to ${path}/${newName}`,
           levels.ERROR,
           scopes.SYSTEM,
           {
@@ -367,7 +363,7 @@ export const getFilesForCurrentUser = new ValidatedMethod({
     if (!authorized) {
       logServer(
         `FILES - METHODS - METEOR ERROR - getFilesForCurrentUser - ${i18n.__('api.users.adminNeeded')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
       );
       throw new Meteor.Error('api.users.notPermitted', i18n.__('api.users.adminNeeded'));
@@ -391,8 +387,9 @@ export const getFilesForCurrentUser = new ValidatedMethod({
     } catch (error) {
       logServer(
         `FILES - METHODS - METEOR ERROR - getFilesForCurrentUser - ${i18n.__('api.users.adminNeeded')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { error },
       );
       throw new Meteor.Error(error.typeError, error.message);
     }

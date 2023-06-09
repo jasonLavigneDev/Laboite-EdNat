@@ -15,17 +15,16 @@ const getWebSiteFaviconsForUserBookmark = new ValidatedMethod({
     try {
       const icon = await getFavicon(url);
       if (icon === undefined) {
-        logServer(
-          `USERBOOKMARKS - METHOD - UPDATE - updateStructureIconOrCoverImage - url: ${url}`,
-          levels.INFO,
-          scopes.SYSTEM,
-        );
+        logServer(`USERBOOKMARKS - METHOD - UPDATE - updateStructureIconOrCoverImage`, levels.INFO, scopes.SYSTEM, {
+          url,
+        });
         UserBookmarks.update({ url }, { $set: { icon: '' } });
       } else {
         logServer(
-          `USERBOOKMARKS - METHOD - UPDATE - updateStructureIconOrCoverImage - url: ${url} / icon: ${icon}`,
+          `USERBOOKMARKS - METHOD - UPDATE - updateStructureIconOrCoverImage - icon: ${icon}`,
           levels.INFO,
           scopes.SYSTEM,
+          { url },
         );
         UserBookmarks.update({ url }, { $set: { icon } });
       }

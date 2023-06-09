@@ -39,7 +39,7 @@ export const sendContactEmail = new ValidatedMethod({
     if (structure === undefined) {
       logServer(
         `SMTP - METHODS - METEOR ERROR - sendContactEmail - ${i18n.__('api.structures.unknownStructure')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
       );
       throw new Meteor.Error('api.smtp.sendContactEmail.unknownStructure', i18n.__('api.structures.unknownStructure'));

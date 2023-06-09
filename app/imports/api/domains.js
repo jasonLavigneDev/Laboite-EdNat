@@ -10,9 +10,8 @@ export default function checkDomain(email) {
   const checkKeyCloakWhiteListDomain = Meteor.settings.private.checkKeyCloakWhiteListDomain || false;
   whiteDomains.forEach((whiteDomain) => {
     if (new RegExp(whiteDomain).test(domainMail)) {
-      // logServer(`  Email domain matches ${whiteDomain}: user activated`);
       logServer(
-        `DOMAIN - checkDomain - Email domain matches${whiteDomain}:user activated`,
+        `DOMAIN - API - TEST - checkDomain - Email domain matches${whiteDomain}:user activated`,
         levels.INFO,
         scopes.SYSTEM,
         {

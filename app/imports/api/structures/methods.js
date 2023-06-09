@@ -36,8 +36,9 @@ export const createStructure = new ValidatedMethod({
     if (structuresWithSameNameOnSameLevel) {
       logServer(
         `STRUCTURE - METHODS - METEOR ERROR - createStructure - ${i18n.__('api.structures.nameAlreadyTaken')}`,
-        levels.VERBOSE,
+        levels.WARN,
         scopes.SYSTEM,
+        { name, parentId },
       );
       throw new Meteor.Error(
         'api.structures.createStructure.nameAlreadyTaken',
@@ -45,11 +46,7 @@ export const createStructure = new ValidatedMethod({
       );
     }
     validateString(name);
-    logServer(
-      `STRUCTURE - METHODS - INSERT - createStructure - name: ${name} / parent id: ${parentId}`,
-      levels.VERBOSE,
-      scopes.SYSTEM,
-    );
+    logServer(`STRUCTURE - METHODS - INSERT - createStructure`, levels.VERBOSE, scopes.SYSTEM, { name, parentId });
     const structureId = Structures.insert({
       name,
       parentId,
@@ -141,8 +138,9 @@ export const updateStructure = new ValidatedMethod({
     if (structure === undefined) {
       logServer(
         `STRUCTURE - METHODS - METEOR ERROR - updateStructure - ${i18n.__('api.structures.unknownStructure')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { structureId, name },
       );
       throw new Meteor.Error(
         'api.structures.updateStructure.unknownStructure',
@@ -156,8 +154,9 @@ export const updateStructure = new ValidatedMethod({
     if (!authorized) {
       logServer(
         `STRUCTURE - METHODS - METEOR ERROR - updateStructure - ${i18n.__('api.users.notPermitted')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { structureId, name },
       );
       throw new Meteor.Error('api.structures.updateStructure.notPermitted', i18n.__('api.users.notPermitted'));
     }
@@ -171,8 +170,9 @@ export const updateStructure = new ValidatedMethod({
     if (structuresWithSameNameOnSameLevel) {
       logServer(
         `STRUCTURE - METHODS - METEOR ERROR - updateStructure - ${i18n.__('api.structures.nameAlreadyTaken')}}`,
-        levels.VERBOSE,
+        levels.WARN,
         scopes.SYSTEM,
+        { structureId, name },
       );
       throw new Meteor.Error('api.structures.updateStructure.notPermitted', i18n.__('api.structures.nameAlreadyTaken'));
     }
@@ -182,11 +182,7 @@ export const updateStructure = new ValidatedMethod({
       group.name = `${structure._id}_${name}`;
       Groups.update({ _id: group._id }, { $set: { name: `${structure._id}_${name}` } });
     }
-    logServer(
-      `STRUCTURE - METHODS - UPDATE - updateStructure - id: ${structureId} / name: ${name}`,
-      levels.VERBOSE,
-      scopes.SYSTEM,
-    );
+    logServer(`STRUCTURE - METHODS - UPDATE - updateStructure`, levels.VERBOSE, scopes.SYSTEM, { structureId, name });
     return Structures.update({ _id: structureId }, { $set: { name } });
   },
 });
@@ -209,8 +205,9 @@ export const setUserStructureAdminValidationMandatoryStatus = new ValidatedMetho
         `STRUCTURE - METHODS - METEOR ERROR - setUserStructureAdminValidationMandatoryStatus - ${i18n.__(
           'api.structures.unknownStructure',
         )}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { structureId, userStructureValidationMandatory },
       );
       throw new Meteor.Error(
         'api.structures.setUserStructureAdminValidationMandatoryStatus.unknownStructure',
@@ -226,8 +223,9 @@ export const setUserStructureAdminValidationMandatoryStatus = new ValidatedMetho
         `STRUCTURE - METHODS - METEOR ERROR - setUserStructureAdminValidationMandatoryStatus - ${i18n.__(
           'api.users.notPermitted',
         )}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { structureId, userStructureValidationMandatory },
       );
       throw new Meteor.Error(
         'api.structures.setUserStructureAdminValidationMandatoryStatus.notPermitted',
@@ -236,10 +234,10 @@ export const setUserStructureAdminValidationMandatoryStatus = new ValidatedMetho
     }
 
     logServer(
-      `STRUCTURE - METHODS - UPDATE - setUserStructureAdminValidationMandatoryStatus - id: ${structureId} 
-      / user validation: ${userStructureValidationMandatory}`,
+      `STRUCTURE - METHODS - UPDATE - setUserStructureAdminValidationMandatoryStatus`,
       levels.VERBOSE,
       scopes.SYSTEM,
+      { structureId, userStructureValidationMandatory },
     );
     return Structures.update({ _id: structureId }, { $set: { userStructureValidationMandatory } });
   },
@@ -269,8 +267,9 @@ export const removeStructure = new ValidatedMethod({
     if (structure === undefined) {
       logServer(
         `STRUCTURE - METHODS - METEOR ERROR - removeStructure - ${i18n.__('api.structures.unknownStructure')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { structureId },
       );
       throw new Meteor.Error(
         'api.structures.removeStructure.unknownStructure',
@@ -284,8 +283,9 @@ export const removeStructure = new ValidatedMethod({
     if (!authorized) {
       logServer(
         `STRUCTURE - METHODS - METEOR ERROR - removeStructure - ${i18n.__('api.users.notPermitted')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { structureId },
       );
       throw new Meteor.Error('api.structures.removeStructure.notPermitted', i18n.__('api.users.notPermitted'));
     }
@@ -294,8 +294,9 @@ export const removeStructure = new ValidatedMethod({
     if (structure.childrenIds.length > 0) {
       logServer(
         `STRUCTURE - METHODS - METEOR ERROR - removeStructure - ${i18n.__('api.structures.hasChildren')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { structureId },
       );
       throw new Meteor.Error('api.structures.removeStructure.hasChildren', i18n.__('api.structures.hasChildren'));
     }
@@ -305,8 +306,9 @@ export const removeStructure = new ValidatedMethod({
     if (servicesCursor.count() > 0) {
       logServer(
         `STRUCTURE - METHODS - METEOR ERROR - removeStructure - ${i18n.__('api.structures.hasServices')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { structureId },
       );
       throw new Meteor.Error('api.structures.removeStructure.hasServices', i18n.__('api.structures.hasServices'));
     }
@@ -316,17 +318,14 @@ export const removeStructure = new ValidatedMethod({
     if (usersCursor.count() > 0) {
       logServer(
         `STRUCTURE - METHODS - METEOR ERROR - removeStructure - ${i18n.__('api.structures.hasUsers')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { structureId },
       );
       throw new Meteor.Error('api.structures.removeStructure.hasUsers', i18n.__('api.structures.hasUsers'));
     }
 
-    logServer(
-      `STRUCTURE - METHODS - REMOVE - removeStructure - structure id: ${structureId}`,
-      levels.INFO,
-      scopes.SYSTEM,
-    );
+    logServer(`STRUCTURE - METHODS - REMOVE - removeStructure`, levels.INFO, scopes.SYSTEM, { structureId });
     // If there are any article attached to this structure, delete them
     Articles.rawCollection().deleteMany({ structure: structureId });
 
@@ -361,11 +360,7 @@ export const removeStructure = new ValidatedMethod({
     // If there are icon or cover images ==> delete them from minio
     structureRemoveIconOrCoverImagesFromMinio(structure, true, true);
 
-    logServer(
-      `STRUCTURE - METHODS - REMOVE - removeStructure - structure id: ${structureId}`,
-      levels.VERBOSE,
-      scopes.SYSTEM,
-    );
+    logServer(`STRUCTURE - METHODS - REMOVE - removeStructure`, levels.VERBOSE, scopes.SYSTEM, { structureId });
     return Structures.remove(structureId);
   },
 });
@@ -381,8 +376,9 @@ export const getAllChilds = new ValidatedMethod({
     if (structure === undefined) {
       logServer(
         `STRUCTURE - METHODS - METEOR ERROR - getAllChilds - ${i18n.__('api.structures.unknownStructure')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { structureId },
       );
       throw new Meteor.Error(
         'api.structures.removeStructure.unknownStructure',
@@ -395,8 +391,9 @@ export const getAllChilds = new ValidatedMethod({
     if (!authorized) {
       logServer(
         `STRUCTURE - METHODS - METEOR ERROR - getAllChilds - ${i18n.__('api.users.notPermitted')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { structureId },
       );
       throw new Meteor.Error('api.structures.getAllChilds.notPermitted', i18n.__('api.users.notPermitted'));
     }
@@ -431,8 +428,9 @@ export const updateStructureContactEmail = new ValidatedMethod({
         `STRUCTURE - METHODS - METEOR ERROR - updateStructureContactEmail - ${i18n.__(
           'api.structures.unknownStructure',
         )}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { structureId, contactEmail, externalUrl, sendMailToParent, sendMailToStructureAdmin },
       );
       throw new Meteor.Error(
         'api.structures.updateContactEmail.unknownStructure',
@@ -445,8 +443,9 @@ export const updateStructureContactEmail = new ValidatedMethod({
     if (!authorized) {
       logServer(
         `STRUCTURE - METHODS - METEOR ERROR - updateStructureContactEmail - ${i18n.__('api.users.notPermitted')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { structureId, contactEmail, externalUrl, sendMailToParent, sendMailToStructureAdmin },
       );
       throw new Meteor.Error('api.structures.updateContactEmail.notPermitted', i18n.__('api.users.notPermitted'));
     }
@@ -456,13 +455,13 @@ export const updateStructureContactEmail = new ValidatedMethod({
     if (externalUrl) {
       validateString(externalUrl);
     }
-    logServer(
-      `STRUCTURE - METHODS - UPDATE - updateStructureContactEmail - structure id: ${structureId}
-      / contact email: ${contactEmail} / externalUrl: ${externalUrl} / sendMailToParent: ${sendMailToParent}
-      / sendMailToStructureAdmin: ${sendMailToStructureAdmin}`,
-      levels.VERBOSE,
-      scopes.SYSTEM,
-    );
+    logServer(`STRUCTURE - METHODS - UPDATE - updateStructureContactEmail`, levels.VERBOSE, scopes.SYSTEM, {
+      structureId,
+      contactEmail,
+      externalUrl,
+      sendMailToParent,
+      sendMailToStructureAdmin,
+    });
 
     return Structures.update(
       { _id: structureId },
@@ -485,8 +484,9 @@ export const updateStructureIntroduction = new ValidatedMethod({
         `STRUCTURE - METHODS - METEOR ERROR - updateStructureIntroduction - ${i18n.__(
           'api.structures.unknownStructure',
         )}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { structureId, language, title, content },
       );
       throw new Meteor.Error(
         'api.structures.updateIntroduction.unknownStructure',
@@ -502,8 +502,9 @@ export const updateStructureIntroduction = new ValidatedMethod({
     if (!authorized) {
       logServer(
         `STRUCTURE - METHODS - METEOR ERROR - updateStructureIntroduction - ${i18n.__('api.users.notPermitted')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { structureId, language, title, content },
       );
       throw new Meteor.Error('api.structures.updateIntroduction.notPermitted', i18n.__('api.users.notPermitted'));
     }
@@ -515,8 +516,9 @@ export const updateStructureIntroduction = new ValidatedMethod({
         `STRUCTURE - METHODS - METEOR ERROR - updateStructureIntroduction - ${i18n.__(
           'api.users.unknownIntroduction',
         )}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { structureId, language, title, content },
       );
       throw new Meteor.Error(
         'api.structures.updateIntroduction.introductionToChangeNotExists',

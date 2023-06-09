@@ -538,7 +538,7 @@ class NextcloudClient {
     const user = Meteor.users.findOne(userId);
     if (!user.nclocator) {
       logServer(
-        `APPCLIENT - NEXTCLOUD - addUser - ${i18n.__('api.nextcloud.misingNCLocator')}`,
+        `APPCLIENT - NEXTCLOUD - ERROR - addUser - ${i18n.__('api.nextcloud.misingNCLocator')}`,
         levels.ERROR,
         scopes.SYSTEM,
         {
@@ -557,7 +557,7 @@ class NextcloudClient {
         };
         this._addUser(ncData, user.nclocator).catch((error) => {
           logServer(
-            `APPCLIENT - NEXTCLOUD - _addUser - ${i18n.__('api.nextcloud.userAddError', { userId })}`,
+            `APPCLIENT - NEXTCLOUD - ERROR - _addUser - ${i18n.__('api.nextcloud.userAddError', { userId })}`,
             levels.ERROR,
             scopes.SYSTEM,
             {

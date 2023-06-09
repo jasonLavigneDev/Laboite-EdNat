@@ -222,17 +222,11 @@ if (Meteor.isServer) {
     // pass the structure name in the options
     const newUser = { ...user };
     if (user.services && user.services.keycloak) {
-      /* eslint no-console:off */
-      // logServer('Creating new user after Keycloak authentication :');
-      // logServer(`  Keycloak id: ${user.services.keycloak.id}`);
-      // logServer(`  email: ${user.services.keycloak.email}`);
-
       logServer(
-        `USERS - Creating new user after Keycloak authentication :
+        `USERS - API - CREATE - Creating new user after Keycloak authentication :
          Keycloak id: ${user.services.keycloak.id}, email: ${user.services.keycloak.email} `,
-        levels.ERROR,
+        levels.VERBOSE,
         scopes.SYSTEM,
-        {},
       );
 
       const structure = findStructureByEmail(user.services.keycloak.email);

@@ -22,8 +22,7 @@ const updatePersonalSpace = (usersList, groupId) => {
 /** When running app for first time, pass a settings file to set up default groups. */
 if (Groups.find().count() === 0) {
   if (Meteor.settings.private.fillWithFakeData) {
-    // logServer('Creating the default groups');
-    logServer(`STARTUP - Creating the default groups`, levels.ERROR, scopes.SYSTEM, {});
+    logServer(`STARTUP - DBINITIALIZE - CREATE - Creating the default groups`, levels.VERBOSE, scopes.SYSTEM, {});
     fakeData.defaultGroups.map((group) => {
       // find owner userId
       const user = Meteor.users.findOne({ username: group.owner });
@@ -31,16 +30,14 @@ if (Groups.find().count() === 0) {
       const members = users(1000);
       const candidates = group.type === 5 ? users(100) : [];
       if (!user) {
-        // logServer(`can not create group ${group.name}: owner not found in database`);
         logServer(
-          `STARTUP - can not create group ${group.name}: owner not found in database`,
+          `STARTUP - DBINITIALIZE - ERROR - can not create group ${group.name}: owner not found in database`,
           levels.ERROR,
           scopes.SYSTEM,
           {},
         );
       } else {
-        // logServer(`  Creating group ${group.name}.`);
-        logServer(`STARTUP - Creating group ${group.name}.`, levels.ERROR, scopes.SYSTEM, {});
+        logServer(`STARTUP - DBINITIALIZE - CREATE - Creating group ${group.name}.`, levels.VERBOSE, scopes.SYSTEM, {});
 
         if (Meteor.isDevelopment) {
           const groupId = Groups.insert({
@@ -88,8 +85,7 @@ if (Groups.find().count() === 0) {
         const animators = users(ANIMATORS_RANDOM);
         const members = users(MEMBERS_RANDOM);
         const candidates = type === 5 ? users(CANDIDATES_RANDOM) : [];
-        // logServer(`  Creating group ${name}.`);
-        logServer(`STARTUP - Creating group ${name}.`, levels.ERROR, scopes.SYSTEM, {});
+        logServer(`STARTUP - DBINITIALIZE - CREATE - Creating group ${name}.`, levels.VERBOSE, scopes.SYSTEM, {});
         const groupId = Groups.insert({
           name,
           type,
@@ -114,9 +110,8 @@ if (Groups.find().count() === 0) {
       });
     }
   } else {
-    // logServer('No default groups to create !  Please invoke meteor with a settings file.');
     logServer(
-      `STARTUP - No default groups to create !  Please invoke meteor with a settings file.`,
+      `STARTUP - DBINITIALIZE - ERROR - No default groups to create !  Please invoke meteor with a settings file.`,
       levels.ERROR,
       scopes.SYSTEM,
       {},

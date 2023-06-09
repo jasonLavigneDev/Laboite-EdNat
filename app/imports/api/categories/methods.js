@@ -26,8 +26,9 @@ export const createCategorie = new ValidatedMethod({
         `CATEGORIES - METHOD - METEOR ERROR - createCategorie - ${i18n.__(
           'api.categories.createCategorie.nameAlreadyUse',
         )}`,
-        levels.VERBOSE,
+        levels.WARN,
         scopes.SYSTEM,
+        { name },
       );
       throw new Meteor.Error(
         'api.categories.createCategorie.alreadyExists',
@@ -37,8 +38,9 @@ export const createCategorie = new ValidatedMethod({
     if (!authorized) {
       logServer(
         `CATEGORIES - METHOD - METEOR ERROR - createCategorie - ${i18n.__('api.users.adminNeeded')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { name },
       );
       throw new Meteor.Error('api.categories.createCategorie.notPermitted', i18n.__('api.users.adminNeeded'));
     }
@@ -62,8 +64,9 @@ export const removeCategorie = new ValidatedMethod({
     if (categorie === undefined) {
       logServer(
         `CATEGORIES - METHOD - METEOR ERROR - removeCategorie - ${i18n.__('api.categories.unknownCategorie')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { categoryId },
       );
       throw new Meteor.Error(
         'api.categories.removeCategorie.unknownCategorie',
@@ -75,8 +78,9 @@ export const removeCategorie = new ValidatedMethod({
     if (!authorized) {
       logServer(
         `CATEGORIES - METHOD - METEOR ERROR - removeCategorie - ${i18n.__('api.users.adminNeeded')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { categoryId },
       );
       throw new Meteor.Error('api.categories.removeCategorie.notPermitted', i18n.__('api.users.adminNeeded'));
     }
@@ -105,8 +109,9 @@ export const updateCategorie = new ValidatedMethod({
     if (categorie === undefined) {
       logServer(
         `CATEGORIES - METHOD - METEOR ERROR - updateCategorie - ${i18n.__('api.categories.unknownCategorie')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { categoryId, data },
       );
       throw new Meteor.Error(
         'api.categories.updateCategorie.unknownCategory',
@@ -118,8 +123,9 @@ export const updateCategorie = new ValidatedMethod({
     if (!authorized) {
       logServer(
         `CATEGORIES - METHOD - METEOR ERROR - updateCategorie - ${i18n.__('api.users.adminNeeded')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { categoryId, data },
       );
       throw new Meteor.Error('api.categories.updateCategorie.notPermitted', i18n.__('api.users.adminNeeded'));
     }

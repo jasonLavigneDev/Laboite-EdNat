@@ -12,11 +12,15 @@ export default async function createUser(req, content) {
   //      http://localhost:3000/api/createuser
   if ('username' in content && 'firstname' in content && 'lastname' in content && 'email' in content) {
     const emailUser = Accounts.findUserByEmail(content.email);
-    if (emailUser)
+    if (emailUser) {
+      logServer(`USERS - REST - ERROR - createUser - user already exists with this email`, levels.WARN, scopes.USER, {
+        emailUser,
+      });
       throw new Meteor.Error(
         'restapi.users.createuser.emailExists',
         `user already exists with this email: ${content.email}`,
       );
+    }
     const user = Meteor.users.findOne({ username: content.username });
     if (!user) {
       // create user account if not existing
@@ -36,7 +40,7 @@ export default async function createUser(req, content) {
         Meteor.users.insert(userData);
       } catch (err) {
         logServer(
-          `USERS - REST - createUser - ${i18n.__('api.users.insertError', { user: content.username })}`,
+          `USERS - REST - ERROR - createUser - ${i18n.__('api.users.insertError', { user: content.username })}`,
           levels.ERROR,
           scopes.USER,
           {
@@ -51,7 +55,13 @@ export default async function createUser(req, content) {
       }
       return { response: 'user created' };
     }
+    logServer(`USERS - REST - ERROR - createUser - username already exists`, levels.WARN, scopes.USER, {
+      user: content.username,
+    });
     throw new Meteor.Error('restapi.users.createuser.alreadyExists', 'username already exists');
   }
+  logServer(`USERS - REST - ERROR - createUser - Missing request parameters`, levels.ERROR, scopes.USER, {
+    req,
+  });
   throw new Meteor.Error('restapi.users.createuser.dataMissing', 'Missing request parameters');
 }

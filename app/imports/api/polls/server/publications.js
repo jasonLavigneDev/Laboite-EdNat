@@ -37,6 +37,10 @@ Meteor.methods({
 
       return Polls.find(query).count();
     } catch (error) {
+      logServer(`POLLS - PUBLICATION - ERROR - get_groups.polls_count - ${error}`, levels.ERROR, scopes.SYSTEM, {
+        search,
+        slug,
+      });
       return 0;
     }
   },
@@ -50,13 +54,17 @@ FindFromPublication.publish('groups.polls', function groupsPolls({ page, search,
   try {
     checkPaginationParams.validate({ page, itemPerPage, search });
   } catch (err) {
-    // logServer(`publish groups.polls : ${err}`);
-    logServer(`POLLS - PUBLICATION - groups.polls, publish groups.polls : ${err}`, levels.ERROR, scopes.SYSTEM, {
-      page,
-      search,
-      slug,
-      itemPerPage,
-    });
+    logServer(
+      `POLLS - PUBLICATION - ERROR - groups.polls - publish groups.polls : ${err}`,
+      levels.ERROR,
+      scopes.SYSTEM,
+      {
+        page,
+        search,
+        slug,
+        itemPerPage,
+      },
+    );
     this.error(err);
   }
   const group = Groups.findOne({ slug });

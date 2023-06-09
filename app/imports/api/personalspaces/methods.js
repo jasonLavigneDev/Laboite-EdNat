@@ -60,8 +60,9 @@ export const removeElement = new ValidatedMethod({
     if (!isActive(this.userId)) {
       logServer(
         `PERSONALSPACES - METHODS - METEOR ERROR - removeElement - ${i18n.__('api.users.notPermitted')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { elementId, type },
       );
       throw new Meteor.Error('api.personalspaces.addService.notPermitted', i18n.__('api.users.notPermitted'));
     }
@@ -95,8 +96,9 @@ export const addService = new ValidatedMethod({
     if (!isActive(this.userId)) {
       logServer(
         `PERSONALSPACES - METHODS - METEOR ERROR - addService - ${i18n.__('api.users.notPermitted')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { serviceId },
       );
       throw new Meteor.Error('api.personalspaces.addService.notPermitted', i18n.__('api.users.notPermitted'));
     }
@@ -104,8 +106,9 @@ export const addService = new ValidatedMethod({
     if (service === undefined) {
       logServer(
         `PERSONALSPACES - METHODS - METEOR ERROR - addService - ${i18n.__('api.services.unknownService')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { serviceId },
       );
       throw new Meteor.Error('api.personalspaces.addService.unknownService', i18n.__('api.services.unknownService'));
     }
@@ -124,8 +127,9 @@ export const addGroup = new ValidatedMethod({
     if (!isActive(this.userId)) {
       logServer(
         `PERSONALSPACES - METHODS - METEOR ERROR - addGroup - ${i18n.__('api.users.notPermitted')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { groupId },
       );
       throw new Meteor.Error('api.personalspaces.addGroup.notPermitted', i18n.__('api.users.notPermitted'));
     }
@@ -133,8 +137,9 @@ export const addGroup = new ValidatedMethod({
     if (group === undefined) {
       logServer(
         `PERSONALSPACES - METHODS - METEOR ERROR - addGroup - ${i18n.__('api.groups.unknownGroup')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { groupId },
       );
       throw new Meteor.Error('api.personalspaces.addGroup.unknownGroup', i18n.__('api.groups.unknownGroup'));
     }
@@ -153,8 +158,9 @@ export const addUserBookmark = new ValidatedMethod({
     if (!isActive(this.userId)) {
       logServer(
         `PERSONALSPACES - METHODS - METEOR ERROR - addUserBookmark - ${i18n.__('api.users.notPermitted')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { bookmarkId },
       );
       throw new Meteor.Error('api.personalspaces.addBookmark.notPermitted', i18n.__('api.users.notPermitted'));
     }
@@ -162,8 +168,9 @@ export const addUserBookmark = new ValidatedMethod({
     if (bookmark === undefined) {
       logServer(
         `PERSONALSPACES - METHODS - METEOR ERROR - addUserBookmark - ${i18n.__('api.bookmarks.unknownBookmark')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { bookmarkId },
       );
       throw new Meteor.Error(
         'api.personalspaces.addBookmark.unknownBookmark',
@@ -201,8 +208,9 @@ export const updatePersonalSpace = new ValidatedMethod({
     if (!isActive(this.userId)) {
       logServer(
         `PERSONALSPACES - METHODS - METEOR ERROR - updatePersonalSpace - ${i18n.__('api.users.notPermitted')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { data },
       );
       throw new Meteor.Error('api.personalspaces.updatePersonalSpace.notPermitted', i18n.__('api.users.notPermitted'));
     }
@@ -211,19 +219,18 @@ export const updatePersonalSpace = new ValidatedMethod({
     if (currentPersonalSpace === undefined) {
       // create personalSpace if not existing
       logServer(
-        `PERSONALSPACES - METHODS - INSERT - updatePersonalSpace - user id: ${this.userId} / data: ${JSON.stringify(
-          data,
-        )}`,
+        `PERSONALSPACES - METHODS - INSERT - updatePersonalSpace - user id: ${this.userId}`,
         levels.VERBOSE,
         scopes.SYSTEM,
+        { data },
       );
       PersonalSpaces.insert({ ...data, userId: this.userId });
     } else {
       logServer(
-        `PERSONALSPACES - METHODS - UPDATE - updatePersonalSpace - user id: ${currentPersonalSpace._id} 
-        / data: ${data}`,
+        `PERSONALSPACES - METHODS - UPDATE - updatePersonalSpace - user id: ${currentPersonalSpace._id}`,
         levels.VERBOSE,
         scopes.SYSTEM,
+        { data },
       );
       PersonalSpaces.update({ _id: currentPersonalSpace._id }, { $set: data });
     }
@@ -240,7 +247,7 @@ export const checkPersonalSpace = new ValidatedMethod({
     if (!isActive(this.userId)) {
       logServer(
         `PERSONALSPACES - METHODS - METEOR ERROR - checkPersonalSpace - ${i18n.__('api.users.notPermitted')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
       );
       throw new Meteor.Error('api.personalspaces.updatePersonalSpace.notPermitted', i18n.__('api.users.notPermitted'));
@@ -252,10 +259,9 @@ export const checkPersonalSpace = new ValidatedMethod({
     );
     if (currentPersonalSpace === undefined) {
       if (u.favServices && u.favGroups && u.favUserBookmarks) {
-        // logServer(`Regen Personalspace (not found) for ${u.username}...`);
         logServer(
-          `PERSONALSPACES - METHODS - checkPersonalSpace, Regen Personalspace (not found) for ${u.username}...`,
-          levels.ERROR,
+          `PERSONALSPACES - METHODS - ERROR - checkPersonalSpace, Regen Personalspace (not found) for ${u.username}...`,
+          levels.WARN,
           scopes.SYSTEM,
           { u },
         );
@@ -340,8 +346,7 @@ export const checkPersonalSpace = new ValidatedMethod({
     if (changeMade) {
       updatePersonalSpace._execute({ userId: this.userId }, { data: currentPersonalSpace }, (err) => {
         if (err) {
-          // logServer(err.reason, 'error');
-          logServer(`PERSONALSPACES - METHODS - checkPersonalSpace`, levels.ERROR, scopes.SYSTEM, {
+          logServer(`PERSONALSPACES - METHODS - ERROR - checkPersonalSpace`, levels.ERROR, scopes.SYSTEM, {
             error: err.reason,
           });
         }
@@ -362,17 +367,18 @@ export const backToDefaultElement = new ValidatedMethod({
     if (!isActive(this.userId)) {
       logServer(
         `PERSONALSPACES - METHODS - METEOR ERROR - backToDefaultElement - ${i18n.__('api.users.notPermitted')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { elementId, type },
       );
       throw new Meteor.Error('api.personalspaces.backToDefaultElement.notPermitted', i18n.__('api.users.notPermitted'));
     }
     // remove all entries matching item type and element_id
     logServer(
-      `PERSONALSPACES - METHODS - UPDATE - backToDefaultElement - user id: ${this.userId} / type: ${type} 
-      / element_id: ${elementId}`,
+      `PERSONALSPACES - METHODS - UPDATE - backToDefaultElement - user id: ${this.userId}`,
       levels.VERBOSE,
       scopes.SYSTEM,
+      { elementId, type },
     );
     PersonalSpaces.update(
       { userId: this.userId },
@@ -398,6 +404,10 @@ export const backToDefaultElement = new ValidatedMethod({
         break;
 
       default:
+        logServer(`PERSONALSPACES - METHODS - METEOR ERROR - backToDefaultElement`, levels.ERROR, scopes.SYSTEM, {
+          elementId,
+          type,
+        });
         throw new Meteor.Error('api.personalspaces.backToDefaultElement.unknownType');
     }
   },
@@ -414,8 +424,9 @@ export const generateDefaultPersonalSpace = new ValidatedMethod({
     if (!isActive(userId)) {
       logServer(
         `PERSONALSPACES - METHODS - METEOR ERROR - generateDefaultPersonalSpace - ${i18n.__('api.users.notPermitted')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { userId },
       );
       throw new Meteor.Error(
         'api.personalspaces.generateDefaultPersonalSpace.notPermitted',

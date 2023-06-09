@@ -21,16 +21,18 @@ export const createTag = new ValidatedMethod({
     if (!authorized) {
       logServer(
         `TAGS - METHODS - METEOR ERROR - createTag - ${i18n.__('api.users.notPermitted')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { name },
       );
       throw new Meteor.Error('api.tags.createTag.notPermitted', i18n.__('api.users.notPermitted'));
     }
     if (name !== name.toLowerCase()) {
       logServer(
         `TAGS - METHODS - METEOR ERROR - createTag - ${i18n.__('api.tags.notLowerCase')}`,
-        levels.VERBOSE,
+        levels.WARN,
         scopes.SYSTEM,
+        { name },
       );
       throw new Meteor.Error('api.tags.createTag.notLowerCase', i18n.__('api.tags.notLowerCase'));
     }
@@ -53,9 +55,10 @@ export const removeTag = new ValidatedMethod({
     const tag = Tags.findOne(tagId);
     if (tag === undefined) {
       logServer(
-        `TAGS - METHODS - REMOVE - removeTag - ${i18n.__('api.tags.unknownTag')}`,
-        levels.VERBOSE,
+        `TAGS - METHODS - METEOR ERROR - removeTag - ${i18n.__('api.tags.unknownTag')}`,
+        levels.ERROR,
         scopes.SYSTEM,
+        { tagId },
       );
       throw new Meteor.Error('api.tags.removeTag.unknownTag', i18n.__('api.tags.unknownTag'));
     }
@@ -63,9 +66,10 @@ export const removeTag = new ValidatedMethod({
     const authorized = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
     if (!authorized) {
       logServer(
-        `TAGS - METHODS - REMOVE - removeTag - ${i18n.__('api.users.notPermitted')}`,
-        levels.VERBOSE,
+        `TAGS - METHODS - METEOR ERROR - removeTag - ${i18n.__('api.users.notPermitted')}`,
+        levels.ERROR,
         scopes.SYSTEM,
+        { tagId },
       );
       throw new Meteor.Error('api.tags.removeTag.notPermitted', i18n.__('api.users.notPermitted'));
     }
@@ -90,8 +94,9 @@ export const updateTag = new ValidatedMethod({
     if (tag === undefined) {
       logServer(
         `TAGS - METHODS - METEOR ERROR - updateTag - ${i18n.__('api.tags.unknownTag')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { tagId, data },
       );
       throw new Meteor.Error('api.tags.updateTag.unknownTag', i18n.__('api.tags.unknownTag'));
     }
@@ -100,17 +105,14 @@ export const updateTag = new ValidatedMethod({
     if (!authorized) {
       logServer(
         `TAGS - METHODS - METEOR ERROR - updateTag - ${i18n.__('api.users.notPermitted')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { tagId, data },
       );
       throw new Meteor.Error('api.tags.updateTag.notPermitted', i18n.__('api.users.notPermitted'));
     }
     validateString(data.name);
-    logServer(
-      `TAGS - METHODS - UPDATE - updateTag - id: ${tagId} / data: ${JSON.stringify(data)}`,
-      levels.VERBOSE,
-      scopes.SYSTEM,
-    );
+    logServer(`TAGS - METHODS - UPDATE - updateTag`, levels.VERBOSE, scopes.SYSTEM, { tagId, data });
     return Tags.update({ _id: tagId }, { $set: data });
   },
 });

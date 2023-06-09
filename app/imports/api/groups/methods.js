@@ -23,8 +23,9 @@ export const favGroup = new ValidatedMethod({
     if (!isActive(this.userId)) {
       logServer(
         `GROUPS - METHODS - METEOR ERROR - favGroup - ${i18n.__('api.users.mustBeLoggedIn')}`,
-        levels.VERBOSE,
+        levels.WARN,
         scopes.SYSTEM,
+        { groupId },
       );
       throw new Meteor.Error('api.groups.favGroup.notPermitted', i18n.__('api.users.mustBeLoggedIn'));
     }
@@ -33,8 +34,9 @@ export const favGroup = new ValidatedMethod({
     if (group === undefined) {
       logServer(
         `GROUPS - METHODS - METEOR ERROR - favGroup - ${i18n.__('api.groups.unknownGroup')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { groupId },
       );
       throw new Meteor.Error('api.groups.favGroup.unknownService', i18n.__('api.groups.unknownGroup'));
     }
@@ -51,7 +53,7 @@ export const favGroup = new ValidatedMethod({
     }
     // update user personalSpace
     addGroup._execute({ userId: this.userId }, { groupId });
-    logServer(`GROUPS - favGroup - User ${this.userId} add favGroup ${groupId} `, levels.VERBOSE, scopes.USER);
+    logServer(`GROUPS - favGroup - ADD - User ${this.userId} add favGroup ${groupId} `, levels.VERBOSE, scopes.USER);
   },
 });
 
@@ -65,8 +67,9 @@ export const unfavGroup = new ValidatedMethod({
     if (!isActive(this.userId)) {
       logServer(
         `GROUPS - METHODS - METEOR ERROR - unfavGroup - ${i18n.__('api.users.mustBeLoggedIn')}`,
-        levels.VERBOSE,
+        levels.WARN,
         scopes.SYSTEM,
+        { groupId },
       );
       throw new Meteor.Error('api.groups.unfavGroup.notPermitted', i18n.__('api.users.mustBeLoggedIn'));
     }
@@ -79,7 +82,11 @@ export const unfavGroup = new ValidatedMethod({
     }
     // update user personalSpace
     removeElement._execute({ userId: this.userId }, { type: 'group', elementId: groupId });
-    logServer(`GROUPS - unFavGroup -User ${this.userId} unFavGroup ${groupId}`, levels.VERBOSE, scopes.USER);
+    logServer(
+      `GROUPS - METHODS - REMOVE - unFavGroup - User ${this.userId} unFavGroup ${groupId}`,
+      levels.VERBOSE,
+      scopes.USER,
+    );
   },
 });
 
@@ -170,7 +177,11 @@ export function _createGroup({ name, type, content, description, avatar, plugins
       Roles.addUsersToRoles(userId, ['admin', 'animator'], groupId);
 
       favGroup._execute({ userId }, { groupId });
-      logServer(`GROUPS - createGroup - User ${userId} create group ${groupId}`, levels.VERBOSE, scopes.USER);
+      logServer(
+        `GROUPS - METHODS - CREATE - createGroup - User ${userId} create group ${groupId}`,
+        levels.VERBOSE,
+        scopes.USER,
+      );
 
       if (type !== 15) {
         user.groupCount += 1;
@@ -205,14 +216,20 @@ export function _createGroup({ name, type, content, description, avatar, plugins
     if (error.code === 11000) {
       logServer(
         `GROUPS - METHODS - METEOR ERROR - _createGroup - ${i18n.__('api.groups.groupAlreadyExist')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { name, type, content, description, avatar, plugins, userId },
       );
       throw new Meteor.Error('api.groups.createGroup.duplicateName', i18n.__('api.groups.groupAlreadyExist'));
     } else {
-      logServer(`GROUPS - createGroup - fail when user ${userId} create group`, levels.WARN, scopes.SYSTEM, {
-        errorMessage: error.message,
-      });
+      logServer(
+        `GROUPS - METHODS - ERROR - createGroup - fail when user ${userId} create group`,
+        levels.WARN,
+        scopes.SYSTEM,
+        {
+          errorMessage: error.message,
+        },
+      );
       throw error;
     }
   }
@@ -239,16 +256,18 @@ export const createGroup = new ValidatedMethod({
     if (!isActive(this.userId)) {
       logServer(
         `GROUPS - METHODS - METEOR ERROR - createGroup - ${i18n.__('api.users.mustBeLoggedIn')}`,
-        levels.VERBOSE,
+        levels.WARN,
         scopes.SYSTEM,
+        { name, type, content, description, avatar, plugins },
       );
       throw new Meteor.Error('api.groups.createGroup.notLoggedIn', i18n.__('api.users.mustBeLoggedIn'));
     }
     if (reservedGroupNames.includes(name)) {
       logServer(
         `GROUPS - METHODS - METEOR ERROR - createGroup - ${i18n.__('api.groups.groupAlreadyExist')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { name, type, content, description, avatar, plugins },
       );
       throw new Meteor.Error('api.groups.createGroup.notPermitted', i18n.__('api.groups.groupAlreadyExist'));
     }
@@ -278,8 +297,9 @@ export function _removeGroup({ groupId, userId }) {
   if (group === undefined) {
     logServer(
       `GROUPS - METHODS - METEOR ERROR - _removeGroup - ${i18n.__('api.groups.unknownGroup')}`,
-      levels.VERBOSE,
+      levels.ERROR,
       scopes.SYSTEM,
+      { groupId, userId },
     );
     throw new Meteor.Error('api.groups.removeGroup.unknownGroup', i18n.__('api.groups.unknownGroup'));
   }
@@ -290,8 +310,9 @@ export function _removeGroup({ groupId, userId }) {
   if (!authorized) {
     logServer(
       `GROUPS - METHODS - METEOR ERROR - _removeGroup - ${i18n.__('api.groups.adminGroupNeeded')}`,
-      levels.VERBOSE,
+      levels.ERROR,
       scopes.SYSTEM,
+      { groupId, userId },
     );
     throw new Meteor.Error('api.groups.removeGroup.notPermitted', i18n.__('api.groups.adminGroupNeeded'));
   }
@@ -312,11 +333,11 @@ export function _removeGroup({ groupId, userId }) {
 
   // remove all roles set on this group
   Roles.removeScope(groupId);
-  logServer(`GROUPS - REMOVE - _removeGroup - groupId: ${groupId}`, levels.INFO, scopes.USER);
+  logServer(`GROUPS - METHODS - REMOVE - _removeGroup - groupId: ${groupId}`, levels.INFO, scopes.USER);
   Groups.remove(groupId);
   // remove from users favorite groups
   Meteor.users.update({ favGroups: { $all: [groupId] } }, { $pull: { favGroups: groupId } }, { multi: true });
-  logServer(`GROUPS - user ${userId} remove group ${groupId}`, levels.VERBOSE, scopes.USER);
+  logServer(`GROUPS - METHODS - UPDATE - user ${userId} remove group ${groupId}`, levels.VERBOSE, scopes.USER);
   return group;
 }
 
@@ -335,18 +356,19 @@ function _updateGroup(groupId, groupData, oldGroup) {
   try {
     Groups.update({ _id: groupId }, { $set: groupData });
     // return both old and new data to allow plugins to detect changes in 'after' hook
-    logServer(`GROUPS - user update group ${groupId}`, levels.VERBOSE, scopes.USER);
+    logServer(`GROUPS - METHODS - UPDATE - user update group ${groupId}`, levels.VERBOSE, scopes.USER);
     return [groupData, oldGroup];
   } catch (error) {
     if (error.code === 11000) {
       logServer(
         `GROUPS - METHODS - METEOR ERROR - _updateGroup - ${i18n.__('api.groups.groupAlreadyExist')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { groupId, groupData, oldGroup },
       );
       throw new Meteor.Error('api.groups.updateGroup.duplicateName', i18n.__('api.groups.groupAlreadyExist'));
     } else {
-      logServer(`GROUPS - updateGroup - error when user updateGroup`, levels.WARN, scopes.SYSTEM, {
+      logServer(`GROUPS - METHODS - ERROR - updateGroup - error when user updateGroup`, levels.WARN, scopes.SYSTEM, {
         errorMEssage: error.message,
       });
       throw error;
@@ -392,8 +414,9 @@ export const updateGroup = new ValidatedMethod({
     if (group === undefined) {
       logServer(
         `GROUPS - METHODS - METEOR ERROR - updateGroup - ${i18n.__('api.groups.unknownGroup')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { groupId, data },
       );
       throw new Meteor.Error('api.groups.updateGroup.unknownGroup', i18n.__('api.groups.unknownGroup'));
     }
@@ -403,16 +426,18 @@ export const updateGroup = new ValidatedMethod({
     if (!authorized) {
       logServer(
         `GROUPS - METHODS - METEOR ERROR - updateGroup - ${i18n.__('api.groups.adminGroupNeeded')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { groupId, data },
       );
       throw new Meteor.Error('api.groups.updateGroup.notPermitted', i18n.__('api.groups.adminGroupNeeded'));
     }
     if (reservedGroupNames.includes(data.name)) {
       logServer(
         `GROUPS - METHODS - METEOR ERROR - updateGroup - ${i18n.__('api.groups.groupAlreadyExist')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { groupId, data },
       );
       throw new Meteor.Error('api.groups.updateGroup.notPermitted', i18n.__('api.groups.groupAlreadyExist'));
     }

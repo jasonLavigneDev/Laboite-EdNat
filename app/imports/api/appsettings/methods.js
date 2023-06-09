@@ -15,12 +15,10 @@ import AppSettings from './appsettings';
 
 export function checkMigrationStatus() {
   if (Migrations._getControl().locked === true) {
-    // logServer('Migration lock detected !!!!', 'error');
     logServer(
       `APPSETTINGS - METHODS - UPDATE - checkMigrationStatus,Migration lock detected !!!!`,
-      levels.ERROR,
+      levels.WARN,
       scopes.SYSTEM,
-      {},
     );
     AppSettings.update({}, { $set: { maintenance: true, textMaintenance: 'api.appsettings.migrationLockedText' } });
   }
@@ -68,10 +66,16 @@ export const updateAppsettings = new ValidatedMethod({
         `APPSETTINGS - METHODS - UPDATE - updateAppsettings - args: ${JSON.stringify(args)}`,
         levels.VERBOSE,
         scopes.SYSTEM,
+        { external, link, content, key },
       );
       return AppSettings.update({ _id: 'settings' }, { $set: { [key]: args } });
     } catch (error) {
-      logServer(`APPSETTINGS - METHODS - METEOR ERROR - updateAppsettings`, levels.INFO, scopes.SYSTEM, { error });
+      logServer(
+        `APPSETTINGS - METHODS - METEOR ERROR - updateAppsettings - error: ${error}`,
+        levels.ERROR,
+        scopes.SYSTEM,
+        { external, link, content, key },
+      );
       throw new Meteor.Error(error, error);
     }
   },
@@ -111,10 +115,11 @@ export const switchMaintenanceStatus = new ValidatedMethod({
         `APPSETTINGS - METHODS - UPDATE - switchMaintenanceStatus - Maintenance: ${newValue}`,
         levels.VERBOSE,
         scopes.SYSTEM,
+        { unlockMigration },
       );
       return AppSettings.update({ _id: 'settings' }, { $set: { maintenance: newValue } });
     } catch (error) {
-      logServer(`APPSETTINGS - METHODS - METEOR ERROR - switchMaintenanceStatus`, levels.INFO, scopes.SYSTEM, {
+      logServer(`APPSETTINGS - METHODS - METEOR ERROR - switchMaintenanceStatus`, levels.ERROR, scopes.SYSTEM, {
         error,
       });
       throw new Meteor.Error(error, error);
@@ -132,8 +137,9 @@ export const setUserStructureValidationMandatoryStatus = new ValidatedMethod({
         logServer(
           `APPSETTINGS - METHODS - METEOR ERROR - setUserStructureValidationMandatoryStatus - 
         authorized: ${authorized}`,
-          levels.VERBOSE,
+          levels.ERROR,
           scopes.SYSTEM,
+          { isValidationMandatory },
         );
         throw new Meteor.Error(
           'api.appsettings.setUserStructureValidationMandatoryStatus.notPermitted',
@@ -145,6 +151,7 @@ export const setUserStructureValidationMandatoryStatus = new ValidatedMethod({
         isValidationMandatory: ${isValidationMandatory}`,
         levels.VERBOSE,
         scopes.SYSTEM,
+        { isValidationMandatory },
       );
       return AppSettings.update(
         { _id: 'settings' },
@@ -153,7 +160,7 @@ export const setUserStructureValidationMandatoryStatus = new ValidatedMethod({
     } catch (error) {
       logServer(
         `APPSETTINGS - METHODS - METEOR ERROR - setUserStructureValidationMandatoryStatus`,
-        levels.INFO,
+        levels.ERROR,
         scopes.SYSTEM,
         { error },
       );
@@ -184,10 +191,11 @@ export const updateTextMaintenance = new ValidatedMethod({
         `APPSETTINGS - METHODS - UPDATE - updateTextMaintenance - text maintenance: ${text}`,
         levels.INFO,
         scopes.SYSTEM,
+        { text },
       );
       return AppSettings.update({ _id: 'settings' }, { $set: { textMaintenance: text } });
     } catch (error) {
-      logServer(`APPSETTINGS - METHODS - METEOR ERROR - updateTextMaintenance`, levels.INFO, scopes.SYSTEM, { error });
+      logServer(`APPSETTINGS - METHODS - METEOR ERROR - updateTextMaintenance`, levels.ERROR, scopes.SYSTEM, { error });
       throw new Meteor.Error(error, error);
     }
   },
@@ -227,7 +235,7 @@ export const updateTextInfoLanguage = new ValidatedMethod({
       if (!authorized) {
         logServer(
           `APPSETTINGS - METHODS - METEOR ERROR - updateTextInfoLanguage - authorized: ${authorized}`,
-          levels.VERBOSE,
+          levels.ERROR,
           scopes.SYSTEM,
         );
         throw new Meteor.Error(
@@ -257,10 +265,13 @@ export const updateTextInfoLanguage = new ValidatedMethod({
         `APPSETTINGS - METHODS - UPDATE - updateTextInfoLanguage - new settings: ${JSON.stringify(newInfo)}`,
         levels.VERBOSE,
         scopes.SYSTEM,
+        { language, content, tabkey },
       );
       return AppSettings.update({ _id: 'settings' }, { $set: { [tabkey]: newInfo } });
     } catch (error) {
-      logServer(`APPSETTINGS - METHODS - METEOR ERROR - updateTextInfoLanguage`, levels.INFO, scopes.SYSTEM, { error });
+      logServer(`APPSETTINGS - METHODS - METEOR ERROR - updateTextInfoLanguage`, levels.ERROR, scopes.SYSTEM, {
+        error,
+      });
       throw new Meteor.Error(error, error);
     }
   },

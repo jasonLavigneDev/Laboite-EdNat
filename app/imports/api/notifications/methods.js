@@ -28,10 +28,10 @@ export function addExpiration(data) {
           `NOTIFICATIONS - METHODS - METEOR ERROR - addExpiration - ${i18n.__(
             'api.notifications.expirationNotNumber',
           )}`,
-          levels.VERBOSE,
+          levels.ERROR,
           scopes.SYSTEM,
+          { data },
         );
-        // console.log(i18n.__('api.notifications.badConfig', { type: dataType })); // FIXME
         throw new Meteor.Error('api.notifications.badConfig', i18n.__('api.notifications.expirationNotNumber'));
       } else if (numDays > 0) {
         // if delay is set to 0 or negative number,
@@ -56,8 +56,9 @@ export const createNotification = new ValidatedMethod({
     if (!authorized) {
       logServer(
         `NOTIFICATIONS - METHODS - METEOR ERROR - createNotification - ${i18n.__('api.users.adminNeeded')}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { data },
       );
       throw new Meteor.Error('api.notifications.createNotification.notPermitted', i18n.__('api.users.adminNeeded'));
     }
@@ -83,8 +84,9 @@ export const removeNotification = new ValidatedMethod({
     if (!isActive(this.userId)) {
       logServer(
         `NOTIFICATIONS - METHODS - METEOR ERROR - removeNotification - ${i18n.__('api.notifications.mustBeLoggedIn')}`,
-        levels.VERBOSE,
+        levels.WARN,
         scopes.SYSTEM,
+        { notificationId },
       );
       throw new Meteor.Error(
         'api.notifications.removeNotification.notLoggedIn',
@@ -98,8 +100,9 @@ export const removeNotification = new ValidatedMethod({
         `NOTIFICATIONS - METHODS - METEOR ERROR - removeNotification - ${i18n.__(
           'api.notifications.adminArticleNeeded',
         )}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { notificationId },
       );
       throw new Meteor.Error(
         'api.notifications.removeNotification.notPermitted',
@@ -125,7 +128,7 @@ export const removeAllNotification = new ValidatedMethod({
         `NOTIFICATIONS - METHODS - METEOR ERROR - removeAllNotification - ${i18n.__(
           'api.notifications.mustBeLoggedIn',
         )}`,
-        levels.VERBOSE,
+        levels.WARN,
         scopes.SYSTEM,
       );
       throw new Meteor.Error(
@@ -152,7 +155,7 @@ export const removeAllNotificationRead = new ValidatedMethod({
         `NOTIFICATIONS - METHODS - METEOR ERROR - removeAllNotificationRead - ${i18n.__(
           'api.notifications.mustBeLoggedIn',
         )}`,
-        levels.VERBOSE,
+        levels.WARN,
         scopes.SYSTEM,
       );
       throw new Meteor.Error(
@@ -181,8 +184,9 @@ export const markNotificationAsRead = new ValidatedMethod({
         `NOTIFICATIONS - METHODS - METEOR ERROR - markNotificationAsRead - ${i18n.__(
           'api.notifications.mustBeLoggedIn',
         )}`,
-        levels.VERBOSE,
+        levels.WARN,
         scopes.SYSTEM,
+        { notificationId },
       );
       throw new Meteor.Error(
         'api.notifications.markNotificationAsRead.notLoggedIn',
@@ -196,8 +200,9 @@ export const markNotificationAsRead = new ValidatedMethod({
         `NOTIFICATIONS - METHODS - METEOR ERROR - markNotificationAsRead - ${i18n.__(
           'api.notifications.adminArticleNeeded',
         )}`,
-        levels.VERBOSE,
+        levels.ERROR,
         scopes.SYSTEM,
+        { notificationId },
       );
       throw new Meteor.Error(
         'api.notifications.markNotificationAsRead.notPermitted',
@@ -223,7 +228,7 @@ export const markAllNotificationAsRead = new ValidatedMethod({
         `NOTIFICATIONS - METHODS - METEOR ERROR - markAllNotificationAsRead - ${i18n.__(
           'api.notifications.mustBeLoggedIn',
         )}`,
-        levels.VERBOSE,
+        levels.WARN,
         scopes.SYSTEM,
       );
       throw new Meteor.Error(
@@ -252,8 +257,9 @@ export const markAllTypeNotificationAsRead = new ValidatedMethod({
         `NOTIFICATIONS - METHODS - METEOR ERROR - markAllTypeNotificationAsRead - ${i18n.__(
           'api.notifications.mustBeLoggedIn',
         )}`,
-        levels.VERBOSE,
+        levels.WARN,
         scopes.SYSTEM,
+        { type },
       );
       throw new Meteor.Error(
         'api.notifications.markAllNotificationAsRead.notLoggedIn',
@@ -286,8 +292,9 @@ export const removeAllTypeNotification = new ValidatedMethod({
         `NOTIFICATIONS - METHODS - METEOR ERROR - removeAllTypeNotification - ${i18n.__(
           'api.notifications.mustBeLoggedIn',
         )}`,
-        levels.VERBOSE,
+        levels.WARN,
         scopes.SYSTEM,
+        { type },
       );
       throw new Meteor.Error(
         'api.notifications.removeAllTypeNotification.notLoggedIn',

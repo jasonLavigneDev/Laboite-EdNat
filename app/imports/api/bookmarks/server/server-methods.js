@@ -26,7 +26,7 @@ const getWebSiteFavicons = new ValidatedMethod({
         Bookmarks.update({ url }, { $set: { icon } });
       }
     } catch (err) {
-      //
+      logServer(`BOOKMARK - METHODS - ERROR - getWebSiteFavicons`, levels.ERROR, scopes.SYSTEM, { err });
     }
   },
 });

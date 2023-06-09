@@ -141,12 +141,11 @@ Migrations.add({
           if (author) {
             updateData.structure = author.structure || '';
           } else {
-            // logServer(`Migration: could not find author ${article.userId} for article ${article._id}`);
             logServer(
-              `MIGRATIONS - Migration: could not find author ${article.userId} for article ${article._id}`,
+              `MIGRATIONS - API - ERROR - Add author structure to articles -
+              Migration: could not find author ${article.userId} for article ${article._id}`,
               levels.WARN,
               scopes.SYSTEM,
-              {},
             );
           }
         }
@@ -757,8 +756,8 @@ Migrations.add({
           }
         });
         logServer(
-          `MIGRATIONS - 30 Add group type to articles with groups 
-          - ARTICLES - UPDATE - articleId: ${articleId} / groups: ${JSON.stringify(updatedGroups)}`,
+          `MIGRATIONS - ARTICLES - UPDATE - 30 Add group type to articles with groups 
+          - articleId: ${articleId} / groups: ${JSON.stringify(updatedGroups)}`,
           levels.INFO,
           scopes.SYSTEM,
         );
@@ -776,7 +775,7 @@ Migrations.add({
   name: 'Update structure.groupId default value',
   up: () => {
     logServer(
-      `MIGRATIONS - 31 Update structure.groupId default value - STRUCTURE - UPDATE`,
+      `MIGRATIONS - STRUCTURE - UPDATE - 31 Update structure.groupId default value`,
       levels.INFO,
       scopes.SYSTEM,
     );
