@@ -1,6 +1,7 @@
 import React from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { Button, InputLabel, MenuItem, FormControl, Select, Paper, Chip } from '@mui/material';
+import sanitizeHtml from 'sanitize-html';
 import PropTypes from 'prop-types';
 
 export const AdminMessagesList = ({
@@ -54,7 +55,7 @@ export const AdminMessagesList = ({
               width: user ? '60vw' : '30vw',
               marginBottom: '1vh',
               padding: '1vh 2vw',
-              border: '1px solid black',
+              border: '1px solid rgba(0,0,0,0.2)',
               borderRadius: '20px',
             }}
           >
@@ -64,7 +65,8 @@ export const AdminMessagesList = ({
             <p>Expire le : {message?.expirationDate?.toLocaleDateString()}</p>
             <p>Langue du message : {message?.language}</p>
             <Chip style={{ width: '40%' }} label="Ma super structure" color="primary" />
-            <p>Message : {message?.content}</p>
+            <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(message?.content) }} />
+            {/* <Typography>Message : {message?.content}</Typography> */}
             {!isNotInAdminPanel && (
               <div style={{ display: 'flex', justifyContent: 'center', gap: '1vw' }}>
                 <Button variant="contained" onClick={() => selectMessageToUpdate(message._id)}>

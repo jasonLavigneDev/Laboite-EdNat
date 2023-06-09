@@ -55,6 +55,21 @@ export const AdminMessageForm = ({ createMessage, initialMessage, isOnUpdateMess
     <div style={{ display: 'flex', flexDirection: 'column', width: '45%', gap: '1vh' }}>
       <Typography variant="h5">{title}</Typography>
       <form style={{ display: 'flex', gap: '1vh', flexDirection: 'column' }}>
+        <FormControl fullWidth>
+          <InputLabel id="demo-simple-select-label">Language</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={language}
+            label="language"
+            placeholder="language"
+            onChange={handleChange}
+          >
+            <MenuItem value="fr">fr</MenuItem>
+            <MenuItem value="en">en</MenuItem>
+          </Select>
+        </FormControl>
+
         <div>
           <CustomToolbarArticle />
           <ReactQuill
@@ -76,21 +91,6 @@ export const AdminMessageForm = ({ createMessage, initialMessage, isOnUpdateMess
             setExpirationDate(e.target.value);
           }}
         />
-        <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">Language</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={language}
-            label="language"
-            placeholder="language"
-            onChange={handleChange}
-          >
-            <MenuItem value="fr">fr</MenuItem>
-            <MenuItem value="en">en</MenuItem>
-          </Select>
-        </FormControl>
-
         <Button variant="contained" onClick={handleSubmit} style={{ width: '10vw', marginTop: '2vh' }}>
           {action}
         </Button>
