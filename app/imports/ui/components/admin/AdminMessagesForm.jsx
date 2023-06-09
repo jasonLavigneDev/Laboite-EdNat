@@ -26,20 +26,26 @@ export const AdminMessageForm = ({ createMessage, initialMessage, isOnUpdateMess
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (isOnUpdateMessage) {
-      const updatedMessage = { ...initialMessage, content, expirationDate, language };
-      updateMessage(updatedMessage);
+    if (content !== '') {
+      if (isOnUpdateMessage) {
+        const updatedMessage = { ...initialMessage, content, expirationDate, language };
+        updateMessage(updatedMessage);
+        msg.success('Information mise à jour avec succès');
+      } else {
+        const newMessage = {
+          language,
+          content,
+          expirationDate: new Date(expirationDate),
+        };
+        createMessage(newMessage);
+        msg.success('Information créée avec succès');
+      }
+      setLanguage('fr');
+      setContent('');
+      setExpirationDate(defaultExpiration);
     } else {
-      const newMessage = {
-        language,
-        content,
-        expirationDate: new Date(expirationDate),
-      };
-      createMessage(newMessage);
+      msg.error('Le contenu du message est vide !');
     }
-    setLanguage('fr');
-    setContent('');
-    setExpirationDate(defaultExpiration);
   };
 
   const onUpdateRichText = (html) => {

@@ -45,6 +45,7 @@ const AdminGlobalInfos = () => {
     Meteor.call('globalInfos.deleteGlobalInfo', { messageId }, (error) => {
       if (!error) {
         const restMessages = messages.filter((message) => message._id !== messageId);
+        msg.success('Message supprimé');
         return setMessages(restMessages);
       }
       return console.log('error', error);

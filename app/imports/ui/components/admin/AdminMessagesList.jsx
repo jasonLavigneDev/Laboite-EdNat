@@ -29,12 +29,12 @@ export const AdminMessagesList = ({
       }}
     >
       {!isNotInAdminPanel && (
-        <FormControl sx={{ width: '92%', paddingBottom: '1vh' }}>
+        <FormControl sx={{ width: '92%', paddingBottom: '1vh', marginTop: '1vh' }}>
           <InputLabel id="demo-simple-select-label">langue des messages</InputLabel>
           <Select
             labelId="demo-simple-select-label"
             id="demo-simple-select"
-            label="language"
+            label="langue des messages"
             onChange={handleChangeMessageLanguage}
           >
             <MenuItem value="all">all</MenuItem>
