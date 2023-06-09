@@ -9,6 +9,7 @@ import { isActive, getLabel, validateString } from '../utils';
 import Bookmarks from './bookmarks';
 import logServer, { levels, scopes } from '../logging';
 import { addUserBookmark, removeElement } from '../personalspaces/methods';
+import Groups from '../groups/groups';
 
 function _updateBookmarkURL(id, url, name, tag) {
   logServer(`BOOKMARKS - METHOD - UPDATE - _updateBookmarkURL`, levels.VERBOSE, scopes.SYSTEM, { id, url, name, tag });
@@ -207,6 +208,7 @@ export const favGroupBookmark = new ValidatedMethod({
     }
     // check bookmark existence
     const bookmark = Bookmarks.findOne({ _id: bookmarkId });
+
     if (!bookmark) {
       logServer(
         `USERBOOKMARKS - METHODS - METEOR ERROR - favUserBookmark - ${i18n.__('api.bookmarks.unknownBookmark')}`,
@@ -218,6 +220,22 @@ export const favGroupBookmark = new ValidatedMethod({
         i18n.__('api.bookmarks.unknownBookmark'),
       );
     }
+
+    const group = Groups.findOne({ _id: bookmark.groupId });
+    if (group) {
+      if (
+        !Roles.userIsInRole(this.userId, ['member', 'admin', 'animator'], group._id) &&
+        bookmark.author !== this.userId
+      ) {
+        logServer(
+          `USERBOOKMARKS - METHODS - METEOR ERROR - favGroupBookmark - ${i18n.__('api.bookmarks.notPermitted')}`,
+          levels.VERBOSE,
+          scopes.SYSTEM,
+        );
+        throw new Meteor.Error('api.bookmarks.notPermitted', i18n.__('api.bookmarks.groupRankNeeded'));
+      }
+    }
+
     Meteor.users.update(this.userId, {
       $push: { favUserBookmarks: bookmarkId },
     });
