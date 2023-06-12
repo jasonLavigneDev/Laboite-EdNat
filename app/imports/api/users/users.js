@@ -304,7 +304,6 @@ Meteor.users.selfFields = {
   nclocator: 1,
   advancedPersonalPage: 1,
   articlesEnable: 1,
-  lastGlobalInfoReadId: 1,
   lastGlobalInfoReadDate: 1,
 };
 
@@ -324,7 +323,6 @@ Meteor.users.adminFields = {
   groupQuota: 1,
   nclocator: 1,
   articlesEnable: 1,
-  lastGlobalInfoReadId: 1,
 };
 
 Meteor.users.publicFields = {

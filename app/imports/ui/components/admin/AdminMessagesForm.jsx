@@ -5,21 +5,23 @@ import PropTypes from 'prop-types';
 import ReactQuill from 'react-quill';
 import { CustomToolbarArticle } from '../system/CustomQuill';
 import { quillOptions } from './InfoEditionComponent';
+import { useAppContext } from '../../contexts/context';
 
 export const AdminMessageForm = ({ createMessage, initialMessage, isOnUpdateMessage, updateMessage }) => {
   const today = new Date();
   const defaultDaysOfValidity = 10;
   const defaultExpiration = new Date(today.setDate(today.getDate() + defaultDaysOfValidity));
+  const [{ language: userLanguage }] = useAppContext();
 
   const [content, setContent] = useState();
   const [expirationDate, setExpirationDate] = useState();
-  const [language, setLanguage] = useState();
+  const [language, setLanguage] = useState(userLanguage);
   const title = isOnUpdateMessage ? 'MODIFIER MESSAGE' : 'CREER MESSAGE';
   const action = isOnUpdateMessage ? 'MODIFIER' : 'CREER ';
 
   useEffect(() => {
     setContent(initialMessage?.content || '');
-    setExpirationDate(initialMessage?.expirationDate || defaultExpiration);
+    setExpirationDate(initialMessage?.expirationDate || defaultExpiration.toISOString().slice(0, 10));
     setLanguage(initialMessage?.language || 'fr');
   }, [initialMessage]);
 
