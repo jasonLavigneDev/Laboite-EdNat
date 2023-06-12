@@ -379,6 +379,7 @@
       "circlesInactive": "ERREUR, vérifiez que l'application 'Circles' est active",
       "userAdded": "Utilisateur {$userId} ajouté (serveur {$ncURL})",
       "userAddError": "ERREUR lors de l'ajout de l'utilisateur {$userId}",
+      "userAlreadyExists": "L'utilisateur {$username} existe déjà dans Nextcloud",
       "circleAdded": "Un nouveau cercle a été créé",
       "circleDeleted": "Un cercle a été supprimé",
       "circleDeleteError": "ERREUR lors de la suppression du cercle",

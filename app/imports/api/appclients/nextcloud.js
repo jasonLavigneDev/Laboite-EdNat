@@ -28,7 +28,7 @@ function getShareName(name) {
   return `groupe-${name}`;
 }
 
-class NextcloudClient {
+export default class NextcloudClient {
   constructor() {
     this.ncURL = (nextcloudPlugin && nextcloudPlugin.URL) || '';
     const ncUser = (nextcloud && nextcloud.nextcloudUser) || '';
@@ -545,31 +545,42 @@ class NextcloudClient {
           userId,
         },
       );
-    } else {
-      const resExists = await this.userExists(user.username, user.nclocator);
-      if (resExists === false) {
-        const ncData = {
-          userid: user.username,
-          password: '',
-          email: user.emails ? user.emails[0].address : '',
-          displayName: `${user.firstName} ${user.lastName}`,
-          language: user.language,
-        };
-        this._addUser(ncData, user.nclocator).catch((error) => {
-          logServer(
-            `APPCLIENT - NEXTCLOUD - ERROR - _addUser - ${i18n.__('api.nextcloud.userAddError', { userId })}`,
-            levels.ERROR,
-            scopes.SYSTEM,
-            {
-              userData: ncData,
-              userId,
-              ncURL: user.nclocator,
-              error: error.reason || error.message,
-            },
-          );
-        });
-      }
+      return false;
     }
+    const resExists = await this.userExists(user.username, user.nclocator);
+    if (resExists === false) {
+      const ncData = {
+        userid: user.username,
+        password: '',
+        email: user.emails ? user.emails[0].address : '',
+        displayName: `${user.firstName} ${user.lastName}`,
+        language: user.language,
+      };
+      return this._addUser(ncData, user.nclocator).catch((error) => {
+        logServer(
+          `APPCLIENT - NEXTCLOUD - ERROR - addUser - ${i18n.__('api.nextcloud.userAddError', { userId })}`,
+          levels.ERROR,
+          scopes.SYSTEM,
+          {
+            userData: ncData,
+            userId,
+            ncURL: user.nclocator,
+            error: error.reason || error.message,
+          },
+        );
+        return false;
+      });
+    }
+    logServer(
+      `APPCLIENT - NEXTCLOUD - addUser - ${i18n.__('api.nextcloud.userAlreadyExists', { username: user.username })}`,
+      levels.INFO,
+      scopes.SYSTEM,
+      {
+        username: user.username,
+        ncURL: user.nclocator,
+      },
+    );
+    return true;
   }
 
   async _addUser(userData, ncURL) {
@@ -593,18 +604,19 @@ class NextcloudClient {
           ncURL,
         },
       );
-    } else {
-      logServer(
-        `APPCLIENT - NEXTCLOUD - _addUser - ${i18n.__('api.nextcloud.userAddError', { userId })}`,
-        levels.ERROR,
-        scopes.SYSTEM,
-        {
-          userData,
-          userId,
-          ncURL,
-        },
-      );
+      return true;
     }
+    logServer(
+      `APPCLIENT - NEXTCLOUD - _addUser - ${i18n.__('api.nextcloud.userAddError', { userId })}`,
+      levels.ERROR,
+      scopes.SYSTEM,
+      {
+        userData,
+        userId,
+        ncURL,
+      },
+    );
+    return false;
   }
 }
 

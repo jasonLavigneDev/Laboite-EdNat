@@ -3,6 +3,11 @@ import { Accounts } from 'meteor/accounts-base';
 import i18n from 'meteor/universe:i18n';
 import { findStructureByEmail } from '../users';
 import logServer, { levels, scopes } from '../../logging';
+import NextcloudClient from '../../appclients/nextcloud';
+
+const nextcloudPlugin = Meteor.settings.public.groupPlugins.nextcloud;
+let nextClient = null;
+if (nextcloudPlugin && nextcloudPlugin.enable) nextClient = new NextcloudClient();
 
 export default async function createUser(req, content) {
   // sample use:
@@ -37,7 +42,25 @@ export default async function createUser(req, content) {
       const structure = findStructureByEmail(content.email);
       if (structure) userData.structure = structure._id;
       try {
-        Meteor.users.insert(userData);
+        const userId = Meteor.users.insert(userData);
+        // create user on nextcloud server
+        if (nextClient) {
+          return nextClient
+            .addUser(userId)
+            .then((resp) => {
+              if (resp === true) return { response: 'user created' };
+              throw new Meteor.Error(
+                'restapi.users.createuser.nextcloudError',
+                `Error encountered while creating user ${content.username} on nextcloud server`,
+              );
+            })
+            .catch(() => {
+              throw new Meteor.Error(
+                'restapi.users.createuser.nextcloudError',
+                `Error encountered while creating user ${content.username} on nextcloud server`,
+              );
+            });
+        }
       } catch (err) {
         logServer(
           `USERS - REST - ERROR - createUser - ${i18n.__('api.users.insertError', { user: content.username })}`,

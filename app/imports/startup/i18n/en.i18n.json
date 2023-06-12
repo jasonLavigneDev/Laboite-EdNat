@@ -376,6 +376,7 @@
       "adminRankNeeded": "You must be admin",
       "urlAlreadyExists": "URL already exists",
       "addUserError": "Error, could not create user in Nextcloud",
+      "userAlreadyExists": "User {$username} already exists in Nextcloud",
       "circlesInactive": "ERROR, make sure 'Circles' application is active",
       "userAdded": "user {$userId} added (server {$ncURL})",
       "userAddError": "ERROR adding user {$userId}",
