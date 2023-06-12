@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 // eslint-disable-next-line no-restricted-imports
-import { Button, Input, InputLabel, Typography, Select, MenuItem, FormControl } from '@mui/material';
+import { Button, Input, InputLabel, Typography, Select, MenuItem, FormControl, IconButton } from '@mui/material';
 import PropTypes from 'prop-types';
 import ReactQuill from 'react-quill';
+import CloseIcon from '@mui/icons-material/Close';
 import { CustomToolbarArticle } from '../system/CustomQuill';
 import { quillOptions } from './InfoEditionComponent';
 import { useAppContext } from '../../contexts/context';
 
-export const AdminMessageForm = ({ createMessage, initialMessage, isOnUpdateMessage, updateMessage }) => {
+export const AdminMessageForm = ({ createMessage, initialMessage, isOnUpdateMessage, updateMessage, closeModal }) => {
   const today = new Date();
   const defaultDaysOfValidity = 10;
   const defaultExpiration = new Date(today.setDate(today.getDate() + defaultDaysOfValidity));
@@ -32,6 +33,7 @@ export const AdminMessageForm = ({ createMessage, initialMessage, isOnUpdateMess
       if (isOnUpdateMessage) {
         const updatedMessage = { ...initialMessage, content, expirationDate, language };
         updateMessage(updatedMessage);
+        closeModal();
         msg.success('Information mise à jour avec succès');
       } else {
         const newMessage = {
@@ -40,6 +42,7 @@ export const AdminMessageForm = ({ createMessage, initialMessage, isOnUpdateMess
           expirationDate: new Date(expirationDate),
         };
         createMessage(newMessage);
+        closeModal();
         msg.success('Information créée avec succès');
       }
       setLanguage('fr');
@@ -60,8 +63,13 @@ export const AdminMessageForm = ({ createMessage, initialMessage, isOnUpdateMess
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', width: '45%', gap: '1vh' }}>
-      <Typography variant="h5">{title}</Typography>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '3vh', padding: '2vh 2vw' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Typography variant="h5">{title}</Typography>
+        <IconButton onClick={closeModal}>
+          <CloseIcon fontSize="large" />
+        </IconButton>
+      </div>
       <form style={{ display: 'flex', gap: '1vh', flexDirection: 'column' }}>
         <FormControl fullWidth>
           <InputLabel id="demo-simple-select-label">Language</InputLabel>
@@ -99,9 +107,14 @@ export const AdminMessageForm = ({ createMessage, initialMessage, isOnUpdateMess
             setExpirationDate(e.target.value);
           }}
         />
-        <Button variant="contained" onClick={handleSubmit} style={{ width: '10vw', marginTop: '2vh' }}>
-          {action}
-        </Button>
+        <div style={{ display: 'flex', gap: '1vw' }}>
+          <Button variant="contained" onClick={closeModal} style={{ width: '10vw', marginTop: '2vh' }}>
+            Annuler
+          </Button>
+          <Button variant="contained" onClick={handleSubmit} style={{ width: '10vw', marginTop: '2vh' }}>
+            {action}
+          </Button>
+        </div>
       </form>
     </div>
   );
@@ -112,6 +125,7 @@ AdminMessageForm.propTypes = {
   updateMessage: PropTypes.func,
   isOnUpdateMessage: PropTypes.bool,
   initialMessage: PropTypes.object,
+  closeModal: PropTypes.func,
 };
 
 AdminMessageForm.defaultProps = {
@@ -123,4 +137,5 @@ AdminMessageForm.defaultProps = {
     expirationDate: undefined,
     language: 'fr',
   },
+  closeModal: undefined,
 };

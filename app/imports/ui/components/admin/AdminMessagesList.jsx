@@ -18,10 +18,10 @@ export const AdminMessagesList = ({ messages, deleteMessage, selectMessageLangua
         overflow: 'scroll',
         overflowX: 'hidden',
         gap: '1vh',
-        width: '50%',
+        width: '100%',
       }}
     >
-      <FormControl sx={{ width: '83%', paddingBottom: '1vh', marginTop: '1vh' }}>
+      <FormControl sx={{ width: '92%', paddingBottom: '1vh', marginTop: '1vh' }}>
         <InputLabel id="demo-simple-select-label">langue des messages</InputLabel>
         <Select
           labelId="demo-simple-select-label"
@@ -43,21 +43,36 @@ export const AdminMessagesList = ({ messages, deleteMessage, selectMessageLangua
             sx={{
               display: 'flex',
               flexDirection: 'column',
-              width: '30vw',
               marginBottom: '1vh',
               padding: '1vh 2vw',
               border: '1px solid rgba(0,0,0,0.2)',
               borderRadius: '20px',
+              width: '66vw',
             }}
           >
-            <p style={{ height: '1vh' }}>Crée le : {message?.createdAt?.toLocaleDateString()}</p>
-            <p style={{ height: '1vh' }}>Mis a jour le : {message?.updatedAt?.toLocaleDateString()}</p>
-            <p>Expire le : {message?.expirationDate?.toLocaleDateString()}</p>
-            <p>Langue du message : {message?.language}</p>
             {message.structureId.length ? (
               <Chip style={{ width: '40%' }} label="Ma super structure" color="primary" />
             ) : null}
-            <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(message?.content) }} />
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(message?.content) }} />
+
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  minWidth: '10vw',
+                  border: '1px solid black',
+                  borderRadius: '15px',
+                  padding: '1vh 1vw',
+                  maxHeight: '11.5vh',
+                }}
+              >
+                <span>Crée le : {message?.createdAt?.toLocaleDateString()}</span>
+                <span>Mis a jour le : {message?.updatedAt?.toLocaleDateString()}</span>
+                <span>Expire le : {message?.expirationDate?.toLocaleDateString()}</span>
+                <span>Langue du message : {message?.language}</span>
+              </div>
+            </div>
             <div style={{ display: 'flex', justifyContent: 'center', gap: '1vw' }}>
               <Button variant="contained" onClick={() => selectMessageToUpdate(message._id)}>
                 Modifier le message

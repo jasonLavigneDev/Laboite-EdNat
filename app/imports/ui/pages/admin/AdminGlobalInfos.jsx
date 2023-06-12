@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import Divider from '@mui/material/Divider';
 import Paper from '@mui/material/Paper';
+import Modal from '@mui/material/Modal';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import AddBox from '@mui/icons-material/AddBox';
 
 import { AdminMessageForm } from '../../components/admin/AdminMessagesForm';
 import { AdminMessagesList } from '../../components/admin/AdminMessagesList';
@@ -9,6 +12,7 @@ const AdminGlobalInfos = () => {
   const [messages, setMessages] = useState([]);
   const [messageToUpdate, setMessageToUpdate] = useState();
   const [isOnUpdateMessage, setIsOnUpdateMessage] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
 
   const keysOfMessageToUpdate = {
     content: messageToUpdate?.content,
@@ -82,6 +86,7 @@ const AdminGlobalInfos = () => {
   };
 
   const selectMessageToUpdate = (messageId) => {
+    setOpenModal(true);
     const messageOnUpdate = messages.find((message) => message._id === messageId);
     setMessageToUpdate(messageOnUpdate);
     setIsOnUpdateMessage(true);
@@ -91,25 +96,41 @@ const AdminGlobalInfos = () => {
     <Paper
       style={{
         display: 'flex',
-        flexDirection: 'row',
+        flexDirection: 'column',
         padding: '2vh 2vw',
         margin: '0 5vw',
-        justifyContent: 'space-between',
       }}
     >
-      <AdminMessageForm
-        createMessage={createMessage}
-        initialMessage={keysOfMessageToUpdate}
-        isOnUpdateMessage={isOnUpdateMessage}
-        updateMessage={updateMessage}
-      />
-      <Divider orientation="vertical" flexItem />
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <Typography variant="h4"> Créer une info </Typography>
+        <IconButton onClick={() => setOpenModal(!openModal)}>
+          <AddBox fontSize="large" />
+        </IconButton>
+      </div>
       <AdminMessagesList
         messages={messages}
         deleteMessage={deleteMessage}
         selectMessageLanguage={selectMessageLanguage}
         selectMessageToUpdate={selectMessageToUpdate}
       />
+      <Modal
+        open={openModal}
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Paper sx={{ display: 'flex' }}>
+          <AdminMessageForm
+            createMessage={createMessage}
+            initialMessage={keysOfMessageToUpdate}
+            isOnUpdateMessage={isOnUpdateMessage}
+            updateMessage={updateMessage}
+            closeModal={() => setOpenModal(false)}
+          />
+        </Paper>
+      </Modal>
     </Paper>
   );
 };

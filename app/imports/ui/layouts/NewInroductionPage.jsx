@@ -53,11 +53,11 @@ export const NewIntroductionPage = () => {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        justifyContent: 'center',
         maxHeight: '',
         overflow: 'hidden',
         overflowX: 'hidden',
         gap: '1vh',
-        width: '80%',
       }}
     >
       {messages
@@ -67,19 +67,35 @@ export const NewIntroductionPage = () => {
             key={message._id}
             sx={{
               display: 'flex',
-              flexDirection: 'column',
+              flexDirection: 'row',
               width: '60vw',
               marginBottom: '1vh',
               padding: '1vh 2vw',
               border: '1px solid rgba(0,0,0,0.2)',
               borderRadius: '20px',
+              justifyContent: 'space-between',
             }}
           >
-            <p style={{ textAlign: 'end', height: '1vh' }}>Crée le : {message?.createdAt?.toLocaleDateString()}</p>
+            {/* <p style={{ textAlign: 'end', height: '1vh' }}>Crée le : {message?.createdAt?.toLocaleDateString()}</p> */}
             {message.structureId.length ? (
               <Chip style={{ width: '40%' }} label="Ma super structure" color="primary" />
             ) : null}
             <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(message?.content) }} />
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                minWidth: '5.5vw',
+                border: '2px solid blue',
+                borderRadius: '15px',
+                padding: '1vh 1vw',
+                maxHeight: '5vh',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <span>{message?.updatedAt?.toLocaleDateString()}</span>
+            </div>
           </Paper>
         ))}
     </div>
