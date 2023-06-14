@@ -106,11 +106,10 @@ const AdminUsersPage = ({ match: { path } }) => {
   const structure = useStructure();
 
   const [selectedStructureId, setSelectedStructureId] = useState(structure && structure._id ? structure._id : '');
-  const {
-    loading: structuresLoading,
-    selectedStructure,
-    structures,
-  } = useAdminSelectedStructure({ selectedStructureId, setSelectedStructureId });
+  const { loading: structuresLoading, structures } = useAdminSelectedStructure({
+    selectedStructureId,
+    setSelectedStructureId,
+  });
 
   // variables depending on the admin page we're in
 
@@ -304,9 +303,9 @@ const AdminUsersPage = ({ match: { path } }) => {
             <Grid container spacing={4}>
               <Grid item md={12}>
                 <Typography variant={isMobile ? 'h6' : 'h4'}>
-                  {`${i18n.__('pages.AdminUsersPage.title')} ${
-                    (isStructureSpecific && selectedStructure && selectedStructure._id && selectedStructure.name) || ''
-                  } (${total})`}
+                  {`${i18n.__(
+                    isStructureSpecific ? 'components.AdminMenu.menuAdminStructureUsers' : 'pages.AdminUsersPage.title',
+                  )} (${total})`}
                 </Typography>
               </Grid>
               {isStructureSpecific && (

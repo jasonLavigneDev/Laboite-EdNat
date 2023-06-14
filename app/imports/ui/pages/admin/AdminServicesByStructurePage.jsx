@@ -47,7 +47,7 @@ const AdminServicesByStructurePage = () => {
   }, [selectedStructureId, selectedStructureId != null]);
 
   const urlStruct = 'structure';
-  const title = `${i18n.__('pages.AdminServicesPage.title')} ${selectedStructure.name} (${services.length})`;
+  const title = `${i18n.__('pages.AdminServicesPage.title')} (${services.length})`;
   const urlNew = `/admin/${urlStruct}services/new/${selectedStructure._id}`;
 
   return (
@@ -59,8 +59,7 @@ const AdminServicesByStructurePage = () => {
           <Grid container spacing={12}>
             <Grid item md={12}>
               <Typography variant={isMobile ? 'h6' : 'h4'}>
-                {i18n.__('pages.AdminServicesByStructurePage.title')}{' '}
-                {selectedStructure && selectedStructure._id && selectedStructure.name}
+                {i18n.__('pages.AdminServicesByStructurePage.title')}
               </Typography>
             </Grid>
             <Grid item md={12} className={classes.marginTop}>
