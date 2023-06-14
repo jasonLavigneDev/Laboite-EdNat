@@ -13,8 +13,10 @@
     "lint": "eslint . --ext js,jsx",
     "lintfix": "eslint --fix . --ext js,jsx",
     "visualize": "meteor --production --extra-packages bundle-visualizer --settings ../config/settings.development.json",
+    "init-npm": "rm -rf node_modules && rm -f package-lock.json && npm upgrade && npm i",
+    "preinstall": "npx npm-force-resolutions",
     "prepare": "cd .. && npx husky install",
-    "init-npm": "rm -rf node_modules && rm -f package-lock.json && npm upgrade && npm i"
+    "serve-widget": "serve private/widget --listen 4000"
   },
   "dependencies": {
     "@babel/runtime": "^7.21.5",
@@ -78,6 +80,7 @@
     "slugify": "^1.6.5",
     "sortablejs": "^1.15.0",
     "tss-react": "^3.7.1",
+    "uuid": "^9.0.0",
     "validate.js": "^0.13.1",
     "webrtc-adapter": "^7.7.1",
     "winston": "^3.8.2",
@@ -115,7 +118,9 @@
     "eslint-plugin-standard": "^4.1.0",
     "husky": "^7.0.4",
     "jscpd": "^3.5.9",
-    "prettier": "^2.8.8"
+    "npm-force-resolutions": "0.0.10",
+    "prettier": "^2.8.8",
+    "serve": "^14.2.0"
   },
   "overrides": {
     "axios": "^1.3.4"
