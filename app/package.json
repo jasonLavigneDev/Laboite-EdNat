@@ -14,7 +14,6 @@
     "lintfix": "eslint --fix . --ext js,jsx",
     "visualize": "meteor --production --extra-packages bundle-visualizer --settings ../config/settings.development.json",
     "init-npm": "rm -rf node_modules && rm -f package-lock.json && npm upgrade && npm i",
-    "preinstall": "npx npm-force-resolutions",
     "prepare": "cd .. && npx husky install",
     "serve-widget": "serve private/widget --listen 4000"
   },
@@ -118,7 +117,6 @@
     "eslint-plugin-standard": "^4.1.0",
     "husky": "^7.0.4",
     "jscpd": "^3.5.9",
-    "npm-force-resolutions": "0.0.10",
     "prettier": "^2.8.8",
     "serve": "^14.2.0"
   },
