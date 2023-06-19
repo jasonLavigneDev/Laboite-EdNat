@@ -104,7 +104,7 @@ const TabbedNotificationsDisplay = () => {
         </Typography>
       ) : (
         <div className={classes.footer}>
-          <Button onClick={handleRemoveAll} className={classes.button}>
+          <Button onClick={handleRemoveAll} variant="contained">
             {i18n.__('components.TabbedNotificationsDisplay.removeAll')}
           </Button>
         </div>
