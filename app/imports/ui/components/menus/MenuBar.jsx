@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import i18n from 'meteor/universe:i18n';
 import { useLocation, useHistory } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
@@ -53,11 +53,20 @@ const useStyles = makeStyles()((theme, mobile) => ({
   },
 }));
 
+export const usePageChange = () => {
+  const history = useHistory();
+
+  return useCallback((link) => {
+    updateDocumentTitle(i18n.__(`components.MenuBar.${link.content}`));
+    history.push(link.path);
+  }, []);
+};
+
 const MenuBar = ({ mobile }) => {
   const { pathname } = useLocation();
   const [{ user }] = useAppContext();
-  const history = useHistory();
   const { classes } = useStyles(mobile);
+  const handleClick = usePageChange();
 
   const links = [
     {
@@ -77,7 +86,29 @@ const MenuBar = ({ mobile }) => {
       contentMobile: 'menuMyspaceMobile',
       icon: <HomeIcon />,
       hidden: false,
+      props: {
+        'data-tour-id': 'mySpace',
+      },
     },
+    {
+      path: '/groups',
+      content: 'menuGroupes',
+      contentMobile: 'menuGroupesMobile',
+      icon: <GroupIcon />,
+      hidden: disabledFeatures.groups,
+    },
+    {
+      path: '/services',
+      content: 'menuServices',
+      contentMobile: 'menuServicesMobile',
+      icon: <AppsIcon />,
+      hidden: false,
+      tooltip: 'tooltipServices',
+      props: {
+        'data-tour-id': 'services',
+      },
+    },
+
     {
       path: '/publications',
       content: 'menuArticles',
@@ -92,26 +123,14 @@ const MenuBar = ({ mobile }) => {
       icon: <BusinessIcon />,
       hidden: false,
       tooltip: 'tooltipStructure',
+      props: {
+        'data-tour-id': 'structure',
+      },
     },
     {
       path: '/divider2',
       separator: true,
       hidden: false,
-    },
-    {
-      path: '/services',
-      content: 'menuServices',
-      contentMobile: 'menuServicesMobile',
-      icon: <AppsIcon />,
-      hidden: false,
-      tooltip: 'tooltipServices',
-    },
-    {
-      path: '/groups',
-      content: 'menuGroupes',
-      contentMobile: 'menuGroupesMobile',
-      icon: <GroupIcon />,
-      hidden: disabledFeatures.groups,
     },
   ];
   const T = i18n.createComponent('components.MenuBar');
@@ -143,10 +162,6 @@ const MenuBar = ({ mobile }) => {
       'aria-controls': `scrollable-force-tabpanel-${index}`,
     };
   }
-  const handleClick = (link) => {
-    updateDocumentTitle(i18n.__(`components.MenuBar.${link.content}`));
-    history.push(link.path);
-  };
 
   const initIndicator = (actions) => {
     if (actions) {
@@ -184,6 +199,7 @@ const MenuBar = ({ mobile }) => {
           />
         ) : (
           <Tab
+            {...(link.props ?? {})}
             {...a11yProps(index)}
             key={link.path}
             value={link.path}

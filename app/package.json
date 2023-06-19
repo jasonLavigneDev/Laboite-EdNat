@@ -54,6 +54,8 @@
     "glob": "^8.0.3",
     "html2canvas": "^1.4.1",
     "html2pdf.js": "^0.10.1",
+    "intro.js": "^6.0.0",
+    "intro.js-react": "^0.7.1",
     "jspdf": "^2.5.1",
     "lodash.debounce": "^4.0.8",
     "mail": "^0.2.3",
@@ -100,6 +102,7 @@
   },
   "devDependencies": {
     "@meteorjs/eslint-config-meteor": "^1.0.5",
+    "@types/intro.js": "^5.1.0",
     "@types/meteor": "^2.7.1",
     "babel-eslint": "^10.1.0",
     "eslint": "^7.32.0",
