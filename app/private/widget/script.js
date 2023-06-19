@@ -289,6 +289,41 @@
     return false;
   };
 
+  container.ondrop = function handleDrop(e) {
+    // Prevent default behavior (Prevent file from being opened)
+    e.preventDefault();
+
+    /**
+     * @type {File[]}
+     */
+    const files = [];
+
+    if (e.dataTransfer.items) {
+      // Use DataTransferItemList interface to access the file(s)
+      [...e.dataTransfer.items].forEach((item) => {
+        // If dropped items aren't files, reject them
+        if (item.kind === 'file') {
+          files.push(item.getAsFile());
+        }
+      });
+    } else {
+      // Use DataTransfer interface to access the file(s)
+      [...e.dataTransfer.files].forEach((file) => {
+        files.push(file);
+      });
+    }
+
+    iframeContainer.contentWindow.postMessage({ type: 'widget', event: 'upload', files }, '*');
+    openRizimo();
+    toggleFullscreen(true);
+    openButton.classList.remove('dropping');
+  };
+
+  container.ondragover = function handleDragOver(e) {
+    // Prevent default behavior (Prevent file from being opened)
+    e.preventDefault();
+  };
+
   container.ondragenter = function handleDragEnter() {
     openButton.classList.add('dropping');
     // iframeContainer.style.pointerEvents = 'all';

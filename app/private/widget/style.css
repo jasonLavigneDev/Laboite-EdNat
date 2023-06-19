@@ -60,6 +60,11 @@
   transform: scale(1.2);
 }
 
+.lb_container .lb_widget.dropping {
+  transform: scale(1.2);
+  background: red;
+}
+
 .lb_container.closed .lb_widget-container {
   /* display: none; */
   opacity: 0;
