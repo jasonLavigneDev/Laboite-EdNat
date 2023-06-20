@@ -1,6 +1,7 @@
 import sys
 import os
 from faker import Faker
+import random
 from pymongo import MongoClient
 from random import randint, choice, choices, sample
 from keycloak import KeycloakAdmin
@@ -138,16 +139,31 @@ def getRandomStructure():
 
 
 def addUserToStructureGroup(idDB, structureID):
-    structure = db['structures'].find({"_id": structureID})
+    structure = db['structures'].find_one({"_id": structureID})
     if(structure != None):
-        group = db['groups'].find({"_id": structure["groupId"]})
+        group = db['groups'].find_one({"_id": structure["groupId"]})
         if(group != None):
             members = group['members']
             user = db['users'].find_one({"_id": idDB})
             if(user != None):
-                members.push(user)
+                members.append(user)
                 db['groups'].update_one({"_id": group["_id"]}, {
                                         "$set": {"members": members}})
+
+                favgroups = user["favGroups"]
+                favgroups.append(group["_id"])
+                db['users'].update_one(
+                    {"_id": idDB}, {"$set": {"favGroups": favgroups}})
+
+                item = {"type": "group", "element_id": group["_id"]}
+
+                persoSpace = {
+                    "_id": generateID(),
+                    "userId": idDB,
+                    "unsorted": [item],
+                    "sorted": []
+                }
+                db['personalspaces'].insert_one(persoSpace)
 
 
 def execUserGenerator(id):
@@ -156,8 +172,6 @@ def execUserGenerator(id):
 
     firstname = name.split(' ')[0]
     lastname = name.split(' ')[1]
-
-    print(mail)
 
     emails = [{"address": mail, "verified": True}]
 
@@ -175,6 +189,7 @@ def execUserGenerator(id):
             "structure": structure,
             "firstName": firstname,
             "lastName": lastname,
+            "favGroups": [],
             "isActive": True
         }
         print("Create user: {}".format(entry["username"]))
