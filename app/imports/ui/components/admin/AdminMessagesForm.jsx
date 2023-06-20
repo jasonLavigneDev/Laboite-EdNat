@@ -9,9 +9,10 @@ import { quillOptions } from './InfoEditionComponent';
 import { useAppContext } from '../../contexts/context';
 
 export const AdminMessageForm = ({ createMessage, initialMessage, isOnUpdateMessage, updateMessage, closeModal }) => {
+  const DEFAULT_VALIDITY_MESSAGE_IN_DAYS = 10;
   const today = new Date();
-  const defaultDaysOfValidity = 10;
-  const defaultExpiration = new Date(today.setDate(today.getDate() + defaultDaysOfValidity));
+  const defaultExpiration = new Date(today.setDate(today.getDate() + DEFAULT_VALIDITY_MESSAGE_IN_DAYS));
+
   const [{ language: userLanguage }] = useAppContext();
 
   const [content, setContent] = useState();
@@ -23,7 +24,7 @@ export const AdminMessageForm = ({ createMessage, initialMessage, isOnUpdateMess
   useEffect(() => {
     setContent(initialMessage?.content || '');
     setExpirationDate(initialMessage?.expirationDate || defaultExpiration.toISOString().slice(0, 10));
-    setLanguage(initialMessage?.language || 'fr');
+    setLanguage(initialMessage?.language || userLanguage);
   }, [initialMessage]);
 
   const handleSubmit = (e) => {
