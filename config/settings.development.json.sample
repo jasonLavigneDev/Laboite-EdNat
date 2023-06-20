@@ -15,11 +15,12 @@
       "introductionTab": false,
       "introductionTabStructuresInfos": true,
       "menuAdminDefaultSpaces": true,  // THIS PARAMS IS SET FOR HIDDEN DEFAULTSPACE FUNCTIONNALITY WHICH DOESN'T WORK
-      "mediaStorageMenu": false
+      "mediaStorageMenu": false,
     },
     "ui": {
       "defaultGridViewMode": "compact",
-      "isBusinessRegroupingMode": false
+      "isBusinessRegroupingMode": false,
+      "feedbackLink": ""
     },
     "matomo": {
       "siteId": 1,
