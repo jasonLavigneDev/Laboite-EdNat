@@ -131,6 +131,25 @@ def execStructureGenerator():
         print("=============================================")
 
 
+def getRandomStructure():
+    allStructures = db['structures'].find()
+    rand = random.randrange(db['structures'].count_documents({}))
+    return allStructures[rand]["_id"]
+
+
+def addUserToStructureGroup(idDB, structureID):
+    structure = db['structures'].find({"_id": structureID})
+    if(structure != None):
+        group = db['groups'].find({"_id": structure["groupId"]})
+        if(group != None):
+            members = group['members']
+            user = db['users'].find_one({"_id": idDB})
+            if(user != None):
+                members.push(user)
+                db['groups'].update_one({"_id": group["_id"]}, {
+                                        "$set": {"members": members}})
+
+
 def execUserGenerator(id):
     name = fake.name()
     mail = name.replace(' ', '.') + '_' + str(id) + '@ac-test.fr'
@@ -145,9 +164,11 @@ def execUserGenerator(id):
     structure = getRandomStructure()
 
     user = db['users'].find_one({"username": mail})
+
+    idDB = generateID()
     if user == None:
         entry = {
-            "_id": generateID(),
+            "_id": idDB,
             "username": mail,
             "emails": emails,
             "password": "123",
@@ -158,6 +179,8 @@ def execUserGenerator(id):
         }
         print("Create user: {}".format(entry["username"]))
         db['users'].insert_one(entry)
+
+        addUserToStructureGroup(idDB, structure)
 
         new_user = keycloak_admin.create_user({"email": mail,
                                                "username": mail,
@@ -181,7 +204,7 @@ nb = int(sys.argv[1])
 #     keycloak_admin.delete_group(gr['id'])
 
 
-execStructureGenerator()
+# execStructureGenerator()
 
-# for i in range(0, nb):
-#    execUserGenerator(i)
+for i in range(0, nb):
+    execUserGenerator(i)
