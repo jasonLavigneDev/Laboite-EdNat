@@ -7,3 +7,4 @@
 cd app
 npm run lint ./
 npx jscpd
+npm run check-lang
