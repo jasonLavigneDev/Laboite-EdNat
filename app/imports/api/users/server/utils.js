@@ -22,7 +22,7 @@ const queryUsers = (search, userType, fieldsToSearch, initialQuery) => {
   const regexes = search
     .split(' ')
     .filter(Boolean)
-    .map((term) => new RegExp(`^${term}`, 'i'));
+    .map((term) => new RegExp(`^.*${term}.*$`, 'i'));
 
   if (userType !== 'all') {
     const userIds = getAdminIds(userType);
