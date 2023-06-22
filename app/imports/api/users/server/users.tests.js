@@ -37,6 +37,7 @@ import {
   getUsersAdmin,
   getUsersByStructure,
   acceptAwaitingStructure,
+  setLastGlobalInfoRead,
 } from './methods';
 import Groups from '../../groups/groups';
 import PersonalSpaces from '../../personalspaces/personalspaces';
@@ -1056,6 +1057,14 @@ describe('users', function () {
         assert.equal(res.data[0].emails[0].address, email);
 
         done();
+      });
+      describe('setLastGlobalInfoRead', function () {
+        it('update lastInfoRead when user arrive on introductionpage', function () {
+          const date = new Date();
+          setLastGlobalInfoRead._execute({ userId }, { lastGlobalInfoReadDate: new Date() });
+          const updatedUser = Meteor.users.findOne({ _id: userId });
+          assert.equal(date.getTime(), updatedUser.lastGlobalInfoReadDate.getTime());
+        });
       });
     });
   });
