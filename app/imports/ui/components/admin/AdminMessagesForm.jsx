@@ -59,10 +59,6 @@ export const AdminMessageForm = ({ createMessage, initialMessage, isOnUpdateMess
     setContent(strippedHTML);
   };
 
-  const handleChange = (e) => {
-    setLanguage(e.target.value);
-  };
-
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '3vh', padding: '2vh 2vw' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -80,7 +76,7 @@ export const AdminMessageForm = ({ createMessage, initialMessage, isOnUpdateMess
             value={language}
             label="language"
             placeholder="language"
-            onChange={handleChange}
+            onChange={(e) => setLanguage(e.target.value)}
           >
             <MenuItem value="fr">fr</MenuItem>
             <MenuItem value="en">en</MenuItem>
@@ -98,7 +94,7 @@ export const AdminMessageForm = ({ createMessage, initialMessage, isOnUpdateMess
           />
         </div>
 
-        <Typography variant="h6">date d expiration</Typography>
+        <Typography variant="h6">Date d expiration</Typography>
         <Input
           type="date"
           name=""

@@ -64,7 +64,7 @@ export const AdminMessagesList = ({ messages, deleteMessage, selectMessageLangua
                   border: '1px solid black',
                   borderRadius: '15px',
                   padding: '1vh 1vw',
-                  maxHeight: '11.5vh',
+                  height: 'max-content',
                 }}
               >
                 <span>Crée le : {message?.createdAt?.toLocaleDateString()}</span>

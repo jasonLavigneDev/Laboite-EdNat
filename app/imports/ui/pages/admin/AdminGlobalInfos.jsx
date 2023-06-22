@@ -92,6 +92,11 @@ const AdminGlobalInfos = () => {
     setIsOnUpdateMessage(true);
   };
 
+  const closeModal = () => {
+    setMessageToUpdate({});
+    setOpenModal(false);
+  };
+
   return (
     <Paper
       style={{
@@ -102,7 +107,7 @@ const AdminGlobalInfos = () => {
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center' }}>
-        <Typography variant="h4"> Créer une info </Typography>
+        <Typography variant="h4"> Creer un message d information générale </Typography>
         <IconButton onClick={() => setOpenModal(!openModal)}>
           <AddBox fontSize="large" />
         </IconButton>
@@ -127,7 +132,7 @@ const AdminGlobalInfos = () => {
             initialMessage={keysOfMessageToUpdate}
             isOnUpdateMessage={isOnUpdateMessage}
             updateMessage={updateMessage}
-            closeModal={() => setOpenModal(false)}
+            closeModal={closeModal}
           />
         </Paper>
       </Modal>

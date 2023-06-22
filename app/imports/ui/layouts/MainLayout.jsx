@@ -43,8 +43,6 @@ const NotificationsDisplay = lazy(() => import('../components/notifications/Noti
 const BookmarksPage = lazy(() => import('../pages/groups/BookmarksPage'));
 const StructureSelectionPage = lazy(() => import('../pages/system/StructureSelectionPage'));
 const TabbedNotificationsDisplay = lazy(() => import('../components/notifications/TabbedNotificationsDisplay'));
-const IntroductionPage = lazy(() => import('../pages/IntroductionPage'));
-
 const NewInroductionPage = lazy(() => import('./NewInroductionPage'));
 
 // dynamic imports
@@ -153,8 +151,6 @@ function MainLayout({ appsettings, ready }) {
                   user.structure ? (
                     <Switch>
                       <Route exact path="/" component={NewInroductionPage} />
-
-                      {/* <Route exact path="/" component={IntroductionPage} /> */}
                       <Route exact path="/personal" component={PersonalPage} />
                       <Route exact path="/profile" component={ProfilePage} />
                       <Route exact path="/contact" component={ContactPage} />
@@ -164,7 +160,7 @@ function MainLayout({ appsettings, ready }) {
                       <Route exact path="/help" component={HelpPage} />
 
                       {!disabledFeatures.introductionTab && (
-                        <Route exact path="/informations" component={IntroductionPage} />
+                        <Route exact path="/informations" component={NewInroductionPage} />
                       )}
 
                       {!disabledFeatures.blog && <Route exact path="/publications" component={ArticlesPage} />}
@@ -204,7 +200,7 @@ function MainLayout({ appsettings, ready }) {
                       <Route exact path="/profile" component={ProfilePage} />
                       <Route exact path="/profilestructureselection" component={StructureSelectionPage} />
                       {!disabledFeatures.introductionTab && (
-                        <Route exact path="/informations" component={IntroductionPage} />
+                        <Route exact path="/informations" component={NewInroductionPage} />
                       )}
                       {user.awaitingStructure ? (
                         <Route component={AwaitingStructureMessage} />
