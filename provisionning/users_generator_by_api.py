@@ -102,8 +102,8 @@ def createStructure(name, parentId):
                 {"name": name}, {"$set": {"groupId": groupDB["_id"]}})
 
 
-def execStructureGenerator():
-    for ac in range(0, 50):
+def execStructureGenerator(nb):
+    for ac in range(0, nb):
         name = 'academie {}'.format(ac)
         createStructure(name, 0)
         struc = db['structures'].find_one({"name": name})
@@ -211,15 +211,17 @@ def execUserGenerator(id):
 
 db = get_database()
 
-nb = int(sys.argv[1])
-
-
-# groups = keycloak_admin.get_groups()
+groups = keycloak_admin.get_groups()
 # for gr in groups:
+#     print("Remove group: {}".format(gr['id']))
 #     keycloak_admin.delete_group(gr['id'])
 
 
-# execStructureGenerator()
+nbStruc = int(sys.argv[1])
+nbUsers = int(sys.argv[2])
 
-for i in range(0, nb):
+
+execStructureGenerator(nbStruc)
+
+for i in range(0, nbUsers):
     execUserGenerator(i)
