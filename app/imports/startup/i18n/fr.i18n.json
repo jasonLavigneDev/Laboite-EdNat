@@ -485,10 +485,26 @@
       "language": "Selectionnez la langue à éditer",
       "language_fr": "Français",
       "language_en": "Anglais",
+      "language_all": "Toutes les langues",
       "content_introduction": "Texte d'introduction",
       "content_globalInfo": "Texte d'informations générales",
       "update": "Mettre à jour",
-      "cancel": "Annuler"
+      "cancel": "Annuler",
+      "due_date": "Durée de validité"
+    },
+    "AdminMesssage": {
+      "select_language": "Langue des messages",
+      "select_language_form": "Langue du message",
+      "button_modify": "Modifier le message",
+      "button_delete": "Supprimer le message",
+      "button_create": "Créer le message",
+      "create_info_success": "Information créée avec succès",
+      "update_info_success": "Information mise à jour avec succès",
+      "missing_content": "Le contenu du message est vide !",
+      "create_at": "Créé le :",
+      "update_at": "Mis à jour le :",
+      "expire_at": "Expire le :",
+      "no_message": "Aucun message"
     },
     "Notifications": {
       "remove": "Supprimer"

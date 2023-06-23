@@ -485,10 +485,26 @@
       "language": "Select the language to edit",
       "language_fr": "French",
       "language_en": "English",
+      "language_all": "All languages",
       "content_introduction": "Introduction text",
       "content_globalInfo": "General informations text",
       "update": "Update",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "due_date": "validity period"
+    },
+    "AdminMesssage": {
+      "select_language": "Message language",
+      "select_language_form": "Message language",
+      "button_modify": "Modify",
+      "button_delete": "Delete",
+      "button_create": "Create",
+      "create_info_success": "Information successfully created",
+      "update_info_success": "Information successfull updated",
+      "missing_content": "Missing content message !",
+      "create_at": "Create at :",
+      "update_at": "Update at :",
+      "expire_at": "Expire at :",
+      "no_message": "No message"
     },
     "Notifications": {
       "remove": "Remove"

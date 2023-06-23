@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import i18n from 'meteor/universe:i18n';
 // eslint-disable-next-line no-restricted-imports
 import { Button, Input, InputLabel, Typography, Select, MenuItem, FormControl, IconButton } from '@mui/material';
 import PropTypes from 'prop-types';
@@ -18,8 +19,12 @@ export const AdminMessageForm = ({ createMessage, initialMessage, isOnUpdateMess
   const [content, setContent] = useState();
   const [expirationDate, setExpirationDate] = useState();
   const [language, setLanguage] = useState(userLanguage);
-  const title = isOnUpdateMessage ? 'MODIFIER MESSAGE' : 'CREER MESSAGE';
-  const action = isOnUpdateMessage ? 'MODIFIER' : 'CREER ';
+  const title = isOnUpdateMessage
+    ? i18n.__('components.AdminMesssage.button_modify')
+    : i18n.__('components.AdminMesssage.button_create');
+  const action = isOnUpdateMessage
+    ? i18n.__('components.AdminMesssage.button_modify')
+    : i18n.__('components.AdminMesssage.button_create');
 
   useEffect(() => {
     setContent(initialMessage?.content || '');
@@ -35,7 +40,7 @@ export const AdminMessageForm = ({ createMessage, initialMessage, isOnUpdateMess
         const updatedMessage = { ...initialMessage, content, expirationDate, language };
         updateMessage(updatedMessage);
         closeModal();
-        msg.success('Information mise à jour avec succès');
+        msg.success(i18n.__('components.AdminMesssage.update_info_success'));
       } else {
         const newMessage = {
           language,
@@ -44,13 +49,13 @@ export const AdminMessageForm = ({ createMessage, initialMessage, isOnUpdateMess
         };
         createMessage(newMessage);
         closeModal();
-        msg.success('Information créée avec succès');
+        msg.success(i18n.__('components.AdminMesssage.create_info_success'));
       }
       setLanguage('fr');
       setContent('');
       setExpirationDate(defaultExpiration);
     } else {
-      msg.error('Le contenu du message est vide !');
+      msg.error(i18n.__('components.AdminMesssage.missing_content'));
     }
   };
 
@@ -69,17 +74,16 @@ export const AdminMessageForm = ({ createMessage, initialMessage, isOnUpdateMess
       </div>
       <form style={{ display: 'flex', gap: '1vh', flexDirection: 'column' }}>
         <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">Language</InputLabel>
+          <InputLabel id="select-langage">{i18n.__('components.AdminMesssage.select_language_form')}</InputLabel>
           <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
+            labelId="select-langage"
+            id="select-langage"
             value={language}
-            label="language"
-            placeholder="language"
+            label={i18n.__('components.AdminMesssage.select_language')}
             onChange={(e) => setLanguage(e.target.value)}
           >
-            <MenuItem value="fr">fr</MenuItem>
-            <MenuItem value="en">en</MenuItem>
+            <MenuItem value="fr">{i18n.__('components.InfoEditionComponent.language_fr')}</MenuItem>
+            <MenuItem value="en">{i18n.__('components.InfoEditionComponent.language_en')}</MenuItem>
           </Select>
         </FormControl>
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import i18n from 'meteor/universe:i18n';
 // eslint-disable-next-line no-restricted-imports
 import { Button, InputLabel, MenuItem, FormControl, Select, Paper, Chip } from '@mui/material';
 import sanitizeHtml from 'sanitize-html';
@@ -22,16 +23,17 @@ export const AdminMessagesList = ({ messages, deleteMessage, selectMessageLangua
       }}
     >
       <FormControl sx={{ width: '92%', paddingBottom: '1vh', marginTop: '1vh' }}>
-        <InputLabel id="demo-simple-select-label">langue des messages</InputLabel>
+        <InputLabel id="select-langage">{i18n.__('components.AdminMesssage.select_language')}</InputLabel>
         <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          label="langue des messages"
+          labelId="select-langage"
+          id="select-langage"
+          defaultValue="all"
+          label={i18n.__('components.AdminMesssage.select_language')}
           onChange={handleChangeMessageLanguage}
         >
-          <MenuItem value="all">all</MenuItem>
-          <MenuItem value="fr">fr</MenuItem>
-          <MenuItem value="en">en</MenuItem>
+          <MenuItem value="all">{i18n.__('components.InfoEditionComponent.language_all')}</MenuItem>
+          <MenuItem value="fr">{i18n.__('components.InfoEditionComponent.language_fr')}</MenuItem>
+          <MenuItem value="en">{i18n.__('components.InfoEditionComponent.language_en')}</MenuItem>
         </Select>
       </FormControl>
 
@@ -67,18 +69,27 @@ export const AdminMessagesList = ({ messages, deleteMessage, selectMessageLangua
                   height: 'max-content',
                 }}
               >
-                <span>Crée le : {message?.createdAt?.toLocaleDateString()}</span>
-                <span>Mis a jour le : {message?.updatedAt?.toLocaleDateString()}</span>
-                <span>Expire le : {message?.expirationDate?.toLocaleDateString()}</span>
-                <span>Langue du message : {message?.language}</span>
+                <span>
+                  {i18n.__('components.AdminMesssage.create_at')} {message?.createdAt?.toLocaleDateString()}
+                </span>
+                <span>
+                  {i18n.__('components.AdminMesssage.update_at')} {message?.updatedAt?.toLocaleDateString()}
+                </span>
+                <span>
+                  {i18n.__('components.AdminMesssage.expire_at')}
+                  {message?.expirationDate?.toLocaleDateString()}
+                </span>
+                <span>
+                  {i18n.__('components.AdminMesssage.select_language_form')}: {message?.language}
+                </span>
               </div>
             </div>
             <div style={{ display: 'flex', justifyContent: 'center', gap: '1vw' }}>
               <Button variant="contained" onClick={() => selectMessageToUpdate(message._id)}>
-                Modifier le message
+                {i18n.__('components.AdminMesssage.button_modify')}
               </Button>
               <Button variant="contained" onClick={() => deleteMessage(message._id)}>
-                Supprimer le message
+                {i18n.__('components.AdminMesssage.button_delete')}
               </Button>
             </div>
           </Paper>

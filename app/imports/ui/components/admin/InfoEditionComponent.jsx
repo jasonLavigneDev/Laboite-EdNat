@@ -157,7 +157,7 @@ const InfoEditionComponent = ({ tabkey, data = [] }) => {
         <CustomToolbarArticle />
         <ReactQuill id="content" value={content || ''} onChange={onUpdateRichText} {...quillOptions} />
       </div>
-      <InputLabel htmlFor="content">Durée de validité</InputLabel>
+      <InputLabel htmlFor="content">{i18n.__('components.InfoEditionComponent.due_date')}</InputLabel>
       <TextField type="number" style={{ width: '50%' }} />
       {changes && (
         <div className={classes.buttonGroup}>
