@@ -43,6 +43,7 @@ const AdminStructureSettingsPage = lazy(() => import('../pages/admin/AdminStruct
 const AdminStructureUsersValidationPage = lazy(() => import('../pages/admin/AdminStructureUsersValidationPage'));
 const AdminStructureDefaultSpace = lazy(() => import('../pages/admin/AdminStructureDefaultSpace'));
 const AdminAsamExtensionsManagementPage = lazy(() => import('../pages/admin/AdminAsamExtensionsManagementPage'));
+const AdminGlobalInfos = lazy(() => import('../pages/admin/AdminGlobalInfos'));
 
 const { disabledFeatures = {} } = Meteor.settings.public;
 
@@ -163,6 +164,13 @@ function AdminLayout() {
                       exact
                       path="/admin/settings"
                       component={AdminSettingsPage}
+                    />
+                    <AdminRoute
+                      userId={userId}
+                      loadingUser={loadingUser}
+                      exact
+                      path="/admin/globalinfos"
+                      component={AdminGlobalInfos}
                     />
                     {!disabledFeatures.groups && (
                       <AdminRoute

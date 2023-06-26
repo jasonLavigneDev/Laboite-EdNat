@@ -68,6 +68,7 @@ function App() {
             )}
             <ProtectedRoute exact path="/logout" component={Logout} {...state} />
             <Route exact path="/legal/:legalKey" component={LegalPage} />
+
             {!userId && <Route exact path="/contact" component={SignLayout} {...state} />}
             <ProtectedRoute
               path="/admin"

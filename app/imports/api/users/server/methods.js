@@ -1341,6 +1341,24 @@ export const setLanguage = new ValidatedMethod({
   },
 });
 
+export const setLastGlobalInfoRead = new ValidatedMethod({
+  name: 'users.setLastGlobalInfoRead',
+  validate: new SimpleSchema({
+    lastGlobalInfoReadDate: { type: Date },
+  }).validator(),
+
+  run({ lastGlobalInfoReadDate }) {
+    console.log('lastGlobalInfoReadDate', lastGlobalInfoReadDate);
+    if (!this.userId) {
+      throw new Meteor.Error('api.users.setLanguage.notPermitted', i18n.__('api.users.mustBeLoggedIn'));
+    }
+
+    Meteor.users.update(this.userId, {
+      $set: { lastGlobalInfoReadDate },
+    });
+  },
+});
+
 export const setLogoutType = new ValidatedMethod({
   name: 'users.setLogoutType',
   validate: new SimpleSchema({
@@ -1800,6 +1818,7 @@ export const getUsersByStructure = new ValidatedMethod({
 // Get list of all method names on User
 const LISTS_METHODS = _.pluck(
   [
+    setLastGlobalInfoRead,
     setStructure,
     setArticlesEnable,
     setActive,

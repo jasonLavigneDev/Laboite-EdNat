@@ -23,6 +23,10 @@
     "appsettings": {
       "labels": {
         "external": "Use an external link",
+        "createdAt": "Created at",
+        "expirationDate": "Expire at",
+        "id": "Id",
+        "updatedAt": "Updated at",
         "link": "Link to the page",
         "content": "Content",
         "introduction": "Introduction",
@@ -481,10 +485,26 @@
       "language": "Select the language to edit",
       "language_fr": "French",
       "language_en": "English",
+      "language_all": "All languages",
       "content_introduction": "Introduction text",
       "content_globalInfo": "General informations text",
       "update": "Update",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "due_date": "validity period"
+    },
+    "AdminMesssage": {
+      "select_language": "Message language",
+      "select_language_form": "Message language",
+      "button_modify": "Modify",
+      "button_delete": "Delete",
+      "button_create": "Create",
+      "create_info_success": "Information successfully created",
+      "update_info_success": "Information successfull updated",
+      "missing_content": "Missing content message !",
+      "create_at": "Create at :",
+      "update_at": "Update at :",
+      "expire_at": "Expire at :",
+      "no_message": "No message"
     },
     "Notifications": {
       "remove": "Remove"
@@ -606,7 +626,9 @@
       "menuUserStructure": "Structures management",
       "menuAdminHelpPage": "Help page management",
       "menuAdminBackHome": "Back to Personnal Space",
-      "menuContact": "Contact"
+      "menuContact": "Contact",
+      "menuAdminAsam": "Email extensions Management",
+      "menuAdminGlobalInfo": "Global informations"
     },
     "AdminMenu": {
       "title": "Administration",
@@ -629,7 +651,8 @@
       "menuAdminStructureIntroduction": "Structure introduction",
       "menuAdminOfStructureUsersValidation": "Awaiting users",
       "menuAdminDefaultSpaces": "Default Personal Spaces",
-      "menuAdminAsam": "Email extensions management"
+      "menuAdminAsam": "Email extensions Management",
+      "menuAdminGlobalInfo": "Global informations"
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Your account has not been activated",

@@ -71,12 +71,6 @@ const AdminSettingsPage = ({ appsettings }) => {
       ElementProps: { data: appsettings.introduction || [] },
     },
     {
-      key: 'globalInfo',
-      title: i18n.__('pages.AdminSettingsPage.globalInfo'),
-      Element: InfoEditionComponent,
-      ElementProps: { data: appsettings.globalInfo || [] },
-    },
-    {
       key: 'legal',
       title: i18n.__('pages.AdminSettingsPage.legal'),
       Element: LegalComponent,

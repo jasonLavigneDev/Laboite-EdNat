@@ -61,7 +61,7 @@ const MenuBar = ({ mobile }) => {
 
   const links = [
     {
-      path: '/informations',
+      path: '/',
       content: 'menuIntroduction',
       icon: <InfoIcon />,
       hidden: disabledFeatures.introductionTab || mobile,
@@ -72,7 +72,7 @@ const MenuBar = ({ mobile }) => {
       hidden: disabledFeatures.introductionTab || mobile,
     },
     {
-      path: '/',
+      path: '/personal',
       content: 'menuMyspace',
       contentMobile: 'menuMyspaceMobile',
       icon: <HomeIcon />,

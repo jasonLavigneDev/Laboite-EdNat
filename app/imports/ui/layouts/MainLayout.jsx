@@ -1,5 +1,6 @@
 import React, { useEffect, lazy, Suspense } from 'react';
-import { useLocation, Route, Switch } from 'react-router-dom';
+import { useLocation, Route, Switch, useHistory } from 'react-router-dom';
+// import { useHistory } from 'react-router-dom/cjs/react-router-dom';
 import { withTracker } from 'meteor/react-meteor-data';
 import { makeStyles } from 'tss-react/mui';
 import i18n from 'meteor/universe:i18n';
@@ -42,7 +43,7 @@ const NotificationsDisplay = lazy(() => import('../components/notifications/Noti
 const BookmarksPage = lazy(() => import('../pages/groups/BookmarksPage'));
 const StructureSelectionPage = lazy(() => import('../pages/system/StructureSelectionPage'));
 const TabbedNotificationsDisplay = lazy(() => import('../components/notifications/TabbedNotificationsDisplay'));
-const IntroductionPage = lazy(() => import('../pages/IntroductionPage'));
+const NewIntroductionPage = lazy(() => import('./NewIntroductionPage'));
 
 // dynamic imports
 const AdminGroupsPage = lazy(() => import('../pages/admin/AdminGroupsPage'));
@@ -93,14 +94,14 @@ export const useLayoutStyles = makeStyles()((theme, isMobile) => ({
 }));
 
 function MainLayout({ appsettings, ready }) {
-  const [{ userId, user, loadingUser, isMobile }] = useAppContext();
+  const [{ userId, user, loadingUser, isMobile, language }] = useAppContext();
   const { classes } = useLayoutStyles(isMobile, {
     props: isMobile,
   });
   const location = useLocation();
   const { disabledFeatures = {} } = Meteor.settings.public;
-
   const isAdmin = Roles.userIsInRole(userId, 'admin');
+  const history = useHistory();
 
   useEffect(() => {
     // Reset focus on all location changes
@@ -108,6 +109,26 @@ function MainLayout({ appsettings, ready }) {
       document.getElementById('root').focus();
     }
   }, [location]);
+
+  useEffect(() => {
+    if (!user.isActive || !user.structure) return;
+
+    Meteor.call('globalInfos.getGlobalInfoByLanguageAndNotExpired', { language, date: new Date() }, (error, res) => {
+      if (error) {
+        console.log('error', error);
+        return;
+      }
+
+      if (!res.length) return;
+
+      if (!user.lastGlobalInfoReadDate || new Date(user.lastGlobalInfoReadDate) < res[0].updatedAt) {
+        Meteor.call('users.setLastGlobalInfoRead', { lastGlobalInfoReadDate: new Date() });
+        return;
+      }
+
+      history.push('/personal');
+    });
+  }, []);
 
   return (
     <>
@@ -129,7 +150,8 @@ function MainLayout({ appsettings, ready }) {
                 user.isActive ? (
                   user.structure ? (
                     <Switch>
-                      <Route exact path="/" component={PersonalPage} />
+                      <Route exact path="/" component={NewIntroductionPage} />
+                      <Route exact path="/personal" component={PersonalPage} />
                       <Route exact path="/profile" component={ProfilePage} />
                       <Route exact path="/contact" component={ContactPage} />
                       <Route exact path="/profilestructureselection" component={StructureSelectionPage} />
@@ -138,7 +160,7 @@ function MainLayout({ appsettings, ready }) {
                       <Route exact path="/help" component={HelpPage} />
 
                       {!disabledFeatures.introductionTab && (
-                        <Route exact path="/informations" component={IntroductionPage} />
+                        <Route exact path="/informations" component={NewIntroductionPage} />
                       )}
 
                       {!disabledFeatures.blog && <Route exact path="/publications" component={ArticlesPage} />}
@@ -178,7 +200,7 @@ function MainLayout({ appsettings, ready }) {
                       <Route exact path="/profile" component={ProfilePage} />
                       <Route exact path="/profilestructureselection" component={StructureSelectionPage} />
                       {!disabledFeatures.introductionTab && (
-                        <Route exact path="/informations" component={IntroductionPage} />
+                        <Route exact path="/informations" component={NewIntroductionPage} />
                       )}
                       {user.awaitingStructure ? (
                         <Route component={AwaitingStructureMessage} />
