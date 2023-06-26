@@ -95,6 +95,7 @@ const AdminGlobalInfos = () => {
   const closeModal = () => {
     setMessageToUpdate({});
     setOpenModal(false);
+    setIsOnUpdateMessage(false);
   };
 
   return (
