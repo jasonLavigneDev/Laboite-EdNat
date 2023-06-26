@@ -626,7 +626,9 @@
       "menuUserStructure": "Structures management",
       "menuAdminHelpPage": "Help page management",
       "menuAdminBackHome": "Back to Personnal Space",
-      "menuContact": "Contact"
+      "menuContact": "Contact",
+      "menuAdminAsam": "Email extensions Management",
+      "menuAdminGlobalInfo": "Global informations"
     },
     "AdminMenu": {
       "title": "Administration",
@@ -650,7 +652,7 @@
       "menuAdminOfStructureUsersValidation": "Awaiting users",
       "menuAdminDefaultSpaces": "Default Personal Spaces",
       "menuAdminAsam": "Email extensions Management",
-      "adminGlobalInfo": "Global informations"
+      "menuAdminGlobalInfo": "Global informations"
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Your account has not been activated",

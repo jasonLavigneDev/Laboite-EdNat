@@ -152,7 +152,7 @@ export default function AdminMenu() {
     { path: '/admin/asam', content: 'menuAdminAsam', icon: <EmailIcon />, hidden: !isAdmin },
     {
       path: '/admin/globalinfos',
-      content: 'adminGlobalInfo',
+      content: 'menuAdminGlobalInfo',
       icon: <InfoIcon />,
       hidden: !isAdmin,
     },

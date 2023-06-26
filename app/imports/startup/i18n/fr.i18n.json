@@ -627,7 +627,9 @@
       "menuAdminBackHome": "Retour à l'espace perso",
       "menuUserStructure": "Gestion des Structures",
       "menuAdminHelpPage": "Gestion de la page d'aide",
-      "menuContact": "Contact"
+      "menuContact": "Contact",
+      "menuAdminAsam": "Gestion des extensions d'email",
+      "menuAdminGlobalInfo": "Informations générales"
     },
     "AdminMenu": {
       "title": "Administration",
@@ -651,7 +653,7 @@
       "menuAdminOfStructureUsersValidation": "Utilisateurs en attente",
       "menuAdminDefaultSpaces": "Espaces par défaut",
       "menuAdminAsam": "Gestion des extensions d'email",
-      "adminGlobalInfo": "Informations générales"
+      "menuAdminGlobalInfo": "Informations générales"
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Votre compte n'a pas été activé",
