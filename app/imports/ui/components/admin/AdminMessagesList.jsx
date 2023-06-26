@@ -52,7 +52,7 @@ export const AdminMessagesList = ({ messages, deleteMessage, selectMessageLangua
               width: '66vw',
             }}
           >
-            {message.structureId.length ? (
+            {message?.structureId?.length ? (
               <Chip style={{ width: '40%' }} label="Ma super structure" color="primary" />
             ) : null}
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>

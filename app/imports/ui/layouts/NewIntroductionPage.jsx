@@ -49,7 +49,7 @@ export const NewIntroductionPage = () => {
             }}
           >
             {/* <p style={{ textAlign: 'end', height: '1vh' }}>Crée le : {message?.createdAt?.toLocaleDateString()}</p> */}
-            {message.structureId.length ? (
+            {message?.structureId?.length ? (
               <Chip style={{ width: '40%' }} label="Ma super structure" color="primary" />
             ) : null}
             <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(message?.content) }} />
