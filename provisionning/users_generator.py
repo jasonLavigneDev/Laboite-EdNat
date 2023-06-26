@@ -156,7 +156,7 @@ def addUserToStructureGroup(idDB, structureID):
             members = group['members']
             user = db['users'].find_one({"_id": idDB})
             if(user != None):
-                members.append(user)
+                members.append(user["_id"])
                 db['groups'].update_one({"_id": group["_id"]}, {
                                         "$set": {"members": members}})
 
@@ -174,6 +174,23 @@ def addUserToStructureGroup(idDB, structureID):
                     "sorted": []
                 }
                 db['personalspaces'].insert_one(persoSpace)
+
+                role = {
+                    "_id": generateID(),
+                    "role": {
+                        "_id": "member"
+                    },
+                    "scope": group["_id"],
+                    "user": {
+                        "_id": user["_id"]
+                    },
+                    "inheritedRoles": [
+                        {
+                            "_id": "member"
+                        }
+                    ]
+                }
+                db['role-assignment'].insert_one(role)
 
 
 def execUserGenerator(id):
@@ -230,8 +247,9 @@ groups = keycloak_admin.get_groups()
 nbStruc = int(sys.argv[1])
 nbUsers = int(sys.argv[2])
 
+if nbStruc > 0:
+    execStructureGenerator(nbStruc)
 
-execStructureGenerator(nbStruc)
-
-for i in range(0, nbUsers):
-    execUserGenerator(i)
+if nbUsers > 0:
+    for i in range(0, nbUsers):
+        execUserGenerator(i)
