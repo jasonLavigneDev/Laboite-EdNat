@@ -22,4 +22,6 @@ The script also requires an active LaBoite setup.
 
 ### Usage
 
-python3 users_generator.py <nb of structures> <nb of users>
+python3 users_generator.py <nb of structures> <nb of users> (<-r>)
+
+-r is optional and it allows to reset all existing users and groups of keycloak

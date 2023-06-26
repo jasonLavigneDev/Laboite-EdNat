@@ -10,6 +10,15 @@ from pymongo import MongoClient
 from dotenv import load_dotenv
 
 
+# 60000 > 1200 par structure dont
+# 4 instit par école, 40 prof par collège, 160 prof par lycée
+# 100 élèves par école, 400 par collège, 1600 par lycée
+
+# 50000 écoles, 7000 collèges, 3000 lycées
+# 50000/50 = 1000
+# 7000/50 = 140
+# 3000/50 = 60
+
 load_dotenv()
 fake = Faker()
 
@@ -46,14 +55,20 @@ def get_database():
     return client['meteor']
 
 
-# 60000 > 1200 par structure dont
-# 4 instit par école, 40 prof par collège, 160 prof par lycée
-# 100 élèves par école, 400 par collège, 1600 par lycée
+def resetData():
+    groups = keycloak_admin.get_groups()
+    for gr in groups:
+        print("Remove group: {}".format(gr['name']))
+        keycloak_admin.delete_group(gr['id'])
+        db['groups'].delete_one({"name": gr['name']})
+        db['structures'].delete_one({"name": gr['name']})
 
-# 50000 écoles, 7000 collèges, 3000 lycées
-# 50000/50 = 1000
-# 7000/50 = 140
-# 3000/50 = 60
+    users = keycloak_admin.get_users()
+    for user in users:
+        if user['username'] != KEYCLOAK_USERNAME:
+            print("Remove user: {}".format(user['username']))
+            keycloak_admin.delete_user(user['id'])
+            db['users'].delete_one({"username": user['username']})
 
 
 def createStructure(name, parentId):
@@ -103,6 +118,7 @@ def createStructure(name, parentId):
                 "animators": [],
                 "members": [],
                 "candidates": [],
+                "admins": [],
                 "avatar": '',
             }
             db['groups'].insert_one(group)
@@ -238,14 +254,15 @@ def execUserGenerator(id):
 
 db = get_database()
 
-groups = keycloak_admin.get_groups()
-# for gr in groups:
-#     print("Remove group: {}".format(gr['id']))
-#     keycloak_admin.delete_group(gr['id'])
-
-
 nbStruc = int(sys.argv[1])
 nbUsers = int(sys.argv[2])
+
+if(len(sys.argv) == 4):
+    reset = sys.argv[3]
+
+    if reset == '-r':
+        resetData()
+
 
 if nbStruc > 0:
     execStructureGenerator(nbStruc)
