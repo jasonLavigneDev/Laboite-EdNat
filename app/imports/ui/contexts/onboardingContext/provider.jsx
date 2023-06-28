@@ -206,7 +206,7 @@ export default function OnBoardingProvider({ children }) {
       title: i18n.__(`onBoarding.steps.end.title`),
       intro: (
         <>
-          <img src="https://i.giphy.com/media/E6jscXfv3AkWQ/giphy.gif" alt="" height="250" width="250" />
+          <img src="/images/cat-keyboard.gif" alt="" height="250" width="250" />
         </>
       ),
       link: {
