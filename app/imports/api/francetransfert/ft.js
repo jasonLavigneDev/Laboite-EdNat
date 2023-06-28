@@ -1,6 +1,7 @@
 import i18n from 'meteor/universe:i18n';
 import axios from 'axios';
 import url from 'url';
+import logServer, { levels, scopes } from '../logging';
 
 if (process.env.ENABLE_FIDDLER === 'true') {
   const proxyUrl = url.format({
@@ -32,7 +33,7 @@ export const FT = axios.create({
   },
 });
 
-export function throwFTError(error) {
+export function throwFTError(error, functionContext) {
   if (axios.isAxiosError(error)) {
     let details;
     // Log error
@@ -64,6 +65,8 @@ export function throwFTError(error) {
       console.error('Error', details);
     }
 
+    logServer(`FRANCE-TRANSFER - FT - UPDATE - ${functionContext} - message`, levels.ERROR, scopes.ADMIN, details);
+
     if (error.response?.data?.erreurs?.[0]?.libelleErreur) {
       return new Meteor.Error(
         'api.francetransfert.initFold.franceTransfertError',
@@ -90,11 +93,11 @@ function foldTypeToFTTypePli(foldType) {
   throw new Error('Unkown foldType');
 }
 
-async function wrapError(promise) {
+async function wrapError(promise, functionContext) {
   try {
     return await promise;
   } catch (error) {
-    throw throwFTError(error);
+    throw throwFTError(error, functionContext);
   }
 }
 
@@ -129,7 +132,7 @@ export function initFold(sender, { data, files }) {
     body.objet = data.title;
   }
 
-  return wrapError(FT.post(`/api-public/initPli`, body));
+  return wrapError(FT.post(`/api-public/initPli`, body), 'initFold');
 }
 
 export function getFoldStatus(id, sender) {
@@ -138,7 +141,7 @@ export function getFoldStatus(id, sender) {
     courrielExpediteur: sender,
   };
 
-  return wrapError(FT.get(`/api-public/statutPli`, { params }));
+  return wrapError(FT.get(`/api-public/statutPli`, { params }), 'getFoldStatus');
 }
 
 export function getFoldData(id, sender) {
@@ -147,5 +150,5 @@ export function getFoldData(id, sender) {
     courrielExpediteur: sender,
   };
 
-  return wrapError(FT.get(`/api-public/donneesPli`, { params }));
+  return wrapError(FT.get(`/api-public/donneesPli`, { params }), 'getFoldData');
 }
