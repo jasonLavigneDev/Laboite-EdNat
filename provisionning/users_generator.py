@@ -10,15 +10,6 @@ from pymongo import MongoClient
 from dotenv import load_dotenv
 
 
-# 60000 > 1200 par structure dont
-# 4 instit par école, 40 prof par collège, 160 prof par lycée
-# 100 élèves par école, 400 par collège, 1600 par lycée
-
-# 50000 écoles, 7000 collèges, 3000 lycées
-# 50000/50 = 1000
-# 7000/50 = 140
-# 3000/50 = 60
-
 load_dotenv()
 fake = Faker()
 
@@ -28,6 +19,7 @@ KEYCLOAK_REALM = os.getenv("KEYCLOAK_REALM")
 KEYCLOAK_USERNAME = os.getenv("KEYCLOAK_USERNAME")
 KEYCLOAK_PASSWORD = os.getenv("KEYCLOAK_PASSWORD")
 KEYCLOAK_CLIENT_ID = os.getenv("KEYCLOAK_CLIENT_ID")
+MONGO_URI = os.getenv("MONGO_URI")
 
 # Keycloak connection
 keycloak_connection = KeycloakOpenIDConnection(
@@ -158,6 +150,10 @@ def execStructureGenerator(nb):
         print("=============================================")
 
 
+# 104 personnes par école
+# 440 personnes par collège
+# 1760 personnes par lycée
+
 def getRandomStructure():
     allStructures = db['structures'].find()
     rand = random.randrange(db['structures'].count_documents({}))
@@ -224,6 +220,14 @@ def execUserGenerator(id):
 
     idDB = generateID()
     if user == None:
+        new_user = keycloak_admin.create_user({"email": mail,
+                                               "username": mail,
+                                               "enabled": True,
+                                               "firstName": firstname,
+                                               "lastName": lastname,
+                                               "credentials": [{"value": "eole", "type": "password", }]},
+                                              exist_ok=False)
+
         entry = {
             "_id": idDB,
             "username": mail,
@@ -239,14 +243,6 @@ def execUserGenerator(id):
         db['users'].insert_one(entry)
 
         addUserToStructureGroup(idDB, structure)
-
-        new_user = keycloak_admin.create_user({"email": mail,
-                                               "username": mail,
-                                               "enabled": True,
-                                               "firstName": firstname,
-                                               "lastName": lastname,
-                                               "credentials": [{"value": "eole", "type": "password", }]},
-                                              exist_ok=False)
 
     else:
         execUserGenerator(id)
