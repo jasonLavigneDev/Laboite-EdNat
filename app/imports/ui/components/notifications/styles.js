@@ -36,6 +36,9 @@ export const useNotifDisplayStyles = makeStyles()((theme, _params, classes) => (
     textAlign: 'center',
     marginTop: 10,
   },
+  // FIXME: Il faudrait supprimer cette classe car elle re-écrit le style des boutons MUI.
+  // Théoriquement, pour la cohérence de l'application, il faudrait supprimer cette classe
+  // et utiliser le style MUI.
   button: {
     textTransform: 'none',
     color: theme.palette.primary.main,
