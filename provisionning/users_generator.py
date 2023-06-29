@@ -54,6 +54,8 @@ def resetData():
         keycloak_admin.delete_group(gr['id'])
         db['groups'].delete_one({"name": gr['name']})
         db['structures'].delete_one({"name": gr['name']})
+        db['asamextensions'].delete_one(
+            {"extension": '{}.fr'.format(gr['name'].replace(' ', '-').replace('(', '').replace(')', ''))})
 
     users = keycloak_admin.get_users()
     for user in users:
@@ -119,6 +121,17 @@ def createStructure(name, parentId):
             db['structures'].update_one(
                 {"name": name}, {"$set": {"groupId": groupDB["_id"]}})
 
+            mailExtension = {"_id": generateID(),
+                             "extension": "{}.fr".format(name.replace(' ', '-').replace('(', '').replace(')', '')),
+                             "entiteNomCourt": "",
+                             "entiteNomLong": "",
+                             "familleNomCourt": "",
+                             "familleNomLong": "",
+                             "structureId": newStruc['_id']
+                             }
+
+            db['asamextensions'].insert_one(mailExtension)
+
 
 def execStructureGenerator(nb):
     for ac in range(0, nb):
@@ -128,7 +141,7 @@ def execStructureGenerator(nb):
         print("Created structure: {}".format(struc["name"]))
 
         for ec in range(0, 1000):
-            school_name = 'Ecole {} ({})'.format(ec+1, name)
+            school_name = 'ecole {} ({})'.format(ec+1, name)
             createStructure(school_name, struc["_id"])
             print("Ecole créée: {}".format(school_name))
 
@@ -206,15 +219,19 @@ def addUserToStructureGroup(idDB, structureID):
 
 
 def execUserGenerator(id):
+
+    structure = getRandomStructure()
+    mailExtension = db['asamextensions'].find_one(
+        {"structureId": structure})
+
     name = fake.name()
-    mail = name.replace(' ', '.') + '_' + str(id) + '@ac-test.fr'
+    mail = name.replace(' ', '.') + '_' + str(id) + \
+        '@' + mailExtension["extension"]
 
     firstname = name.split(' ')[0]
     lastname = name.split(' ')[1]
 
     emails = [{"address": mail, "verified": True}]
-
-    structure = getRandomStructure()
 
     user = db['users'].find_one({"username": mail})
 
