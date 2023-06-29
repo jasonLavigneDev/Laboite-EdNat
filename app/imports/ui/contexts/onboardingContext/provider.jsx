@@ -116,7 +116,7 @@ export default function OnBoardingProvider({ children }) {
       ...tOnBoarding('mySpace'),
       element: '[data-tour-id="mySpace"]',
       link: {
-        path: '/',
+        path: '/personal',
         title: 'menuMyspace',
       },
     },
@@ -124,7 +124,7 @@ export default function OnBoardingProvider({ children }) {
       ...tOnBoarding('zone'),
       element: '[data-tour-id="zone"]',
       link: {
-        path: '/',
+        path: '/personal',
         title: 'components.MenuBar.menuMyspace',
       },
     },
