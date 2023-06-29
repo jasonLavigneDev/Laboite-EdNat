@@ -46,6 +46,10 @@ PersonalSpaces.schema = new SimpleSchema(
       type: String,
       optional: true,
     },
+    'unsorted.$.group_url': {
+      type: String,
+      optional: true,
+    },
     sorted: {
       type: Array,
       defaultValue: [],
@@ -81,6 +85,10 @@ PersonalSpaces.schema = new SimpleSchema(
       optional: true,
     },
     'sorted.$.elements.$.url': {
+      type: String,
+      optional: true,
+    },
+    'sorted.$.elements.$.group_url': {
       type: String,
       optional: true,
     },

@@ -134,7 +134,7 @@ export const favUserBookmark = new ValidatedMethod({
     }
     // check bookmark existence
     const bookmark = UserBookmarks.findOne({ _id: bookmarkId, userId: this.userId });
-    if (bookmark === undefined) {
+    if (!bookmark) {
       logServer(
         `USERBOOKMARKS - METHODS - METEOR ERROR - favUserBookmark - ${i18n.__('api.bookmarks.unknownBookmark')}`,
         levels.ERROR,
@@ -155,7 +155,7 @@ export const favUserBookmark = new ValidatedMethod({
       scopes.SYSTEM,
     );
     // update user personalSpace
-    addUserBookmark._execute({ userId: this.userId }, { bookmarkId });
+    addUserBookmark._execute({ userId: this.userId }, { bookmarkId, type: 'link' });
   },
 });
 

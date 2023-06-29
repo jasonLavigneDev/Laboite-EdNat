@@ -9,6 +9,8 @@ import MaterialTable from '@material-table/core';
 import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
 import { Roles } from 'meteor/alanning:roles';
+import StarIcon from '@mui/icons-material/Star';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Tooltip from '@mui/material/Tooltip';
 import add from '@mui/icons-material/Add';
@@ -30,7 +32,7 @@ import { bookmarkColumns, useBookmarkPageStyles } from '../users/UserBookmarksPa
 import QRCanvas from '../../components/users/QRCanvas';
 
 function BookmarksPage({ loading, bookmarksList, group }) {
-  const [{ userId }] = useAppContext();
+  const [{ user, userId }] = useAppContext();
 
   const history = useHistory();
   const [filter, setFilter] = useState(false);
@@ -96,6 +98,24 @@ function BookmarksPage({ loading, bookmarksList, group }) {
       onClick: () => {
         setIsModalOpen(true);
         setQrUrl(rowData.url);
+      },
+    };
+  });
+  tableActions.push((rowData) => {
+    const isFavorite = user.favUserBookmarks.indexOf(rowData._id) !== -1;
+    return {
+      icon: () => (isFavorite ? <StarIcon /> : <StarBorderIcon />),
+      tooltip: i18n.__(`pages.UserBookmarksPage.${isFavorite ? 'unfavoriteBookmark' : 'favoriteBookmark'}`),
+      onClick: () => {
+        Meteor.call(
+          `bookmarks.${isFavorite ? 'unfavGroupBookmark' : 'favGroupBookmark'}`,
+          { bookmarkId: rowData._id },
+          (err) => {
+            if (err) {
+              msg.error(err.reason);
+            }
+          },
+        );
       },
     };
   });

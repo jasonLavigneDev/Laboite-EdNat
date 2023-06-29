@@ -29,6 +29,7 @@ import Animation from '../screencast/Animation';
 import { useAppContext } from '../../contexts/context';
 import UserBookmarks from '../../../api/userBookmarks/userBookmarks';
 import CollapsingSearch from '../system/CollapsingSearch';
+import Bookmarks from '../../../api/bookmarks/bookmarks';
 
 const { disabledFeatures } = Meteor.settings.public;
 
@@ -139,6 +140,7 @@ function PersonalZoneUpdater({
   allServices,
   allGroups,
   allLinks,
+  allGroupLinks,
   appSettingsValues,
   edition,
   handleEditionData,
@@ -183,6 +185,11 @@ function PersonalZoneUpdater({
         searchText = userBookmark !== undefined ? `${userBookmark.name} ${userBookmark.url}` : '';
         break;
       }
+      case 'groupLink': {
+        const Bookmark = Bookmarks.findOne(element.element_id);
+        searchText = Bookmark !== undefined ? `${Bookmark.name} ${Bookmark.url}` : '';
+        break;
+      }
       default:
         searchText = '';
         break;
@@ -193,6 +200,10 @@ function PersonalZoneUpdater({
 
   const filterLink = (element) => {
     return element.type === 'link';
+  };
+
+  const filterGroupLink = (element) => {
+    return element.type === 'groupLink';
   };
 
   const filterGroup = (element) => {
@@ -211,7 +222,7 @@ function PersonalZoneUpdater({
   };
 
   const doNotDisplayHidenServices = (element) => {
-    return filterService(element) || filterGroup(element) || filterLink(element);
+    return filterService(element) || filterGroup(element) || filterLink(element) || filterGroupLink(element);
   };
   // focus on search input when it appears
   useEffect(() => {
@@ -230,7 +241,7 @@ function PersonalZoneUpdater({
 
   const [localPS, setLocalPS] = useState(personalspace);
   useEffect(() => {
-    if (personalspace && allServices && allGroups && allLinks) {
+    if (personalspace && allServices && allGroups && allLinks && allGroupLinks) {
       // Called once
       Meteor.call('personalspaces.checkPersonalSpace', {}, (err) => {
         if (err) {
@@ -241,7 +252,7 @@ function PersonalZoneUpdater({
   }, []);
 
   useEffect(() => {
-    if (personalspace && allServices && allGroups && allLinks) {
+    if (personalspace && allServices && allGroups && allLinks && allGroupLinks) {
       setLocalPS(personalspace);
     }
   }, [personalspace]);
@@ -303,17 +314,43 @@ function PersonalZoneUpdater({
     } else if (type === 'service') {
       setLocalPS({
         ...localPS,
-        unsorted: [...list, ...localPS.unsorted.filter(filterGroup), ...localPS.unsorted.filter(filterLink)],
+        unsorted: [
+          ...list,
+          ...localPS.unsorted.filter(filterGroupLink),
+          ...localPS.unsorted.filter(filterGroup),
+          ...localPS.unsorted.filter(filterLink),
+        ],
       });
     } else if (type === 'link') {
       setLocalPS({
         ...localPS,
-        unsorted: [...list, ...localPS.unsorted.filter(filterGroup), ...localPS.unsorted.filter(filterService)],
+        unsorted: [
+          ...list,
+          ...localPS.unsorted.filter(filterGroupLink),
+          ...localPS.unsorted.filter(filterGroup),
+          ...localPS.unsorted.filter(filterService),
+        ],
+      });
+    } else if (type === 'groupLink') {
+      setLocalPS({
+        ...localPS,
+        unsorted: [
+          ...list,
+          ...localPS.unsorted.filter(filterLink),
+          ...localPS.unsorted.filter(filterGroup),
+          ...localPS.unsorted.filter(filterService),
+        ],
       });
     } else {
       setLocalPS({
         ...localPS,
-        unsorted: [...list, ...localPS.unsorted.filter(filterService), ...localPS.unsorted.filter(filterLink)],
+        unsorted: [
+          ...list,
+          ...localPS.unsorted.filter(filterGroupLink),
+          ...localPS.unsorted.filter(filterService),
+          ...localPS.unsorted.filter(filterGroup),
+          ...localPS.unsorted.filter(filterLink),
+        ],
       });
     }
   };
@@ -521,6 +558,20 @@ function PersonalZoneUpdater({
                   />,
                 ]
               : null}
+            {!edition && localPS.unsorted.filter(filterGroupLink).length !== 0
+              ? [
+                  <PersonalZone
+                    key="zone-favGroupBookmark-000000000000"
+                    elements={localPS.unsorted.filter(filterSearch).filter(filterGroupLink)}
+                    title={i18n.__('pages.PersonalPage.unsortedGroupLinks')}
+                    setList={setZoneList('groupLink')}
+                    suspendUpdate={suspendUpdate}
+                    updateList={updateList}
+                    customDrag={customDrag}
+                    needUpdate={handleNeedUpdate}
+                  />,
+                ]
+              : null}
             {customDrag && localPS.sorted.length >= 1 ? (
               <div className={classes.zoneButtonContainer}>
                 <Button
@@ -589,6 +640,7 @@ PersonalZoneUpdater.propTypes = {
   allServices: PropTypes.arrayOf(PropTypes.object).isRequired,
   allGroups: PropTypes.arrayOf(PropTypes.object).isRequired,
   allLinks: PropTypes.arrayOf(PropTypes.object).isRequired,
+  allGroupLinks: PropTypes.arrayOf(PropTypes.object).isRequired,
   appSettingsValues: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 

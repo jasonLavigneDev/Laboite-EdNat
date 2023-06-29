@@ -13,6 +13,7 @@ import Services from '../services/services';
 import UserBookmarks from '../userBookmarks/userBookmarks';
 import DefaultSpaces from '../defaultspaces/defaultspaces';
 import logServer, { levels, scopes } from '../logging';
+import Bookmarks from '../bookmarks/bookmarks';
 
 export const addItem = (userId, item) => {
   const currentPersonalSpace = PersonalSpaces.findOne({ userId });
@@ -151,9 +152,10 @@ export const addUserBookmark = new ValidatedMethod({
   name: 'personalspaces.addBookmark',
   validate: new SimpleSchema({
     bookmarkId: { type: String, regEx: SimpleSchema.RegEx.Id },
+    type: { type: String },
   }).validator(),
 
-  run({ bookmarkId }) {
+  run({ bookmarkId, type }) {
     // check if active and logged in
     if (!isActive(this.userId)) {
       logServer(
@@ -164,8 +166,10 @@ export const addUserBookmark = new ValidatedMethod({
       );
       throw new Meteor.Error('api.personalspaces.addBookmark.notPermitted', i18n.__('api.users.notPermitted'));
     }
-    const bookmark = UserBookmarks.findOne(bookmarkId);
-    if (bookmark === undefined) {
+    let bookmark;
+    if (type === 'link') bookmark = UserBookmarks.findOne(bookmarkId);
+    else bookmark = Bookmarks.findOne(bookmarkId);
+    if (!bookmark) {
       logServer(
         `PERSONALSPACES - METHODS - METEOR ERROR - addUserBookmark - ${i18n.__('api.bookmarks.unknownBookmark')}`,
         levels.ERROR,
@@ -177,7 +181,7 @@ export const addUserBookmark = new ValidatedMethod({
         i18n.__('api.bookmarks.unknownBookmark'),
       );
     }
-    addItem(this.userId, { type: 'link', element_id: bookmarkId });
+    addItem(this.userId, { type, element_id: bookmarkId });
   },
 });
 
@@ -255,10 +259,11 @@ export const checkPersonalSpace = new ValidatedMethod({
     const currentPersonalSpace = PersonalSpaces.findOne({ userId: this.userId });
     const u = Meteor.users.findOne(
       { _id: this.userId },
-      { fields: { username: 1, favServices: 1, favGroups: 1, favUserBookmarks: 1 } },
+      { fields: { username: 1, favServices: 1, favGroups: 1, favUserBookmarks: 1, favGroupBookmarks: 1 } },
     );
     if (currentPersonalSpace === undefined) {
-      if (u.favServices && u.favGroups && u.favUserBookmarks) {
+      if (u.favServices && u.favGroups && u.favUserBookmarks && u.favGroupBookmarks) {
+        // logServer(`Regen Personalspace (not found) for ${u.username}...`);
         logServer(
           `PERSONALSPACES - METHODS - ERROR - checkPersonalSpace, Regen Personalspace (not found) for ${u.username}...`,
           levels.WARN,
@@ -284,12 +289,18 @@ export const checkPersonalSpace = new ValidatedMethod({
             type: 'link',
           });
         });
+        u.favGroupBookmarks.forEach((b) => {
+          unsorted.push({
+            element_id: b,
+            type: 'groupLink',
+          });
+        });
         updatePersonalSpace._execute({ userId: this.userId }, { data: { userId: this.userId, unsorted, sorted: [] } });
       }
       return; // No need to go further
     }
     let changeMade = false;
-    const elementIds = { service: [], group: [], link: [] };
+    const elementIds = { service: [], group: [], link: [], groupLink: [] };
 
     const checkZone = (zone) => {
       // Loop zone elements backward so we can delete items by index
@@ -305,7 +316,7 @@ export const checkPersonalSpace = new ValidatedMethod({
         if (elem.type === 'group') {
           // Check if group still exists
           const group = Groups.findOne(elem.element_id);
-          if (group === undefined) {
+          if (!group) {
             // group no more exists so delete element
             zone.splice(index, 1);
             changeMade = true;
@@ -315,7 +326,7 @@ export const checkPersonalSpace = new ValidatedMethod({
         } else if (elem.type === 'link') {
           // Check if link still exists
           const link = UserBookmarks.findOne(elem.element_id);
-          if (link === undefined) {
+          if (!link) {
             // link no more exists so delete element
             zone.splice(index, 1);
             changeMade = true;
@@ -325,7 +336,17 @@ export const checkPersonalSpace = new ValidatedMethod({
         } else if (elem.type === 'service') {
           // Check if service still exists
           const service = Services.findOne(elem.element_id);
-          if (service === undefined) {
+          if (!service) {
+            // service no more exists so delete element
+            zone.splice(index, 1);
+            changeMade = true;
+            // eslint-disable-next-line
+            continue; // continue to next element
+          }
+        } else if (elem.type === 'groupLink') {
+          // Check if service still exists
+          const bookmark = Bookmarks.findOne(elem.element_id);
+          if (!bookmark) {
             // service no more exists so delete element
             zone.splice(index, 1);
             changeMade = true;
@@ -400,7 +421,11 @@ export const backToDefaultElement = new ValidatedMethod({
         break;
 
       case 'link':
-        addUserBookmark._execute({ userId: this.userId }, { bookmarkId: elementId });
+        addUserBookmark._execute({ userId: this.userId }, { bookmarkId: elementId, type: 'link' });
+        break;
+
+      case 'groupLink':
+        addUserBookmark._execute({ userId: this.userId }, { bookmarkId: elementId, type: 'groupLink' });
         break;
 
       default:
