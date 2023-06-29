@@ -91,25 +91,6 @@ const MenuBar = ({ mobile }) => {
       },
     },
     {
-      path: '/groups',
-      content: 'menuGroupes',
-      contentMobile: 'menuGroupesMobile',
-      icon: <GroupIcon />,
-      hidden: disabledFeatures.groups,
-    },
-    {
-      path: '/services',
-      content: 'menuServices',
-      contentMobile: 'menuServicesMobile',
-      icon: <AppsIcon />,
-      hidden: false,
-      tooltip: 'tooltipServices',
-      props: {
-        'data-tour-id': 'services',
-      },
-    },
-
-    {
       path: '/publications',
       content: 'menuArticles',
       contentMobile: 'menuArticlesMobile',
@@ -131,6 +112,24 @@ const MenuBar = ({ mobile }) => {
       path: '/divider2',
       separator: true,
       hidden: false,
+    },
+    {
+      path: '/services',
+      content: 'menuServices',
+      contentMobile: 'menuServicesMobile',
+      icon: <AppsIcon />,
+      hidden: false,
+      tooltip: 'tooltipServices',
+      props: {
+        'data-tour-id': 'services',
+      },
+    },
+    {
+      path: '/groups',
+      content: 'menuGroupes',
+      contentMobile: 'menuGroupesMobile',
+      icon: <GroupIcon />,
+      hidden: disabledFeatures.groups,
     },
   ];
   const T = i18n.createComponent('components.MenuBar');
