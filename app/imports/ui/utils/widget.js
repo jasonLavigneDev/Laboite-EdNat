@@ -35,7 +35,7 @@ window.addEventListener('message', (e) => {
 });
 
 export async function isWiget() {
-  if (!isInWidgetIframe) throw new Error('Not in widget iframe');
+  if (!isInWidgetIframe) return false;
 
   return new Promise((r) => {
     postMessage(

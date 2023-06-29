@@ -26,6 +26,10 @@
       "siteId": 1,
       "urlBase": "https://URL.fr"
     },
+    "onBoarding": {
+      "enabled": true,
+      "appDesignation": "Laboîte"
+    },
     "enableBBB": false,
     "BBBUrl": "",
     "minioPort": null,
