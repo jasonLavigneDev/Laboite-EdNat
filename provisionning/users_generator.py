@@ -14,6 +14,9 @@ load_dotenv()
 fake = Faker()
 
 
+structures = {}
+
+
 KEYCLOAK_URL = os.getenv("KEYCLOAK_URL")
 KEYCLOAK_REALM = os.getenv("KEYCLOAK_REALM")
 KEYCLOAK_USERNAME = os.getenv("KEYCLOAK_USERNAME")
@@ -132,6 +135,15 @@ def createStructure(name, parentId):
 
             db['asamextensions'].insert_one(mailExtension)
 
+            if 'ecole' in name:
+                structures[newStruc["_id"]] = 104
+
+            elif 'college' in name:
+                structures[newStruc["_id"]] = 440
+
+            elif 'lycee' in name:
+                structures[newStruc["_id"]] = 1760
+
 
 def execStructureGenerator(nb):
     for ac in range(0, nb):
@@ -218,9 +230,8 @@ def addUserToStructureGroup(idDB, structureID):
                 db['role-assignment'].insert_one(role)
 
 
-def execUserGenerator(id):
+def execUserGenerator(id, structure):
 
-    structure = getRandomStructure()
     mailExtension = db['asamextensions'].find_one(
         {"structureId": structure})
 
@@ -268,10 +279,9 @@ def execUserGenerator(id):
 db = get_database()
 
 nbStruc = int(sys.argv[1])
-nbUsers = int(sys.argv[2])
 
-if(len(sys.argv) == 4):
-    reset = sys.argv[3]
+if(len(sys.argv) == 3):
+    reset = sys.argv[2]
 
     if reset == '-r':
         resetData()
@@ -280,6 +290,9 @@ if(len(sys.argv) == 4):
 if nbStruc > 0:
     execStructureGenerator(nbStruc)
 
-if nbUsers > 0:
-    for i in range(0, nbUsers):
-        execUserGenerator(i)
+
+print(structures)
+
+for key in structures:
+    for i in range(0, structures[key]):
+        execUserGenerator(i, key)
