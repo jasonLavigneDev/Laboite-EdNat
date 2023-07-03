@@ -23,6 +23,15 @@ KEYCLOAK_REALM = os.getenv("KEYCLOAK_REALM")
 KEYCLOAK_USERNAME = os.getenv("KEYCLOAK_USERNAME")
 KEYCLOAK_PASSWORD = os.getenv("KEYCLOAK_PASSWORD")
 KEYCLOAK_CLIENT_ID = os.getenv("KEYCLOAK_CLIENT_ID")
+
+ECOLE_PAR_ACADEMIE = os.getenv("ECOLE_PAR_ACADEMIE")
+COLLEGE_PAR_ACADEMIE = os.getenv("COLLEGE_PAR_ACADEMIE")
+LYCEE_PAR_ACADEMIE = os.getenv("LYCEE_PAR_ACADEMIE")
+
+PERSONNE_PAR_ECOLE = os.getenv("PERSONNE_PAR_ECOLE")
+PERSONNE_PAR_COLLEGE = os.getenv("PERSONNE_PAR_COLLEGE")
+PERSONNE_PAR_LYCEE = os.getenv("PERSONNE_PAR_LYCEE")
+
 MONGO_URI = os.getenv("MONGO_URI")
 
 # Keycloak connection
@@ -137,13 +146,13 @@ def createStructure(name, parentId):
             db['asamextensions'].insert_one(mailExtension)
 
             if 'ecole' in name:
-                structures[newStruc["_id"]] = 104
+                structures[newStruc["_id"]] = PERSONNE_PAR_ECOLE
 
             elif 'college' in name:
-                structures[newStruc["_id"]] = 440
+                structures[newStruc["_id"]] = PERSONNE_PAR_COLLEGE
 
             elif 'lycee' in name:
-                structures[newStruc["_id"]] = 1760
+                structures[newStruc["_id"]] = PERSONNE_PAR_LYCEE
 
 
 def execStructureGenerator(nb):
@@ -154,21 +163,21 @@ def execStructureGenerator(nb):
         print("[{}] Created structure: {}".format(
             datetime.now(), struc["name"]))
 
-        for ec in range(0, 1000):
+        for ec in range(0, ECOLE_PAR_ACADEMIE):
             school_name = 'ecole {} ({})'.format(ec+1, name)
             createStructure(school_name, struc["_id"])
             print("[{}] Ecole créée: {}".format(datetime.now(), school_name))
 
         print("=============================================")
 
-        for col in range(0, 140):
+        for col in range(0, COLLEGE_PAR_ACADEMIE):
             col_name = 'college {} ({})'.format(col+1, name)
             createStructure(col_name, struc["_id"])
             print("[{}] Collège créé: {}".format(datetime.now(), col_name))
 
         print("=============================================")
 
-        for lyc in range(0, 60):
+        for lyc in range(0, LYCEE_PAR_ACADEMIE):
             lyc_name = 'lycee {} ({})'.format(lyc+1, name)
             createStructure(lyc_name, struc["_id"])
             print("[{}] Lycée créé: {}".format(datetime.now(), lyc_name))
@@ -176,10 +185,6 @@ def execStructureGenerator(nb):
         print("=============================================")
         print("=============================================")
 
-
-# 104 personnes par école
-# 440 personnes par collège
-# 1760 personnes par lycée
 
 def getRandomStructure():
     allStructures = db['structures'].find()
@@ -291,9 +296,6 @@ if(len(sys.argv) == 3):
 
 if nbStruc > 0:
     execStructureGenerator(nbStruc)
-
-
-print(structures)
 
 for key in structures:
     for i in range(0, structures[key]):

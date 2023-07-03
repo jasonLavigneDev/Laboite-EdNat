@@ -15,6 +15,12 @@ The script needs a well formed .env file.
 - KEYCLOAK_USERNAME: An administrator username
 - KEYCLOAK_PASSWORD: An administrator password
 - KEYCLOAK_CLIENT_ID: Keycloak client to use
+- ECOLE_PAR_ACADEMIE: Number of school by academy (structure)
+- COLLEGE_PAR_ACADEMIE: Number of middle-school by academy (structure)
+- LYCEE_PAR_ACADEMIE: Number of high-school by academy (structure)
+- PERSONNE_PAR_ECOLE: Number of users by school
+- PERSONNE_PAR_COLLEGE: Number of users by middle-school
+- PERSONNE_PAR_LYCEE: Number of users by high-school
 
 
 The script also requires an active LaBoite setup.
