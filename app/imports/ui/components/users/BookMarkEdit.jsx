@@ -12,6 +12,7 @@ import PropTypes from 'prop-types';
 import CardContent from '@mui/material/CardContent';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import Checkbox from '@mui/material/Checkbox';
 import { useAppContext } from '../../contexts/context';
 import COMMON_STYLES from '../../themes/styles';
 
@@ -19,6 +20,9 @@ const useStyles = makeStyles()((theme, isMobile) => ({
   root: COMMON_STYLES.root,
   actions: COMMON_STYLES.actions,
   paper: COMMON_STYLES.paper(isMobile),
+  widgetDisplay: {
+    bottom: '200px',
+  },
 }));
 
 const BookMarkEdit = ({ data, group, onEdit, open, onClose, method }) => {
@@ -28,13 +32,17 @@ const BookMarkEdit = ({ data, group, onEdit, open, onClose, method }) => {
   const [name, setName] = useState(data.name);
   const [isValid, setIsValid] = useState(false);
   const { classes } = useStyles(isMobile);
+  const [favBookmarkDirectry, setFavBookmarkDirectry] = useState(true);
   const args = {
     url,
     name,
     tag,
   };
+
   if (method === 'bookmark') {
     args.groupId = group._id;
+  } else if (method === 'userBookmark') {
+    args.favUserBookmarkDirectry = favBookmarkDirectry;
   }
 
   useEffect(() => {
@@ -83,8 +91,13 @@ const BookMarkEdit = ({ data, group, onEdit, open, onClose, method }) => {
   const updateTag = (e) => {
     setTag(e.target.value);
   };
+
+  const updateFavBookmark = (e) => {
+    setFavBookmarkDirectry(e.target.checked);
+    args.favUserBookmarkDirectry = e.target.checked;
+  };
   return (
-    <Modal open={open} onClose={onClose}>
+    <Modal open={open} onClose={onClose} className={isMobile ? `${classes.widgetDisplay}` : ``}>
       <div className={classes.paper}>
         <Card className={classes.root}>
           <CardHeader
@@ -138,6 +151,15 @@ const BookMarkEdit = ({ data, group, onEdit, open, onClose, method }) => {
               onChange={updateTag}
               variant="outlined"
               fullWidth
+            />
+          </CardContent>
+          <CardContent>
+            {i18n.__('components.ServiceDetails.favButtonLabelFav')}
+            <Checkbox
+              name="isFavBookmark"
+              onChange={updateFavBookmark}
+              checked={favBookmarkDirectry}
+              inputProps={{ 'aria-label': 'primary checkbox' }}
             />
           </CardContent>
           <CardActions className={classes.actions}>

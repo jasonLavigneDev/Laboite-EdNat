@@ -133,7 +133,6 @@ const useStyles = (isMobile) =>
       justifyContent: 'flex-end',
     },
   }));
-
 function PersonalZoneUpdater({
   personalspace,
   isLoading,
@@ -420,6 +419,7 @@ function PersonalZoneUpdater({
 
   const notReady = isLoading || loadingUser;
   const { personalSpace = {} } = appSettingsValues;
+
   return (
     <>
       {notReady ? (
@@ -538,7 +538,7 @@ function PersonalZoneUpdater({
                     title={i18n.__('pages.PersonalPage.unsortedService')}
                     setList={setZoneList('service')}
                     suspendUpdate={suspendUpdate}
-                    updateList={updateList}
+                    updateList={updateList} // setAskToCreateNewBookMark(true);
                     customDrag={customDrag}
                     needUpdate={handleNeedUpdate}
                   />,
@@ -605,7 +605,7 @@ function PersonalZoneUpdater({
                 isSorted
                 isExpanded={isExpanded}
                 setExpanded={setExpanded}
-                needUpdate={handleNeedUpdate}
+                needUpdate={handleNeedUpdate} // setAskToCreateNewBookMark(true);
               />,
               // localPS.sorted.length !== index + 1 ? (
               //   <Divider className={classes.divider} key={`div-${zoneId}`} />
