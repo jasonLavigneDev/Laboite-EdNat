@@ -8,6 +8,7 @@ from keycloak import KeycloakAdmin
 from keycloak import KeycloakOpenIDConnection
 from pymongo import MongoClient
 from dotenv import load_dotenv
+from datetime import datetime
 
 
 load_dotenv()
@@ -150,26 +151,27 @@ def execStructureGenerator(nb):
         name = 'academie {}'.format(ac)
         createStructure(name, 0)
         struc = db['structures'].find_one({"name": name})
-        print("Created structure: {}".format(struc["name"]))
+        print("[{}] Created structure: {}".format(
+            datetime.now(), struc["name"]))
 
         for ec in range(0, 1000):
             school_name = 'ecole {} ({})'.format(ec+1, name)
             createStructure(school_name, struc["_id"])
-            print("Ecole créée: {}".format(school_name))
+            print("[{}] Ecole créée: {}".format(datetime.now(), school_name))
 
         print("=============================================")
 
         for col in range(0, 140):
             col_name = 'college {} ({})'.format(col+1, name)
             createStructure(col_name, struc["_id"])
-            print("Collège créé: {}".format(col_name))
+            print("[{}] Collège créé: {}".format(datetime.now(), col_name))
 
         print("=============================================")
 
         for lyc in range(0, 60):
             lyc_name = 'lycee {} ({})'.format(lyc+1, name)
             createStructure(lyc_name, struc["_id"])
-            print("Lycée créé: {}".format(lyc_name))
+            print("[{}] Lycée créé: {}".format(datetime.now(), lyc_name))
 
         print("=============================================")
         print("=============================================")
@@ -267,7 +269,7 @@ def execUserGenerator(id, structure):
             "favGroups": [],
             "isActive": True
         }
-        print("Create user: {}".format(entry["username"]))
+        print("[{}] Create user: {}".format(datetime.now(), entry["username"]))
         db['users'].insert_one(entry)
 
         addUserToStructureGroup(idDB, structure)
