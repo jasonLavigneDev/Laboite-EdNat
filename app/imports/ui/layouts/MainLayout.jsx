@@ -164,7 +164,9 @@ function MainLayout({ appsettings, ready }) {
                         <Route exact path="/informations" component={NewIntroductionPage} />
                       )}
 
-                      <Route exact path="/upload" component={UploadPage} />
+                      {Meteor.settings.franceTransfert?.endpoint && (
+                        <Route exact path="/upload" component={UploadPage} />
+                      )}
 
                       {!disabledFeatures.blog && <Route exact path="/publications" component={ArticlesPage} />}
                       {!disabledFeatures.blog && <Route exact path="/publications/new" component={EditArticlePage} />}

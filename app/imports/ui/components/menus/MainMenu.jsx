@@ -62,11 +62,14 @@ export const userMenu = [
       'data-tour-id': 'bookMark',
     },
   },
-  {
+];
+
+if (Meteor.settings.franceTransfert?.endpoint) {
+  userMenu.push({
     path: '/upload',
     content: 'menuUpload',
-  },
-];
+  });
+}
 
 export const userGroups = [
   // for admin users, group management is in admin section

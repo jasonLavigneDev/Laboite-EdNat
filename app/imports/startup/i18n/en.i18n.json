@@ -1095,7 +1095,23 @@
       "send": "Send",
       "pause": "Pause",
       "resume": "Resume",
-      "abort": "Abort"
+      "abort": "Annuler",
+      "errorWhenLoadingFile": "Error on loding file {$fileName}",
+      "errorWhenVerifyingFiles": "Error on file verification",
+      "errorWhenRetrievingFoldData": "Error on retrieving fold data",
+      "summary": {
+        "title": "Fold successfully sent",
+        "expiryDate": "The fold will we available until {$date}.",
+        "link": "Download link: ",
+        "password": "Link's password: ",
+        "showPassword": "Show",
+        "hidePassword": "Hide",
+        "clickToCopy": "Click to copy",
+        "passwordCopied": "Password has been copied.",
+        "linkCopied": "Link has been copied.",
+        "errorWhenCopying": "Impossible to copy the password."
+      }
+
     },
     "UserBookmarksPage": {
       "back": "Go back",
