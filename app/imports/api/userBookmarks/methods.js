@@ -82,7 +82,7 @@ export const createUserBookmark = new ValidatedMethod({
         });
 
         // update user personalSpace
-        addUserBookmark._execute({ userId: this.userId }, { bookmarkId });
+        addUserBookmark._execute({ userId: this.userId }, { bookmarkId, type: 'link' });
       }
     }
     return finalUrl;

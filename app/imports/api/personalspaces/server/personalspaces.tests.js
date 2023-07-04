@@ -186,7 +186,7 @@ describe('personalspaces', function () {
       it("does add a bookmark to the current user's personalspace", function () {
         const urlFinal = createUserBookmark._execute({ userId }, { url: 'toto.com', name: 'Test', tag: 'Tag' });
         const bookmarkId = UserBookmarks.findOne({ url: urlFinal, userId })._id;
-        addUserBookmark._execute({ userId }, { bookmarkId });
+        addUserBookmark._execute({ userId }, { bookmarkId, type: 'link' });
         const ps = PersonalSpaces.findOne({ userId });
         assert.typeOf(ps.unsorted, 'array');
         assert.lengthOf(ps.unsorted, 1);
