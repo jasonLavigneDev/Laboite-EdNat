@@ -8,6 +8,7 @@ import { Roles } from 'meteor/alanning:roles';
 
 import { isActive, getLabel, validateString } from '../utils';
 import Tags from './tags';
+import logServer, { levels, scopes } from '../logging';
 
 export const createTag = new ValidatedMethod({
   name: 'tags.createTag',
@@ -18,12 +19,25 @@ export const createTag = new ValidatedMethod({
   run({ name }) {
     const authorized = isActive(this.userId); // && Roles.userIsInRole(this.userId, 'admin');
     if (!authorized) {
+      logServer(
+        `TAGS - METHODS - METEOR ERROR - createTag - ${i18n.__('api.users.notPermitted')}`,
+        levels.ERROR,
+        scopes.SYSTEM,
+        { name },
+      );
       throw new Meteor.Error('api.tags.createTag.notPermitted', i18n.__('api.users.notPermitted'));
     }
     if (name !== name.toLowerCase()) {
+      logServer(
+        `TAGS - METHODS - METEOR ERROR - createTag - ${i18n.__('api.tags.notLowerCase')}`,
+        levels.WARN,
+        scopes.SYSTEM,
+        { name },
+      );
       throw new Meteor.Error('api.tags.createTag.notLowerCase', i18n.__('api.tags.notLowerCase'));
     }
     validateString(name);
+    logServer(`TAGS - METHODS - INSERT - createTag - name: ${name}`, levels.VERBOSE, scopes.SYSTEM);
     return Tags.insert({
       name: name.toLowerCase(),
     });
@@ -40,13 +54,26 @@ export const removeTag = new ValidatedMethod({
     // check tag existence
     const tag = Tags.findOne(tagId);
     if (tag === undefined) {
+      logServer(
+        `TAGS - METHODS - METEOR ERROR - removeTag - ${i18n.__('api.tags.unknownTag')}`,
+        levels.ERROR,
+        scopes.SYSTEM,
+        { tagId },
+      );
       throw new Meteor.Error('api.tags.removeTag.unknownTag', i18n.__('api.tags.unknownTag'));
     }
     // check if current user is active
     const authorized = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
     if (!authorized) {
+      logServer(
+        `TAGS - METHODS - METEOR ERROR - removeTag - ${i18n.__('api.users.notPermitted')}`,
+        levels.ERROR,
+        scopes.SYSTEM,
+        { tagId },
+      );
       throw new Meteor.Error('api.tags.removeTag.notPermitted', i18n.__('api.users.notPermitted'));
     }
+    logServer(`TAGS - METHODS - REMOVE - removeTag - id: ${tagId}`, levels.INFO, scopes.SYSTEM);
     // changed: do not remove tag from existing articles
     // Articles.update({}, { $pull: { tags: tag.name } }, { multi: true });
     return Tags.remove(tagId);
@@ -65,14 +92,27 @@ export const updateTag = new ValidatedMethod({
     // check tag existence
     const tag = Tags.findOne({ _id: tagId });
     if (tag === undefined) {
+      logServer(
+        `TAGS - METHODS - METEOR ERROR - updateTag - ${i18n.__('api.tags.unknownTag')}`,
+        levels.ERROR,
+        scopes.SYSTEM,
+        { tagId, data },
+      );
       throw new Meteor.Error('api.tags.updateTag.unknownTag', i18n.__('api.tags.unknownTag'));
     }
     // check if current user is active
     const authorized = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
     if (!authorized) {
+      logServer(
+        `TAGS - METHODS - METEOR ERROR - updateTag - ${i18n.__('api.users.notPermitted')}`,
+        levels.ERROR,
+        scopes.SYSTEM,
+        { tagId, data },
+      );
       throw new Meteor.Error('api.tags.updateTag.notPermitted', i18n.__('api.users.notPermitted'));
     }
     validateString(data.name);
+    logServer(`TAGS - METHODS - UPDATE - updateTag`, levels.VERBOSE, scopes.SYSTEM, { tagId, data });
     return Tags.update({ _id: tagId }, { $set: data });
   },
 });

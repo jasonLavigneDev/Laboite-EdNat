@@ -1,14 +1,18 @@
 import { Meteor } from 'meteor/meteor';
 import { Roles } from 'meteor/alanning:roles';
 import { Counts } from 'meteor/tmeasday:publish-counts';
+import { UserStatus } from 'meteor/mizzao:user-status';
 import { FindFromPublication } from 'meteor/percolate:find-from-publication';
 import SimpleSchema from 'simpl-schema';
+import moment from 'moment';
 import { checkPaginationParams, isActive, getLabel } from '../../utils';
 import Groups from '../../groups/groups';
 import { getStructureIds } from '../structures';
 import logServer, { levels, scopes } from '../../logging';
 
-import { hasAdminRightOnStructure, hasRightToAcceptAwaitingStructure } from '../../structures/utils';
+import { queryUsersAdmin, queryUsersByStructure } from './utils';
+import { hasRightToAcceptAwaitingStructure } from '../../structures/utils';
+import Structures from '../../structures/structures';
 
 // publish additional fields for current user
 Meteor.publish('userData', function publishUserData() {
@@ -156,14 +160,18 @@ FindFromPublication.publish(
         .extend(checkPaginationParams)
         .validate({ page, itemPerPage, slug, search, userType });
     } catch (err) {
-      // logServer(`publish users.group: ${err}`);
-      logServer(`USERS - PUBLICATION - publish users.group: ${err}`, levels.ERROR, scopes.SYSTEM, {
-        page,
-        itemPerPage,
-        search,
-        slug,
-        userType,
-      });
+      logServer(
+        `USERS - PUBLICATION - ERROR - users.group - publish users.group: ${err}`,
+        levels.ERROR,
+        scopes.SYSTEM,
+        {
+          page,
+          itemPerPage,
+          search,
+          slug,
+          userType,
+        },
+      );
       this.error(err);
     }
     const group = Groups.findOne({ slug });
@@ -205,12 +213,16 @@ FindFromPublication.publish('users.publishers', ({ page, itemPerPage, search, ..
   try {
     checkPaginationParams.validate({ page, itemPerPage, search });
   } catch (err) {
-    // logServer(`publish users.publishers: ${err}`);
-    logServer(`USERS - PUBLICATION - publish users.publishers: ${err}`, levels.ERROR, scopes.SYSTEM, {
-      page,
-      itemPerPage,
-      search,
-    });
+    logServer(
+      `USERS - PUBLICATION - ERROR - users.group - publish users.publishers: ${err}`,
+      levels.ERROR,
+      scopes.SYSTEM,
+      {
+        page,
+        itemPerPage,
+        search,
+      },
+    );
     this.error(err);
   }
   const pubFields = { ...Meteor.users.publicFields };
@@ -248,37 +260,18 @@ Meteor.methods({
   },
 });
 
-const getAdminIds = (userType) => {
-  let userIds = [];
-  if (userType === 'adminStructure')
-    userIds = Roles.getUsersInRole('adminStructure', { anyScope: true })
-      .fetch()
-      .map((user) => user._id);
-  if (userType === 'admin')
-    userIds = Roles.getUsersInRole('admin')
-      .fetch()
-      .map((user) => user._id);
-  return userIds;
-};
-
-// Keep this as pure constant out of the function
-const defaultFieldsToSearch = ['firstName', 'lastName', 'emails.address', 'username', 'structure'];
-
-// build query for all users from group
-export const queryUsersAdmin = ({ search, userType, fieldsToSearch = defaultFieldsToSearch }) => {
-  const regexes = search
-    .split(' ')
-    .filter(Boolean)
-    .map((term) => new RegExp(`^${term}`, 'i'));
-
-  let searchQuery = {};
-  if (regexes.length) {
-    searchQuery = { $and: regexes.map((regex) => ({ $or: fieldsToSearch.map((field) => ({ [field]: regex })) })) };
+// publish all users from a group
+/**
+ * ! Ready for deletion
+FindFromPublication.publish('users.admin', function usersAdmin({ page, itemPerPage, search, ...rest }) {
+  if (!isActive(this.userId) || !Roles.userIsInRole(this.userId, 'admin')) {
+    return this.ready();
   }
-
-  if (userType !== 'all') {
-    const userIds = getAdminIds(userType);
-    searchQuery._id = { $in: userIds };
+  try {
+    checkPaginationParams.validate({ page, itemPerPage, search });
+  } catch (err) {
+    logServer(`publish users.admin : ${err}`);
+    this.error(err);
   }
   return searchQuery;
 };
@@ -300,31 +293,36 @@ FindFromPublication.publish(
         .extend(checkPaginationParams)
         .validate({ page, itemPerPage, search, userType });
     } catch (err) {
-      // logServer(`publish users.admin : ${err}`);
-      logServer(`USERS - PUBLICATION - publish users.admin : ${err}`, levels.ERROR, scopes.SYSTEM, {
-        page,
-        itemPerPage,
-        search,
-        userType,
-      });
+      logServer(
+        `USERS - PUBLICATION - ERROR - users.admin - publish users.admin : ${err}`,
+        levels.ERROR,
+        scopes.SYSTEM,
+        {
+          page,
+          itemPerPage,
+          search,
+          userType,
+        },
+      );
       this.error(err);
     }
 
     try {
       const query = queryUsersAdmin({ search, userType });
 
-      return Meteor.users.find(query, {
-        fields: Meteor.users.adminFields,
-        skip: itemPerPage * (page - 1),
-        limit: itemPerPage,
-        sort: { lastName: 1, firstName: 1 },
-        ...rest,
-      });
-    } catch (error) {
-      return this.ready();
-    }
-  },
-);
+    return Meteor.users.find(query, {
+      fields: Meteor.users.adminFields,
+      skip: itemPerPage * (page - 1),
+      limit: itemPerPage,
+      sort: { lastName: 1, firstName: 1 },
+      ...rest,
+    });
+  } catch (error) {
+    return this.ready();
+  }
+});
+*/
+
 // count all users
 Meteor.methods({
   'get_users.admin_count': ({ search, userType }) => {
@@ -342,71 +340,6 @@ Meteor.methods({
   },
 });
 
-// build query for all users with same structure
-const queryUsersByStructure = ({ search, userType }, currentStructure) => {
-  const regex = new RegExp(search, 'i');
-  const fieldsToSearch = ['firstName', 'lastName', 'emails.address', 'username'];
-  const searchQuery = fieldsToSearch.map((field) => ({ [field]: { $regex: regex } }));
-  if (userType === 'all') {
-    return {
-      structure: currentStructure,
-      $or: searchQuery,
-    };
-  }
-  const userIds = getAdminIds(userType);
-  return {
-    _id: { $in: userIds },
-    structure: currentStructure,
-    $or: searchQuery,
-  };
-};
-
-// publish all users with same structure
-FindFromPublication.publish(
-  'users.byStructure',
-  function usersStructure({ selectedStructureId = null, page, itemPerPage, search, userType, forceReload, ...rest }) {
-    const currentUser = Meteor.users.findOne(this.userId);
-    const usedStructure = selectedStructureId || currentUser.structure;
-    const hasAdminRight = hasAdminRightOnStructure({ userId: this.userId, structureId: usedStructure });
-
-    const isAuthorized = isActive(this.userId) && (Roles.userIsInRole(this.userId, 'admin') || hasAdminRight);
-
-    if (!isAuthorized) {
-      return this.ready();
-    }
-    try {
-      new SimpleSchema({
-        userType: {
-          type: String,
-          allowedValues: ['adminStructure', 'admin', 'all'],
-        },
-      })
-        .extend(checkPaginationParams)
-        .validate({ page, itemPerPage, search, userType });
-    } catch (err) {
-      // logServer(`publish users.byStructure : ${err}`);
-      logServer(`USERS - PUBLICATION - publish users.byStructure : ${err}`, levels.ERROR, scopes.SYSTEM, {
-        page,
-        itemPerPage,
-        search,
-        userType,
-      });
-      this.error(err);
-    }
-    try {
-      const query = queryUsersByStructure({ search, userType }, usedStructure);
-      return Meteor.users.find(query, {
-        fields: Meteor.users.adminFields,
-        skip: itemPerPage * (page - 1),
-        limit: itemPerPage,
-        sort: { lastName: 1, firstName: 1 },
-        ...rest,
-      });
-    } catch (error) {
-      return this.ready();
-    }
-  },
-);
 // count structure users
 Meteor.methods({
   'get_users.byStructure_count': function queryUsersStructureCount({ selectedStructureId = null, search, userType }) {
@@ -442,5 +375,37 @@ Meteor.publish('users.awaitingForStructure.count', function usersAwaitingForStru
     return this.ready();
   }
   Counts.publish(this, 'users.awaitingForStructure.count', Meteor.users.find({ awaitingStructure: structureId }));
+  this.ready();
   return [];
+});
+
+Meteor.publish('users.connections.counts', function usersAll() {
+  Counts.publish(this, 'users.connections.counts.logged', UserStatus.connections.find({ userId: { $exists: true } }));
+  Counts.publish(
+    this,
+    'users.connections.counts.notLogged',
+    UserStatus.connections.find({ userId: { $exists: false } }),
+  );
+  Counts.publish(this, 'users.connections.counts.idle', Meteor.users.find({ status: { idle: true } }));
+  Counts.publish(this, 'users.connections.counts.idle', Meteor.users.find({ status: { idle: false } }));
+  Counts.publish(
+    this,
+    'users.new.counts',
+    Meteor.users.find({ createdAt: { $gte: new Date(moment().subtract(2, 'days').format()) } }),
+  );
+
+  const structuresWithLoggedUsers = [];
+
+  Structures.find()
+    .fetch()
+    .forEach(({ _id }) => {
+      const users = Meteor.users.find({ structure: _id, $or: [{ 'status.online': true }, { 'status.idle': true }] });
+
+      if (users.count() !== 0) {
+        structuresWithLoggedUsers.push(_id);
+        Counts.publish(this, `users.connections.counts.structures.${_id}`, users);
+      }
+    });
+
+  return Structures.find({ _id: { $in: structuresWithLoggedUsers } }, { sort: { name: 1 }, limit: 200 });
 });

@@ -5,6 +5,7 @@ import i18n from 'meteor/universe:i18n';
 import { Quill } from 'react-quill';
 import '../locales';
 import 'material-icons/iconfont/material-icons.css';
+import 'intro.js/introjs.css';
 import App from '../../ui/layouts/App';
 import getLang from '../../ui/utils/getLang';
 import { registerSchemaMessages } from '../../api/utils';
@@ -14,6 +15,7 @@ Meteor.startup(() => {
   window.Quill = Quill;
   i18n.setLocale(getLang());
   document.documentElement.setAttribute('lang', getLang());
+
   // setup translated validation messages
   registerSchemaMessages();
   // setup client side login hook

@@ -7,6 +7,8 @@ import { _ } from 'meteor/underscore';
 import AsamExtensions from './asamextensions';
 import { validateString } from '../utils';
 
+import logServer, { levels, scopes } from '../logging';
+
 const validateAsam = (extension, entiteNomCourt, entiteNomLong, familleNomCourt, familleNomLong) => {
   if (extension) validateString(extension, true);
   if (entiteNomCourt) validateString(entiteNomCourt, true);
@@ -48,9 +50,21 @@ export const assignStructureToAsam = new ValidatedMethod({
   run({ extensionId, extension, entiteNomCourt, entiteNomLong, familleNomCourt, familleNomLong, structureId = null }) {
     const isAdmin = Roles.userIsInRole(this.userId, 'admin');
     if (!isAdmin) {
+      logServer(
+        `ASAM - METHOD - METEOR ERROR - assignStructureToAsam - ${i18n.__('api.users.adminNeeded')}`,
+        levels.ERROR,
+        scopes.ADMIN,
+        { extensionId, extension, entiteNomCourt, entiteNomLong, familleNomCourt, familleNomLong },
+      );
       throw new Meteor.Error('api.asam.assignStructureToAsam.notPermitted', i18n.__('api.users.adminNeeded'));
     }
     validateAsam(extension, entiteNomCourt, entiteNomLong, familleNomCourt, familleNomLong);
+    logServer(
+      `ASAM - METHOD - UPDATE - assignStructureToAsam - structureId: ${structureId}}`,
+      levels.VERBOSE,
+      scopes.ADMIN,
+      { extensionId, extension, entiteNomCourt, entiteNomLong, familleNomCourt, familleNomLong },
+    );
     return AsamExtensions.update(
       { _id: extensionId },
       { $set: { structureId, extension, entiteNomCourt, entiteNomLong, familleNomCourt, familleNomLong } },
@@ -64,9 +78,19 @@ export const unassignStructureToAsam = new ValidatedMethod({
   run({ extensionId }) {
     const isAdmin = Roles.userIsInRole(this.userId, 'admin');
     if (!isAdmin) {
+      logServer(
+        `ASAM - METHOD - METEOR ERROR - unassignStructureToAsam - ${i18n.__('api.users.adminNeeded')}`,
+        levels.ERROR,
+        scopes.ADMIN,
+        { extensionId },
+      );
       throw new Meteor.Error('api.asam.assignStructureToAsam.notPermitted', i18n.__('api.users.adminNeeded'));
     }
-
+    logServer(
+      `ASAM - METHOD - UPDATE - unassignStructureToAsam - extensionID: ${extensionId}`,
+      levels.VERBOSE,
+      scopes.ADMIN,
+    );
     return AsamExtensions.update({ _id: extensionId }, { $set: { structureId: null } });
   },
 });
@@ -77,9 +101,15 @@ export const deleteAsam = new ValidatedMethod({
   run({ extensionId }) {
     const isAdmin = Roles.userIsInRole(this.userId, 'admin');
     if (!isAdmin) {
+      logServer(
+        `ASAM - METHOD - METEOR ERROR - deleteAsam - ${i18n.__('api.users.adminNeeded')}`,
+        levels.ERROR,
+        scopes.ADMIN,
+        { extensionId },
+      );
       throw new Meteor.Error('api.asam.assignStructureToAsam.notPermitted', i18n.__('api.users.adminNeeded'));
     }
-
+    logServer(`ASAM - METHOD - REMOVE - deleteAsam - extensionID: ${extensionId}`, levels.VERBOSE, scopes.ADMIN);
     return AsamExtensions.remove({ _id: extensionId });
   },
 });
@@ -115,9 +145,22 @@ export const addNewAsam = new ValidatedMethod({
   run({ extension, entiteNomCourt, entiteNomLong, familleNomCourt, familleNomLong, structureId }) {
     const isAdmin = Roles.userIsInRole(this.userId, 'admin');
     if (!isAdmin) {
+      logServer(
+        `ASAM - METHOD - METEOR ERROR - deleteAsam - ${i18n.__('api.users.adminNeeded')}}`,
+        levels.ERROR,
+        scopes.ADMIN,
+        { extension, entiteNomCourt, entiteNomLong, familleNomCourt, familleNomLong, structureId },
+      );
       throw new Meteor.Error('api.asamextensions.notPermitted', i18n.__('api.users.adminNeeded'));
     }
     validateAsam(extension, entiteNomCourt, entiteNomLong, familleNomCourt, familleNomLong);
+    logServer(
+      `ASAM - METHOD - REMOVE - deleteAsam - data: ${
+        (extension, entiteNomCourt, entiteNomLong, familleNomCourt, familleNomLong, structureId)
+      }`,
+      levels.VERBOSE,
+      scopes.ADMIN,
+    );
     return AsamExtensions.insert({
       extension,
       entiteNomCourt,

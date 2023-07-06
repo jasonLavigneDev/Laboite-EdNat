@@ -2,6 +2,7 @@ import { Migrations } from 'meteor/percolate:migrations';
 import { Meteor } from 'meteor/meteor';
 import { WebApp } from 'meteor/webapp';
 import helmet from 'helmet';
+import { SyncedCron } from 'meteor/littledata:synced-cron';
 import { NOTIFICATIONS_TYPES, SCOPE_TYPES } from '../../api/notifications/enums';
 import { checkMigrationStatus } from '../../api/appsettings/methods';
 
@@ -62,4 +63,11 @@ Meteor.startup(() => {
     }),
   );
   WebApp.connectHandlers.use(helmet.crossOriginEmbedderPolicy({ policy: 'credentialless' }));
+
+  SyncedCron.config({
+    log: true,
+    // Name of collection to use for synchronisation and logging
+    collectionTTL: 172800,
+  });
+  SyncedCron.start();
 });

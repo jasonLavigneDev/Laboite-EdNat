@@ -23,6 +23,10 @@
     "appsettings": {
       "labels": {
         "external": "Use an external link",
+        "createdAt": "Created at",
+        "expirationDate": "Expire at",
+        "id": "Id",
+        "updatedAt": "Updated at",
         "link": "Link to the page",
         "content": "Content",
         "introduction": "Introduction",
@@ -142,7 +146,10 @@
         "contactEmail": "Structure contact email",
         "asamExtensionsIds": "Related email extensions ids",
         "iconUrlImage": "Icon url image",
-        "coverUrlImage": "Cover url image"
+        "coverUrlImage": "Cover url image",
+        "externalUrl": "External URL link",
+        "sendMailToParent": "Send mails to parent structure",
+        "sendMailToStructureAdmin": "Send mails to structure admins"
       }
     },
     "asamextensions": {
@@ -164,6 +171,7 @@
       "notPermitted": "You don't have sufficient rights.",
       "lastAdminError": "Can not remove rights on last admin user",
       "managedByKeycloak": "This information must be managed in Keycloak",
+      "insertError": "Error while creating user {$user}",
       "logWhiteDomains": "Users matching these domains will be activated when logging in: {$domains}",
       "labels": {
         "id": "User Id",
@@ -231,7 +239,10 @@
         "all": "All",
         "applications": "Applications ID",
         "nextcloud": "Create groupe in Nextcloud",
-        "plugins": "Related services managing groups"
+        "plugins": "Related services managing groups",
+        "circleId": "Nextcloud Circle Id",
+        "shareName": "Nextcloud share name",
+        "shareId": "Nextcloud share Id"
       }
     },
     "services": {
@@ -300,6 +311,7 @@
       "requestNotifTitle": "Group request",
       "requestNotifContent": "{$name} is candidate for group {$group}.",
       "badConfig": "Bad configuration for notifications of type {$type} (expiration delay in days)",
+      "expirationNotNumber": "numDays is not a number",
       "labels": {
         "id": "Notification Id",
         "userId": "Owner ID",
@@ -367,33 +379,29 @@
       "notPermitted": "You don't have sufficient rights.",
       "adminRankNeeded": "You must be admin",
       "urlAlreadyExists": "URL already exists",
-      "groupExists": "Group already exists in Nextcloud",
-      "addGroupError": "Error, could not create group in Nextcloud",
-      "addGroupFolderError": "Error, could not create group folder in Nextcloud",
       "addUserError": "Error, could not create user in Nextcloud",
-      "removeGroupError": "Warning, could not delete group in Nextcloud",
-      "removeGroupFolderError": "Warning, could not delete group folder in Nextcloud",
-      "groupFoldersInactive": "Nextcloud: ERROR, make sure 'Group Folders' application is active",
-      "groupNotFound": "Nextcloud: ERROR getting group {$groupName}",
-      "groupAdded": "Nextcloud: group {$groupName} added",
-      "groupAddError": "Nextcloud: ERROR adding group {$groupName}",
-      "userAdded": "Nextcloud: user {$userId} added (server {$ncURL})",
-      "userAddError": "Nextcloud: ERROR adding user {$userId}",
-      "groupFolderAssignError": "Nextcloud: could not assign group {$groupName} to folder {$folderName}",
-      "groupFolderAdded": "Nextcloud: group folder {$folderName} added",
-      "permissionsSet": "Nextcloud: access and permissions set for group folder {$folderName}",
-      "quotaSet": "Nextcloud: quota set for group folder {$folderName}",
-      "quotaSetError": "Nextcloud: ERROR setting quota on group folder {$folderName}",
-      "permissionSetError": "Nextcloud: ERROR settings group permissions for group folder {$folderName}",
-      "folderAddError": "Nextcloud: ERROR adding group folder {$folderName}",
-      "folderRemoved": "Nextcloud: removed group folder {$id} ({$mount_point})",
-      "folderRemoveError": "Nextcloud: ERROR deleting group folder {$id} ({$message})",
-      "groupRemoved": "Nextcloud: group {$groupName} removed",
-      "groupRemoveError": "Nextcloud: Error removing group {$groupName}",
-      "enablePluginForGroup": "Create group in Nextcloud",
+      "userAlreadyExists": "User {$username} already exists in Nextcloud",
+      "circlesInactive": "ERROR, make sure 'Circles' application is active",
+      "userAdded": "user {$userId} added (server {$ncURL})",
+      "userAddError": "ERROR adding user {$userId}",
+      "circleAdded": "A new circle has been created",
+      "circleDeleted": "Circle has been deleted",
+      "circleDeleteError": "ERROR deleting circle",
+      "folderDeleted": "Shared folder has been deleted",
+      "folderDeleteError": "ERROR deleting shared folder",
+      "shareAdded": "A new share folder has been created for group {$groupId}",
+      "shareAddError": "ERROR creating share for group {$groupId}",
+      "shareCreateError": "ERROR creating folder for group {$groupId}",
+      "userInvited": "User has been invited to circle",
+      "userInviteError": "ERROR inviting user to circle",
+      "userKicked": "User has been removed from circle",
+      "userKickError": "ERROR removing user from circle",
+      "notMember": "User is not member of the circle",
+      "configureCircleError": "ERROR configuring circle",
+      "enablePluginForGroup": "Associate a shared folder in Nextcloud",
       "buttonLinkPlugin": "Access shared files in Nextcloud",
       "checkConfig": "Checking access to Nextcloud API ({$URL})",
-      "badConfig": "Error accessing Nextcloud, check settings and make sure 'Group Folders' app is active",
+      "badConfig": "Error accessing Nextcloud, check settings and make sure 'Circles' app is active",
       "configOk": "connection to Nextcloud API successfull",
       "misingNCLocator": "nextcloud instance (nclocator) is missing.",
       "apiError": "Error while accessing Nextcloud API",
@@ -451,6 +459,73 @@
     "rateLimitError": "Error, too many requests. Please slow down. You must wait {$timeToReset} seconds before trying again."
   },
   "components": {
+    "onBoarding": {
+      "actions": {
+        "doneLabel": "Done",
+        "nextLabel": "Next",
+        "prevLabel": "Prev",
+        "skipLabel": "Skip",
+        "hintButtonLabel": "Got it",
+        "cancelConfirm": "Are you sure you want to ignore the introduction?"
+      },
+      "steps": {
+        "intro": {
+          "title": "Welcome to your space!",
+          "text": "A new space is opening up for state employees. 👋"
+        },
+        "mySpace": {
+          "title": "Your Space!",
+          "text": "This is where it all happens!"
+        },
+        "services": {
+          "title": "The interdepartmental applications",
+          "text": "The application store available to all government employees"
+        },
+        "structure": {
+          "title": "The ministerial applications",
+          "text": "The application store available for your department or organization"
+        },
+        "bookMark": {
+          "title": "Manage your bookmarks",
+          "text": "Access the links you have saved in the application"
+        },
+        "addBookMark": {
+          "title": "Add a bookmark",
+          "text": "Add a web link in 5 seconds!"
+        },
+        "editMySpace": {
+          "title": "Edit your space",
+          "text": "Add application areas or bookmarks here!"
+        },
+        "menu": {
+          "title": "Menu",
+          "text": "Find your profile and all options here!"
+        },
+        "zone": {
+          "title": "Zone",
+          "text": "Find your personalized zones allowing quick access to the links you (or your structure) have chosen"
+        },
+        "zone-old": {
+          "title": "Zone",
+          "text": "Add, modify or delete zones and customize your space"
+        },
+        "link": {
+          "title": "Link",
+          "text": "You can add a line from interdepartmental or departmental applications or bookmarks"
+        },
+        "help": {
+          "title": "Need help?",
+          "text": "Here you will find additional help on the different applications available"
+        },
+        "replay": {
+          "title": "A memory lapse?",
+          "text": "You can always replay this help sequence with this button"
+        },
+        "end": {
+          "title": "Thank you!"
+        }
+      }
+    },
     "AdminGroupDelete": {
       "subtitle": "Group deletion",
       "mainText": "Do you really want to remove this group? this action is irreversible.",
@@ -477,10 +552,26 @@
       "language": "Select the language to edit",
       "language_fr": "French",
       "language_en": "English",
+      "language_all": "All languages",
       "content_introduction": "Introduction text",
       "content_globalInfo": "General informations text",
       "update": "Update",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "due_date": "validity period"
+    },
+    "AdminMesssage": {
+      "select_language": "Message language",
+      "select_language_form": "Message language",
+      "button_modify": "Modify",
+      "button_delete": "Delete",
+      "button_create": "Create",
+      "create_info_success": "Information successfully created",
+      "update_info_success": "Information successfull updated",
+      "missing_content": "Missing content message !",
+      "create_at": "Create at :",
+      "update_at": "Update at :",
+      "expire_at": "Expire at :",
+      "no_message": "No message"
     },
     "Notifications": {
       "remove": "Remove"
@@ -550,12 +641,14 @@
       "menuArticles": "My publications",
       "menuArticlesMobile": "Publications",
       "menuHelp": "Help",
-      "menuServices": "Applications",
+      "menuServices": "All Services",
+      "menuServicesMobile": "Services",
       "menuStructure": "My Structure",
+      "menuStructureMobile": "Structure",
       "menuGroupes": "All Groups",
       "menuGroupesMobile": "Groups",
       "menuNotifications": "My Alerts",
-      "menuAdminServices": "Service Management",
+      "menuAdminServices": "Service management",
       "menuAdminUserValidation": "User validation",
       "tooltipServices": "SNP apps",
       "tooltipStructure": "Resources from your structure",
@@ -579,50 +672,58 @@
       "inputSearchLabel": "Search..."
     },
     "MainMenu": {
-      "menuAdminGroups": "Groups Management",
+      "menuAdminGroups": "Groups management",
       "menuUserBookmarks": "Bookmarks",
+      "menuUpload": "Transfer files",
       "menuProfileLabel": "Profile",
       "menuHelpLabel": "Help",
+      "menuFeedbackLabel": "Give feedback",
+      "menuOnboardingLabel": "How to use this service?",
       "menuLogoutLabel": "Logout",
       "menuMedias": "Medias Storage",
       "menuAdminApp": "Administration",
       "menuAdminAppSettings": "Admin Settings",
-      "menuAdminServices": "Service Management",
-      "menuAdminUsers": "Users Management",
+      "menuAdminServices": "Service management",
+      "menuAdminUsers": "Users management",
       "menuAdminNextcloudUrl": "Nextcloud URL management",
       "menuAdminUserValidation": "User validation",
-      "menuAdminCategories": "Categories Management",
-      "menuAdminBusinessRegrouping": "Business regrouping Management",
-      "menuAdminTags": "Tags Management",
+      "menuAdminCategories": "Categories management",
+      "menuAdminBusinessRegrouping": "Business regrouping management",
+      "menuAdminTags": "Tags management",
       "menuAdminStructureUsers": "Structure Users",
       "menuAdminStructureServices": "Structure Services",
-      "menuUserStructure": "Structures Management",
+      "menuUserStructure": "Structures management",
       "menuAdminHelpPage": "Help page management",
       "menuAdminBackHome": "Back to Personnal Space",
-      "menuContact": "Contact"
+      "menuContact": "Contact",
+      "menuAdminAsam": "Email extensions Management",
+      "menuAdminGlobalInfo": "Global informations"
     },
     "AdminMenu": {
       "title": "Administration",
-      "menuAdminAppSettings": "Admin Settings",
+      "menuAdminAppSettings": "Global settings",
       "menuAdminHelpPage": "Help page management",
-      "menuAdminServices": "Service Management",
-      "menuAdminUsers": "Users Management",
+      "menuAdminServices": "Service management",
+      "menuAdminUsers": "Users management",
       "menuAdminNextcloudUrl": "Nextcloud URL management",
       "menuAdminUserValidation": "User validation",
-      "menuAdminCategories": "Categories Management",
-      "menuAdminBusinessRegrouping": "Business regrouping Management",
-      "menuAdminTags": "Tags Management",
-      "menuAdminGroups": "Groups Management",
+      "menuAdminCategories": "Categories management",
+      "menuAdminBusinessRegrouping": "Business regrouping management",
+      "menuAdminTags": "Tags management",
+      "menuAdminGroups": "Groups management",
       "menuAdminStructureUsers": "Structure Users",
       "menuAdminStructureServices": "Structure Services",
       "menuAdminBackHome": "Back to Personnal Space",
-      "menuUserStructure": "Structures Management",
-      "menuAdminOfStructures": "Sub structures Management",
-      "menuAdminStructureSettings": "Structure settings",
+      "menuUserStructure": "Structures management",
+      "menuAdminOfStructures": "Sub structures management",
       "menuAdminStructureIntroduction": "Structure introduction",
       "menuAdminOfStructureUsersValidation": "Awaiting users",
       "menuAdminDefaultSpaces": "Default Personal Spaces",
-      "menuAdminAsam": "Email extensions Management"
+      "menuAdminAsam": "Email extensions Management",
+      "menuAdminGlobalInfo": "Global information",
+      "menuAdminAnalytics": "Analytics",
+      "menuAdminStructureAnalytics": "Structure analytics",
+      "menuAdminStructureSettings": "Structure settings"
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Your account has not been activated",
@@ -905,7 +1006,9 @@
       "attachToStructure": "Do you want to be attached to this structure?"
     },
     "AdminStructureTreeView": {
-      "title": "Structures list"
+      "all": "all",
+      "title": "Structures list",
+      "isPartOf": "You are a member of structure "
     },
     "AdminStructureSearchBar": {
       "filterByName": "Filter by a structure's name (three letter and more)",
@@ -956,6 +1059,64 @@
     "body_editRow_saveTooltip": "Confirm"
   },
   "pages": {
+    "UploadPage": {
+      "description": "You can send large, non-sensitive files securely to a government agent or between agents using France transfert.",
+      "fileCount": "{$count} elements",
+      "fileAlreadyExists": "The file {$name} is already imported.",
+      "emailFold": "Email",
+      "linkFold": "Link",
+      "totalSize": "{$totalSize} / {$maxSize}",
+      "addFilesLabel": "Add your files and folders",
+      "recipientsLabel": "Recipients",
+      "recipientsPlaceholder": "The email addresses of the recipients",
+      "recipientsHelp": "If the sender is a government official, the recipient(s) may be a government official or an individual. If the sender is a private individual, the addressee(s) can only be a government official.",
+      "subjectLabel": "Subjet",
+      "messageLabel": "Message",
+      "linkNameLabel": "Name of the transfer",
+      "wrongEmailFormat": "A valid email address is required (john.doe@email.com).",
+      "tosLabel": {
+        "a": "I have read the ",
+        "b": "TOS",
+        "c": " and I do not send sensitive data, as defined in article 4.2, not encrypted beforehand."
+      },
+      "settings": {
+        "expiryDateLabel": "Validity period",
+        "passwordLabel": "Password",
+        "passwordConditions": {
+          "minMaxChars": "12 characters minimum - 64 characters maximum",
+          "lowercase": "At least 3 lower case letters (unaccented a-z)",
+          "uppercase": "At least 3 capital letters (unaccented A-Z)",
+          "numbers": "At least 3 digits",
+          "specialChars": "At least 3 special characters (!@#$%^&*()_-:+)",
+          "supported": "No special characters not supported"
+        },
+        "languageLabel": "Email display language",
+        "encryptLabel": "Password protect the zip archive of my fold",
+        "cancel": "Cancel",
+        "save": "Save"
+      },
+      "settingsBtn": "Settings",
+      "send": "Send",
+      "pause": "Pause",
+      "resume": "Resume",
+      "abort": "Annuler",
+      "errorWhenLoadingFile": "Error on loding file {$fileName}",
+      "errorWhenVerifyingFiles": "Error on file verification",
+      "errorWhenRetrievingFoldData": "Error on retrieving fold data",
+      "summary": {
+        "title": "Fold successfully sent",
+        "expiryDate": "The fold will we available until {$date}.",
+        "link": "Download link: ",
+        "password": "Link's password: ",
+        "showPassword": "Show",
+        "hidePassword": "Hide",
+        "clickToCopy": "Click to copy",
+        "passwordCopied": "Password has been copied.",
+        "linkCopied": "Link has been copied.",
+        "errorWhenCopying": "Impossible to copy the password."
+      }
+
+    },
     "UserBookmarksPage": {
       "back": "Go back",
       "favoriteBookmark": "Add to your personal space",
@@ -973,7 +1134,7 @@
       "disableFilter": "Show all bookmarks",
       "enableFilter": "Show only my bookmarks",
       "noAccess": "You don't have access to bookmarks of this group",
-      "title": "Bookmarks Management",
+      "title": "Bookmarks management",
       "materialTableLocalization": {
         "body_addTooltip": "Add new bookmark",
         "body_editTooltip": "Edit this bookmark",
@@ -984,9 +1145,6 @@
         "body_editRow_deleteText": "Do you really want to delete this bookmark ?",
         "body_actionTooltip": "Open bookmark's URL"
       }
-    },
-    "EventsPage": {
-      "noAccess": "You don't have access to events of this group"
     },
     "LegalPage": {
       "personalData": "Personal Data",
@@ -1009,6 +1167,9 @@
       "toggleMaintenance": "Put the site in maintenance",
       "textMaintenance": "Maintenance reason",
       "buttonTextMaintenance": "Validate message",
+      "sendMailToParentStructure": "Redirect mails to parent structure.",
+      "sendMailToAdminStructure": "Send mails to administrators of the structure",
+      "externalUrl": "External URL link",
       "unlockMigration": {
         "title": "Migration unlocking",
         "mainText": "Database migration is currently locked.",
@@ -1101,7 +1262,11 @@
       "onlyActiveUserOption": "Only actives users can select a structure",
       "awaitingForStructure": "You are awaiting for structure:",
       "nclocator": "Nextcloud Federation ID",
-      "emptyNcLocator": "No Nextcloud given"
+      "emptyNcLocator": "No Nextcloud given",
+      "ApplyDefaultSpace": "Apply '{$structName}' structure default space",
+      "ApplyDefaultSpaceMessage": "This will apply the changes to your personal space",
+      "ApplyDefaultSpaceBtn": "Apply default space",
+      "ApplyDefaultSpaceWarning": "Can not apply default space if advanced personal page is activated"
     },
     "NotFound": {
       "backButtonLabel": "Back",
@@ -1136,14 +1301,15 @@
       "filterGroup": "Show only joined groups",
       "noGroup": "There is no group to display.",
       "addEvent": "Add new event",
-      "addPoll": "Add new poll"
+      "addPoll": "Add new poll",
+      "addNewForm": "Add new Form"
     },
     "AdminHome": {
       "title": "Administration Page",
       "subtitle": "Choose a setting to change"
     },
     "AdminServicesPage": {
-      "title": "Service Management",
+      "title": "Service management",
       "columnLogo": "Logo",
       "columnTitle": "Name",
       "columnUsage": "Usage",
@@ -1162,7 +1328,7 @@
       }
     },
     "AdminCategoriesPage": {
-      "title": "Categories Management",
+      "title": "Categories management",
       "columnName": "Name",
       "structure": "structure",
       "materialTableLocalization": {
@@ -1189,7 +1355,7 @@
       }
     },
     "AdminTagsPage": {
-      "title": "Tags Management",
+      "title": "Tags management",
       "columnName": "Name",
       "materialTableLocalization": {
         "toolbar_searchPlaceholder": "Find a tag",
@@ -1202,7 +1368,7 @@
       }
     },
     "AdminStructuresManagementPage": {
-      "title": "Structure Management",
+      "title": "Structure management",
       "helpText": "Click on a structure to reveal its children.",
       "columnName": "Name",
       "modal": {
@@ -1215,7 +1381,7 @@
       }
     },
     "AdminGroupsPage": {
-      "title": "Groups Management",
+      "title": "Groups management",
       "columnName": "Logo",
       "columnInfo": "Description",
       "columnType": "Type",
@@ -1252,7 +1418,7 @@
       }
     },
     "AdminUsersPage": {
-      "title": "Users Management",
+      "title": "Users management",
       "searchText": "Which user are you looking for ?",
       "admin": "Administrator",
       "setAdmin": "Give admin rights",
@@ -1290,7 +1456,7 @@
       "title": "User validation"
     },
     "AdminHelpPage": {
-      "title": "Helps Management",
+      "title": "Help page management",
       "columnTitle": "Title",
       "columnDescription": "Description",
       "columnCategory": "Category",
@@ -1325,7 +1491,8 @@
       "unsortedFav": "My Favorites",
       "unsortedGroup": "My groups",
       "unsortedService": "My applications",
-      "unsortedLinks": "My bookmarks",
+      "unsortedLinks": "My personal bookmarks",
+      "unsortedGroupLinks": "My group bookmarks",
       "newZone": "New Zone",
       "typeApplication": "Application",
       "typeGroup": "Group",
@@ -1333,7 +1500,9 @@
       "addZoneHere": "Add a zone here",
       "toggleEdition": "Toggle edition mode",
       "coverImage": "Cover image",
-      "iconImage": "Icon image"
+      "iconImage": "Icon image",
+      "newBookMarkWithCtrV": "New bookmark from clipboard Ctrl+V ",
+      "newBookMarkWithCtrVOrButton": "or below button"
     },
     "HelpPage": {
       "title": "Find here all the help you need",
@@ -1359,7 +1528,12 @@
       "update": "Update",
       "cancel": "Cancel",
       "logo_url": "Logo URL",
-      "offlineService": "Enable this service on the offline page"
+      "offlineService": "Enable this service on the offline page",
+      "titleFieldHelperText": "Service title",
+      "StateFieldHelperText": "Service state",
+      "teamFieldHelperText": "Team that manages the service",
+      "usageFieldHelperText": "Service usage",
+      "descriptionFieldHelperText": "Short description"
     },
     "AdminSingleGroupPage": {
       "edition": "Edition of the group",
@@ -1374,7 +1548,10 @@
       "update": "Update",
       "cancel": "Cancel",
       "groupRemoved": "Group deleted",
-      "invalidName": "Nom invalide"
+      "invalidName": "Nom invalide",
+      "shareName": "Nextcloud share name",
+      "invalidCharacters": "Invalid characters",
+      "shareNameExists": "This share name already exists"
     },
     "SingleGroupPage": {
       "backToList": "Back to the list",
@@ -1398,6 +1575,8 @@
       "Events": "Events",
       "PollUsage": "Polls list",
       "Polls": "Polls",
+      "FormUsage": "Forms list",
+      "Forms": "Forms",
       "groupArticles": "Access blog's articles",
       "BookmarksUsage": "Bookmarks list",
       "Bookmarks": "Bookmarks",
@@ -1416,13 +1595,6 @@
       "userType": "Users type",
       "noStructure": "No Structure assigned"
     },
-    "Events": {
-      "seeEvent": "See event",
-      "back": "Back to the group",
-      "searchText": "Which event are you looking for ?",
-      "dayOf": "All day of",
-      "noEvents": "No current or upcoming polls were found for this group"
-    },
     "GroupArticlesPage": {
       "seeArticle": "See article",
       "back": "Back to the group",
@@ -1432,12 +1604,26 @@
       "publicPage": "Public page",
       "openPublicPage": "Open this group's public page"
     },
-    "Polls": {
+    "ExtService": {
+      "title": {
+        "polls": "Polls",
+        "events": "Events",
+        "forms": "Forms"
+      },
+      "back": "Go back to group",
       "seePoll": "See poll",
-      "back": "Back to the group",
-      "searchText": "Which poll are you looking for ?",
-      "noPoll": "No current or upcoming polls were found for this group",
-      "noAccess": "You don't have access to polls of this group"
+      "seeForm": "Replie to form",
+      "seeEvent": "See event",
+      "addPoll": "Add new poll",
+      "addEvent": "Add new event",
+      "addForm": "Add new form",
+      "searchText": "What are you looking for ?",
+      "noElements": "There is nothing to display.",
+      "noAccess": "You don't have access to the elements of this group",
+      "seeFormForEdit": "Edit your form's answers",
+      "blockForm": "You have already answered to this form, and you cannot modify your answers.",
+      "dayOf": "All day of",
+      "daysOf": "All days of {$start} to {$end}"
     },
     "ArticlesPage": {
       "title": "Your publications",
@@ -1519,7 +1705,7 @@
       "objectUsedText": "This file is used in a publication (title under this text), if you delete it, it will result as an empty link in your article. If you click again on delete, be aware that it will not be possible to restore it."
     },
     "AdminStructureUsersPage": {
-      "title": "Structure Users Management",
+      "title": "Structure users management",
       "searchText": "Which user are you looking for ?",
       "structureAdmin": "Structure Administrator",
       "setStructureAdmin": "Give structure admin rights",
@@ -1533,14 +1719,14 @@
       "sortByLastLogin": "Sort by last login date"
     },
     "AdminStructureUsersValidationPage": {
-      "title": "Users structure validation page for {$structureName}",
+      "title": "Users awaiting validation for structure {$structureName}",
       "successSetStructure": "User successfuly added in structure",
       "actions": {
         "validate": "Validate user"
       }
     },
     "AdminServicesByStructurePage": {
-      "title": "Services management for structure"
+      "title": "Structure Services"
     },
     "AdminDefaultSpacesPage": {
       "chooseStructure": "Choose the structure",
@@ -1591,6 +1777,39 @@
         "famillyLongName": "Corresponding familly long name if exists",
         "confirmMsg": "Are you sure you want to delete email extension ",
         "deleteExtensionEmailTitle": "Email extension "
+      }
+    },
+    "AdminAnalytics": {
+      "title": "Analytics Data",
+      "usersTabs": "Users",
+      "actionsTabs": "Actions",
+      "viewsTabs": "Pages View",
+      "usersTitle": "Real time connected users",
+      "status": "Status",
+      "number": "Number",
+      "usersByStructure": "Connected by structure",
+      "rows": {
+        "usersLogged": "Users",
+        "newAccounts": "Accounts created in the past 2 days",
+        "usersNotLogged": "Visitors",
+        "usersIdle": "Idle",
+        "usersIdleTotal": "Idle (including substructures)",
+        "usersActive": "Active",
+        "usersActiveTotal": "Active (including substructures)"
+      },
+      "pageViewsTitle": "Pages View",
+      "actionsClickTitle": "Users actions",
+      "columnRoute": "Route",
+      "columnNumberConnected": "Users",
+      "columnNumberNotConnected": "Visitors",
+      "columnActionsTarget": "Target",
+      "columnContent": "Content",
+      "noEventOnPeriod": "No available data for the period",
+      "download": "Download",
+      "materialTableLocalization": {
+        "pagination_labelRowsSelect": "events per page",
+        "toolbar_searchPlaceholder": "Search",
+        "body_emptyDataSourceMessage": "No results"
       }
     }
   },

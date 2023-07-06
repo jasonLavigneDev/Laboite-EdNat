@@ -56,14 +56,18 @@ FindFromPublication.publish(
         .extend(checkPaginationParams)
         .validate({ page, itemPerPage, userId, search });
     } catch (err) {
-      // logServer(`publish articles.all : ${err}`);
-      logServer(`ARTICLES - PUBLICATION - articles.all,publish articles.all : ${err}`, levels.ERROR, scopes.SYSTEM, {
-        nodrafts,
-        page,
-        search,
-        itemPerPage,
-        userId,
-      });
+      logServer(
+        `ARTICLES - PUBLICATION - ERROR - articles.all,publish articles.all : ${err}`,
+        levels.ERROR,
+        scopes.SYSTEM,
+        {
+          nodrafts,
+          page,
+          search,
+          itemPerPage,
+          userId,
+        },
+      );
       this.error(err);
     }
 
@@ -93,9 +97,8 @@ FindFromPublication.publish('articles.one.admin', ({ slug }) => {
       },
     }).validate({ slug });
   } catch (err) {
-    // logServer(`publish articles.one : ${err}`);
     logServer(
-      `ARTICLES - PUBLICATION - articles.one.admin,publish articles.one : ${err}`,
+      `ARTICLES - PUBLICATION - ERROR - articles.one.admin,publish articles.one : ${err}`,
       levels.ERROR,
       scopes.SYSTEM,
       { slug },
@@ -122,10 +125,14 @@ publishComposite('articles.one', ({ slug }) => {
       },
     }).validate({ slug });
   } catch (err) {
-    // logServer(`publish articles.one : ${err}`);
-    logServer(`ARTICLES - PUBLICATION - articles.one,publish articles.one : ${err}`, levels.ERROR, scopes.SYSTEM, {
-      slug,
-    });
+    logServer(
+      `ARTICLES - PUBLICATION - ERROR - articles.one,publish articles.one : ${err}`,
+      levels.ERROR,
+      scopes.SYSTEM,
+      {
+        slug,
+      },
+    );
 
     this.error(err);
   }
@@ -192,9 +199,8 @@ FindFromPublication.publish('groups.articles', function groupsArticles({ page, s
   try {
     checkPaginationParams.validate({ page, itemPerPage, search });
   } catch (err) {
-    // logServer(`publish groups.articles : ${err}`);
     logServer(
-      `ARTICLES - PUBLICATION - groups.articles,publish groups.articles : ${err}`,
+      `ARTICLES - PUBLICATION - ERROR - groups.articles,publish groups.articles : ${err}`,
       levels.ERROR,
       scopes.SYSTEM,
       {

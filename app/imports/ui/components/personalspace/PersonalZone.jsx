@@ -27,6 +27,7 @@ import UserBookmarks from '../../../api/userBookmarks/userBookmarks';
 import ServiceDetailsPersSpace from '../services/ServiceDetailsPersSpace';
 import GroupDetailsPersSpace from '../groups/GroupDetailsPersSpace';
 import PersonalLinkDetails from './PersonalLinkDetails';
+import Bookmarks from '../../../api/bookmarks/bookmarks';
 
 export const useZoneStyles = makeStyles()((theme) => ({
   expansionpanel: {
@@ -231,7 +232,11 @@ const PersonalZone = ({
   };
 
   return (
-    <Accordion className={classes.expansionpanel} expanded={isSorted ? isExpanded : localIsExpanded}>
+    <Accordion
+      className={classes.expansionpanel}
+      expanded={isSorted ? isExpanded : localIsExpanded}
+      data-tour-id="zone"
+    >
       <AccordionSummary
         expandIcon={<ExpandMoreIcon className={classes.cursorPointer} />}
         aria-controls={`zone-${title}-${index}`}
@@ -408,6 +413,31 @@ const PersonalZone = ({
                             globalEdit={customDrag}
                             isSorted={isSorted}
                             needUpdate={handleNeedUpdate}
+                            type={elem.type}
+                          />
+                        </Grid>
+                      );
+                    }
+                    case 'groupLink': {
+                      const myLink = Bookmarks.findOne(elem.element_id);
+                      return myLink === undefined ? null : (
+                        <Grid
+                          className={classes.gridItem}
+                          item
+                          key={`group_link_${elem.element_id}`}
+                          xs={12}
+                          sm={6}
+                          md={4}
+                          lg={3}
+                        >
+                          <div className={customDrag ? classes.handle : null} />
+                          <PersonalLinkDetails
+                            link={myLink}
+                            isMobile={isMobile}
+                            globalEdit={customDrag}
+                            isSorted={isSorted}
+                            needUpdate={handleNeedUpdate}
+                            type={elem.type}
                           />
                         </Grid>
                       );

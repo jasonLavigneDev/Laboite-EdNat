@@ -13,7 +13,10 @@ import Spinner from '../components/system/Spinner';
 import MsgHandler from '../components/system/MsgHandler';
 import DynamicStore, { useAppContext } from '../contexts/context';
 import lightTheme from '../themes/light';
-import { instance } from '../utils/matomo';
+import LocalizationLayout from './locales/LocalizationLayout';
+import useWidgetLink from '../utils/widgetLink';
+import { OnBoardingContext } from '../contexts';
+import { instance } from '../utils/analyticsServices';
 
 // dynamic imports
 const MainLayout = lazy(() => import('./MainLayout'));
@@ -42,6 +45,7 @@ function App() {
   const theme = useTheme();
   const { enableLinkTracking } = useMatomo();
   enableLinkTracking();
+  useWidgetLink();
 
   const { userId, loadingUser = false, loading } = state;
   const externalBlog = !!Meteor.settings.public.services.laboiteBlogURL;
@@ -68,6 +72,7 @@ function App() {
             )}
             <ProtectedRoute exact path="/logout" component={Logout} {...state} />
             <Route exact path="/legal/:legalKey" component={LegalPage} />
+
             {!userId && <Route exact path="/contact" component={SignLayout} {...state} />}
             <ProtectedRoute
               path="/admin"
@@ -92,7 +97,11 @@ export default () => (
       <ThemeProvider theme={lightTheme}>
         <BrowserRouter>
           <DynamicStore>
-            <App />
+            <LocalizationLayout>
+              <OnBoardingContext.Provider>
+                <App />
+              </OnBoardingContext.Provider>
+            </LocalizationLayout>
           </DynamicStore>
         </BrowserRouter>
       </ThemeProvider>

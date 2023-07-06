@@ -20,9 +20,8 @@ class RocketChatClient {
     // initialize client id and check that we can get tokens
     this._getToken().then((initToken) => {
       if (initToken) {
-        // logServer(i18n.__('api.rocketChat.initClient'));
         logServer(
-          `APPCLIENT - ROCKETCHAT - _getToken - ${i18n.__('api.rocketChat.initClient')}`,
+          `APPCLIENT - ROCKETCHAT - CONSTRUCTOR - _getToken - ${i18n.__('api.rocketChat.initClient')}`,
           levels.INFO,
           scopes.SYSTEM,
           {},
@@ -63,17 +62,14 @@ class RocketChatClient {
       )
       .then((response) => {
         if (response.data.status === 'success') {
-          // logServer(i18n.__('api.rocketChat.logout'));
           logServer(
-            `APPCLIENT - ROCKETCHAT - _expire - ${i18n.__('api.rocketChat.logout')}`,
+            `APPCLIENT - ROCKETCHAT - THEN - _expire - ${i18n.__('api.rocketChat.logout')}`,
             levels.INFO,
             scopes.SYSTEM,
-            {},
           );
         } else {
-          // logServer(i18n.__('api.rocketChat.logoutError'), 'error');
           logServer(
-            `APPCLIENT - ROCKETCHAT - _expire - ${i18n.__('api.rocketChat.logoutError')}`,
+            `APPCLIENT - ROCKETCHAT - ERROR - _expire - ${i18n.__('api.rocketChat.logoutError')}`,
             levels.ERROR,
             scopes.SYSTEM,
             {
@@ -83,11 +79,8 @@ class RocketChatClient {
         }
       })
       .catch((error) => {
-        // logServer(i18n.__('api.rocketChat.logoutError'), 'error');
-        // logServer(error.response && error.response.data ? error.response.data : error, 'error');
-
         logServer(
-          `APPCLIENT - ROCKETCHAT - _expire - ${i18n.__('api.rocketChat.logoutError')}`,
+          `APPCLIENT - ROCKETCHAT - ERROR - _expire - ${i18n.__('api.rocketChat.logoutError')}`,
           levels.ERROR,
           scopes.SYSTEM,
           {
@@ -106,7 +99,11 @@ class RocketChatClient {
   _checkToken() {
     if (this.token) return Promise.resolve(this.token);
     return this._authenticate().then((response) => {
-      logServer('RocketChat : new token received');
+      logServer(
+        `APPCLIENT - ROCKETCHAT - THEN - _checkToken - RocketChat : new token received`,
+        levels.INFO,
+        scopes.SYSTEM,
+      );
       const newToken = response.data.data.authToken;
       this.adminId = response.data.data.userId;
       // Rocket Chat does not indicate token expiration (set to 15 minutes)
@@ -119,10 +116,8 @@ class RocketChatClient {
     return this._checkToken()
       .then((newToken) => Promise.resolve(newToken))
       .catch((error) => {
-        // logServer(i18n.__('api.rocketChat.tokenError'), 'error');
-        // logServer(error.response && error.response.data ? error.response.data : error, 'error');
         logServer(
-          `APPCLIENT - ROCKETCHAT - _getToken - ${i18n.__('api.rocketChat.tokenError')}`,
+          `APPCLIENT - ROCKETCHAT - ERROR - _getToken - ${i18n.__('api.rocketChat.tokenError')}`,
           levels.ERROR,
           scopes.SYSTEM,
           {
@@ -184,9 +179,8 @@ class RocketChatClient {
           )
           .then((response) => {
             if (response.data && response.data.success === true) {
-              // logServer(i18n.__('api.rocketChat.groupAdded', { name }));
               logServer(
-                `APPCLIENT - ROCKETCHAT - createGroup - ${i18n.__('api.rocketChat.groupAdded', { name })}`,
+                `APPCLIENT - ROCKETCHAT - THEN - createGroup - ${i18n.__('api.rocketChat.groupAdded', { name })}`,
                 levels.INFO,
                 scopes.USER,
                 {
@@ -196,9 +190,8 @@ class RocketChatClient {
               );
               return response.data.group;
             }
-            // logServer(`${i18n.__('api.rocketChat.groupAddError', { name })} (${response.error})`, 'error', callerId);
             logServer(
-              `APPCLIENT - ROCKETCHAT - createGroup - ${i18n.__('api.rocketChat.groupAddError', { name })}`,
+              `APPCLIENT - ROCKETCHAT - ERROR - createGroup - ${i18n.__('api.rocketChat.groupAddError', { name })}`,
               levels.ERROR,
               scopes.USER,
               {
@@ -210,10 +203,8 @@ class RocketChatClient {
           });
       })
       .catch((error) => {
-        // logServer(i18n.__('api.rocketChat.groupAddError', { name }), 'error', callerId);
-        // logServer(error.response && error.response.data ? error.response.data : error, 'error');
         logServer(
-          `APPCLIENT - ROCKETCHAT - createGroup - ${i18n.__('api.rocketChat.groupAddError', { name })}`,
+          `APPCLIENT - ROCKETCHAT - ERROR - createGroup - ${i18n.__('api.rocketChat.groupAddError', { name })}`,
           levels.ERROR,
           scopes.USER,
           {
@@ -247,9 +238,8 @@ class RocketChatClient {
           )
           .then((response) => {
             if (response.data && response.data.success === true) {
-              // logServer(i18n.__('api.rocketChat.groupRenamed', { slug }));
               logServer(
-                `APPCLIENT - ROCKETCHAT - renameGroup - ${i18n.__('api.rocketChat.groupRenamed', { slug })}`,
+                `APPCLIENT - ROCKETCHAT - THEN - renameGroup - ${i18n.__('api.rocketChat.groupRenamed', { slug })}`,
                 levels.INFO,
                 scopes.USER,
                 {
@@ -260,9 +250,8 @@ class RocketChatClient {
               );
               return response.data.group;
             }
-            // logServer(`${i18n.__('api.rocketChat.groupRenameError', { slug })} (${response.error})`, 'error', callerId);
             logServer(
-              `APPCLIENT - ROCKETCHAT - renameGroup - ${i18n.__('api.rocketChat.groupRenameError', { slug })}`,
+              `APPCLIENT - ROCKETCHAT - ERROR - renameGroup - ${i18n.__('api.rocketChat.groupRenameError', { slug })}`,
               levels.ERROR,
               scopes.USER,
               {
@@ -275,11 +264,8 @@ class RocketChatClient {
           });
       })
       .catch((error) => {
-        // logServer(i18n.__('api.rocketChat.groupRenameError', { slug }), 'error', callerId);
-        // logServer(error.response && error.response.data ? error.response.data : error, 'error');
-
         logServer(
-          `APPCLIENT - ROCKETCHAT - renameGroup - ${i18n.__('api.rocketChat.groupRenameError', { slug })}`,
+          `APPCLIENT - ROCKETCHAT - ERROR - renameGroup - ${i18n.__('api.rocketChat.groupRenameError', { slug })}`,
           levels.ERROR,
           scopes.USER,
           {
@@ -314,9 +300,8 @@ class RocketChatClient {
           )
           .then((response) => {
             if (response.data.success === true) {
-              // logServer(i18n.__('api.rocketChat.groupRemoved', { name }));
               logServer(
-                `APPCLIENT - ROCKETCHAT - removeGroup - ${i18n.__('api.rocketChat.groupRemoved', { name })}`,
+                `APPCLIENT - ROCKETCHAT - REMOVE - removeGroup - ${i18n.__('api.rocketChat.groupRemoved', { name })}`,
                 levels.INFO,
                 scopes.USER,
                 {
@@ -325,13 +310,10 @@ class RocketChatClient {
                 },
               );
             } else {
-              // logServer(
-              //   `${i18n.__('api.rocketChat.groupRemoveError', { name })} (${response.error})`,
-              //   'error',
-              //   callerId,
-              // );
               logServer(
-                `APPCLIENT - ROCKETCHAT - removeGroup - ${i18n.__('api.rocketChat.groupRemoveError', { name })}`,
+                `APPCLIENT - ROCKETCHAT - ERROR - removeGroup - ${i18n.__('api.rocketChat.groupRemoveError', {
+                  name,
+                })}`,
                 levels.ERROR,
                 scopes.USER,
                 {
@@ -344,10 +326,8 @@ class RocketChatClient {
           });
       })
       .catch((error) => {
-        // logServer(i18n.__('api.rocketChat.groupRemoveError', { name }), 'error', callerId);
-        // logServer(error.response && error.response.data ? error.response.data : error, 'error');
         logServer(
-          `APPCLIENT - ROCKETCHAT - removeGroup - ${i18n.__('api.rocketChat.groupRemoveError', { name })}`,
+          `APPCLIENT - ROCKETCHAT - ERROR - removeGroup - ${i18n.__('api.rocketChat.groupRemoveError', { name })}`,
           levels.ERROR,
           scopes.USER,
           {
@@ -380,9 +360,8 @@ class RocketChatClient {
               if (response.data.users.length > 0) return response.data.users[0];
               return null;
             }
-            // logServer(`${i18n.__('api.rocketChat.getUserError')} (${response.error})`, 'error');
             logServer(
-              `APPCLIENT - ROCKETCHAT - _getUserByUsername - ${i18n.__('api.rocketChat.getUserError')}`,
+              `APPCLIENT - ROCKETCHAT - ERROR - _getUserByUsername - ${i18n.__('api.rocketChat.getUserError')}`,
               levels.ERROR,
               scopes.SYSTEM,
               {
@@ -393,10 +372,8 @@ class RocketChatClient {
           });
       })
       .catch((error) => {
-        // logServer(i18n.__('api.rocketChat.getUserError'), 'error');
-        // logServer(error.response && error.response.data ? error.response.data : error, 'error');
         logServer(
-          `APPCLIENT - ROCKETCHAT - _getUserByUsername - ${i18n.__('api.rocketChat.getUserError')}`,
+          `APPCLIENT - ROCKETCHAT - ERROR - _getUserByUsername - ${i18n.__('api.rocketChat.getUserError')}`,
           levels.ERROR,
           scopes.SYSTEM,
           {
@@ -431,9 +408,8 @@ class RocketChatClient {
             )
             .then((response) => {
               if (response.data && response.data.success === true) {
-                // logServer(i18n.__('api.rocketChat.userInvited', { groupId, username }));
                 logServer(
-                  `APPCLIENT - ROCKETCHAT - inviteUser - ${i18n.__('api.rocketChat.userInvited', {
+                  `APPCLIENT - ROCKETCHAT - THEN - inviteUser - ${i18n.__('api.rocketChat.userInvited', {
                     groupId,
                     username,
                   })}`,
@@ -446,13 +422,8 @@ class RocketChatClient {
                   },
                 );
               } else {
-                // logServer(
-                //   `${i18n.__('api.rocketChat.userInviteError', { groupId, username })} (${response.data.error})`,
-                //   'error',
-                //   callerId,
-                // );
                 logServer(
-                  `APPCLIENT - ROCKETCHAT - inviteUser - ${i18n.__('api.rocketChat.userInviteError', {
+                  `APPCLIENT - ROCKETCHAT - ERROR - inviteUser - ${i18n.__('api.rocketChat.userInviteError', {
                     groupId,
                     username,
                   })}`,
@@ -470,10 +441,11 @@ class RocketChatClient {
         }),
       )
       .catch((error) => {
-        // logServer(i18n.__('api.rocketChat.userInviteError', { groupId, username }), 'error', callerId);
-        // logServer(error.response && error.response.data ? error.response.data : error, 'error');
         logServer(
-          `APPCLIENT - ROCKETCHAT - inviteUser - ${i18n.__('api.rocketChat.userInviteError', { groupId, username })}`,
+          `APPCLIENT - ROCKETCHAT - ERROR - inviteUser - ${i18n.__('api.rocketChat.userInviteError', {
+            groupId,
+            username,
+          })}`,
           levels.ERROR,
           scopes.USER,
           {
@@ -511,15 +483,8 @@ class RocketChatClient {
             )
             .then((response) => {
               if (response.data && response.data.success === true) {
-                // logServer(
-                //   i18n.__(`api.rocketChat.${setMode ? 'roleSet' : 'roleUnset'}`, {
-                //     groupId,
-                //     username,
-                //     role: displayRole,
-                //   }),
-                // );
                 logServer(
-                  `APPCLIENT - ROCKETCHAT - changeRole - ${i18n.__(`api.rocketChat`)}`,
+                  `APPCLIENT - ROCKETCHAT - THEN - changeRole - ${i18n.__(`api.rocketChat`)}`,
                   levels.INFO,
                   scopes.USER,
                   {
@@ -532,17 +497,8 @@ class RocketChatClient {
                   },
                 );
               } else {
-                // logServer(
-                //   `${i18n.__(`api.rocketChat.${setMode ? 'setRoleError' : 'unsetRoleError'}`, {
-                //     groupId,
-                //     username,
-                //     role: displayRole,
-                //   })} (${response.data.error})`,
-                //   'error',
-                //   callerId,
-                // );
                 logServer(
-                  `APPCLIENT - ROCKETCHAT - changeRole - ${i18n.__(`api.rocketChat`)}`,
+                  `APPCLIENT - ROCKETCHAT - ERROR - changeRole - ${i18n.__(`api.rocketChat`)}`,
                   levels.ERROR,
                   scopes.USER,
                   {
@@ -560,25 +516,20 @@ class RocketChatClient {
         }),
       )
       .catch((error) => {
-        // logServer(
-        //   i18n.__(`api.rocketChat.${setMode ? 'setRoleError' : 'unsetRoleError'}`, {
-        //     groupId,
-        //     username,
-        //     role: displayRole,
-        //   }),
-        //   'error',
-        //   callerId,
-        // );
-        // logServer(error.response && error.response.data ? error.response.data : error, 'error');
-        logServer(`APPCLIENT - ROCKETCHAT - changeRole - ${i18n.__(`api.rocketChat`)}`, levels.ERROR, scopes.USER, {
-          APIUrl,
-          setMode,
-          groupId,
-          username,
-          role,
-          callerId,
-          error: error.response && error.response.data ? error.response.data : error,
-        });
+        logServer(
+          `APPCLIENT - ROCKETCHAT - ERROR - changeRole - ${i18n.__(`api.rocketChat`)}`,
+          levels.ERROR,
+          scopes.USER,
+          {
+            APIUrl,
+            setMode,
+            groupId,
+            username,
+            role,
+            callerId,
+            error: error.response && error.response.data ? error.response.data : error,
+          },
+        );
         return null;
       });
   }
@@ -617,9 +568,11 @@ class RocketChatClient {
             )
             .then((response) => {
               if (response.data && response.data.success === true) {
-                // logServer(i18n.__('api.rocketChat.userKicked', { groupId, username }));
                 logServer(
-                  `APPCLIENT - ROCKETCHAT - kickUser - ${i18n.__('api.rocketChat.userKicked', { groupId, username })}`,
+                  `APPCLIENT - ROCKETCHAT - THEN - kickUser - ${i18n.__('api.rocketChat.userKicked', {
+                    groupId,
+                    username,
+                  })}`,
                   levels.INFO,
                   scopes.USER,
                   {
@@ -629,13 +582,8 @@ class RocketChatClient {
                   },
                 );
               } else {
-                // logServer(
-                //   `${i18n.__('api.rocketChat.userKickError', { groupId, username })} (${response.data.error})`,
-                //   'error',
-                //   callerId,
-                // );
                 logServer(
-                  `APPCLIENT - ROCKETCHAT - kickUser - ${i18n.__('api.rocketChat.userKickError', {
+                  `APPCLIENT - ROCKETCHAT - ERROR - kickUser - ${i18n.__('api.rocketChat.userKickError', {
                     groupId,
                     username,
                   })}`,
@@ -653,10 +601,11 @@ class RocketChatClient {
         }),
       )
       .catch((error) => {
-        // logServer(i18n.__('api.rocketChat.userKickError', { groupId, username }), 'error', callerId);
-        // logServer(error.response && error.response.data ? error.response.data : error, 'error');
         logServer(
-          `APPCLIENT - ROCKETCHAT - kickUser - ${i18n.__('api.rocketChat.userKickError', { groupId, username })}`,
+          `APPCLIENT - ROCKETCHAT - ERROR - kickUser - ${i18n.__('api.rocketChat.userKickError', {
+            groupId,
+            username,
+          })}`,
           levels.ERROR,
           scopes.USER,
           {
@@ -700,9 +649,8 @@ class RocketChatClient {
           )
           .then((response) => {
             if (response.data && response.data.success === true) {
-              // logServer(i18n.__('api.rocketChat.userAdded', { username }));
               logServer(
-                `APPCLIENT - ROCKETCHAT - createUser - ${i18n.__('api.rocketChat.userAdded', { username })}`,
+                `APPCLIENT - ROCKETCHAT - THEN - createUser - ${i18n.__('api.rocketChat.userAdded', { username })}`,
                 levels.INFO,
                 scopes.USER,
                 {
@@ -714,9 +662,8 @@ class RocketChatClient {
               );
               return response.data.user;
             }
-            // logServer(`${i18n.__('api.rocketChat.userAddError', { username })} (${response.error})`, 'error', callerId);
             logServer(
-              `APPCLIENT - ROCKETCHAT - createUser - ${i18n.__('api.rocketChat.userAddError', { username })}`,
+              `APPCLIENT - ROCKETCHAT - ERROR - createUser - ${i18n.__('api.rocketChat.userAddError', { username })}`,
               levels.ERROR,
               scopes.USER,
               {
@@ -730,10 +677,8 @@ class RocketChatClient {
           });
       })
       .catch((error) => {
-        // logServer(i18n.__('api.rocketChat.userAddError', { username }), 'error', callerId);
-        // logServer(error.response && error.response.data ? error.response.data : error, 'error');
         logServer(
-          `APPCLIENT - ROCKETCHAT - createUser - ${i18n.__('api.rocketChat.userAddError', { username })}`,
+          `APPCLIENT - ROCKETCHAT - ERROR - createUser - ${i18n.__('api.rocketChat.userAddError', { username })}`,
           levels.ERROR,
           scopes.USER,
           {
@@ -781,9 +726,8 @@ class RocketChatClient {
             )
             .then((response) => {
               if (response.data && response.data.success === true) {
-                // logServer(i18n.__('api.rocketChat.updateEmail', { username, email }));
                 logServer(
-                  `APPCLIENT - ROCKETCHAT - updateEmail - ${i18n.__('api.rocketChat.updateEmail', {
+                  `APPCLIENT - ROCKETCHAT - THEN - updateEmail - ${i18n.__('api.rocketChat.updateEmail', {
                     username,
                     email,
                   })}`,
@@ -795,12 +739,8 @@ class RocketChatClient {
                   },
                 );
               } else {
-                // logServer(
-                //   `${i18n.__('api.rocketChat.updateEmailError', { username, email })} (${response.data.error})}`,
-                //   'error',
-                // );
                 logServer(
-                  `APPCLIENT - ROCKETCHAT - updateEmail - ${i18n.__('api.rocketChat.updateEmailError', {
+                  `APPCLIENT - ROCKETCHAT - ERROR - updateEmail - ${i18n.__('api.rocketChat.updateEmailError', {
                     username,
                     email,
                   })}`,
@@ -817,11 +757,11 @@ class RocketChatClient {
         }),
       )
       .catch((error) => {
-        // logServer(i18n.__('api.rocketChat.updateEmailError', { username, email }), 'error');
-        // logServer(error.response && error.response.data ? error.response.data : error, 'error');
-
         logServer(
-          `APPCLIENT - ROCKETCHAT - updateEmail - ${i18n.__('api.rocketChat.updateEmailError', { username, email })}`,
+          `APPCLIENT - ROCKETCHAT - ERROR - updateEmail - ${i18n.__('api.rocketChat.updateEmailError', {
+            username,
+            email,
+          })}`,
           levels.ERROR,
           scopes.USER,
           {

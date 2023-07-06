@@ -21,6 +21,7 @@ import Zoom from '@mui/material/Zoom';
 import Button from '@mui/material/Button';
 import i18n from 'meteor/universe:i18n';
 import { useObjectState } from '../../utils/hooks';
+import { useAppContext } from '../../contexts/context';
 
 const linkColor = 'brown';
 const useStyles = makeStyles()((theme) => ({
@@ -91,9 +92,10 @@ const useStyles = makeStyles()((theme) => ({
   },
 }));
 
-function PersonalLinkDetails({ link, globalEdit, isMobile, isSorted, needUpdate }) {
+function PersonalLinkDetails({ link, globalEdit, isMobile, isSorted, needUpdate, type }) {
   const { name = '', url = '', tag = '', _id = Random.id(), icon = '' } = link;
   const { classes } = useStyles();
+  const [{ userId }] = useAppContext();
   const [localEdit, setLocalEdit] = useState(name === '');
   const [state, setState] = useObjectState({ name, url, tag });
   const favButtonLabel = i18n.__('components.PersonalLinkDetails.favButtonLabelNoFav');
@@ -103,24 +105,53 @@ function PersonalLinkDetails({ link, globalEdit, isMobile, isSorted, needUpdate 
     setLocalEdit(!localEdit);
     if (!event.target.checked) {
       if (state.name !== name || state.url !== url) {
-        Meteor.call('userBookmark.updateURL', { id: _id, url: state.url, name: state.name, tag: link.tag });
-        Meteor.call('userBookmark.getFavicon', { url: state.url });
+        if (type === 'link') {
+          Meteor.call('userBookmark.updateURL', { id: _id, url: state.url, name: state.name, tag: link.tag });
+          Meteor.call('userBookmark.getFavicon', { url: state.url });
+        } else if (type === 'groupLink') {
+          Meteor.call(
+            'bookmark.updateURL',
+            {
+              id: _id,
+              url: state.url,
+              name: state.name,
+              tag: link.tag,
+              groupId: link.groupId,
+            },
+            (err) => {
+              if (err) {
+                msg.error(err.reason);
+              }
+            },
+          );
+          Meteor.call('bookmark.getFavicon', { url: state.url });
+        }
       }
     }
   };
 
   const handleFavorite = () => {
-    Meteor.call('userBookmarks.unfavUserBookmark', { bookmarkId: link._id }, (err) => {
-      if (err) {
-        msg.error(err.reason);
-      } else {
-        msg.success(i18n.__('components.PersonalLinkDetails.unfavSuccessMsg'));
-      }
-    });
+    if (type === 'link') {
+      Meteor.call('userBookmarks.unfavUserBookmark', { bookmarkId: link._id }, (err) => {
+        if (err) {
+          msg.error(err.reason);
+        } else {
+          msg.success(i18n.__('components.PersonalLinkDetails.unfavSuccessMsg'));
+        }
+      });
+    } else if (type === 'groupLink') {
+      Meteor.call('bookmarks.unfavGroupBookmark', { bookmarkId: link._id }, (err) => {
+        if (err) {
+          msg.error(err.reason);
+        } else {
+          msg.success(i18n.__('components.PersonalLinkDetails.unfavSuccessMsg'));
+        }
+      });
+    }
   };
 
   const handleBackToDefault = () => {
-    Meteor.call('personalspaces.backToDefaultElement', { elementId: link._id, type: 'link' }, (err) => {
+    Meteor.call('personalspaces.backToDefaultElement', { elementId: link._id, type }, (err) => {
       if (err) {
         msg.error(err.reason);
       } else {
@@ -143,6 +174,12 @@ function PersonalLinkDetails({ link, globalEdit, isMobile, isSorted, needUpdate 
         <LaunchIcon />
       </Avatar>
     );
+  };
+
+  const canEdit = () => {
+    if (type === 'link') return true;
+    if (type === 'groupLink' && link.author === userId) return true;
+    return false;
   };
 
   const showData = () => {
@@ -207,7 +244,7 @@ function PersonalLinkDetails({ link, globalEdit, isMobile, isSorted, needUpdate 
   return (
     <Card className={classes.card}>
       {showData()}
-      {globalEdit ? (
+      {globalEdit && canEdit() ? (
         <CardActions className={classes.cardActions}>
           <Tooltip
             title={i18n.__(`components.PersonalLinkDetails.${localEdit ? 'saveLink' : 'modifyLink'}`)}
@@ -241,6 +278,7 @@ PersonalLinkDetails.propTypes = {
   isMobile: PropTypes.bool.isRequired,
   isSorted: PropTypes.bool.isRequired,
   needUpdate: PropTypes.func.isRequired,
+  type: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 export default PersonalLinkDetails;

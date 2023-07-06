@@ -119,8 +119,7 @@ if (Meteor.isServer) {
       }
     });
   } catch (err) {
-    // logServer(`Error removing old services slug index: ${err}`);
-    logServer(`SERVICES - Error removing old services slug index: ${err}`, levels.ERROR, scopes.SYSTEM, {});
+    logServer(`SERVICES - API - ERROR - Error removing old services slug index: ${err}`, levels.ERROR, scopes.SYSTEM);
   }
 }
 

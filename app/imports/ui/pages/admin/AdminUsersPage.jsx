@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Meteor } from 'meteor/meteor';
 import { useTracker } from 'meteor/react-meteor-data';
@@ -35,14 +35,14 @@ import Select from '@mui/material/Select';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import { Roles } from 'meteor/alanning:roles';
-import { usePagination } from '../../utils/hooks';
+import { usePaginatedMethod } from '../../utils/hooks';
 import Spinner from '../../components/system/Spinner';
 import { useAppContext } from '../../contexts/context';
 import UserAvatar from '../../components/users/UserAvatar';
 import AdminGroupQuota from '../../components/users/AdminGroupQuota';
 import SearchField from '../../components/system/SearchField';
 import AdminSendNotification from '../../components/users/AdminSendNotification';
-import { getStructure, useAdminSelectedStructure, useStructure } from '../../../api/structures/hooks';
+import { useAdminSelectedStructure, useStructure } from '../../../api/structures/hooks';
 import StructureSelect from '../../components/structures/StructureSelect';
 
 let userData = {};
@@ -86,6 +86,7 @@ const useStyles = makeStyles()((theme) => ({
 }));
 
 const ITEM_PER_PAGE = 10;
+const userTypes = ['all', 'adminStructure', 'admin'];
 
 const AdminUsersPage = ({ match: { path } }) => {
   const [openQuota, setOpenQuota] = useState(false);
@@ -96,9 +97,6 @@ const AdminUsersPage = ({ match: { path } }) => {
   const [search, setSearch] = useState('');
   const [sortByDate, setSortByDate] = useState(false);
   const [userType, setUserType] = useState('all');
-  const userTypes = ['all', 'adminStructure', 'admin'];
-  // forceReload is used to force publication reload when removing a role
-  let forceReload = new Date();
 
   // for user structure
   const isStructureSpecific = path === '/admin/structureusers';
@@ -106,25 +104,39 @@ const AdminUsersPage = ({ match: { path } }) => {
   const structure = useStructure();
 
   const [selectedStructureId, setSelectedStructureId] = useState(structure && structure._id ? structure._id : '');
-  const {
-    loading: structuresLoading,
-    selectedStructure,
-    structures,
-  } = useAdminSelectedStructure({ selectedStructureId, setSelectedStructureId });
+  const { loading: structuresLoading, structures } = useAdminSelectedStructure({
+    selectedStructureId,
+    setSelectedStructureId,
+  });
 
   // variables depending on the admin page we're in
+  const methodName = isStructureSpecific ? 'users.byStructure' : 'users.admins';
+  const sortQuery = sortByDate ? { lastLogin: -1 } : { lastName: 1, firstName: 1 };
 
-  const subscription = isStructureSpecific ? 'users.byStructure' : 'users.admin';
+  const [
+    call,
+    {
+      data: items = [],
+      page,
+      goToPage,
+      total,
+      // goToNextPage,
+      // goToPreviousPage,
+      // nbPage,
+      // loading,
+      // error,
+      // called,
+    },
+  ] = usePaginatedMethod(methodName);
 
-  const { changePage, page, items, total } = usePagination(
-    subscription,
-    { selectedStructureId, search, userType, forceReload, sort: sortByDate ? { lastLogin: -1 } : { lastName: 1 } },
-    Meteor.users,
-    {},
-    { sort: sortByDate ? { lastLogin: -1 } : { lastName: 1 } },
-    ITEM_PER_PAGE,
-    [selectedStructureId, selectedStructureId != null],
-  );
+  const fetchUsers = useCallback(() => {
+    call(search.trim(), { userType, sortQuery });
+  }, [call, search, userType, sortByDate]);
+
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
+
   // track all global admin users
   const { isLoading, admins } = useTracker(() => {
     const roleshandlers = Meteor.subscribe('roles.admin');
@@ -140,32 +152,31 @@ const AdminUsersPage = ({ match: { path } }) => {
     };
   });
   const handleChangePage = (event, value) => {
-    changePage(value);
+    goToPage(value);
+  };
+  const updateSearch = (e) => {
+    setSearch(e.target.value);
+  };
+  const onResetSearch = () => {
+    setSearch('');
   };
   const handleUserType = (evt) => {
     setUserType(evt.target.value);
   };
-  const searchRef = useRef();
-  const updateSearch = (e) => setSearch(e.target.value);
-  const resetSearch = () => setSearch('');
 
   useEffect(() => {
-    if (searchRef.current) {
-      searchRef.current.value = search;
-    }
-
     if (page !== 1) {
-      changePage(1);
+      goToPage(1);
     }
   }, [search]);
 
   const isAdmin = (user) => admins.includes(user._id);
   const changeAdmin = (user) => {
     const method = isAdmin(user) ? 'users.unsetAdmin' : 'users.setAdmin';
-    Meteor.call(method, { userId: user._id }, (error) => {
-      if (error) msg.error(error.reason);
+    Meteor.call(method, { userId: user._id }, (err) => {
+      if (err) msg.error(err.reason);
       else {
-        forceReload = new Date();
+        fetchUsers();
         msg.success(
           method === 'users.unsetAdmin'
             ? i18n.__('pages.AdminUsersPage.successUnsetAdmin')
@@ -175,22 +186,13 @@ const AdminUsersPage = ({ match: { path } }) => {
     });
   };
   const isStructureAdmin = (user) => Roles.userIsInRole(user._id, 'adminStructure', user.structure);
-  useTracker(() => {
-    const structuresIds = [];
-    items.forEach((item) => {
-      if (item.structure && structuresIds.indexOf(structuresIds) === -1) {
-        structuresIds.push(item.structure);
-      }
-    });
-    Meteor.subscribe('structures.ids', { ids: structuresIds });
-  });
 
   const changeAdminStructure = (user) => {
     const method = isStructureAdmin(user) ? 'users.unsetAdminStructure' : 'users.setAdminStructure';
     Meteor.call(method, { userId: user._id }, (error) => {
       if (error) msg.error(error.reason);
       else {
-        forceReload = new Date();
+        fetchUsers();
         msg.success(
           method === 'users.unsetAdminStructure'
             ? i18n.__('pages.AdminUsersPage.successUnsetAdminStructure')
@@ -202,7 +204,10 @@ const AdminUsersPage = ({ match: { path } }) => {
   const deleteUser = (user) => {
     Meteor.call(`users.removeUser${isStructureSpecific ? 'FromStructure' : ''}`, { userId: user._id }, (error) => {
       if (error) msg.error(error.reason);
-      else msg.success(i18n.__('pages.AdminUsersPage.successDeleteUser'));
+      else {
+        fetchUsers();
+        msg.success(i18n.__('pages.AdminUsersPage.successDeleteUser'));
+      }
     });
   };
   const loginInfo = (user) =>
@@ -257,7 +262,7 @@ const AdminUsersPage = ({ match: { path } }) => {
         hidden: isDeleting,
       },
       {
-        label: i18n.__('pages.AdminUsersPage.copyNcLocator'),
+        label: `${i18n.__('pages.AdminUsersPage.copyNcLocator')}: ${user.username}@${user.nclocator}`,
         onclick: copyNcLocator,
         icon: <CloudIcon />,
         hidden: isDeleting || !haveNcLocator,
@@ -304,9 +309,9 @@ const AdminUsersPage = ({ match: { path } }) => {
             <Grid container spacing={4}>
               <Grid item md={12}>
                 <Typography variant={isMobile ? 'h6' : 'h4'}>
-                  {`${i18n.__('pages.AdminUsersPage.title')} ${
-                    (isStructureSpecific && selectedStructure && selectedStructure._id && selectedStructure.name) || ''
-                  } (${total})`}
+                  {`${i18n.__(
+                    isStructureSpecific ? 'components.AdminMenu.menuAdminStructureUsers' : 'pages.AdminUsersPage.title',
+                  )} (${total})`}
                 </Typography>
               </Grid>
               {isStructureSpecific && (
@@ -345,8 +350,8 @@ const AdminUsersPage = ({ match: { path } }) => {
                 <SearchField
                   updateSearch={updateSearch}
                   search={search}
-                  inputRef={searchRef}
-                  resetSearch={resetSearch}
+                  //   inputRef={searchRef}
+                  resetSearch={onResetSearch}
                   label={i18n.__('pages.AdminUsersPage.searchText')}
                 />
               </Grid>
@@ -376,7 +381,6 @@ const AdminUsersPage = ({ match: { path } }) => {
                 <List className={classes.list} disablePadding>
                   {items.map((user, i) => {
                     const userEmail = user.emails ? user.emails[0].address : '';
-                    const userStructure = getStructure(user.structure);
 
                     return [
                       <ListItem alignItems="flex-start" key={`user-${userEmail}`}>
@@ -411,7 +415,7 @@ const AdminUsersPage = ({ match: { path } }) => {
                               >
                                 {userEmail}
                               </Typography>
-                              {` - ${userStructure ? userStructure.name : i18n.__('pages.AdminUsersPage.undefined')}`}
+                              {` - ${user.structureName || i18n.__('pages.AdminUsersPage.undefined')}`}
                             </>
                           }
                         />

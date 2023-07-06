@@ -19,7 +19,6 @@ import Box from '@mui/material/Box';
 import AddBox from '@mui/icons-material/AddBox';
 import PropTypes from 'prop-types';
 import Spinner from '../../components/system/Spinner';
-
 import { useObjectState } from '../../utils/hooks';
 import { getTree } from '../../../api/utils';
 import Structures from '../../../api/structures/structures';
@@ -230,7 +229,7 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
                     name="structureName"
                     fullWidth
                     onChange={(e) => {
-                      setSelectedStructure({ name: e.target.value });
+                      setSelectedStructure({ name: e.target.value.trim() });
                     }}
                     autoFocus
                   />
@@ -277,6 +276,12 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
             />
           </Box>
           <CardContent>
+            <Box>
+              <Typography>
+                {`${i18n.__('components.AdminStructureTreeView.isPartOf')}: `}
+                <span>{currentUserStructure.name}</span>
+              </Typography>
+            </Box>
             <Box display="flex" alignItems="center">
               <Box>
                 <Typography

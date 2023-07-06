@@ -6,14 +6,13 @@ import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import AddBox from '@mui/icons-material/AddBox';
-import CheckIcon from '@mui/icons-material/Check';
 import DeleteIcon from '@mui/icons-material/DeleteOutline';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import EditIcon from '@mui/icons-material/Edit';
 import { alpha } from '@mui/material/styles';
 import { withStyles, makeStyles } from 'tss-react/mui';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
 import CustomDialog from '../system/CustomDialog';
 
 const StyledTreeItem = withStyles(TreeItem, (theme) => ({
@@ -36,6 +35,9 @@ const useStyles = makeStyles()(() => ({
   },
   space: {
     padding: '12px',
+  },
+  line: {
+    padding: 2,
   },
 }));
 
@@ -68,7 +70,7 @@ const AdminStructureTreeItem = ({
         nodeId={id}
         onClick={() => hasChildren && updateParentIdsList({ ids: [id] })}
         label={
-          <Box display="flex">
+          <Box display="flex" className={classes.line}>
             <Box flexGrow={1} className={classes.name}>
               <div>
                 <Typography>{name}</Typography>
@@ -116,17 +118,17 @@ const AdminStructureTreeItem = ({
               )}
               {onClickSelectBtn && (
                 <Tooltip title={i18n.__('components.AdminStructureTreeItem.actions.choose')}>
-                  <span>
-                    <IconButton
-                      onClick={() => {
-                        setChoosenStructure(nodes);
-                        openConfirm();
-                      }}
-                      size="large"
-                    >
-                      {selectedId === id ? <CheckCircleOutlineIcon color="primary" /> : <CheckIcon />}
-                    </IconButton>
-                  </span>
+                  <Button
+                    onClick={() => {
+                      setChoosenStructure(nodes);
+                      openConfirm();
+                    }}
+                    variant="contained"
+                    sx={{ textTransform: 'none' }}
+                    disabled={selectedId === id}
+                  >
+                    {i18n.__('components.AdminStructureTreeItem.actions.chooseShort')}
+                  </Button>
                 </Tooltip>
               )}
             </Box>

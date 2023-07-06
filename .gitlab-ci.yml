@@ -33,7 +33,7 @@ stages:
 # Common setup for all meteor based jobs
 .meteor:
   extends: .not-on-stable
-  image: hub.eole.education/proxyhub/geoffreybooth/meteor-base:2.10.0
+  image: hub.eole.education/proxyhub/geoffreybooth/meteor-base:2.12
   before_script:
     - cd app
   cache:

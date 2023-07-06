@@ -9,8 +9,13 @@ export default async function getNcToken(req, content) {
   //      -H "Content-Type: application/json" \
   //      -d '{"username":"utilisateur1" }' \
   //      http://localhost:3000/api/nctoken
-  if ('username' in content) {
-    const user = Meteor.users.findOne({ username: content.username });
+  if ('username' in content || 'email' in content) {
+    let user = null;
+    if (content.email) {
+      user = Accounts.findUserByEmail(content.email);
+    } else {
+      user = Accounts.findUserByUsername(content.username);
+    }
     // check that user exists
     if (!user) {
       throw new Meteor.Error('restapi.nextcloud.getNcToken.unknownUser', i18n.__('api.users.unknownUser'));
@@ -35,10 +40,8 @@ export default async function getNcToken(req, content) {
         );
       })
       .catch((err) => {
-        // logServer(err);
-        // logServer(i18n.__('api.nextcloud.getTokenError', { user: user.username }), 'error');
         logServer(
-          `NEXTCLOUD - REST - getNcToken - ${i18n.__('api.nextcloud.getTokenError', { user: user.username })}`,
+          `NEXTCLOUD - REST - ERROR - getNcToken - ${i18n.__('api.nextcloud.getTokenError', { user: user.username })}`,
           levels.ERROR,
           scopes.SYSTEM,
           {
@@ -53,5 +56,17 @@ export default async function getNcToken(req, content) {
         );
       });
   }
-  throw new Meteor.Error('restapi.nextcloud.getNcToken.dataWithoutUsername', 'request sent to API with no username');
+  logServer(
+    `NEXTCLOUD - REST - ERROR - getNcToken - request sent to API with no username or email`,
+    levels.ERROR,
+    scopes.SYSTEM,
+    {
+      content,
+      req,
+    },
+  );
+  throw new Meteor.Error(
+    'restapi.nextcloud.getNcToken.dataWithoutUsername',
+    'request sent to API with no username or email',
+  );
 }

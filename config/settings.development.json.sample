@@ -12,19 +12,32 @@
       "blog": false,
       "notificationsTab": false,
       "groups": false,
+      "analytics": false,
       "introductionTab": false,
       "introductionTabStructuresInfos": true,
       "menuAdminDefaultSpaces": true,  // THIS PARAMS IS SET FOR HIDDEN DEFAULTSPACE FUNCTIONNALITY WHICH DOESN'T WORK
-      "mediaStorageMenu": false
+      "mediaStorageMenu": false,
+      "bookmarksFromClipboard": false,
     },
     "ui": {
       "defaultGridViewMode": "compact",
-      "isBusinessRegroupingMode": false
+      "isBusinessRegroupingMode": false,
+      "feedbackLink": ""
     },
     "matomo": {
       "siteId": 1,
       "urlBase": "https://URL.fr"
     },
+    "onBoarding": {
+      "enabled": true,
+      "appDesignation": "Laboîte"
+    },
+    "countly": {
+      "app_key": "lol",
+      "url": "https://countly.url.fr",
+      "consent": true,
+    },
+    "laboiteBlogURL": "",
     "enableBBB": false,
     "BBBUrl": "",
     "minioPort": null,
@@ -38,6 +51,7 @@
     "minioFileSize": 500000,
     "minioStorageFilesSize": 3000000,
     "maxMinioDiskPerUser": 1000000,
+    "analyticsExpirationInDays": 24,
     "NotificationsExpireDays": {
       "setRole": null,
       "unsetRole": null,
@@ -55,7 +69,7 @@
       "nextcloud": {
         "enable": false,
         "URL": "",
-        "groupURL": "[URL]/apps/files/?dir=/[GROUPNAME]",
+        "groupURL": "[NCLOCATOR]/apps/files/?dir=/[NCSHARENAME]",
         "enableChangeName": false
       }
     },
@@ -64,7 +78,12 @@
       "sondagesUrl": "",
       "mezigUrl": "",
       "laboiteBlogURL": "",
+      "questionnaireURL": ""
     }
+  },
+  "franceTransfert": {
+    "apiKey": "",
+    "endpoint": ""
   },
   "keycloak": {
     "pubkey": "",
@@ -76,6 +95,8 @@
   "nextcloud": {
     "nextcloudUser": "",
     "nextcloudPassword": "",
+    "circlesUser": "",
+    "circlesPassword": "",
     "nextcloudQuota": "1073741824"
     "nextcloudApiKeys": [],
     "sessionTokenKey": "",
@@ -97,6 +118,7 @@
     "apiKeys": [
       ""
     ],
+    "createUserApiKeys": [],
     "BBBSecret": "",
     "whiteDomains": [
       "^ac-[a-z-]*\\.fr",

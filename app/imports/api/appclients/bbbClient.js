@@ -75,13 +75,12 @@ class BigBlueButtonClient {
                 meeting: meetingData,
               },
             });
-            // logServer(`meeting created: ${JSON.stringify(meetingData)}`);
             logServer(
-              `APPCLIENT - BBBCLIENT - createMeeting - meeting created: ${JSON.stringify(meetingData)}`,
+              `APPCLIENT - BBBCLIENT - UPDATE - createMeeting - meeting created: ${JSON.stringify(meetingData)}`,
               levels.INFO,
               scopes.SYSTEM,
               {
-                meetingData,
+                meetingParams,
                 slug,
                 userId,
               },
@@ -92,17 +91,33 @@ class BigBlueButtonClient {
             // a meeting has already been created, ignore this error
             return Promise.resolve(this.getJoinURL(slug, userId));
           }
+          logServer(
+            `APPCLIENT - BBBCLIENT - METEOR ERROR - createMeeting 
+            - BBB create meeting Error: ${result.response.messageKey[0]}`,
+            levels.INFO,
+            scopes.SYSTEM,
+            {
+              meetingParams,
+              slug,
+              userId,
+            },
+          );
           // use messageKey if translation needed
           throw new Meteor.Error('api.BBBClient.createMeeting.error', result.response.messageKey[0]);
         }),
       )
       .catch((err) => {
-        // logServer(`BBB create error: ${err}`, 'error');
-        logServer(`APPCLIENT - BBBCLIENT - createMeeting - BBB create error: ${err}`, levels.ERROR, scopes.SYSTEM, {
-          slug,
-          userId,
-          meetingParams,
-        });
+        logServer(
+          `APPCLIENT - BBBCLIENT - METEOR ERROR - createMeeting 
+        - BBB create error: ${err}`,
+          levels.ERROR,
+          scopes.SYSTEM,
+          {
+            slug,
+            userId,
+            meetingParams,
+          },
+        );
         throw new Meteor.Error('api.BBBClient.createMeeting.error', i18n.__('api.bbb.createError'));
       });
   }
@@ -146,14 +161,20 @@ class BigBlueButtonClient {
           if (result.response.returncode[0] === 'SUCCESS') {
             return Promise.resolve(result.response.running);
           }
+          logServer(
+            `APPCLIENT - BBBCLIENT - METEOR ERROR - checkRunning - 
+            BBB check runnning: ${result.response.messageKey[0]}`,
+            levels.ERROR,
+            scopes.SYSTEM,
+            {},
+          );
           // use messageKey if translation needed
           throw new Meteor.Error('api.BBBClient.checkRunning.error', result.response.messageKey[0]);
         }),
       )
       .catch((err) => {
-        // logServer(`BBB checkRunning Error: ${JSON.stringify(err)}`);
         logServer(
-          `APPCLIENT - BBBCLIENT - checkRunning - BBB checkRunning Error: ${JSON.stringify(err)}`,
+          `APPCLIENT - BBBCLIENT - ERROR - checkRunning - BBB checkRunning Error: ${JSON.stringify(err)}`,
           levels.ERROR,
           scopes.SYSTEM,
           {
@@ -180,17 +201,21 @@ class BigBlueButtonClient {
           if (result.response.returncode[0] === 'SUCCESS') {
             return Promise.resolve(result.response.meetings);
           }
+          logServer(
+            `APPCLIENT - BBBCLIENT - METEOR ERROR - getMeetings - 
+            BBB message missing: ${result.response.messageKey[0]}`,
+            levels.WARN,
+            scopes.SYSTEM,
+          );
           // use messageKey if translation needed
           throw new Meteor.Error('api.BBBClient.getMeetings.error', result.response.messageKey[0]);
         }),
       )
       .catch((err) => {
-        // logServer(`BBB getMeetings Error: ${JSON.stringify(err)}`);
         logServer(
-          `APPCLIENT - BBBCLIENT - getMeetings - BBB getMeetings Error: ${JSON.stringify(err)}`,
+          `APPCLIENT - BBBCLIENT - ERROR - getMeetings - BBB getMeetings Error: ${JSON.stringify(err)}`,
           levels.ERROR,
           scopes.SYSTEM,
-          {},
         );
         return Promise.resolve(null);
       });
@@ -200,9 +225,9 @@ class BigBlueButtonClient {
 let Client = null;
 if (Meteor.isServer && bbbEnabled) {
   Client = new BigBlueButtonClient();
-  // logServer(i18n.__('api.bbb.checkConfig', { URL: Client.bbbURL }));
   logServer(
-    `APPCLIENT - BBBCLIENT - ${i18n.__('api.bbb.checkConfig', { URL: Client.bbbURL })}`,
+    `APPCLIENT - BBBCLIENT - NEW OBJECT - BigBlueButtonClient
+    - ${i18n.__('api.bbb.checkConfig', { URL: Client.bbbURL })}`,
     levels.INFO,
     scopes.SYSTEM,
     {
@@ -210,11 +235,15 @@ if (Meteor.isServer && bbbEnabled) {
     },
   );
   Client.getMeetings().then(() => {
-    // console.log('*** ALL MEETINGS : ', JSON.stringify(response));
-    // logServer(i18n.__('api.bbb.configOk'));
-    logServer(`APPCLIENT - BBBCLIENT - ${i18n.__('api.bbb.configOk')}`, levels.INFO, scopes.SYSTEM, {
-      URL: Client.bbbURL,
-    });
+    logServer(
+      `APPCLIENT - BBBCLIENT - THEN - getMeetings
+    - ${i18n.__('api.bbb.configOk')}`,
+      levels.INFO,
+      scopes.SYSTEM,
+      {
+        URL: Client.bbbURL,
+      },
+    );
   });
 }
 const BBBClient = Client;

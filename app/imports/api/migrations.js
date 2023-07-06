@@ -10,6 +10,7 @@ import logServer, { levels, scopes } from './logging';
 import AppSettings from './appsettings/appsettings';
 import { addItem } from './personalspaces/methods';
 import PersonalSpaces from './personalspaces/personalspaces';
+import EventsAgenda from './eventsAgenda/eventsAgenda';
 
 Migrations.add({
   version: 1,
@@ -140,12 +141,11 @@ Migrations.add({
           if (author) {
             updateData.structure = author.structure || '';
           } else {
-            // logServer(`Migration: could not find author ${article.userId} for article ${article._id}`);
             logServer(
-              `MIGRATIONS - Migration: could not find author ${article.userId} for article ${article._id}`,
+              `MIGRATIONS - API - ERROR - Add author structure to articles -
+              Migration: could not find author ${article.userId} for article ${article._id}`,
               levels.WARN,
               scopes.SYSTEM,
-              {},
             );
           }
         }
@@ -755,6 +755,12 @@ Migrations.add({
             updatedGroups.push({ _id: group._id, name: group.name, type: group.type });
           }
         });
+        logServer(
+          `MIGRATIONS - ARTICLES - UPDATE - 30 Add group type to articles with groups 
+          - articleId: ${articleId} / groups: ${JSON.stringify(updatedGroups)}`,
+          levels.INFO,
+          scopes.SYSTEM,
+        );
         Articles.update({ _id: articleId }, { $set: { groups: updatedGroups } });
       }
     });
@@ -768,7 +774,25 @@ Migrations.add({
   version: 31,
   name: 'Update structure.groupId default value',
   up: () => {
+    logServer(
+      `MIGRATIONS - STRUCTURE - UPDATE - 31 Update structure.groupId default value`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     Structures.update({ groupId: '' }, { $set: { groupId: null } });
+  },
+  down: () => {
+    // no rollback on this step
+  },
+});
+
+Migrations.add({
+  version: 32,
+  name: 'Fix incomplete events',
+  up: () => {
+    logServer(`MIGRATIONS - 32 Fix incomplete events - EVENTSAGENDA - UPDATE`, levels.INFO, scopes.SYSTEM);
+    const now = new Date();
+    EventsAgenda.update({ updatedAt: null }, { $set: { updatedAt: now, createdAt: now } });
   },
   down: () => {
     // no rollback on this step

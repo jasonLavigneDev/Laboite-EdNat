@@ -28,10 +28,10 @@ class KeyCloakClient {
     this._getToken().then((initToken) => {
       if (initToken) {
         logServer(
-          `APPCLIENT - KcCLIENT - getToken -  ${i18n.__('api.keycloak.initClient')}`,
+          `APPCLIENT - KcCLIENT - CONSTRUCTOR - getToken - ${i18n.__('api.keycloak.initClient')}`,
           levels.INFO,
           scopes.SYSTEM,
-          {},
+          { initToken },
         );
       }
     });
@@ -94,12 +94,11 @@ class KeyCloakClient {
         return newToken;
       });
     return this._authenticate().then((response) => {
-      // logServer('Keycloak : new access token received');
       logServer(
-        `APPCLIENT - KcCLIENT - _checkToken -  Keycloak : new access token received'`,
+        `APPCLIENT - KcCLIENT - THEN - _checkToken -  Keycloak : new access token received'`,
         levels.INFO,
         scopes.SYSTEM,
-        {},
+        { response },
       );
       const newToken = response.data.access_token;
       this._setToken(newToken, response.data.expires_in);
@@ -114,17 +113,16 @@ class KeyCloakClient {
         // check that clientId is set in case keycloak was not available at startup
         return this._ensureClientId(newToken)
           .then(() => this._ensureAdminsId(newToken))
+          .then(() => this._ensureAdminStructure(newToken))
           .then(() => Promise.resolve(newToken));
       })
       .catch((error) => {
-        // logServer(i18n.__('api.keycloak.tokenError'), 'error');
-        // logServer(error.response && error.response.data ? error.response.data : error, 'error');
         logServer(
-          `APPCLIENT - KcCLIENT - _getToken - ${i18n.__('api.keycloak.tokenError')}`,
+          `APPCLIENT - KcCLIENT - ERROR - _getToken - ${i18n.__('api.keycloak.tokenError')}`,
           levels.ERROR,
           scopes.SYSTEM,
           {
-            error: error.response && error.response.data ? error.response.data : error,
+            error: error.response && error.response.data ? error.response.data : error.message,
           },
         );
         return null;
@@ -142,9 +140,8 @@ class KeyCloakClient {
         })
         .then((response) => {
           this.clientId = response.data.find((client) => client.clientId === keycloakSettings.client).id;
-          // logServer(i18n.__('api.keycloak.clientIdFound', { clientId: this.clientId }));
           logServer(
-            `APPCLIENT - KcCLIENT - _ensureClientId - ${i18n.__('api.keycloak.clientIdFound', {
+            `APPCLIENT - KcCLIENT - THEN - _ensureClientId - ${i18n.__('api.keycloak.clientIdFound', {
               clientId: this.clientId,
             })}`,
             levels.INFO,
@@ -156,10 +153,8 @@ class KeyCloakClient {
           return this.clientId;
         })
         .catch((error) => {
-          // logServer(i18n.__('api.keycloak.clientIdError'), 'error');
-          // logServer(error.response && error.response.data ? error.response.data : error, 'error');
           logServer(
-            `APPCLIENT - KcCLIENT - _ensureClientId - ${i18n.__('api.keycloak.clientIdError')}`,
+            `APPCLIENT - KcCLIENT - ERROR - _ensureClientId - ${i18n.__('api.keycloak.clientIdError')}`,
             levels.ERROR,
             scopes.SYSTEM,
             {
@@ -189,6 +184,15 @@ class KeyCloakClient {
       });
     }
     return Promise.resolve(this.adminsGroupId);
+  }
+
+  _ensureAdminStructure(token) {
+    return this._getGroupId('adminStructure', token).then((groupId) => {
+      if (groupId) {
+        return groupId;
+      }
+      return this._addGroup('adminStructure', token).then(() => this._getGroupId('adminStructure', token));
+    });
   }
 
   _getGroupId(name, token) {
@@ -269,9 +273,8 @@ class KeyCloakClient {
         )
         .then(() => this._getGroupId(groupName, token))
         .then((groupId) => {
-          // logServer(i18n.__('api.keycloak.groupAdded', { groupName, groupId }));
           logServer(
-            `APPCLIENT - KcCLIENT - _addGroup - ${i18n.__('api.keycloak.groupAdded', { groupName, groupId })}`,
+            `APPCLIENT - KcCLIENT - THEN - _addGroup - ${i18n.__('api.keycloak.groupAdded', { groupName, groupId })}`,
             levels.INFO,
             scopes.SYSTEM,
             {
@@ -289,10 +292,9 @@ class KeyCloakClient {
       const groupName = `${role}_${name}`;
       this._getToken().then((token) => {
         this._addGroup(groupName, token).catch((error) => {
-          // logServer(i18n.__('api.keycloak.groupAddError', { groupName }), 'error', callerId);
-          // logServer(error.response && error.response.data ? error.response.data : error, 'error');
           logServer(
-            `APPCLIENT - KcCLIENT - addGroupWithRoles - ${i18n.__('api.keycloak.groupAddError', { groupName })}`,
+            `APPCLIENT - KcCLIENT - ERROR - addGroupWithRoles -
+            ${i18n.__('api.keycloak.groupAddError', { groupName })}`,
             levels.ERROR,
             scopes.USER,
             {
@@ -319,10 +321,8 @@ class KeyCloakClient {
           return null;
         })
         .catch((error) => {
-          // logServer(i18n.__('api.keycloak.groupAddError', { groupName: name }), 'error', callerId);
-          // logServer(error.response && error.response.data ? error.response.data : error, 'error');
           logServer(
-            `APPCLIENT - KcCLIENT - addGroup - ${i18n.__('api.keycloak.groupAddError', { groupName: name })}`,
+            `APPCLIENT - KcCLIENT - ERROR - addGroup - ${i18n.__('api.keycloak.groupAddError', { groupName: name })}`,
             levels.ERROR,
             scopes.USER,
             {
@@ -350,10 +350,10 @@ class KeyCloakClient {
         // search group id
         return this._getGroupId(oldName, token).then((groupId) => {
           if (groupId === undefined) {
-            // logServer(i18n.__('api.keycloak.groupNotFound', { groupName: oldName }), 'error', callerId);
             logServer(
-              `APPCLIENT - KcCLIENT - _updateGroup - ${i18n.__('api.keycloak.groupNotFound', { groupName: oldName })}`,
-              levels.ERROR,
+              `APPCLIENT - KcCLIENT - ERROR - _updateGroup -
+              ${i18n.__('api.keycloak.groupNotFound', { groupName: oldName })}`,
+              levels.WARN,
               scopes.USER,
               {
                 groupName,
@@ -381,9 +381,8 @@ class KeyCloakClient {
               .then(() => this._addRole(groupName, token))
               .then(() =>
                 this._addRoleToGroup(groupId, groupName, token).then(() => {
-                  // logServer(i18n.__('api.keycloak.groupNameChanged', { oldName, newName: groupName }));
                   logServer(
-                    `APPCLIENT - KcCLIENT - _updateGroup - ${i18n.__('api.keycloak.groupNameChanged', {
+                    `APPCLIENT - KcCLIENT - ADD - _updateGroup - ${i18n.__('api.keycloak.groupNameChanged', {
                       oldName,
                       newName: groupName,
                     })}`,
@@ -402,10 +401,9 @@ class KeyCloakClient {
         });
       })
       .catch((error) => {
-        // logServer(i18n.__('api.keycoak.groupUpdateError', { groupName: oldName }), 'error', callerId);
-        // logServer(error.response && error.response.data ? error.response.data : error, 'error');
         logServer(
-          `APPCLIENT - KcCLIENT - _updateGroup - ${i18n.__('api.keycoak.groupUpdateError', { groupName: oldName })}`,
+          `APPCLIENT - KcCLIENT - ERROR - _updateGroup -
+          ${i18n.__('api.keycoak.groupUpdateError', { groupName: oldName })}`,
           levels.ERROR,
           scopes.USER,
           {
@@ -436,10 +434,9 @@ class KeyCloakClient {
         // search group id
         return this._getGroupId(groupName, token).then((groupId) => {
           if (groupId === undefined) {
-            // logServer(i18n.__('api.keycloak.groupNotFound', { groupName }), 'error', callerId);
             logServer(
-              `APPCLIENT - KcCLIENT - _removeGroup - ${i18n.__('api.keycloak.groupNotFound', { groupName })}`,
-              levels.ERROR,
+              `APPCLIENT - KcCLIENT - ERROR - _removeGroup - ${i18n.__('api.keycloak.groupNotFound', { groupName })}`,
+              levels.WARN,
               scopes.USER,
               {
                 groupName,
@@ -463,10 +460,8 @@ class KeyCloakClient {
         });
       })
       .catch((error) => {
-        // logServer(i18n.__('api.keycloak.groupRemoveError', { groupName }), 'error', callerId);
-        // logServer(error.response && error.response.data ? error.response.data : error, 'error');
         logServer(
-          `APPCLIENT - KcCLIENT - _removeGroup - ${i18n.__('api.keycloak.groupRemoveError', { groupName })}`,
+          `APPCLIENT - KcCLIENT - ERROR - _removeGroup - ${i18n.__('api.keycloak.groupRemoveError', { groupName })}`,
           levels.ERROR,
           scopes.USER,
           {
@@ -505,9 +500,9 @@ class KeyCloakClient {
               })
               .then(() => {
                 if (groupName === 'adminStructure') {
-                  // logServer(i18n.__('api.keycloak.adminStructureAdded', { userId }));
                   logServer(
-                    `APPCLIENT - KcCLIENT - setAdmin - ${i18n.__('api.keycloak.adminStructureAdded', { userId })}`,
+                    `APPCLIENT - KcCLIENT - THEN - setAdmin -
+                    ${i18n.__('api.keycloak.adminStructureAdded', { userId })}`,
                     levels.INFO,
                     scopes.USER,
                     {
@@ -517,9 +512,8 @@ class KeyCloakClient {
                     },
                   );
                 } else {
-                  // logServer(i18n.__('api.keycloak.adminAdded', { userId }));
                   logServer(
-                    `APPCLIENT - KcCLIENT - setAdmin - ${i18n.__('api.keycloak.adminAdded', { userId })}`,
+                    `APPCLIENT - KcCLIENT - THEN - setAdmin - ${i18n.__('api.keycloak.adminAdded', { userId })}`,
                     levels.INFO,
                     scopes.USER,
                     {
@@ -534,9 +528,8 @@ class KeyCloakClient {
         )
         .catch((error) => {
           if (groupName === 'adminStructure') {
-            // logServer(i18n.__('api.keycloak.addAdminStructureError', { userId }), 'error', callerId);
             logServer(
-              `APPCLIENT - KcCLIENT - setAdmin - ${i18n.__('api.keycloak.addAdminStructureError', { userId })}`,
+              `APPCLIENT - KcCLIENT - ERROR - setAdmin - ${i18n.__('api.keycloak.addAdminStructureError', { userId })}`,
               levels.ERROR,
               scopes.USER,
               {
@@ -547,9 +540,8 @@ class KeyCloakClient {
               },
             );
           } else {
-            // logServer(i18n.__('api.keycloak.addAdminError', { userId }), 'error', callerId);
             logServer(
-              `APPCLIENT - KcCLIENT - setAdmin - ${i18n.__('api.keycloak.addAdminError', { userId })}`,
+              `APPCLIENT - KcCLIENT - ERROR - setAdmin - ${i18n.__('api.keycloak.addAdminError', { userId })}`,
               levels.ERROR,
               scopes.USER,
               {
@@ -559,13 +551,11 @@ class KeyCloakClient {
               },
             );
           }
-          // logServer(error.response && error.response.data ? error.response.data : error, 'error');
         });
     } else {
-      // logServer(i18n.__('api.keycloak.userNotFound', { userId }), 'error', callerId);
       logServer(
-        `APPCLIENT - KcCLIENT - setAdmin - ${i18n.__('api.keycloak.userNotFound', { userId })}`,
-        levels.ERROR,
+        `APPCLIENT - KcCLIENT - ERROR - setAdmin - ${i18n.__('api.keycloak.userNotFound', { userId })}`,
+        levels.WARN,
         scopes.USER,
         {
           userId,
@@ -592,9 +582,10 @@ class KeyCloakClient {
               })
               .then(() => {
                 if (groupName === 'adminStructure') {
-                  // logServer(i18n.__('api.keycloak.adminStructureRemoved', { userId }));
                   logServer(
-                    `APPCLIENT - KcCLIENT - unsetAdmin - ${i18n.__('api.keycloak.adminStructureRemoved', { userId })}`,
+                    `APPCLIENT - KcCLIENT - THEN - unsetAdmin - ${i18n.__('api.keycloak.adminStructureRemoved', {
+                      userId,
+                    })}`,
                     levels.INFO,
                     scopes.USER,
                     {
@@ -604,9 +595,8 @@ class KeyCloakClient {
                     },
                   );
                 } else {
-                  // logServer(i18n.__('api.keycloak.adminRemoved', { userId }));
                   logServer(
-                    `APPCLIENT - KcCLIENT - unsetAdmin - ${i18n.__('api.keycloak.adminRemoved', { userId })}`,
+                    `APPCLIENT - KcCLIENT - THEN - unsetAdmin - ${i18n.__('api.keycloak.adminRemoved', { userId })}`,
                     levels.INFO,
                     scopes.USER,
                     {
@@ -620,10 +610,8 @@ class KeyCloakClient {
           ),
         )
         .catch((error) => {
-          // logServer(`Keycloak : ERROR removing user ${userId} from admins`, 'error', callerId);
-          // logServer(error.response && error.response.data ? error.response.data : error, 'error');
           logServer(
-            `APPCLIENT - KcCLIENT - unsetAdmin - Keycloak : ERROR removing user ${userId} from admins`,
+            `APPCLIENT - KcCLIENT - ERROR - unsetAdmin - Keycloak : ERROR removing user ${userId} from admins`,
             levels.ERROR,
             scopes.USER,
             {
@@ -635,10 +623,9 @@ class KeyCloakClient {
           );
         });
     } else {
-      // logServer(i18n.__('api.keycloak.userNotFound', { userId }), 'error', callerId);
       logServer(
-        `APPCLIENT - KcCLIENT - unsetAdmin - ${i18n.__('api.keycloak.userNotFound', { userId })}`,
-        levels.ERROR,
+        `APPCLIENT - KcCLIENT - ERROR - unsetAdmin - ${i18n.__('api.keycloak.userNotFound', { userId })}`,
+        levels.WARN,
         scopes.USER,
         {
           userId,
@@ -660,9 +647,7 @@ class KeyCloakClient {
             },
           })
           .then(() => {
-            // logServer(i18n.__('api.keycloak.userGroupAdded', { groupName: roleName, userId }));
-
-            logServer('APPCLIENT - KcCLIENT - _setRole - ', levels.INFO, scopes.USER, {
+            logServer('APPCLIENT - KcCLIENT - THEN - _setRole - ', levels.INFO, scopes.USER, {
               userId,
               keycloakId,
               groupName: roleName,
@@ -677,9 +662,7 @@ class KeyCloakClient {
     const keycloakId = user.services && user.services.keycloak ? user.services.keycloak.id : null;
     if (keycloakId) {
       this._setRole(userId, keycloakId, roleName).catch((error) => {
-        // logServer(i18n.__('api.keycloak.userGroupAddError', { groupName: roleName, userId }), 'error', callerId);
-        // logServer(error.response && error.response.data ? error.response.data : error, 'error');
-        logServer(`APPCLIENT - KcCLIENT - setRole`, levels.ERROR, scopes.USER, {
+        logServer(`APPCLIENT - KcCLIENT - ERROR - setRole`, levels.ERROR, scopes.USER, {
           userId,
           groupName: roleName,
           callerId,
@@ -687,7 +670,6 @@ class KeyCloakClient {
         });
       });
     } else {
-      // logServer(i18n.__('api.keycloak.userNotFound', { userId }), 'error', callerId);
       logServer(
         `APPCLIENT - KcCLIENT - setRole - ${i18n.__('api.keycloak.userNotFound', { userId })}`,
         levels.ERROR,
@@ -716,9 +698,8 @@ class KeyCloakClient {
                 },
               })
               .then(() => {
-                // logServer(i18n.__('api.keycloak.userGroupRemoved', { groupName: roleName, userId }));
                 logServer(
-                  `APPCLIENT - KcCLIENT - unsetRole - ${i18n.__('api.keycloak.userGroupRemoved', {
+                  `APPCLIENT - KcCLIENT - THEN - unsetRole - ${i18n.__('api.keycloak.userGroupRemoved', {
                     groupName: roleName,
                     userId,
                   })}`,
@@ -734,10 +715,8 @@ class KeyCloakClient {
           ),
         )
         .catch((error) => {
-          // logServer(i18n.__('api.keycloak.userGroupRemoveError', { groupName: roleName, userId }), 'error', callerId);
-          // logServer(error.response && error.response.data ? error.response.data : error, 'error');
           logServer(
-            `APPCLIENT - KcCLIENT - unsetRole - ${i18n.__('api.keycloak.userGroupRemoveError', {
+            `APPCLIENT - KcCLIENT - ERROR - unsetRole - ${i18n.__('api.keycloak.userGroupRemoveError', {
               groupName: roleName,
               userId,
             })}`,
@@ -752,10 +731,9 @@ class KeyCloakClient {
           );
         });
     } else {
-      // logServer(i18n.__('api.keycloak.userNotFound', { userId }), 'error', callerId);
       logServer(
-        `APPCLIENT - KcCLIENT - unsetRole - ${i18n.__('api.keycloak.userNotFound', { userId })}`,
-        levels.ERROR,
+        `APPCLIENT - KcCLIENT - ERROR - unsetRole - ${i18n.__('api.keycloak.userNotFound', { userId })}`,
+        levels.WARN,
         scopes.USER,
         {
           userId,

@@ -13,6 +13,7 @@ import Polls from '../../polls/polls';
 import EventsAgenda from '../../eventsAgenda/eventsAgenda';
 import Bookmarks from '../../bookmarks/bookmarks';
 import Articles from '../../articles/articles';
+import Forms from '../../forms/forms';
 
 // publish groups that user is admin/animator of
 publishComposite('groups.adminof', function groupsAdminOf() {
@@ -81,9 +82,8 @@ FindFromPublication.publish('groups.one.admin', function GroupsOne({ _id }) {
       },
     }).validate({ _id });
   } catch (err) {
-    // logServer(`publish groups.one.admin : ${err}`);
     logServer(
-      `GROUPS - PUBLICATION - groups.one.admin,publish groups.one.admin : ${err}`,
+      `GROUPS - PUBLICATION - ERROR - groups.one.admin,publish groups.one.admin : ${err}`,
       levels.ERROR,
       scopes.SYSTEM,
       {
@@ -110,12 +110,16 @@ publishComposite('groups.users', function groupDetails({ groupId, role = 'member
       },
     }).validate({ groupId, role });
   } catch (err) {
-    // logServer(`publish groups.users : ${err}`);
-    logServer(`GROUPS - PUBLICATION - groups.users,publish groups.users : ${err}`, levels.ERROR, scopes.SYSTEM, {
-      groupId,
-      role: 'member',
-      err,
-    });
+    logServer(
+      `GROUPS - PUBLICATION - ERROR - groups.users,publish groups.users : ${err}`,
+      levels.ERROR,
+      scopes.SYSTEM,
+      {
+        groupId,
+        role: 'member',
+        err,
+      },
+    );
     this.error(err);
   }
   if (!isActive(this.userId)) {
@@ -184,6 +188,9 @@ Meteor.methods({
       const query = queryAllGroupsMemberOf({ search, groups });
       return Groups.find(query, { fields: Groups.publicFields, sort: { name: 1 } }).count();
     } catch (error) {
+      logServer(`GROUPS - PUBLICATION - ERROR - get_groups.memberOf_count`, levels.ERROR, scopes.SYSTEM, {
+        error,
+      });
       return 0;
     }
   },
@@ -195,6 +202,9 @@ Meteor.methods({
       const query = queryAllGroups({ search });
       return Groups.find(query, { fields: Groups.publicFields, sort: { name: 1 } }).count();
     } catch (error) {
+      logServer(`GROUPS - PUBLICATION - ERROR - get_groups.all_count`, levels.ERROR, scopes.SYSTEM, {
+        error,
+      });
       return 0;
     }
   },
@@ -208,8 +218,7 @@ FindFromPublication.publish('groups.all', function groupsAll({ page, search, ite
   try {
     checkPaginationParams.validate({ page, itemPerPage, search });
   } catch (err) {
-    // logServer(`publish groups.all : ${err}`);
-    logServer(`GROUPS - PUBLICATION - groups.all,publish groups.all : ${err}`, levels.ERROR, scopes.SYSTEM, {
+    logServer(`GROUPS - PUBLICATION - ERROR - groups.all,publish groups.all : ${err}`, levels.ERROR, scopes.SYSTEM, {
       page,
       itemPerPage,
       search,
@@ -241,13 +250,17 @@ FindFromPublication.publish('groups.memberOf', function groupsMemberOf({ page, s
   try {
     checkPaginationParams.validate({ page, itemPerPage, search });
   } catch (err) {
-    // logServer(`publish groups.memberOf : ${err}`);
-    logServer(`GROUPS - PUBLICATION - groups.memberOf,publish groups.memberOf : ${err}`, levels.ERROR, scopes.SYSTEM, {
-      page,
-      itemPerPage,
-      search,
-      err,
-    });
+    logServer(
+      `GROUPS - PUBLICATION - ERROR - groups.memberOf,publish groups.memberOf : ${err}`,
+      levels.ERROR,
+      scopes.SYSTEM,
+      {
+        page,
+        itemPerPage,
+        search,
+        err,
+      },
+    );
     this.error(err);
   }
 
@@ -281,8 +294,7 @@ FindFromPublication.publish('groups.one', function groupsOne({ slug }) {
       },
     }).validate({ slug });
   } catch (err) {
-    // logServer(`publish groups.one : ${err}`);
-    logServer(`GROUPS - PUBLICATION - groups.one, publish groups.one : ${err}`, levels.ERROR, scopes.SYSTEM, {
+    logServer(`GROUPS - PUBLICATION - ERROR - groups.one, publish groups.one : ${err}`, levels.ERROR, scopes.SYSTEM, {
       slug,
       err,
     });
@@ -311,11 +323,15 @@ publishComposite('groups.single', function groupSingle({ slug }) {
       },
     }).validate({ slug });
   } catch (err) {
-    // logServer(`publish groups.one : ${err}`);
-    logServer(`GROUPS - PUBLICATION - groups.single, publish groups.one : ${err}`, levels.ERROR, scopes.SYSTEM, {
-      slug,
-      err,
-    });
+    logServer(
+      `GROUPS - PUBLICATION - ERROR - groups.single, publish groups.one : ${err}`,
+      levels.ERROR,
+      scopes.SYSTEM,
+      {
+        slug,
+        err,
+      },
+    );
     this.error(err);
   }
 
@@ -369,6 +385,19 @@ publishComposite('groups.single', function groupSingle({ slug }) {
           const groupId = group._id;
           return Articles.find(
             { groups: { $elemMatch: { _id: groupId } } },
+            {
+              fields: {
+                _id: 1,
+              },
+            },
+          );
+        },
+      },
+      {
+        find(group) {
+          const groupId = group._id;
+          return Forms.find(
+            { groups: { $in: [groupId] }, active: true },
             {
               fields: {
                 _id: 1,

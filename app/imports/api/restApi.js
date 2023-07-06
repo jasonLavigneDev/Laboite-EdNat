@@ -7,14 +7,27 @@ import Rest from 'connect-rest';
 import addNotification from './notifications/server/rest';
 import getStats from './stats/server/rest';
 import getNcToken from './nextcloud/server/rest';
+import createUser from './users/server/rest';
+import ftUploadProxy from './francetransfert/server/rest';
 import { widget } from './widget';
 
-WebApp.connectHandlers.use(bodyParser.urlencoded({ extended: false }));
-WebApp.connectHandlers.use(bodyParser.json());
+const unless = (path, middleware) => (req, res, next) => {
+  if (path === req.path) {
+    return next();
+  }
+  return middleware(req, res, next);
+};
+
+// We don't want to parse data for francetransfert proxy
+WebApp.connectHandlers.use(unless('/api/francetransfert/upload', bodyParser.urlencoded({ extended: false })));
+WebApp.connectHandlers.use(unless('/api/francetransfert/upload', bodyParser.json()));
 WebApp.connectHandlers.use('*', cors());
 // // gzip/deflate outgoing responses
 // var compression = require('compression');
 // app.use(compression());
+
+// Initialize France Transfert proxy
+WebApp.connectHandlers.use('/api/francetransfert/upload', Meteor.bindEnvironment(ftUploadProxy));
 
 // Initialize REST library
 const options = {
@@ -40,6 +53,15 @@ if (ncApiKeys && ncApiKeys.length > 0) {
   const restNc = Rest.create({ ...options, apiKeys: ncApiKeys });
   WebApp.connectHandlers.use(restNc.processRequest());
   restNc.post({ path: '/nctoken', version: '>=1.0.0' }, Meteor.bindEnvironment(getNcToken));
+}
+
+const cuApiKeys = Meteor.settings.private.createUserApiKeys;
+// specific endpoint and api key for user creation
+// Only active if at least one API key is defined in config (private.createUserApiKeys)
+if (cuApiKeys && cuApiKeys.length > 0) {
+  const restCu = Rest.create({ ...options, apiKeys: cuApiKeys });
+  WebApp.connectHandlers.use(restCu.processRequest());
+  restCu.post({ path: '/createuser', version: '>=1.0.0' }, Meteor.bindEnvironment(createUser));
 }
 
 WebApp.connectHandlers.use('/scripts/widget', (req, res) => {

@@ -108,7 +108,6 @@ describe('structures', function () {
 
     describe('createStructure', function () {
       it('does create a structure with admin user', function () {
-        // logServer('User admin:', adminId);
         const _id = createStructure._execute({ userId: adminId }, { name: `${structureName}WithAdminUser` });
         const structure = Structures.findOne({ _id });
         assert.typeOf(structure, 'object');
@@ -118,7 +117,6 @@ describe('structures', function () {
         assert.equal(group._id, structure.groupId);
       });
       it('does create a structure with structure admin user of parent', function () {
-        // logServer('User admin:', adminId);
         const parentWithAdminRightId = createStructure._execute(
           { userId: adminId },
           { name: `${structureName}ParentWithAdminRight` },
