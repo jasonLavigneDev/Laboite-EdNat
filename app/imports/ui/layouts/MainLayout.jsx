@@ -44,6 +44,7 @@ const BookmarksPage = lazy(() => import('../pages/groups/BookmarksPage'));
 const StructureSelectionPage = lazy(() => import('../pages/system/StructureSelectionPage'));
 const TabbedNotificationsDisplay = lazy(() => import('../components/notifications/TabbedNotificationsDisplay'));
 const NewIntroductionPage = lazy(() => import('./NewIntroductionPage'));
+const UploadPage = lazy(() => import('../pages/Upload'));
 
 // dynamic imports
 const AdminGroupsPage = lazy(() => import('../pages/admin/AdminGroupsPage'));
@@ -161,6 +162,10 @@ function MainLayout({ appsettings, ready }) {
 
                       {!disabledFeatures.introductionTab && (
                         <Route exact path="/informations" component={NewIntroductionPage} />
+                      )}
+
+                      {Meteor.settings.franceTransfert?.endpoint && (
+                        <Route exact path="/upload" component={UploadPage} />
                       )}
 
                       {!disabledFeatures.blog && <Route exact path="/publications" component={ArticlesPage} />}

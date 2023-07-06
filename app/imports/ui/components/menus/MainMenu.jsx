@@ -64,6 +64,13 @@ export const userMenu = [
   },
 ];
 
+if (Meteor.settings.franceTransfert?.endpoint) {
+  userMenu.push({
+    path: '/upload',
+    content: 'menuUpload',
+  });
+}
+
 export const userGroups = [
   // for admin users, group management is in admin section
   {
