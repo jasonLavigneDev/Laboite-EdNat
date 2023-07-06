@@ -13,10 +13,10 @@ import Spinner from '../components/system/Spinner';
 import MsgHandler from '../components/system/MsgHandler';
 import DynamicStore, { useAppContext } from '../contexts/context';
 import lightTheme from '../themes/light';
-import { instance } from '../utils/matomo';
 import LocalizationLayout from './locales/LocalizationLayout';
 import useWidgetLink from '../utils/widgetLink';
 import { OnBoardingContext } from '../contexts';
+import { instance } from '../utils/analyticsServices';
 
 // dynamic imports
 const MainLayout = lazy(() => import('./MainLayout'));

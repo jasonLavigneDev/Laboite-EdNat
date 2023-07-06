@@ -69,7 +69,7 @@ export const createStructure = new ValidatedMethod({
         // Add structure to the parent childrenIds
         directParentStructureChildrenIds.push(structureId);
         logServer(
-          `STRUCTURE - METHODS - UPDATE - createStructure - id: ${structureId} 
+          `STRUCTURE - METHODS - UPDATE - createStructure - id: ${structureId}
           / childrenIds: ${directParentStructureChildrenIds}`,
           levels.INFO,
           scopes.SYSTEM,
@@ -77,7 +77,7 @@ export const createStructure = new ValidatedMethod({
         Structures.update({ _id: parentId }, { $set: { childrenIds: [...new Set(directParentStructureChildrenIds)] } });
 
         logServer(
-          `STRUCTURE - METHODS - UPDATE - createStructure - id: ${structureId} 
+          `STRUCTURE - METHODS - UPDATE - createStructure - id: ${structureId}
           / ancestorsIds: ${parentId} / directParentStructureAncestorIds: ${directParentStructureAncestorIds}`,
           levels.INFO,
           scopes.SYSTEM,
@@ -539,7 +539,7 @@ export const updateStructureIntroduction = new ValidatedMethod({
     });
 
     logServer(
-      `STRUCTURE - METHODS - UPDATE - updateStructureIntroduction - structure id: ${structureId} 
+      `STRUCTURE - METHODS - UPDATE - updateStructureIntroduction - structure id: ${structureId}
       / introduction: ${newIntroductionArray}`,
       levels.INFO,
       scopes.SYSTEM,

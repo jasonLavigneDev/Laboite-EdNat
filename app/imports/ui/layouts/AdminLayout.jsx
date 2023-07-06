@@ -44,6 +44,7 @@ const AdminStructureUsersValidationPage = lazy(() => import('../pages/admin/Admi
 const AdminStructureDefaultSpace = lazy(() => import('../pages/admin/AdminStructureDefaultSpace'));
 const AdminAsamExtensionsManagementPage = lazy(() => import('../pages/admin/AdminAsamExtensionsManagementPage'));
 const AdminGlobalInfos = lazy(() => import('../pages/admin/AdminGlobalInfos'));
+const AdminAnalytics = lazy(() => import('../pages/admin/AdminAnalytics'));
 
 const { disabledFeatures = {} } = Meteor.settings.public;
 
@@ -101,6 +102,13 @@ function AdminLayout() {
                       exact
                       path="/admin/nextcloudurl"
                       component={AdminNextcloudUrlPage}
+                    />
+                    <AdminRoute
+                      userId={userId}
+                      loadingUser={loadingUser}
+                      exact
+                      path="/admin/analytics"
+                      component={AdminAnalytics}
                     />
                     <AdminRoute
                       userId={userId}
@@ -199,6 +207,13 @@ function AdminLayout() {
                         component={AdminSingleGroupPage}
                       />
                     )}
+                    <StructureAdminRoute
+                      user={user}
+                      loadingUser={loadingUser}
+                      exact
+                      path="/admin/structureanalytics"
+                      component={AdminAnalytics}
+                    />
                     <StructureAdminRoute
                       exact
                       path="/admin/structureusers"
