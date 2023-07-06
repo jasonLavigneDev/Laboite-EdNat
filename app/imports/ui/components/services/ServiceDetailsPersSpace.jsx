@@ -18,6 +18,8 @@ import PublishIcon from '@mui/icons-material/Publish';
 import i18n from 'meteor/universe:i18n';
 
 import { isUrlExternal } from '../../utils/utilsFuncs';
+import { eventTracking } from '../../../api/analyticsEvents/eventsTracking';
+import AnalyticsEvents from '../../../api/analyticsEvents/analyticsEvents';
 
 const useStyles = makeStyles()((theme) => ({
   card: {
@@ -67,6 +69,7 @@ function ServiceDetailsPersSpace({ service, customDrag, isMobile, isSorted, need
   const history = useHistory();
   const favButtonLabel = i18n.__('components.ServiceDetails.favButtonLabelNoFav');
   const backToDefaultButtonLabel = i18n.__('components.ServiceDetails.backToDefault');
+  const isExternalService = isUrlExternal(service.url);
 
   const handleFavorite = () => {
     Meteor.call('services.unfavService', { serviceId: service._id }, (err) => {
@@ -78,13 +81,18 @@ function ServiceDetailsPersSpace({ service, customDrag, isMobile, isSorted, need
     });
   };
 
-  const handleClick = () => {
-    if (isUrlExternal(service.url)) {
+  const handleClick = React.useCallback(() => {
+    eventTracking({
+      target: AnalyticsEvents.targets.SERVICE,
+      content: service.title,
+    });
+
+    if (isExternalService) {
       window.open(service.url, '_blank', 'noreferrer,noopener');
     } else {
       history.push(service.url.replace(Meteor.absoluteUrl(), '/'));
     }
-  };
+  }, [history, isExternalService, service?.url, service?.title]);
 
   const handleBackToDefault = () => {
     Meteor.call('personalspaces.backToDefaultElement', { elementId: service._id, type: 'service' }, (err) => {
@@ -109,7 +117,7 @@ function ServiceDetailsPersSpace({ service, customDrag, isMobile, isSorted, need
         }
         aria-label={service.title}
       >
-        {/* this span is to allow display of tooltip when CardActionArea is disabled 
+        {/* this span is to allow display of tooltip when CardActionArea is disabled
         (occur when a service is disabled) */}
         <span className={classes.span}>
           <CardActionArea

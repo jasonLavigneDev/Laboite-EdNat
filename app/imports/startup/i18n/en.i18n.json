@@ -716,12 +716,14 @@
       "menuAdminBackHome": "Back to Personnal Space",
       "menuUserStructure": "Structures management",
       "menuAdminOfStructures": "Sub structures management",
-      "menuAdminStructureSettings": "Structure settings",
       "menuAdminStructureIntroduction": "Structure introduction",
       "menuAdminOfStructureUsersValidation": "Awaiting users",
       "menuAdminDefaultSpaces": "Default Personal Spaces",
       "menuAdminAsam": "Email extensions Management",
-      "menuAdminGlobalInfo": "Global informations"
+      "menuAdminGlobalInfo": "Global information",
+      "menuAdminAnalytics": "Analytics",
+      "menuAdminStructureAnalytics": "Structure analytics",
+      "menuAdminStructureSettings": "Structure settings"
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Your account has not been activated",
@@ -1004,7 +1006,9 @@
       "attachToStructure": "Do you want to be attached to this structure?"
     },
     "AdminStructureTreeView": {
-      "title": "Structures list"
+      "all": "all",
+      "title": "Structures list",
+      "isPartOf": "You are a member of structure "
     },
     "AdminStructureSearchBar": {
       "filterByName": "Filter by a structure's name (three letter and more)",
@@ -1773,6 +1777,39 @@
         "famillyLongName": "Corresponding familly long name if exists",
         "confirmMsg": "Are you sure you want to delete email extension ",
         "deleteExtensionEmailTitle": "Email extension "
+      }
+    },
+    "AdminAnalytics": {
+      "title": "Analytics Data",
+      "usersTabs": "Users",
+      "actionsTabs": "Actions",
+      "viewsTabs": "Pages View",
+      "usersTitle": "Real time connected users",
+      "status": "Status",
+      "number": "Number",
+      "usersByStructure": "Connected by structure",
+      "rows": {
+        "usersLogged": "Users",
+        "newAccounts": "Accounts created in the past 2 days",
+        "usersNotLogged": "Visitors",
+        "usersIdle": "Idle",
+        "usersIdleTotal": "Idle (including substructures)",
+        "usersActive": "Active",
+        "usersActiveTotal": "Active (including substructures)"
+      },
+      "pageViewsTitle": "Pages View",
+      "actionsClickTitle": "Users actions",
+      "columnRoute": "Route",
+      "columnNumberConnected": "Users",
+      "columnNumberNotConnected": "Visitors",
+      "columnActionsTarget": "Target",
+      "columnContent": "Content",
+      "noEventOnPeriod": "No available data for the period",
+      "download": "Download",
+      "materialTableLocalization": {
+        "pagination_labelRowsSelect": "events per page",
+        "toolbar_searchPlaceholder": "Search",
+        "body_emptyDataSourceMessage": "No results"
       }
     }
   },

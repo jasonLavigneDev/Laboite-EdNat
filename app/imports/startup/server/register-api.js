@@ -56,3 +56,5 @@ import '../../api/asamextensions/server/publications';
 import '../../api/migration/server/methods';
 import '../../api/globalinfos/server/methods';
 import '../../api/francetransfert/methods';
+import '../../api/analyticsEvents/server/methods';
+import '../../api/analyticsEvents/server/publications';

@@ -12,6 +12,7 @@
       "blog": false,
       "notificationsTab": false,
       "groups": false,
+      "analytics": false,
       "introductionTab": false,
       "introductionTabStructuresInfos": true,
       "menuAdminDefaultSpaces": true,  // THIS PARAMS IS SET FOR HIDDEN DEFAULTSPACE FUNCTIONNALITY WHICH DOESN'T WORK
@@ -31,6 +32,12 @@
       "enabled": true,
       "appDesignation": "Laboîte"
     },
+    "countly": {
+      "app_key": "lol",
+      "url": "https://countly.url.fr",
+      "consent": true,
+    },
+    "laboiteBlogURL": "",
     "enableBBB": false,
     "BBBUrl": "",
     "minioPort": null,
@@ -44,6 +51,7 @@
     "minioFileSize": 500000,
     "minioStorageFilesSize": 3000000,
     "maxMinioDiskPerUser": 1000000,
+    "analyticsExpirationInDays": 24,
     "NotificationsExpireDays": {
       "setRole": null,
       "unsetRole": null,
