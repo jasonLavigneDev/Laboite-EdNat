@@ -110,6 +110,11 @@ export default function OnBoardingProvider({ children }) {
     history.push(link.path);
   }, []);
 
+  /* TODO:
+   *   another approach for themes could be to have predefined sets of steps that could be listed in settings
+   *   Steps translations could also be configured through laboite's admin interface
+   */
+
   /**
    * @type {Array<import('intro.js-react').Step>}
    */
