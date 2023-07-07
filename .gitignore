@@ -6,3 +6,4 @@ config/settings.development.json
 app/.reports
 **/.reports/*.*
 passwords.txt
+provisionning/.env
