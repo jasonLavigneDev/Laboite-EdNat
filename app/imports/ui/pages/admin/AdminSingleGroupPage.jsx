@@ -162,7 +162,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
 
   function _checkShareName() {
     const value = groupData.shareName;
-    if (value) {
+    if (value && plugins.nextcloud === true) {
       if (value.includes('/') || value.includes('\\')) {
         setErrorShareText(`${i18n.__('pages.AdminSingleGroupPage.invalidCharacters')}: /, \\`);
         setErrorShare(true);
@@ -178,6 +178,8 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
         }
       });
     }
+    // if plugins.nextcloud is false we don't need to perform check,
+    // as shareName will be ignored when submitting
     setErrorShareText('');
     setErrorShare(false);
     return false;
@@ -188,7 +190,11 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
   useEffect(() => {
     if (params._id && group._id && loading) {
       setLoading(false);
-      setGroupData(group);
+      if (!group.shareName) {
+        setGroupData({ ...group, shareName: calcShareName(group.name) });
+      } else {
+        setGroupData(group);
+      }
       setContent(group.content || '');
       setPlugins(group.plugins || {});
     }
@@ -196,7 +202,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
 
   useEffect(() => {
     checkShareName();
-  }, [groupData.shareName]);
+  }, [groupData.shareName, plugins.nextcloud]);
 
   const handleChangeTab = (event, newValue) => {
     setTabId(newValue);
@@ -304,7 +310,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
     }
     const method = params._id ? updateGroup : createGroup;
     setLoading(true);
-    const { _id, slug, avatar, ...rest } = groupData;
+    const { _id, slug, avatar, shareName, ...rest } = groupData;
     if (!isAutomaticGroup && rest.name.toLowerCase().includes('[struc]')) {
       msg.error(i18n.__('pages.AdminSingleGroupPage.invalidName'));
       history.goBack();
@@ -321,6 +327,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
             avatar: avatar.replace('groupAvatar_TEMP.png', 'groupAvatar.png'),
           },
         };
+        if (plugins.nextcloud === true) args.data.shareName = shareName;
       } else {
         args = {
           ...rest,
@@ -328,6 +335,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
           plugins,
           avatar,
         };
+        if (plugins.nextcloud === true) args.shareName = shareName;
       }
       method.call(args, (error) => {
         setLoading(false);
