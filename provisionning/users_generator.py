@@ -7,16 +7,26 @@ from random import randint, choice, choices, sample
 from keycloak import KeycloakAdmin
 from keycloak import KeycloakOpenIDConnection
 from pymongo import MongoClient
+from dotenv import load_dotenv
 
+
+load_dotenv()
 fake = Faker()
+
+
+KEYCLOAK_URL = os.getenv("KEYCLOAK_URL")
+KEYCLOAK_REALM = os.getenv("KEYCLOAK_REALM")
+KEYCLOAK_USERNAME = os.getenv("KEYCLOAK_USERNAME")
+KEYCLOAK_PASSWORD = os.getenv("KEYCLOAK_PASSWORD")
+KEYCLOAK_CLIENT_ID = os.getenv("KEYCLOAK_CLIENT_ID")
 
 # Keycloak connection
 keycloak_connection = KeycloakOpenIDConnection(
-    server_url="http://localhost:8080/auth/",
-    realm_name="master",
-    username="admin",
-    password="admin",
-    client_id="admin-cli",
+    server_url=KEYCLOAK_URL,
+    realm_name=KEYCLOAK_REALM,
+    username=KEYCLOAK_USERNAME,
+    password=KEYCLOAK_PASSWORD,
+    client_id=KEYCLOAK_CLIENT_ID,
     verify=True)
 
 keycloak_admin = KeycloakAdmin(connection=keycloak_connection)

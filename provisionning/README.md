@@ -1,8 +1,6 @@
 ### Description
 
-These scripts allow the creation of a specified number of users in the database used by LaBoite. The goal is to test the integrity project, and to identify any performance issues with high amount of users. 
-
-For now, it's possible to create users with API (users_generator_by_api)
+The script allows the creation of a specified number of structures and users in the database and keycloak used by LaBoite. The goal is to test the integrity project, and to identify any performance issues with high amount of users. 
 
 
 ### Install
@@ -11,13 +9,17 @@ requirements.txt contains all import necessary for scripts to work.
 
 ```pip install -r requirements.txt```
 
-The API script needs some environment variables:
-- MONGO_URI (example: mongodb://localhost:3001/meteor)
+The script needs a well formed .env file.
+- KEYCLOAK_URL: URL of keycloak
+- KEYCLOAK_REALM: Realm to use to create and store users and structures groups
+- KEYCLOAK_USERNAME: An administrator username
+- KEYCLOAK_PASSWORD: An administrator password
+- KEYCLOAK_CLIENT_ID: Keycloak client to use
 
 
-These scripts requires an active LaBoite setup.
+The script also requires an active LaBoite setup.
 
 
 ### Usage
 
-python3 users_generator_by_db.py <nb of structures> <nb of users>
+python3 users_generator.py <nb of structures> <nb of users>

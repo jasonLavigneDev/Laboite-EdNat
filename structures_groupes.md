@@ -1,0 +1,24 @@
+groupe owner: admin site qui créé la structure
+
+différencer les groupes de structures des autres groupes ?
+- Type spécial (structure)
+- Nom du groupe: Alias pour éviter les conflits de nom. Exemple: grp_nomDeLaStructure (Il faut dans ce cas interdire grp_ à la création d'un groupe classique)
+	- Alors en fait: 
+		Version courte: C'est nul.
+		Version longue: 
+			Une sous-structure peut avoir le même nom qu'une autre. Mais les groupes ont des noms uniques. 
+			Il faudrait pouvoir interdire des alias/caractères spéciaux dans les noms de groupes. Ca pose problème si des groupes existants ont des noms qui ne sont plus conformes à ces nouvelles règles. 
+
+
+Rejoindre une structure = rejoindre le groupe + groupe des structures ancêtres:
+listGroup = Structures.find(ancetre: st.ancêtres).map(st => Groups.find(name: st.name))
+Puis ajouter l'user à tout les groupes de cette liste
+
+Quitter une structure = quitter le groupe + groupe des structures ancêtes. Fonctionne plus ou moins pareil que rejoindre
+
+Update structure = Update groupe (Mettre à jour le nom des deux côtés, sans oublier de garder l'alias pour le groupe)
+
+Suppression de groupe de structure = Impossible
+Suppression de structure = Suppression de groupe
+
+Le nom: Nul.
