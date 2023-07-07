@@ -130,8 +130,8 @@ const AdminUsersPage = ({ match: { path } }) => {
   ] = usePaginatedMethod(methodName);
 
   const fetchUsers = useCallback(() => {
-    call(search.trim(), { userType, sortQuery });
-  }, [call, search, userType, sortByDate]);
+    call(search.trim(), { userType, selectedStructureId, sortQuery });
+  }, [call, search, userType, sortByDate, selectedStructureId]);
 
   useEffect(() => {
     fetchUsers();
