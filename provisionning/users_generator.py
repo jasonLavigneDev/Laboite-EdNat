@@ -20,6 +20,7 @@ structures = {}
 
 KEYCLOAK_URL = os.getenv("KEYCLOAK_URL")
 KEYCLOAK_REALM = os.getenv("KEYCLOAK_REALM")
+KEYCLOAK_USER_REALM = os.getenv("KEYCLOAK_USER_REALM")
 KEYCLOAK_USERNAME = os.getenv("KEYCLOAK_USERNAME")
 KEYCLOAK_PASSWORD = os.getenv("KEYCLOAK_PASSWORD")
 KEYCLOAK_CLIENT_ID = os.getenv("KEYCLOAK_CLIENT_ID")
@@ -37,6 +38,7 @@ MONGO_URI = os.getenv("MONGO_URI")
 # Keycloak connection
 keycloak_connection = KeycloakOpenIDConnection(
     server_url=KEYCLOAK_URL,
+    user_realm_name=KEYCLOAK_USER_REALM,
     realm_name=KEYCLOAK_REALM,
     username=KEYCLOAK_USERNAME,
     password=KEYCLOAK_PASSWORD,
