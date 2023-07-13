@@ -51,7 +51,8 @@ const LegalComponent = ({ tabkey, ...props }) => {
   const [config, setConfig] = useState({ ...configData });
   const [loading, setLoading] = useState(false);
 
-  const changes = config.content !== configData.content;
+  const changes =
+    config.content !== configData.content || config.external !== configData.external || config.link !== configData.link;
 
   const onCheckExternal = (event) => {
     const { name, checked } = event.target;
