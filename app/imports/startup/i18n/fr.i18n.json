@@ -866,7 +866,7 @@
     },
     "AvatarEdit": {
       "title": "Créez votre avatar",
-      "subtitle": "à patir d'une image",
+      "subtitle": "à partir d'une image",
       "sendImage": "Envoyer cet avatar",
       "turnLeft": "Pivoter à gauche",
       "turnRight": "Pivoter à droite",
