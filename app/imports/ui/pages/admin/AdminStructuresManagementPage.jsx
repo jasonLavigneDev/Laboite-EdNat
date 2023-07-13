@@ -159,11 +159,11 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
     const { value: structureName } = e.target.structureName;
 
     if (isEditMode) {
-      onEdit({ structureId: _id, name: structureName });
+      onEdit({ structureId: _id, name: structureName.trim() });
     } else {
       onCreate({
         updateParentIdsList,
-        name: structureName,
+        name: structureName.trim(),
         parentId: _id || null,
       });
     }
@@ -229,7 +229,7 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
                     name="structureName"
                     fullWidth
                     onChange={(e) => {
-                      setSelectedStructure({ name: e.target.value.trim() });
+                      setSelectedStructure({ name: e.target.value });
                     }}
                     autoFocus
                   />
