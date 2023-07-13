@@ -120,9 +120,7 @@ function MainLayout({ appsettings, ready }) {
         return;
       }
 
-      if (!res.length) return;
-
-      if (!user.lastGlobalInfoReadDate || new Date(user.lastGlobalInfoReadDate) < res[0].updatedAt) {
+      if (res.length && (!user.lastGlobalInfoReadDate || new Date(user.lastGlobalInfoReadDate) < res[0].updatedAt)) {
         Meteor.call('users.setLastGlobalInfoRead', { lastGlobalInfoReadDate: new Date() });
         return;
       }
