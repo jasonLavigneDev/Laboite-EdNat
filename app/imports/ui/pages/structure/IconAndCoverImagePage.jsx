@@ -68,11 +68,9 @@ const IconAndCoverImagePage = () => {
   const iconImgRef = useRef(null);
   useEffect(() => {
     // update cover and icon images style for a widget mode
-    if (userStructure?.coverUrlImage !== undefined) {
-      imgWrapperRef.current.style.height = !isMobile ? '175px' : 'auto';
-    }
 
-    if (userStructure?.iconUrlImage !== undefined) {
+    if (userStructure?.iconUrlImage !== undefined && userStructure?.coverUrlImage !== undefined) {
+      imgWrapperRef.current.style.height = !isMobile ? '175px' : 'auto';
       iconImgRef.current.style.bottom =
         !isMobile || (isMobile && userStructure?.coverUrlImage === undefined) ? '-48px' : '-25px';
       iconImgRef.current.style.height = !isMobile ? '100px' : '50px';
@@ -86,7 +84,7 @@ const IconAndCoverImagePage = () => {
         <Fade in>
           <Container className={classes.containerGrid}>
             <Grid container spacing={4} className={classes.containerGridImgWrapper}>
-              {(userStructure?.coverUrlImage !== undefined || userStructure?.iconUrlImage !== undefined) && (
+              {userStructure?.coverUrlImage !== undefined && userStructure?.iconUrlImage !== undefined && (
                 <Grid item xs={12} sm={12} md={12} className={classes.containerGridItem}>
                   <div className={classes.parentImgWrapper}>
                     <div

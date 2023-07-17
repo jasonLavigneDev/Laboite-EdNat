@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
+import i18n from 'meteor/universe:i18n';
 import PropTypes from 'prop-types';
 import { useTheme } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
@@ -133,7 +134,7 @@ const clearClipboard = async () => {
   await navigator?.clipboard?.writeText('');
 };
 function TopBar({ publicMenu, root, appsettings, adminApp }) {
-  const [{ isMobile, user, notificationPage }, dispatch] = useAppContext();
+  const [{ isMobile, user, notificationPage, structure }, dispatch] = useAppContext();
   const history = useHistory();
   const location = useLocation();
   const theme = useTheme();
@@ -243,6 +244,16 @@ function TopBar({ publicMenu, root, appsettings, adminApp }) {
     <AppBar position="fixed" className={classes.root}>
       <div className={classes.firstBar}>
         <div className={classes.leftContainer}>
+          {structure?.iconUrlImage !== undefined && structure?.coverUrlImage === undefined && (
+            <img
+              src={structure.iconUrlImage}
+              alt={i18n.__('pages.PersonalPage.iconImage')}
+              id="iconImgId"
+              className={classes.imgLogoContainer}
+              style={{ padding: !isMobile ? '5px' : '' }}
+            />
+          )}
+          ,
           {LOGO ? (
             <Link to={root || (publicMenu ? '/public' : '/')} className={classes.imgLogoContainer}>
               <img
