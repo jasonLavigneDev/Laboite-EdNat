@@ -30,8 +30,7 @@
     },
     "onBoarding": {
       "enabled": true,
-      "appDesignation": "Laboîte",
-      "appsTheme": true
+      "appDesignation": "Laboîte"
     },
     "countly": {
       "app_key": "lol",

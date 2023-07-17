@@ -999,10 +999,6 @@
     "steps": {
       "intro": {
         "title": "Bienvenue sur votre espace !",
-        "text": "Un nouvel espace s'ouvre aux agents de l'État. 👋"
-      },
-      "introApps": {
-        "title": "Bienvenue sur votre espace !",
         "text": "Un nouvel espace s'ouvre aux agents de l'Éducation nationale. 👋"
       },
       "mySpace": {
@@ -1010,18 +1006,10 @@
         "text": "C'est là que tout se passe !"
       },
       "services": {
-        "title": "Les applications interministérielles",
-        "text": "Le magasin d'applications disponibles pour tous les agents de l'État"
-      },
-      "servicesApps": {
         "title": "Les applications nationales",
         "text": "Le magasin d'applications disponibles pour tous les agents de l'Éducation nationale"
       },
       "groups": {
-        "title": "Les groupes",
-        "text": "Le magasin des groupes créés par les agents de l'État"
-      },
-      "groupsApps": {
         "title": "Les groupes",
         "text": "Le magasin des groupes créés par les agents de l'Éducation nationale"
       },
@@ -1034,10 +1022,6 @@
         "text": "Créer votre propre groupe"
       },
       "structure": {
-        "title": "Les applications ministérielles",
-        "text": "Le magasin d'applications mises à disposition pour votre ministère ou organisation"
-      },
-      "structureApps": {
         "title": "Les applications locales",
         "text": "Le magasin d'applications mises à disposition par votre structure de rattachement"
       },

@@ -471,10 +471,6 @@
       "steps": {
         "intro": {
           "title": "Welcome to your space!",
-          "text": "A new space is opening up for state employees. 👋"
-        },
-        "introApps": {
-          "title": "Welcome to your space!",
           "text": "A new space is opening up for french education employees. 👋"
         },
         "mySpace": {
@@ -482,18 +478,10 @@
           "text": "This is where it all happens!"
         },
         "services": {
-          "title": "The interdepartmental applications",
-          "text": "The application store available to all government employees"
-        },
-        "servicesApps": {
           "title": "The national applications",
           "text": "The application store available to all french education employees"
         },
         "groups": {
-          "title": "The groups",
-          "text": "The groups store available to all government employees"
-        },
-        "groupsApps": {
           "title": "The groups",
           "text": "The groups store of groups created by french education employees"
         },
@@ -506,10 +494,6 @@
           "text": "Create your own group"
         },
         "structure": {
-          "title": "The ministerial applications",
-          "text": "The application store available for your department or organization"
-        },
-        "structureApps": {
           "title": "The local applications",
           "text": "The application store hosted by your attachment structure"
         },
