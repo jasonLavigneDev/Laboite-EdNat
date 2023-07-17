@@ -98,7 +98,6 @@ export default function OnBoardingProvider({ children }) {
   const history = useHistory();
   const [areStepsEnabled, setStepsEnabled] = useState(false);
   const isAdmin = Roles.userIsInRole(user?._id, 'admin');
-  const appsTheme = Meteor.settings.public.onBoarding?.appsTheme === true;
   /**
    * @type {useRef<import('intro.js-react').Steps>}
    */
@@ -120,7 +119,7 @@ export default function OnBoardingProvider({ children }) {
    */
   let steps = [
     {
-      ...tOnBoarding(appsTheme ? 'introApps' : 'intro'),
+      ...tOnBoarding('intro'),
     },
     {
       ...tOnBoarding('mySpace'),
@@ -147,7 +146,7 @@ export default function OnBoardingProvider({ children }) {
     //   },
     // },
     {
-      ...tOnBoarding(appsTheme ? 'servicesApps' : 'services'),
+      ...tOnBoarding('services'),
       element: '[data-tour-id="services"]',
       link: {
         path: '/services',
@@ -163,7 +162,7 @@ export default function OnBoardingProvider({ children }) {
     //   },
     // },
     {
-      ...tOnBoarding(appsTheme ? 'structureApps' : 'structure'),
+      ...tOnBoarding('structure'),
       element: '[data-tour-id="structure"]',
       link: {
         path: '/structure',
@@ -175,7 +174,7 @@ export default function OnBoardingProvider({ children }) {
     steps = [
       ...steps,
       {
-        ...tOnBoarding(appsTheme ? 'groupsApps' : 'groups'),
+        ...tOnBoarding('groups'),
         element: '[data-tour-id="groups"]',
         link: {
           path: '/groups',
