@@ -347,7 +347,6 @@ function PersonalZoneUpdater({
           ...list,
           ...localPS.unsorted.filter(filterGroupLink),
           ...localPS.unsorted.filter(filterService),
-          ...localPS.unsorted.filter(filterGroup),
           ...localPS.unsorted.filter(filterLink),
         ],
       });
