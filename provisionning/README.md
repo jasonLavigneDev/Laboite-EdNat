@@ -21,6 +21,8 @@ The script needs a well formed .env file.
 - PERSONNE_PAR_ECOLE: Number of users by school
 - PERSONNE_PAR_COLLEGE: Number of users by middle-school
 - PERSONNE_PAR_LYCEE: Number of users by high-school
+- MONGO_URI: URI of mongo database
+- MONGO_DATABASE: name of mongo database
 
 
 The script also requires an active LaBoite setup.

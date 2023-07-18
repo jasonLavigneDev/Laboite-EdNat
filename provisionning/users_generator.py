@@ -34,6 +34,7 @@ PERSONNE_PAR_COLLEGE = os.getenv("PERSONNE_PAR_COLLEGE")
 PERSONNE_PAR_LYCEE = os.getenv("PERSONNE_PAR_LYCEE")
 
 MONGO_URI = os.getenv("MONGO_URI")
+MONGO_DATABASE = os.getenv("MONGO_DATABASE")
 
 # Keycloak connection
 keycloak_connection = KeycloakOpenIDConnection(
@@ -57,9 +58,8 @@ def generateID():
 
 def get_database():
 
-    mongo_uri = os.getenv('MONGO_URI')
-    client = MongoClient(mongo_uri)
-    return client['meteor']
+    client = MongoClient(MONGO_URI)
+    return client[MONGO_DATABASE]
 
 
 def resetData():
