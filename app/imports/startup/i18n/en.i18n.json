@@ -1294,6 +1294,7 @@
       "searchText": "Which group are you looking for ?",
       "searchGroup": "Search a group",
       "addGroup": "Add group",
+      "cantCreate": "You can't create more group",
       "viewMode": "Change view mode",
       "viewDetail": "Detail view",
       "viewSimple": "Simple view",
@@ -1392,6 +1393,7 @@
         "pagination_labelRowsSelect": "groups per page",
         "body_emptyDataSourceMessage": "No groups to manage",
         "body_addTooltip": "Add a group",
+        "body_cantCreate": "You can't create more group",
         "body_editTooltip": "Modify this group",
         "body_deleteTooltip": "Remove this group",
         "body_editRow_deleteText": "Do you really want to delete this group and unsubscribe its members ?"
