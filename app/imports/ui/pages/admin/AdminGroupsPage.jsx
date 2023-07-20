@@ -93,7 +93,12 @@ function AdminGroupsPage({ groups, loading, user }) {
               },
               {
                 icon: add,
-                tooltip: i18n.__('pages.AdminGroupsPage.materialTableLocalization.body_addTooltip'),
+                hidden: user.groupQuota <= 0,
+                disabled: user.groupQuota < user.groupCount,
+                tooltip:
+                  user.groupQuota < user.groupCount
+                    ? i18n.__('pages.AdminGroupsPage.materialTableLocalization.body_cantCreate')
+                    : i18n.__('pages.AdminGroupsPage.materialTableLocalization.body_addTooltip'),
                 isFreeAction: true,
                 onClick: () => {
                   createNewGoup();
