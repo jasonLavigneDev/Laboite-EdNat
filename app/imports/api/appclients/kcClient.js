@@ -98,7 +98,7 @@ class KeyCloakClient {
         `APPCLIENT - KcCLIENT - THEN - _checkToken -  Keycloak : new access token received'`,
         levels.INFO,
         scopes.SYSTEM,
-        { response },
+        { status: response.status, statusText: response.statusText },
       );
       const newToken = response.data.access_token;
       this._setToken(newToken, response.data.expires_in);
