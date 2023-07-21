@@ -15,7 +15,7 @@ function ocsUrl(ncURL) {
 }
 
 function getInstance(user) {
-  return new URL(user.nclocator).host;
+  return user.nclocator ? new URL(user.nclocator).host : '';
 }
 
 function checkResponse(response) {
@@ -417,9 +417,12 @@ export default class NextcloudClient {
     const userIds = [...group.members, ...group.animators];
     const allUsers = Meteor.users.find({ _id: { $in: userIds } }, { fields: { username: 1, nclocator: 1 } }).fetch();
     const params = {
-      members: allUsers.map((user) => {
-        return { type: 1, id: `${user.username}@${getInstance(user)}` };
-      }),
+      // invite all group members except those who don't have an nclocator
+      members: allUsers
+        .map((user) => {
+          return user.nclocator ? { type: 1, id: `${user.username}@${getInstance(user)}` } : null;
+        })
+        .filter((entry) => entry !== null),
     };
     const response = await fetch(`${this.appsURL}/circles/circles/${circleId}/members/multi`, {
       method: 'POST',
