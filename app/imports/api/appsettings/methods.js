@@ -17,7 +17,7 @@ export function checkMigrationStatus() {
   if (Migrations._getControl().locked === true) {
     // logServer('Migration lock detected !!!!', 'error');
     logServer(
-      `APPSETTINGS - METHODS - checkMigrationStatus,Migration lock detected !!!!`,
+      `APPSETTINGS - METHODS - UPDATE - checkMigrationStatus,Migration lock detected !!!!`,
       levels.ERROR,
       scopes.SYSTEM,
       {},
@@ -64,8 +64,14 @@ export const updateAppsettings = new ValidatedMethod({
         throw new Meteor.Error('api.appsettings.updateAppsettings.notPermitted', i18n.__('api.users.adminNeeded'));
       }
       const args = { content: sanitizedContent, external, link };
+      logServer(
+        `APPSETTINGS - METHODS - UPDATE - updateAppsettings - args: ${JSON.stringify(args)}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       return AppSettings.update({ _id: 'settings' }, { $set: { [key]: args } });
     } catch (error) {
+      logServer(`APPSETTINGS - METHODS - METEOR ERROR - updateAppsettings`, levels.INFO, scopes.SYSTEM, { error });
       throw new Meteor.Error(error, error);
     }
   },
@@ -101,8 +107,16 @@ export const switchMaintenanceStatus = new ValidatedMethod({
         checkMigrationStatus();
         return AppSettings.update({ _id: 'settings' }, { $set: { maintenance: newValue, textMaintenance: '' } });
       }
+      logServer(
+        `APPSETTINGS - METHODS - UPDATE - switchMaintenanceStatus - Maintenance: ${newValue}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       return AppSettings.update({ _id: 'settings' }, { $set: { maintenance: newValue } });
     } catch (error) {
+      logServer(`APPSETTINGS - METHODS - METEOR ERROR - switchMaintenanceStatus`, levels.INFO, scopes.SYSTEM, {
+        error,
+      });
       throw new Meteor.Error(error, error);
     }
   },
@@ -115,16 +129,34 @@ export const setUserStructureValidationMandatoryStatus = new ValidatedMethod({
     try {
       const authorized = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
       if (!authorized) {
+        logServer(
+          `APPSETTINGS - METHODS - METEOR ERROR - setUserStructureValidationMandatoryStatus - 
+        authorized: ${authorized}`,
+          levels.VERBOSE,
+          scopes.SYSTEM,
+        );
         throw new Meteor.Error(
           'api.appsettings.setUserStructureValidationMandatoryStatus.notPermitted',
           i18n.__('api.users.admineeded'),
         );
       }
+      logServer(
+        `APPSETTINGS - METHODS - UPDATE - setUserStructureValidationMandatoryStatus - 
+        isValidationMandatory: ${isValidationMandatory}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       return AppSettings.update(
         { _id: 'settings' },
         { $set: { userStructureValidationMandatory: isValidationMandatory } },
       );
     } catch (error) {
+      logServer(
+        `APPSETTINGS - METHODS - METEOR ERROR - setUserStructureValidationMandatoryStatus`,
+        levels.INFO,
+        scopes.SYSTEM,
+        { error },
+      );
       throw new Meteor.Error(error, error);
     }
   },
@@ -148,8 +180,14 @@ export const updateTextMaintenance = new ValidatedMethod({
       if (!authorized) {
         throw new Meteor.Error('api.appsettings.updateTextMaintenance.notPermitted', i18n.__('api.users.adminNeeded'));
       }
+      logServer(
+        `APPSETTINGS - METHODS - UPDATE - updateTextMaintenance - text maintenance: ${text}`,
+        levels.INFO,
+        scopes.SYSTEM,
+      );
       return AppSettings.update({ _id: 'settings' }, { $set: { textMaintenance: text } });
     } catch (error) {
+      logServer(`APPSETTINGS - METHODS - METEOR ERROR - updateTextMaintenance`, levels.INFO, scopes.SYSTEM, { error });
       throw new Meteor.Error(error, error);
     }
   },
@@ -187,6 +225,11 @@ export const updateTextInfoLanguage = new ValidatedMethod({
       // check if current user is admin
       const authorized = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
       if (!authorized) {
+        logServer(
+          `APPSETTINGS - METHODS - METEOR ERROR - updateTextInfoLanguage - authorized: ${authorized}`,
+          levels.VERBOSE,
+          scopes.SYSTEM,
+        );
         throw new Meteor.Error(
           'api.appsettings.updateIntroductionLanguage.notPermitted',
           i18n.__('api.users.adminNeeded'),
@@ -210,9 +253,14 @@ export const updateTextInfoLanguage = new ValidatedMethod({
       } else {
         newInfo.push({ language, content: sanitizedContent });
       }
-
+      logServer(
+        `APPSETTINGS - METHODS - UPDATE - updateTextInfoLanguage - new settings: ${JSON.stringify(newInfo)}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       return AppSettings.update({ _id: 'settings' }, { $set: { [tabkey]: newInfo } });
     } catch (error) {
+      logServer(`APPSETTINGS - METHODS - METEOR ERROR - updateTextInfoLanguage`, levels.INFO, scopes.SYSTEM, { error });
       throw new Meteor.Error(error, error);
     }
   },

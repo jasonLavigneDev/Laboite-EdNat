@@ -8,6 +8,7 @@ import i18n from 'meteor/universe:i18n';
 import { isActive, getLabel, validateString } from '../utils';
 import UserBookmarks from './userBookmarks';
 import { addUserBookmark, removeElement } from '../personalspaces/methods';
+import logServer, { levels, scopes } from '../logging';
 
 function _formatURL(name) {
   let finalName = name;
@@ -33,6 +34,11 @@ export const createUserBookmark = new ValidatedMethod({
   run({ url, name, tag, favUserBookmarkDirectry = false }) {
     const isAllowed = isActive(this.userId);
     if (!isAllowed) {
+      logServer(
+        `USERBOOKMARKS - METHODS - METEOR ERROR - createUserBookmark - ${i18n.__('api.users.notPermitted')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error('api.userBookmarks.createUserBookmark.notPermitted', i18n.__('api.users.notPermitted'));
     }
     validateString(url);
@@ -44,6 +50,13 @@ export const createUserBookmark = new ValidatedMethod({
     // check that this URL does not already exist in this user bookmarks
     const bk = UserBookmarks.findOne({ url: finalUrl, userId: this.userId });
     if (bk !== undefined) {
+      logServer(
+        `USERBOOKMARKS - METHODS - METEOR ERROR - createUserBookmark - ${i18n.__(
+          'api.bookmarks.createBookmark.URLAlreadyExists',
+        )}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error(
         'api.userBookmarks.createBookmark.URLAlreadyExists',
         i18n.__('api.bookmarks.createBookmark.URLAlreadyExists'),
@@ -77,6 +90,11 @@ export const updateUserBookmark = new ValidatedMethod({
   run({ id, url, name, tag }) {
     const bk = UserBookmarks.findOne({ _id: id });
     if (bk === undefined) {
+      logServer(
+        `USERBOOKMARKS - METHODS - METEOR ERROR - updateUserBookmark - ${i18n.__('api.bookmarks.unknownBookmark')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error(
         'api.UserBookmarks.updateUserBookmark.unknownBookmark',
         i18n.__('api.bookmarks.unknownBookmark'),
@@ -85,6 +103,11 @@ export const updateUserBookmark = new ValidatedMethod({
 
     const isAllowed = isActive(this.userId) && (Roles.userIsInRole(this.userId, 'admin') || bk.userId === this.userId);
     if (!isAllowed) {
+      logServer(
+        `USERBOOKMARKS - METHODS - METEOR ERROR - updateUserBookmark - ${i18n.__('api.users.notPermitted')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error('api.userBookmarks.updateUserBookmark.notPermitted', i18n.__('api.users.notPermitted'));
     }
 
@@ -92,6 +115,12 @@ export const updateUserBookmark = new ValidatedMethod({
     validateString(url);
     validateString(name);
     validateString(tag);
+    logServer(
+      `USERBOOKMARKS - METHODS - UPDATE - updateUserBookmark - id: ${id} / url: ${finalUrl} 
+      / name: ${name} / tag: ${tag}`,
+      levels.VERBOSE,
+      scopes.SYSTEM,
+    );
     UserBookmarks.update({ _id: id }, { $set: { url: finalUrl, name, tag } });
     return finalUrl;
   },
@@ -105,11 +134,21 @@ export const favUserBookmark = new ValidatedMethod({
 
   run({ bookmarkId }) {
     if (!this.userId) {
+      logServer(
+        `USERBOOKMARKS - METHODS - METEOR ERROR - favUserBookmark - ${i18n.__('api.users.mustBeLoggedIn')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error('api.userBookmarks.favUserBookmark.mustBeLoggedIn', i18n.__('api.users.mustBeLoggedIn'));
     }
     // check bookmark existence
     const bookmark = UserBookmarks.findOne({ _id: bookmarkId, userId: this.userId });
     if (bookmark === undefined) {
+      logServer(
+        `USERBOOKMARKS - METHODS - METEOR ERROR - favUserBookmark - ${i18n.__('api.bookmarks.unknownBookmark')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error(
         'api.userBookmarks.favUserBookmark.unknownBookmark',
         i18n.__('api.bookmarks.unknownBookmark'),
@@ -118,6 +157,11 @@ export const favUserBookmark = new ValidatedMethod({
     Meteor.users.update(this.userId, {
       $push: { favUserBookmarks: bookmarkId },
     });
+    logServer(
+      `USERBOOKMARKS - METHODS - EXECUTE - favUserBookmark - user id: ${this.userId} / bookmarkId: ${bookmarkId}`,
+      levels.VERBOSE,
+      scopes.SYSTEM,
+    );
     // update user personalSpace
     addUserBookmark._execute({ userId: this.userId }, { bookmarkId });
   },
@@ -131,6 +175,11 @@ export const unfavUserBookmark = new ValidatedMethod({
 
   run({ bookmarkId }) {
     if (!this.userId) {
+      logServer(
+        `USERBOOKMARKS - METHODS - METEOR ERROR - unfavUserBookmark - ${i18n.__('api.users.mustBeLoggedIn')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error('api.userBookmarks.unfavUserBookmark.mustBeLoggedIn', i18n.__('api.users.mustBeLoggedIn'));
     }
     const user = Meteor.users.findOne(this.userId);
@@ -140,6 +189,12 @@ export const unfavUserBookmark = new ValidatedMethod({
         $pull: { favUserBookmarks: bookmarkId },
       });
     }
+    logServer(
+      `USERBOOKMARKS - METHODS - METEOR ERROR - unfavUserBookmark - user id: ${this.userId} 
+      / bookmarkId: ${bookmarkId}`,
+      levels.VERBOSE,
+      scopes.SYSTEM,
+    );
     // update user personalSpace
     removeElement._execute({ userId: this.userId }, { type: 'link', elementId: bookmarkId });
   },
@@ -155,6 +210,11 @@ export const removeUserBookmark = new ValidatedMethod({
     // check bookmark existence
     const bk = UserBookmarks.findOne(id);
     if (bk === undefined) {
+      logServer(
+        `USERBOOKMARKS - METHODS - METEOR UPDATE - removeUserBookmark - ${i18n.__('api.bookmarks.UnknownBookmark')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error(
         'api.userBookmarks.removeUserBookmark.UnknownBookmark',
         i18n.__('api.bookmarks.UnknownBookmark'),
@@ -164,13 +224,28 @@ export const removeUserBookmark = new ValidatedMethod({
     const isAllowed = isActive(this.userId) && (Roles.userIsInRole(this.userId, 'admin') || bk.userId === this.userId);
 
     if (!isAllowed) {
+      logServer(
+        `USERBOOKMARKS - METHODS - METEOR UPDATE - removeUserBookmark - ${i18n.__('api.users.notPermitted')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error('api.userBookmarks.removeUserBookmark.notPermitted', i18n.__('api.users.notPermitted'));
     }
+    logServer(
+      `USERBOOKMARKS - METHODS - METEOR UPDATE - removeUserBookmark - favUserBookmarks id: ${id}`,
+      levels.VERBOSE,
+      scopes.SYSTEM,
+    );
     // remove bookmark from users favorites
     Meteor.users.update({ favUserBookmarks: { $all: [id] } }, { $pull: { favUserBookmarks: id } }, { multi: true });
 
     unfavUserBookmark._execute({ userId: this.userId }, { bookmarkId: id });
 
+    logServer(
+      `USERBOOKMARKS - METHODS - REMOVE - removeUserBookmark - bookmarks id: ${id}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     UserBookmarks.remove(id);
 
     return null;

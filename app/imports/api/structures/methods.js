@@ -13,6 +13,7 @@ import Articles from '../articles/articles';
 import Groups from '../groups/groups';
 import { _createGroup, _removeGroup } from '../groups/methods';
 import { removeFilesFolder } from '../files/server/methods';
+import logServer, { levels, scopes } from '../logging';
 
 export const createStructure = new ValidatedMethod({
   name: 'structures.createStructure',
@@ -33,18 +34,33 @@ export const createStructure = new ValidatedMethod({
     const structuresWithSameNameOnSameLevel = isAStructureWithSameNameExistWithSameParent({ name, parentId });
 
     if (structuresWithSameNameOnSameLevel) {
+      logServer(
+        `STRUCTURE - METHODS - METEOR ERROR - createStructure - ${i18n.__('api.structures.nameAlreadyTaken')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error(
         'api.structures.createStructure.nameAlreadyTaken',
         i18n.__('api.structures.nameAlreadyTaken'),
       );
     }
     validateString(name);
+    logServer(
+      `STRUCTURE - METHODS - INSERT - createStructure - name: ${name} / parent id: ${parentId}`,
+      levels.VERBOSE,
+      scopes.SYSTEM,
+    );
     const structureId = Structures.insert({
       name,
       parentId,
     });
 
     if (parentId) {
+      logServer(
+        `STRUCTURE - METHODS - UPDATE - createStructure - id: ${structureId} / ancestorsIds: ${parentId}`,
+        levels.INFO,
+        scopes.SYSTEM,
+      );
       // Update ancestorsId with only direct parent
       Structures.update({ _id: structureId }, { $set: { ancestorsIds: [parentId] } });
 
@@ -55,8 +71,20 @@ export const createStructure = new ValidatedMethod({
 
         // Add structure to the parent childrenIds
         directParentStructureChildrenIds.push(structureId);
+        logServer(
+          `STRUCTURE - METHODS - UPDATE - createStructure - id: ${structureId} 
+          / childrenIds: ${directParentStructureChildrenIds}`,
+          levels.INFO,
+          scopes.SYSTEM,
+        );
         Structures.update({ _id: parentId }, { $set: { childrenIds: [...new Set(directParentStructureChildrenIds)] } });
 
+        logServer(
+          `STRUCTURE - METHODS - UPDATE - createStructure - id: ${structureId} 
+          / ancestorsIds: ${parentId} / directParentStructureAncestorIds: ${directParentStructureAncestorIds}`,
+          levels.INFO,
+          scopes.SYSTEM,
+        );
         // Update structure ancestors with parent structure's ancestors too
         Structures.update(
           { _id: structureId },
@@ -83,6 +111,11 @@ export const createStructure = new ValidatedMethod({
       const group = Groups.findOne({ name: strucName });
       if (group) {
         structure.groupId = group._id;
+        logServer(
+          `STRUCTURE - METHODS - UPDATE - createStructure - id: ${structureId} / groupId: ${group._id}`,
+          levels.INFO,
+          scopes.SYSTEM,
+        );
         Structures.update({ _id: structureId }, { $set: { groupId: group._id } });
       }
     }
@@ -106,6 +139,11 @@ export const updateStructure = new ValidatedMethod({
     // check structure existence
     const structure = Structures.findOne({ _id: structureId });
     if (structure === undefined) {
+      logServer(
+        `STRUCTURE - METHODS - METEOR ERROR - updateStructure - ${i18n.__('api.structures.unknownStructure')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error(
         'api.structures.updateStructure.unknownStructure',
         i18n.__('api.structures.unknownStructure'),
@@ -116,6 +154,11 @@ export const updateStructure = new ValidatedMethod({
     const authorized = isActive(this.userId) && (Roles.userIsInRole(this.userId, 'admin') || isAdminOfStructure);
 
     if (!authorized) {
+      logServer(
+        `STRUCTURE - METHODS - METEOR ERROR - updateStructure - ${i18n.__('api.users.notPermitted')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error('api.structures.updateStructure.notPermitted', i18n.__('api.users.notPermitted'));
     }
 
@@ -126,6 +169,11 @@ export const updateStructure = new ValidatedMethod({
     });
 
     if (structuresWithSameNameOnSameLevel) {
+      logServer(
+        `STRUCTURE - METHODS - METEOR ERROR - updateStructure - ${i18n.__('api.structures.nameAlreadyTaken')}}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error('api.structures.updateStructure.notPermitted', i18n.__('api.structures.nameAlreadyTaken'));
     }
     validateString(name);
@@ -134,6 +182,11 @@ export const updateStructure = new ValidatedMethod({
       group.name = `${structure._id}_${name}`;
       Groups.update({ _id: group._id }, { $set: { name: `${structure._id}_${name}` } });
     }
+    logServer(
+      `STRUCTURE - METHODS - UPDATE - updateStructure - id: ${structureId} / name: ${name}`,
+      levels.VERBOSE,
+      scopes.SYSTEM,
+    );
     return Structures.update({ _id: structureId }, { $set: { name } });
   },
 });
@@ -152,6 +205,13 @@ export const setUserStructureAdminValidationMandatoryStatus = new ValidatedMetho
     // check structure existence
     const structure = Structures.findOne({ _id: structureId });
     if (structure === undefined) {
+      logServer(
+        `STRUCTURE - METHODS - METEOR ERROR - setUserStructureAdminValidationMandatoryStatus - ${i18n.__(
+          'api.structures.unknownStructure',
+        )}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error(
         'api.structures.setUserStructureAdminValidationMandatoryStatus.unknownStructure',
         i18n.__('api.structures.unknownStructure'),
@@ -162,12 +222,25 @@ export const setUserStructureAdminValidationMandatoryStatus = new ValidatedMetho
     const authorized = isActive(this.userId) && (Roles.userIsInRole(this.userId, 'admin') || isAdminOfStructure);
 
     if (!authorized) {
+      logServer(
+        `STRUCTURE - METHODS - METEOR ERROR - setUserStructureAdminValidationMandatoryStatus - ${i18n.__(
+          'api.users.notPermitted',
+        )}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error(
         'api.structures.setUserStructureAdminValidationMandatoryStatus.notPermitted',
         i18n.__('api.users.notPermitted'),
       );
     }
 
+    logServer(
+      `STRUCTURE - METHODS - UPDATE - setUserStructureAdminValidationMandatoryStatus - id: ${structureId} 
+      / user validation: ${userStructureValidationMandatory}`,
+      levels.VERBOSE,
+      scopes.SYSTEM,
+    );
     return Structures.update({ _id: structureId }, { $set: { userStructureValidationMandatory } });
   },
 });
@@ -194,6 +267,11 @@ export const removeStructure = new ValidatedMethod({
     // check structure existence
     const structure = Structures.findOne({ _id: structureId });
     if (structure === undefined) {
+      logServer(
+        `STRUCTURE - METHODS - METEOR ERROR - removeStructure - ${i18n.__('api.structures.unknownStructure')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error(
         'api.structures.removeStructure.unknownStructure',
         i18n.__('api.structures.unknownStructure'),
@@ -204,26 +282,51 @@ export const removeStructure = new ValidatedMethod({
     const authorized = isActive(this.userId) && (Roles.userIsInRole(this.userId, 'admin') || isAdminOfStructure);
 
     if (!authorized) {
+      logServer(
+        `STRUCTURE - METHODS - METEOR ERROR - removeStructure - ${i18n.__('api.users.notPermitted')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error('api.structures.removeStructure.notPermitted', i18n.__('api.users.notPermitted'));
     }
 
     // Check if structure has children
     if (structure.childrenIds.length > 0) {
+      logServer(
+        `STRUCTURE - METHODS - METEOR ERROR - removeStructure - ${i18n.__('api.structures.hasChildren')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error('api.structures.removeStructure.hasChildren', i18n.__('api.structures.hasChildren'));
     }
 
     // Check if any service is attached to this structure
     const servicesCursor = Services.find({ structure: structureId });
     if (servicesCursor.count() > 0) {
+      logServer(
+        `STRUCTURE - METHODS - METEOR ERROR - removeStructure - ${i18n.__('api.structures.hasServices')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error('api.structures.removeStructure.hasServices', i18n.__('api.structures.hasServices'));
     }
 
     // Check if any user is attached to this structure
     const usersCursor = Meteor.users.find({ structure: structureId });
     if (usersCursor.count() > 0) {
+      logServer(
+        `STRUCTURE - METHODS - METEOR ERROR - removeStructure - ${i18n.__('api.structures.hasUsers')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error('api.structures.removeStructure.hasUsers', i18n.__('api.structures.hasUsers'));
     }
 
+    logServer(
+      `STRUCTURE - METHODS - REMOVE - removeStructure - structure id: ${structureId}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     // If there are any article attached to this structure, delete them
     Articles.rawCollection().deleteMany({ structure: structureId });
 
@@ -233,6 +336,12 @@ export const removeStructure = new ValidatedMethod({
       const ancestorsCursor = Structures.find({ _id: { $in: ancestorsIds } });
       if (ancestorsCursor.count() > 0) {
         ancestorsCursor.forEach((ancestor) => {
+          logServer(
+            `STRUCTURE - METHODS - UPDATE - removeStructure - ancestor id: ${ancestor._id}
+             / structureid: ${structureId}`,
+            levels.INFO,
+            scopes.SYSTEM,
+          );
           Structures.update(
             { _id: ancestor._id },
             {
@@ -252,6 +361,11 @@ export const removeStructure = new ValidatedMethod({
     // If there are icon or cover images ==> delete them from minio
     structureRemoveIconOrCoverImagesFromMinio(structure, true, true);
 
+    logServer(
+      `STRUCTURE - METHODS - REMOVE - removeStructure - structure id: ${structureId}`,
+      levels.VERBOSE,
+      scopes.SYSTEM,
+    );
     return Structures.remove(structureId);
   },
 });
@@ -265,6 +379,11 @@ export const getAllChilds = new ValidatedMethod({
     const structure = Structures.findOne({ _id: structureId });
 
     if (structure === undefined) {
+      logServer(
+        `STRUCTURE - METHODS - METEOR ERROR - getAllChilds - ${i18n.__('api.structures.unknownStructure')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error(
         'api.structures.removeStructure.unknownStructure',
         i18n.__('api.structures.unknownStructure'),
@@ -274,6 +393,11 @@ export const getAllChilds = new ValidatedMethod({
     const authorized = isActive(this.userId);
 
     if (!authorized) {
+      logServer(
+        `STRUCTURE - METHODS - METEOR ERROR - getAllChilds - ${i18n.__('api.users.notPermitted')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error('api.structures.getAllChilds.notPermitted', i18n.__('api.users.notPermitted'));
     }
 
@@ -283,18 +407,33 @@ export const getAllChilds = new ValidatedMethod({
 });
 
 export const updateStructureContactEmail = new ValidatedMethod({
-  name: 'structures.updateContactEmail',
+  name: 'structures.updateContactData',
   validate: new SimpleSchema({
     contactEmail: {
       type: String,
-      regEx: SimpleSchema.RegEx.Email,
+    },
+    externalUrl: {
+      type: String,
+    },
+    sendMailToParent: {
+      type: Boolean,
+    },
+    sendMailToStructureAdmin: {
+      type: Boolean,
     },
     structureId: { type: String, regEx: SimpleSchema.RegEx.Id, label: getLabel('api.structures.labels.id') },
   }).validator(),
-  run({ structureId, contactEmail }) {
+  run({ structureId, contactEmail, externalUrl, sendMailToParent, sendMailToStructureAdmin }) {
     const structure = Structures.findOne({ _id: structureId });
 
     if (structure === undefined) {
+      logServer(
+        `STRUCTURE - METHODS - METEOR ERROR - updateStructureContactEmail - ${i18n.__(
+          'api.structures.unknownStructure',
+        )}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error(
         'api.structures.updateContactEmail.unknownStructure',
         i18n.__('api.structures.unknownStructure'),
@@ -304,10 +443,31 @@ export const updateStructureContactEmail = new ValidatedMethod({
     const authorized = isActive(this.userId) && hasAdminRightOnStructure({ userId: this.userId, structureId });
 
     if (!authorized) {
+      logServer(
+        `STRUCTURE - METHODS - METEOR ERROR - updateStructureContactEmail - ${i18n.__('api.users.notPermitted')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error('api.structures.updateContactEmail.notPermitted', i18n.__('api.users.notPermitted'));
     }
-    validateString(contactEmail);
-    return Structures.update({ _id: structureId }, { $set: { contactEmail } });
+    if (contactEmail) {
+      validateString(contactEmail);
+    }
+    if (externalUrl) {
+      validateString(externalUrl);
+    }
+    logServer(
+      `STRUCTURE - METHODS - UPDATE - updateStructureContactEmail - structure id: ${structureId}
+      / contact email: ${contactEmail} / externalUrl: ${externalUrl} / sendMailToParent: ${sendMailToParent}
+      / sendMailToStructureAdmin: ${sendMailToStructureAdmin}`,
+      levels.VERBOSE,
+      scopes.SYSTEM,
+    );
+
+    return Structures.update(
+      { _id: structureId },
+      { $set: { contactEmail, externalUrl, sendMailToParent, sendMailToStructureAdmin } },
+    );
   },
 });
 
@@ -321,6 +481,13 @@ export const updateStructureIntroduction = new ValidatedMethod({
     const structure = Structures.findOne({ _id: structureId });
 
     if (structure === undefined) {
+      logServer(
+        `STRUCTURE - METHODS - METEOR ERROR - updateStructureIntroduction - ${i18n.__(
+          'api.structures.unknownStructure',
+        )}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error(
         'api.structures.updateIntroduction.unknownStructure',
         i18n.__('api.structures.unknownStructure'),
@@ -333,12 +500,24 @@ export const updateStructureIntroduction = new ValidatedMethod({
     const authorized = isActive(this.userId) && (Roles.userIsInRole(this.userId, 'admin') || isAdminOfStructure);
 
     if (!authorized) {
+      logServer(
+        `STRUCTURE - METHODS - METEOR ERROR - updateStructureIntroduction - ${i18n.__('api.users.notPermitted')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error('api.structures.updateIntroduction.notPermitted', i18n.__('api.users.notPermitted'));
     }
 
     const oldIntroductionArray = [...structure.introduction];
     let introductionToChange = oldIntroductionArray.find((entry) => entry.language === language);
     if (!introductionToChange) {
+      logServer(
+        `STRUCTURE - METHODS - METEOR ERROR - updateStructureIntroduction - ${i18n.__(
+          'api.users.unknownIntroduction',
+        )}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error(
         'api.structures.updateIntroduction.introductionToChangeNotExists',
         i18n.__('api.users.unknownIntroduction'),
@@ -357,6 +536,12 @@ export const updateStructureIntroduction = new ValidatedMethod({
       return entry;
     });
 
+    logServer(
+      `STRUCTURE - METHODS - UPDATE - updateStructureIntroduction - structure id: ${structureId} 
+      / introduction: ${newIntroductionArray}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     return Structures.update({ _id: structureId }, { $set: { introduction: newIntroductionArray } });
   },
 });

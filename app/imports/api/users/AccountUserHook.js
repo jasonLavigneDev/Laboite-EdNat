@@ -52,6 +52,12 @@ if (Meteor.isServer) {
       }
       // make sure that default values are set for this user
       const cleanedInfo = Meteor.users.simpleSchema().clean(updateInfos);
+      logServer(
+        `USERS - METHOD - UPDATE (meteor user) - Accounts.onLogin - user id: ${details.user._id} 
+        / info: ${JSON.stringify(cleanedInfo)}`,
+        levels.INFO,
+        scopes.SYSTEM,
+      );
       Meteor.users.update({ _id: details.user._id }, { $set: cleanedInfo });
       // Manage primary email change
       if (details.user.primaryEmail !== details.user.services.keycloak.email) {
@@ -137,6 +143,12 @@ if (Meteor.isServer) {
         );
       }
     } else {
+      logServer(
+        `USERS - METHOD - UPDATE (meteor user) - Accounts.onLogin - user id: ${details.user._id} 
+        / login date: ${loginDate}`,
+        levels.INFO,
+        scopes.SYSTEM,
+      );
       Meteor.users.update({ _id: details.user._id }, { $set: { lastLogin: loginDate } });
     }
   });

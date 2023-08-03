@@ -142,7 +142,10 @@
         "contactEmail": "Structure contact email",
         "asamExtensionsIds": "Related email extensions ids",
         "iconUrlImage": "Icon url image",
-        "coverUrlImage": "Cover url image"
+        "coverUrlImage": "Cover url image",
+        "externalUrl": "External URL link",
+        "sendMailToParent": "Send mails to parent structure",
+        "sendMailToStructureAdmin": "Send mails to structure admins"
       }
     },
     "asamextensions": {
@@ -232,7 +235,10 @@
         "all": "All",
         "applications": "Applications ID",
         "nextcloud": "Create groupe in Nextcloud",
-        "plugins": "Related services managing groups"
+        "plugins": "Related services managing groups",
+        "circleId": "Nextcloud Circle Id",
+        "shareName": "Nextcloud share name",
+        "shareId": "Nextcloud share Id"
       }
     },
     "services": {
@@ -301,6 +307,7 @@
       "requestNotifTitle": "Group request",
       "requestNotifContent": "{$name} is candidate for group {$group}.",
       "badConfig": "Bad configuration for notifications of type {$type} (expiration delay in days)",
+      "expirationNotNumber": "numDays is not a number",
       "labels": {
         "id": "Notification Id",
         "userId": "Owner ID",
@@ -368,33 +375,28 @@
       "notPermitted": "You don't have sufficient rights.",
       "adminRankNeeded": "You must be admin",
       "urlAlreadyExists": "URL already exists",
-      "groupExists": "Group already exists in Nextcloud",
-      "addGroupError": "Error, could not create group in Nextcloud",
-      "addGroupFolderError": "Error, could not create group folder in Nextcloud",
       "addUserError": "Error, could not create user in Nextcloud",
-      "removeGroupError": "Warning, could not delete group in Nextcloud",
-      "removeGroupFolderError": "Warning, could not delete group folder in Nextcloud",
-      "groupFoldersInactive": "Nextcloud: ERROR, make sure 'Group Folders' application is active",
-      "groupNotFound": "Nextcloud: ERROR getting group {$groupName}",
-      "groupAdded": "Nextcloud: group {$groupName} added",
-      "groupAddError": "Nextcloud: ERROR adding group {$groupName}",
-      "userAdded": "Nextcloud: user {$userId} added (server {$ncURL})",
-      "userAddError": "Nextcloud: ERROR adding user {$userId}",
-      "groupFolderAssignError": "Nextcloud: could not assign group {$groupName} to folder {$folderName}",
-      "groupFolderAdded": "Nextcloud: group folder {$folderName} added",
-      "permissionsSet": "Nextcloud: access and permissions set for group folder {$folderName}",
-      "quotaSet": "Nextcloud: quota set for group folder {$folderName}",
-      "quotaSetError": "Nextcloud: ERROR setting quota on group folder {$folderName}",
-      "permissionSetError": "Nextcloud: ERROR settings group permissions for group folder {$folderName}",
-      "folderAddError": "Nextcloud: ERROR adding group folder {$folderName}",
-      "folderRemoved": "Nextcloud: removed group folder {$id} ({$mount_point})",
-      "folderRemoveError": "Nextcloud: ERROR deleting group folder {$id} ({$message})",
-      "groupRemoved": "Nextcloud: group {$groupName} removed",
-      "groupRemoveError": "Nextcloud: Error removing group {$groupName}",
-      "enablePluginForGroup": "Create group in Nextcloud",
+      "circlesInactive": "ERROR, make sure 'Circles' application is active",
+      "userAdded": "user {$userId} added (server {$ncURL})",
+      "userAddError": "ERROR adding user {$userId}",
+      "circleAdded": "A new circle has been created",
+      "circleDeleted": "Circle has been deleted",
+      "circleDeleteError": "ERROR deleting circle",
+      "folderDeleted": "Shared folder has been deleted",
+      "folderDeleteError": "ERROR deleting shared folder",
+      "shareAdded": "A new share folder has been created for group {$groupId}",
+      "shareAddError": "ERROR creating share for group {$groupId}",
+      "shareCreateError": "ERROR creating folder for group {$groupId}",
+      "userInvited": "User has been invited to circle",
+      "userInviteError": "ERROR inviting user to circle",
+      "userKicked": "User has been removed from circle",
+      "userKickError": "ERROR removing user from circle",
+      "notMember": "User is not member of the circle",
+      "configureCircleError": "ERROR configuring circle",
+      "enablePluginForGroup": "Associate a shared folder in Nextcloud",
       "buttonLinkPlugin": "Access shared files in Nextcloud",
       "checkConfig": "Checking access to Nextcloud API ({$URL})",
-      "badConfig": "Error accessing Nextcloud, check settings and make sure 'Group Folders' app is active",
+      "badConfig": "Error accessing Nextcloud, check settings and make sure 'Circles' app is active",
       "configOk": "connection to Nextcloud API successfull",
       "misingNCLocator": "nextcloud instance (nclocator) is missing.",
       "apiError": "Error while accessing Nextcloud API",
@@ -1100,9 +1102,6 @@
         "body_actionTooltip": "Open bookmark's URL"
       }
     },
-    "EventsPage": {
-      "noAccess": "You don't have access to events of this group"
-    },
     "LegalPage": {
       "personalData": "Personal Data",
       "gcu": "General Conditions of Use",
@@ -1124,6 +1123,9 @@
       "toggleMaintenance": "Put the site in maintenance",
       "textMaintenance": "Maintenance reason",
       "buttonTextMaintenance": "Validate message",
+      "sendMailToParentStructure": "Redirect mails to parent structure.",
+      "sendMailToAdminStructure": "Send mails to administrators of the structure",
+      "externalUrl": "External URL link",
       "unlockMigration": {
         "title": "Migration unlocking",
         "mainText": "Database migration is currently locked.",
@@ -1255,7 +1257,8 @@
       "filterGroup": "Show only joined groups",
       "noGroup": "There is no group to display.",
       "addEvent": "Add new event",
-      "addPoll": "Add new poll"
+      "addPoll": "Add new poll",
+      "addNewForm": "Add new Form"
     },
     "AdminHome": {
       "title": "Administration Page",
@@ -1403,7 +1406,8 @@
       "copyNcLocator": "Copy Nextcloud federation ID",
       "userType": "Users type",
       "all": "all",
-      "noResult": "No result"
+      "noResult": "No result",
+      "usersExport": "Export all users"
     },
     "AdminUserValidationPage": {
       "title": "User validation"
@@ -1500,7 +1504,10 @@
       "update": "Update",
       "cancel": "Cancel",
       "groupRemoved": "Group deleted",
-      "invalidName": "Nom invalide"
+      "invalidName": "Nom invalide",
+      "shareName": "Nextcloud share name",
+      "invalidCharacters": "Invalid characters",
+      "shareNameExists": "This share name already exists"
     },
     "SingleGroupPage": {
       "backToList": "Back to the list",
@@ -1524,6 +1531,8 @@
       "Events": "Events",
       "PollUsage": "Polls list",
       "Polls": "Polls",
+      "FormUsage": "Forms list",
+      "Forms": "Forms",
       "groupArticles": "Access blog's articles",
       "BookmarksUsage": "Bookmarks list",
       "Bookmarks": "Bookmarks",
@@ -1542,13 +1551,6 @@
       "userType": "Users type",
       "noStructure": "No Structure assigned"
     },
-    "Events": {
-      "seeEvent": "See event",
-      "back": "Back to the group",
-      "searchText": "Which event are you looking for ?",
-      "dayOf": "All day of",
-      "noEvents": "No current or upcoming polls were found for this group"
-    },
     "GroupArticlesPage": {
       "seeArticle": "See article",
       "back": "Back to the group",
@@ -1558,12 +1560,26 @@
       "publicPage": "Public page",
       "openPublicPage": "Open this group's public page"
     },
-    "Polls": {
+    "ExtService": {
+      "title": {
+        "polls": "Polls",
+        "events": "Events",
+        "forms": "Forms"
+      },
+      "back": "Go back to group",
       "seePoll": "See poll",
-      "back": "Back to the group",
-      "searchText": "Which poll are you looking for ?",
-      "noPoll": "No current or upcoming polls were found for this group",
-      "noAccess": "You don't have access to polls of this group"
+      "seeForm": "Replie to form",
+      "seeEvent": "See event",
+      "addPoll": "Add new poll",
+      "addEvent": "Add new event",
+      "addForm": "Add new form",
+      "searchText": "What are you looking for ?",
+      "noElements": "There is nothing to display.",
+      "noAccess": "You don't have access to the elements of this group",
+      "seeFormForEdit": "Edit your form's answers",
+      "blockForm": "You have already answered to this form, and you cannot modify your answers.",
+      "dayOf": "All day of",
+      "daysOf": "All days of {$start} to {$end}"
     },
     "ArticlesPage": {
       "title": "Your publications",

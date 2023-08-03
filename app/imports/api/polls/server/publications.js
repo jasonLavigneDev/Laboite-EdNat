@@ -9,7 +9,7 @@ import logServer, { levels, scopes } from '../../logging';
 // build query for all users from group
 const queryGroupPolls = ({ search, group, onlyPublic }) => {
   const regex = new RegExp(search, 'i');
-  const fieldsToSearch = ['title', 'description'];
+  const fieldsToSearch = ['title', 'description', 'updatedAt'];
   const searchQuery = fieldsToSearch.map((field) => ({
     [field]: { $regex: regex },
     groups: group._id,
@@ -71,7 +71,7 @@ FindFromPublication.publish('groups.polls', function groupsPolls({ page, search,
       fields: Polls.publicFields,
       skip: itemPerPage * (page - 1),
       limit: itemPerPage,
-      sort: { title: -1 },
+      sort: { updatedAt: -1 },
       ...rest,
     });
     return res;

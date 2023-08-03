@@ -105,6 +105,7 @@ function ServiceDetails({ service, favAction, isShort }) {
   const isPoll = service._id === 'polls';
   const isBookmark = service._id === 'bookmarks';
   const isArticles = service._id === 'articles';
+  const isForms = service._id === 'forms';
 
   return (
     <Card className={classes.card}>
@@ -134,6 +135,8 @@ function ServiceDetails({ service, favAction, isShort }) {
                 service.logo
               ) : isArticles ? (
                 service.logo
+              ) : isForms ? (
+                service.logo
               ) : (
                 <CardMedia className={classes.cardMedia} component="img" alt={service.title} image={service.logo} />
               )
@@ -149,7 +152,7 @@ function ServiceDetails({ service, favAction, isShort }) {
           />
         </Link>
       </Tooltip>
-      {!isAddressBook && !isEvents && !isPoll && !isBookmark && !isArticles && (
+      {!isAddressBook && !isEvents && !isPoll && !isBookmark && !isArticles && !isForms && (
         <CardContent className={isShort ? classes.cardContentMobile : classes.cardContent}>
           {!isShort && <Typography variant="body1">{service.description}</Typography>}
           {/* <Paper variant="elevation"  className={classes.paperChip}>

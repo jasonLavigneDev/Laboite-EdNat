@@ -7,6 +7,7 @@ import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import Structures from '../structures/structures';
 import { getTargetMail } from './utils';
+import logServer, { levels, scopes } from '../logging';
 
 Meteor.startup(function startSmtp() {
   process.env.MAIL_URL = Meteor.settings.smtp.url;
@@ -36,6 +37,11 @@ export const sendContactEmail = new ValidatedMethod({
   run({ firstName, lastName, email, text, structureId }) {
     const structure = Structures.findOne({ _id: structureId });
     if (structure === undefined) {
+      logServer(
+        `SMTP - METHODS - METEOR ERROR - sendContactEmail - ${i18n.__('api.structures.unknownStructure')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error('api.smtp.sendContactEmail.unknownStructure', i18n.__('api.structures.unknownStructure'));
     }
 
@@ -46,28 +52,34 @@ export const sendContactEmail = new ValidatedMethod({
       allowedTags: ['b', 'i', 'strong', 'em'],
     });
 
-    const msg = `Message de: ${firstName} ${lastName}
+    let msg = `Message de: ${firstName} ${lastName}
 Structure de rattachement: ${structure.name}
 Adresse mail: ${email}
                  
                  
 ${cleanText}`;
 
-    const tabTo = Meteor.roleAssignment
-      .find({ 'role._id': 'adminStructure', scope: structureId })
-      .fetch()
-      .map((role) => Meteor.users.findOne({ _id: role.user._id }).emails[0].address);
-
     const from = Meteor.settings.smtp.fromEmail;
-    const structureTargetMail = getTargetMail({ structure });
-    // if a structure contact mail if found, use it
-    // if not, use settings one
-    const to = structureTargetMail || Meteor.settings.smtp.toEmail;
+    const structureTargetMail = getTargetMail({ structure }) || { mails: [], admin: true };
+
+    if (structureTargetMail.admin) {
+      msg = `Message de: ${firstName} ${lastName}
+      Structure de rattachement: ${structure.name}
+      Adresse mail: ${email}   
+      
+      ${cleanText}
+      
+      ATTENTION: Vous recevez ce mail car la configuration des contacts de la structure cible n'est pas valide.
+      Veuillez vous rapprocher des administrateurs de celle-ci afin de faire suivre le message.`;
+    }
+
+    const tabTo = structureTargetMail.mails.slice(1) || [];
+    const to = structureTargetMail.mails[0] || Meteor.settings.smtp.toEmail;
 
     this.unblock();
 
     if (tabTo.length > 0) {
-      Email.send({ to: tabTo, cc: to, from, subject: object, text: msg });
+      Email.send({ to, cc: tabTo, from, subject: object, text: msg });
     } else {
       Email.send({ to, from, subject: object, text: msg });
     }

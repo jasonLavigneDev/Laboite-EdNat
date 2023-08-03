@@ -145,7 +145,10 @@
         "contactEmail": "Email de contact de la structure",
         "asamExtensionsIds": "Ids des extensions d'email",
         "iconUrlImage": "Url de l'image de l'icône",
-        "coverUrlImage": "Url de l'image de la couverture"
+        "coverUrlImage": "Url de l'image de la couverture",
+        "externalUrl": "Url externe",
+        "sendMailToParent": "Envoi de mails à la structure parente",
+        "sendMailToStructureAdmin": "Envoi de mails aux administrateurs de structure"
       }
     },
     "asamextensions": {
@@ -235,7 +238,10 @@
         "all": "Tous",
         "applications": "ID de l'application",
         "nextcloud": "Créer le groupe dans Nextcloud",
-        "plugins": "Services liés gérant les groupes"
+        "plugins": "Services liés gérant les groupes",
+        "circleId": "Id du cercle Nextcloud",
+        "shareName": "Nom du partage Nextcloud",
+        "shareId": "Id du partage Nextcloud"
       }
     },
     "services": {
@@ -304,6 +310,7 @@
       "requestNotifTitle": "Demande de candidature",
       "requestNotifContent": "{$name} est candidat pour le groupe {$group}.",
       "badConfig": "Mauvaise configuration pour les notifications de type {$type} (expiration en jours)",
+      "expirationNotNumber": "numDays n'est pas un nombre",
       "labels": {
         "id": "Id de la notification",
         "userId": "ID du destinataire",
@@ -371,33 +378,28 @@
       "adminRankNeeded": "Vous devez être administrateur",
       "unknownURL": "URL introuvable.",
       "urlAlreadyExists": "L'url existe déjà",
-      "groupExists": "Ce groupe existe déjà dans Nextcloud",
-      "addGroupError": "Erreur lors de la création du groupe dans Nextcloud",
-      "addGroupFolderError": "Erreur lors de la création du partage dans Nextcloud",
       "addUserError": "Erreur lors de la création de l'utilisateur dans Nextcloud",
-      "removeGroupError": "Attention, le groupe n'a pas pu être supprimé dans Nextcloud",
-      "removeGroupFolderError": "Attention, le dossier n'a pas pu être supprimé dans Nextcloud",
-      "groupFoldersInactive": "Nextcloud: ERREUR, vérifiez que l'application 'Group Folders' est active",
-      "groupNotFound": "Nextcloud: ERREUR de récupération du groupe {$groupName}",
-      "groupAdded": "Nextcloud: groupe {$groupName} ajouté",
-      "groupAddError": "Nextcloud: ERREUR lors de l'ajout du groupe {$groupName}",
-      "userAdded": "Nextcloud: utilisateur {$userId} ajouté (serveur {$ncURL})",
-      "userAddError": "Nextcloud: ERREUR lors de l'ajout de l'utilisateur {$userId}",
-      "groupFolderAssignError": "Nextcloud: impossible d'assigner le groupe {$groupName} au répertoire {$folderName}",
-      "groupFolderAdded": "Nextcloud: répertoire de groupe {$folderName} ajouté",
-      "permissionsSet": "Nextcloud: permissions définies pour le répertoire de groupe {$folderName}",
-      "quotaSet": "Nextcloud: quota défini pour le répertoire de groupe {$folderName}",
-      "quotaSetError": "Nextcloud: ERREUR lors de la définition des quotas sur le répertoire de goupe {$folderName}",
-      "permissionSetError": "Nextcloud: ERREUR lors de la définition des permissions sur le répertoire de groupe {$folderName}",
-      "folderAddError": "Nextcloud: ERREUR lors de l'ajout du répertoire de groupe {$folderName}",
-      "folderRemoved": "Nextcloud: répertoire de groupe {$id} supprimé ({$mount_point})",
-      "folderRemoveError": "Nextcloud: ERREUR lors de la suppression du répertoire de groupe {$id} ({$message})",
-      "groupRemoved": "Nextcloud: groupe {$groupName} supprimé",
-      "groupRemoveError": "Nextcloud: Erreur lors de la suppression du groupe {$groupName}",
-      "enablePluginForGroup": "Créer le groupe dans Nextcloud",
+      "circlesInactive": "ERREUR, vérifiez que l'application 'Circles' est active",
+      "userAdded": "Utilisateur {$userId} ajouté (serveur {$ncURL})",
+      "userAddError": "ERREUR lors de l'ajout de l'utilisateur {$userId}",
+      "circleAdded": "Un nouveau cercle a été créé",
+      "circleDeleted": "Un cercle a été supprimé",
+      "circleDeleteError": "ERREUR lors de la suppression du cercle",
+      "folderDeleted": "Le répertoire partagé a été supprimé",
+      "folderDeleteError": "ERREUR de suppression du répertoire partagé",
+      "shareAdded": "Un nouveau dossier partagé a été créé pour le groupe {$groupId}",
+      "shareAddError": "ERREUR lors de la création du partage pour le groupe {$groupId}",
+      "shareCreateError": "ERREUR lors de la création du dossier du groupe {$groupId}",
+      "userInvited": "Utilisateur ajouté au cercle",
+      "userInviteError": "ERREUR à l'ajout de l'utilisateur au cercle",
+      "userKicked": "Utilisateur supprimé du cercle",
+      "userKickError": "ERREUR à la suppression de l'utilisateur du cercle",
+      "notMember": "L'utilisateur n'est pas membre du cercle",
+      "configureCircleError": "ERREUR lors de la configuration du cercle",
+      "enablePluginForGroup": "Associer un partage dans Nextcloud",
       "buttonLinkPlugin": "Accéder au partage Nextcloud",
       "checkConfig": "Vérification de l'accès à l'API Nextcloud ({$URL})",
-      "badConfig": "Erreur d'accès à Nextcloud, veuillez vérifier la configuration et l'activation de l'application 'Group Folders'",
+      "badConfig": "Erreur d'accès à Nextcloud, veuillez vérifier la configuration et l'activation de l'application 'Circles'",
       "configOk": "connecté avec succès à l'API Nextcloud",
       "misingNCLocator": "Information d'instance nextcloud (nclocator) manquante.",
       "apiError": "Error while accessing Nextcloud API",
@@ -1123,9 +1125,6 @@
         "body_actionTooltip": "Ouvrir le lien du marque-page"
       }
     },
-    "EventsPage": {
-      "noAccess": "Vous n'avez pas accès aux évènements de ce groupe."
-    },
     "LegalPage": {
       "personalData": "Données Personnelles",
       "gcu": "Conditions générales d'utilisation",
@@ -1147,6 +1146,9 @@
       "errorMongo": "Une erreur MongoDB est survenue lors de la migration.",
       "textMaintenance": "Raison de la maintenance",
       "buttonTextMaintenance": "Valider le message",
+      "sendMailToParentStructure": "Redirection des mails vers la structure parente",
+      "sendMailToAdminStructure": "Envoi des mails aux administrateurs de structure",
+      "externalUrl": "Lien de redirection externe",
       "unlockMigration": {
         "title": "Déblocage de la migration",
         "mainText": "La migration de la base de données est actuellement vérouillée.",
@@ -1278,7 +1280,8 @@
       "filterGroup": "Afficher uniquement les groupes rejoints",
       "noGroup": "Il n'y a aucun groupe à afficher.",
       "addEvent": "Ajouer un nouvel événement",
-      "addPoll": "Ajouter un nouveau sondage"
+      "addPoll": "Ajouter un nouveau sondage",
+      "addForm": "Ajouter un nouveau questionnaire"
     },
     "AdminHome": {
       "title": "Interface d'administration",
@@ -1426,7 +1429,8 @@
       "copyNcLocator": "Copier l'ID de fédération Nextcloud",
       "userType": "Type d'utilisateurs",
       "all": "tous",
-      "noResult": "Pas de résultat"
+      "noResult": "Pas de résultat",
+      "usersExport": "Export de tous utilisateurs"
     },
     "AdminUserValidationPage": {
       "title": "Utilisateurs en attente de validation"
@@ -1523,7 +1527,10 @@
       "update": "Mettre à jour",
       "cancel": "Annuler",
       "groupRemoved": "Groupe supprimé",
-      "invalidName": "Nom invalide"
+      "invalidName": "Nom invalide",
+      "shareName": "Nom du partage Nextcloud",
+      "invalidCharacters": "caractères invalides",
+      "shareNameExists": "Ce nom de partage existe déjà"
     },
     "SingleGroupPage": {
       "backToList": "Retour à la liste",
@@ -1546,10 +1553,12 @@
       "Events": "Evénements",
       "PollUsage": "Liste des sondages",
       "Polls": "Sondages",
+      "FormUsage": "Liste des questionnaires",
+      "Forms": "Questionnaires",
       "groupArticles": "Accéder aux publications",
       "BookmarksUsage": "Liste des marque-pages",
       "Bookmarks": "Marque-pages",
-      "ArticlesUsage": "liste des publications",
+      "ArticlesUsage": "Liste des publications",
       "Articles": "Publications",
       "GroupNotExist": "Le groupe {$groupTitle} n'existe pas"
     },
@@ -1564,13 +1573,6 @@
       "userType": "Type d'utilisateurs",
       "noStructure": "Aucune structure assignée"
     },
-    "Events": {
-      "seeEvent": "Voir l'événement",
-      "back": "Retour au groupe",
-      "searchText": "Quel événement cherchez-vous ?",
-      "dayOf": "Sur la journée du",
-      "noEvents": "Il n'y a actuellement aucun événement en cours ou à venir pour ce groupe."
-    },
     "GroupArticlesPage": {
       "seeArticle": "Consulter la publication",
       "back": "Retour au groupe",
@@ -1580,12 +1582,27 @@
       "publicPage": "Page publique",
       "openPublicPage": "Ouvrir la page publique de ce groupe"
     },
-    "Polls": {
-      "seePoll": "Voir le sondage",
+    "ExtService": {
+      "title": {
+        "polls": "Sondages",
+        "events": "Evénements",
+        "forms": "Questionnaires"
+      },
       "back": "Retour au groupe",
-      "searchText": "Quel sondage cherchez-vous ?",
-      "noPoll": "Il n'y a actuellement aucun sondage en cours ou à venir pour ce groupe.",
-      "noAccess": "Vous n'avez pas accès aux sondages de ce groupe."
+      "seePoll": "Voir le sondage",
+      "seeForm": "Répondre au formulaire",
+      "seeEvent": "Voir l'événement",
+      "addPoll": "Ajouter un nouveau sondage",
+      "addEvent": "Ajouter un nouvel événement",
+      "addForm": "Ajouter un nouveau questionnaire",
+      "searchText": "Que recherchez-vous ?",
+      "noElements": "Il n'y a aucun élément à afficher sur cette page.",
+      "noAccess": "Vous n'avez pas accès à cette page.",
+      "seeFormForEdit": "Modifier vos réponses au formulaire",
+      "blockForm": "Vous avez déjà répondu à ce formulaire, et vous ne pouvez pas changer les réponses",
+      "noForm": "Il n'y a actuellement aucun questionnaire en cours pour ce groupe.",
+      "dayOf": "Sur la journée du",
+      "daysOf": "Sur les journées du {$start} au {$end}"
     },
     "ArticlesPage": {
       "title": "Vos publications",

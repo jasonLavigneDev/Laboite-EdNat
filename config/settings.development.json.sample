@@ -68,7 +68,7 @@
       "nextcloud": {
         "enable": false,
         "URL": "",
-        "groupURL": "[URL]/apps/files/?dir=/[GROUPNAME]",
+        "groupURL": "[NCLOCATOR]/apps/files/?dir=/[NCSHARENAME]",
         "enableChangeName": false
       }
     },
@@ -77,6 +77,7 @@
       "sondagesUrl": "",
       "mezigUrl": "",
       "laboiteBlogURL": "",
+      "questionnaireURL": ""
     }
   },
   "franceTransfert": {
@@ -93,6 +94,8 @@
   "nextcloud": {
     "nextcloudUser": "",
     "nextcloudPassword": "",
+    "circlesUser": "",
+    "circlesPassword": "",
     "nextcloudQuota": "1073741824"
     "nextcloudApiKeys": [],
     "sessionTokenKey": "",

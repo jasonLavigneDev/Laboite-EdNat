@@ -92,6 +92,13 @@ class BigBlueButtonClient {
             // a meeting has already been created, ignore this error
             return Promise.resolve(this.getJoinURL(slug, userId));
           }
+          logServer(
+            `APPCLIENT - BBBCLIENT - METEOR ERROR -
+             createMeeting - BBB create meeting Error: ${result.response.messageKey[0]}`,
+            levels.INFO,
+            scopes.SYSTEM,
+            {},
+          );
           // use messageKey if translation needed
           throw new Meteor.Error('api.BBBClient.createMeeting.error', result.response.messageKey[0]);
         }),
@@ -146,6 +153,13 @@ class BigBlueButtonClient {
           if (result.response.returncode[0] === 'SUCCESS') {
             return Promise.resolve(result.response.running);
           }
+          logServer(
+            `APPCLIENT - BBBCLIENT - METEOR ERROR - checkRunning - 
+            BBB check runnning: ${result.response.messageKey[0]}`,
+            levels.INFO,
+            scopes.SYSTEM,
+            {},
+          );
           // use messageKey if translation needed
           throw new Meteor.Error('api.BBBClient.checkRunning.error', result.response.messageKey[0]);
         }),
@@ -180,6 +194,13 @@ class BigBlueButtonClient {
           if (result.response.returncode[0] === 'SUCCESS') {
             return Promise.resolve(result.response.meetings);
           }
+          logServer(
+            `APPCLIENT - BBBCLIENT - METEOR ERROR - getMeetings - 
+            BBB message missing: ${result.response.messageKey[0]}`,
+            levels.INFO,
+            scopes.SYSTEM,
+            {},
+          );
           // use messageKey if translation needed
           throw new Meteor.Error('api.BBBClient.getMeetings.error', result.response.messageKey[0]);
         }),

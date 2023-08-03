@@ -33,6 +33,8 @@ import '../../api/appsettings/server/publications';
 import '../../api/notifications/methods';
 import '../../api/notifications/server/publications';
 import '../../api/notifications/server/methods';
+import '../../api/forms/forms';
+import '../../api/forms/server/publications';
 import '../../api/eventsAgenda/methods';
 import '../../api/eventsAgenda/server/publications';
 import '../../api/polls/methods';

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import ReactQuill from 'react-quill'; // ES6
 import { makeStyles } from 'tss-react/mui';
@@ -86,37 +86,18 @@ export const quillOptions = {
 
 const InfoEditionComponent = ({ tabkey, data = [] }) => {
   const { classes } = useStyles();
-  const [content, setContent] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [changes, setChanges] = useState(false);
 
   const translations = Object.keys(i18n._translations);
-
   const getLanguage = (lang) => {
     if (translations.includes(lang)) return lang;
     return 'fr';
   };
-
   const [language, setLanguage] = useState(getLanguage(i18n._locale));
 
-  useEffect(() => {
-    if (data) {
-      const currentData = getCurrentText({ data, language });
-      setContent(currentData.content || '');
-      setLoading(false);
-    }
-  }, [data, language]);
+  const [content, setContent] = useState(getCurrentText({ data, language })?.content || '');
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (data) {
-      const currentData = getCurrentText({ data, language }) || {};
-      if (content !== currentData.content) {
-        setChanges(true);
-      } else {
-        setChanges(false);
-      }
-    }
-  }, [content]);
+  const changes = content !== getCurrentText({ data, language })?.content;
 
   const onUpdateRichText = (html) => {
     const strippedHTML = html.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
@@ -143,6 +124,7 @@ const InfoEditionComponent = ({ tabkey, data = [] }) => {
 
   const handleChange = (event) => {
     setLanguage(event.target.value);
+    setContent(getCurrentText({ data, language: event.target.value }).content);
   };
 
   if (loading) {

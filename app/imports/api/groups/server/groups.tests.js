@@ -16,7 +16,15 @@ import { Roles } from 'meteor/alanning:roles';
 
 import Groups from '../groups';
 import PersonalSpaces from '../../personalspaces/personalspaces';
-import { createGroup, removeGroup, updateGroup, favGroup, unfavGroup, countMembersOfGroup } from '../methods';
+import {
+  createGroup,
+  removeGroup,
+  updateGroup,
+  favGroup,
+  unfavGroup,
+  countMembersOfGroup,
+  checkShareName,
+} from '../methods';
 import './publications';
 import './factories';
 import {
@@ -700,6 +708,29 @@ describe('groups', function () {
       });
       it('does return 0 if slug not found', function () {
         assert.equal(countMembersOfGroup._execute({}, { slug: 'SlugNotExist' }), 0);
+      });
+    });
+    describe('check nextcloud share name', function () {
+      it('does not return when not logged in', function () {
+        assert.throws(
+          () => {
+            checkShareName._execute({}, { shareName: 'toto' });
+          },
+          Meteor.Error,
+          /api.groups.checkShareName.notLoggedIn/,
+        );
+      });
+      it('does return true if name is available', function () {
+        Factory.create('group', { owner: userId, name: 'un groupe' });
+        assert.equal(checkShareName._execute({ userId }, { shareName: 'toto' }), true);
+        const myGroupId = Factory.create('group', { owner: userId, name: 'toto', shareName: 'toto' })._id;
+        assert.equal(checkShareName._execute({ userId }, { shareName: 'toto', groupId: myGroupId }), true);
+      });
+      it('does return false if name already exists', function () {
+        Factory.create('group', { owner: userId, name: 'toto', shareName: 'toto' });
+        const myGroupId = Factory.create('group', { owner: userId, name: 'un groupe' })._id;
+        assert.equal(checkShareName._execute({ userId }, { shareName: 'toto' }), false);
+        assert.equal(checkShareName._execute({ userId }, { shareName: 'toto', groupId: myGroupId }), false);
       });
     });
   });

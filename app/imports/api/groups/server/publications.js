@@ -13,6 +13,7 @@ import Polls from '../../polls/polls';
 import EventsAgenda from '../../eventsAgenda/eventsAgenda';
 import Bookmarks from '../../bookmarks/bookmarks';
 import Articles from '../../articles/articles';
+import Forms from '../../forms/forms';
 
 // publish groups that user is admin/animator of
 publishComposite('groups.adminof', function groupsAdminOf() {
@@ -369,6 +370,19 @@ publishComposite('groups.single', function groupSingle({ slug }) {
           const groupId = group._id;
           return Articles.find(
             { groups: { $elemMatch: { _id: groupId } } },
+            {
+              fields: {
+                _id: 1,
+              },
+            },
+          );
+        },
+      },
+      {
+        find(group) {
+          const groupId = group._id;
+          return Forms.find(
+            { groups: { $in: [groupId] }, active: true },
             {
               fields: {
                 _id: 1,

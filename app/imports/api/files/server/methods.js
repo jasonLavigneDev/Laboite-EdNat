@@ -47,6 +47,11 @@ const checkUserAdminRights = (path, userId) => {
       }
     }
     if (!isUserPath && !isGroupAdmin && !isStructureAdmin) {
+      logServer(
+        `FILES - METHODS - METEOR ERROR - checkUserAdminRights - ${i18n.__('api.users.adminNeeded')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error('api.users.notPermitted', i18n.__('api.users.adminNeeded'));
     }
   }
@@ -106,6 +111,13 @@ function checkExtension(name) {
   ];
   const extension = name.split('.').pop();
   if (!fileTypes.includes(extension)) {
+    logServer(
+      `FILES - METHODS - METEOR ERROR - checkExtension - ${i18n.__(
+        'components.UploaderNotifier.formatNotAcceptedTitle',
+      )}`,
+      levels.VERBOSE,
+      scopes.SYSTEM,
+    );
     throw new Meteor.Error(
       'components.UploadNotifier.ExtensionNotAllowed',
       i18n.__('components.UploaderNotifier.formatNotAcceptedTitle'),
@@ -151,11 +163,17 @@ export const filesupload = new ValidatedMethod({
 
         return result;
       }
+      logServer(
+        `FILES - METHODS - METEOR ERROR - filesupload - ${i18n.__('components.UploaderNotifier.fileTooLarge')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error(
         i18n.__('components.UploaderNotifier.fileTooLargeTitle'),
         `${i18n.__('components.UploaderNotifier.fileTooLarge')} ${size / 1000}ko`,
       );
     } catch (error) {
+      logServer(`FILES - METHODS - METEOR ERROR - filesupload`, levels.VERBOSE, scopes.SYSTEM, { error });
       throw new Meteor.Error(error.typeError, error.message);
     }
   },
@@ -347,6 +365,11 @@ export const getFilesForCurrentUser = new ValidatedMethod({
   async run() {
     const authorized = isActive(this.userId);
     if (!authorized) {
+      logServer(
+        `FILES - METHODS - METEOR ERROR - getFilesForCurrentUser - ${i18n.__('api.users.adminNeeded')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error('api.users.notPermitted', i18n.__('api.users.adminNeeded'));
     }
     try {
@@ -366,6 +389,11 @@ export const getFilesForCurrentUser = new ValidatedMethod({
       });
       return results;
     } catch (error) {
+      logServer(
+        `FILES - METHODS - METEOR ERROR - getFilesForCurrentUser - ${i18n.__('api.users.adminNeeded')}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       throw new Meteor.Error(error.typeError, error.message);
     }
   },

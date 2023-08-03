@@ -7,6 +7,7 @@ import { getLabel, isActive, validateString } from '../../utils';
 import Structures from '../structures';
 import { hasAdminRightOnStructure } from '../utils';
 import { structureRemoveIconOrCoverImagesFromMinio } from '../methods';
+import logServer, { levels, scopes } from '../../logging';
 
 const paramsSchema = new SimpleSchema({
   structureId: { type: String, regEx: SimpleSchema.RegEx.Id, label: getLabel('api.structures.labels.id') },
@@ -46,6 +47,12 @@ export const updateStructureIconOrCoverImage = new ValidatedMethod({
 
     if (coverUrlImage !== '-1') res = Structures.update({ _id: structureId }, { $set: { coverUrlImage } });
 
+    logServer(
+      `STRUCTURES - METHOD - UPDATE - updateStructureIconOrCoverImage - structureId: ${structureId} 
+      / iconUrlImage: ${iconUrlImage} / coverUrlImage: ${coverUrlImage}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     return res;
   },
 });
@@ -78,6 +85,12 @@ export const deleteIconOrCoverImage = new ValidatedMethod({
 
     if (coverUrlImage !== '-1') res = Structures.update({ _id: structureId }, { $unset: { coverUrlImage: '' } });
 
+    logServer(
+      `STRUCTURES - METHOD - UPDATE - deleteIconOrCoverImage - structureId: ${structureId} 
+      / iconUrlImage: ${iconUrlImage} / coverUrlImage: ${coverUrlImage}`,
+      levels.INFO,
+      scopes.SYSTEM,
+    );
     return res;
   },
 });

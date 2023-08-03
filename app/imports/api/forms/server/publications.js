@@ -1,17 +1,19 @@
 import { FindFromPublication } from 'meteor/percolate:find-from-publication';
 import { Roles } from 'meteor/alanning:roles';
-import EventsAgenda from '../eventsAgenda';
+import Forms from '../forms';
 import { checkPaginationParams, isActive } from '../../utils';
-import logServer, { levels, scopes } from '../../logging';
+import logServer from '../../logging';
 import Groups from '../../groups/groups';
 
 // build query for all users from group
-const queryGroupEvents = ({ search, group }) => {
+const queryGroupForms = ({ search, group }) => {
   const regex = new RegExp(search, 'i');
-  const fieldsToSearch = ['title', 'start', 'end'];
+  const fieldsToSearch = ['title', 'description'];
+
   const searchQuery = fieldsToSearch.map((field) => ({
     [field]: { $regex: regex },
-    groups: { $elemMatch: { _id: group._id } },
+    groups: { $in: [group._id] },
+    active: true,
   }));
   return {
     $or: searchQuery,
@@ -19,18 +21,18 @@ const queryGroupEvents = ({ search, group }) => {
 };
 
 Meteor.methods({
-  'get_groups.events_count': function getArticlesAllCount({ search, slug }) {
+  'get_groups.forms_count': function getFormsAllCount({ search, slug }) {
     try {
-      const group = Groups.findOne(
+      const form = Groups.findOne(
         { slug },
         {
           fields: Groups.allPublicFields,
           limit: 1,
-          sort: { name: -1 },
+          sort: { createdAt: -1 },
         },
       );
-      const query = queryGroupEvents({ search, group });
-      return EventsAgenda.find(query).count();
+      const query = queryGroupForms({ search, form });
+      return Forms.find(query).count();
     } catch (error) {
       return 0;
     }
@@ -38,25 +40,14 @@ Meteor.methods({
 });
 
 // publish all existing events for specific group
-FindFromPublication.publish('groups.events', function groupsEvents({ page, search, slug, itemPerPage, ...rest }) {
+FindFromPublication.publish('groups.forms', function groupForms({ page, search, slug, itemPerPage, ...rest }) {
   if (!isActive(this.userId)) {
     return this.ready();
   }
   try {
     checkPaginationParams.validate({ page, itemPerPage, search });
   } catch (err) {
-    // logServer(`publish groups.events : ${err}`);
-    logServer(
-      `EVENTSAGENDA - PUBLICATION - groups.events, publish groups.events : ${err}`,
-      levels.ERROR,
-      scopes.SYSTEM,
-      {
-        page,
-        search,
-        slug,
-        itemPerPage,
-      },
-    );
+    logServer(`publish groups.forms : ${err}`);
     this.error(err);
   }
   const group = Groups.findOne(
@@ -76,12 +67,12 @@ FindFromPublication.publish('groups.events', function groupsEvents({ page, searc
   }
 
   try {
-    const query = queryGroupEvents({ search, group });
-    const res = EventsAgenda.find(query, {
-      fields: EventsAgenda.publicFields,
+    const query = queryGroupForms({ search, group });
+    const res = Forms.find(query, {
+      fields: Forms.publicFields,
       skip: itemPerPage * (page - 1),
       limit: itemPerPage,
-      sort: { start: -1 },
+      sort: { createdAt: -1 },
       ...rest,
     });
 

@@ -72,6 +72,38 @@ curl POST -H "X-API-KEY: 849b7648-14b8-4154-9ef2-8d1dc4c2b7e9" \
      http://localhost:3000/api/notifications
 ```
 
+---
+
+**Data constraints for multi group notification**
+
+```json
+{
+  "groupsId": "[array : string of group ID]",
+  "title": "[string : notification title]",
+  "content": "[string : notification content]",
+  "link": "[optionnal string : destination link of notification]"
+}
+```
+
+**Data example for multi group notification**
+
+```json
+{
+  "groupsId": ["smbjvtgABqvRtFg4S", "eZRRKbaTDty4Xk4kX"],
+  "title": "Réunion cruciale",
+  "content": "Préparer des supports de communication percutants"
+}
+```
+
+**Curl example for multi group notification**
+
+```bash
+curl POST -H "X-API-KEY: 849b7648-14b8-4154-9ef2-8d1dc4c2b7e9" \
+     -H "Content-Type: application/json" \
+     -d '{"groupsId":["smbjvtgABqvRtFg4S","eZRRKbaTDty4Xk4kX"], "title":"Réunion cruciale", "content":"Préparer des supports de communication percutants"}' \
+     http://localhost:3000/api/notifications
+```
+
 ## Success Response
 
 - **Code** : `200 OK`
@@ -100,4 +132,5 @@ curl POST -H "X-API-KEY: 849b7648-14b8-4154-9ef2-8d1dc4c2b7e9" \
 
 - **Condition** : If no field userId or groupId.
 - **Code** : `500 Internal Server Error`
-- **Content** : `Error: Notification sent by API with neither userId nor groupId [restapi.notifications.addNotifications.dataWithoutuserIdNorGroupId]`
+- **Content** :
+  `Error: Notification sent by API with neither userId nor groupId [restapi.notifications.addNotifications.dataWithoutuserIdNorGroupId]`

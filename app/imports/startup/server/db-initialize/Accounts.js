@@ -48,17 +48,17 @@ Accounts.config({
 
 function createUser(email, password, role, structure, firstName, lastName) {
   // logServer(`  Creating user ${email}.`);
-  logServer(`STARTUP - ACCOUNTS , CreateUser -  Creating user ${email}.`, levels.INFO, scopes.SYSTEM, {
-    email,
-    role,
-    structure,
-    firstName,
-    lastName,
-  });
   const userID = Accounts.createUser({
     username: email,
     email,
     password,
+    structure,
+    firstName,
+    lastName,
+  });
+  logServer(`STARTUP - ACCOUNTS , CreateUser - userID: ${userID} Creating user ${email}.`, levels.INFO, scopes.SYSTEM, {
+    email,
+    role,
     structure,
     firstName,
     lastName,
@@ -127,7 +127,7 @@ if (Meteor.users.find().count() === 0) {
     // logServer('No default users to create !  Please invoke meteor with a settings file.');
     logServer(
       `STARTUP - ACCOUNTS , CreateUser - No default users to create !  Please invoke meteor with a settings file.`,
-      levels.INFO,
+      levels.ERROR,
       scopes.SYSTEM,
       {},
     );

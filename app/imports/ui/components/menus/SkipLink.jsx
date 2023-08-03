@@ -6,20 +6,19 @@ import Typography from '@mui/material/Typography';
 
 const useStyles = makeStyles()((theme) => ({
   skipLink: {
-    zIndex: 10000,
+    position: 'absolute',
+    top: 0,
+    left: '45%',
+
+    height: 48,
+    padding: 8,
+
     background: theme.palette.primary.main,
     color: theme.palette.tertiary.main,
-    fontWeight: 500,
-    height: 48,
-    left: '50%',
     borderRadius: theme.shape.borderRadius,
-    padding: 8,
-    position: 'absolute',
-    transform: 'translateY(-100%)',
-    transition: 'transform 0.3s',
 
     '&:focus': {
-      transform: 'translateY(0%)',
+      zIndex: 10000,
     },
   },
 }));
