@@ -8,6 +8,7 @@
     "theme": "laboite",
     "keycloackPopupStyle": false,
     "keycloackPopupStyleIframe": false,
+    "loginWithTokenUrls": "http://localhost",
     "disabledFeatures": {
       "blog": false,
       "notificationsTab": false,
@@ -111,6 +112,7 @@
     "toEmail": ""
   },
   "private": {
+    "autoAttachNewUserToStructures": false,
     "loginExpirationInDays": 1,
     "fillWithFakeData": false,
     "minioAccess": "",
@@ -119,6 +121,7 @@
       ""
     ],
     "createUserApiKeys": [],
+    "createUserTokenApiKeys": [],
     "BBBSecret": "",
     "whiteDomains": [
       "^ac-[a-z-]*\\.fr",
