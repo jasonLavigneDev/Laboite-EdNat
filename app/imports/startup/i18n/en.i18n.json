@@ -1122,7 +1122,16 @@
       "favoriteBookmark": "Add to your personal space",
       "unfavoriteBookmark": "Remove from your personal space",
       "close": "Close",
-      "showQrCode": "Display QR Code"
+      "showQrCode": "Display QR Code",
+      "wantToImport": "Do you want to proceed importing {$nbOfBoomarks} bookmarks ?",
+      "proceedWithImport": "Import the bookmarks",
+      "proceedWithExport": "Export the bookmarks",
+      "importSuccess": "{$nbOfBoomarks} bookmarks imported successfully",
+      "exportSuccess": "{$nbOfBoomarks} bookmarks exported successfully",
+      "importFirefox": "Import bookmarks in Firefox",
+      "exportFirefox": "Export bookmarks in Firefox",
+      "exportChrome": "Export or import bookmarks in Chrome / Chromium",
+      "importHtmlFile": "Import bookmarks from HTML file"
     },
     "BookmarksPage": {
       "columnIcon": "Favicon",
@@ -1136,6 +1145,8 @@
       "noAccess": "You don't have access to bookmarks of this group",
       "title": "Bookmarks management",
       "materialTableLocalization": {
+        "body_importTooltip": "Import bookmarks from browser",
+        "body_exportTooltip": "Export your bookmarks",
         "body_addTooltip": "Add new bookmark",
         "body_editTooltip": "Edit this bookmark",
         "body_deleteTooltip": "Delete this bookmark",
