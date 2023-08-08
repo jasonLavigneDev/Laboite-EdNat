@@ -1130,7 +1130,16 @@
       "favoriteBookmark": "Ajouter à votre espace personnel",
       "unfavoriteBookmark": "Supprimer de votre espace personnel",
       "close": "Fermer",
-      "showQrCode": "Voir le QR Code"
+      "showQrCode": "Voir le QR Code",
+      "wantToImport": "Voulez vous importer {$nbOfBoomarks} marques-pages ?",
+      "proceedWithImport": "Importer les marques-pages",
+      "proceedWithExport": "Exporter les marques-pages",
+      "importSuccess": "{$nbOfBoomarks} marques-pages ont été importés avec succès",
+      "exportSuccess": "{$nbOfBoomarks} marques-pages exportés avec succès",
+      "importFirefox": "Importer les marques-pages dans Firefox",
+      "exportFirefox": "Exporter les marques-pages dans Firefox",
+      "exportChrome": "Exporter ou importer les marques-pages dans Chrome / Chromium",
+      "importHtmlFile": "Importer les marques-page depuis un fichier HTML"
     },
     "BookmarksPage": {
       "columnIcon": "Favicon",
@@ -1144,6 +1153,8 @@
       "noAccess": "Vous n'avez pas accès aux marque-pages de ce groupe.",
       "title": "Gestion des marque-pages",
       "materialTableLocalization": {
+        "body_importTooltip": "Importer des marque-pages du navigateur",
+        "body_exportTooltip": "Exporter vos marque-pages",
         "body_addTooltip": "Créer un nouveau marque-page",
         "body_editTooltip": "Modifier ce marque-page",
         "body_deleteTooltip": "Supprimer ce marque-page",

@@ -19,6 +19,105 @@ function _formatURL(name) {
   return finalName;
 }
 
+export const createUserBookmarks = new ValidatedMethod({
+  name: 'userBookmark.bulkImport',
+  validate: new SimpleSchema({
+    bookmarks: { type: Array, minCount: 1 },
+    'bookmarks.$': {
+      type: new SimpleSchema({
+        url: { type: String, label: getLabel('api.bookmarks.labels.url') },
+        name: { type: String, label: getLabel('api.bookmarks.labels.name'), optional: true },
+        tag: { type: String, label: getLabel('api.bookmarks.labels.tag'), defaultValue: '' },
+      }),
+    },
+  }).validator({ clean: true }),
+  async run({ bookmarks }) {
+    const isAllowed = isActive(this.userId);
+
+    if (!isAllowed) {
+      logServer(
+        `USERBOOKMARKS - METHODS - METEOR ERROR - createUserBookmarks - ${i18n.__('api.users.notPermitted')}`,
+        levels.ERROR,
+        scopes.SYSTEM,
+      );
+      throw new Meteor.Error('api.userBookmarks.createUserBookmarks.notPermitted', i18n.__('api.users.notPermitted'));
+    }
+
+    // Extract URLs and filter out existing ones
+    const urls = bookmarks.map((bookmark) => bookmark.url);
+    const existingUrls = UserBookmarks.find({ url: { $in: urls }, userId: this.userId })
+      .fetch()
+      .map((bk) => bk.url);
+    const filteredBookmarks = bookmarks.filter(
+      (bookmark) => !existingUrls.includes(bookmark.url) && bookmark.name && bookmark.url.length <= 256,
+    );
+
+    const finalUrls = [];
+
+    // eslint-disable-next-line no-restricted-syntax
+    for (const { url, name, tag } of filteredBookmarks) {
+      try {
+        validateString(url);
+        validateString(name);
+        validateString(tag);
+
+        const finalUrl = _formatURL(url);
+
+        logServer(
+          `USERBOOKMARKS - METHODS - INSERT - createUserBookmark - user id: ${this.userId} / url: ${finalUrl}
+          / name: ${name} / tag: ${tag}`,
+          levels.VERBOSE,
+          scopes.SYSTEM,
+        );
+
+        UserBookmarks.insert({ url: finalUrl, name, tag, userId: this.userId });
+
+        finalUrls.push(finalUrl);
+      } catch (error) {
+        // Log error and continue with the next bookmark
+        logServer(
+          `USERBOOKMARKS - METHODS - METEOR ERROR - createUserBookmark - ${error.message}`,
+          levels.WARN,
+          scopes.SYSTEM,
+        );
+
+        // eslint-disable-next-line no-continue
+        continue;
+      }
+    }
+
+    return finalUrls;
+  },
+});
+
+export const getUserBookmarks = new ValidatedMethod({
+  name: 'userBookmark.export',
+  validate: null, // No arguments
+  run() {
+    const isAllowed = isActive(this.userId);
+
+    if (!isAllowed) {
+      logServer(
+        `USERBOOKMARKS - METHODS - METEOR ERROR - createUserBookmarks - ${i18n.__('api.users.notPermitted')}`,
+        levels.ERROR,
+        scopes.SYSTEM,
+      );
+      throw new Meteor.Error('api.userBookmarks.createUserBookmarks.notPermitted', i18n.__('api.users.notPermitted'));
+    }
+
+    return UserBookmarks.find(
+      { userId: this.userId },
+      {
+        fields: {
+          name: 1,
+          tag: 1,
+          url: 1,
+        },
+      },
+    ).fetch();
+  },
+});
+
 export const createUserBookmark = new ValidatedMethod({
   name: 'userBookmark.create',
   validate: new SimpleSchema({
