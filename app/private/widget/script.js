@@ -43,8 +43,12 @@
 
   // Create Close Button
   const closeButton = document.createElement('button');
-  closeButton.setAttribute('class', 'cross-stand-alone');
+  closeButton.setAttribute('class', 'close-btn');
   closeButton.title = 'Accéder aux services réservés aux agents de l’Etat';
+
+  // Create Close Icon
+  const closeIcon = document.createElement('div');
+  closeIcon.setAttribute('class', 'cross-stand-alone');
 
   // Create fullscreen Icon
   const fullscreenButton = document.createElement('button');
@@ -53,6 +57,7 @@
   fullscreenButton.title = 'Plein écran';
 
   // Insert logo and buttons into header
+  closeButton.append(closeIcon);
   buttonsContainer.append(fullscreenButton);
   buttonsContainer.append(closeButton);
   widgetHeader.append(widgetLogo);

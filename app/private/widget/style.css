@@ -129,48 +129,63 @@
 
 .lb_container .lb_widget-container .buttons-container {
   display: flex;
+  gap: 5px;
 }
 
 .lb_container .lb_widget-container .buttons-container button {
   margin: 0;
-  padding: 0;
   border: 0;
+  padding: 0;
   background: none;
-  position: relative;
-  width: 25px;
-  height: 25px;
-  cursor: pointer;
-}
-
-.lb_container .lb_widget-container .cross-stand-alone:before,
-.lb_container .cross-stand-alone:after {
-  content: '';
-  position: absolute;
-  top: 18px;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: #fff;
-  border-radius: 4px;
-}
-
-.lb_container .lb_widget-container .cross-stand-alone:before {
-  transform: rotate(45deg);
-}
-
-.lb_container .lb_widget-container .cross-stand-alone:after {
-  transform: rotate(-45deg);
-}
-
-.lb_container .lb_widget-container button.full-screen {
   width: 35px;
   height: 35px;
-  color: #fff;
-  font-size: 25px;
+  cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-right: 5px;
+}
+
+.lb_container .lb_widget-container .cross-stand-alone {
+  width: 25px;
+  height: 25px;
+  position: relative;
+}
+.lb_container .lb_widget-container button .cross-stand-alone:before,
+.lb_container .lb_widget-container button .cross-stand-alone:after {
+  content: '';
+  position: absolute;
+  top: calc(50%);
+  transform: translateY(-50%);
+  height: 2px;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border-radius: 4px;
+  transition: background-color ease-in-out 200ms;
+}
+
+.lb_container .lb_widget-container button:hover .cross-stand-alone:after,
+.lb_container .lb_widget-container button:hover .cross-stand-alone:before {
+  background: #d4d4d4;
+}
+
+.lb_container .lb_widget-container button .cross-stand-alone:before {
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.lb_container .lb_widget-container button .cross-stand-alone:after {
+  transform: translateY(-50%) rotate(-45deg);
+}
+
+.lb_container .lb_widget-container button.full-screen {
+  color: #fff;
+  line-height: 25px;
+  font-size: 25px;
+  transition: color ease-in-out 200ms;
+}
+
+.lb_container .lb_widget-container button.full-screen:hover {
+  color: #d4d4d4;
 }
 
 @keyframes fadeIn {
