@@ -1,5 +1,13 @@
 /** Le préfixe choisi pour les classes CSS, afin d'assurer une unicité, est `lb_` */
 
+:root {
+  --lb_primary-color: #000091;
+  --lb_alert-color: #ce0500;
+
+  --lb_text-color: #fff;
+  --lb_accent-color: #d4d4d4;
+}
+
 .lb_container {
   position: fixed;
   bottom: 10px;
@@ -40,9 +48,9 @@
   height: 75px;
 }
 
-.lb_container .lb_widget .notifications {
+.lb_container .lb_widget .lb_notifications {
   position: absolute;
-  background-color: #ce0500;
+  background-color: var(--lb_alert-color);
   font-size: 15px;
   width: 20px;
   height: 20px;
@@ -52,20 +60,20 @@
   box-shadow: 0px 3px 5px -1px rgb(0 0 0 / 20%), 0px 6px 10px 0px rgb(0 0 0 / 14%), 0px 1px 18px 0px rgb(0 0 0 / 12%);
 }
 
-.lb_container.opened .lb_widget {
+.lb_container.lb_opened .lb_widget {
   display: none;
 }
 
-.lb_container .lb_widget.moving {
+.lb_container .lb_widget.lb_moving {
   transform: scale(1.2);
 }
 
-.lb_container .lb_widget.dropping {
+.lb_container .lb_widget.lb_dropping {
   transform: scale(1.2);
   background: red;
 }
 
-.lb_container.closed .lb_widget-container {
+.lb_container.lb_closed .lb_widget-container {
   /* display: none; */
   opacity: 0;
   pointer-events: none;
@@ -76,11 +84,11 @@
   bottom: 0;
 }
 
-.lb_container.closed .lb_widget-container .lb_widget-header {
+.lb_container.lb_closed .lb_widget-container .lb_widget-header {
   display: none;
 }
 
-.lb_container.opened .lb_widget-container {
+.lb_container.lb_opened .lb_widget-container {
   transition: all 0.2s ease-in-out;
   z-index: 9999;
   position: fixed;
@@ -95,14 +103,14 @@
   background: white;
   border-width: 2px;
   border-style: solid;
-  border-color: #000091;
+  border-color: var(--lb_primary-color);
   border-radius: 8px;
   animation: fadeIn 0.7s;
   overflow: hidden;
   box-shadow: 0px 3px 5px -1px rgb(0 0 0 / 20%), 0px 6px 10px 0px rgb(0 0 0 / 14%), 0px 1px 18px 0px rgb(0 0 0 / 12%);
 }
 
-.lb_container.opened.fullscreen .lb_widget-container {
+.lb_container.lb_opened.lb_fullscreen .lb_widget-container {
   height: calc(100% - 10px);
   width: calc(100% - 10px);
 }
@@ -117,7 +125,7 @@
 
 .lb_container .lb_widget-container .lb_widget-header {
   height: 35px;
-  background-color: #000091;
+  background-color: var(--lb_primary-color);
   display: flex;
   padding: 5px;
   justify-content: space-between;
@@ -127,12 +135,12 @@
   height: 35px;
 }
 
-.lb_container .lb_widget-container .buttons-container {
+.lb_container .lb_widget-container .lb_buttons-container {
   display: flex;
   gap: 5px;
 }
 
-.lb_container .lb_widget-container .buttons-container button {
+.lb_container .lb_widget-container .lb_buttons-container button {
   margin: 0;
   border: 0;
   padding: 0;
@@ -145,13 +153,13 @@
   align-items: center;
 }
 
-.lb_container .lb_widget-container .cross-stand-alone {
+.lb_container .lb_widget-container .lb_cross-stand-alone {
   width: 25px;
   height: 25px;
   position: relative;
 }
-.lb_container .lb_widget-container button .cross-stand-alone:before,
-.lb_container .lb_widget-container button .cross-stand-alone:after {
+.lb_container .lb_widget-container button .lb_cross-stand-alone:before,
+.lb_container .lb_widget-container button .lb_cross-stand-alone:after {
   content: '';
   position: absolute;
   top: calc(50%);
@@ -159,33 +167,33 @@
   height: 2px;
   left: 0;
   right: 0;
-  background: #fff;
+  background: var(--lb_text-color);
   border-radius: 4px;
   transition: background-color ease-in-out 200ms;
 }
 
-.lb_container .lb_widget-container button:hover .cross-stand-alone:after,
-.lb_container .lb_widget-container button:hover .cross-stand-alone:before {
-  background: #d4d4d4;
+.lb_container .lb_widget-container button:hover .lb_cross-stand-alone:after,
+.lb_container .lb_widget-container button:hover .lb_cross-stand-alone:before {
+  background: var(--lb_accent-color);
 }
 
-.lb_container .lb_widget-container button .cross-stand-alone:before {
+.lb_container .lb_widget-container button .lb_cross-stand-alone:before {
   transform: translateY(-50%) rotate(45deg);
 }
 
-.lb_container .lb_widget-container button .cross-stand-alone:after {
+.lb_container .lb_widget-container button .lb_cross-stand-alone:after {
   transform: translateY(-50%) rotate(-45deg);
 }
 
-.lb_container .lb_widget-container button.full-screen {
-  color: #fff;
+.lb_container .lb_widget-container button.lb_fullscreen-btn {
+  color: var(--lb_text-color);
   line-height: 25px;
   font-size: 25px;
   transition: color ease-in-out 200ms;
 }
 
-.lb_container .lb_widget-container button.full-screen:hover {
-  color: #d4d4d4;
+.lb_container .lb_widget-container button.lb_fullscreen-btn:hover {
+  color: var(--lb_accent-color);
 }
 
 @keyframes fadeIn {

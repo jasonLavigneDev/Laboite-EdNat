@@ -39,20 +39,20 @@
 
   // Create buttons container
   const buttonsContainer = document.createElement('div');
-  buttonsContainer.setAttribute('class', 'buttons-container');
+  buttonsContainer.setAttribute('class', 'lb_buttons-container');
 
   // Create Close Button
   const closeButton = document.createElement('button');
-  closeButton.setAttribute('class', 'close-btn');
+  closeButton.setAttribute('class', 'lb_close-btn');
   closeButton.title = 'Accéder aux services réservés aux agents de l’Etat';
 
   // Create Close Icon
   const closeIcon = document.createElement('div');
-  closeIcon.setAttribute('class', 'cross-stand-alone');
+  closeIcon.setAttribute('class', 'lb_cross-stand-alone');
 
   // Create fullscreen Icon
   const fullscreenButton = document.createElement('button');
-  fullscreenButton.setAttribute('class', 'full-screen');
+  fullscreenButton.setAttribute('class', 'lb_fullscreen-btn');
   fullscreenButton.innerHTML = '⛶';
   fullscreenButton.title = 'Plein écran';
 
@@ -70,7 +70,7 @@
   iframeContainer.setAttribute('id', iframeName);
   iframeContainer.setAttribute('name', iframeName);
   iframeContainer.setAttribute('class', 'lb_iframe-widget');
-  iframeContainer.setAttribute('iframe-state', 'closed');
+  iframeContainer.setAttribute('iframe-state', 'lb_closed');
   iframeContainer.setAttribute('name', 'lb_iframe-widget');
   iframeContainer.setAttribute('src', ROOT_URL);
 
@@ -100,7 +100,7 @@
 
   // ------------------- CONTAINER --------------------
   const container = document.createElement('div');
-  container.setAttribute('class', 'lb_container closed');
+  container.setAttribute('class', 'lb_container lb_closed');
 
   // ------------------ INSERT WIDGET ------------------
   // insert root
@@ -113,22 +113,22 @@
 
   const openRizimo = () => {
     if (!dragged) {
-      replaceOrAddClass(container, 'closed', 'opened');
-      iframeContainer.setAttribute('iframe-state', 'opened');
+      replaceOrAddClass(container, 'lb_closed', 'lb_opened');
+      iframeContainer.setAttribute('iframe-state', 'lb_opened');
     }
     dragged = false;
   };
   const closeRizimo = () => {
-    replaceOrAddClass(container, 'opened', 'closed');
-    iframeContainer.setAttribute('iframe-state', 'closed');
+    replaceOrAddClass(container, 'lb_opened', 'lb_closed');
+    iframeContainer.setAttribute('iframe-state', 'lb_closed');
   };
   const toggleFullscreen = (state = null) => {
     if (state === true) {
-      container.classList.add('fullscreen');
+      container.classList.add('lb_fullscreen');
     } else if (state === false) {
-      container.classList.remove('fullscreen');
+      container.classList.remove('lb_fullscreen');
     } else {
-      container.classList.toggle('fullscreen');
+      container.classList.toggle('lb_fullscreen');
     }
   };
 
@@ -137,7 +137,7 @@
     if (notifications > 0) {
       openButton.innerHTML = `
     <img src="${ABSOLUTE_URL}images/logos/${THEME}/widget/notifications.svg" />
-    <div class="notifications">
+    <div class="lb_notifications">
       ${notifications}
     </div>
     `;
@@ -237,7 +237,7 @@
 
   const onlongpress = () => {
     dragged = true;
-    openButton.classList.add('moving');
+    openButton.classList.add('lb_moving');
     document.addEventListener('touchmove', onMouseMove, false);
     document.addEventListener('mousemove', onMouseMove, false);
     if (timer) {
@@ -263,7 +263,7 @@
       if (timer) {
         clearTimeout(timer);
       }
-      openButton.classList.remove('moving');
+      openButton.classList.remove('lb_moving');
       document.removeEventListener('mousemove', onMouseMove);
       document.onmouseup = null;
     };
@@ -283,7 +283,7 @@
         clearTimeout(timer);
       }
       dragged = false;
-      openButton.classList.remove('moving');
+      openButton.classList.remove('lb_moving');
       document.removeEventListener('touchmove', onMouseMove);
       document.ontouchend = null;
     };
@@ -321,7 +321,7 @@
     iframeContainer.contentWindow.postMessage({ type: 'widget', event: 'upload', files }, '*');
     openRizimo();
     toggleFullscreen(true);
-    openButton.classList.remove('dropping');
+    openButton.classList.remove('lb_dropping');
   };
 
   container.ondragover = function handleDragOver(e) {
@@ -330,12 +330,12 @@
   };
 
   container.ondragenter = function handleDragEnter() {
-    openButton.classList.add('dropping');
+    openButton.classList.add('lb_dropping');
     // iframeContainer.style.pointerEvents = 'all';
   };
 
   container.ondragleave = function handleDragLeave() {
-    openButton.classList.remove('dropping');
+    openButton.classList.remove('lb_dropping');
     // iframeContainer.style.pointerEvents = 'none';
   };
 }
