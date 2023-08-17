@@ -9,7 +9,7 @@ import getStats from './stats/server/rest';
 import getNcToken from './nextcloud/server/rest';
 import createUser from './users/server/rest';
 import ftUploadProxy from './francetransfert/server/rest';
-import { widget } from './widget';
+import { widget, demo } from './widget';
 
 const unless = (path, middleware) => (req, res, next) => {
   if (path === req.path) {
@@ -64,11 +64,18 @@ if (cuApiKeys && cuApiKeys.length > 0) {
   restCu.post({ path: '/createuser', version: '>=1.0.0' }, Meteor.bindEnvironment(createUser));
 }
 
-WebApp.connectHandlers.use('/scripts/widget', (req, res) => {
-  const fileContent = widget();
+WebApp.connectHandlers.use('/scripts/widget/demo', (_req, res) => {
+  res.writeHead(200, {
+    'Content-Type': 'text/html',
+  });
+  res.write(demo());
+  res.end();
+});
+
+WebApp.connectHandlers.use('/scripts/widget', (_req, res) => {
   res.writeHead(200, {
     'Content-Type': 'application/javascript',
   });
-  res.write(fileContent);
+  res.write(widget());
   res.end();
 });

@@ -15,7 +15,6 @@
     "visualize": "meteor --production --extra-packages bundle-visualizer --settings ../config/settings.development.json",
     "init-npm": "rm -rf node_modules && rm -f package-lock.json && npm upgrade && npm i",
     "prepare": "cd .. && npx husky install",
-    "serve-widget": "serve private/widget --listen 4000",
     "check-lang": "node ./scripts/lang-check.js imports/startup/i18n/*.json"
   },
   "dependencies": {
@@ -136,8 +135,7 @@
     "eslint-plugin-standard": "^4.1.0",
     "husky": "^7.0.4",
     "jscpd": "^3.5.9",
-    "prettier": "^2.8.8",
-    "serve": "^14.2.0"
+    "prettier": "^2.8.8"
   },
   "overrides": {
     "axios": "^1.3.4",

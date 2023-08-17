@@ -25,6 +25,7 @@ function minifyCss(content) {
 
 const widgtStyle = Assets.getText('widget/style.css');
 const widgtScript = Assets.getText('widget/script.js');
+const widgtDemo = Assets.getText('widget/index.html');
 
 const style = minifyCss(widgtStyle);
 
@@ -36,5 +37,11 @@ export const widget = () => {
     absoluteUrl: Meteor.absoluteUrl(),
     style,
     rootUrl: process.env.ROOT_URL,
+  });
+};
+
+export const demo = () => {
+  return template(widgtDemo, {
+    scriptUrl: `${Meteor.absoluteUrl()}/scripts/widget`,
   });
 };
