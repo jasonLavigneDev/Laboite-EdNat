@@ -1,11 +1,55 @@
 /** Le préfixe choisi pour les classes CSS, afin d'assurer une unicité, est `lb_` */
 
 :root {
-  --lb_primary-color: #000091;
-  --lb_alert-color: #ce0500;
+  /* DSFR Colors. See https://www.systeme-de-design.gouv.fr/elements-d-interface/fondamentaux-de-l-identite-de-l-etat/couleurs-palette */
+  --blue-france-main-525: #6a6af4;
+  --blue-france-main-525-hover: #9898f8;
+  --blue-france-main-525-active: #aeaef9;
 
-  --lb_text-color: #fff;
-  --lb_accent-color: #d4d4d4;
+  --blue-france-sun-113: #000091;
+  --blue-france-sun-113-hover: #1212ff;
+  --blue-france-sun-113-active: #2323ff;
+
+  --blue-france-975: #f5f5fe;
+  --blue-france-975-hover: #dcdcfc;
+  --blue-france-975-active: #cbcbfa;
+
+  --red-marianne-main-472: #e1000f;
+  --red-marianne-main-472-hover: #ff292f;
+  --red-marianne-main-472-active: #ff4347;
+
+  --red-marianne-425: #c9191e;
+  --red-marianne-425-hover: #f93f42;
+  --red-marianne-425-active: #f95a5c;
+
+  --error-main-525: #f60700;
+  --error-425: #ce0500;
+
+  --grey-1000: #ffffff;
+  --grey-1000-hover: #f6f6f6;
+  --grey-1000-active: #ededed;
+
+  --grey-975: #f6f6f6;
+  --grey-975-hover: #dfdfdf;
+  --grey-975-active: #cfcfcf;
+
+  /* APP COLORS */
+  --lb_primary-color: var(--blue-france-sun-113);
+
+  --lb_container-border-color: var(--lb_primary-color);
+  --lb_header-background-color: var(--lb_primary-color);
+
+  --lb_header-action-color: var(--grey-1000);
+  --lb_header-action-color-hover: var(--grey-975-hover);
+
+  --lb_header-tab-background-color: var(--blue-france-sun-113);
+  --lb_header-tab-background-color-hover: var(--blue-france-sun-113-hover);
+  --lb_header-tab-background-color-active: var(--blue-france-sun-113-active);
+
+  --lb_header-tab-color: var(--grey-1000);
+  --lb_header-tab-color-hover: var(--grey-975-hover);
+
+  --lb_notification-bubble-color: var(--error-425);
 }
 
 .lb_container {
@@ -50,7 +94,7 @@
 
 .lb_container .lb_widget .lb_notifications {
   position: absolute;
-  background-color: var(--lb_alert-color);
+  background-color: var(--lb_notification-bubble-color);
   font-size: 15px;
   width: 20px;
   height: 20px;
@@ -101,9 +145,6 @@
   width: 500px;
   max-width: calc(100% - 10px);
   background: white;
-  border-width: 2px;
-  border-style: solid;
-  border-color: var(--lb_primary-color);
   border-radius: 8px;
   animation: fadeIn 0.7s;
   overflow: hidden;
@@ -115,29 +156,80 @@
   width: calc(100% - 10px);
 }
 
-.lb_container .lb_widget-container iframe {
+.lb_container .lb_widget-container .lb_widget-tab-container {
   flex: 1;
-  width: 100%;
-  height: 100%;
-  border: none;
+  display: flex;
   border-radius: 0 0 8px 8px;
+
+  border-width: 2px;
+  border-top-width: 0;
+  border-style: solid;
+  border-color: var(--lb_container-border-color);
+  overflow: hidden;
+}
+
+.lb_container .lb_widget-container .lb_container_tab {
+  display: none;
+  flex: 1;
+}
+.lb_container .lb_widget-container .lb_container_tab[data-active='true'] {
+  display: flex;
+}
+
+.lb_container .lb_widget-container .lb_iframe-widget {
+  flex: 1;
+  border: 0;
+  outline: none;
+  /* width: 100%;
+  height: 100%; */
 }
 
 .lb_container .lb_widget-container .lb_widget-header {
-  height: 35px;
-  background-color: var(--lb_primary-color);
+  background-color: var(--lb_header-background-color);
   display: flex;
-  padding: 5px;
+  padding: 0 5px;
   justify-content: space-between;
 }
 
-.lb_container .lb_widget-container img {
-  height: 35px;
+.lb_widget-header-tabs {
+  display: flex;
+  gap: 12px;
+  padding-top: 5px;
+}
+
+.lb_widget-header-tabs--tab {
+  cursor: pointer;
+  background: 0;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  outline: 0;
+  padding: 5px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 100%;
+  color: var(--lb_header-tab-color);
+  background-color: var(--lb_header-tab-background-color);
+  transition: all ease-in-out 200ms;
+  border-radius: 8px 8px 0 0;
+}
+
+.lb_widget-header-tabs--tab:hover {
+  background-color: var(--lb_header-tab-background-color-hover);
+  color: var(--lb_header-tab-color-hover);
+}
+
+.lb_widget-header-tabs--tab[data-active='true'] {
+  background-color: var(--lb_header-tab-background-color-active);
 }
 
 .lb_container .lb_widget-container .lb_buttons-container {
   display: flex;
   gap: 5px;
+  padding: 5px 0;
 }
 
 .lb_container .lb_widget-container .lb_buttons-container button {
@@ -158,6 +250,7 @@
   height: 25px;
   position: relative;
 }
+
 .lb_container .lb_widget-container button .lb_cross-stand-alone:before,
 .lb_container .lb_widget-container button .lb_cross-stand-alone:after {
   content: '';
@@ -167,14 +260,14 @@
   height: 2px;
   left: 0;
   right: 0;
-  background: var(--lb_text-color);
+  background: var(--lb_header-action-color);
   border-radius: 4px;
   transition: background-color ease-in-out 200ms;
 }
 
 .lb_container .lb_widget-container button:hover .lb_cross-stand-alone:after,
 .lb_container .lb_widget-container button:hover .lb_cross-stand-alone:before {
-  background: var(--lb_accent-color);
+  background: var(--lb_header-action-color-hover);
 }
 
 .lb_container .lb_widget-container button .lb_cross-stand-alone:before {
@@ -186,14 +279,14 @@
 }
 
 .lb_container .lb_widget-container button.lb_fullscreen-btn {
-  color: var(--lb_text-color);
+  color: var(--lb_header-action-color);
   line-height: 25px;
   font-size: 25px;
   transition: color ease-in-out 200ms;
 }
 
 .lb_container .lb_widget-container button.lb_fullscreen-btn:hover {
-  color: var(--lb_accent-color);
+  color: var(--lb_header-action-color-hover);
 }
 
 @keyframes fadeIn {

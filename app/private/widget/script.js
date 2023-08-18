@@ -3,9 +3,99 @@
   const ABSOLUTE_URL = `{{absoluteUrl}}`;
   const THEME = `{{theme}}`;
   const ROOT_URL = `{{rootUrl}}`;
+  const CHATBOT_URL = `{{chatbotUrl}}`;
   const WIDGET_STYLE = `{{style}}`;
 
+  // ------------------ CONFIG ------------------
+  /**
+   * @enum {string}
+   */
+  const TABS = {
+    RIZOMO: 'rizomo',
+    CHATBOT: 'chatbot',
+  };
+
+  const IFRAME_ID = 'lb-widget';
+  const CHATBOT_IFRAME_ID = 'lb-widget';
+
+  const createIframe = function createIframe(name, src) {
+    // Create Iframe
+    const iframeContainer = document.createElement('iframe');
+    iframeContainer.setAttribute('id', name);
+    iframeContainer.setAttribute('name', name);
+    iframeContainer.setAttribute('class', 'lb_iframe-widget');
+    iframeContainer.setAttribute('iframe-state', 'lb_closed');
+    iframeContainer.setAttribute('name', 'lb_iframe-widget');
+    iframeContainer.setAttribute('src', src);
+    iframeContainer.setAttribute('frameborder', '0');
+    return iframeContainer;
+  };
+
+  /**
+   * @type {{ key: TABS; children?: Element | Element[] | () => (Element | Element[]); attributes: { [attribute: string]: string; }; render?: Element | Element[] | () => (Element | Element[]);  }[]}
+   */
+  const TABS_CONFIG = [
+    {
+      key: TABS.RIZOMO,
+      children: () => {
+        const widgetLogo = document.createElement('img');
+        widgetLogo.setAttribute('src', `${ABSOLUTE_URL}images/logos/${THEME}/widget/logo.svg`);
+        widgetLogo.style.borderRadius = '4px';
+
+        return widgetLogo;
+      },
+      render() {
+        return createIframe(IFRAME_ID, ROOT_URL);
+      },
+    },
+    {
+      key: TABS.CHATBOT,
+      children: () => {
+        const chatIcon = document.createElement('div');
+        chatIcon.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M0 0h24v24H0V0z" fill="none"/>
+            <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/>
+        </svg>
+        `;
+
+        return chatIcon.firstElementChild;
+      },
+      render() {
+        const iframe = createIframe(CHATBOT_IFRAME_ID, CHATBOT_URL);
+        iframe.setAttribute('allow', 'autoplay');
+
+        return iframe;
+      },
+    },
+  ];
+
   // ------------------ UTILS ------------------
+
+  const getIframe = function getIframe() {
+    return document.getElementById(IFRAME_ID);
+  };
+
+  /**
+   * @param {Element | Element[] | () => (Element | Element[])} children
+   *
+   * @returns {Element[]}
+   */
+  const renderChildren = function renderChildren(children) {
+    if (!children) {
+      return [];
+    }
+
+    if (typeof children === 'function') {
+      return renderChildren(children());
+    }
+    if (!Array.isArray(children)) {
+      return [children];
+    }
+
+    return children;
+  };
+
   /**
    *
    * @param {HTMLElement} element
@@ -28,14 +118,102 @@
   let shiftX;
   let shiftY;
 
+  // ------------------ TAB VARIABLES ------------------
+  let currentTab = TABS.RIZOMO;
+
+  const tabChildrenContainer = document.createElement('div');
+  tabChildrenContainer.setAttribute('class', 'lb_widget-tab-container');
+
   // ------------------ HEADER WIDGET ------------------
   // Create Header
   const widgetHeader = document.createElement('div');
   widgetHeader.setAttribute('class', 'lb_widget-header');
 
-  // create Logo
-  const widgetLogo = document.createElement('img');
-  widgetLogo.setAttribute('src', `${ABSOLUTE_URL}images/logos/${THEME}/widget/logo.svg`);
+  const tabsHeaderContainer = document.createElement('div');
+  tabsHeaderContainer.setAttribute('class', 'lb_widget-header-tabs');
+
+  TABS_CONFIG.forEach(({ key, children, attributes }) => {
+    const tabEl = document.createElement('button');
+
+    if (attributes) {
+      Object.entries(attributes).forEach(([attrKey, attrValue]) => {
+        tabEl.setAttribute(attrKey, attrValue);
+      });
+    }
+
+    tabEl.setAttribute('data-tab', key);
+    if (key === currentTab) {
+      tabEl.setAttribute('data-active', 'true');
+    }
+
+    if (children) {
+      renderChildren(children).forEach((element) => {
+        tabEl.append(element);
+      });
+    }
+
+    tabEl.classList.add('lb_widget-header-tabs--tab');
+    tabsHeaderContainer.append(tabEl);
+  });
+
+  const getTabRender = function getTabRender(key) {
+    return tabChildrenContainer.querySelector(`:scope > .lb_container_tab[data-tab="${key}"]`);
+  };
+  const renderTab = function renderTab(key) {
+    let renderEl = getTabRender(key);
+
+    if (!renderEl) {
+      renderEl = document.createElement('div');
+      renderEl.setAttribute('data-tab', key);
+      renderEl.setAttribute('class', 'lb_container_tab');
+
+      const tab = TABS_CONFIG.find((t) => t.key === key);
+
+      if (!tab) {
+        console.warn('Tab config not found.');
+      }
+
+      const rendered = renderChildren(tab.render);
+      rendered.forEach((renderedEl) => {
+        renderEl.append(renderedEl);
+      });
+
+      tabChildrenContainer.append(renderEl);
+    }
+
+    return renderEl;
+  };
+
+  tabsHeaderContainer.addEventListener('click', (e) => {
+    const tabEl = /** @type {HTMLElement} */ (e.target).closest('.lb_widget-header-tabs--tab');
+
+    if (!tabEl) {
+      console.error('Tab not found');
+      return;
+    }
+
+    const tabKey = tabEl.getAttribute('data-tab');
+
+    if (!tabKey) {
+      console.error('Tab key empty');
+      return;
+    }
+
+    if (currentTab === tabKey) {
+      return;
+    }
+
+    // Edit the active tab in the header
+    tabEl.setAttribute('data-active', 'true');
+    const oldTabEl = /** @type {HTMLElement} */ (e.currentTarget).querySelector(`[data-tab=${currentTab}]`);
+    oldTabEl.setAttribute('data-active', 'false');
+
+    // Edit the active tab in the main fram
+    renderTab(tabKey).setAttribute('data-active', 'true');
+    getTabRender(currentTab).setAttribute('data-active', 'false');
+
+    currentTab = tabKey;
+  });
 
   // Create buttons container
   const buttonsContainer = document.createElement('div');
@@ -57,22 +235,15 @@
   fullscreenButton.title = 'Plein écran';
 
   // Insert logo and buttons into header
-  closeButton.append(closeIcon);
   buttonsContainer.append(fullscreenButton);
+
+  closeButton.append(closeIcon);
   buttonsContainer.append(closeButton);
-  widgetHeader.append(widgetLogo);
+
+  widgetHeader.append(tabsHeaderContainer);
   widgetHeader.append(buttonsContainer);
 
   // ------------------ CONTAINER WIDGET ------------------
-  // Create Iframe
-  const iframeName = 'lb-widget';
-  const iframeContainer = document.createElement('iframe');
-  iframeContainer.setAttribute('id', iframeName);
-  iframeContainer.setAttribute('name', iframeName);
-  iframeContainer.setAttribute('class', 'lb_iframe-widget');
-  iframeContainer.setAttribute('iframe-state', 'lb_closed');
-  iframeContainer.setAttribute('name', 'lb_iframe-widget');
-  iframeContainer.setAttribute('src', ROOT_URL);
 
   // Create Container for Widget
   const widgetContainer = document.createElement('div');
@@ -80,7 +251,10 @@
 
   // Insert Header and Iframe into container
   widgetContainer.append(widgetHeader);
-  widgetContainer.append(iframeContainer);
+  widgetContainer.append(tabChildrenContainer);
+
+  // Render default tab on first execution. And set it as active
+  renderTab(currentTab).setAttribute('data-active', 'true');
 
   // ------------------ ROBOT WIDGET ------------------
   // Create open button with the robot
@@ -114,13 +288,13 @@
   const openRizimo = () => {
     if (!dragged) {
       replaceOrAddClass(container, 'lb_closed', 'lb_opened');
-      iframeContainer.setAttribute('iframe-state', 'lb_opened');
+      getIframe().setAttribute('iframe-state', 'lb_opened');
     }
     dragged = false;
   };
   const closeRizimo = () => {
     replaceOrAddClass(container, 'lb_opened', 'lb_closed');
-    iframeContainer.setAttribute('iframe-state', 'lb_closed');
+    getIframe().setAttribute('iframe-state', 'lb_closed');
   };
   const toggleFullscreen = (state = null) => {
     if (state === true) {
@@ -157,7 +331,7 @@
   };
 
   const messageCallback = (message, data) => {
-    iframeContainer.contentWindow.postMessage({ type: 'callback', callback: message.data.callback, data }, '*');
+    getIframe().contentWindow.postMessage({ type: 'callback', callback: message.data.callback, data }, '*');
   };
 
   const receiveMessage = (message) => {
@@ -318,7 +492,7 @@
       });
     }
 
-    iframeContainer.contentWindow.postMessage({ type: 'widget', event: 'upload', files }, '*');
+    getIframe().contentWindow.postMessage({ type: 'widget', event: 'upload', files }, '*');
     openRizimo();
     toggleFullscreen(true);
     openButton.classList.remove('lb_dropping');
@@ -331,11 +505,11 @@
 
   container.ondragenter = function handleDragEnter() {
     openButton.classList.add('lb_dropping');
-    // iframeContainer.style.pointerEvents = 'all';
+    // getIframe().style.pointerEvents = 'all';
   };
 
   container.ondragleave = function handleDragLeave() {
     openButton.classList.remove('lb_dropping');
-    // iframeContainer.style.pointerEvents = 'none';
+    // getIframe().style.pointerEvents = 'none';
   };
 }

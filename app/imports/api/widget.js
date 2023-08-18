@@ -37,6 +37,7 @@ export const widget = () => {
     absoluteUrl: Meteor.absoluteUrl(),
     style,
     rootUrl: process.env.ROOT_URL,
+    chatbotUrl: 'https://chat.rizomo.numerique.gouv.fr/',
   });
 };
 
