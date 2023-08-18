@@ -164,12 +164,6 @@ const AdminUsersPage = ({ match: { path } }) => {
     setUserType(evt.target.value);
   };
 
-  useEffect(() => {
-    if (page !== 1) {
-      goToPage(1);
-    }
-  }, [search]);
-
   const isAdmin = (user) => admins.includes(user._id);
   const changeAdmin = (user) => {
     const method = isAdmin(user) ? 'users.unsetAdmin' : 'users.setAdmin';
