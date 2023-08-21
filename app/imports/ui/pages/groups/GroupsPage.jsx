@@ -204,7 +204,11 @@ function GroupsPage() {
 
               {user.groupQuota > 0 && (
                 <Tooltip
-                  title={canCreateGroup ? i18n.__('pages.GroupsPage.addGroup') : i18n.__('pages.GroupsPage.cantCreate')}
+                  title={
+                    canCreateGroup
+                      ? i18n.__('pages.GroupsPage.addGroup')
+                      : i18n.__('pages.AdminGroupsPage.materialTableLocalization.body_cantCreate')
+                  }
                 >
                   <span>
                     <IconButton onClick={goToAddGroup} disabled={!canCreateGroup} size="large">
