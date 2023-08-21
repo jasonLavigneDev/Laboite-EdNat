@@ -118,8 +118,8 @@ const AdminUsersPage = ({ match: { path } }) => {
     {
       data: items = [],
       page,
-      goToPage,
       total,
+      goToPage,
       // goToNextPage,
       // goToPreviousPage,
       // nbPage,
@@ -163,12 +163,6 @@ const AdminUsersPage = ({ match: { path } }) => {
   const handleUserType = (evt) => {
     setUserType(evt.target.value);
   };
-
-  useEffect(() => {
-    if (page !== 1) {
-      goToPage(1);
-    }
-  }, [search]);
 
   const isAdmin = (user) => admins.includes(user._id);
   const changeAdmin = (user) => {
