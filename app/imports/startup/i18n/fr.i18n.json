@@ -943,12 +943,13 @@
         "DeleteIconImage": "Enlever l'image d'icône",
         "DeleteCoverImage": "Enlever l'image de la couverture"
       },
-      "attachToStructure": "Souhaitez vous être rattaché(e) à cette structure ?"
+      "attachToStructure": "Souhaitez vous être rattaché(e) à cette structure ?",
+      "noStructure": "Il n'y a aucune structure d'enregistrée."
     },
     "AdminStructureTreeView": {
       "all": "Tout",
       "title": "Liste des structures",
-      "isPartOf": "Vous faites membre de la structure "
+      "isPartOf": "Vous êtes membre de la structure "
     },
     "AdminStructureSearchBar": {
       "filterByName": "Filtrer par nom de structure (à partir de 3 lettres)",

@@ -1003,7 +1003,8 @@
         "DeleteIconImage": "Remove icon image",
         "DeleteCoverImage": "Remove cover image"
       },
-      "attachToStructure": "Do you want to be attached to this structure?"
+      "attachToStructure": "Do you want to be attached to this structure?",
+      "noStructure": "There is no structure registered"
     },
     "AdminStructureTreeView": {
       "all": "all",

@@ -191,6 +191,10 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
     setIsOpenDeleteConfirm(true);
   };
 
+  const atLeastOneStructureExist = () => {
+    return filteredFlatData && filteredFlatData.length > 0;
+  };
+
   const onDeleteConfirm = () => {
     onDelete({
       structureId: selectedStructure._id,
@@ -276,12 +280,14 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
             />
           </Box>
           <CardContent>
-            <Box>
-              <Typography>
-                {`${i18n.__('components.AdminStructureTreeView.isPartOf')}: `}
-                <span>{currentUserStructure.name}</span>
-              </Typography>
-            </Box>
+            {currentUserStructure && (
+              <Box>
+                <Typography>
+                  {`${i18n.__('components.AdminStructureTreeView.isPartOf')}: `}
+                  <span>{currentUserStructure.name}</span>
+                </Typography>
+              </Box>
+            )}
             <Box display="flex" alignItems="center">
               <Box>
                 <Typography
@@ -303,9 +309,9 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
                 </IconButton>
               </Box>
             </Box>
-            {loading ? (
-              <Spinner />
-            ) : (
+            {loading && <Spinner />}
+
+            {atLeastOneStructureExist() ? (
               <AdminStructureTreeView
                 treeData={getTree(filteredFlatData, isAdminStructureMode ? user.structure : null)}
                 onClickAddBtn={onClickAddBtn}
@@ -316,6 +322,8 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
                 expandedIds={expandedIds}
                 selectedId=""
               />
+            ) : (
+              <p style={{ textAlign: 'center' }}>{i18n.__('components.AdminStructureTreeItem.noStructure')}</p>
             )}
           </CardContent>
         </Card>
