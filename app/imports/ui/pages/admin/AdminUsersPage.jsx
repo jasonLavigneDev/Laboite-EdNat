@@ -118,8 +118,8 @@ const AdminUsersPage = ({ match: { path } }) => {
     {
       data: items = [],
       page,
-      goToPage,
       total,
+      goToPage,
       // goToNextPage,
       // goToPreviousPage,
       // nbPage,
