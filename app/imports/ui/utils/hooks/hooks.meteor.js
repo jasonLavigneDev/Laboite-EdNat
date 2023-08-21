@@ -127,7 +127,7 @@ export const usePaginatedMethod = (
           data: result.data,
         };
         setPageSize(res.pageSize);
-        if (res.nbPage === 1) setPage(1);
+        if (res.nbPage < res.page) setPage(1);
         else setPage(res.page);
         setTotal(res.total);
         setNbPage(res.nbPage);
