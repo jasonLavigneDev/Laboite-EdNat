@@ -193,7 +193,7 @@ Meteor.users.schema = new SimpleSchema(
     articlesEnable: {
       type: Boolean,
       optional: true,
-      defaultValue: false,
+      defaultValue: true,
       label: getLabel('api.users.labels.articlesEnable'),
     },
     authToken: {
