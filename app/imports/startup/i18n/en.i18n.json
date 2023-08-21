@@ -1674,7 +1674,8 @@
       "openPublicPage": "All publications page",
       "copyOwnPublicPageUrl": "Copy url to your public publications page",
       "successCopyURL": "Public URL has been sent to clipboard",
-      "searchText": "What are you looking for ?"
+      "searchText": "What are you looking for ?",
+      "noArticle": "No publication available."
     },
     "EditArticlePage": {
       "title": "Edit this publication",
