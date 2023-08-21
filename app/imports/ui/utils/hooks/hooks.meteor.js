@@ -122,7 +122,7 @@ export const usePaginatedMethod = (
         const res = {
           pageSize: result.pageSize,
           page: result.page,
-          nbPage: Math.floor(result.total / result.pageSize) || 1,
+          nbPage: Math.ceil(result.total / result.pageSize),
           total: result.total,
           data: result.data,
         };
