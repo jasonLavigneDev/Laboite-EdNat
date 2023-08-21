@@ -102,7 +102,6 @@ const defaultState = {
   logoutType: '',
   avatar: '',
   advancedPersonalPage: false,
-  articlesEnable: false,
   nclocator: '',
 };
 
@@ -197,7 +196,7 @@ const ProfilePage = () => {
 
   const checkSubmitOk = () => {
     const errSum = Object.keys(errors).reduce((sum, name) => {
-      if (name === 'advancedPersonalPage' || name === 'articlesEnable') {
+      if (name === 'advancedPersonalPage') {
         // checkbox not concerned by errors
         return sum;
       }
@@ -220,7 +219,6 @@ const ProfilePage = () => {
       avatar: userData.avatar === '' || reset ? data.avatar : userData.avatar,
       advancedPersonalPage:
         userData.advancedPersonalPage === false || reset ? data.advancedPersonalPage : userData.advancedPersonalPage,
-      articlesEnable: userData.articlesEnable === false || reset ? data.articlesEnable : userData.articlesEnable,
       nclocator: data.nclocator || userData.nclocator,
     });
     if (reset === true) {
@@ -240,7 +238,6 @@ const ProfilePage = () => {
       userData.logoutType === user.logoutType &&
       userData.avatar === user.avatar &&
       userData.advancedPersonalPage === user.advancedPersonalPage &&
-      userData.articlesEnable === user.articlesEnable &&
       userData.nclocator === user.nclocator
     ) {
       msg.success(i18n.__('pages.ProfilePage.updateSuccess'));
@@ -353,14 +350,6 @@ const ProfilePage = () => {
     if (userData.advancedPersonalPage !== user.advancedPersonalPage) {
       modifications = true;
       Meteor.call('users.toggleAdvancedPersonalPage', {}, (error) => {
-        if (error) {
-          msg.error(error.message);
-        }
-      });
-    }
-    if (userData.articlesEnable !== user.articlesEnable) {
-      modifications = true;
-      Meteor.call('users.setArticlesEnable', {}, (error) => {
         if (error) {
           msg.error(error.message);
         }
@@ -725,23 +714,6 @@ const ProfilePage = () => {
                 />
                 {Meteor.user().advancedPersonalPage && (
                   <FormHelperText>{i18n.__('pages.ProfilePage.advancedPersonalPageWarning')}</FormHelperText>
-                )}
-                {enableBlog && (
-                  <>
-                    <br />
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          id="articlesEnable"
-                          name="articlesEnable"
-                          checked={userData.articlesEnable}
-                          onChange={onCheckOption}
-                          inputProps={{ 'aria-label': 'primary checkbox' }}
-                        />
-                      }
-                      label={i18n.__('pages.ProfilePage.activateArticles')}
-                    />
-                  </>
                 )}
               </Grid>
             </Grid>
