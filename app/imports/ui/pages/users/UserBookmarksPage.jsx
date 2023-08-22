@@ -8,6 +8,12 @@ import ArrowBack from '@mui/icons-material/ArrowBack';
 import MaterialTable from '@material-table/core';
 import Grid from '@mui/material/Grid';
 import { makeStyles } from 'tss-react/mui';
+import TableContainer from '@mui/material/TableContainer';
+import Table from '@mui/material/Table';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import TableCell from '@mui/material/TableCell';
+import TableBody from '@mui/material/TableBody';
 import LanguageIcon from '@mui/icons-material/Language';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import StarIcon from '@mui/icons-material/Star';
@@ -35,6 +41,8 @@ import BookMarkEdit from '../../components/users/BookMarkEdit';
 import QRCanvas from '../../components/users/QRCanvas';
 import UserBookmarks from '../../../api/userBookmarks/userBookmarks';
 import { useMethod } from '../../utils/hooks/hooks.meteor';
+import { ImportBookmarkTableRow } from './ImportBookmarkTableRow';
+import './types';
 
 export const useBookmarkPageStyles = makeStyles()(() => ({
   ErrorPage: {
@@ -61,6 +69,11 @@ export const useBookmarkPageStyles = makeStyles()(() => ({
     alignItems: 'center',
     justifyContent: 'center',
   },
+
+  dialogContent: {
+    // overflowY: 'hidden'
+  },
+  tableContainer: { maxHeight: 600, marginTop: 24 },
 }));
 
 /**
@@ -242,9 +255,13 @@ function UserBookmarksPage({ loading, bookmarksList }) {
   const [qrUrl, setQrUrl] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+  const [isReadingFile, setIsReadingFile] = useState(false);
+  /**
+   * @type {[BookmarkToImport[]]}
+   */
   const [bookmarksToImport, setBookmarksToImport] = useState([]);
   const [dialogMode, setDialogMode] = useState('export');
-  const [importBookmark, { loading: importing }] = useMethod(`userBookmark.bulkImport`);
+  const [importBookmark, { loading: importing }] = useMethod(`userBookmark.import`);
   const [exportBookmark, { loading: exporting }] = useMethod(`userBookmark.export`);
   const inputRef = useRef(null);
   const closeModal = useCallback(() => setIsModalOpen(false), []);
@@ -257,7 +274,11 @@ function UserBookmarksPage({ loading, bookmarksList }) {
   const hideEditActions = (checkId) => !(checkId === userId || Roles.userIsInRole(userId, 'admin'));
 
   const proceedWithImport = useCallback(async () => {
-    importBookmark({ bookmarks: bookmarksToImport }).then((result) => {
+    const filteredBookmarks = bookmarksToImport
+      .filter((bookmark) => bookmark.keep)
+      .map(({ keep, ...bookmark }) => bookmark);
+
+    importBookmark({ bookmarks: filteredBookmarks }).then((result) => {
       closeImportModal();
       toast.success(i18n.__('pages.UserBookmarksPage.importSuccess', { nbOfBoomarks: result.length }));
     });
@@ -314,7 +335,10 @@ function UserBookmarksPage({ loading, bookmarksList }) {
     }
   };
 
+  const nbBookmarksToImport = useRef(0);
+
   const handleFileChange = useCallback((event) => {
+    setIsReadingFile(true);
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
@@ -322,14 +346,36 @@ function UserBookmarksPage({ loading, bookmarksList }) {
         // Here is your HTML file content
         const content = reader.result;
         const parsedBookmarks = htmlToBookmarks(content);
-        setBookmarksToImport(parsedBookmarks);
+        setBookmarksToImport(
+          parsedBookmarks.map((bookmark) => ({ ...bookmark, keep: true, addToPersonalSpace: false })),
+        );
+        nbBookmarksToImport.current = parsedBookmarks.length;
+
+        setIsReadingFile(false);
       };
       reader.onerror = () => {
         // TODO display error to the user ?
         console.error('Failed to read file!');
+        setIsReadingFile(false);
       };
       reader.readAsText(file); // read file as text
     }
+  }, []);
+
+  const handleImportBookmarkRowKeepChange = useCallback((idx, keep) => {
+    setBookmarksToImport((previous) => {
+      const next = [...previous];
+      next[idx] = { ...next[idx], keep, addToPersonalSpace: keep ? next[idx].addToPersonalSpace : false };
+      nbBookmarksToImport.current += keep ? 1 : -1;
+      return next;
+    });
+  }, []);
+  const handleImportBookmarkRowAddToFavChange = useCallback((idx, addToPersonalSpace) => {
+    setBookmarksToImport((previous) => {
+      const next = [...previous];
+      next[idx] = { ...next[idx], addToPersonalSpace };
+      return next;
+    });
   }, []);
 
   return (
@@ -471,29 +517,58 @@ function UserBookmarksPage({ loading, bookmarksList }) {
               <Button onClick={closeModal}>{i18n.__('pages.UserBookmarksPage.close')}</Button>
             </DialogActions>
           </Dialog>
-          <Dialog className={classes.modal} open={isImportModalOpen} onClose={closeImportModal}>
-            <DialogContent>
+          <Dialog
+            className={classes.modal}
+            open={isImportModalOpen}
+            onClose={closeImportModal}
+            PaperProps={{ style: { maxWidth: 'fit-content' } }}
+          >
+            <DialogContent className={classes.dialogContent}>
               {dialogMode === 'import' && (
                 <>
                   {importing ? (
                     <LinearProgress variant="indeterminate" />
                   ) : bookmarksToImport.length ? (
-                    <Typography>
-                      {i18n.__('pages.UserBookmarksPage.wantToImport', { nbOfBoomarks: bookmarksToImport.length })}
-                    </Typography>
+                    <div>
+                      <Typography>
+                        {i18n.__('pages.UserBookmarksPage.wantToImport', { nbOfBoomarks: nbBookmarksToImport.current })}
+                      </Typography>
+                      <TableContainer className={classes.tableContainer}>
+                        <Table stickyHeader size="small" aria-label="a sticky dense table">
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>{i18n.__('api.bookmarks.labels.name')}</TableCell>
+                              <TableCell>{i18n.__('api.bookmarks.labels.url')}</TableCell>
+                              <TableCell>{i18n.__('api.bookmarks.keep')}</TableCell>
+                              <TableCell>{i18n.__('api.bookmarks.addToPersonalSpace')}</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {bookmarksToImport.map((bookmark, index) => (
+                              <ImportBookmarkTableRow
+                                // eslint-disable-next-line react/no-array-index-key
+                                key={index}
+                                id={index}
+                                bookmark={bookmark}
+                                handleKeepChange={handleImportBookmarkRowKeepChange}
+                                handleAddToFavChange={handleImportBookmarkRowAddToFavChange}
+                              />
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    </div>
                   ) : (
                     <>
-                      <Button variant="contained" onClick={() => inputRef.current?.click()} disabled={importing}>
+                      <Button
+                        variant="contained"
+                        onClick={() => inputRef.current?.click()}
+                        disabled={importing || isReadingFile}
+                      >
                         {i18n.__('pages.UserBookmarksPage.importHtmlFile')}
                       </Button>
                       <br />
-                      <input
-                        type="file"
-                        accept=".html"
-                        ref={inputRef}
-                        style={{ display: 'none' }}
-                        onChange={handleFileChange}
-                      />
+                      <input type="file" accept=".html" ref={inputRef} className="hidden" onChange={handleFileChange} />
                     </>
                   )}
                   <br />

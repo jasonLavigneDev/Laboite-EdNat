@@ -13,6 +13,9 @@
         "id": "ID",
         "icon": "favicon"
       },
+      "addToPersonalSpace": "Ajouter à l'espace personnel",
+      "keep": "Ajouter",
+      "discard": "Ignorer",
       "creationFailed": "Echec lors de la création. Assurez-vous que tous les champs soient convenablement remplis.",
       "UnknownURL": "Cette URL n'existe pas.",
       "unknownBookmark": "Ce marque-page n'existe pas.",
@@ -1132,6 +1135,7 @@
       "close": "Fermer",
       "showQrCode": "Voir le QR Code",
       "wantToImport": "Voulez vous importer {$nbOfBoomarks} marques-pages ?",
+      "action": "Action",
       "proceedWithImport": "Importer les marques-pages",
       "proceedWithExport": "Exporter les marques-pages",
       "importSuccess": "{$nbOfBoomarks} marques-pages ont été importés avec succès",
