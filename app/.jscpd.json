@@ -4,6 +4,7 @@
   "ignore": [
     "**/node_modules/**",
     "**/.meteor/**",
+    "**/.reports/**",
     "./packages/**",
     "./i18n/*.json",
     "**/*.svg",

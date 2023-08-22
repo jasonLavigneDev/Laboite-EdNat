@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useCallback, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { Meteor } from 'meteor/meteor';
 
 import i18n from 'meteor/universe:i18n';
 import { Steps } from 'intro.js-react';
@@ -232,41 +233,43 @@ export default function OnBoardingProvider({ children }) {
   }, []);
 
   // Automatically start the tour on the first time the page loads in the browser
-  useEffect(() => {
-    if (userId) {
-      if (window.localStorage.getItem(localStorageKey) !== 'true') {
-        setTimeout(() => setStepsEnabled(true), 225);
+  if (Meteor.settings.public.onBoarding?.enabled === true) {
+    useEffect(() => {
+      if (userId) {
+        if (window.localStorage.getItem(localStorageKey) !== 'true') {
+          setTimeout(() => setStepsEnabled(true), 225);
+        }
       }
-    }
-  }, []);
+    }, [userId]);
 
-  useEffect(() => {
-    if (ref.current?.introJs && areStepsEnabled) {
-      const intervalId = setInterval(() => {
-        ref.current?.introJs?.refresh();
-      }, 500);
+    useEffect(() => {
+      if (ref.current?.introJs && areStepsEnabled) {
+        const intervalId = setInterval(() => {
+          ref.current?.introJs?.refresh();
+        }, 500);
 
+        return () => {
+          clearInterval(intervalId);
+        };
+      }
+
+      return () => null;
+    }, [areStepsEnabled]);
+
+    useEffect(() => {
+      function handleResize() {
+        const introjs = ref.current?.introJs;
+        updateElement(introjs._currentStep).then(() => {
+          ref.current?.introJs?.refresh();
+        });
+      }
+
+      window.addEventListener('resize', handleResize);
       return () => {
-        clearInterval(intervalId);
+        window.removeEventListener('resize', handleResize);
       };
-    }
-
-    return () => null;
-  }, [areStepsEnabled]);
-
-  useEffect(() => {
-    function handleResize() {
-      const introjs = ref.current?.introJs;
-      updateElement(introjs._currentStep).then(() => {
-        ref.current?.introJs?.refresh();
-      });
-    }
-
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
+    }, []);
+  }
 
   return (
     <onBoardingContext.Provider
