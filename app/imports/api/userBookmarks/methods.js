@@ -5,19 +5,10 @@ import SimpleSchema from 'simpl-schema';
 import { Roles } from 'meteor/alanning:roles';
 import { _ } from 'meteor/underscore';
 import i18n from 'meteor/universe:i18n';
-import { isActive, getLabel, validateString } from '../utils';
+import { isActive, getLabel, validateString, formatURL } from '../utils';
 import UserBookmarks from './userBookmarks';
 import { addUserBookmark, removeElement } from '../personalspaces/methods';
 import logServer, { levels, scopes } from '../logging';
-
-function _formatURL(name) {
-  let finalName = name;
-
-  if (!name.includes('://')) {
-    finalName = `https://${name}`;
-  }
-  return finalName;
-}
 
 export const createUserBookmark = new ValidatedMethod({
   name: 'userBookmark.create',
@@ -47,7 +38,7 @@ export const createUserBookmark = new ValidatedMethod({
     validateString(name);
     validateString(tag);
 
-    const finalUrl = _formatURL(url);
+    const finalUrl = formatURL(url);
 
     // check that this URL does not already exist in this user bookmarks
     const bk = UserBookmarks.findOne({ url: finalUrl, userId: this.userId });
@@ -124,7 +115,7 @@ export const updateUserBookmark = new ValidatedMethod({
       throw new Meteor.Error('api.userBookmarks.updateUserBookmark.notPermitted', i18n.__('api.users.notPermitted'));
     }
 
-    const finalUrl = _formatURL(url);
+    const finalUrl = formatURL(url);
     validateString(url);
     validateString(name);
     validateString(tag);
