@@ -272,3 +272,11 @@ export const sanitizeParameters = {
     p: ['ql-indent-*'],
   },
 };
+
+export const formatURL = (name) => {
+  let finalName = name;
+  if (!name.includes('://')) {
+    finalName = `https://${name}`;
+  }
+  return finalName;
+};
