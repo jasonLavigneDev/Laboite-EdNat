@@ -3,11 +3,11 @@ import { Accounts } from 'meteor/accounts-base';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Roles } from 'meteor/alanning:roles';
 import PropTypes from 'prop-types';
-import { useWindowSize } from '../utils/hooks';
-import * as flags from '../utils/flags';
+import { useWindowSize } from '../../utils/hooks';
+import * as flags from '../../utils/flags';
 import reducer, { MOBILE_SIZE, TABLET_SIZE } from './reducer';
-import getLang from '../utils/getLang';
-import Structures, { propTypes as structuresPropTypes } from '../../api/structures/structures';
+import getLang from '../../utils/getLang';
+import Structures, { propTypes as structuresPropTypes } from '../../../api/structures/structures';
 
 const initialState = {
   user: Meteor.user(),
@@ -23,7 +23,7 @@ const initialState = {
   articlePage: {},
   publishersPage: {},
   notificationPage: {},
-  pollPage: {},
+  extServicePage: {},
   addressBookPage: {},
   roles: [],
   uploads: [],

@@ -105,17 +105,10 @@ function ServiceDetails({ service, favAction, isShort }) {
   const isPoll = service._id === 'polls';
   const isBookmark = service._id === 'bookmarks';
   const isArticles = service._id === 'articles';
+  const isForms = service._id === 'forms';
 
   return (
     <Card className={classes.card}>
-      {/* <CardHeader
-        className={handleClasseName}
-        action={(
-          <IconButton color="primary">
-            <OpenWithIcon />
-          </IconButton>
-        )}
-      /> */}
       <Tooltip
         title={i18n.__('components.ServiceDetails.singleServiceButtonLabel')}
         aria-label={i18n.__('components.ServiceDetails.singleServiceButtonLabel')}
@@ -124,15 +117,11 @@ function ServiceDetails({ service, favAction, isShort }) {
           <CardHeader
             className={classes.cardHeader}
             avatar={
-              isAddressBook ? (
-                service.logo
-              ) : isEvents ? (
-                service.logo
-              ) : isPoll ? (
-                service.logo
-              ) : isBookmark ? (
+              isAddressBook || isEvents || isPoll || isBookmark ? (
                 service.logo
               ) : isArticles ? (
+                service.logo
+              ) : isForms ? (
                 service.logo
               ) : (
                 <CardMedia className={classes.cardMedia} component="img" alt={service.title} image={service.logo} />
@@ -149,25 +138,9 @@ function ServiceDetails({ service, favAction, isShort }) {
           />
         </Link>
       </Tooltip>
-      {!isAddressBook && !isEvents && !isPoll && !isBookmark && !isArticles && (
+      {!isAddressBook && !isEvents && !isPoll && !isBookmark && !isArticles && !isForms && (
         <CardContent className={isShort ? classes.cardContentMobile : classes.cardContent}>
           {!isShort && <Typography variant="body1">{service.description}</Typography>}
-          {/* <Paper variant="elevation"  className={classes.paperChip}>
-          {service.categories.map((cat) => {
-            const currentCategory = categories.find((categ) => categ._id === cat);
-            return (
-              <Chip
-                size="small"
-                className={classes.chip}
-                key={currentCategory._id}
-                label={currentCategory.name}
-                variant="outlined"
-                color={catList.includes(currentCategory._id) ? 'primary' : 'default'}
-                onClick={() => updateCategories(currentCategory._id)}
-              />
-            );
-          })}
-        </Paper> */}
           <div className={isShort ? classes.cardActionShort : classes.cardActions}>
             <DisplayButton service={service} />
             {!!favAction && <FavButton classesArray={[classes.fab]} service={service} favorite={favorite} />}

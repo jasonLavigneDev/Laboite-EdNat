@@ -21,6 +21,7 @@ import WatchLaterIcon from '@mui/icons-material/WatchLater';
 import PeopleIcon from '@mui/icons-material/People';
 import TodayIcon from '@mui/icons-material/Today';
 import PollIcon from '@mui/icons-material/Poll';
+import ListAltIcon from '@mui/icons-material/ListAlt';
 import LockIcon from '@mui/icons-material/Lock';
 import BookmarksIcon from '@mui/icons-material/Bookmarks';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -45,6 +46,7 @@ import { countMembersOfGroup } from '../../../api/groups/methods';
 import COMMON_STYLES from '../../themes/styles';
 import { getGroupName } from '../../utils/utilsFuncs';
 import { testUrl } from '../../../api/utils';
+import Forms from '../../../api/forms/forms';
 
 const useStyles = makeStyles()((theme, { member, candidate, type }) => ({
   root: {
@@ -162,7 +164,7 @@ const useStyles = makeStyles()((theme, { member, candidate, type }) => ({
   },
 }));
 
-const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks, articles }) => {
+const SingleGroupPage = ({ group = {}, ready, services, polls, forms, events, bookmarks, articles }) => {
   const { type } = group;
   const [{ userId, user }] = useAppContext();
   const [loading, setLoading] = useState(false);
@@ -310,15 +312,14 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
     });
   };
 
-  const openBlog = () => {
-    window.open(`${Meteor.settings.public.services.laboiteBlogURL}/groups/${group.slug}`, '_blank');
-  };
-
   const openGroupFolder = (plugin) => {
+    const shareName = group.shareName ? `groupe-${encodeURIComponent(group.shareName)}` : '';
     const resourceURL = groupPlugins[plugin].groupURL
       .replace('[URL]', testUrl(groupPlugins[plugin].URL))
       .replace('[GROUPNAME]', encodeURIComponent(group.name))
-      .replace('[GROUPSLUG]', group.slug);
+      .replace('[GROUPSLUG]', group.slug)
+      .replace('[NCLOCATOR]', user.nclocator)
+      .replace('[NCSHARENAME]', shareName);
     window.open(resourceURL, '_blank', 'noopener,noreferrer');
   };
 
@@ -497,19 +498,6 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
                     </Button>
                   </Grid>
                 ) : null}
-                {Meteor.settings.public.services.laboiteBlogURL ? (
-                  <Grid item key={`groupblog_${group._id}`} className={classes.cardGrid}>
-                    <Button
-                      startIcon={<LibraryBooksIcon />}
-                      className={classes.buttonAdmin}
-                      size="large"
-                      variant="contained"
-                      onClick={() => openBlog()}
-                    >
-                      {i18n.__(`pages.SingleGroupPage.groupArticles`)}
-                    </Button>
-                  </Grid>
-                ) : null}
                 {Object.keys(groupPlugins)
                   .filter((p) => groupPlugins[p].enable === true)
                   .map((p) => {
@@ -537,28 +525,45 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
                 title={`${i18n.__('pages.SingleGroupPage.addressBook')} (${countUser})`}
                 url={`/groups/${group.slug}/addressbook`}
               />
-              <AppCard
-                id="events"
-                usage={i18n.__('pages.SingleGroupPage.EventsUsage')}
-                logo={<TodayIcon className={classes.icon} color="primary" fontSize="large" />}
-                title={
-                  events === undefined
-                    ? `${i18n.__('pages.SingleGroupPage.Events')}`
-                    : `${i18n.__('pages.SingleGroupPage.Events')} (${events})`
-                }
-                url={`/groups/${group.slug}/events`}
-              />
-              <AppCard
-                id="polls"
-                usage={i18n.__('pages.SingleGroupPage.PollUsage')}
-                logo={<PollIcon className={classes.icon} color="primary" fontSize="large" />}
-                title={
-                  polls === undefined
-                    ? `${i18n.__('pages.SingleGroupPage.Polls')}`
-                    : `${i18n.__('pages.SingleGroupPage.Polls')} (${polls})`
-                }
-                url={`/groups/${group.slug}/poll`}
-              />
+              {Meteor.settings.public.services.agendaUrl ? (
+                <AppCard
+                  id="events"
+                  usage={i18n.__('pages.SingleGroupPage.EventsUsage')}
+                  logo={<TodayIcon className={classes.icon} color="primary" fontSize="large" />}
+                  title={
+                    events === undefined
+                      ? `${i18n.__('pages.SingleGroupPage.Events')}`
+                      : `${i18n.__('pages.SingleGroupPage.Events')} (${events})`
+                  }
+                  url={`/groups/${group.slug}/services/events`}
+                />
+              ) : null}
+              {Meteor.settings.public.services.sondagesUrl ? (
+                <AppCard
+                  id="polls"
+                  usage={i18n.__('pages.SingleGroupPage.PollUsage')}
+                  logo={<PollIcon className={classes.icon} color="primary" fontSize="large" />}
+                  title={
+                    polls === undefined
+                      ? `${i18n.__('pages.SingleGroupPage.Polls')}`
+                      : `${i18n.__('pages.SingleGroupPage.Polls')} (${polls})`
+                  }
+                  url={`/groups/${group.slug}/services/polls`}
+                />
+              ) : null}
+              {Meteor.settings.public.services.questionnaireURL ? (
+                <AppCard
+                  id="forms"
+                  usage={i18n.__('pages.SingleGroupPage.FormUsage')}
+                  logo={<ListAltIcon className={classes.icon} color="primary" fontSize="large" />}
+                  title={
+                    forms === undefined
+                      ? `${i18n.__('pages.SingleGroupPage.Forms')}`
+                      : `${i18n.__('pages.SingleGroupPage.Forms')} (${forms})`
+                  }
+                  url={`/groups/${group.slug}/services/forms`}
+                />
+              ) : null}
               <AppCard
                 id="bookmarks"
                 usage={i18n.__('pages.SingleGroupPage.BookmarksUsage')}
@@ -570,17 +575,19 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, events, bookmarks
                 }
                 url={`/groups/${group.slug}/bookmarks`}
               />
-              <AppCard
-                id="articles"
-                usage={i18n.__('pages.SingleGroupPage.ArticlesUsage')}
-                logo={<LibraryBooksIcon className={classes.icon} color="primary" fontSize="large" />}
-                title={
-                  articles === undefined
-                    ? `${i18n.__('pages.SingleGroupPage.Articles')}`
-                    : `${i18n.__('pages.SingleGroupPage.Articles')} (${articles})`
-                }
-                url={`/groups/${group.slug}/articles`}
-              />
+              {Meteor.settings.public.services.laboiteBlogURL ? (
+                <AppCard
+                  id="articles"
+                  usage={i18n.__('pages.SingleGroupPage.ArticlesUsage')}
+                  logo={<LibraryBooksIcon className={classes.icon} color="primary" fontSize="large" />}
+                  title={
+                    articles === undefined
+                      ? `${i18n.__('pages.SingleGroupPage.Articles')}`
+                      : `${i18n.__('pages.SingleGroupPage.Articles')} (${articles})`
+                  }
+                  url={`/groups/${group.slug}/articles`}
+                />
+              ) : null}
             </>
           ) : null}
           <Grid item xs={12} sm={12} md={12} className={classes.cardGrid}>
@@ -617,6 +624,7 @@ export default withTracker(
     const subGroup = Meteor.subscribe('groups.single', { slug });
     const group = Groups.findOne({ slug }) || {};
     const polls = Polls.find({}).count();
+    const forms = Forms.find({}).count();
     const bookmarks = Bookmarks.find({}).count();
     const events = EventsAgenda.find({}).count();
     const articles = Articles.find({}).count();
@@ -630,6 +638,7 @@ export default withTracker(
       ready,
       services,
       polls,
+      forms,
       bookmarks,
       events,
       articles,
@@ -641,6 +650,7 @@ SingleGroupPage.defaultProps = {
   group: {},
   services: [],
   polls: undefined,
+  forms: undefined,
   bookmarks: undefined,
   events: undefined,
   articles: undefined,
@@ -651,6 +661,7 @@ SingleGroupPage.propTypes = {
   ready: PropTypes.bool.isRequired,
   services: PropTypes.arrayOf(PropTypes.any),
   polls: PropTypes.number,
+  forms: PropTypes.number,
   bookmarks: PropTypes.number,
   events: PropTypes.number,
   articles: PropTypes.number,

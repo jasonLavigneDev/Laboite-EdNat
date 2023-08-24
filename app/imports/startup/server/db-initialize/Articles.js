@@ -19,8 +19,7 @@ if (Articles.find().count() === 0) {
   if (Meteor.settings.private.fillWithFakeData && Meteor.isDevelopment) {
     const PUBLISHERS_RANDOM = 100;
     const publishers = users(PUBLISHERS_RANDOM);
-    // logServer('Creating the default articles.');
-    logServer(`STARTUP - ARTICLES - Creating the default articles.`, levels.INFO, scopes.SYSTEM, {});
+    logServer(`STARTUP - ARTICLES - CREATE - Creating the default articles.`, levels.INFO, scopes.SYSTEM, {});
     publishers.forEach(({ userId, structure }) => {
       const array = new Array(Math.floor(Math.random() * 30));
       array.fill(0);
@@ -38,9 +37,8 @@ if (Articles.find().count() === 0) {
           });
           Meteor.users.update({ _id: userId }, { $inc: { articlesCount: 1 }, $set: { lastArticle: new Date() } });
         } catch (error) {
-          // logServer(`Error creating article: ${error.reason || error.message || error}`);
           logServer(
-            `STARTUP - ARTICLES - Error creating article: ${error.reason || error.message || error}`,
+            `STARTUP - ARTICLES - ERROR - Error creating article: ${error.reason || error.message || error}`,
             levels.INFO,
             scopes.SYSTEM,
             {},

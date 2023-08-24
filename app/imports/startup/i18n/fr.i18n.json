@@ -1,5 +1,8 @@
 {
   "api": {
+    "franceTransfert": {
+      "FTError": "Erreur avec France Transfert"
+    },
     "bookmarks": {
       "labels": {
         "url": "URL",
@@ -25,6 +28,10 @@
         "external": "Utiliser un lien externe",
         "link": "Lien vers la page",
         "content": "Contenu",
+        "createdAt": "Crée le",
+        "expirationDate": "Expire le",
+        "id": "Id",
+        "updatedAt": "Mis a jour le",
         "introduction": "Introduction",
         "content_introduction": "Texte d'introduction",
         "globalInfo": "General informations",
@@ -142,7 +149,10 @@
         "contactEmail": "Email de contact de la structure",
         "asamExtensionsIds": "Ids des extensions d'email",
         "iconUrlImage": "Url de l'image de l'icône",
-        "coverUrlImage": "Url de l'image de la couverture"
+        "coverUrlImage": "Url de l'image de la couverture",
+        "externalUrl": "Url externe",
+        "sendMailToParent": "Envoi de mails à la structure parente",
+        "sendMailToStructureAdmin": "Envoi de mails aux administrateurs de structure"
       }
     },
     "asamextensions": {
@@ -232,7 +242,10 @@
         "all": "Tous",
         "applications": "ID de l'application",
         "nextcloud": "Créer le groupe dans Nextcloud",
-        "plugins": "Services liés gérant les groupes"
+        "plugins": "Services liés gérant les groupes",
+        "circleId": "Id du cercle Nextcloud",
+        "shareName": "Nom du partage Nextcloud",
+        "shareId": "Id du partage Nextcloud"
       }
     },
     "services": {
@@ -301,6 +314,7 @@
       "requestNotifTitle": "Demande de candidature",
       "requestNotifContent": "{$name} est candidat pour le groupe {$group}.",
       "badConfig": "Mauvaise configuration pour les notifications de type {$type} (expiration en jours)",
+      "expirationNotNumber": "numDays n'est pas un nombre",
       "labels": {
         "id": "Id de la notification",
         "userId": "ID du destinataire",
@@ -368,33 +382,29 @@
       "adminRankNeeded": "Vous devez être administrateur",
       "unknownURL": "URL introuvable.",
       "urlAlreadyExists": "L'url existe déjà",
-      "groupExists": "Ce groupe existe déjà dans Nextcloud",
-      "addGroupError": "Erreur lors de la création du groupe dans Nextcloud",
-      "addGroupFolderError": "Erreur lors de la création du partage dans Nextcloud",
       "addUserError": "Erreur lors de la création de l'utilisateur dans Nextcloud",
-      "removeGroupError": "Attention, le groupe n'a pas pu être supprimé dans Nextcloud",
-      "removeGroupFolderError": "Attention, le dossier n'a pas pu être supprimé dans Nextcloud",
-      "groupFoldersInactive": "Nextcloud: ERREUR, vérifiez que l'application 'Group Folders' est active",
-      "groupNotFound": "Nextcloud: ERREUR de récupération du groupe {$groupName}",
-      "groupAdded": "Nextcloud: groupe {$groupName} ajouté",
-      "groupAddError": "Nextcloud: ERREUR lors de l'ajout du groupe {$groupName}",
-      "userAdded": "Nextcloud: utilisateur {$userId} ajouté (serveur {$ncURL})",
-      "userAddError": "Nextcloud: ERREUR lors de l'ajout de l'utilisateur {$userId}",
-      "groupFolderAssignError": "Nextcloud: impossible d'assigner le groupe {$groupName} au répertoire {$folderName}",
-      "groupFolderAdded": "Nextcloud: répertoire de groupe {$folderName} ajouté",
-      "permissionsSet": "Nextcloud: permissions définies pour le répertoire de groupe {$folderName}",
-      "quotaSet": "Nextcloud: quota défini pour le répertoire de groupe {$folderName}",
-      "quotaSetError": "Nextcloud: ERREUR lors de la définition des quotas sur le répertoire de goupe {$folderName}",
-      "permissionSetError": "Nextcloud: ERREUR lors de la définition des permissions sur le répertoire de groupe {$folderName}",
-      "folderAddError": "Nextcloud: ERREUR lors de l'ajout du répertoire de groupe {$folderName}",
-      "folderRemoved": "Nextcloud: répertoire de groupe {$id} supprimé ({$mount_point})",
-      "folderRemoveError": "Nextcloud: ERREUR lors de la suppression du répertoire de groupe {$id} ({$message})",
-      "groupRemoved": "Nextcloud: groupe {$groupName} supprimé",
-      "groupRemoveError": "Nextcloud: Erreur lors de la suppression du groupe {$groupName}",
-      "enablePluginForGroup": "Créer le groupe dans Nextcloud",
+      "circlesInactive": "ERREUR, vérifiez que l'application 'Circles' est active",
+      "userAdded": "Utilisateur {$userId} ajouté (serveur {$ncURL})",
+      "userAddError": "ERREUR lors de l'ajout de l'utilisateur {$userId}",
+      "userAlreadyExists": "L'utilisateur {$username} existe déjà dans Nextcloud",
+      "circleAdded": "Un nouveau cercle a été créé",
+      "circleDeleted": "Un cercle a été supprimé",
+      "circleDeleteError": "ERREUR lors de la suppression du cercle",
+      "folderDeleted": "Le répertoire partagé a été supprimé",
+      "folderDeleteError": "ERREUR de suppression du répertoire partagé",
+      "shareAdded": "Un nouveau dossier partagé a été créé pour le groupe {$groupId}",
+      "shareAddError": "ERREUR lors de la création du partage pour le groupe {$groupId}",
+      "shareCreateError": "ERREUR lors de la création du dossier du groupe {$groupId}",
+      "userInvited": "Utilisateur ajouté au cercle",
+      "userInviteError": "ERREUR à l'ajout de l'utilisateur au cercle",
+      "userKicked": "Utilisateur supprimé du cercle",
+      "userKickError": "ERREUR à la suppression de l'utilisateur du cercle",
+      "notMember": "L'utilisateur n'est pas membre du cercle",
+      "configureCircleError": "ERREUR lors de la configuration du cercle",
+      "enablePluginForGroup": "Associer un partage dans Nextcloud",
       "buttonLinkPlugin": "Accéder au partage Nextcloud",
       "checkConfig": "Vérification de l'accès à l'API Nextcloud ({$URL})",
-      "badConfig": "Erreur d'accès à Nextcloud, veuillez vérifier la configuration et l'activation de l'application 'Group Folders'",
+      "badConfig": "Erreur d'accès à Nextcloud, veuillez vérifier la configuration et l'activation de l'application 'Circles'",
       "configOk": "connecté avec succès à l'API Nextcloud",
       "misingNCLocator": "Information d'instance nextcloud (nclocator) manquante.",
       "apiError": "Error while accessing Nextcloud API",
@@ -478,10 +488,26 @@
       "language": "Selectionnez la langue à éditer",
       "language_fr": "Français",
       "language_en": "Anglais",
+      "language_all": "Toutes les langues",
       "content_introduction": "Texte d'introduction",
       "content_globalInfo": "Texte d'informations générales",
       "update": "Mettre à jour",
-      "cancel": "Annuler"
+      "cancel": "Annuler",
+      "due_date": "Durée de validité"
+    },
+    "AdminMesssage": {
+      "select_language": "Langue des messages",
+      "select_language_form": "Langue du message",
+      "button_modify": "Modifier le message",
+      "button_delete": "Supprimer le message",
+      "button_create": "Créer le message",
+      "create_info_success": "Information créée avec succès",
+      "update_info_success": "Information mise à jour avec succès",
+      "missing_content": "Le contenu du message est vide !",
+      "create_at": "Créé le :",
+      "update_at": "Mis à jour le :",
+      "expire_at": "Expire le :",
+      "no_message": "Aucun message"
     },
     "Notifications": {
       "remove": "Supprimer"
@@ -547,14 +573,16 @@
       "ValidateForm": "Valider"
     },
     "MenuBar": {
-      "menuMyspace": "Mon Espace Personnel",
+      "menuMyspace": "Mon Espace",
       "menuMyspaceMobile": "Mon Espace",
       "menuArticles": "Mes publications",
       "menuArticlesMobile": "Publications",
       "menuHelp": "Aide",
-      "menuServices": "Applications",
+      "menuServices": "Les services",
+      "menuServicesMobile": "Services",
       "menuStructure": "Ma Structure",
-      "menuGroupes": "Les Groupes",
+      "menuStructureMobile": "Structure",
+      "menuGroupes": "Les groupes",
       "menuGroupesMobile": "Groupes",
       "menuNotifications": "Mes Notifications",
       "menuAdminServices": "Gestion des Services",
@@ -582,8 +610,11 @@
     },
     "MainMenu": {
       "menuUserBookmarks": "Marque-pages",
+      "menuUpload": "Transférer des fichiers",
       "menuProfileLabel": "Profil",
       "menuHelpLabel": "Aide",
+      "menuFeedbackLabel": "Partager mon avis",
+      "menuOnboardingLabel": "Comment utiliser ce service ?",
       "menuLogoutLabel": "Se déconnecter",
       "menuMedias": "Stockage de Médias",
       "menuAdminApp": "Administration",
@@ -601,30 +632,35 @@
       "menuAdminBackHome": "Retour à l'espace perso",
       "menuUserStructure": "Gestion des Structures",
       "menuAdminHelpPage": "Gestion de la page d'aide",
-      "menuContact": "Contact"
+      "menuContact": "Contact",
+      "menuAdminAsam": "Gestion des extensions d'email",
+      "menuAdminGlobalInfo": "Informations générales"
     },
     "AdminMenu": {
       "title": "Administration",
-      "menuAdminServices": "Gestion des Services",
+      "menuAdminServices": "Gestion des services",
       "menuAdminUserValidation": "Validation des utilisateurs",
       "menuAdminNextcloudUrl": "Gestion des URL Nextcloud",
-      "menuAdminCategories": "Gestion des categories",
+      "menuAdminCategories": "Gestion des catégories",
       "menuAdminBusinessRegrouping": "Gestion des regroupements métiers",
-      "menuAdminTags": "Gestion des mots clé",
-      "menuAdminGroups": "Gestion des Groupes",
+      "menuAdminTags": "Gestion des mots clés",
+      "menuAdminGroups": "Gestion des groupes",
       "menuAdminUsers": "Gestion des utilisateurs",
-      "menuAdminAppSettings": "Réglages Administrateurs",
+      "menuAdminAppSettings": "Réglages globaux",
       "menuAdminHelpPage": "Gestion de la page d'aide",
       "menuAdminStructureUsers": "Utilisateurs de la structure",
       "menuAdminStructureServices": "Services de la structure",
       "menuAdminBackHome": "Retour à l'espace perso",
-      "menuUserStructure": "Gestion des Structures",
+      "menuUserStructure": "Gestion des structures",
       "menuAdminOfStructures": "Gestion des sous-structures",
-      "menuAdminStructureSettings": "Réglages de structure",
       "menuAdminStructureIntroduction": "Introduction de structure",
       "menuAdminOfStructureUsersValidation": "Utilisateurs en attente",
       "menuAdminDefaultSpaces": "Espaces par défaut",
-      "menuAdminAsam": "Gestion des extensions d'email"
+      "menuAdminAsam": "Gestion des extensions d'email",
+      "menuAdminGlobalInfo": "Informations générales",
+      "menuAdminAnalytics": "Analytiques",
+      "menuAdminStructureAnalytics": "Analytiques de structure",
+      "menuAdminStructureSettings": "Réglages de structure"
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Votre compte n'a pas été activé",
@@ -830,7 +866,7 @@
     },
     "AvatarEdit": {
       "title": "Créez votre avatar",
-      "subtitle": "à patir d'une image",
+      "subtitle": "à partir d'une image",
       "sendImage": "Envoyer cet avatar",
       "turnLeft": "Pivoter à gauche",
       "turnRight": "Pivoter à droite",
@@ -907,10 +943,13 @@
         "DeleteIconImage": "Enlever l'image d'icône",
         "DeleteCoverImage": "Enlever l'image de la couverture"
       },
-      "attachToStructure": "Souhaitez vous être rattaché(e) à cette structure ?"
+      "attachToStructure": "Souhaitez vous être rattaché(e) à cette structure ?",
+      "noStructure": "Il n'y a aucune structure d'enregistrée."
     },
     "AdminStructureTreeView": {
-      "title": "Liste des structures"
+      "all": "Tout",
+      "title": "Liste des structures",
+      "isPartOf": "Vous êtes membre de la structure "
     },
     "AdminStructureSearchBar": {
       "filterByName": "Filtrer par nom de structure (à partir de 3 lettres)",
@@ -948,6 +987,73 @@
       }
     }
   },
+  "onBoarding": {
+    "actions": {
+      "doneLabel": "Terminer",
+      "nextLabel": "Suivant",
+      "prevLabel": "Précedent",
+      "skipLabel": "Passer",
+      "hintButtonLabel": "OK",
+      "cancelConfirm": "Êtes-vous sûr de vouloir ignorer l'introduction ?"
+    },
+    "steps": {
+      "intro": {
+        "title": "Bienvenue sur votre espace !",
+        "text": "Un nouvel espace s'ouvre aux agents de l'État. 👋"
+      },
+      "mySpace": {
+        "title": "Votre espace",
+        "text": "C'est là que tout se passe !"
+      },
+      "services": {
+        "title": "Les applications interministérielles",
+        "text": "Le magasin d'applications disponibles pour tous les agents de l'État"
+      },
+      "structure": {
+        "title": "Les applications ministérielles",
+        "text": "Le magasin d'applications mises à disposition pour votre ministère ou organisation"
+      },
+      "bookMark": {
+        "title": "Gérez vos marque-pages",
+        "text": "Accédez aux liens que vous avez sauvegardés dans l'application"
+      },
+      "addBookMark": {
+        "title": "Ajouter un marque-page",
+        "text": "Ajouter un lien web en 5 secondes chrono !"
+      },
+      "editMySpace": {
+        "title": "Éditez votre espace",
+        "text": "Ajoutez des zones d'applications ou des marque-pages ici !"
+      },
+      "menu": {
+        "title": "Menu",
+        "text": "Retrouvez votre profil et l'ensemble des options ici !"
+      },
+      "zone": {
+        "title": "Zone",
+        "text": "Retrouvez vos zones personnalisées permettant d'accéder rapidement aux liens que vous (ou votre structure) avez choisis"
+      },
+      "zone-old": {
+        "title": "Zone",
+        "text": "Ajoutez, modifiez ou supprimez des zones et personnalisez votre espace"
+      },
+      "link": {
+        "title": "Lien",
+        "text": "Vous pouvez ajouter un line à partir des applications interministérielles ou ministrérielles ou encore des marque-pages"
+      },
+      "help": {
+        "title": "Besoin d'aide ?",
+        "text": "Vous trouverez ici de l'aide supplémentaire sur les différentes applications disponibles"
+      },
+      "replay": {
+        "title": "Un trou de mémoire ?",
+        "text": "Vous pouvez toujours rejouer cette séquence d'aide grâce à ce bouton"
+      },
+      "end": {
+        "title": "Merci !"
+      }
+    }
+  },
   "validatejs": {
     "isRequired": "ce champ est requis",
     "isEmail": "courriel non valide"
@@ -961,6 +1067,64 @@
     "body_editRow_saveTooltip": "Valider"
   },
   "pages": {
+    "UploadPage": {
+      "description": "Vous pouvez envoyer des fichiers volumineux non sensibles de manière sécurisée à un agent de l'Etat ou entre agents grâce à France transfert.",
+      "fileCount": "{$count} éléments",
+      "totalSize": "{$totalSize} / {$maxSize}",
+      "fileAlreadyExists": "Le fichier {$name} est déjà importé.",
+      "emailFold": "Courriel",
+      "linkFold": "Lien",
+      "addFilesLabel": "Ajouter vos fichiers et dossiers",
+      "recipientsLabel": "Destinataires",
+      "recipientsHelper": "Entrez les mails déstinataires séparés d'un espace",
+      "recipientsPlaceholder": "Les adresses courriels des destinataires",
+      "recipientsHelp": "Si l'expéditeur est un agent de l'Etat, le ou les destinataires peuvent être un agent de l'Etat ou un particulier. Si l'expéditeur est un particulier, les destinataires ne peuvent être que des agents de l'Etat.",
+      "subjectLabel": "Objet",
+      "messageLabel": "Message",
+      "linkNameLabel": "Nom de votre transfert",
+      "wrongEmailFormat": "Une adresse courriel valide est requise (jean.dupont@email.com).",
+      "tosLabel": {
+        "a": "J'ai pris connaissance des ",
+        "b": "CGU",
+        "c": " et je n'envoie pas de données sensibles, telles que définies à l'article 4.2, non chiffrées au préalable."
+      },
+      "settings": {
+        "expiryDateLabel": "Délai de validité",
+        "passwordLabel": "Mot de passe",
+        "passwordConditions": {
+          "minMaxChars": "12 caractères minimum - 64 caractères maximum",
+          "lowercase": "Au moins 3 lettres minuscules (a-z non accentué)",
+          "uppercase": "Au moins 3 lettres majuscules (A-Z non accentué)",
+          "numbers": "Au moins 3 chiffres",
+          "specialChars": "Au moins 3 caractères spéciaux (!@#$%^&*()_-:+)",
+          "supported": "Aucun caractère spécial non supporté"
+        },
+        "languageLabel": "Langue d'affichage des courriels",
+        "encryptLabel": "Protéger l'archive zip de mon pli par mot de passe",
+        "cancel": "Annuler",
+        "save": "Sauvegarder"
+      },
+      "settingsBtn": "Paramètres",
+      "send": "Envoyer",
+      "pause": "Pause",
+      "resume": "Reprendre",
+      "abort": "Annuler",
+      "errorWhenLoadingFile": "Erreur lors du chargement de {$fileName}",
+      "errorWhenVerifyingFiles": "Erreur lors de la vérification des fichiers",
+      "errorWhenRetrievingFoldData": "Erreur lors de la récupération des données du pli",
+      "summary": {
+        "title": "Le pli a été envoyé avec succès",
+        "expiryDate": "Le pli sera disponible jusqu'au {$date}.",
+        "link": "Lien de téléchargement: ",
+        "password": "Mot de passe du lien: ",
+        "showPassword": "Afficher",
+        "hidePassword": "Cacher",
+        "clickToCopy": "Cliquez pour copier",
+        "passwordCopied": "Mot de passe copié.",
+        "linkCopied": "Lien copié.",
+        "errorWhenCopying": "Impossible de copier le mot de passe."
+      }
+    },
     "UserBookmarksPage": {
       "back": "Retour",
       "favoriteBookmark": "Ajouter à votre espace personnel",
@@ -990,9 +1154,6 @@
         "body_actionTooltip": "Ouvrir le lien du marque-page"
       }
     },
-    "EventsPage": {
-      "noAccess": "Vous n'avez pas accès aux évènements de ce groupe."
-    },
     "LegalPage": {
       "personalData": "Données Personnelles",
       "gcu": "Conditions générales d'utilisation",
@@ -1001,7 +1162,7 @@
       "personalSpace": "Introduction à l'espace personnel"
     },
     "AdminSettingsPage": {
-      "edition": "Edition des réglages de l'application",
+      "edition": "Réglages de l'application",
       "introduction": "Introduction",
       "legal": "Mentions légales",
       "gcu": "C.G.U",
@@ -1014,6 +1175,9 @@
       "errorMongo": "Une erreur MongoDB est survenue lors de la migration.",
       "textMaintenance": "Raison de la maintenance",
       "buttonTextMaintenance": "Valider le message",
+      "sendMailToParentStructure": "Redirection des mails vers la structure parente",
+      "sendMailToAdminStructure": "Envoi des mails aux administrateurs de structure",
+      "externalUrl": "Lien de redirection externe",
       "unlockMigration": {
         "title": "Déblocage de la migration",
         "mainText": "La migration de la base de données est actuellement vérouillée.",
@@ -1106,7 +1270,11 @@
       "onlyActiveUserOption": "Seuls les utilisateurs actifs peuvent définir une structure",
       "awaitingForStructure": "Vous êtes en attente de validation pour :",
       "nclocator": "ID de Fédération Nextcloud",
-      "emptyNcLocator": "Aucun Nextcloud renseigné"
+      "emptyNcLocator": "Aucun Nextcloud renseigné",
+      "ApplyDefaultSpace": "Appliquer l'espace par default de la structure '{$structName}'",
+      "ApplyDefaultSpaceMessage": "Cela appliquera les changements sur votre espace personnel",
+      "ApplyDefaultSpaceBtn": "Appliquer l'espace par default",
+      "ApplyDefaultSpaceWarning": "On ne peut pas appliquer l'espace par défaut si l'option 'espace personnel avancé' est activé"
     },
     "NotFound": {
       "backButtonLabel": "Retour",
@@ -1141,14 +1309,15 @@
       "filterGroup": "Afficher uniquement les groupes rejoints",
       "noGroup": "Il n'y a aucun groupe à afficher.",
       "addEvent": "Ajouer un nouvel événement",
-      "addPoll": "Ajouter un nouveau sondage"
+      "addPoll": "Ajouter un nouveau sondage",
+      "addForm": "Ajouter un nouveau questionnaire"
     },
     "AdminHome": {
       "title": "Interface d'administration",
       "subtitle": "Choisissez un paramètre à modifier"
     },
     "AdminServicesPage": {
-      "title": "Gestion des Services",
+      "title": "Gestion des services",
       "columnLogo": "Logo",
       "columnTitle": "Nom",
       "columnUsage": "Usage",
@@ -1167,7 +1336,7 @@
       }
     },
     "AdminCategoriesPage": {
-      "title": "Gestion des Catégories",
+      "title": "Gestion des catégories",
       "columnName": "Nom",
       "structure": "structure",
       "materialTableLocalization": {
@@ -1194,7 +1363,7 @@
       }
     },
     "AdminTagsPage": {
-      "title": "Gestion des Mots clé",
+      "title": "Gestion des mots clés",
       "columnName": "Nom",
       "materialTableLocalization": {
         "toolbar_searchPlaceholder": "Rechercher un Mot clé",
@@ -1295,7 +1464,7 @@
       "title": "Utilisateurs en attente de validation"
     },
     "AdminHelpPage": {
-      "title": "Gestion de l'aide",
+      "title": "Gestion de la page d'aide",
       "columnTitle": "Titre",
       "columnDescription": "Description",
       "columnCategory": "Catégorie",
@@ -1330,7 +1499,8 @@
       "unsortedFav": "Mes Favoris",
       "unsortedGroup": "Mes groupes",
       "unsortedService": "Mes applications",
-      "unsortedLinks": "Mes marque-pages",
+      "unsortedLinks": "Mes marque-pages personnels",
+      "unsortedGroupLinks": "Mes marque-pages de groupe",
       "newZone": "Nouvelle Zone",
       "typeApplication": "Application",
       "typeGroup": "Groupe",
@@ -1338,7 +1508,9 @@
       "addZoneHere": "Ajouter une zone ici",
       "toggleEdition": "Activer/Désactiver le mode édition",
       "coverImage": "Image de couverture",
-      "iconImage": "Image de l'icône"
+      "iconImage": "Image de l'icône",
+      "newBookMarkWithCtrV": "Nouveau marque-page à partir du presse-papiers Ctrl+V ",
+      "newBookMarkWithCtrVOrButton": "ou bouton ci-dessous"
     },
     "HelpPage": {
       "title": "Retrouvez ici toute l'aide nécessaire",
@@ -1350,7 +1522,7 @@
       "title": "Titre",
       "slug": "Slug",
       "state": "État",
-      "team": "Equipe",
+      "team": "Équipe",
       "usage": "Utilisation du service",
       "logo": "Logo du service",
       "description": "Courte description",
@@ -1364,7 +1536,12 @@
       "update": "Mettre à jour",
       "cancel": "Annuler",
       "logo_url": "URL du logo",
-      "offlineService": "Activer ce service sur la page non connectée"
+      "offlineService": "Activer ce service sur la page non connectée",
+      "titleFieldHelperText": "Titre du service",
+      "StateFieldHelperText": "État du service",
+      "teamFieldHelperText": "Équipe qui gère le service",
+      "usageFieldHelperText": "Dans quel cadre allez-vous utiliser le service",
+      "descriptionFieldHelperText": "Ajouter une courte description"
     },
     "AdminSingleGroupPage": {
       "edition": "Édition du groupe",
@@ -1379,7 +1556,10 @@
       "update": "Mettre à jour",
       "cancel": "Annuler",
       "groupRemoved": "Groupe supprimé",
-      "invalidName": "Nom invalide"
+      "invalidName": "Nom invalide",
+      "shareName": "Nom du partage Nextcloud",
+      "invalidCharacters": "caractères invalides",
+      "shareNameExists": "Ce nom de partage existe déjà"
     },
     "SingleGroupPage": {
       "backToList": "Retour à la liste",
@@ -1402,10 +1582,12 @@
       "Events": "Evénements",
       "PollUsage": "Liste des sondages",
       "Polls": "Sondages",
+      "FormUsage": "Liste des questionnaires",
+      "Forms": "Questionnaires",
       "groupArticles": "Accéder aux publications",
       "BookmarksUsage": "Liste des marque-pages",
       "Bookmarks": "Marque-pages",
-      "ArticlesUsage": "liste des publications",
+      "ArticlesUsage": "Liste des publications",
       "Articles": "Publications",
       "GroupNotExist": "Le groupe {$groupTitle} n'existe pas"
     },
@@ -1420,13 +1602,6 @@
       "userType": "Type d'utilisateurs",
       "noStructure": "Aucune structure assignée"
     },
-    "Events": {
-      "seeEvent": "Voir l'événement",
-      "back": "Retour au groupe",
-      "searchText": "Quel événement cherchez-vous ?",
-      "dayOf": "Sur la journée du",
-      "noEvents": "Il n'y a actuellement aucun événement en cours ou à venir pour ce groupe."
-    },
     "GroupArticlesPage": {
       "seeArticle": "Consulter la publication",
       "back": "Retour au groupe",
@@ -1436,12 +1611,27 @@
       "publicPage": "Page publique",
       "openPublicPage": "Ouvrir la page publique de ce groupe"
     },
-    "Polls": {
-      "seePoll": "Voir le sondage",
+    "ExtService": {
+      "title": {
+        "polls": "Sondages",
+        "events": "Evénements",
+        "forms": "Questionnaires"
+      },
       "back": "Retour au groupe",
-      "searchText": "Quel sondage cherchez-vous ?",
-      "noPoll": "Il n'y a actuellement aucun sondage en cours ou à venir pour ce groupe.",
-      "noAccess": "Vous n'avez pas accès aux sondages de ce groupe."
+      "seePoll": "Voir le sondage",
+      "seeForm": "Répondre au formulaire",
+      "seeEvent": "Voir l'événement",
+      "addPoll": "Ajouter un nouveau sondage",
+      "addEvent": "Ajouter un nouvel événement",
+      "addForm": "Ajouter un nouveau questionnaire",
+      "searchText": "Que recherchez-vous ?",
+      "noElements": "Il n'y a aucun élément à afficher sur cette page.",
+      "noAccess": "Vous n'avez pas accès à cette page.",
+      "seeFormForEdit": "Modifier vos réponses au formulaire",
+      "blockForm": "Vous avez déjà répondu à ce formulaire, et vous ne pouvez pas changer les réponses",
+      "noForm": "Il n'y a actuellement aucun questionnaire en cours pour ce groupe.",
+      "dayOf": "Sur la journée du",
+      "daysOf": "Sur les journées du {$start} au {$end}"
     },
     "ArticlesPage": {
       "title": "Vos publications",
@@ -1537,14 +1727,14 @@
       "sortByLastLogin": "Trier par date de dernière connexion"
     },
     "AdminStructureUsersValidationPage": {
-      "title": "Validation des demandeurs de la structure {$structureName}",
+      "title": "Utilisateurs en attente de validation pour la structure {$structureName}",
       "successSetStructure": "L'utilisateur a bien été ajouté à la structure",
       "actions": {
         "validate": "Valider l'utilisateur"
       }
     },
     "AdminServicesByStructurePage": {
-      "title": "Gestion des services de la structure"
+      "title": "Services de la structure"
     },
     "StructureSelectionPage": {
       "backToProfile": "Retourner au profil"
@@ -1557,7 +1747,7 @@
       "titleStructures": "Informations de structures"
     },
     "AdminStructureSettingsPage": {
-      "title": "Paramétrage de la structure",
+      "title": "Informations de la structure",
       "userStructureValidationMandatory": "Validation obligatoire de cette structure",
       "selectIconAndCoverImage": "Choisir une image d'icône et/ou de couverture"
     },
@@ -1597,6 +1787,39 @@
         "famillyLongName": "Nom long de l'entité famille correspondant s'il existe",
         "confirmMsg": "Êtes vous sûr de vouloir supprimer l'extension d'email ",
         "deleteExtensionEmailTitle": "Extension d'email "
+      }
+    },
+    "AdminAnalytics": {
+      "title": "Données Analytiques",
+      "usersTabs": "Utilisateurs",
+      "actionsTabs": "Actions",
+      "viewsTabs": "Pages vues",
+      "usersTitle": "Utilisateurs connectés en temps réél",
+      "status": "Status",
+      "number": "Nombre",
+      "usersByStructure": "Connectés par structure",
+      "rows": {
+        "usersLogged": "Utilisateurs",
+        "newAccounts": "Comptes créés il y a moins de 2 jours",
+        "usersNotLogged": "Widget (utilisateur non-connecté)",
+        "usersIdle": "Inactif",
+        "usersIdleTotal": "Inactif (sous-structures incluses)",
+        "usersActive": "Actif",
+        "usersActiveTotal": "Actif (sous-structures incluses)"
+      },
+      "pageViewsTitle": "Pages Vues",
+      "actionsClickTitle": "Actions des utilisateurs",
+      "columnRoute": "Route",
+      "columnNumberConnected": "Utilisateurs",
+      "columnNumberNotConnected": "Nb Pastilles non connectées",
+      "columnActionsTarget": "Cible",
+      "columnContent": "Contenu",
+      "noEventOnPeriod": "Aucune data disponible sur la période demandée",
+      "download": "Télécharger",
+      "materialTableLocalization": {
+        "pagination_labelRowsSelect": "évènements par page",
+        "toolbar_searchPlaceholder": "Rechercher",
+        "body_emptyDataSourceMessage": "Aucun resultats"
       }
     }
   },

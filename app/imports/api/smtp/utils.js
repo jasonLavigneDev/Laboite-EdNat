@@ -1,15 +1,31 @@
+import { Roles } from 'meteor/alanning:roles';
 import Structures from '../structures/structures';
 
 /**
  * - Check first if structure has a contact email
- * - If not, check if ancestors have one
- * - I nothing find, return null
+ * - If not, check if structure has to send mail to structure admins
+ * - If not, check if structures has to send mail to parent (so check parent configuration)
+ * - If not, send to global admins
  */
 export const getTargetMail = ({ structure }) => {
-  const { contactEmail } = structure;
-  if (contactEmail !== null) return contactEmail;
-  const mails = Structures.find({ _id: { $in: structure.ancestorsIds } }, { fields: { contactEmail: 1 } }).fetch();
-  // reverse the array since we get the structures in descending order
-  const result = mails.reverse().find((mail) => mail.contactEmail !== null);
-  return result || null;
+  const { contactEmail, sendMailToStructureAdmin, sendMailToParent } = structure;
+  if (contactEmail) return { mails: [contactEmail], admin: false };
+  if (sendMailToStructureAdmin) {
+    const mails = Roles.getUsersInRole('adminStructure', { scope: structure._id })
+      .fetch()
+      .map((user) => user.emails[0].address);
+    return { mails, admin: false };
+  }
+  if (sendMailToParent) {
+    if (structure.parentId) {
+      const ancestor = Structures.findOne({ _id: structure.parentId });
+      if (ancestor) {
+        return getTargetMail({ structure: ancestor });
+      }
+    }
+  }
+  const mails = Roles.getUsersInRole('admin')
+    .fetch()
+    .map((user) => user.emails[0].address);
+  return { mails, admin: true };
 };

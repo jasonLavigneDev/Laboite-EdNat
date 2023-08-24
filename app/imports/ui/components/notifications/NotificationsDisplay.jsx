@@ -117,7 +117,7 @@ const NotificationsDisplay = ({ notifications, ready }) => {
                       </Typography>
                     ) : (
                       <div className={classes.footer}>
-                        <Button className={classes.button} onClick={handleOpenDialog}>
+                        <Button color="primary" variant="contained" onClick={handleOpenDialog}>
                           {i18n.__('components.NotificationsDisplay.removeAll')}
                         </Button>
                       </div>

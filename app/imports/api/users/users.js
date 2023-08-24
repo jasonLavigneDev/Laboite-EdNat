@@ -13,6 +13,11 @@ const AppRoles = ['candidate', 'member', 'animator', 'admin', 'adminStructure'];
 
 Meteor.users.schema = new SimpleSchema(
   {
+    lastGlobalInfoReadDate: {
+      type: Date,
+      defaultValue: null,
+      optional: true,
+    },
     username: {
       type: String,
       optional: true,
@@ -22,11 +27,13 @@ Meteor.users.schema = new SimpleSchema(
       type: String,
       optional: true,
       label: getLabel('api.users.labels.firstName'),
+      index: true,
     },
     lastName: {
       type: String,
       optional: true,
       label: getLabel('api.users.labels.lastName'),
+      index: true,
     },
     emails: {
       type: Array,
@@ -113,6 +120,7 @@ Meteor.users.schema = new SimpleSchema(
       type: SimpleSchema.RegEx.Id,
       optional: true,
       label: getLabel('api.users.labels.structure'),
+      index: true,
     },
     awaitingStructure: {
       type: SimpleSchema.RegEx.Id,
@@ -201,6 +209,38 @@ Meteor.users.schema = new SimpleSchema(
       },
       label: getLabel('api.users.labels.authToken'),
     },
+    status: {
+      type: Object,
+      optional: true,
+    },
+    'status.lastlogin': {
+      type: Object,
+      optional: true,
+    },
+    'status.lastlogin.date': {
+      type: Date,
+      optional: true,
+    },
+    'status.lastlogin.ipAddr': {
+      type: String,
+      optional: true,
+    },
+    'status.userAgent': {
+      type: String,
+      optional: true,
+    },
+    'status.idle': {
+      type: Boolean,
+      optional: true,
+    },
+    'status.lastActivity': {
+      type: Date,
+      optional: true,
+    },
+    'status.online': {
+      type: Boolean,
+      optional: true,
+    },
   },
   { clean: { removeEmptyStrings: false }, tracker: Tracker },
 );
@@ -222,17 +262,11 @@ if (Meteor.isServer) {
     // pass the structure name in the options
     const newUser = { ...user };
     if (user.services && user.services.keycloak) {
-      /* eslint no-console:off */
-      // logServer('Creating new user after Keycloak authentication :');
-      // logServer(`  Keycloak id: ${user.services.keycloak.id}`);
-      // logServer(`  email: ${user.services.keycloak.email}`);
-
       logServer(
-        `USERS - Creating new user after Keycloak authentication :
+        `USERS - API - CREATE - Creating new user after Keycloak authentication :
          Keycloak id: ${user.services.keycloak.id}, email: ${user.services.keycloak.email} `,
-        levels.ERROR,
+        levels.VERBOSE,
         scopes.SYSTEM,
-        {},
       );
 
       const structure = findStructureByEmail(user.services.keycloak.email);
@@ -302,6 +336,7 @@ Meteor.users.selfFields = {
   nclocator: 1,
   advancedPersonalPage: 1,
   articlesEnable: 1,
+  lastGlobalInfoReadDate: 1,
 };
 
 Meteor.users.adminFields = {

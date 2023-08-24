@@ -19,7 +19,6 @@ import Box from '@mui/material/Box';
 import AddBox from '@mui/icons-material/AddBox';
 import PropTypes from 'prop-types';
 import Spinner from '../../components/system/Spinner';
-
 import { useObjectState } from '../../utils/hooks';
 import { getTree } from '../../../api/utils';
 import Structures from '../../../api/structures/structures';
@@ -160,11 +159,11 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
     const { value: structureName } = e.target.structureName;
 
     if (isEditMode) {
-      onEdit({ structureId: _id, name: structureName });
+      onEdit({ structureId: _id, name: structureName.trim() });
     } else {
       onCreate({
         updateParentIdsList,
-        name: structureName,
+        name: structureName.trim(),
         parentId: _id || null,
       });
     }
@@ -190,6 +189,10 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
   const onClickDeleteBtn = (nodes) => {
     setSelectedStructure(nodes);
     setIsOpenDeleteConfirm(true);
+  };
+
+  const atLeastOneStructureExist = () => {
+    return filteredFlatData && filteredFlatData.length > 0;
   };
 
   const onDeleteConfirm = () => {
@@ -277,6 +280,14 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
             />
           </Box>
           <CardContent>
+            {currentUserStructure && (
+              <Box>
+                <Typography>
+                  {`${i18n.__('components.AdminStructureTreeView.isPartOf')}: `}
+                  <span>{currentUserStructure.name}</span>
+                </Typography>
+              </Box>
+            )}
             <Box display="flex" alignItems="center">
               <Box>
                 <Typography
@@ -298,9 +309,9 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
                 </IconButton>
               </Box>
             </Box>
-            {loading ? (
-              <Spinner />
-            ) : (
+            {loading && <Spinner />}
+
+            {atLeastOneStructureExist() ? (
               <AdminStructureTreeView
                 treeData={getTree(filteredFlatData, isAdminStructureMode ? user.structure : null)}
                 onClickAddBtn={onClickAddBtn}
@@ -311,6 +322,8 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
                 expandedIds={expandedIds}
                 selectedId=""
               />
+            ) : (
+              <p style={{ textAlign: 'center' }}>{i18n.__('components.AdminStructureTreeItem.noStructure')}</p>
             )}
           </CardContent>
         </Card>

@@ -40,7 +40,7 @@ const AdminStructureSettingsPage = () => {
           <Grid container>
             <Grid item md={12}>
               <Typography variant={isMobile ? 'h6' : 'h4'}>
-                {i18n.__('pages.AdminStructureSettingsPage.title')}
+                {i18n.__('components.AdminMenu.menuAdminStructureSettings')}
               </Typography>
             </Grid>
             <Grid item md={12}>

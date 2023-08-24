@@ -7,16 +7,33 @@ import { _ } from 'meteor/underscore';
 import i18n from 'meteor/universe:i18n';
 import { isActive, getLabel, validateString } from '../utils';
 import Nextcloud from './nextcloud';
+import logServer, { levels, scopes } from '../logging';
 
 function _updateNextcloudURL(url, active, count) {
+  logServer(
+    `NEXTCLOUD - METHOD - REMOVE - _updateNextcloudURL - url: ${url} / active: ${active} / count: ${count}`,
+    levels.VERBOSE,
+    scopes.SYSTEM,
+  );
   Nextcloud.update({ url }, { $set: { active, count } });
 }
 
 function _createUrl(url, active) {
   try {
+    logServer(
+      `NEXTCLOUD - METHOD - INSERT - _createUrl - url: ${url} / active: ${active}`,
+      levels.VERBOSE,
+      scopes.SYSTEM,
+    );
     Nextcloud.insert({ url, active });
   } catch (error) {
     if (error.code === 11000) {
+      logServer(
+        `NEXTCLOUD - METHOD - METEOR ERROR - _createUrl - ${i18n.__('api.nextcloud.urlAlreadyExists')}`,
+        levels.WARN,
+        scopes.SYSTEM,
+        { error },
+      );
       throw new Meteor.Error('api.nextcloud._createUrl.urlAlreadyExists', i18n.__('api.nextcloud.urlAlreadyExists'));
     } else {
       throw error;
@@ -45,6 +62,12 @@ export const updateNextcloudURL = new ValidatedMethod({
   run({ url, active }) {
     const isAllowed = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
     if (!isAllowed) {
+      logServer(
+        `NEXTCLOUD - METHOD - METEOR ERROR - removeNextcloudURL - ${i18n.__('api.nextcloud.adminRankNeeded')}`,
+        levels.ERROR,
+        scopes.SYSTEM,
+        { url, active },
+      );
       throw new Meteor.Error('api.nextcloud.updateNextcloudURL.notPermitted', i18n.__('api.nextcloud.adminRankNeeded'));
     }
 
@@ -68,19 +91,37 @@ export const removeNextcloudURL = new ValidatedMethod({
     // check group existence
     const ncloud = Nextcloud.findOne({ url });
     if (ncloud === undefined) {
+      logServer(
+        `NEXTCLOUD - METHOD - METEOR ERROR - removeNextcloudURL - ${i18n.__('api.nextcloud.unknownURL')}`,
+        levels.ERROR,
+        scopes.SYSTEM,
+        { url },
+      );
       throw new Meteor.Error('api.nextcloud.removeNextcloudURL.unknownURL', i18n.__('api.nextcloud.unknownURL'));
     }
     // check if current user has admin rights
     if (!isActive(this.userId) || !Roles.userIsInRole(this.userId, 'admin')) {
+      logServer(
+        `NEXTCLOUD - METHOD - METEOR ERROR - removeNextcloudURL - ${i18n.__('api.nextcloud.adminGroupNeeded')}`,
+        levels.ERROR,
+        scopes.SYSTEM,
+        { url },
+      );
       throw new Meteor.Error(
         'api.nextcloud.removeNextcloudURL.notPermitted',
         i18n.__('api.nextcloud.adminGroupNeeded'),
       );
     }
     if (ncloud.count > 0) {
+      logServer(
+        `NEXTCLOUD - METHOD - METEOR ERROR - removeNextcloudURL - ${i18n.__('api.nextcloud.mustNotBeUsed')}`,
+        levels.WARN,
+        scopes.SYSTEM,
+        { url },
+      );
       throw new Meteor.Error('api.nextcloud.removeNextcloudURL.notPermitted', i18n.__('api.nextcloud.mustNotBeUsed'));
     }
-
+    logServer(`NEXTCLOUD - METHOD - REMOVE - removeNextcloudURL - url: ${url}`, levels.VERBOSE, scopes.SYSTEM);
     Nextcloud.remove({ url });
 
     return null;

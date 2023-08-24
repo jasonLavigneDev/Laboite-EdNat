@@ -62,9 +62,8 @@ FindFromPublication.publish('services.one.admin', function servicesOne({ _id }) 
       },
     }).validate({ _id });
   } catch (err) {
-    // logServer(`publish services.one.admin : ${err}`);
     logServer(
-      `SERVICES - PUBLICATION - services.one.admin, publish services.one.admin : ${err}`,
+      `SERVICES - PUBLICATION - ERROR - services.one.admin, publish services.one.admin : ${err}`,
       levels.ERROR,
       scopes.SYSTEM,
       { _id },
@@ -96,10 +95,14 @@ publishComposite('services.one', ({ slug }) => {
       },
     }).validate({ slug });
   } catch (err) {
-    // logServer(`publish services.one : ${err}`);
-    logServer(`SERVICES - PUBLICATION - services.one, publish services.one : ${err}`, levels.ERROR, scopes.SYSTEM, {
-      slug,
-    });
+    logServer(
+      `SERVICES - PUBLICATION - ERROR - services.one, publish services.one : ${err}`,
+      levels.ERROR,
+      scopes.SYSTEM,
+      {
+        slug,
+      },
+    );
     this.error(err);
   }
   return {

@@ -15,6 +15,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import RestorePageIcon from '@mui/icons-material/RestorePage';
+import EqualizerIcon from '@mui/icons-material/Equalizer';
 import HttpIcon from '@mui/icons-material/Http';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import EmailIcon from '@mui/icons-material/Email';
@@ -28,6 +29,7 @@ import Drawer from '@mui/material/Drawer';
 import Typography from '@mui/material/Typography';
 import Toolbar from '@mui/material/Toolbar';
 import Divider from '@mui/material/Divider';
+import InfoIcon from '@mui/icons-material/Info';
 import { useHistory, useLocation } from 'react-router-dom';
 import updateDocumentTitle from '../../utils/updateDocumentTitle';
 import { useAppContext } from '../../contexts/context';
@@ -87,6 +89,12 @@ export default function AdminMenu() {
   } = Meteor.settings.public;
 
   const adminMenu = [
+    {
+      path: '/admin/analytics',
+      content: 'menuAdminAnalytics',
+      icon: <EqualizerIcon />,
+      hidden: !isAdmin,
+    },
     {
       path: '/admin/groups',
       content: 'menuAdminGroups',
@@ -150,6 +158,12 @@ export default function AdminMenu() {
     },
     { path: '/admin/asam', content: 'menuAdminAsam', icon: <EmailIcon />, hidden: !isAdmin },
     {
+      path: '/admin/globalinfos',
+      content: 'menuAdminGlobalInfo',
+      icon: <InfoIcon />,
+      hidden: !isAdmin,
+    },
+    {
       path: 'adminDivider',
       content: 'Divider',
     },
@@ -157,7 +171,13 @@ export default function AdminMenu() {
       path: '/admin/businessRegrouping',
       content: 'menuAdminBusinessRegrouping',
       icon: <CategoryIcon />,
-      hidden: !isAdminStructure || !isBusinessRegroupingMode,
+      hidden: !(isAdminStructure && isBusinessRegroupingMode),
+    },
+    {
+      path: '/admin/structureanalytics',
+      content: 'menuAdminStructureAnalytics',
+      icon: <EqualizerIcon />,
+      hidden: !isAdminStructure,
     },
     {
       path: '/admin/structureservices',

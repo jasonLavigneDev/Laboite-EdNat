@@ -8,6 +8,7 @@ import i18n from 'meteor/universe:i18n';
 import DefaultSpaces from './defaultspaces';
 import { checkPersonalSpaceData, generateDefaultPersonalSpace } from '../personalspaces/methods';
 import { hasAdminRightOnStructure } from '../structures/utils';
+import logServer, { levels, scopes } from '../logging';
 
 export const updateStructureSpace = new ValidatedMethod({
   name: 'defaultspaces.updateStructureSpace',
@@ -19,14 +20,27 @@ export const updateStructureSpace = new ValidatedMethod({
     // check if active and logged in
     const isAdminOfStructure = hasAdminRightOnStructure({ userId: this.userId, structureId: data.structureId });
     if (!isAdminOfStructure) {
+      logServer(
+        `DEFAULTSPACE - METHOD - METEOR ERROR - updateStructureSpace - ${i18n.__('api.users.notPermitted')}`,
+        levels.ERROR,
+        scopes.SYSTEM,
+        { data },
+      );
       throw new Meteor.Error('api.defaultspaces.updateStructureSpace.notPermitted', i18n.__('api.users.notPermitted'));
     }
     checkPersonalSpaceData(data);
     const currentStructureSpace = DefaultSpaces.findOne({ structureId: data.structureId });
     if (currentStructureSpace === undefined) {
       // create DefaultSpaces if not existing
+      logServer(`DEFAULTSPACE - METHOD - INSERT - updateStructureSpace - data: ${data}`, levels.VERBOSE, scopes.SYSTEM);
       DefaultSpaces.insert({ ...data });
     } else {
+      logServer(
+        `DEFAULTSPACE - METHOD - UPDATE - updateStructureSpace - current space id: ${currentStructureSpace._id} 
+        / data: ${data}`,
+        levels.VERBOSE,
+        scopes.SYSTEM,
+      );
       DefaultSpaces.update({ _id: currentStructureSpace._id }, { $set: data });
     }
   },
@@ -42,6 +56,12 @@ export const applyDefaultSpaceToAllUsers = new ValidatedMethod({
     // check if active and logged in
     const isAdminOfStructure = hasAdminRightOnStructure({ userId: this.userId, structureId });
     if (!isAdminOfStructure) {
+      logServer(
+        `DEFAULTSPACE - METHOD - METEOR ERROR - applyDefaultSpaceToAllUsers - ${i18n.__('api.users.notPermitted')}`,
+        levels.ERROR,
+        scopes.SYSTEM,
+        { structureId },
+      );
       throw new Meteor.Error(
         'api.defaultspaces.applyDefaultSpaceToAllUsers.notPermitted',
         i18n.__('api.users.notPermitted'),

@@ -72,8 +72,10 @@ External url for blog                                                           
 
 | Key                 | Type     | Default value | Description                                      |
 | ------------------- | -------- | ------------- | ------------------------------------------------ |
-| nextcloudUser       | string   | ""            | Nextcloud user                                   |
-| nextcloudPassword   | string   | ""            | Nextcloud password                               |
+| nextcloudUser       | string   | ""            | Nextcloud user for user creation                 |
+| nextcloudPassword   | string   | ""            | Nextcloud password for user creation             |
+| circlesUser         | string   | ""            | Nextcloud user for circle and share creation     |
+| circlesPassword     | string   | ""            | Nextcloud password for circle and share creation |
 | nextcloudQuota      | number   | "1073741824"  | Nextcloud quota                                  |
 | nextcloudApiKeys    | [string] | []            | API keys for nextcloud token retrieval           |
 | sessionTokenKey     | string   | ""            | Password used to get token from sessiontoken app |

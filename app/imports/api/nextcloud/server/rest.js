@@ -40,10 +40,8 @@ export default async function getNcToken(req, content) {
         );
       })
       .catch((err) => {
-        // logServer(err);
-        // logServer(i18n.__('api.nextcloud.getTokenError', { user: user.username }), 'error');
         logServer(
-          `NEXTCLOUD - REST - getNcToken - ${i18n.__('api.nextcloud.getTokenError', { user: user.username })}`,
+          `NEXTCLOUD - REST - ERROR - getNcToken - ${i18n.__('api.nextcloud.getTokenError', { user: user.username })}`,
           levels.ERROR,
           scopes.SYSTEM,
           {
@@ -58,6 +56,15 @@ export default async function getNcToken(req, content) {
         );
       });
   }
+  logServer(
+    `NEXTCLOUD - REST - ERROR - getNcToken - request sent to API with no username or email`,
+    levels.ERROR,
+    scopes.SYSTEM,
+    {
+      content,
+      req,
+    },
+  );
   throw new Meteor.Error(
     'restapi.nextcloud.getNcToken.dataWithoutUsername',
     'request sent to API with no username or email',

@@ -47,6 +47,9 @@ const useStyles = makeStyles()((theme) => ({
     display: 'block',
     width: '100%',
   },
+  title: {
+    marginBottom: theme.spacing(2),
+  },
 }));
 
 const AdminSettingsPage = ({ appsettings }) => {
@@ -66,12 +69,6 @@ const AdminSettingsPage = ({ appsettings }) => {
       title: i18n.__('pages.AdminSettingsPage.introduction'),
       Element: InfoEditionComponent,
       ElementProps: { data: appsettings.introduction || [] },
-    },
-    {
-      key: 'globalInfo',
-      title: i18n.__('pages.AdminSettingsPage.globalInfo'),
-      Element: InfoEditionComponent,
-      ElementProps: { data: appsettings.globalInfo || [] },
     },
     {
       key: 'legal',
@@ -188,6 +185,9 @@ const AdminSettingsPage = ({ appsettings }) => {
   ) : (
     <Fade in>
       <Container>
+        <Typography className={classes.title} variant={isMobile ? 'h6' : 'h4'}>
+          {i18n.__('components.AdminMenu.menuAdminAppSettings')}
+        </Typography>
         <TabbedForms tabs={tabs} globalTitle={i18n.__('pages.AdminSettingsPage.edition')} />
         <Paper className={classes.root}>
           <Grid container spacing={4}>

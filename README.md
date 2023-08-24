@@ -41,3 +41,7 @@ La description des champs et les valeurs requisent sont toutes définies dans le
 - Lorsque tout est convenablement installé et configuré, revenir dans le dossier app, puis exécuter la commande suivant:
 
 `meteor npm start`
+
+## Contribution au projet
+
+[Guide développeur](./app/../doc/Developer%20guide/Contribuer%20au%20projet.md)

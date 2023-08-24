@@ -12,6 +12,7 @@ const StructureSelect = ({
   setSelectedStructureId,
   customSelectProps = {},
   formControlProps = {},
+  emptyPossible,
 }) => {
   return (
     <FormControl variant="filled" fullWidth {...formControlProps}>
@@ -20,7 +21,7 @@ const StructureSelect = ({
         value={selectedStructureId || ''}
         error={false}
         onChange={(e) => {
-          if (e.target.value.trim().length < 1) return;
+          if (e.target.value.trim().length < 1 && !emptyPossible) return;
           setSelectedStructureId(e.target.value);
         }}
         options={structures.map((opt) => ({ value: opt._id, label: opt.name }))}
@@ -34,6 +35,7 @@ StructureSelect.propTypes = {
   structures: PropTypes.arrayOf(structuresPropTypes).isRequired,
   setSelectedStructureId: PropTypes.func.isRequired,
   selectedStructureId: PropTypes.string.isRequired,
+  emptyPossible: PropTypes.bool,
   customSelectProps: PropTypes.objectOf(PropTypes.any),
   formControlProps: PropTypes.objectOf(PropTypes.any),
 };
@@ -41,6 +43,7 @@ StructureSelect.propTypes = {
 StructureSelect.defaultProps = {
   customSelectProps: {},
   formControlProps: {},
+  emptyPossible: false,
 };
 
 export default StructureSelect;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import ReactQuill from 'react-quill'; // ES6
 import { makeStyles } from 'tss-react/mui';
@@ -7,6 +7,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
+import TextField from '@mui/material/TextField';
 import 'react-quill/dist/quill.snow.css';
 import Select from '@mui/material/Select';
 
@@ -86,37 +87,18 @@ export const quillOptions = {
 
 const InfoEditionComponent = ({ tabkey, data = [] }) => {
   const { classes } = useStyles();
-  const [content, setContent] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [changes, setChanges] = useState(false);
 
   const translations = Object.keys(i18n._translations);
-
   const getLanguage = (lang) => {
     if (translations.includes(lang)) return lang;
     return 'fr';
   };
-
   const [language, setLanguage] = useState(getLanguage(i18n._locale));
 
-  useEffect(() => {
-    if (data) {
-      const currentData = getCurrentText({ data, language });
-      setContent(currentData.content || '');
-      setLoading(false);
-    }
-  }, [data, language]);
+  const [content, setContent] = useState(getCurrentText({ data, language })?.content || '');
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (data) {
-      const currentData = getCurrentText({ data, language }) || {};
-      if (content !== currentData.content) {
-        setChanges(true);
-      } else {
-        setChanges(false);
-      }
-    }
-  }, [content]);
+  const changes = content !== getCurrentText({ data, language })?.content;
 
   const onUpdateRichText = (html) => {
     const strippedHTML = html.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
@@ -143,6 +125,7 @@ const InfoEditionComponent = ({ tabkey, data = [] }) => {
 
   const handleChange = (event) => {
     setLanguage(event.target.value);
+    setContent(getCurrentText({ data, language: event.target.value }).content);
   };
 
   if (loading) {
@@ -174,6 +157,8 @@ const InfoEditionComponent = ({ tabkey, data = [] }) => {
         <CustomToolbarArticle />
         <ReactQuill id="content" value={content || ''} onChange={onUpdateRichText} {...quillOptions} />
       </div>
+      <InputLabel htmlFor="content">{i18n.__('components.InfoEditionComponent.due_date')}</InputLabel>
+      <TextField type="number" style={{ width: '50%' }} />
       {changes && (
         <div className={classes.buttonGroup}>
           <Button variant="contained" color="grey" onClick={onCancel} disabled={loading}>

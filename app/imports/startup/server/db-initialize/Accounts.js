@@ -32,9 +32,9 @@ if (Meteor.settings.keycloak) {
     },
   );
 } else {
-  // logServer('No Keycloak configuration. Please invoke meteor with a settings file.');
   logServer(
-    'STARTUP - ACCOUNTS , No Keycloak configuration. Please invoke meteor with a settings file.',
+    `STARTUP - SERVER - ACCOUNTS - ServiceConfiguration -
+    No Keycloak configuration. Please invoke meteor with a settings file.`,
     levels.INFO,
     scopes.SYSTEM,
     {},
@@ -47,14 +47,6 @@ Accounts.config({
 /* eslint-disable no-console */
 
 function createUser(email, password, role, structure, firstName, lastName) {
-  // logServer(`  Creating user ${email}.`);
-  logServer(`STARTUP - ACCOUNTS , CreateUser -  Creating user ${email}.`, levels.INFO, scopes.SYSTEM, {
-    email,
-    role,
-    structure,
-    firstName,
-    lastName,
-  });
   const userID = Accounts.createUser({
     username: email,
     email,
@@ -63,6 +55,18 @@ function createUser(email, password, role, structure, firstName, lastName) {
     firstName,
     lastName,
   });
+  logServer(
+    `STARTUP - SERVER - ACCOUNTS - CreateUser - userID: ${userID} Creating user ${email}.`,
+    levels.INFO,
+    scopes.SYSTEM,
+    {
+      email,
+      role,
+      structure,
+      firstName,
+      lastName,
+    },
+  );
   // global admin
   if (role === 'admin') {
     Roles.addUsersToRoles(userID, 'admin', null);
@@ -83,8 +87,7 @@ AppRoles.forEach((role) => {
 const NUMBER_OF_FAKE_USERS = 300;
 if (Meteor.users.find().count() === 0) {
   if (Meteor.settings.private.fillWithFakeData) {
-    // logServer('Creating the default user(s)');
-    logServer(`STARTUP - ACCOUNTS Creating the default user(s)`, levels.INFO, scopes.SYSTEM, {});
+    logServer(`STARTUP - SERVER - ACCOUNTS - Creating the default user(s)`, levels.INFO, scopes.SYSTEM, {});
     fakeData.defaultAccounts.map(({ email, password, role, structure, firstName, lastName }) =>
       createUser(email, password, role, structure, firstName, lastName),
     );
@@ -110,10 +113,11 @@ if (Meteor.users.find().count() === 0) {
             if (error.reason && error.reason.indexOf('already exists') !== -1) {
               retries -= 1;
             } else {
-              // logServer(`Error creating user: ${error.reason || error.message || error}`, 'error');
               logServer(
-                `ACCOUNTS , CreateUser - Error creating user: ${error.reason || error.message || error}`,
-                levels.INFO,
+                `STARTUP- SERVER - ACCOUNTS - CreateUser - Error creating user: ${
+                  error.reason || error.message || error
+                }`,
+                levels.ERROR,
                 scopes.SYSTEM,
                 {},
               );
@@ -124,10 +128,10 @@ if (Meteor.users.find().count() === 0) {
       });
     }
   } else {
-    // logServer('No default users to create !  Please invoke meteor with a settings file.');
     logServer(
-      `STARTUP - ACCOUNTS , CreateUser - No default users to create !  Please invoke meteor with a settings file.`,
-      levels.INFO,
+      `STARTUP - SERVER - ACCOUNTS - 
+      CreateUser - No default users to create !  Please invoke meteor with a settings file.`,
+      levels.ERROR,
       scopes.SYSTEM,
       {},
     );
