@@ -1500,7 +1500,8 @@
       "copyNcLocator": "Copier l'ID de fédération Nextcloud",
       "userType": "Type d'utilisateurs",
       "all": "tous",
-      "noResult": "Pas de résultat"
+      "noResult": "Pas de résultat",
+      "usersExport": "Export de tous utilisateurs"
     },
     "AdminUserValidationPage": {
       "title": "Utilisateurs en attente de validation"
