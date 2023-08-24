@@ -1461,7 +1461,8 @@
       "copyNcLocator": "Copy Nextcloud federation ID",
       "userType": "Users type",
       "all": "all",
-      "noResult": "No result"
+      "noResult": "No result",
+      "usersExport": "Export all users"
     },
     "AdminUserValidationPage": {
       "title": "User validation"
