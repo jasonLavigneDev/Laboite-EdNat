@@ -274,6 +274,7 @@ def execUserGenerator(id, structure):
             "firstName": firstname,
             "lastName": lastname,
             "favGroups": [],
+            "favServices": [],
             "isActive": True
         }
         print("[{}] Create user: {}".format(datetime.now(), entry["username"]))
