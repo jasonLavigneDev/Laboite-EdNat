@@ -92,7 +92,7 @@ async function asyncQuerySelector(selector, depth = 0) {
  * @returns {JSX.Element}
  */
 export default function OnBoardingProvider({ children }) {
-  const [{ userId }] = useAppContext();
+  const [{ userId, user }] = useAppContext();
   const history = useHistory();
   const [areStepsEnabled, setStepsEnabled] = useState(false);
   /**
@@ -235,12 +235,12 @@ export default function OnBoardingProvider({ children }) {
   // Automatically start the tour on the first time the page loads in the browser
   if (Meteor.settings.public.onBoarding?.enabled === true) {
     useEffect(() => {
-      if (userId) {
+      if (userId && user?.isActive && user?.structure) {
         if (window.localStorage.getItem(localStorageKey) !== 'true') {
           setTimeout(() => setStepsEnabled(true), 225);
         }
       }
-    }, [userId]);
+    }, [userId, user?.isActive, user?.structure]);
 
     useEffect(() => {
       if (ref.current?.introJs && areStepsEnabled) {
