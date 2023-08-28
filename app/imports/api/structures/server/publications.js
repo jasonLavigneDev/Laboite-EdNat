@@ -81,7 +81,7 @@ FindFromPublication.publish(
       return this.ready();
     }
 
-    const regex = new RegExp(searchText, 'i');
+    const regex = new RegExp(accentInsensitive(searchText), 'i');
     const searchResult = Structures.find({ name: { $regex: regex } }).fetch();
 
     const ids = searchResult.reduce((acc, struct) => {
