@@ -675,7 +675,7 @@
       "menuAdminGroups": "Groups management",
       "menuUserBookmarks": "Bookmarks",
       "menuUpload": "Transfer files",
-      "menuProfileLabel": "Profile",
+      "menuProfileLabel": "My profile",
       "menuHelpLabel": "Help",
       "menuFeedbackLabel": "Give feedback",
       "menuOnboardingLabel": "How to use this service?",
@@ -1116,7 +1116,6 @@
         "linkCopied": "Link has been copied.",
         "errorWhenCopying": "Impossible to copy the password."
       }
-
     },
     "UserBookmarksPage": {
       "back": "Go back",
@@ -1218,7 +1217,7 @@
       "cancel": "Cancel"
     },
     "ProfilePage": {
-      "title": "My settings",
+      "title": "My profile",
       "firstNameLabel": "First name",
       "lastNameLabel": "Last name",
       "emailLabel": "Email",

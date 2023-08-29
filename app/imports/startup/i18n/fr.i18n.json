@@ -611,7 +611,7 @@
     "MainMenu": {
       "menuUserBookmarks": "Marque-pages",
       "menuUpload": "Transférer des fichiers",
-      "menuProfileLabel": "Profil",
+      "menuProfileLabel": "Mon profil",
       "menuHelpLabel": "Aide",
       "menuFeedbackLabel": "Partager mon avis",
       "menuOnboardingLabel": "Comment utiliser ce service ?",
@@ -1225,7 +1225,7 @@
       "cancel": "Annuler"
     },
     "ProfilePage": {
-      "title": "Mes préférences",
+      "title": "Mon profil",
       "firstNameLabel": "Prénom",
       "lastNameLabel": "Nom",
       "emailLabel": "Courriel",
@@ -1706,7 +1706,7 @@
       "sortByDate": "Trier par date de publication"
     },
     "MediaStoragePage": {
-      "title": "Stockage de fichiers",
+      "title": "Stockage de médias",
       "usage": "Utilisation",
       "delete": "Supprimer",
       "confirmDelete": "Confirmer la suppression",
