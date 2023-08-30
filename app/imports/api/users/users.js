@@ -295,6 +295,7 @@ if (Meteor.isServer) {
     if (options.lastName) newUser.lastName = options.lastName;
     if (options.structure) newUser.structure = options.structure;
     if (options.profile) newUser.profile = options.profile;
+    if (options.primaryEmail) newUser.primaryEmail = options.primaryEmail;
 
     return newUser;
   });
