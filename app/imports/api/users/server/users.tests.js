@@ -528,7 +528,7 @@ describe('users', function () {
       it('structure admin can set/unset a user as structure admin', function () {
         const email2 = faker.internet.email();
         const userId2 = Accounts.createUser({
-          email2,
+          email: email2,
           username: email2,
           password: 'toto',
           structure: 'test',
