@@ -137,6 +137,18 @@ export const deleteIconOrCoverImage = new ValidatedMethod({
   },
 });
 
+// Recursive function to build the tree
+const buildTree = (structure, allSubStructures) => {
+  const subStructures = allSubStructures
+    .filter((struct) => struct.parentId === structure._id)
+    .map((child) => buildTree(child, allSubStructures));
+
+  return {
+    ...structure,
+    subStructures,
+  };
+};
+
 export const getStructureAndAllChilds = new ValidatedMethod({
   name: 'structures.getStructureAndAllChilds',
   validate: new SimpleSchema({
@@ -185,13 +197,10 @@ export const getStructureAndAllChilds = new ValidatedMethod({
       },
     ]);
 
-    return structureTree;
+    // Start building the tree from the initial structure
+    const result = structureTree.map((struct) => buildTree(struct, struct.subStructures));
 
-    // return Structures.find(query, {
-    //   fields: Structures.publicFields,
-    //   sort: { name: 1 },
-    //   limit: 10000,
-    // }).fetch();
+    return result;
   },
 });
 
