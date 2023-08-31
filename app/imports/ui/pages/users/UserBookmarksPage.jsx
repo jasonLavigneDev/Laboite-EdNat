@@ -95,7 +95,7 @@ export const bookmarkColumns = (classes) => [
 
       if (icon !== '') {
         // eslint-disable-next-line jsx-a11y/alt-text
-        return <img src={`${icon}`} className={classes.icon} />;
+        return <img src={icon} className={classes.icon} />;
       }
       return <LanguageIcon className={classes.icon} />;
     },
@@ -392,7 +392,7 @@ function UserBookmarksPage({ loading, bookmarksList }) {
             </Grid>
             <MaterialTable
               // other props
-              title={`${i18n.__('pages.BookmarksPage.title')}`}
+              title={i18n.__('pages.BookmarksPage.title')}
               columns={columns}
               data={bookmarksList.map((row) => {
                 return { ...row, id: row._id };
