@@ -1400,6 +1400,7 @@
         "pagination_labelRowsSelect": "groupes par page",
         "body_emptyDataSourceMessage": "Aucun groupe à gérer",
         "body_addTooltip": "Ajouter un groupe",
+        "body_cantCreate": "Vous ne pouvez pas créer plus de groupe",
         "body_editTooltip": "Modifier ce groupe",
         "body_deleteTooltip": "Supprimer ce groupe",
         "body_editRow_deleteText": "Souhaitez vous réellement supprimer ce groupe et désinscrire ses membres ?"
