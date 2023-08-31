@@ -158,7 +158,7 @@ function BookmarksPage({ loading, bookmarksList, group }) {
             </Tooltip>
             <MaterialTable
               // other props
-              title={`${i18n.__('pages.BookmarksPage.title')}`}
+              title={i18n.__('pages.BookmarksPage.title')}
               columns={columns}
               data={(filter ? bookmarksListFinal : bookmarksList).map((row) => ({ ...row, id: row._id }))}
               options={options}
