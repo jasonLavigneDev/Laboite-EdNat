@@ -2,7 +2,6 @@ import { Meteor } from 'meteor/meteor';
 import { Roles } from 'meteor/alanning:roles';
 import React, { createContext, useState, useContext, useCallback, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Meteor } from 'meteor/meteor';
 
 import i18n from 'meteor/universe:i18n';
 import { Steps } from 'intro.js-react';
