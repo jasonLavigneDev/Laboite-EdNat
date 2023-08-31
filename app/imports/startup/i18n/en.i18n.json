@@ -939,6 +939,15 @@
       "OpenInWindow": "Open media",
       "copyUrl": "Copy this media URL"
     },
+    "MediaStorageEdit":{
+      "title": "Modify your picture",
+      "subtitle": "",
+      "sendImage": "Send this picture",
+      "turnLeft": "Turn left",
+      "turnRight": "Turn right",
+      "zoom": "Zoom",
+      "cancel": "Cancel"
+    },
     "AvatarEdit": {
       "title": "Create your avatar",
       "subtitle": "from an image",

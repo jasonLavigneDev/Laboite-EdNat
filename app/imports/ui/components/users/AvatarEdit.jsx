@@ -34,7 +34,16 @@ const useStyles = makeStyles()((theme, isMobile) => ({
   alert: COMMON_STYLES.alert,
 }));
 
-const AvatarEdit = ({ open, avatar, onClose, onSendImage }) => {
+const AvatarEdit = ({
+  open,
+  avatar,
+  onClose,
+  onSendImage,
+  cardTitle,
+  cardSubtitle,
+  sendButtonText,
+  isMediaStorageCropping,
+}) => {
   const [{ isMobile }] = useAppContext();
   const { classes } = useStyles(isMobile);
   const [scale, setScale] = useState(1);
@@ -53,8 +62,7 @@ const AvatarEdit = ({ open, avatar, onClose, onSendImage }) => {
   const onLocalSendImage = () => {
     if (editor) {
       const canvasScaled = editor.current.getImageScaledToCanvas();
-
-      onSendImage({ image: canvasScaled.toDataURL() });
+      onSendImage([{ image: canvasScaled.toDataURL() }]);
       onClose();
     }
   };
@@ -64,8 +72,8 @@ const AvatarEdit = ({ open, avatar, onClose, onSendImage }) => {
       <div className={classes.paper}>
         <Card className={classes.root}>
           <CardHeader
-            title={i18n.__('components.AvatarEdit.title')}
-            subheader={i18n.__('components.AvatarEdit.subtitle')}
+            title={cardTitle}
+            subheader={cardSubtitle}
             action={
               <IconButton onClick={onClose} size="large">
                 <ClearIcon />
@@ -76,9 +84,9 @@ const AvatarEdit = ({ open, avatar, onClose, onSendImage }) => {
             <AvatarEditor
               ref={editor}
               image={avatar}
-              width={250}
-              height={250}
-              border={50}
+              width={isMediaStorageCropping ? 300 : 250}
+              height={isMediaStorageCropping ? 300 : 250}
+              border={isMediaStorageCropping ? 0 : 50}
               color={[255, 255, 255, 0.6]} // RGBA
               scale={scale}
               rotate={rotate}
@@ -133,7 +141,7 @@ const AvatarEdit = ({ open, avatar, onClose, onSendImage }) => {
           </Grid>
           <CardActions className={classes.actions}>
             <Button variant="contained" color="primary" onClick={onLocalSendImage}>
-              {i18n.__('components.AvatarEdit.sendImage')}
+              {sendButtonText}
             </Button>
             <Button onClick={onClose}>{i18n.__('components.AvatarEdit.cancel')}</Button>
           </CardActions>
@@ -148,6 +156,10 @@ AvatarEdit.propTypes = {
   avatar: PropTypes.string.isRequired,
   onClose: PropTypes.func.isRequired,
   onSendImage: PropTypes.func.isRequired,
+  cardTitle: PropTypes.string.isRequired,
+  cardSubtitle: PropTypes.string.isRequired,
+  sendButtonText: PropTypes.string.isRequired,
+  isMediaStorageCropping: PropTypes.bool.isRequired,
 };
 
 export default AvatarEdit;
