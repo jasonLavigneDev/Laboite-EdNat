@@ -113,7 +113,6 @@
     "toEmail": ""
   },
   "private": {
-    "autoAttachNewUserToStructures": false,
     "loginExpirationInDays": 1,
     "fillWithFakeData": false,
     "minioAccess": "",
