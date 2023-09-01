@@ -6,5 +6,5 @@
 
 cd app
 npm run lint ./
-npx jscpd
+npx jscpd --gitignore
 npm run check-lang
