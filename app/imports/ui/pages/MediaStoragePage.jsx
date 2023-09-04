@@ -9,6 +9,7 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import AddIcon from '@mui/icons-material/Add';
+import Alert from '@mui/material/Alert';
 import i18n from 'meteor/universe:i18n';
 import { useDropzone } from 'react-dropzone';
 import { useAppContext } from '../contexts/context';
@@ -180,6 +181,7 @@ const MediaStoragePage = ({ selectFile, modal }) => {
               <Typography className={classes.flex}>
                 {i18n.__('pages.MediaStoragePage.usage')} {storageToSize(usedDisk)}/{storageToSize(maxMinioDiskPerUser)}
               </Typography>
+              <Alert severity="warning">{i18n.__('pages.MediaStoragePage.publicWarning')}</Alert>
             </Grid>
             {files.map((file) => (
               <Grid item xs={6} sm={3} md={2} key={Random.id()} className={classes.fileWrapper}>
