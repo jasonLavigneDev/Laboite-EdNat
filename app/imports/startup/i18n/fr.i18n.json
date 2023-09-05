@@ -663,7 +663,8 @@
       "menuAdminGlobalInfo": "Informations générales",
       "menuAdminAnalytics": "Analytiques",
       "menuAdminStructureAnalytics": "Analytiques de structure",
-      "menuAdminStructureSettings": "Réglages de structure"
+      "menuAdminStructureSettings": "Réglages de structure",
+      "menuAdminStructureInfo": "Informations de structure"
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Votre compte n'a pas été activé",

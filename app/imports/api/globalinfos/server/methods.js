@@ -22,9 +22,13 @@ export const createGlobalInfo = new ValidatedMethod({
       type: Date,
       optional: false,
     },
+    structure: {
+      type: Boolean,
+      defaultValue: false,
+    },
   }).validator({ clean: true }),
 
-  run({ content, language, expirationDate }) {
+  run({ content, language, expirationDate, structure }) {
     if (language) validateString(language, true);
     let sanitizedContent = '';
     if (content) {
@@ -32,7 +36,11 @@ export const createGlobalInfo = new ValidatedMethod({
       validateString(sanitizedContent);
     }
     try {
-      const authorized = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
+      const structId = Meteor.users.findOne(this.userId)?.structure;
+      const authorized =
+        isActive(this.userId) && structure
+          ? Roles.userIsInRole(this.userId, 'adminStructure', structId)
+          : Roles.userIsInRole(this.userId, 'admin');
       if (!authorized) {
         throw new Meteor.Error(
           'api.appsettings.updateIntroductionLanguage.notPermitted',
@@ -46,6 +54,10 @@ export const createGlobalInfo = new ValidatedMethod({
         expirationDate,
       };
 
+      if (structure) {
+        newGlobalInfo.structureId = [structId];
+      }
+
       const newId = GlobalInfos.insert(newGlobalInfo);
       return GlobalInfos.findOne({ _id: newId });
     } catch (error) {
@@ -56,11 +68,18 @@ export const createGlobalInfo = new ValidatedMethod({
 
 export const getAllGlobalInfo = new ValidatedMethod({
   name: 'globalInfos.getAllGlobalInfo',
-  validate: new SimpleSchema({}).validator({ clean: true }),
+  validate: new SimpleSchema({
+    structure: {
+      type: Boolean,
+      defaultValue: false,
+    },
+  }).validator({ clean: true }),
 
-  run() {
+  run({ structure }) {
     try {
-      return GlobalInfos.find({}).fetch();
+      const structId = Meteor.users.findOne(this.userId)?.structure;
+      const structQuery = structure ? { structureId: structId } : { structureId: [] };
+      return GlobalInfos.find(structQuery).fetch();
     } catch (error) {
       throw new Meteor.Error(error, error);
     }
@@ -73,12 +92,18 @@ export const getAllGlobalInfoByLanguage = new ValidatedMethod({
     language: {
       type: String,
     },
+    structure: {
+      type: Boolean,
+      defaultValue: false,
+    },
   }).validator({ clean: true }),
 
-  run({ language }) {
+  run({ language, structure }) {
     validateString(language, true);
     try {
-      return GlobalInfos.find({ language }).fetch();
+      const structId = Meteor.users.findOne(this.userId)?.structure;
+      const structQuery = structure ? { structureId: structId } : { structureId: [] };
+      return GlobalInfos.find({ language }, structQuery).fetch();
     } catch (error) {
       throw new Meteor.Error(error, error);
     }
@@ -99,9 +124,11 @@ export const getGlobalInfoByLanguageAndNotExpired = new ValidatedMethod({
   run({ language, date }) {
     validateString(language, true);
     try {
+      const structId = Meteor.users.findOne(this.userId)?.structure;
       return GlobalInfos.find(
         { $and: [{ language }, { expirationDate: { $gt: date } }] },
         { sort: { updatedAt: -1 } },
+        { $or: [{ structureId: structId }, { structureId: [] }] },
       ).fetch();
     } catch (error) {
       throw new Meteor.Error(error, error);

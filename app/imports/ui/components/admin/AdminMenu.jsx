@@ -192,6 +192,12 @@ export default function AdminMenu() {
       hidden: !isAdminStructure,
     },
     {
+      path: '/admin/structuresinfos',
+      content: 'menuAdminStructureInfo',
+      icon: <InfoIcon />,
+      hidden: !isAdminStructure,
+    },
+    {
       path: '/admin/structureusers',
       content: 'menuAdminStructureUsers',
       icon: <PeopleAltIcon />,

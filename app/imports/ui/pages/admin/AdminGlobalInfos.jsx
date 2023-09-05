@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import Paper from '@mui/material/Paper';
 import Modal from '@mui/material/Modal';
 import IconButton from '@mui/material/IconButton';
@@ -8,7 +9,7 @@ import AddBox from '@mui/icons-material/AddBox';
 import { AdminMessageForm } from '../../components/admin/AdminMessagesForm';
 import { AdminMessagesList } from '../../components/admin/AdminMessagesList';
 
-const AdminGlobalInfos = () => {
+const AdminGlobalInfos = ({ structure = false }) => {
   const [messages, setMessages] = useState([]);
   const [messageToUpdate, setMessageToUpdate] = useState();
   const [isOnUpdateMessage, setIsOnUpdateMessage] = useState(false);
@@ -21,25 +22,25 @@ const AdminGlobalInfos = () => {
   };
 
   useEffect(() => {
-    Meteor.call('globalInfos.getAllGlobalInfo', {}, (error, res) => {
+    Meteor.call('globalInfos.getAllGlobalInfo', { structure }, (error, res) => {
       if (!error) return setMessages(res);
       return console.log('error', error);
     });
   }, []);
   const selectMessageLanguage = (language) => {
     if (language === 'all') {
-      Meteor.call('globalInfos.getAllGlobalInfo', {}, (error, res) => {
+      Meteor.call('globalInfos.getAllGlobalInfo', { structure }, (error, res) => {
         if (!error) setMessages(res);
       });
     } else {
-      Meteor.call('globalInfos.getAllGlobalInfoByLanguage', { language }, (error, res) => {
+      Meteor.call('globalInfos.getAllGlobalInfoByLanguage', { language, structure }, (error, res) => {
         if (!error) setMessages(res);
       });
     }
   };
 
   const createMessage = (newMessage) => {
-    Meteor.call('globalInfos.createGlobalInfo', { ...newMessage }, (error, res) => {
+    Meteor.call('globalInfos.createGlobalInfo', { ...newMessage, structure }, (error, res) => {
       if (!error) return setMessages([...messages, res]);
       return console.log('error', error);
     });
@@ -139,6 +140,14 @@ const AdminGlobalInfos = () => {
       </Modal>
     </Paper>
   );
+};
+
+AdminGlobalInfos.propTypes = {
+  structure: PropTypes.bool,
+};
+
+AdminGlobalInfos.defaultProps = {
+  structure: false,
 };
 
 export default AdminGlobalInfos;
