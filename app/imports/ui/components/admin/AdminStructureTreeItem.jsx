@@ -63,12 +63,19 @@ const AdminStructureTreeItem = ({
     closeConfirm();
   };
 
+  const onClickCollapseStruc = () => {
+    if (hasChildren) {
+      updateParentIdsList({ ids: [id] });
+      window.scrollTo(0, window.scrollY);
+    }
+  };
+
   return (
     <>
       <StyledTreeItem
         key={id}
         nodeId={id}
-        onClick={() => hasChildren && updateParentIdsList({ ids: [id] })}
+        onClick={() => onClickCollapseStruc({ ids: [id] })}
         label={
           <Box display="flex" className={classes.line}>
             <Box flexGrow={1} className={classes.name}>
