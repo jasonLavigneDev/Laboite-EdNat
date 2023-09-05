@@ -18,10 +18,10 @@ export function addExpiration(data) {
     return result;
   }
   // check if an expiration delay has been configured
-  if (Meteor.settings.public.NotificationsExpireDays) {
+  if (Meteor.settings.public.notificationsExpireDays) {
     const dataType =
-      typeof Meteor.settings.public.NotificationsExpireDays[data.type] !== 'number' ? 'default' : data.type;
-    const numDays = Meteor.settings.public.NotificationsExpireDays[dataType];
+      typeof Meteor.settings.public.notificationsExpireDays[data.type] !== 'number' ? 'default' : data.type;
+    const numDays = Meteor.settings.public.notificationsExpireDays[dataType];
     if (numDays || numDays === 0) {
       if (typeof numDays !== 'number') {
         logServer(

@@ -12,6 +12,7 @@ import PublicRoute from '../components/system/PublicRoute';
 import Spinner from '../components/system/Spinner';
 import MsgHandler from '../components/system/MsgHandler';
 import DynamicStore, { useAppContext } from '../contexts/context';
+import { SettingsProvider } from '../contexts/settings';
 import lightTheme from '../themes/light';
 import LocalizationLayout from './locales/LocalizationLayout';
 import useWidgetLink from '../utils/widgetLink';
@@ -95,15 +96,17 @@ export default () => (
   <MatomoProvider value={instance}>
     <CacheProvider value={muiCache}>
       <ThemeProvider theme={lightTheme}>
-        <BrowserRouter>
-          <DynamicStore>
-            <LocalizationLayout>
-              <OnBoardingContext.Provider>
-                <App />
-              </OnBoardingContext.Provider>
-            </LocalizationLayout>
-          </DynamicStore>
-        </BrowserRouter>
+        <SettingsProvider>
+          <BrowserRouter>
+            <DynamicStore>
+              <LocalizationLayout>
+                <OnBoardingContext.Provider>
+                  <App />
+                </OnBoardingContext.Provider>
+              </LocalizationLayout>
+            </DynamicStore>
+          </BrowserRouter>
+        </SettingsProvider>
       </ThemeProvider>
     </CacheProvider>
   </MatomoProvider>
