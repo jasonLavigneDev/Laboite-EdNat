@@ -32,6 +32,7 @@ const useStyles = (isMobile) =>
       width: '8vw',
     },
     containerGrid: {
+      display: isMobile ? 'none' : 'inherit',
       paddingTop: theme.spacing(0),
       paddingBottom: theme.spacing(0),
       paddingLeft: theme.spacing(0),
