@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.5.1](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/5.5.0...release/5.5.1) (2023-09-01)
+
+
+### Bug Fixes
+
+* **nextcloud:** add setting to hide plugins checkboxes in group admin ([0210865](https://gitlab.mim-libre.fr/alphabet/laboite/commit/0210865e943811b9fdf40af075425d22a62a57a7))
+
 # [5.5.0](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/5.4.0...release/5.5.0) (2023-08-24)
 
 
