@@ -1,5 +1,11 @@
 {
   "api": {
+    "settings":{
+      "labels": {
+        "name": "settings name",
+        "sondageUrl": "URL for sondage service"
+      }
+    },
     "bookmarks": {
       "labels": {
         "url": "URL",
