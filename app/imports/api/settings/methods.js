@@ -1,9 +1,10 @@
 import { _ } from 'meteor/underscore';
+import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import Settings from './settings';
 
-export const getSettings = new ValidatedMethod({
-  name: 'settings.getSettings',
+export const getAllSettings = new ValidatedMethod({
+  name: 'settings.getAllSettings',
   validate: null,
   run() {
     let res = Settings.find({ name: 'settings' }).fetch();
@@ -15,9 +16,21 @@ export const getSettings = new ValidatedMethod({
   },
 });
 
+export const getSetting = new ValidatedMethod({
+  name: 'settings.getSetting',
+  validate: new SimpleSchema({
+    field: {
+      type: String,
+    },
+  }).validator(),
+  run(field) {
+    return Settings.find({ name: 'settings' }, { field }).fetch();
+  },
+});
+
 if (Meteor.isServer) {
   // Get list of all method names on Structures
-  const LISTS_METHODS = _.pluck([getSettings], 'name');
+  const LISTS_METHODS = _.pluck([getAllSettings, getSetting], 'name');
 
   // Only allow 5 list operations per connection per second
   DDPRateLimiter.addRule(
