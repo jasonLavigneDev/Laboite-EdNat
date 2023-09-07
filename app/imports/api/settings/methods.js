@@ -24,7 +24,8 @@ export const getSetting = new ValidatedMethod({
     },
   }).validator(),
   run(field) {
-    return Settings.find({ name: 'settings' }, { field }).fetch();
+    const res = Settings.find({ name: 'settings' }).fetch();
+    return res[field];
   },
 });
 
