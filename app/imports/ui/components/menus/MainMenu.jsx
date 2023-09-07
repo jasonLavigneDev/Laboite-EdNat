@@ -17,6 +17,7 @@ import UserAvatar from '../users/UserAvatar';
 import updateDocumentTitle from '../../utils/updateDocumentTitle';
 import { testMeteorSettingsUrl } from '../../utils/utilsFuncs';
 import { useOnBoarding } from '../../contexts/onboardingContext';
+import { FEATURES, isFeatureEnabled } from '../../utils/features';
 
 const { disabledFeatures = {} } = Meteor.settings.public;
 
@@ -64,7 +65,7 @@ export const userMenu = [
   },
 ];
 
-if (Meteor.settings.franceTransfert?.endpoint) {
+if (isFeatureEnabled(FEATURES.franceTransfert)) {
   userMenu.push({
     path: '/upload',
     content: 'menuUpload',

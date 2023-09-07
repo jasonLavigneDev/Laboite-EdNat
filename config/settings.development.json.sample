@@ -17,8 +17,9 @@
       "introductionTab": false,
       "menuAdminDefaultSpaces": true,  // THIS PARAMS IS SET FOR HIDDEN DEFAULTSPACE FUNCTIONNALITY WHICH DOESN'T WORK
       "mediaStorageMenu": false,
-      "bookmarksFromClipboard": false,
+      "bookmarksFromClipboard": false
     },
+    "features": ["franceTransfert"],
     "ui": {
       "defaultGridViewMode": "compact",
       "isBusinessRegroupingMode": false,
@@ -97,7 +98,7 @@
     "nextcloudPassword": "",
     "circlesUser": "",
     "circlesPassword": "",
-    "nextcloudQuota": "1073741824"
+    "nextcloudQuota": "1073741824",
     "nextcloudApiKeys": [],
     "sessionTokenKey": "",
     "sessionTokenAppName": "apps.education.fr"  },

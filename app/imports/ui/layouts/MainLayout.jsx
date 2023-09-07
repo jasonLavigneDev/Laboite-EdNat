@@ -21,6 +21,7 @@ import NoStructureSelected from '../components/system/NoStructureSelected';
 import AwaitingStructureMessage from '../components/system/AwaitingStructure';
 import SiteInMaintenance from '../components/system/SiteInMaintenance';
 import Footer from '../components/menus/Footer';
+import { FEATURES, isFeatureEnabled } from '../utils/features';
 
 // pages
 const ServicesPage = lazy(() => import('../pages/services/ServicesPage'));
@@ -164,7 +165,7 @@ function MainLayout({ appsettings, ready }) {
                         <Route exact path="/informations" component={IntroductionPage} />
                       )}
 
-                      {Meteor.settings.franceTransfert?.endpoint && (
+                      {isFeatureEnabled(FEATURES.franceTransfert) && (
                         <Route exact path="/upload" component={UploadPage} />
                       )}
 
