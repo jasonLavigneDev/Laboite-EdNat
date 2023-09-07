@@ -22,3 +22,14 @@ a {
   max-width: 100%;
   overflow-wrap: anywhere;
 }
+
+.import-bookmark-cell {
+    white-space: nowrap;
+    max-width: 350px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.hidden {
+  display: none;
+}

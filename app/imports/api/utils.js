@@ -242,3 +242,11 @@ export const accentInsensitive = (searchString) => {
   const result = searchString.replace(/\S/g, accentReplacer);
   return result;
 };
+
+export const formatURL = (name) => {
+  let finalName = name;
+  if (!name.includes('://')) {
+    finalName = `https://${name}`;
+  }
+  return finalName;
+};
