@@ -65,7 +65,7 @@ export const AdminMessageForm = ({ createMessage, initialMessage, isOnUpdateMess
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '3vh', padding: '2vh 2vw' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '3vh', padding: '2vh 2vw', width: '60vw' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Typography variant="h5">{title}</Typography>
         <IconButton onClick={closeModal}>
