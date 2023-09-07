@@ -110,6 +110,7 @@
     if (!dragged) {
       replaceOrAddClass(container, 'closed', 'opened');
       iframeContainer.setAttribute('iframe-state', 'opened');
+      iframeContainer.contentWindow.postMessage('openWidget', '*');
     }
     dragged = false;
   };
