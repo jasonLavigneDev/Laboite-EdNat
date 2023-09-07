@@ -49,10 +49,12 @@ export const NewIntroductionPage = () => {
             }}
           >
             {/* <p style={{ textAlign: 'end', height: '1vh' }}>Crée le : {message?.createdAt?.toLocaleDateString()}</p> */}
-            {message?.structureId?.length ? (
-              <Chip style={{ width: '40%' }} label="Ma super structure" color="primary" />
-            ) : null}
-            <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(message?.content) }} />
+            <div style={{ display: 'flex', flexDirection: 'column', width: 'inherit' }}>
+              {message?.structureId?.length ? (
+                <Chip sx={{ width: '50%' }} label={message.structureName} color="primary" />
+              ) : null}
+              <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(message?.content) }} />
+            </div>
             <div
               style={{
                 display: 'flex',

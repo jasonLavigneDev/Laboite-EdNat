@@ -53,7 +53,7 @@ export const AdminMessagesList = ({ messages, deleteMessage, selectMessageLangua
             }}
           >
             {message?.structureId?.length ? (
-              <Chip style={{ width: '40%' }} label="Ma super structure" color="primary" />
+              <Chip style={{ width: '50%' }} label={message.structureName} color="primary" />
             ) : null}
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(message?.content) }} />

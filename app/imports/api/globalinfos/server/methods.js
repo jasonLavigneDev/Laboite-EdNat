@@ -8,6 +8,7 @@ import sanitizeHtml from 'sanitize-html';
 import { isActive, validateString } from '../../utils';
 
 import GlobalInfos from '../globalInfo';
+import Structures from '../../structures/structures';
 
 export const createGlobalInfo = new ValidatedMethod({
   name: 'globalInfos.createGlobalInfo',
@@ -55,7 +56,9 @@ export const createGlobalInfo = new ValidatedMethod({
       };
 
       if (structure) {
+        const structName = Structures.findOne(structId).name;
         newGlobalInfo.structureId = [structId];
+        newGlobalInfo.structureName = structName;
       }
 
       const newId = GlobalInfos.insert(newGlobalInfo);
@@ -125,10 +128,20 @@ export const getGlobalInfoByLanguageAndNotExpired = new ValidatedMethod({
     validateString(language, true);
     try {
       const structId = Meteor.users.findOne(this.userId)?.structure;
+      let structures = [];
+      if (structId) {
+        const parentStructs = Structures.findOne(structId).ancestorsIds;
+        structures = [structId, ...parentStructs];
+      }
       return GlobalInfos.find(
-        { $and: [{ language }, { expirationDate: { $gt: date } }] },
+        {
+          $and: [
+            { language },
+            { expirationDate: { $gt: date } },
+            { $or: [{ structureId: { $in: structures } }, { structureId: [] }] },
+          ],
+        },
         { sort: { updatedAt: -1 } },
-        { $or: [{ structureId: structId }, { structureId: [] }] },
       ).fetch();
     } catch (error) {
       throw new Meteor.Error(error, error);
