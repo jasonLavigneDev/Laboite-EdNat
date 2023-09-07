@@ -510,7 +510,9 @@
       "create_at": "Créé le :",
       "update_at": "Mis à jour le :",
       "expire_at": "Expire le :",
-      "no_message": "Aucun message"
+      "no_message": "Aucun message",
+      "label_expire": "Date d'expiration",
+      "cancel": "Annuler"
     },
     "Notifications": {
       "remove": "Supprimer"
@@ -1850,6 +1852,11 @@
         "toolbar_searchPlaceholder": "Rechercher",
         "body_emptyDataSourceMessage": "Aucun resultats"
       }
+    },
+    "AdminGlobalInfos": {
+      "title": "Gérer les messages d'information générale",
+      "titleStructure": "Gérer les messages de structure",
+      "createButton": "Créer un nouveau message"
     }
   },
   "layouts": {

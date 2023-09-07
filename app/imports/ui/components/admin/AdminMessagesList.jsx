@@ -76,11 +76,10 @@ export const AdminMessagesList = ({ messages, deleteMessage, selectMessageLangua
                   {i18n.__('components.AdminMesssage.update_at')} {message?.updatedAt?.toLocaleDateString()}
                 </span>
                 <span>
-                  {i18n.__('components.AdminMesssage.expire_at')}
-                  {message?.expirationDate?.toLocaleDateString()}
+                  {i18n.__('components.AdminMesssage.expire_at')} {message?.expirationDate?.toLocaleDateString()}
                 </span>
                 <span>
-                  {i18n.__('components.AdminMesssage.select_language_form')}: {message?.language}
+                  {i18n.__('components.AdminMesssage.select_language_form')} : {message?.language}
                 </span>
               </div>
             </div>

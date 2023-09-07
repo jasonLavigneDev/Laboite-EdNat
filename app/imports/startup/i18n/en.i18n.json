@@ -586,7 +586,9 @@
       "create_at": "Create at :",
       "update_at": "Update at :",
       "expire_at": "Expire at :",
-      "no_message": "No message"
+      "no_message": "No message",
+      "label_expire": "Expiration date",
+      "cancel": "Cancel"
     },
     "Notifications": {
       "remove": "Remove"
@@ -1840,6 +1842,11 @@
         "toolbar_searchPlaceholder": "Search",
         "body_emptyDataSourceMessage": "No results"
       }
+    },
+    "AdminGlobalInfos": {
+      "title": "Manage global info messages",
+      "titleStructure": "Manage structure messages",
+      "createButton": "Create new message"
     }
   },
   "layouts": {

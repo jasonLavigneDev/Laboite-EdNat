@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import i18n from 'meteor/universe:i18n';
 import Paper from '@mui/material/Paper';
 import Modal from '@mui/material/Modal';
-import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import AddBox from '@mui/icons-material/AddBox';
+import Button from '@mui/material/Button';
 
 import { AdminMessageForm } from '../../components/admin/AdminMessagesForm';
 import { AdminMessagesList } from '../../components/admin/AdminMessagesList';
@@ -109,11 +110,13 @@ const AdminGlobalInfos = ({ structure = false }) => {
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center' }}>
-        <Typography variant="h4"> Creer un message d information générale </Typography>
-        <IconButton onClick={() => setOpenModal(!openModal)}>
-          <AddBox fontSize="large" />
-        </IconButton>
+        <Typography variant="h4">
+          {i18n.__(structure ? 'pages.AdminGlobalInfos.titleStructure' : 'pages.AdminGlobalInfos.title')}
+        </Typography>
       </div>
+      <Button onClick={() => setOpenModal(!openModal)} startIcon={<AddBox />}>
+        {i18n.__('pages.AdminGlobalInfos.createButton')}
+      </Button>
       <AdminMessagesList
         messages={messages}
         deleteMessage={deleteMessage}
