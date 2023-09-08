@@ -1847,6 +1847,9 @@
       "title": "Manage global info messages",
       "titleStructure": "Manage structure messages",
       "createButton": "Create new message"
+    },
+    "NewIntroductionPage": {
+      "structureMessage": "Information from {$structure} :"
     }
   },
   "layouts": {

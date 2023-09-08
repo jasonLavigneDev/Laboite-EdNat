@@ -1,7 +1,7 @@
 import React from 'react';
 import i18n from 'meteor/universe:i18n';
 // eslint-disable-next-line no-restricted-imports
-import { Button, InputLabel, MenuItem, FormControl, Select, Paper, Chip } from '@mui/material';
+import { Button, InputLabel, MenuItem, FormControl, Select, Paper } from '@mui/material';
 import sanitizeHtml from 'sanitize-html';
 import PropTypes from 'prop-types';
 
@@ -52,9 +52,6 @@ export const AdminMessagesList = ({ messages, deleteMessage, selectMessageLangua
               width: '66vw',
             }}
           >
-            {message?.structureId?.length ? (
-              <Chip style={{ width: '50%' }} label={message.structureName} color="primary" />
-            ) : null}
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(message?.content) }} />
 

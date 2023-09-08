@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import sanitizeHtml from 'sanitize-html';
 import i18n from 'meteor/universe:i18n';
 // eslint-disable-next-line no-restricted-imports
-import { Chip, Paper } from '@mui/material';
+import { Paper, Typography } from '@mui/material';
 
 import { useAppContext } from '../contexts/context';
 
@@ -51,7 +51,9 @@ export const NewIntroductionPage = () => {
             {/* <p style={{ textAlign: 'end', height: '1vh' }}>Crée le : {message?.createdAt?.toLocaleDateString()}</p> */}
             <div style={{ display: 'flex', flexDirection: 'column', width: 'inherit' }}>
               {message?.structureId?.length ? (
-                <Chip sx={{ width: '50%' }} label={message.structureName} color="primary" />
+                <Typography variant="subtitle1">
+                  {i18n.__('pages.NewIntroductionPage.structureMessage', { structure: message.structureName })}
+                </Typography>
               ) : null}
               <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(message?.content) }} />
             </div>

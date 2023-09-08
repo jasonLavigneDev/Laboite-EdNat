@@ -1857,6 +1857,9 @@
       "title": "Gérer les messages d'information générale",
       "titleStructure": "Gérer les messages de structure",
       "createButton": "Créer un nouveau message"
+    },
+    "NewIntroductionPage": {
+      "structureMessage": "{$structure} vous informe :"
     }
   },
   "layouts": {
