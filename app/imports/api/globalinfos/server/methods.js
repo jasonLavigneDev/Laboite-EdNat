@@ -207,8 +207,6 @@ export const updateGlobalInfo = new ValidatedMethod({
         );
       }
 
-      console.log('expirationDate', expirationDate);
-
       const updatedGlobalInfo = {
         language,
         content,
