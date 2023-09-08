@@ -125,7 +125,7 @@ function MainLayout({ appsettings, ready }) {
         return;
       }
 
-      history.push('/personal');
+      if (history.location.pathname === '/') history.push('/personal');
     });
   }, []);
 
