@@ -4,6 +4,7 @@ import i18n from 'meteor/universe:i18n';
 import { findStructureByEmail } from '../users';
 import logServer, { levels, scopes } from '../../logging';
 import NextcloudClient from '../../appclients/nextcloud';
+import Structures from '../../structures/structures';
 
 const nextcloudPlugin = Meteor.settings.public.groupPlugins.nextcloud;
 let nextClient = null;
@@ -13,9 +14,15 @@ export default async function createUser(req, content) {
   // sample use:
   // curl -X POST -H "X-API-KEY: createuser-password" \
   //      -H "Content-Type: application/json" \
-  //      -d '{"username":"utilisateur1", "firstname":"", "lastname":"", "email":"" }' \
+  //      -d '{"username":"utilisateur1", "firstname":"", "lastname":"", "email":"", "structure":"" }' \   // avec structure passée en param
   //      http://localhost:3000/api/createuser
-  if ('username' in content && 'firstname' in content && 'lastname' in content && 'email' in content) {
+  if (
+    'username' in content &&
+    'firstname' in content &&
+    'lastname' in content &&
+    'email' in content &&
+    'structure' in content
+  ) {
     const emailUser = Accounts.findUserByEmail(content.email);
     if (emailUser) {
       logServer(`USERS - REST - ERROR - createUser - user already exists with this email`, levels.WARN, scopes.USER, {
@@ -38,9 +45,15 @@ export default async function createUser(req, content) {
         lastName: content.lastname,
         profile: {},
       };
-      // check if we can determine structure from email
-      const structure = findStructureByEmail(content.email);
-      if (structure) userData.structure = structure._id;
+      // add a structure to user if we give a structure in content.structure
+      if (content.structure) {
+        const structureName = Structures.findOne({ name: content.structure });
+        userData.structure = structureName._id;
+      } else {
+        // check if we can determine structure from email
+        const structureByEmail = findStructureByEmail(content.email);
+        if (structureByEmail) userData.structure = structureByEmail._id;
+      }
       try {
         const { emails, ...u } = userData;
         const userId = Accounts.createUser({ ...u, email: emails[0].address });
