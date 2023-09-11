@@ -1769,11 +1769,8 @@
       "backToProfile": "Back to profile"
     },
     "IntroductionPage": {
-      "titleAppIntroduction": "General informations",
-      "noContent": "No content for now.",
-      "noTitle": "No title for now.",
       "informationsOf": "Informations of",
-      "titleStructures": "Structures informations"
+      "structureMessage": "Information from {$structure} :"
     },
     "AdminStructureSettingsPage": {
       "title": "Structure settings",
@@ -1847,9 +1844,6 @@
       "title": "Manage global info messages",
       "titleStructure": "Manage structure messages",
       "createButton": "Create new message"
-    },
-    "NewIntroductionPage": {
-      "structureMessage": "Information from {$structure} :"
     }
   },
   "layouts": {
