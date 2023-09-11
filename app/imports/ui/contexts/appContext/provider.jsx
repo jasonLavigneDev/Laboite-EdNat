@@ -42,7 +42,7 @@ const logger = (state, action) => {
 };
 
 const sendStateToIframe = (userId) => {
-  window.top.postMessage(
+  window.parent.postMessage(
     {
       type: 'userLogged',
       content: !!userId,
@@ -80,6 +80,7 @@ const Store = ({ children, loggingIn, user, userId, authenticated, roles, loadin
         },
       });
     }
+
     if (state.isIframed) {
       sendStateToIframe(userId);
     }

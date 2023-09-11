@@ -21,6 +21,7 @@
       "bookmarksFromClipboard": false
     },
     "features": ["franceTransfert"],
+    "chatbotUrl": "https://chat.rizomo.numerique.gouv.fr/",
     "ui": {
       "defaultGridViewMode": "compact",
       "isBusinessRegroupingMode": false,
