@@ -17,7 +17,6 @@ import './config/security';
 // as an API to the client.
 import './config/ValidationError';
 import './register-api';
-import '../../api/restApi';
 
 // Set up roles, initial accounts and services
 import './db-initialize/Structures';
@@ -29,6 +28,7 @@ import './db-initialize/Tags';
 import './db-initialize/Articles';
 import './db-initialize/AppSettings';
 import logServer from '../../api/logging';
+import initRestApi from '../../api/restApi';
 // import './db-initialize/PersonalSpaces';
 
 Meteor.startup(() => {
@@ -62,7 +62,11 @@ Meteor.startup(() => {
       },
     }),
   );
+
+  WebApp.connectHandlers.use(helmet.crossOriginResourcePolicy({ policy: 'cross-origin' }));
   WebApp.connectHandlers.use(helmet.crossOriginEmbedderPolicy({ policy: 'credentialless' }));
+
+  initRestApi();
 
   SyncedCron.config({
     log: true,

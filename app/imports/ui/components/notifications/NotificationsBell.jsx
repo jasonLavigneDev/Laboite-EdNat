@@ -16,7 +16,7 @@ const useStyles = makeStyles()((theme) => badgeStyle(theme));
 
 const sendNonReadNotificationCountToWindow = (count) => {
   if (flags.IS_FRAMED) {
-    window.top.postMessage(
+    window.parent.postMessage(
       {
         type: 'notifications',
         content: count,
