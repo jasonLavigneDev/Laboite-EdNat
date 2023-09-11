@@ -105,8 +105,8 @@ export const getAllGlobalInfoByLanguage = new ValidatedMethod({
     validateString(language, true);
     try {
       const structId = Meteor.users.findOne(this.userId)?.structure;
-      const structQuery = structure ? { structureId: structId } : { structureId: [] };
-      return GlobalInfos.find({ language }, structQuery).fetch();
+      const structQuery = structure ? { language, structureId: structId } : { language, structureId: [] };
+      return GlobalInfos.find(structQuery).fetch();
     } catch (error) {
       throw new Meteor.Error(error, error);
     }
