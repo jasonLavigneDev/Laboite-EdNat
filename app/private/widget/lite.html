@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="noindex" />
+  </head>
+  <body></body>
+  <script>
+    function load() {
+      const token = localStorage.getItem('Meteor.loginToken');
+
+      fetch(window.location.href, {
+        method: 'POST',
+        headers: {
+          Authorization: 'Token ' + token,
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (window !== window.parent) {
+            window.parent.postMessage(
+              {
+                type: 'load',
+                content: data,
+              },
+              '*',
+            );
+          }
+        });
+    }
+
+    window.addEventListener('message', (event) => {
+      if (event.data === 'load') {
+        load();
+      }
+    });
+  </script>
+</html>
