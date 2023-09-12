@@ -176,7 +176,7 @@ const SingleServicePage = ({ service = {}, ready, categories = [] }) => {
             </Typography>
             <div className={classes.content} dangerouslySetInnerHTML={{ __html: sanitizeHtml(service.content) }} />
           </Grid>
-          {Boolean(service.screenshots.length) && (
+          {Boolean(service.screenshots?.length) && (
             <>
               <Grid item xs={12} sm={12} md={12}>
                 <Typography className={classes.smallTitle} variant="h5">
@@ -200,10 +200,10 @@ const SingleServicePage = ({ service = {}, ready, categories = [] }) => {
 export default withTracker(
   ({
     match: {
-      params: { slug },
+      params: { slug, structure = '' },
     },
   }) => {
-    const subService = Meteor.subscribe('services.one', { slug });
+    const subService = Meteor.subscribe('services.one', { slug, structure });
     const service = Services.findOne({ slug, state: { $ne: 10 } }) || {};
     const categories = Categories.find({ _id: { $in: service.categories || [] } }).fetch();
     const ready = subService.ready();
