@@ -84,14 +84,8 @@
   openButton.title = 'Accéder aux services réservés aux agents de l’Etat';
   openButton.innerHTML = `<img src="${ABSOLUTE_URL}images/logos/${THEME}/widget/${userLogged}.svg" />`;
 
-  // create Styles
-  const stylesBalise = document.createElement('style');
-  stylesBalise.innerHTML = `${WIDGET_STYLE}`;
-
   // Get header and body from the page
   const target = document.body || document.querySelector('body');
-  const head = document.head || document.querySelector('head');
-  head.append(stylesBalise);
 
   // ------------------- CONTAINER --------------------
   const container = document.createElement('div');
@@ -102,7 +96,31 @@
   container.appendChild(openButton);
   container.appendChild(widgetContainer);
 
-  target.append(container);
+  const root = document.createElement('div');
+  root.id = 'la-pastille';
+
+  if ('attachShadow' in root) {
+    const shadow = root.attachShadow({ mode: 'open' });
+
+    shadow.appendChild(container);
+
+    const stylesheet = new CSSStyleSheet();
+    stylesheet.replaceSync(WIDGET_STYLE);
+    shadow.adoptedStyleSheets = [stylesheet];
+  } else {
+    console.warn('Browser does not support ShadowDOM. Some bugs may occur.');
+
+    // create Styles
+    const stylesBalise = document.createElement('style');
+    stylesBalise.innerHTML = WIDGET_STYLE;
+
+    const head = document.head || document.querySelector('head');
+    head.append(stylesBalise);
+
+    root.append(container);
+  }
+
+  target.append(root);
 
   // ------------------ FUNCTIONS WIDGET ------------------
 
