@@ -93,7 +93,7 @@ async function asyncQuerySelector(selector, depth = 0) {
  * @returns {JSX.Element}
  */
 export default function OnBoardingProvider({ children }) {
-  const [{ user, userId }] = useAppContext();
+  const [{ userId, user }] = useAppContext();
   const history = useHistory();
   const [areStepsEnabled, setStepsEnabled] = useState(false);
   const isAdmin = Roles.userIsInRole(user?._id, 'admin');

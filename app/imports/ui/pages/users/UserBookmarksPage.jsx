@@ -1,5 +1,6 @@
 import React, { useState, useRef, useCallback, useMemo } from 'react';
 import { Meteor } from 'meteor/meteor';
+// eslint-disable-next-line import/no-unresolved
 import { saveAs } from 'file-saver';
 import PropTypes from 'prop-types';
 import i18n from 'meteor/universe:i18n';

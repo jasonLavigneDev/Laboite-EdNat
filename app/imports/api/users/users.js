@@ -262,6 +262,33 @@ export const findStructureByEmail = (email) => {
   return undefined;
 };
 
+export const findStructureAllowed = (structure) => {
+  let isAllowed = false;
+  const tabApiKeys = Meteor.settings.private.createUserApiKeys;
+  const tabApiKeysByStructure = Meteor.settings.private.createUserApiKeysByStructure;
+  // eslint-disable-next-line no-restricted-syntax, guard-for-in
+  for (const key in tabApiKeysByStructure) {
+    const structures = tabApiKeysByStructure[key];
+    // eslint-disable-next-line no-restricted-syntax, no-plusplus
+    for (let i = 0; i < tabApiKeys.length; i++) {
+      logServer(`USERS - REST - ERROR - createUser - username already exists`, levels.WARN, scopes.USER, {
+        tabApiKeys,
+      });
+      if (key === tabApiKeys[i]) {
+        // eslint-disable-next-line no-loop-func
+        const test = structures[0].split(', ');
+        // eslint-disable-next-line no-loop-func
+        test.forEach((element) => {
+          if (element === structure) {
+            isAllowed = true;
+          }
+        });
+      }
+    }
+  }
+  return isAllowed;
+};
+
 if (Meteor.isServer) {
   Accounts.onCreateUser((options, user) => {
     // pass the structure name in the options
