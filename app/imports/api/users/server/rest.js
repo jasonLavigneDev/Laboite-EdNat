@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Accounts } from 'meteor/accounts-base';
 import i18n from 'meteor/universe:i18n';
-import { findStructureByEmail, findStructureAllowed } from '../users';
+import { findStructureAllowed } from '../users';
 import logServer, { levels, scopes } from '../../logging';
 import NextcloudClient from '../../appclients/nextcloud';
 import Structures from '../../structures/structures';
