@@ -278,7 +278,7 @@ PersonalLinkDetails.propTypes = {
   isMobile: PropTypes.bool.isRequired,
   isSorted: PropTypes.bool.isRequired,
   needUpdate: PropTypes.func.isRequired,
-  type: PropTypes.objectOf(PropTypes.any).isRequired,
+  type: PropTypes.string.isRequired,
 };
 
 export default PersonalLinkDetails;

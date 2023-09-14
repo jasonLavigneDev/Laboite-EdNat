@@ -279,7 +279,6 @@ if (Meteor.isServer) {
       email = user.services.keycloak.email;
     }
 
-    // if (Meteor.settings.private.autoAttachNewUserToStructures || (user.services && user.services.keycloak)) {
     const structure = findStructureByEmail(email);
 
     if (structure) {
@@ -287,7 +286,6 @@ if (Meteor.isServer) {
       newUser.structure = structure._id;
       newUser.isActive = true;
     }
-    // }
 
     newUser.emails = [{ address: email, verified: true }];
 
@@ -295,6 +293,7 @@ if (Meteor.isServer) {
     if (options.lastName) newUser.lastName = options.lastName;
     if (options.structure) newUser.structure = options.structure;
     if (options.profile) newUser.profile = options.profile;
+    if (options.primaryEmail) newUser.primaryEmail = options.primaryEmail;
 
     return newUser;
   });

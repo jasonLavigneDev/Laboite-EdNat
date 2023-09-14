@@ -145,7 +145,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
 
   const [plugins, setPlugins] = useState({}); // { nextcloud: false, rocketChat: true}
   const [{ isMobile }] = useAppContext();
-  const { groupPlugins } = Meteor.settings.public;
+  const { groupPlugins, hideGroupPlugins } = Meteor.settings.public;
   const history = useHistory();
   const { classes } = useStyles();
 
@@ -367,7 +367,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
     .reduce((acculator, currentValue) => acculator && currentValue, true);
 
   const groupPluginsShow = (plugin) => {
-    if (groupPlugins[plugin].enable) {
+    if (groupPlugins[plugin].enable && !hideGroupPlugins) {
       return (
         <FormGroup key={plugin}>
           <FormControlLabel

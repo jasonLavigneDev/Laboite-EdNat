@@ -61,6 +61,7 @@
       "group": null,
       "default": null
     },
+    "hideGroupPlugins": false,
     "groupPlugins": {
       "rocketChat": {
         "enable": false,

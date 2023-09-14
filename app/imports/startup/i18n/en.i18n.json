@@ -474,19 +474,31 @@
       "steps": {
         "intro": {
           "title": "Welcome to your space!",
-          "text": "A new space is opening up for state employees. 👋"
+          "text": "A new space is opening up for french education employees. 👋"
         },
         "mySpace": {
           "title": "Your Space!",
           "text": "This is where it all happens!"
         },
         "services": {
-          "title": "The interdepartmental applications",
-          "text": "The application store available to all government employees"
+          "title": "The national applications",
+          "text": "The application store available to all french education employees"
+        },
+        "groups": {
+          "title": "The groups",
+          "text": "The groups store of groups created by french education employees"
+        },
+        "adminGroups": {
+          "title": "Manage your groups",
+          "text": "Manage the groups you have created"
+        },
+        "addGroup": {
+          "title": "Add a group",
+          "text": "Create your own group"
         },
         "structure": {
-          "title": "The ministerial applications",
-          "text": "The application store available for your department or organization"
+          "title": "The local applications",
+          "text": "The application store hosted by your attachment structure"
         },
         "bookMark": {
           "title": "Manage your bookmarks",
@@ -678,7 +690,7 @@
       "menuAdminGroups": "Groups management",
       "menuUserBookmarks": "Bookmarks",
       "menuUpload": "Transfer files",
-      "menuProfileLabel": "Profile",
+      "menuProfileLabel": "My profile",
       "menuHelpLabel": "Help",
       "menuFeedbackLabel": "Give feedback",
       "menuOnboardingLabel": "How to use this service?",
@@ -1232,7 +1244,7 @@
       "cancel": "Cancel"
     },
     "ProfilePage": {
-      "title": "My settings",
+      "title": "My profile",
       "firstNameLabel": "First name",
       "lastNameLabel": "Last name",
       "emailLabel": "Email",
@@ -1407,6 +1419,7 @@
         "pagination_labelRowsSelect": "groups per page",
         "body_emptyDataSourceMessage": "No groups to manage",
         "body_addTooltip": "Add a group",
+        "body_cantCreate": "You can't create more group",
         "body_editTooltip": "Modify this group",
         "body_deleteTooltip": "Remove this group",
         "body_editRow_deleteText": "Do you really want to delete this group and unsubscribe its members ?"
