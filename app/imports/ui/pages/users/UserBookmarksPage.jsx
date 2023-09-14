@@ -8,6 +8,7 @@ import ArrowBack from '@mui/icons-material/ArrowBack';
 import MaterialTable from '@material-table/core';
 import Grid from '@mui/material/Grid';
 import { makeStyles } from 'tss-react/mui';
+import Checkbox from '@mui/material/Checkbox';
 import TableContainer from '@mui/material/TableContainer';
 import Table from '@mui/material/Table';
 import TableHead from '@mui/material/TableHead';
@@ -260,6 +261,7 @@ function UserBookmarksPage({ loading, bookmarksList }) {
    * @type {[BookmarkToImport[]]}
    */
   const [bookmarksToImport, setBookmarksToImport] = useState([]);
+  const [keepAll, setKeepAll] = useState(false);
   const [dialogMode, setDialogMode] = useState('export');
   const [importBookmark, { loading: importing }] = useMethod(`userBookmark.import`);
   const [exportBookmark, { loading: exporting }] = useMethod(`userBookmark.export`);
@@ -268,6 +270,7 @@ function UserBookmarksPage({ loading, bookmarksList }) {
   const closeImportModal = useCallback(() => {
     setIsImportModalOpen(false);
     setBookmarksToImport([]);
+    setKeepAll(false);
   }, []);
   const openURLEditor = useCallback(() => setEditUrl(true), []);
   const goBack = useCallback(() => history.goBack(), []);
@@ -280,7 +283,7 @@ function UserBookmarksPage({ loading, bookmarksList }) {
 
     importBookmark({ bookmarks: filteredBookmarks }).then((result) => {
       closeImportModal();
-      toast.success(i18n.__('pages.UserBookmarksPage.importSuccess', { nbOfBoomarks: result.length }));
+      toast.success(i18n.__('pages.UserBookmarksPage.importSuccess', { nbOfBoomarks: result.finalUrlsCount }));
     });
   }, [bookmarksToImport]);
 
@@ -346,10 +349,20 @@ function UserBookmarksPage({ loading, bookmarksList }) {
         // Here is your HTML file content
         const content = reader.result;
         const parsedBookmarks = htmlToBookmarks(content);
-        setBookmarksToImport(
-          parsedBookmarks.map((bookmark) => ({ ...bookmark, keep: true, addToPersonalSpace: false })),
-        );
-        nbBookmarksToImport.current = parsedBookmarks.length;
+
+        const seenUrls = {};
+        const mappedBookmarks = [];
+
+        // eslint-disable-next-line no-restricted-syntax
+        for (const bookmark of parsedBookmarks) {
+          if (!seenUrls[bookmark.url]) {
+            seenUrls[bookmark.url] = true;
+            mappedBookmarks.push({ ...bookmark, keep: false, addToPersonalSpace: false });
+          }
+        }
+
+        setBookmarksToImport(mappedBookmarks);
+        nbBookmarksToImport.current = 0;
 
         setIsReadingFile(false);
       };
@@ -375,6 +388,23 @@ function UserBookmarksPage({ loading, bookmarksList }) {
       const next = [...previous];
       next[idx] = { ...next[idx], addToPersonalSpace };
       return next;
+    });
+  }, []);
+  const handleKeepAll = useCallback(() => {
+    let shouldKeep = true;
+
+    setKeepAll((prevKeepAll) => {
+      shouldKeep = !prevKeepAll;
+      return shouldKeep;
+    });
+    setBookmarksToImport((previousBookmarks) => {
+      nbBookmarksToImport.current = shouldKeep ? previousBookmarks?.length : 0;
+
+      return previousBookmarks.map((bookmark) => ({
+        ...bookmark,
+        keep: shouldKeep,
+        addToPersonalSpace: shouldKeep ? bookmark.addToPersonalSpace : false,
+      }));
     });
   }, []);
 
@@ -539,7 +569,16 @@ function UserBookmarksPage({ loading, bookmarksList }) {
                             <TableRow>
                               <TableCell>{i18n.__('api.bookmarks.labels.name')}</TableCell>
                               <TableCell>{i18n.__('api.bookmarks.labels.url')}</TableCell>
-                              <TableCell>{i18n.__('api.bookmarks.keep')}</TableCell>
+                              <TableCell>
+                                <div className="flex align-center">
+                                  {i18n.__('api.bookmarks.keep')}
+                                  <Checkbox
+                                    checked={keepAll}
+                                    onChange={handleKeepAll}
+                                    title={i18n.__('api.bookmarks.keepOrAddAll')}
+                                  />
+                                </div>
+                              </TableCell>
                               <TableCell>{i18n.__('api.bookmarks.addToPersonalSpace')}</TableCell>
                             </TableRow>
                           </TableHead>
@@ -579,22 +618,23 @@ function UserBookmarksPage({ loading, bookmarksList }) {
                 <Typography variant="caption">Ressources :</Typography>
                 <ul>
                   <li>
-                    <Link
-                      href="https://support.mozilla.org/fr/kb/importer-marque-pages-fichier-html"
-                      target="blank"
-                      rel="noopener noreferrer"
-                    >
-                      <Typography variant="caption">{i18n.__('pages.UserBookmarksPage.importFirefox')}</Typography>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="https://support.mozilla.org/fr/kb/exporter-marque-pages-firefox-fichier-html"
-                      target="blank"
-                      rel="noopener noreferrer"
-                    >
-                      <Typography variant="caption">{i18n.__('pages.UserBookmarksPage.exportFirefox')}</Typography>
-                    </Link>
+                    {dialogMode === 'import' ? (
+                      <Link
+                        href="https://support.mozilla.org/fr/kb/importer-marque-pages-fichier-html"
+                        target="blank"
+                        rel="noopener noreferrer"
+                      >
+                        <Typography variant="caption">{i18n.__('pages.UserBookmarksPage.importFirefox')}</Typography>
+                      </Link>
+                    ) : (
+                      <Link
+                        href="https://support.mozilla.org/fr/kb/exporter-marque-pages-firefox-fichier-html"
+                        target="blank"
+                        rel="noopener noreferrer"
+                      >
+                        <Typography variant="caption">{i18n.__('pages.UserBookmarksPage.exportFirefox')}</Typography>
+                      </Link>
+                    )}
                   </li>
                   <li>
                     <Link
@@ -613,7 +653,7 @@ function UserBookmarksPage({ loading, bookmarksList }) {
                 {i18n.__('pages.UserBookmarksPage.close')}
               </Button>
               {dialogMode === 'import' ? (
-                <Button onClick={proceedWithImport} disabled={importing || !bookmarksToImport?.length}>
+                <Button onClick={proceedWithImport} disabled={importing || !nbBookmarksToImport.current}>
                   {i18n.__('pages.UserBookmarksPage.proceedWithImport')}
                 </Button>
               ) : (

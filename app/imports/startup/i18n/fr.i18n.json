@@ -15,6 +15,7 @@
       },
       "addToPersonalSpace": "Ajouter à l'espace personnel",
       "keep": "Ajouter",
+      "keepOrAddAll": "Tout ajouter ou retirer",
       "discard": "Ignorer",
       "creationFailed": "Echec lors de la création. Assurez-vous que tous les champs soient convenablement remplis.",
       "UnknownURL": "Cette URL n'existe pas.",

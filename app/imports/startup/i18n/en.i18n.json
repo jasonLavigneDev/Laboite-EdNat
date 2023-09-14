@@ -12,6 +12,7 @@
       },
       "addToPersonalSpace": "Add to personal space",
       "keep": "Keep",
+      "keepOrAddAll": "Keep or add all",
       "discard": "Discard",
       "creationFailed": "Creation failed. Make sure all fields are filled.",
       "UnknownURL": "This URL doesn't exist.",
