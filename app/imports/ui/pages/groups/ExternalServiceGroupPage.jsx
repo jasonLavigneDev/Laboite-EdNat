@@ -183,7 +183,9 @@ const ExternalServiceGroupPage = ({ loading, group, slug, service }) => {
     if (service === 'events')
       return `${testMeteorSettingsUrl(Meteor.settings.public.services.agendaUrl)}/event/${item._id}`;
     if (service === 'forms')
-      return `${testMeteorSettingsUrl(Meteor.settings.public.services.questionnaireURL)}/visualizer/${item._id}`;
+      return `${testMeteorSettingsUrl(Meteor.settings.public.services.questionnaireURL)}/visualizer/${
+        item._id
+      }?autologin`;
     return '';
   };
 
