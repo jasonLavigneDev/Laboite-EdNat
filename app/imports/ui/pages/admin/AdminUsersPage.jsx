@@ -313,12 +313,14 @@ const AdminUsersPage = ({ match: { path } }) => {
           JSON.stringify(user.firstName),
           JSON.stringify(user.lastName),
           JSON.stringify(user.structureName),
+          JSON.stringify(user.emails[0].address),
         ]);
 
         csvUsersDatas.unshift([
           i18n.__('api.users.labels.username'),
           i18n.__('api.users.labels.lastName'),
           i18n.__('api.users.labels.structure'),
+          i18n.__('api.users.labels.emailAddress'),
         ]);
 
         const csvUsersDatasToExport = csvUsersDatas.map((row) => row.join(';')).join('\n');
@@ -326,6 +328,7 @@ const AdminUsersPage = ({ match: { path } }) => {
         const formattedOptions = { day: '2-digit', month: '2-digit', year: 'numeric' };
         const formattedCurrDate = new Intl.DateTimeFormat(formattedOptions).format(currDate);
         const fileName = `${i18n.__('pages.AdminUsersPage.usersExport')}_${formattedCurrDate}.csv`;
+
         saveAs(new Blob([csvUsersDatasToExport], { type: 'text/csv;charset=utf-8;' }), fileName);
       }
     });
