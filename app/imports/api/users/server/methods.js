@@ -1829,7 +1829,7 @@ export const getUsersForExport = new ValidatedMethod({
   run({ structureId = '' }) {
     let structureToCheck;
 
-    const projection = { field: { firstName: 1, lastName: 1, structure: 1 } };
+    const projection = { fields: { firstName: 1, lastName: 1, structure: 1, emails: 1 } };
 
     const queryUser = structureId ? { structure: structureId } : {};
     const queryStructure = structureId ? { _id: structureId } : {};
