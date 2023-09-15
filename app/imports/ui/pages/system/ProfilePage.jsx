@@ -599,6 +599,7 @@ const ProfilePage = () => {
                     userAvatar={userData.avatar || ''}
                     userFirstName={userData.firstName || ''}
                     onAssignAvatar={onAssignAvatar}
+                    userActive={user.isActive}
                   />
                 </Grid>
               </Grid>

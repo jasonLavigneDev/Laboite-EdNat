@@ -1301,7 +1301,8 @@
       "ApplyDefaultSpace": "Appliquer l'espace par default de la structure '{$structName}'",
       "ApplyDefaultSpaceMessage": "Cela appliquera les changements sur votre espace personnel",
       "ApplyDefaultSpaceBtn": "Appliquer l'espace par default",
-      "ApplyDefaultSpaceWarning": "On ne peut pas appliquer l'espace par défaut si l'option 'espace personnel avancé' est activé"
+      "ApplyDefaultSpaceWarning": "On ne peut pas appliquer l'espace par défaut si l'option 'espace personnel avancé' est activé",
+      "activeAccountRequired": "Nécessite un compte actif"
     },
     "NotFound": {
       "backButtonLabel": "Retour",
