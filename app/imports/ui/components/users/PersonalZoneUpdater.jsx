@@ -515,7 +515,9 @@ function PersonalZoneUpdater({
                 </Grid>
               ) : null}
             </Grid>
-            {!edition && !disabledFeatures.groups && localPS.unsorted.filter(filterGroup).length !== 0
+            {!edition &&
+            !disabledFeatures.groups &&
+            localPS.unsorted.filter(filterSearch).filter(filterGroup).length !== 0
               ? [
                   <PersonalZone
                     key="zone-favGroup-000000000000"
@@ -529,7 +531,7 @@ function PersonalZoneUpdater({
                   />,
                 ]
               : null}
-            {!edition && localPS.unsorted.filter(filterService).length !== 0
+            {!edition && localPS.unsorted.filter(filterSearch).filter(filterService).length !== 0
               ? [
                   <PersonalZone
                     key="zone-favService-000000000000"
@@ -543,7 +545,7 @@ function PersonalZoneUpdater({
                   />,
                 ]
               : null}
-            {!edition && localPS.unsorted.filter(filterLink).length !== 0
+            {!edition && localPS.unsorted.filter(filterSearch).filter(filterLink).length !== 0
               ? [
                   <PersonalZone
                     key="zone-favUserBookmark-000000000000"
@@ -557,7 +559,7 @@ function PersonalZoneUpdater({
                   />,
                 ]
               : null}
-            {!edition && localPS.unsorted.filter(filterGroupLink).length !== 0
+            {!edition && localPS.unsorted.filter(filterSearch).filter(filterGroupLink).length !== 0
               ? [
                   <PersonalZone
                     key="zone-favGroupBookmark-000000000000"
