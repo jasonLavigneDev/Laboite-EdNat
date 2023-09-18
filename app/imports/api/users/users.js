@@ -262,7 +262,7 @@ export const findStructureByEmail = (email) => {
   return undefined;
 };
 
-export const findStructureAllowed = (structure) => {
+export const findStructureAllowed = (structure, apiKey) => {
   let isAllowed = false;
   const tabApiKeys = Meteor.settings.private.createUserApiKeys;
   const tabApiKeysByStructure = Meteor.settings.private.createUserApiKeysByStructure;
@@ -273,12 +273,15 @@ export const findStructureAllowed = (structure) => {
     for (let i = 0; i < tabApiKeys.length; i++) {
       logServer(`USERS - REST - ERROR - createUser - username already exists`, levels.WARN, scopes.USER, {
         tabApiKeys,
+        structures,
+        key,
       });
-      if (key === tabApiKeys[i]) {
+      if (key === tabApiKeys[i] && key === apiKey) {
         // eslint-disable-next-line no-loop-func
-        const test = structures[0].split(', ');
-        // eslint-disable-next-line no-loop-func
-        test.forEach((element) => {
+        structures.forEach((element) => {
+          logServer(`USERS - REST - ERROR - createUser - username already exists`, levels.WARN, scopes.USER, {
+            element,
+          });
           if (element === structure) {
             isAllowed = true;
           }

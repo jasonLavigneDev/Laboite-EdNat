@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Accounts } from 'meteor/accounts-base';
 import i18n from 'meteor/universe:i18n';
-import { findStructureAllowed } from '../users';
+import { findStructureByEmail, findStructureAllowed } from '../users';
 import logServer, { levels, scopes } from '../../logging';
 import NextcloudClient from '../../appclients/nextcloud';
 import Structures from '../../structures/structures';
@@ -23,16 +23,6 @@ export default async function createUser(req, content) {
     'email' in content &&
     'structure' in content
   ) {
-    const emailUser = Accounts.findUserByEmail(content.email);
-    if (emailUser) {
-      logServer(`USERS - REST - ERROR - createUser - user already exists with this email`, levels.WARN, scopes.USER, {
-        emailUser,
-      });
-      throw new Meteor.Error(
-        'restapi.users.createuser.emailExists',
-        `user already exists with this email: ${content.email}`,
-      );
-    }
     const user = Meteor.users.findOne({ username: content.username });
     if (!user) {
       // create user account if not existing
@@ -45,19 +35,30 @@ export default async function createUser(req, content) {
         lastName: content.lastname,
         profile: {},
       };
-      const isAllowed = findStructureAllowed(content.structure);
-      // add a structure to user if we give a structure in content.structure
-      if (content.structure && isAllowed) {
-        const structureName = Structures.findOne({ name: content.structure });
-        userData.structure = structureName._id;
-      } else {
-        throw new Meteor.Error(
-          'Structure not allowed to create users',
-          `Error encountered while creating user whith structure ${content.structure}`,
-        );
+      const structureName = Structures.findOne({ name: content.structure });
+      if (!content.structure || !structureName) {
         // check if we can determine structure from email
-        // const structureByEmail = findStructureByEmail(content.email);
-        // if (structureByEmail) userData.structure = structureByEmail._id;
+        const structureByEmail = findStructureByEmail(content.email);
+        if (structureByEmail) {
+          userData.structure = structureByEmail._id;
+        } else {
+          throw new Meteor.Error(
+            'Structure not find, we cannot assign a structure to this user',
+            `Error encountered while creating user whith no structure`,
+          );
+        }
+      } else {
+        const apiKey = req.headers['x-api-key'];
+        const isAllowed = findStructureAllowed(content.structure, apiKey);
+        // add a structure to user if we give a structure in content.structure
+        if (content.structure && isAllowed) {
+          userData.structure = structureName._id;
+        } else {
+          throw new Meteor.Error(
+            'Structure not allowed to create users',
+            `Error encountered while creating user whith structure ${content.structure}`,
+          );
+        }
       }
       try {
         const { emails, ...u } = userData;
