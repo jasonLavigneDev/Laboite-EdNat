@@ -6,7 +6,6 @@ from pymongo import MongoClient
 from random import randint, choice, choices, sample
 from keycloak import KeycloakAdmin
 from keycloak import KeycloakOpenIDConnection
-from pymongo import MongoClient
 from dotenv import load_dotenv
 from datetime import datetime
 
