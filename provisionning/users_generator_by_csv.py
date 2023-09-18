@@ -188,22 +188,22 @@ if(len(sys.argv) == 2):
     if reset == '-r':
         resetData()
 
-# print("[{}] Start insert structures".format(datetime.now()))
-# with open('structures.csv', mode='r') as csv_file:
-#     csv_reader = csv.DictReader(csv_file)
-#     line_count = 0
-#     for row in csv_reader:
-#         insertStructure(row)
-# print("======================================================")
+print("[{}] Start insert structures".format(datetime.now()))
+with open('structures.csv', mode='r') as csv_file:
+    csv_reader = csv.DictReader(csv_file)
+    line_count = 0
+    for row in csv_reader:
+        insertStructure(row)
+print("======================================================")
 
 
-# print("[{}] Start insert mails extension".format(datetime.now()))
-# with open('mails.csv', mode='r') as csv_file:
-#     csv_reader = csv.DictReader(csv_file)
+print("[{}] Start insert mails extension".format(datetime.now()))
+with open('mails.csv', mode='r') as csv_file:
+    csv_reader = csv.DictReader(csv_file)
 
-#     for row in csv_reader:
-#         insertMailExtension(row)
-# print("======================================================")
+    for row in csv_reader:
+        insertMailExtension(row)
+print("======================================================")
 
 
 print("[{}] Start insert users".format(datetime.now()))
