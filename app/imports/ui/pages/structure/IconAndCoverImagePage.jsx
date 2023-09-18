@@ -30,6 +30,7 @@ const useStyles = (isMobile) =>
       bottom: !isMobile ? '-48px' : '-25px',
       height: '8vw',
       width: '8vw',
+      borderRadius: '50%',
     },
     containerGrid: {
       paddingTop: theme.spacing(0),

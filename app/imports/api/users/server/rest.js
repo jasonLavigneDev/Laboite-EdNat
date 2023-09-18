@@ -1,9 +1,10 @@
 import { Meteor } from 'meteor/meteor';
 import { Accounts } from 'meteor/accounts-base';
 import i18n from 'meteor/universe:i18n';
-import { findStructureByEmail } from '../users';
+import { findStructureByEmail, searchMatchingStructure } from '../users';
 import logServer, { levels, scopes } from '../../logging';
 import NextcloudClient from '../../appclients/nextcloud';
+import Structures from '../../structures/structures';
 
 const nextcloudPlugin = Meteor.settings.public.groupPlugins.nextcloud;
 let nextClient = null;
@@ -13,7 +14,7 @@ export default async function createUser(req, content) {
   // sample use:
   // curl -X POST -H "X-API-KEY: createuser-password" \
   //      -H "Content-Type: application/json" \
-  //      -d '{"username":"utilisateur1", "firstname":"", "lastname":"", "email":"" }' \
+  //      -d '{"username":"utilisateur1", "firstname":"", "lastname":"", "email":"", "structure":"" }' \
   //      http://localhost:3000/api/createuser
   if ('username' in content && 'firstname' in content && 'lastname' in content && 'email' in content) {
     const emailUser = Accounts.findUserByEmail(content.email);
@@ -38,9 +39,28 @@ export default async function createUser(req, content) {
         lastName: content.lastname,
         profile: {},
       };
-      // check if we can determine structure from email
-      const structure = findStructureByEmail(content.email);
-      if (structure) userData.structure = structure._id;
+      const structureObject = Structures.findOne({ name: content.structure });
+      if (!content.structure || !structureObject) {
+        // check if we can determine structure from email
+        const structureByEmail = findStructureByEmail(content.email);
+        if (structureByEmail) {
+          userData.structure = structureByEmail._id;
+        }
+      } else {
+        const apiKey = req.headers['x-api-key'];
+        const tabApiKeys = Meteor.settings.private.createUserApiKeys;
+        const tabApiKeysByStructure = Meteor.settings.private.createUserApiKeysByStructure;
+        const isAllowed = searchMatchingStructure(structureObject, apiKey, tabApiKeys, tabApiKeysByStructure);
+        // add a structure to user if we give a structure in content.structure
+        if (content.structure && isAllowed) {
+          userData.structure = structureObject._id;
+        } else {
+          throw new Meteor.Error(
+            'Structure not allowed to create users',
+            `Error encountered while creating user whith structure ${content.structure}`,
+          );
+        }
+      }
       try {
         const { emails, ...u } = userData;
         const userId = Accounts.createUser({ ...u, email: emails[0].address });
