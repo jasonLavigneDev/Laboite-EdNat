@@ -153,14 +153,12 @@ def generateUser(id, structure):
         firstname = name.split(' ')[0]
         lastname = name.split(' ')[1]
 
-        emails = [{"address": mail, "verified": True}]
-
         idDB = generateID()
 
         entry = {
             "_id": idDB,
             "username": mail,
-            "emails": emails,
+            "emails": mail,
             "password": "123",
             "structure": structure,
             "firstName": firstname,

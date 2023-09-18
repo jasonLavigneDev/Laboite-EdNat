@@ -30,6 +30,26 @@ The script also requires an active LaBoite setup.
 
 ### Usage
 
-python3 users_generator.py <nb of structures> (<-r>)
+```python3 users_generator.py <nb of structures> (<-r>)```
 
 -r is optional and it allows to reset all existing users and groups of keycloak
+
+
+### CSV generator and insertion of CSV data
+
+It's possible to use a csv with formated data to insert in database. 
+You can generate csv with fake data with csv_generator.py
+
+```python3 csv_generator.py <nb of structures>```
+
+This script will create three files:
+- structures.csv for all structures/sub-structures
+- mails.csv for mails extension for each structure
+- users.csv for all users
+
+You can reuse this csv and insert all data with:
+
+```python3 users_generator_by_csv.py (-r)```
+
+-r is optional and it allows to reset all existing users and groups of keycloak
+
