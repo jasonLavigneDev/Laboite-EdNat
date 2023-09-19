@@ -43,9 +43,13 @@ function Logout() {
 function App() {
   const [state] = useAppContext();
   const theme = useTheme();
-  const { enableLinkTracking } = useMatomo();
+  const { trackPageView, enableLinkTracking } = useMatomo();
   enableLinkTracking();
   useWidgetLink();
+
+  useEffect(() => {
+    trackPageView();
+  }, []);
 
   const { userId, loadingUser = false, loading } = state;
   const externalBlog = !!Meteor.settings.public.services.laboiteBlogURL;
