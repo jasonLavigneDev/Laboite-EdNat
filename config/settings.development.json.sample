@@ -122,6 +122,9 @@
     ],
     "createUserApiKeys": [],
     "createUserTokenApiKeys": [],
+    "createUserTokenApiKeysByStructures": {
+      "createusertoken-password": []
+    },
     "BBBSecret": "",
     "whiteDomains": [
       "^ac-[a-z-]*\\.fr",
