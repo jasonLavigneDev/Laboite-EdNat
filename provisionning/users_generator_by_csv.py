@@ -182,34 +182,53 @@ def insertMailExtension(mailExtension):
 
 db = get_database()
 
-if(len(sys.argv) == 2):
+if(len(sys.argv) >= 2):
     reset = sys.argv[1]
 
     if reset == '-r':
         resetData()
 
-print("[{}] Start insert structures".format(datetime.now()))
-with open('structures.csv', mode='r') as csv_file:
-    csv_reader = csv.DictReader(csv_file)
-    line_count = 0
-    for row in csv_reader:
-        insertStructure(row)
-print("======================================================")
+csvStructurePath = "structures.csv"
+csvMailPath = "mails.csv"
+csvUserPath = "users.csv"
+
+if(len(sys.argv) > 2):
+    csvStructurePath = sys.argv[2]
+
+    csvMailPath = sys.argv[3]
+
+    csvUserPath = sys.argv[4]
+
+if(csvStructurePath != '' and csvStructurePath != None):
+    print("[{}] Start insert structures".format(datetime.now()))
+    with open(csvStructurePath, mode='r') as csv_file:
+        csv_reader = csv.DictReader(csv_file)
+        line_count = 0
+        for row in csv_reader:
+            insertStructure(row)
+    print("======================================================")
+else:
+    print("[{}] Aucun CSV pour les structures.".format(datetime.now()))
 
 
-print("[{}] Start insert mails extension".format(datetime.now()))
-with open('mails.csv', mode='r') as csv_file:
-    csv_reader = csv.DictReader(csv_file)
+if(csvMailPath != '' and csvMailPath != None):
+    print("[{}] Start insert mails extension".format(datetime.now()))
+    with open(csvMailPath, mode='r') as csv_file:
+        csv_reader = csv.DictReader(csv_file)
 
-    for row in csv_reader:
-        insertMailExtension(row)
-print("======================================================")
+        for row in csv_reader:
+            insertMailExtension(row)
+    print("======================================================")
+else:
+    print("[{}] Aucun CSV pour les mails.".format(datetime.now()))
 
+if(csvUserPath != '' and csvUserPath != None):
+    print("[{}] Start insert users".format(datetime.now()))
+    with open(csvUserPath, mode='r') as csv_file:
+        csv_reader = csv.DictReader(csv_file)
 
-print("[{}] Start insert users".format(datetime.now()))
-with open('users.csv', mode='r') as csv_file:
-    csv_reader = csv.DictReader(csv_file)
-
-    for row in csv_reader:
-        insertUser(row)
-print("======================================================")
+        for row in csv_reader:
+            insertUser(row)
+    print("======================================================")
+else:
+    print("[{}] Aucun CSV pour les utilisateurs.".format(datetime.now()))
