@@ -268,20 +268,17 @@ export const findStructureAllowed = (structure, apiKey) => {
   const tabApiKeysByStructure = Meteor.settings.private.createUserApiKeysByStructure;
   // eslint-disable-next-line no-restricted-syntax, guard-for-in
   for (const key in tabApiKeysByStructure) {
-    const structures = tabApiKeysByStructure[key];
+    const structuresInTab = tabApiKeysByStructure[key];
     // eslint-disable-next-line no-restricted-syntax, no-plusplus
     for (let i = 0; i < tabApiKeys.length; i++) {
-      logServer(`USERS - REST - ERROR - createUser - username already exists`, levels.WARN, scopes.USER, {
-        tabApiKeys,
-        structures,
-        key,
-      });
+      // allow create user if there is no structure in structureInTab and apiKey is in tabApiKeys and tabApiKeysByStructure
+      if (key === tabApiKeys[i] && structuresInTab.length === 0) {
+        isAllowed = true;
+      }
+      // check if the structure gave in curl request is in apiKey tab inside tabApiKeysByStructure
       if (key === tabApiKeys[i] && key === apiKey) {
         // eslint-disable-next-line no-loop-func
-        structures.forEach((element) => {
-          logServer(`USERS - REST - ERROR - createUser - username already exists`, levels.WARN, scopes.USER, {
-            element,
-          });
+        structuresInTab.forEach((element) => {
           if (element === structure) {
             isAllowed = true;
           }

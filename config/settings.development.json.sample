@@ -121,6 +121,10 @@
       ""
     ],
     "createUserApiKeys": [],
+    "createUserApiKeysByStructure": {
+      "createuser-password2": [],
+      "createuser-password": []
+    },
     "createUserTokenApiKeys": [],
     "BBBSecret": "",
     "whiteDomains": [

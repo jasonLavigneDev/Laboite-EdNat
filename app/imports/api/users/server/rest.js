@@ -23,6 +23,16 @@ export default async function createUser(req, content) {
     'email' in content &&
     'structure' in content
   ) {
+    const emailUser = Accounts.findUserByEmail(content.email);
+    if (emailUser) {
+      logServer(`USERS - REST - ERROR - createUser - user already exists with this email`, levels.WARN, scopes.USER, {
+        emailUser,
+      });
+      throw new Meteor.Error(
+        'restapi.users.createuser.emailExists',
+        `user already exists with this email: ${content.email}`,
+      );
+    }
     const user = Meteor.users.findOne({ username: content.username });
     if (!user) {
       // create user account if not existing
