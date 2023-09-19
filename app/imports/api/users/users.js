@@ -262,6 +262,82 @@ export const findStructureByEmail = (email) => {
   return undefined;
 };
 
+export const findStructureAllowed = (structureObject, apiKey, tabApiKeys, tabApiKeysByStructure) => {
+  let isAllowed = false;
+  // eslint-disable-next-line no-restricted-syntax, guard-for-in
+  for (const key in tabApiKeysByStructure) {
+    const structuresInTab = tabApiKeysByStructure[key];
+    // eslint-disable-next-line no-restricted-syntax, no-plusplus
+    for (let i = 0; i < tabApiKeys.length; i++) {
+      // allow create user if there is no structure in structureInTab and apiKey is in tabApiKeys and tabApiKeysByStructure
+      if (key === tabApiKeys[i] && structuresInTab.length === 0) {
+        isAllowed = true;
+      }
+      // check if the structure gave in curl request is in apiKey tab inside tabApiKeysByStructure
+      if (key === tabApiKeys[i] && key === apiKey) {
+        // eslint-disable-next-line no-loop-func
+        structuresInTab.forEach((element) => {
+          if (element === structureObject.name) {
+            isAllowed = true;
+          }
+        });
+      }
+    }
+  }
+  return isAllowed;
+};
+
+export const isMatchingStructureWithParent = (structureObject, apiKey, tabApiKeys, tabApiKeysByStructure) => {
+  const structureParent = Structures.findOne({ _id: structureObject.parentId });
+  let isMatchingWithParent = findStructureAllowed(structureParent, apiKey, tabApiKeys, tabApiKeysByStructure);
+
+  if (!isMatchingWithParent) {
+    if (structureObject.parentId === null) {
+      isMatchingWithParent = false;
+    } else {
+      isMatchingStructureWithParent(structureParent, apiKey, tabApiKeys, tabApiKeysByStructure);
+    }
+  }
+
+  return isMatchingWithParent;
+};
+
+export const isMatchingStructureWithChildrens = (structureObject, apiKey, tabApiKeys, tabApiKeysByStructure) => {
+  let isMatchingWithChild = false;
+
+  if (structureObject.childrenIds.length !== 0) {
+    isMatchingWithChild = findStructureAllowed(structureObject.childrenIds[0]);
+    if (!isMatchingWithChild) {
+      for (let i = 1; i < structureObject.childrenIds.length; i += 1) {
+        isMatchingStructureWithChildrens(structureObject.childrenIds[i], apiKey, tabApiKeys, tabApiKeysByStructure);
+      }
+    }
+  } else {
+    isMatchingWithChild = findStructureAllowed(structureObject.childrenIds[0]);
+  }
+
+  return isMatchingWithChild;
+};
+
+export const searchMatchingStructure = (structureObject, apiKey, tabApiKeys, tabApiKeysByStructure) => {
+  let isMatchingWithChildren = false;
+  let isMatchingWithParent = false;
+  let result = findStructureAllowed(structureObject, apiKey, tabApiKeys, tabApiKeysByStructure);
+  if (!result) {
+    isMatchingWithChildren = isMatchingStructureWithChildrens(
+      structureObject,
+      apiKey,
+      tabApiKeys,
+      tabApiKeysByStructure,
+    );
+    isMatchingWithParent = isMatchingStructureWithParent(structureObject, apiKey, tabApiKeys, tabApiKeysByStructure);
+    if (isMatchingWithParent || isMatchingWithChildren) {
+      result = true;
+    }
+  }
+  return result;
+};
+
 if (Meteor.isServer) {
   Accounts.onCreateUser((options, user) => {
     // pass the structure name in the options
