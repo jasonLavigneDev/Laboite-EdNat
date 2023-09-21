@@ -33,8 +33,7 @@ def generateID():
 
 
 def generateMailExtension(struc):
-    mailExtension = {"_id": generateID(),
-                     "extension": "{}.fr".format(struc["name"].replace(' ', '-').replace('(', '').replace(')', '')),
+    mailExtension = {"extension": "{}.fr".format(struc["name"].replace(' ', '-').replace('(', '').replace(')', '')),
                      "entiteNomCourt": "",
                      "entiteNomLong": "",
                      "familleNomCourt": "",
@@ -156,7 +155,6 @@ def generateUser(id, structure):
         idDB = generateID()
 
         entry = {
-            "_id": idDB,
             "username": mail,
             "emails": mail,
             "password": "123",
@@ -178,7 +176,7 @@ def generateUser(id, structure):
 def generateCSVForMailExtensions():
 
     print("[{}] Création CSV: mails.csv".format(datetime.now()))
-    headers = ["_id", "extension", "entiteNomCourt", "entiteNomLong",
+    headers = ["extension", "entiteNomCourt", "entiteNomLong",
                "familleNomCourt", "familleNomLong", "structureId"]
     with open('mails.csv', 'w', encoding='UTF8', newline='') as f:
         writer = csv.DictWriter(f, fieldnames=headers)
@@ -190,7 +188,7 @@ def generateCSVForMailExtensions():
 
 def generateCSVForUsers():
     print("[{}] Création CSV: users.csv".format(datetime.now()))
-    headers = ["_id", "username", "emails", "password",
+    headers = ["username", "emails", "password",
                "structure", "firstName", "lastName", "favGroups", "favServices", "isActive"]
 
     with open('users.csv', 'w', encoding='UTF8', newline='') as f:

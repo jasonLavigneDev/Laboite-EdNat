@@ -128,8 +128,9 @@ def insertUser(user):
                                            "credentials": [{"value": user["password"], "type": "password", }]},
                                           exist_ok=False)
 
+    idDB = generateID()
     entry = {
-        "_id": user["_id"],
+        "_id": idDB,
         "username": user["emails"],
         "emails": emails,
         "password": user["password"],
@@ -143,7 +144,7 @@ def insertUser(user):
     print("[{}] Insert user: {}".format(datetime.now(), entry["username"]))
     db['users'].insert_one(entry)
 
-    addUserToStructureGroup(user["_id"], user["structure"])
+    addUserToStructureGroup(idDB, user["structure"])
 
 
 def insertStructure(structure):
@@ -182,22 +183,26 @@ def insertMailExtension(mailExtension):
 
 db = get_database()
 
-if(len(sys.argv) >= 2):
-    reset = sys.argv[1]
-
-    if reset == '-r':
-        resetData()
 
 csvStructurePath = "structures.csv"
 csvMailPath = "mails.csv"
 csvUserPath = "users.csv"
 
-if(len(sys.argv) > 2):
-    csvStructurePath = sys.argv[2]
+if '-r' in sys.argv:
+    resetData()
 
-    csvMailPath = sys.argv[3]
+if '-s' in sys.argv:
+    index = sys.argv.index('-s')
+    csvStructurePath = sys.argv[index+1]
 
-    csvUserPath = sys.argv[4]
+if '-m' in sys.argv:
+    index = sys.argv.index('-m')
+    csvMailPath = sys.argv[index+1]
+
+if '-u' in sys.argv:
+    index = sys.argv.index('-u')
+    csvUserPath = sys.argv[index+1]
+
 
 if(csvStructurePath != '' and csvStructurePath != None):
     print("[{}] Start insert structures".format(datetime.now()))
@@ -208,7 +213,7 @@ if(csvStructurePath != '' and csvStructurePath != None):
             insertStructure(row)
     print("======================================================")
 else:
-    print("[{}] Aucun CSV pour les structures.".format(datetime.now()))
+    print("[{}] No CSV found for structures.".format(datetime.now()))
 
 
 if(csvMailPath != '' and csvMailPath != None):
@@ -217,10 +222,12 @@ if(csvMailPath != '' and csvMailPath != None):
         csv_reader = csv.DictReader(csv_file)
 
         for row in csv_reader:
-            insertMailExtension(row)
+            data = row
+            data["_id"] = generateID()
+            insertMailExtension(data)
     print("======================================================")
 else:
-    print("[{}] Aucun CSV pour les mails.".format(datetime.now()))
+    print("[{}] No CSV found for mails extensions.".format(datetime.now()))
 
 if(csvUserPath != '' and csvUserPath != None):
     print("[{}] Start insert users".format(datetime.now()))
@@ -231,4 +238,4 @@ if(csvUserPath != '' and csvUserPath != None):
             insertUser(row)
     print("======================================================")
 else:
-    print("[{}] Aucun CSV pour les utilisateurs.".format(datetime.now()))
+    print("[{}] No CSV found for users.".format(datetime.now()))
