@@ -187,12 +187,6 @@ def execStructureGenerator(nb):
         print("=============================================")
 
 
-def getRandomStructure():
-    allStructures = db['structures'].find()
-    rand = random.randrange(db['structures'].count_documents({}))
-    return allStructures[rand]["_id"]
-
-
 def addUserToStructureGroup(idDB, structureID):
     structure = db['structures'].find_one({"_id": structureID})
     if(structure != None):

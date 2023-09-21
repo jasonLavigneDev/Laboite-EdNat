@@ -1,9 +1,7 @@
 import sys
 import os
 from faker import Faker
-import random
 from pymongo import MongoClient
-from random import randint, choice, choices, sample
 from keycloak import KeycloakAdmin
 from keycloak import KeycloakOpenIDConnection
 from dotenv import load_dotenv
