@@ -119,66 +119,81 @@ def addUserToStructureGroup(idDB, structureID):
 
 def insertUser(user):
 
-    emails = [{"address": user["emails"], "verified": True}]
-    new_user = keycloak_admin.create_user({"email": user["emails"],
-                                           "username": user["emails"],
-                                           "enabled": True,
-                                           "firstName": user["firstName"],
-                                           "lastName": user["lastName"],
-                                           "credentials": [{"value": user["password"], "type": "password", }]},
-                                          exist_ok=False)
+    alreadyExist = db['users'].find_one({"username": user["emails"]})
+    if(alreadyExist == None):
+        emails = [{"address": user["emails"], "verified": True}]
+        new_user = keycloak_admin.create_user({"email": user["emails"],
+                                               "username": user["emails"],
+                                               "enabled": True,
+                                               "firstName": user["firstName"],
+                                               "lastName": user["lastName"],
+                                               "credentials": [{"value": user["password"], "type": "password", }]},
+                                              exist_ok=False)
 
-    idDB = generateID()
-    entry = {
-        "_id": idDB,
-        "username": user["emails"],
-        "emails": emails,
-        "password": user["password"],
-        "structure": user["structure"],
-        "firstName": user["firstName"],
-        "lastName": user["lastName"],
-        "favGroups": [],
-        "favServices": [],
-        "isActive": True
-    }
-    print("[{}] Insert user: {}".format(datetime.now(), entry["username"]))
-    db['users'].insert_one(entry)
+        idDB = generateID()
+        entry = {
+            "_id": idDB,
+            "username": user["emails"],
+            "emails": emails,
+            "password": user["password"],
+            "structure": user["structure"],
+            "firstName": user["firstName"],
+            "lastName": user["lastName"],
+            "favGroups": [],
+            "favServices": [],
+            "isActive": True
+        }
+        print("[{}] Insert user: {}".format(datetime.now(), entry["username"]))
+        db['users'].insert_one(entry)
 
-    addUserToStructureGroup(idDB, user["structure"])
+        addUserToStructureGroup(idDB, user["structure"])
+    else:
+        print("[{}] user {} already exists. Pass...".format(
+            datetime.now(), alreadyExist["username"]))
 
 
 def insertStructure(structure):
-    db['structures'].insert_one(structure)
+    alreadyExist = db["structures"].find_one({"name": structure["name"]})
+    if(alreadyExist == None):
+        db['structures'].insert_one(structure)
 
-    keycloak_admin.create_group({"name": structure["name"]})
-    group = {
-        "_id": generateID(),
-        "name": structure["name"],
-        "slug": '{}_{}'.format(structure['_id'], structure["name"].replace(' ', '_')),
-        "type": 15,
-        "description": 'groupe structure',
-        "content": '',
-        "avatar": '',
-        "plugins": {},
-        "owner": 0,
-        "animators": [],
-        "members": [],
-        "candidates": [],
-        "admins": [],
-        "avatar": '',
-    }
-    print("[{}] Insert group: {}".format(datetime.now(), group["name"]))
-    db['groups'].insert_one(group)
-    groupDB = db['groups'].find_one({"name": structure["name"]})
+        keycloak_admin.create_group({"name": structure["name"]})
+        group = {
+            "_id": generateID(),
+            "name": structure["name"],
+            "slug": '{}_{}'.format(structure['_id'], structure["name"].replace(' ', '_')),
+            "type": 15,
+            "description": 'groupe structure',
+            "content": '',
+            "avatar": '',
+            "plugins": {},
+            "owner": 0,
+            "animators": [],
+            "members": [],
+            "candidates": [],
+            "admins": [],
+            "avatar": '',
+        }
+        print("[{}] Insert group: {}".format(datetime.now(), group["name"]))
+        db['groups'].insert_one(group)
+        groupDB = db['groups'].find_one({"name": structure["name"]})
 
-    db['structures'].update_one(
-        {"name": structure["name"]}, {"$set": {"groupId": groupDB["_id"]}})
+        db['structures'].update_one(
+            {"name": structure["name"]}, {"$set": {"groupId": groupDB["_id"]}})
+    else:
+        print("[{}] structure {} already exists. Pass...".format(
+            datetime.now(), alreadyExist["name"]))
 
 
 def insertMailExtension(mailExtension):
-    print("[{}] Insert mail extension: {}".format(
-        datetime.now(), mailExtension["extension"]))
-    db['asamextensions'].insert_one(mailExtension)
+    alreadyExist = db.find_one({"extension": mailExtension["extension"]})
+    if(alreadyExist == None):
+        print("[{}] Insert mail extension: {}".format(
+            datetime.now(), mailExtension["extension"]))
+        db['asamextensions'].insert_one(mailExtension)
+    else:
+        print("[{}] Mail extension {} already exists. Pass...".format(
+            datetime.now(), alreadyExist["extension"]))
 
 
 db = get_database()
@@ -204,7 +219,7 @@ if '-u' in sys.argv:
     csvUserPath = sys.argv[index+1]
 
 
-if(csvStructurePath != '' and csvStructurePath != None):
+if(csvStructurePath != '' and csvStructurePath != 'none' and csvStructurePath != None):
     print("[{}] Start insert structures".format(datetime.now()))
     with open(csvStructurePath, mode='r') as csv_file:
         csv_reader = csv.DictReader(csv_file)
@@ -216,7 +231,7 @@ else:
     print("[{}] No CSV found for structures.".format(datetime.now()))
 
 
-if(csvMailPath != '' and csvMailPath != None):
+if(csvMailPath != '' and csvMailPath != 'none' and csvMailPath != None):
     print("[{}] Start insert mails extension".format(datetime.now()))
     with open(csvMailPath, mode='r') as csv_file:
         csv_reader = csv.DictReader(csv_file)
@@ -229,7 +244,7 @@ if(csvMailPath != '' and csvMailPath != None):
 else:
     print("[{}] No CSV found for mails extensions.".format(datetime.now()))
 
-if(csvUserPath != '' and csvUserPath != None):
+if(csvUserPath != '' and csvUserPath != 'none' and csvUserPath != None):
     print("[{}] Start insert users".format(datetime.now()))
     with open(csvUserPath, mode='r') as csv_file:
         csv_reader = csv.DictReader(csv_file)

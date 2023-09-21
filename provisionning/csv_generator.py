@@ -80,7 +80,8 @@ def generateCSVForStructure(nb):
 
             structures[subEntry["_id"]] = int(PERSONNE_PAR_ECOLE)
 
-            print("[{}] Ecole créée: {}".format(datetime.now(), school_name))
+            print("[{}] Elementary School created: {}".format(
+                datetime.now(), school_name))
 
         print("=============================================")
 
@@ -100,7 +101,8 @@ def generateCSVForStructure(nb):
             generateMailExtension(subEntry)
 
             structures[subEntry2["_id"]] = int(PERSONNE_PAR_COLLEGE)
-            print("[{}] Collège créé: {}".format(datetime.now(), col_name))
+            print("[{}] Middle school created: {}".format(
+                datetime.now(), col_name))
 
         print("=============================================")
 
@@ -120,12 +122,13 @@ def generateCSVForStructure(nb):
             generateMailExtension(subEntry)
 
             structures[subEntry3["_id"]] = int(PERSONNE_PAR_LYCEE)
-            print("[{}] Lycée créé: {}".format(datetime.now(), lyc_name))
+            print("[{}] High school created: {}".format(
+                datetime.now(), lyc_name))
 
         print("=============================================")
         print("=============================================")
 
-    print("[{}] Création CSV".format(datetime.now()))
+    print("[{}] Creation of CSV".format(datetime.now()))
     with open('structures.csv', 'w', encoding='UTF8', newline='') as f:
         writer = csv.DictWriter(f, fieldnames=headers)
         writer.writeheader()
@@ -167,7 +170,7 @@ def generateUser(id, structure):
         }
 
         users.append(entry)
-        print("[{}] Création utilisateur: {} {} ({})".format(
+        print("[{}] Creation of user: {} {} ({})".format(
             datetime.now(), firstname, lastname, mail))
         print("=============================================")
         return
@@ -175,7 +178,7 @@ def generateUser(id, structure):
 
 def generateCSVForMailExtensions():
 
-    print("[{}] Création CSV: mails.csv".format(datetime.now()))
+    print("[{}] Creation of CSV: mails.csv".format(datetime.now()))
     headers = ["extension", "entiteNomCourt", "entiteNomLong",
                "familleNomCourt", "familleNomLong", "structureId"]
     with open('mails.csv', 'w', encoding='UTF8', newline='') as f:
@@ -187,7 +190,7 @@ def generateCSVForMailExtensions():
 
 
 def generateCSVForUsers():
-    print("[{}] Création CSV: users.csv".format(datetime.now()))
+    print("[{}] Creation of CSV: users.csv".format(datetime.now()))
     headers = ["username", "emails", "password",
                "structure", "firstName", "lastName", "favGroups", "favServices", "isActive"]
 
