@@ -127,7 +127,9 @@ function MainLayout({ appsettings, ready }) {
           return;
         }
 
-        history.push('/personal');
+        if (Meteor.settings.public.forceRedirectToPersonalSpace !== false) {
+          history.push('/personal');
+        }
       });
     }
   }, []);
