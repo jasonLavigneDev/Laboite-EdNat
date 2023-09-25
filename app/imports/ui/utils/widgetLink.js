@@ -16,7 +16,6 @@ export default function useWidgetLink() {
       if (data.type === 'widget') {
         switch (data.event) {
           case 'upload':
-            console.log(event, data.files);
             history.push('/upload', data.files);
             break;
           default:
