@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Accounts } from 'meteor/accounts-base';
 import i18n from 'meteor/universe:i18n';
-import { findStructureByEmail, findStructureAllowed } from '../users';
+import { findStructureByEmail, searchMatchingStructure } from '../users';
 import logServer, { levels, scopes } from '../../logging';
 import NextcloudClient from '../../appclients/nextcloud';
 import Structures from '../../structures/structures';
@@ -45,8 +45,8 @@ export default async function createUser(req, content) {
         lastName: content.lastname,
         profile: {},
       };
-      const structureName = Structures.findOne({ name: content.structure });
-      if (!content.structure || !structureName) {
+      const structureObject = Structures.findOne({ name: content.structure });
+      if (!content.structure || !structureObject) {
         // check if we can determine structure from email
         const structureByEmail = findStructureByEmail(content.email);
         if (structureByEmail) {
@@ -59,10 +59,12 @@ export default async function createUser(req, content) {
         }
       } else {
         const apiKey = req.headers['x-api-key'];
-        const isAllowed = findStructureAllowed(content.structure, apiKey);
+        const tabApiKeys = Meteor.settings.private.createUserApiKeys;
+        const tabApiKeysByStructure = Meteor.settings.private.createUserApiKeysByStructure;
+        const isAllowed = searchMatchingStructure(structureObject, apiKey, tabApiKeys, tabApiKeysByStructure);
         // add a structure to user if we give a structure in content.structure
         if (content.structure && isAllowed) {
-          userData.structure = structureName._id;
+          userData.structure = structureObject._id;
         } else {
           throw new Meteor.Error(
             'Structure not allowed to create users',
