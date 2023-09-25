@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import i18n from 'meteor/universe:i18n';
 import SimpleSchema from 'simpl-schema';
+import sanitizeHtml from 'sanitize-html';
 import { testMeteorSettingsUrl } from '../ui/utils/utilsFuncs';
 import logServer, { levels, scopes } from './logging';
 
@@ -249,4 +250,15 @@ export const formatURL = (name) => {
     finalName = `https://${name}`;
   }
   return finalName;
+};
+
+// allow iframes for embedded videos in blog articles
+export const sanitizeParameters = {
+  allowedTags: sanitizeHtml.defaults.allowedTags.concat(['iframe']),
+  allowedAttributes: {
+    ...sanitizeHtml.defaults.allowedClasses,
+    iframe: ['src', 'frameborder', 'allowfullscreen'],
+    span: ['contenteditable'],
+  },
+  allowedClasses: { ...sanitizeHtml.defaults.allowedClasses, iframe: ['ql-video'] },
 };
