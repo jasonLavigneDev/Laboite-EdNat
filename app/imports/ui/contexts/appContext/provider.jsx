@@ -8,6 +8,7 @@ import * as flags from '../../utils/flags';
 import reducer, { MOBILE_SIZE, TABLET_SIZE } from './reducer';
 import getLang from '../../utils/getLang';
 import Structures, { propTypes as structuresPropTypes } from '../../../api/structures/structures';
+import { postMessage } from '../../utils/widget';
 
 const initialState = {
   user: Meteor.user(),
@@ -42,7 +43,7 @@ const logger = (state, action) => {
 };
 
 const sendStateToIframe = (userId) => {
-  window.parent.postMessage(
+  postMessage(
     {
       type: 'userLogged',
       content: !!userId,
