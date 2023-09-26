@@ -45,7 +45,7 @@ import Articles from '../../../api/articles/articles';
 import { countMembersOfGroup } from '../../../api/groups/methods';
 import COMMON_STYLES from '../../themes/styles';
 import { getGroupName } from '../../utils/utilsFuncs';
-import { testUrl } from '../../../api/utils';
+import { sanitizeParameters, testUrl } from '../../../api/utils';
 import Forms from '../../../api/forms/forms';
 
 const useStyles = makeStyles()((theme, { member, candidate, type }) => ({
@@ -596,7 +596,7 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, forms, events, bo
             </Typography>
             <div
               className={openedContent ? classes.openedContent : classes.content}
-              dangerouslySetInnerHTML={{ __html: sanitizeHtml(group.content) }}
+              dangerouslySetInnerHTML={{ __html: sanitizeHtml(group.content, sanitizeParameters) }}
             />
             <Button
               color="primary"
