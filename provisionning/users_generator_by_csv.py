@@ -52,7 +52,16 @@ def get_database():
     return client[MONGO_DATABASE]
 
 
-def resetData():
+def resetUsers():
+    users = keycloak_admin.get_users()
+    for user in users:
+        if user['username'] != KEYCLOAK_USERNAME:
+            print("Remove user: {}".format(user['username']))
+            keycloak_admin.delete_user(user['id'])
+            db['users'].delete_one({"username": user['username']})
+
+
+def resetStructures():
     groups = keycloak_admin.get_groups()
     for gr in groups:
         print("Remove group: {}".format(gr['name']))
@@ -62,12 +71,10 @@ def resetData():
         db['asamextensions'].delete_one(
             {"extension": '{}.fr'.format(gr['name'].replace(' ', '-').replace('(', '').replace(')', ''))})
 
-    users = keycloak_admin.get_users()
-    for user in users:
-        if user['username'] != KEYCLOAK_USERNAME:
-            print("Remove user: {}".format(user['username']))
-            keycloak_admin.delete_user(user['id'])
-            db['users'].delete_one({"username": user['username']})
+
+def resetData():
+    resetStructures()
+    resetUsers()
 
 
 def addUserToStructureGroup(idDB, structureID):
@@ -203,6 +210,12 @@ csvUserPath = "users.csv"
 
 if '-r' in sys.argv:
     resetData()
+
+if '-ru' in sys.argv:
+    resetUsers()
+
+if '-rs' in sys.argv:
+    resetStructures()
 
 if '-s' in sys.argv:
     index = sys.argv.index('-s')
