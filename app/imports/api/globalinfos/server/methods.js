@@ -5,7 +5,7 @@ import { Roles } from 'meteor/alanning:roles';
 import i18n from 'meteor/universe:i18n';
 import sanitizeHtml from 'sanitize-html';
 
-import { isActive, validateString } from '../../utils';
+import { isActive, sanitizeParameters, validateString } from '../../utils';
 
 import GlobalInfos from '../globalInfo';
 import Structures from '../../structures/structures';
@@ -33,7 +33,7 @@ export const createGlobalInfo = new ValidatedMethod({
     if (language) validateString(language, true);
     let sanitizedContent = '';
     if (content) {
-      sanitizedContent = sanitizeHtml(content);
+      sanitizedContent = sanitizeHtml(content, sanitizeParameters);
       validateString(sanitizedContent);
     }
     try {
@@ -195,7 +195,7 @@ export const updateGlobalInfo = new ValidatedMethod({
     if (language) validateString(language, true);
     let sanitizedContent = '';
     if (content) {
-      sanitizedContent = sanitizeHtml(content);
+      sanitizedContent = sanitizeHtml(content, sanitizeParameters);
       validateString(sanitizedContent);
     }
     try {

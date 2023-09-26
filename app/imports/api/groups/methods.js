@@ -6,7 +6,7 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { Roles } from 'meteor/alanning:roles';
 import i18n from 'meteor/universe:i18n';
 import sanitizeHtml from 'sanitize-html';
-import { isActive, getLabel, validateString } from '../utils';
+import { isActive, getLabel, validateString, sanitizeParameters } from '../utils';
 import Groups from './groups';
 import { addGroup, removeElement } from '../personalspaces/methods';
 import logServer, { levels, scopes } from '../logging';
@@ -275,7 +275,7 @@ export const createGroup = new ValidatedMethod({
     validateString(description);
     validateString(avatar);
     if (shareName) validateString(shareName);
-    const sanitizedContent = sanitizeHtml(content);
+    const sanitizedContent = sanitizeHtml(content, sanitizeParameters);
     validateString(sanitizedContent);
     return _createGroup({
       name,
@@ -447,7 +447,7 @@ export const updateGroup = new ValidatedMethod({
     if (data.groupPadId) validateString(data.groupPadId);
     if (data.digest) validateString(data.digest);
     if (data.shareName) validateString(data.shareName);
-    const sanitizedContent = sanitizeHtml(data.content);
+    const sanitizedContent = sanitizeHtml(data.content, sanitizeParameters);
     validateString(sanitizedContent);
     let groupData = {};
     if (!Roles.userIsInRole(this.userId, 'admin', groupId)) {

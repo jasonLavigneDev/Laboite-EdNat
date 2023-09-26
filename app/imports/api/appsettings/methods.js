@@ -10,7 +10,7 @@ import sanitizeHtml from 'sanitize-html';
 
 import logServer, { levels, scopes } from '../logging';
 
-import { isActive, getLabel, validateString } from '../utils';
+import { isActive, getLabel, validateString, sanitizeParameters } from '../utils';
 import AppSettings from './appsettings';
 
 export function checkMigrationStatus() {
@@ -52,7 +52,7 @@ export const updateAppsettings = new ValidatedMethod({
       if (link) validateString(link);
       let sanitizedContent = '';
       if (content) {
-        sanitizedContent = sanitizeHtml(content);
+        sanitizedContent = sanitizeHtml(content, sanitizeParameters);
         validateString(sanitizedContent);
       }
       validateString(key, true);
@@ -226,7 +226,7 @@ export const updateTextInfoLanguage = new ValidatedMethod({
     if (tabkey) validateString(tabkey, true);
     let sanitizedContent = '';
     if (content) {
-      sanitizedContent = sanitizeHtml(content);
+      sanitizedContent = sanitizeHtml(content, sanitizeParameters);
       validateString(sanitizedContent);
     }
     try {

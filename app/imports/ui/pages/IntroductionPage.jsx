@@ -6,6 +6,7 @@ import { Paper, Typography } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
 import { useAppContext } from '../contexts/context';
+import { sanitizeParameters } from '../../api/utils';
 
 const useStyles = makeStyles()((theme, isMobile) => ({
   main: {
@@ -75,7 +76,7 @@ export const IntroductionPage = () => {
                   {i18n.__('pages.IntroductionPage.structureMessage', { structure: message.structureName })}
                 </Typography>
               ) : null}
-              <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(message?.content) }} />
+              <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(message?.content, sanitizeParameters) }} />
             </div>
           </Paper>
         ))}

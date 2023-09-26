@@ -4,6 +4,7 @@ import i18n from 'meteor/universe:i18n';
 import { Button, InputLabel, MenuItem, FormControl, Select, Paper } from '@mui/material';
 import sanitizeHtml from 'sanitize-html';
 import PropTypes from 'prop-types';
+import { sanitizeParameters } from '../../../api/utils';
 
 export const AdminMessagesList = ({ messages, deleteMessage, selectMessageLanguage, selectMessageToUpdate }) => {
   const handleChangeMessageLanguage = (e) => {
@@ -53,7 +54,7 @@ export const AdminMessagesList = ({ messages, deleteMessage, selectMessageLangua
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(message?.content) }} />
+              <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(message?.content, sanitizeParameters) }} />
 
               <div
                 style={{
