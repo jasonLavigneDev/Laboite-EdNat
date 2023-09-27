@@ -73,7 +73,7 @@ Copy `settings-development.json.sample` to `settings-development.json` and updat
 | countly.app_key                                | string   | ""                                   |                                                                                             |
 | countly.url                                    | string   | ""                                   |                                                                                             |
 | countly.consent                                | boolean  | true                                 |                                                                                             |
-| hideGroupPlugins                               | boolean  | false                                |                                                                                             |
+| hideGroupPlugins                               | boolean  | false                                | setting temporaire en attendant la configuration des servuers nextcloud de groupe           |
 
 ## franceTransfert:
 
@@ -122,16 +122,16 @@ Copy `settings-development.json.sample` to `settings-development.json` and updat
 
 ## private:
 
-| Key                          | Type     | Default value                              | Description                                        |
-| ---------------------------- | -------- | ------------------------------------------ | -------------------------------------------------- |
-| fillWithFakeData             | boolean  | false                                      | If true, fake datas are generated at start         |
-| minioAccess                  | string   | ""                                         | Minio user                                         |
-| minioSecret                  | string   | ""                                         | Minio password                                     |
-| apiKeys                      | [string] | [""]                                       | API access keys for external services              |
-| BBBSecret                    | string   | ""                                         | Big Blue Button Secret                             |
-| whiteDomains                 | [string] | ["^ac-[a-z-]_\\.fr", "^[a-z-]_\\.gouv.fr"] | Emails white domains for user account activation   |
-| loginExpirationInDays        | number   | 1                                          | Number of days for the token session to expire     |
-| cspFrameAncestors            | [string] | ["'self'"]                                 | values for frame-ancestors directive in CSP header |
-| checkKeyCloakWhiteListDomain | boolean  | false                                      |                                                    |
-| createUserApiKeys            | array    | []                                         |                                                    |
-| createUserTokenApiKeys       | array    | []                                         |                                                    |
+| Key                          | Type     | Default value                              | Description                                                             |
+| ---------------------------- | -------- | ------------------------------------------ | ----------------------------------------------------------------------- |
+| fillWithFakeData             | boolean  | false                                      | If true, fake datas are generated at start                              |
+| minioAccess                  | string   | ""                                         | Minio user                                                              |
+| minioSecret                  | string   | ""                                         | Minio password                                                          |
+| apiKeys                      | [string] | [""]                                       | API access keys for external services                                   |
+| BBBSecret                    | string   | ""                                         | Big Blue Button Secret                                                  |
+| whiteDomains                 | [string] | ["^ac-[a-z-]_\\.fr", "^[a-z-]_\\.gouv.fr"] | Emails white domains for user account activation                        |
+| loginExpirationInDays        | number   | 1                                          | Number of days for the token session to expire                          |
+| cspFrameAncestors            | [string] | ["'self'"]                                 | values for frame-ancestors directive in CSP header                      |
+| checkKeyCloakWhiteListDomain | boolean  | false                                      | active les utilisateurs si ils matchent un domaine des ‘asamExtensions’ |
+| createUserApiKeys            | array    | []                                         |                                                                         |
+| createUserTokenApiKeys       | array    | []                                         |                                                                         |
