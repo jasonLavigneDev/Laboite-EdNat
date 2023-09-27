@@ -21,11 +21,19 @@
       "bookmarksFromClipboard": false
     },
     "forceRedirectToPersonalSpace": true,
-    "chatbotUrl": "https://chat.rizomo.numerique.gouv.fr/",
     "widget": {
       "pakcageUrl": "https://unpkg.com/@suitesnap/la-pastille@1.0.0/index.umd.cjs"
     },
     "features": ["franceTransfert"],
+    "chatbotUrl": "https://chat.rizomo.numerique.gouv.fr/",
+    "chatbotConfig": {
+      "chatWidth": "400px",
+      "chatHeight": "500px",
+      "buttonSize": "60px",
+      "buttonColor": "#000091",
+      "iconSize": "30px",
+      "iconColor": "#fff"
+    },
     "ui": {
       "defaultGridViewMode": "compact",
       "isBusinessRegroupingMode": false,
