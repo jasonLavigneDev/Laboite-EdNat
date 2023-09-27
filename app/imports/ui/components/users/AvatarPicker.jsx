@@ -156,6 +156,9 @@ const AvatarPicker = ({ userAvatar, userFirstName, onAssignAvatar, avatar, type,
           avatar={imageAvatar}
           onClose={() => setOpenAvatarEdit(false)}
           onSendImage={onAssignAvatar}
+          cardTitle={i18n.__('components.AvatarEdit.title')}
+          cardSubTitle={i18n.__('components.AvatarEdit.subtitle')}
+          sendButtonText={i18n.__('components.AvatarEdit.sendImage')}
         />
       ) : null}
       {openCamCapture ? (

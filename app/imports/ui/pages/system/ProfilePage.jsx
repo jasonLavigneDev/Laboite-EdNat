@@ -431,9 +431,9 @@ const ProfilePage = () => {
   };
 
   const onAssignAvatar = (avatarObj) => {
-    // avatarObj = {image: base64... or url: http...}
-    if (avatarObj.image) {
-      SendNewAvatarToMedia(avatarObj.image);
+    // avatarObj = [{image: base64...}] or {url: http...}
+    if (avatarObj?.[0]?.image) {
+      SendNewAvatarToMedia(avatarObj[0].image);
     } else if (avatarObj.url !== user.avatar) {
       setUserData({ ...userData, avatar: avatarObj.url });
     }
