@@ -280,3 +280,11 @@ export const formatURL = (name) => {
   }
   return finalName;
 };
+
+export function template(content, options) {
+  return Object.entries(options).reduce((acc, [key, value]) => {
+    const re = new RegExp(`{{${key}}}`, 'g');
+
+    return acc.replace(re, value);
+  }, content);
+}
