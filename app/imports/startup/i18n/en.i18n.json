@@ -1293,7 +1293,8 @@
       "ApplyDefaultSpace": "Apply '{$structName}' structure default space",
       "ApplyDefaultSpaceMessage": "This will apply the changes to your personal space",
       "ApplyDefaultSpaceBtn": "Apply default space",
-      "ApplyDefaultSpaceWarning": "Can not apply default space if advanced personal page is activated"
+      "ApplyDefaultSpaceWarning": "Can not apply default space if advanced personal page is activated",
+      "activeAccountRequired": "Requires an active account"
     },
     "NotFound": {
       "backButtonLabel": "Back",
