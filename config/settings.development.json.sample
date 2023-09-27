@@ -37,7 +37,6 @@
       "url": "https://countly.url.fr",
       "consent": true,
     },
-    "laboiteBlogURL": "",
     "enableBBB": false,
     "BBBUrl": "",
     "minioPort": null,
