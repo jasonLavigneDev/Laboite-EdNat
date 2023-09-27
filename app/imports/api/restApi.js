@@ -12,6 +12,7 @@ import createUser from './users/server/rest';
 import ftUploadProxy from './francetransfert/server/rest';
 import createUserToken from './users/server/restToken';
 import Notifications from './notifications/notifications';
+import { template } from './utils';
 
 export default function initRestApi() {
   const unless = (path, middleware) => (req, res, next) => {
@@ -77,14 +78,29 @@ export default function initRestApi() {
   /**
    * @deprecated
    */
+  WebApp.connectHandlers.use('/scripts/widget/demo', (req, res) => {
+    res.writeHead(200, {
+      'Content-Type': 'text/html',
+    });
+    res.write(Assets.getText('widget/demo.html'));
+    res.end();
+  });
+
+  /**
+   * @deprecated
+   */
   WebApp.connectHandlers.use('/scripts/widget', (req, res) => {
     res.writeHead(200, {
       'Content-Type': 'application/javascript',
     });
-    res.write(Assets.getText('widget/script.js'));
+    res.write(
+      template(Assets.getText('widget/script.js'), {
+        url: Meteor.absoluteUrl().slice(0, -1),
+        script: Meteor.settings.public?.widget?.pakcageUrl,
+      }),
+    );
     res.end();
   });
-
   WebApp.connectHandlers.use('/widget/assets/', (req, res) => {
     if (req.method !== 'GET') {
       res.writeHead(405);
@@ -95,10 +111,10 @@ export default function initRestApi() {
     const { theme } = Meteor.settings.public;
 
     const widgetAssets = {
-      logo: `${Meteor.absoluteUrl()}images/logos/${theme}/widget/logo.svg`,
-      notifications: `${Meteor.absoluteUrl()}images/logos/${theme}/widget/notifications.svg`,
-      connected: `${Meteor.absoluteUrl()}images/logos/${theme}/widget/connected.svg`,
-      disconnected: `${Meteor.absoluteUrl()}images/logos/${theme}/widget/disconnected.svg`,
+      logo: Meteor.absoluteUrl(`images/logos/${theme}/widget/logo.svg`),
+      notifications: Meteor.absoluteUrl(`images/logos/${theme}/widget/notifications.svg`),
+      connected: Meteor.absoluteUrl(`images/logos/${theme}/widget/connected.svg`),
+      disconnected: Meteor.absoluteUrl(`images/logos/${theme}/widget/disconnected.svg`),
     };
 
     const key = req.url.substring(1);

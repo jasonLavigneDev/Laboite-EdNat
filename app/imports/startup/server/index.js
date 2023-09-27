@@ -48,23 +48,36 @@ Meteor.startup(() => {
   const imgSrcs = ['*', 'data:', 'blob:'];
   if (Meteor.settings.public.minioEndPoint) imgSrcs.push(`https://${Meteor.settings.public.minioEndPoint}`);
   const frameAncestors = Meteor.settings.private?.cspFrameAncestors || ["'self'"];
-  WebApp.connectHandlers.use(helmet());
+
+  if (Meteor.settings.public?.widget?.pakcageUrl) scriptSrcs.push(Meteor.settings.public.widget.pakcageUrl);
+  if (Meteor.settings.public?.chatbotUrl) scriptSrcs.push(Meteor.settings.public.chatbotUrl);
+
   WebApp.connectHandlers.use(
-    helmet.contentSecurityPolicy({
-      directives: {
-        defaultSrc: ['*'],
-        scriptSrc: scriptSrcs,
-        connectSrc: ['*'],
-        imgSrc: imgSrcs,
-        mediaSrc: imgSrcs,
-        styleSrc: ["'self'", "'unsafe-inline'"],
-        frameAncestors,
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ['*'],
+          scriptSrc: scriptSrcs,
+          connectSrc: ['*'],
+          imgSrc: imgSrcs,
+          mediaSrc: imgSrcs,
+          styleSrc: ["'self'", "'unsafe-inline'"],
+          frameAncestors,
+        },
       },
+      crossOriginResourcePolicy: {
+        policy: 'cross-origin',
+      },
+      crossOriginOpenerPolicy: {
+        policy: 'unsafe-none',
+      },
+      crossOriginEmbedderPolicy: {
+        policy: 'credentialless',
+      },
+      noSniff: true,
+      hidePoweredBy: true,
     }),
   );
-
-  WebApp.connectHandlers.use(helmet.crossOriginResourcePolicy({ policy: 'cross-origin' }));
-  WebApp.connectHandlers.use(helmet.crossOriginEmbedderPolicy({ policy: 'credentialless' }));
 
   initRestApi();
 
