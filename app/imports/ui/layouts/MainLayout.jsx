@@ -171,6 +171,7 @@ function MainLayout({ appsettings, ready }) {
                       {!disabledFeatures.blog && <Route exact path="/publications/:slug" component={EditArticlePage} />}
 
                       <Route exact path="/services/:slug" component={SingleServicePage} />
+                      <Route exact path="/services/:structure/:slug" component={SingleServicePage} />
                       <Route exact path="/structure/:slug" component={SingleServicePage} />
                       {!disabledFeatures.groups && <Route exact path="/groups" component={GroupsPage} />}
                       {!disabledFeatures.groups && <Route exact path="/groups/:slug" component={SingleGroupPage} />}
