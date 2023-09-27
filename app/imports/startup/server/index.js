@@ -9,6 +9,7 @@ import { checkMigrationStatus } from '../../api/appsettings/methods';
 // import i18n translation files
 import '../locales';
 import './inject-i18n';
+import './index-chatbot';
 
 // Set up some rate limiting and other important security settings.
 import './config/security';
@@ -45,6 +46,8 @@ Meteor.startup(() => {
   // set up various security related headers
   const scriptSrcs = ["'self'", "'unsafe-inline'", "'unsafe-eval'"];
   if (Meteor.settings.public.matomo?.urlBase) scriptSrcs.push(Meteor.settings.public.matomo.urlBase);
+  if (Meteor.settings.public.chatbotUrl)
+    scriptSrcs.push(`${Meteor.settings.public.chatbotUrl}backoffice/assets/scripts/embbed-chatbot.min.js`);
   const imgSrcs = ['*', 'data:', 'blob:'];
   if (Meteor.settings.public.minioEndPoint) imgSrcs.push(`https://${Meteor.settings.public.minioEndPoint}`);
   const frameAncestors = Meteor.settings.private?.cspFrameAncestors || ["'self'"];
