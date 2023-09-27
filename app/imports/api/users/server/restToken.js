@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Accounts } from 'meteor/accounts-base';
 import logServer, { levels, scopes } from '../../logging';
-import { findStructureTokenAllowed } from '../users';
+import { searchMatchingStructure } from '../users';
 import Structures from '../../structures/structures';
 
 export default async function createUserToken(req, content) {
@@ -13,9 +13,11 @@ export default async function createUserToken(req, content) {
 
   if ('email' in content) {
     const emailUser = Accounts.findUserByEmail(content.email);
-    const structure = Structures.findOne({ _id: emailUser.structure });
+    const structureObject = Structures.findOne({ _id: emailUser.structure });
+    const tabApiKeys = Meteor.settings.private.createUserTokenApiKeys;
+    const tabApiKeysByStructure = Meteor.settings.private.createUserTokenApiKeysByStructures;
     const apiKey = req.headers['x-api-key'];
-    const isAllowed = findStructureTokenAllowed(structure.name, apiKey);
+    const isAllowed = searchMatchingStructure(structureObject, apiKey, tabApiKeys, tabApiKeysByStructure);
     if (!isAllowed) {
       throw new Meteor.Error(
         'This structure is not allow to create a connection token',

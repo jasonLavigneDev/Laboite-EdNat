@@ -262,10 +262,8 @@ export const findStructureByEmail = (email) => {
   return undefined;
 };
 
-export const findStructureTokenAllowed = (structure, apiKey) => {
+export const findStructureAllowed = (structureObject, apiKey, tabApiKeys, tabApiKeysByStructure) => {
   let isAllowed = false;
-  const tabApiKeys = Meteor.settings.private.createUserTokenApiKeys;
-  const tabApiKeysByStructure = Meteor.settings.private.createUserTokenApiKeysByStructures;
   // eslint-disable-next-line no-restricted-syntax, guard-for-in
   for (const key in tabApiKeysByStructure) {
     const structuresInTab = tabApiKeysByStructure[key];
@@ -279,7 +277,7 @@ export const findStructureTokenAllowed = (structure, apiKey) => {
       if (key === tabApiKeys[i] && key === apiKey) {
         // eslint-disable-next-line no-loop-func
         structuresInTab.forEach((element) => {
-          if (element === structure) {
+          if (element === structureObject.name) {
             isAllowed = true;
           }
         });
@@ -287,6 +285,57 @@ export const findStructureTokenAllowed = (structure, apiKey) => {
     }
   }
   return isAllowed;
+};
+
+export const isMatchingStructureWithParent = (structureObject, apiKey, tabApiKeys, tabApiKeysByStructure) => {
+  const structureParent = Structures.findOne({ _id: structureObject.parentId });
+  let isMatchingWithParent = findStructureAllowed(structureParent, apiKey, tabApiKeys, tabApiKeysByStructure);
+
+  if (!isMatchingWithParent) {
+    if (structureObject.parentId === null) {
+      isMatchingWithParent = false;
+    } else {
+      isMatchingStructureWithParent(structureParent, apiKey, tabApiKeys, tabApiKeysByStructure);
+    }
+  }
+
+  return isMatchingWithParent;
+};
+
+export const isMatchingStructureWithChildrens = (structureObject, apiKey, tabApiKeys, tabApiKeysByStructure) => {
+  let isMatchingWithChild = false;
+
+  if (structureObject.childrenIds.length !== 0) {
+    isMatchingWithChild = findStructureAllowed(structureObject.childrenIds[0]);
+    if (!isMatchingWithChild) {
+      for (let i = 1; i < structureObject.childrenIds.length; i += 1) {
+        isMatchingStructureWithChildrens(structureObject.childrenIds[i], apiKey, tabApiKeys, tabApiKeysByStructure);
+      }
+    }
+  } else {
+    isMatchingWithChild = findStructureAllowed(structureObject.childrenIds[0]);
+  }
+
+  return isMatchingWithChild;
+};
+
+export const searchMatchingStructure = (structureObject, apiKey, tabApiKeys, tabApiKeysByStructure) => {
+  let isMatchingWithChildren = false;
+  let isMatchingWithParent = false;
+  let result = findStructureAllowed(structureObject, apiKey, tabApiKeys, tabApiKeysByStructure);
+  if (!result) {
+    isMatchingWithChildren = isMatchingStructureWithChildrens(
+      structureObject,
+      apiKey,
+      tabApiKeys,
+      tabApiKeysByStructure,
+    );
+    isMatchingWithParent = isMatchingStructureWithParent(structureObject, apiKey, tabApiKeys, tabApiKeysByStructure);
+    if (isMatchingWithParent || isMatchingWithChildren) {
+      result = true;
+    }
+  }
+  return result;
 };
 
 if (Meteor.isServer) {
