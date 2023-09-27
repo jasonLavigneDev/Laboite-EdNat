@@ -14,11 +14,21 @@ Meteor.startup(async () => {
         <script src="${Meteor.settings.public.chatbotUrl}backoffice/assets/scripts/embbed-chatbot.min.js"></script>
         <div id="webchat"></div>
         <script>
-            Webchat.init({
-                // Mandatory
-                botURL: '${Meteor.settings.public.chatbotUrl}chatbot',
-                ...JSON.parse(\`${JSON.stringify(Meteor.settings.public?.chatbotConfig ?? {})}\`)
-            });
+            function inIframe () {
+                try {
+                    return window.self !== window.top;
+                } catch (e) {
+                    return true;
+                }
+            }
+
+            if(!inIframe) {
+                Webchat.init({
+                    // Mandatory
+                    botURL: '${Meteor.settings.public.chatbotUrl}chatbot',
+                    ...JSON.parse(\`${JSON.stringify(Meteor.settings.public?.chatbotConfig ?? {})}\`)
+                });
+            }
         </script>
       `);
     }
