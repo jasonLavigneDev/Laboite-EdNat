@@ -123,10 +123,11 @@ function MainLayout({ appsettings, ready }) {
 
       if (res.length && (!user.lastGlobalInfoReadDate || new Date(user.lastGlobalInfoReadDate) < res[0].updatedAt)) {
         Meteor.call('users.setLastGlobalInfoRead', { lastGlobalInfoReadDate: new Date() });
-        return;
       }
 
-      history.push('/personal');
+      if (Meteor.settings.public.forceRedirectToPersonalSpace !== false) {
+        history.push('/personal');
+      }
     });
   }, []);
 

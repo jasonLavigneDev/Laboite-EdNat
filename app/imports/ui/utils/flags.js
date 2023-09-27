@@ -1,1 +1,1 @@
-export const IS_FRAMED = window.self !== window.top;
+export const IS_FRAMED = window.self !== window.parent;
