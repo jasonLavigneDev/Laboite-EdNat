@@ -1740,7 +1740,8 @@
       "usage": "Usage",
       "delete": "Delete",
       "confirmDelete": "Confirm delete",
-      "objectUsedText": "This file is used in a publication (title under this text), if you delete it, it will result as an empty link in your article. If you click again on delete, be aware that it will not be possible to restore it."
+      "objectUsedText": "This file is used in a publication (title under this text), if you delete it, it will result as an empty link in your article. If you click again on delete, be aware that it will not be possible to restore it.",
+      "publicWarning": "Warning, all media published on this page are publicly accessible."
     },
     "AdminStructureUsersPage": {
       "title": "Structure users management",
