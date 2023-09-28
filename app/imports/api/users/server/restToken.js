@@ -18,13 +18,13 @@ export default async function createUserToken(req, content) {
     const tabApiKeysByStructure = Meteor.settings.private.createUserTokenApiKeysByStructures;
     const apiKey = req.headers['x-api-key'];
     const isAllowed = searchMatchingStructure(structureObject, apiKey, tabApiKeys, tabApiKeysByStructure);
-    if (!isAllowed) {
+    if (structureObject && !isAllowed) {
       throw new Meteor.Error(
         'This structure is not allow to create a connection token',
         `Error encountered while creating ${content.email} user token`,
       );
     }
-    if (emailUser) {
+    if ((emailUser && !structureObject) || (emailUser && isAllowed)) {
       const dataToken = Accounts._generateStampedLoginToken();
 
       try {
