@@ -586,7 +586,9 @@
       "create_at": "Create at :",
       "update_at": "Update at :",
       "expire_at": "Expire at :",
-      "no_message": "No message"
+      "no_message": "No message",
+      "label_expire": "Expiration date",
+      "cancel": "Cancel"
     },
     "Notifications": {
       "remove": "Remove"
@@ -738,7 +740,8 @@
       "menuAdminGlobalInfo": "Global information",
       "menuAdminAnalytics": "Analytics",
       "menuAdminStructureAnalytics": "Structure analytics",
-      "menuAdminStructureSettings": "Structure settings"
+      "menuAdminStructureSettings": "Structure settings",
+      "menuAdminStructureInfo": "Structure information"
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Your account has not been activated",
@@ -1777,11 +1780,8 @@
       "backToProfile": "Back to profile"
     },
     "IntroductionPage": {
-      "titleAppIntroduction": "General informations",
-      "noContent": "No content for now.",
-      "noTitle": "No title for now.",
       "informationsOf": "Informations of",
-      "titleStructures": "Structures informations"
+      "structureMessage": "Information from {$structure} :"
     },
     "AdminStructureSettingsPage": {
       "title": "Structure settings",
@@ -1850,6 +1850,11 @@
         "toolbar_searchPlaceholder": "Search",
         "body_emptyDataSourceMessage": "No results"
       }
+    },
+    "AdminGlobalInfos": {
+      "title": "Manage global info messages",
+      "titleStructure": "Manage structure messages",
+      "createButton": "Create new message"
     }
   },
   "layouts": {
