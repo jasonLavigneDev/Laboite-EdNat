@@ -5,6 +5,7 @@ from pymongo import MongoClient
 from keycloak import KeycloakAdmin
 from keycloak import KeycloakOpenIDConnection
 from dotenv import load_dotenv
+from random import choices
 from datetime import datetime
 import csv
 
@@ -191,7 +192,8 @@ def insertStructure(structure):
 
 
 def insertMailExtension(mailExtension):
-    alreadyExist = db.find_one({"extension": mailExtension["extension"]})
+    alreadyExist = db['asamextensions'].find_one(
+        {"extension": mailExtension["extension"]})
     if(alreadyExist == None):
         print("[{}] Insert mail extension: {}".format(
             datetime.now(), mailExtension["extension"]))
