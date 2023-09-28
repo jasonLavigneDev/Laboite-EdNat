@@ -22,7 +22,9 @@ Meteor.startup(async () => {
                 }
             }
 
-            if(!inIframe) {
+            const frameName = window.frameElement?.getAttribute('lb_iframe-widget')
+
+            if(!inIframe() || frameName !== 'lb_iframe-widget') {
                 Webchat.init({
                     // Mandatory
                     botURL: '${Meteor.settings.public.chatbotUrl}chatbot',
