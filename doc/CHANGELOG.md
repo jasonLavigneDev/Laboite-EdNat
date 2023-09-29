@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.5.2](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/5.5.1...release/5.5.2) (2023-09-29)
+
+
+### Bug Fixes
+
+* **service:** disable add button for structure groups ([c465878](https://gitlab.mim-libre.fr/alphabet/laboite/commit/c465878ad27476572cd6b4f42c04f51eb92265b5))
+
 ## [5.5.1](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/5.5.0...release/5.5.1) (2023-09-01)
 
 
