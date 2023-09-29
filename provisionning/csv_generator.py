@@ -5,6 +5,7 @@ from pymongo import MongoClient
 from keycloak import KeycloakAdmin
 from keycloak import KeycloakOpenIDConnection
 from dotenv import load_dotenv
+from random import choices
 from datetime import datetime
 import csv
 
@@ -31,7 +32,10 @@ def generateID():
 
 
 def generateMailExtension(struc):
-    mailExtension = {"extension": "{}.fr".format(struc["name"].replace(' ', '-').replace('(', '').replace(')', '')),
+    extension = "{}.fr".format(struc["name"].replace(
+        ' ', '-').replace('(', '').replace(')', ''))
+    extension = extension.replace("-academie", ".academie")
+    mailExtension = {"extension": extension,
                      "entiteNomCourt": "",
                      "entiteNomLong": "",
                      "familleNomCourt": "",
