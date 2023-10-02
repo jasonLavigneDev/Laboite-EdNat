@@ -55,8 +55,8 @@ def generateCSVForStructure(nb):
             "_id": generateID(),
             "name": name,
             "parentId": None,
-            "ancestorsIds": [],
-            "childrenIds": [],
+            "ancestorsIds": "",
+            "childrenIds": "",
         }
 
         rows.append(mainEntry)
@@ -72,8 +72,8 @@ def generateCSVForStructure(nb):
                 "_id": generateID(),
                 "name": school_name,
                 "parentId": mainEntry["_id"],
-                "ancestorsIds": [mainEntry["_id"]],
-                "childrenIds": [],
+                "ancestorsIds": mainEntry["_id"],
+                "childrenIds": "",
             }
 
             rows.append(subEntry)
@@ -94,8 +94,8 @@ def generateCSVForStructure(nb):
                 "_id": generateID(),
                 "name": col_name,
                 "parentId": mainEntry["_id"],
-                "ancestorsIds": [mainEntry["_id"]],
-                "childrenIds": [],
+                "ancestorsIds": mainEntry["_id"],
+                "childrenIds": "",
             }
 
             rows.append(subEntry2)
@@ -115,8 +115,8 @@ def generateCSVForStructure(nb):
                 "_id": generateID(),
                 "name": lyc_name,
                 "parentId": mainEntry["_id"],
-                "ancestorsIds": [mainEntry["_id"]],
-                "childrenIds": [],
+                "ancestorsIds": mainEntry["_id"],
+                "childrenIds": "",
             }
 
             rows.append(subEntry3)
