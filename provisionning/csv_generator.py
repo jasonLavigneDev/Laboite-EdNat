@@ -100,7 +100,7 @@ def generateCSVForStructure(nb):
 
             rows.append(subEntry2)
 
-            generateMailExtension(subEntry)
+            generateMailExtension(subEntry2)
 
             structures[subEntry2["_id"]] = int(PERSONNE_PAR_COLLEGE)
             print("[{}] Middle school created: {}".format(
@@ -121,7 +121,7 @@ def generateCSVForStructure(nb):
 
             rows.append(subEntry3)
 
-            generateMailExtension(subEntry)
+            generateMailExtension(subEntry3)
 
             structures[subEntry3["_id"]] = int(PERSONNE_PAR_LYCEE)
             print("[{}] High school created: {}".format(
@@ -211,7 +211,7 @@ if nbStruc > 0:
 generateCSVForMailExtensions()
 
 for key in structures:
-    for i in range(0, structures[key]):
+    for i in range(0, structures.get(key)):
         generateUser(i, key)
 
 generateCSVForUsers()
