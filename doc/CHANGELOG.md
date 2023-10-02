@@ -1,5 +1,67 @@
 # Changelog
 
+# [5.6.0](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/5.5.2...release/5.6.0) (2023-10-02)
+
+
+### Bug Fixes
+
+* **analytics:** build structure tree on any depth ([8ec2258](https://gitlab.mim-libre.fr/alphabet/laboite/commit/8ec22589ec440219f43779116e5e16db88df1885))
+* **articles:** allow embedded videos in articles and descriptions ([fb10267](https://gitlab.mim-libre.fr/alphabet/laboite/commit/fb1026796c87b34f94dfb5984b17a4dbed01526c))
+* **articles:** update sanitizeHtml parameters for articles ([6b1ed4b](https://gitlab.mim-libre.fr/alphabet/laboite/commit/6b1ed4b70cb117698059539aeaab261a96e6913e))
+* **build:** get node image from meteor docker images ([a3d6874](https://gitlab.mim-libre.fr/alphabet/laboite/commit/a3d68740563b3bea2f5e1cebb3756f35f8abe02c))
+* **css:** add selector in css file ([fa91881](https://gitlab.mim-libre.fr/alphabet/laboite/commit/fa918815d7c25ece92e19d2d616aafbde8a37668))
+* **fileUpload:** remove unnecessary log when file is too large ([73107a9](https://gitlab.mim-libre.fr/alphabet/laboite/commit/73107a932169da90863cd944bd9aa540981977de))
+* **forms:** fix typo in get_groups.forms_count method ([b297cd9](https://gitlab.mim-libre.fr/alphabet/laboite/commit/b297cd951068a412d65216f828738b13db5730e4))
+* **globalInfos:** fix display and position of date and text ([beabace](https://gitlab.mim-libre.fr/alphabet/laboite/commit/beabace1a6600511768a29fad3770f6a0d77d032))
+* **globalInfos:** fix various texts and glitches in UI ([e1b8d59](https://gitlab.mim-libre.fr/alphabet/laboite/commit/e1b8d59e559268d2a03059b9eed761cc597794b9))
+* **i18n:** remove duplicate message ([eea2831](https://gitlab.mim-libre.fr/alphabet/laboite/commit/eea283161bff38c9749542bf58f387219a07420e))
+* **informations:** fix modal size to modify a global info ([7464f1e](https://gitlab.mim-libre.fr/alphabet/laboite/commit/7464f1e8a40e471d6812dcbed60667f1157126dc))
+* **IntroductionPage:** replace inline style with classes ([55138e8](https://gitlab.mim-libre.fr/alphabet/laboite/commit/55138e829546bf8ddceba4a0e56f897d629c0322))
+* **labels:** change some labels in menus ([f18644c](https://gitlab.mim-libre.fr/alphabet/laboite/commit/f18644c3819fafecd53c9d653afa31523c31e390))
+* **links:** make html links blue and underlined ([1dcb443](https://gitlab.mim-libre.fr/alphabet/laboite/commit/1dcb4438dcc6f9acddd42b420a9c1cce6e677a52))
+* **logo:** app logo in top bar redirects to personal space ([436cb4b](https://gitlab.mim-libre.fr/alphabet/laboite/commit/436cb4bd20ce18de965592fa236c64f8f7323fab))
+* **onboarding:** disable onboarding until active with structure ([5da15eb](https://gitlab.mim-libre.fr/alphabet/laboite/commit/5da15eb77063accfec4e0382a913d51610bcd4d8))
+* **onBoarding:** remove theme, apps translation is the default ([735c5fd](https://gitlab.mim-libre.fr/alphabet/laboite/commit/735c5fd97632072a4f835f2214a7031b6c64de60))
+* **onboarding:** remove unnecessary Meteor import ([ba21c01](https://gitlab.mim-libre.fr/alphabet/laboite/commit/ba21c01d9f076f39f1340311dd7098cd55557de7))
+* **package:** change script to run tests ([0ed93c5](https://gitlab.mim-libre.fr/alphabet/laboite/commit/0ed93c5bca7f2b42905db0e8e5269bdc0487ce88))
+* **profile:** disable avatar edition if user is not active ([2f3d4be](https://gitlab.mim-libre.fr/alphabet/laboite/commit/2f3d4be154961680d4bd31d6b97dcbe5f9e380f3))
+* **quota:** quota check in admin group page ([07d4be1](https://gitlab.mim-libre.fr/alphabet/laboite/commit/07d4be19e06d8bf08adc9571bf861a7b275de46c))
+* **redirect:** auto redirect from informations page ([85fae14](https://gitlab.mim-libre.fr/alphabet/laboite/commit/85fae14be640c0d77c595662386643ab15f3d604))
+* **redirect:** auto redirect on informations page ([bd840b9](https://gitlab.mim-libre.fr/alphabet/laboite/commit/bd840b978638fb6f3a869ec1136e42fde702d115))
+* **service:** force favservices init if field is missing ([d3d7d09](https://gitlab.mim-libre.fr/alphabet/laboite/commit/d3d7d09a105a720aefcbb084f12ae01d7a8a44e8))
+* **services:** prefix structure service url with structure id ([683e98b](https://gitlab.mim-libre.fr/alphabet/laboite/commit/683e98b6f2aefe60312ca32f99ace374571f6772))
+* **structures:** create and receive structure information messages ([06121a0](https://gitlab.mim-libre.fr/alphabet/laboite/commit/06121a0aec5cf697eb33cc64fada6d2202a0bfd6))
+* **structures:** fix query in getAllGlobalInfoByLanguage ([45a6b87](https://gitlab.mim-libre.fr/alphabet/laboite/commit/45a6b87d06a58144d93d101ee9a091a3ce595768))
+* **structures:** manage structure name and parent struc messages ([4b6c2bc](https://gitlab.mim-libre.fr/alphabet/laboite/commit/4b6c2bccb81b5ff164b9800b5cf3ac9575848764))
+* **structures:** page NewIntroductionPage replaces IntroductionPage ([72cb752](https://gitlab.mim-libre.fr/alphabet/laboite/commit/72cb7523f089f4909edddf26db96823844c28a6f))
+* **structures:** remove chip from admin, change messages design ([c4a1a1f](https://gitlab.mim-libre.fr/alphabet/laboite/commit/c4a1a1f122aec1462439a02a8f7f5e8047d9a508))
+* **user tests:** email not passed correctly at account creation ([ccebeb5](https://gitlab.mim-libre.fr/alphabet/laboite/commit/ccebeb5078692f38a6306d1022de7a5dddb0f4a9))
+
+
+### Features
+
+* **bookmarks:** add import/export ([daf963b](https://gitlab.mim-libre.fr/alphabet/laboite/commit/daf963b88bffc154e2baa365e9a3a04fe5f3f906))
+* **bookmarks:** increase bookmarks url length ([fb28609](https://gitlab.mim-libre.fr/alphabet/laboite/commit/fb28609978b09658de88aa2ec9fd2c3e604dddbf))
+* **forms:** force user to log in when answering a group form ([5b08d1a](https://gitlab.mim-libre.fr/alphabet/laboite/commit/5b08d1a6ee3fdd8f7d49fc012f6d923f8f205ac8))
+* **group:** disable add button if too many groups created ([8517b2c](https://gitlab.mim-libre.fr/alphabet/laboite/commit/8517b2c7d2301a2b0bad829187d8246cfdb8732e))
+* **libs:** update npm libs to wanted version ([1592db4](https://gitlab.mim-libre.fr/alphabet/laboite/commit/1592db43d8f9aaa9376bc549a48a98f6280b79bc))
+* **libs:** update version number of meteor base ([11d81e3](https://gitlab.mim-libre.fr/alphabet/laboite/commit/11d81e3a8545379f728234391813795e1f6de4bc))
+* **mediastorage:** add crop tools for upload image ([081f966](https://gitlab.mim-libre.fr/alphabet/laboite/commit/081f9669eb628982d1892b73f48515ed683f23a3))
+* **mediastorage:** add warning text to media storage page ([600f3d7](https://gitlab.mim-libre.fr/alphabet/laboite/commit/600f3d7b16dc56119553139679083521081d2766))
+* **node:** change node version to previous version ([05d1c41](https://gitlab.mim-libre.fr/alphabet/laboite/commit/05d1c4199ee9efd9461ed67a82578246c77c8612))
+* **onBoarding:** add steps for groups and apps theme ([4cf8adf](https://gitlab.mim-libre.fr/alphabet/laboite/commit/4cf8adfec1474c32709df4cee4e4e69ca00aea64))
+* **packgage:** regen package lock with the new deps ([84d6269](https://gitlab.mim-libre.fr/alphabet/laboite/commit/84d6269f78af219b7aff82f03f6924cdea5ab138))
+* **profile:** hide apply struc perso space if no structure ([d32cb67](https://gitlab.mim-libre.fr/alphabet/laboite/commit/d32cb673c025d243118fa45665c05272e09a32e6))
+* **test:** disable logging initialize for tests ([4653234](https://gitlab.mim-libre.fr/alphabet/laboite/commit/4653234431537e0ab87a5b4362bd4c2767b60a48))
+* **tokenApi:** allow users to login from widget host ([64f555d](https://gitlab.mim-libre.fr/alphabet/laboite/commit/64f555d5254798541f8898f414da6c2ad5204cf8))
+* **widget:** init widget in a shadow root ([2143857](https://gitlab.mim-libre.fr/alphabet/laboite/commit/2143857082c025b0d12488761fa8f32424db0d55))
+
+
+### Tests
+
+* fix tests and eslint errors ([8c6661d](https://gitlab.mim-libre.fr/alphabet/laboite/commit/8c6661d4cc0cc53de6d1534bbeef682d0f217195))
+* **globalinfos:** add tests for structure messages ([6c1c917](https://gitlab.mim-libre.fr/alphabet/laboite/commit/6c1c917680932c32521c68a37ae66996d1965929))
+
 ## [5.5.2](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/5.5.1...release/5.5.2) (2023-09-29)
 
 
