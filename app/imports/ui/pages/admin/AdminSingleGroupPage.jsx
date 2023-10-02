@@ -248,9 +248,9 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
     });
   };
   const onAssignAvatar = (avatarObj, groupName) => {
-    // avatarObj = {image: base64... or url: http...}
-    if (avatarObj.image) {
-      SendNewAvatarToMedia(avatarObj.image, groupName);
+    // avatarObj = [{image: base64...}] or {url: http...}
+    if (avatarObj?.[0]?.image) {
+      SendNewAvatarToMedia(avatarObj[0].image, groupName);
     } else if (avatarObj.url !== group.avatar) {
       setGroupData({ ...groupData, avatar: avatarObj.url });
     }

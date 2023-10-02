@@ -100,7 +100,7 @@ function AdminNextcloudUrlPage({ loading, nextclouds }) {
             <Container style={{ overflowX: 'auto' }}>
               <MaterialTable
                 // other props
-                title={`${i18n.__('pages.AdminNextcloudUrlPage.title')}`}
+                title={i18n.__('pages.AdminNextcloudUrlPage.title')}
                 columns={columns}
                 data={nextclouds.map((row) => ({ ...row, id: row._id }))}
                 options={options}

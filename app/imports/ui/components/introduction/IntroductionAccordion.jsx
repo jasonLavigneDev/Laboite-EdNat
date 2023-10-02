@@ -9,6 +9,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Divider from '@mui/material/Divider';
 import { useZoneStyles as useStyles } from '../personalspace/PersonalZone';
 import { useAppContext } from '../../contexts/context';
+import { sanitizeParameters } from '../../../api/utils';
 
 const IntroductionAccordion = ({ summary, head = '', body, startExpanded = false }) => {
   const [{ isMobile }] = useAppContext();
@@ -33,7 +34,10 @@ const IntroductionAccordion = ({ summary, head = '', body, startExpanded = false
             <Typography variant={isMobile ? 'h6' : 'h4'}>{head}</Typography> <Divider />
           </>
         )}
-        <div style={{ padding: '10px' }} dangerouslySetInnerHTML={{ __html: sanitizeHtml(body) || '' }} />
+        <div
+          style={{ padding: '10px' }}
+          dangerouslySetInnerHTML={{ __html: sanitizeHtml(body, sanitizeParameters) || '' }}
+        />
       </AccordionDetails>
     </Accordion>
   );

@@ -171,7 +171,7 @@ export function ServicesPage({ services, categories, businessRegroupings, ready,
     viewMode = getLocalStorageViewMode('cstViewMode', GRID_VIEW_MODE[defaultGridViewMode]),
   } = servicePage;
 
-  const favs = loadingUser || offline ? [] : user.favServices;
+  const favs = loadingUser || offline ? [] : user.favServices ? user.favServices : [];
 
   const updateGlobalState = (key, value) =>
     dispatch({
