@@ -272,9 +272,6 @@ function AdminLayout() {
                       component={AdminStructureSettingsPage}
                       loadingUser={loadingUser}
                     />
-                    <StructureAdminRoute exact path="/admin/structuresinfos" user={user} loadingUser={loadingUser}>
-                      <AdminGlobalInfos structure />
-                    </StructureAdminRoute>
                     <StructureAdminRoute
                       userId={userId}
                       loadingUser={loadingUser}

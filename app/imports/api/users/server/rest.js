@@ -42,10 +42,7 @@ export default async function createUser(req, content) {
       const structure = findStructureByEmail(content.email);
       if (structure) userData.structure = structure._id;
       try {
-        const { emails, ...u } = userData;
-        const userId = Accounts.createUser({ ...u, email: emails[0].address });
-        Meteor.users.update(userId, { $set: { emails } });
-
+        const userId = Meteor.users.insert(userData);
         // create user on nextcloud server
         if (nextClient) {
           return nextClient

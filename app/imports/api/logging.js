@@ -22,7 +22,7 @@ let logger = 0;
 const { combine, timestamp, printf, colorize, align, padLevels, label } = winston.format;
 
 function logServer(message, level = 'info', scope = 'USER', params = {}) {
-  if (Meteor.isServer && !Meteor.isTest) {
+  if (Meteor.isServer) {
     const fileFormat = combine(
       timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSS' }),
       align(),

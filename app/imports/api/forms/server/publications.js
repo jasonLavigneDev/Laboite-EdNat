@@ -23,7 +23,7 @@ const queryGroupForms = ({ search, group }) => {
 Meteor.methods({
   'get_groups.forms_count': function getFormsAllCount({ search, slug }) {
     try {
-      const group = Groups.findOne(
+      const form = Groups.findOne(
         { slug },
         {
           fields: Groups.allPublicFields,
@@ -31,7 +31,7 @@ Meteor.methods({
           sort: { createdAt: -1 },
         },
       );
-      const query = queryGroupForms({ search, group });
+      const query = queryGroupForms({ search, form });
       return Forms.find(query).count();
     } catch (error) {
       logServer(`FORMS - METHODS - ERROR - get_groups.forms_count`, levels.ERROR, scopes.SYSTEM, { error });

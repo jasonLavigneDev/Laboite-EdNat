@@ -255,7 +255,7 @@ function TopBar({ publicMenu, root, appsettings, adminApp }) {
           )}
           ,
           {LOGO ? (
-            <Link to={root || (publicMenu ? '/public' : '/personal')} className={classes.imgLogoContainer}>
+            <Link to={root || (publicMenu ? '/public' : '/')} className={classes.imgLogoContainer}>
               <img
                 src={LOGO}
                 className={classes.imgLogoContainer}

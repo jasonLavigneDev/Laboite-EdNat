@@ -136,7 +136,7 @@ describe('services', function () {
     describe('services.one', function () {
       it('sends one service and corresponding categories selected by service slug', function (done) {
         const collector = new PublicationCollector({ userId });
-        collector.collect('services.one', { slug: 'test', structure: '' }, (collections) => {
+        collector.collect('services.one', { slug: 'test' }, (collections) => {
           assert.equal(collections.services.length, 1);
           assert.equal(collections.categories.length, 1);
           assert.equal(collections.services[0]._id, oneServiceId);

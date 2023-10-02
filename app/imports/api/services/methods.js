@@ -7,7 +7,7 @@ import { Roles } from 'meteor/alanning:roles';
 import i18n from 'meteor/universe:i18n';
 import sanitizeHtml from 'sanitize-html';
 
-import { isActive, getLabel, validateString, sanitizeParameters } from '../utils';
+import { isActive, getLabel, validateString } from '../utils';
 import slugy from '../../ui/utils/slugy';
 import { hasAdminRightOnStructure } from '../structures/utils';
 import Services from './services';
@@ -62,7 +62,7 @@ export const createService = new ValidatedMethod({
       );
     }
     checkService(data);
-    const sanitizedContent = sanitizeHtml(data.content, sanitizeParameters);
+    const sanitizedContent = sanitizeHtml(data.content);
     validateString(sanitizedContent);
     logServer(
       `SERVICES - METHODS - INSERT - createService - content: ${sanitizedContent}`,
@@ -134,7 +134,7 @@ export const updateService = new ValidatedMethod({
       throw new Meteor.Error('api.services.updateService.notPermitted', i18n.__('api.users.adminNeeded'));
     }
     checkService(data);
-    const sanitizedContent = sanitizeHtml(data.content, sanitizeParameters);
+    const sanitizedContent = sanitizeHtml(data.content);
     validateString(sanitizedContent);
     logServer(
       `SERVICES - METHODS - UPDATE - updateService - service id: ${serviceId} / data: ${JSON.stringify(data)}
@@ -187,8 +187,6 @@ export const favService = new ValidatedMethod({
     }
     const user = Meteor.users.findOne(this.userId);
     // store service in user favorite services
-    if (!user.favServices) user.favServices = [];
-
     if (user.favServices.indexOf(serviceId) === -1) {
       Meteor.users.update(this.userId, {
         $push: { favServices: serviceId },

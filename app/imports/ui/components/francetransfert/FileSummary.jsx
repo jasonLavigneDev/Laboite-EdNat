@@ -181,7 +181,7 @@ export default FileSummary;
  * @param {import('@mui/material/LinearProgress').LinearProgressProps & { label: string }} props
  * @returns
  */
-export function LinearProgressWithLabel({ label, ...props }) {
+function LinearProgressWithLabel({ label, ...props }) {
   return (
     <Box sx={{ display: 'flex', height: secondaryHeight, alignItems: 'center' }}>
       <Box sx={{ width: '100%', mr: 1 }}>

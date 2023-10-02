@@ -204,7 +204,7 @@ const AddressBook = ({ loading, group, slug }) => {
 
                           <ListItemSecondaryAction>
                             {!!user.nclocator && (
-                              <Tooltip title={i18n.__('pages.AdminUsersPage.copyNcLocator')} aria-label="add">
+                              <Tooltip title={`${i18n.__('pages.AdminUsersPage.copyNcLocator')}`} aria-label="add">
                                 <IconButton
                                   edge="end"
                                   aria-label="comments"

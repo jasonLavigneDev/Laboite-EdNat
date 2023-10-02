@@ -31,7 +31,6 @@ import Spinner from '../../components/system/Spinner';
 import { useAppContext } from '../../contexts/context';
 import TopBar from '../../components/menus/TopBar';
 import Footer from '../../components/menus/Footer';
-import { sanitizeParameters } from '../../../api/utils';
 // import Tags from '../../../api/tags/tags';
 
 const modifiedColorSyntax = (context, options) => {
@@ -247,7 +246,7 @@ function PublicArticleDetailsPage({
               ) : (
                 <div
                   className={`ql-editor ${classes.content}`}
-                  dangerouslySetInnerHTML={{ __html: sanitizeHtml(article.content, sanitizeParameters) }}
+                  dangerouslySetInnerHTML={{ __html: sanitizeHtml(article.content) }}
                 />
               )}
             </Grid>

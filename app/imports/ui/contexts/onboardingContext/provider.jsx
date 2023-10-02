@@ -1,7 +1,6 @@
-import { Meteor } from 'meteor/meteor';
-import { Roles } from 'meteor/alanning:roles';
 import React, { createContext, useState, useContext, useCallback, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { Meteor } from 'meteor/meteor';
 
 import i18n from 'meteor/universe:i18n';
 import { Steps } from 'intro.js-react';
@@ -93,10 +92,9 @@ async function asyncQuerySelector(selector, depth = 0) {
  * @returns {JSX.Element}
  */
 export default function OnBoardingProvider({ children }) {
-  const [{ user, userId }] = useAppContext();
+  const [{ userId }] = useAppContext();
   const history = useHistory();
   const [areStepsEnabled, setStepsEnabled] = useState(false);
-  const isAdmin = Roles.userIsInRole(user?._id, 'admin');
   /**
    * @type {useRef<import('intro.js-react').Steps>}
    */
@@ -108,15 +106,10 @@ export default function OnBoardingProvider({ children }) {
     history.push(link.path);
   }, []);
 
-  /* TODO:
-   *   another approach for themes could be to have predefined sets of steps that could be listed in settings
-   *   Steps translations could also be configured through laboite's admin interface
-   */
-
   /**
    * @type {Array<import('intro.js-react').Step>}
    */
-  let steps = [
+  const steps = [
     {
       ...tOnBoarding('intro'),
     },
@@ -168,22 +161,6 @@ export default function OnBoardingProvider({ children }) {
         title: 'components.MenuBar.menuStructure',
       },
     },
-  ];
-  if (Meteor.settings.public.disabledFeatures?.groups === false) {
-    steps = [
-      ...steps,
-      {
-        ...tOnBoarding('groups'),
-        element: '[data-tour-id="groups"]',
-        link: {
-          path: '/groups',
-          title: 'components.MenuBar.menuGroupes',
-        },
-      },
-    ];
-  }
-  steps = [
-    ...steps,
     {
       ...tOnBoarding('menu'),
       element: '#main-menu-button',
@@ -208,31 +185,6 @@ export default function OnBoardingProvider({ children }) {
         title: 'components.MainMenu.menuUserBookmarks',
       },
     },
-  ];
-  if (!isAdmin && Meteor.settings.public.disabledFeatures?.groups === false) {
-    steps = [
-      ...steps,
-      {
-        ...tOnBoarding('adminGroups'),
-        element: '[data-tour-id="adminGroups"]',
-        openMenu: true,
-        link: {
-          path: '/admingroups',
-          title: 'components.MainMenu.menuAdminGroups',
-        },
-      },
-      {
-        ...tOnBoarding('addGroup'),
-        element: `button[aria-label="${i18n.__('pages.AdminGroupsPage.materialTableLocalization.body_addTooltip')}"]`,
-        link: {
-          path: '/admingroups',
-          title: 'components.MainMenu.menuAdminGroups',
-        },
-      },
-    ];
-  }
-  steps = [
-    ...steps,
     {
       ...tOnBoarding('help'),
       element: '[data-tour-id="help"]',
@@ -259,8 +211,8 @@ export default function OnBoardingProvider({ children }) {
         </>
       ),
       link: {
-        path: '/personal',
-        title: 'components.MenuBar.menuMyspace',
+        path: '/userBookmarks',
+        title: 'components.MainMenu.menuUserBookmarks',
       },
     },
   ];
@@ -283,12 +235,12 @@ export default function OnBoardingProvider({ children }) {
   // Automatically start the tour on the first time the page loads in the browser
   if (Meteor.settings.public.onBoarding?.enabled === true) {
     useEffect(() => {
-      if (userId && user?.isActive && user?.structure) {
+      if (userId) {
         if (window.localStorage.getItem(localStorageKey) !== 'true') {
           setTimeout(() => setStepsEnabled(true), 225);
         }
       }
-    }, [userId, user?.isActive, user?.structure]);
+    }, [userId]);
 
     useEffect(() => {
       if (ref.current?.introJs && areStepsEnabled) {

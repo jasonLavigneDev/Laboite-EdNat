@@ -188,7 +188,7 @@ const GroupArticlesPage = ({ loading, group }) => {
                                 className={classes.inline}
                                 color="textPrimary"
                               >
-                                {article.description}
+                                {`${article.description}`}
                               </Typography>
                             </>
                           }

@@ -23,7 +23,7 @@ Bookmarks.schema = new SimpleSchema(
     url: {
       type: String,
       min: 1,
-      max: 512,
+      max: 256,
       label: getLabel('api.bookmarks.labels.url'),
     },
     name: {

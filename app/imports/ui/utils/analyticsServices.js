@@ -55,15 +55,15 @@ if (countly?.url) {
     'group_features',
     {
       activity: ['sessions', 'events', 'views', 'location'],
-      interaction: [],
+      interaction: ['scrolls', 'clicks', 'crashes'],
       whereabouts: ['users'],
     },
   ]);
 
   // Countly.q.push(['enable_feedback', { widgets: ['widget-id-1', 'widget-id-2'] }]);
   Countly.q.push(['track_sessions']);
-  // Countly.q.push(['track_scrolls']);
-  // Countly.q.push(['track_clicks']);
+  Countly.q.push(['track_scrolls']);
+  Countly.q.push(['track_clicks']);
   Countly.q.push(['track_links']);
-  // Countly.q.push(['track_errors']);
+  Countly.q.push(['track_errors']);
 }

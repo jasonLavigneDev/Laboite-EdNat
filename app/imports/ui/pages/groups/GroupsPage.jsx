@@ -80,13 +80,11 @@ const useStyles = makeStyles()(() => ({
 const ITEM_PER_PAGE = 9;
 
 function GroupsPage() {
-  const [{ isMobile, groupPage, userId, user }, dispatch] = useAppContext();
+  const [{ isMobile, groupPage, userId }, dispatch] = useAppContext();
   const [filterChecked, setFilterChecked] = React.useState(false);
   const history = useHistory();
   const { classes } = useStyles();
   const { classes: classesIcons } = useIconStyles();
-
-  const canCreateGroup = user.groupCount < user.groupQuota;
 
   const { defaultGridViewMode = '' } = Meteor.settings.public?.ui || {};
 
@@ -201,23 +199,11 @@ function GroupsPage() {
                   <SearchIcon fontSize="large" />
                 </IconButton>
               </Tooltip>
-
-              {user.groupQuota > 0 && (
-                <Tooltip
-                  title={
-                    canCreateGroup
-                      ? i18n.__('pages.GroupsPage.addGroup')
-                      : i18n.__('pages.AdminGroupsPage.materialTableLocalization.body_cantCreate')
-                  }
-                >
-                  <span>
-                    <IconButton onClick={goToAddGroup} disabled={!canCreateGroup} size="large">
-                      <AddIcon fontSize="large" />
-                    </IconButton>
-                  </span>
-                </Tooltip>
-              )}
-
+              <Tooltip title={i18n.__('pages.GroupsPage.addGroup')}>
+                <IconButton onClick={goToAddGroup} size="large">
+                  <AddIcon fontSize="large" />
+                </IconButton>
+              </Tooltip>
               {!isMobile && filterSwitch()}
             </Typography>
             <div className={classes.spaceBetween}>{!isMobile && toggleButtons}</div>
