@@ -161,7 +161,14 @@ def insertUser(user):
 def insertStructure(structure):
     alreadyExist = db["structures"].find_one({"name": structure["name"]})
     if(alreadyExist == None):
-        db['structures'].insert_one(structure)
+        st = {
+            "_id": structure["_id"],
+            "name": structure["name"],
+            "parentId": structure["parentId"],
+            "ancestorsIds": structure["ancestorsIds"].split(),
+            "childrenIds": structure["childrenIds"].split()
+        }
+        db['structures'].insert_one(st)
 
         keycloak_admin.create_group({"name": structure["name"]})
         group = {
