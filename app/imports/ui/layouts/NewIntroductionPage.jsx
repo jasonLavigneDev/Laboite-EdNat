@@ -5,6 +5,7 @@ import i18n from 'meteor/universe:i18n';
 import { Chip, Paper } from '@mui/material';
 
 import { useAppContext } from '../contexts/context';
+import { sanitizeParameters } from '../../api/utils';
 
 export const NewIntroductionPage = () => {
   const [messages, setMessages] = useState([]);
@@ -52,7 +53,7 @@ export const NewIntroductionPage = () => {
             {message?.structureId?.length ? (
               <Chip style={{ width: '40%' }} label="Ma super structure" color="primary" />
             ) : null}
-            <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(message?.content) }} />
+            <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(message?.content, sanitizeParameters) }} />
             <div
               style={{
                 display: 'flex',
