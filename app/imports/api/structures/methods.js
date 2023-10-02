@@ -5,7 +5,7 @@ import { Roles } from 'meteor/alanning:roles';
 import i18n from 'meteor/universe:i18n';
 import { _ } from 'meteor/underscore';
 import sanitizeHtml from 'sanitize-html';
-import { getLabel, isActive, sanitizeParameters, validateString } from '../utils';
+import { getLabel, isActive, validateString } from '../utils';
 import Structures, { IntroductionStructure } from './structures';
 import { hasAdminRightOnStructure, isAStructureWithSameNameExistWithSameParent } from './utils';
 import Services from '../services/services';
@@ -526,7 +526,7 @@ export const updateStructureIntroduction = new ValidatedMethod({
       );
     }
     validateString(title);
-    const sanitizedContent = sanitizeHtml(content, sanitizeParameters);
+    const sanitizedContent = sanitizeHtml(content);
     validateString(sanitizedContent);
     introductionToChange = {
       ...introductionToChange,

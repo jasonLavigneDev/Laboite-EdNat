@@ -9,7 +9,6 @@ import 'intro.js/introjs.css';
 import App from '../../ui/layouts/App';
 import getLang from '../../ui/utils/getLang';
 import { registerSchemaMessages } from '../../api/utils';
-import './iframecommands';
 
 /** Startup the application by rendering the App layout component. */
 Meteor.startup(() => {

@@ -130,9 +130,6 @@ const MenuBar = ({ mobile }) => {
       contentMobile: 'menuGroupesMobile',
       icon: <GroupIcon />,
       hidden: disabledFeatures.groups,
-      props: {
-        'data-tour-id': 'groups',
-      },
     },
   ];
   const T = i18n.createComponent('components.MenuBar');

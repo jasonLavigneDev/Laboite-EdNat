@@ -322,7 +322,7 @@ const AdminSingleServicePage = ({ categories, businessReGrouping, service, ready
         <Paper className={classes.root}>
           <Typography component="h1">
             {i18n.__(`pages.AdminSingleServicePage.${params._id ? 'edition' : 'creation'}`)}
-            <b> {serviceData.title}</b> {structureMode && structure != null ? `(${structure.name})` : ''}
+            <b> {serviceData.title}</b> {`${structureMode && structure != null ? `(${structure.name})` : ''}`}
           </Typography>
           <form noValidate autoComplete="off">
             <Tooltip title={i18n.__('pages.AdminSingleServicePage.titleFieldHelperText')} arrow key="tooTipTitle">
@@ -394,7 +394,7 @@ const AdminSingleServicePage = ({ categories, businessReGrouping, service, ready
               <ImageAdminUploader
                 onImageChange={onUpdateLogo}
                 name="logo"
-                className={classes.logo}
+                className={`${classes.logo}`}
                 alt={`logo for ${serviceData.title}`}
                 src={serviceData.logo}
                 path={`services/${params._id}`}
@@ -458,7 +458,7 @@ const AdminSingleServicePage = ({ categories, businessReGrouping, service, ready
               <ReactQuill id="content" value={content} onChange={onUpdateRichText} modules={quillOptions} />
             </div>
             <InputLabel id="categories-label">{i18n.__('pages.AdminSingleServicePage.categories')}</InputLabel>
-            <div className={classes.chipWrapper}>
+            <div className={`${classes.chipWrapper}`}>
               {categories.map((categ) => {
                 const isActive = serviceData.categories && Boolean(serviceData.categories.find((c) => c === categ._id));
                 return (

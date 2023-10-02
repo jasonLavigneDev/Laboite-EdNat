@@ -4,15 +4,9 @@
 #root {
   min-height: 100vh;
 }
-
 a {
   color: inherit; /* blue colors for links too */
-  text-decoration: inherit;
-}
-
-div p a {
-  color: blue;
-  text-decoration: underline;
+  text-decoration: inherit; /* no underline */
 }
 
 .ql-editor {
@@ -27,15 +21,4 @@ div p a {
   overflow: hidden;
   max-width: 100%;
   overflow-wrap: anywhere;
-}
-
-.import-bookmark-cell {
-  white-space: nowrap;
-  max-width: 350px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.hidden {
-  display: none;
 }

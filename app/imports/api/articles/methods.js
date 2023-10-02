@@ -7,7 +7,7 @@ import i18n from 'meteor/universe:i18n';
 import sanitizeHtml from 'sanitize-html';
 import logServer, { levels, scopes } from '../logging';
 
-import { isActive, getLabel, validateString, sanitizeParameters } from '../utils';
+import { isActive, getLabel, validateString } from '../utils';
 import Articles from './articles';
 
 const validateData = (data) => {
@@ -37,7 +37,7 @@ export const createArticle = new ValidatedMethod({
       throw new Meteor.Error('api.articles.createArticle.notLoggedIn', i18n.__('api.users.mustBeLoggedIn'));
     }
     validateData(data);
-    const sanitizedContent = data.markdown ? data.content : sanitizeHtml(data.content, sanitizeParameters);
+    const sanitizedContent = data.markdown ? data.content : sanitizeHtml(data.content);
     validateString(sanitizedContent);
     logServer(
       `ARTICLES - METHODS - METEOR UPDATE - createArticle - id: ${this.userId}`,
@@ -130,7 +130,7 @@ export const updateArticle = new ValidatedMethod({
       throw new Meteor.Error('api.articles.updateArticle.notPermitted', i18n.__('api.articles.adminArticleNeeded'));
     }
     validateData(data);
-    const sanitizedContent = data.markdown ? data.content : sanitizeHtml(data.content, sanitizeParameters);
+    const sanitizedContent = data.markdown ? data.content : sanitizeHtml(data.content);
     validateString(sanitizedContent);
     const userStructure = Meteor.users.findOne(this.userId, { fields: { structure: 1 } }).structure || '';
     logServer(
@@ -230,7 +230,7 @@ export const uploadBackupPublications = new ValidatedMethod({
       articles.forEach((data) => validateData(data));
       const userStructure = Meteor.users.findOne(this.userId, { fields: { structure: 1 } }).structure || '';
       return articles.map((article) => {
-        const sanitizedContent = article.markdown ? article.content : sanitizeHtml(article.content, sanitizeParameters);
+        const sanitizedContent = article.markdown ? article.content : sanitizeHtml(article.content);
         validateString(sanitizedContent);
         logServer(
           `ARTICLES - METHODS - INSERT - uploadBackupPublications - article: ${JSON.stringify(

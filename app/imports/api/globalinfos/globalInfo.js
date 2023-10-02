@@ -39,14 +39,9 @@ GlobalInfos.schema = new SimpleSchema(
     language: {
       type: String,
     },
-    structureName: {
-      type: String,
-      defaultValue: '',
-    },
     structureId: {
       type: Array,
       defaultValue: [],
-      index: true,
     },
     'structureId.$': { type: String },
   },

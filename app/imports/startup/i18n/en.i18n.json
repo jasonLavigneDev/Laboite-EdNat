@@ -10,9 +10,6 @@
         "id": "ID",
         "icon": "favion"
       },
-      "addToPersonalSpace": "Add to personal space",
-      "keep": "Keep",
-      "discard": "Discard",
       "creationFailed": "Creation failed. Make sure all fields are filled.",
       "UnknownURL": "This URL doesn't exist.",
       "unknownBookmark": "This bookmark doesn't exist.",
@@ -474,31 +471,19 @@
       "steps": {
         "intro": {
           "title": "Welcome to your space!",
-          "text": "A new space is opening up for french education employees. 👋"
+          "text": "A new space is opening up for state employees. 👋"
         },
         "mySpace": {
           "title": "Your Space!",
           "text": "This is where it all happens!"
         },
         "services": {
-          "title": "The national applications",
-          "text": "The application store available to all french education employees"
-        },
-        "groups": {
-          "title": "The groups",
-          "text": "The groups store of groups created by french education employees"
-        },
-        "adminGroups": {
-          "title": "Manage your groups",
-          "text": "Manage the groups you have created"
-        },
-        "addGroup": {
-          "title": "Add a group",
-          "text": "Create your own group"
+          "title": "The interdepartmental applications",
+          "text": "The application store available to all government employees"
         },
         "structure": {
-          "title": "The local applications",
-          "text": "The application store hosted by your attachment structure"
+          "title": "The ministerial applications",
+          "text": "The application store available for your department or organization"
         },
         "bookMark": {
           "title": "Manage your bookmarks",
@@ -586,9 +571,7 @@
       "create_at": "Create at :",
       "update_at": "Update at :",
       "expire_at": "Expire at :",
-      "no_message": "No message",
-      "label_expire": "Expiration date",
-      "cancel": "Cancel"
+      "no_message": "No message"
     },
     "Notifications": {
       "remove": "Remove"
@@ -692,7 +675,7 @@
       "menuAdminGroups": "Groups management",
       "menuUserBookmarks": "Bookmarks",
       "menuUpload": "Transfer files",
-      "menuProfileLabel": "My profile",
+      "menuProfileLabel": "Profile",
       "menuHelpLabel": "Help",
       "menuFeedbackLabel": "Give feedback",
       "menuOnboardingLabel": "How to use this service?",
@@ -740,8 +723,7 @@
       "menuAdminGlobalInfo": "Global information",
       "menuAdminAnalytics": "Analytics",
       "menuAdminStructureAnalytics": "Structure analytics",
-      "menuAdminStructureSettings": "Structure settings",
-      "menuAdminStructureInfo": "Structure information"
+      "menuAdminStructureSettings": "Structure settings"
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Your account has not been activated",
@@ -942,15 +924,6 @@
       "OpenInWindow": "Open media",
       "copyUrl": "Copy this media URL"
     },
-    "MediaStorageEdit":{
-      "title": "Modify your picture",
-      "subtitle": "",
-      "sendImage": "Send this picture",
-      "turnLeft": "Turn left",
-      "turnRight": "Turn right",
-      "zoom": "Zoom",
-      "cancel": "Cancel"
-    },
     "AvatarEdit": {
       "title": "Create your avatar",
       "subtitle": "from an image",
@@ -1143,23 +1116,14 @@
         "linkCopied": "Link has been copied.",
         "errorWhenCopying": "Impossible to copy the password."
       }
+
     },
     "UserBookmarksPage": {
       "back": "Go back",
       "favoriteBookmark": "Add to your personal space",
       "unfavoriteBookmark": "Remove from your personal space",
       "close": "Close",
-      "showQrCode": "Display QR Code",
-      "wantToImport": "Do you want to proceed importing {$nbOfBoomarks} bookmarks ?",
-      "action": "Action",
-      "proceedWithImport": "Import the bookmarks",
-      "proceedWithExport": "Export the bookmarks",
-      "importSuccess": "{$nbOfBoomarks} bookmarks imported successfully",
-      "exportSuccess": "{$nbOfBoomarks} bookmarks exported successfully",
-      "importFirefox": "Import bookmarks in Firefox",
-      "exportFirefox": "Export bookmarks in Firefox",
-      "exportChrome": "Export or import bookmarks in Chrome / Chromium",
-      "importHtmlFile": "Import bookmarks from HTML file"
+      "showQrCode": "Display QR Code"
     },
     "BookmarksPage": {
       "columnIcon": "Favicon",
@@ -1173,8 +1137,6 @@
       "noAccess": "You don't have access to bookmarks of this group",
       "title": "Bookmarks management",
       "materialTableLocalization": {
-        "body_importTooltip": "Import bookmarks from browser",
-        "body_exportTooltip": "Export your bookmarks",
         "body_addTooltip": "Add new bookmark",
         "body_editTooltip": "Edit this bookmark",
         "body_deleteTooltip": "Delete this bookmark",
@@ -1256,7 +1218,7 @@
       "cancel": "Cancel"
     },
     "ProfilePage": {
-      "title": "My profile",
+      "title": "My settings",
       "firstNameLabel": "First name",
       "lastNameLabel": "Last name",
       "emailLabel": "Email",
@@ -1305,8 +1267,7 @@
       "ApplyDefaultSpace": "Apply '{$structName}' structure default space",
       "ApplyDefaultSpaceMessage": "This will apply the changes to your personal space",
       "ApplyDefaultSpaceBtn": "Apply default space",
-      "ApplyDefaultSpaceWarning": "Can not apply default space if advanced personal page is activated",
-      "activeAccountRequired": "Requires an active account"
+      "ApplyDefaultSpaceWarning": "Can not apply default space if advanced personal page is activated"
     },
     "NotFound": {
       "backButtonLabel": "Back",
@@ -1432,7 +1393,6 @@
         "pagination_labelRowsSelect": "groups per page",
         "body_emptyDataSourceMessage": "No groups to manage",
         "body_addTooltip": "Add a group",
-        "body_cantCreate": "You can't create more group",
         "body_editTooltip": "Modify this group",
         "body_deleteTooltip": "Remove this group",
         "body_editRow_deleteText": "Do you really want to delete this group and unsubscribe its members ?"
@@ -1743,8 +1703,7 @@
       "usage": "Usage",
       "delete": "Delete",
       "confirmDelete": "Confirm delete",
-      "objectUsedText": "This file is used in a publication (title under this text), if you delete it, it will result as an empty link in your article. If you click again on delete, be aware that it will not be possible to restore it.",
-      "publicWarning": "Warning, all media published on this page are publicly accessible."
+      "objectUsedText": "This file is used in a publication (title under this text), if you delete it, it will result as an empty link in your article. If you click again on delete, be aware that it will not be possible to restore it."
     },
     "AdminStructureUsersPage": {
       "title": "Structure users management",
@@ -1780,8 +1739,11 @@
       "backToProfile": "Back to profile"
     },
     "IntroductionPage": {
+      "titleAppIntroduction": "General informations",
+      "noContent": "No content for now.",
+      "noTitle": "No title for now.",
       "informationsOf": "Informations of",
-      "structureMessage": "Information from {$structure} :"
+      "titleStructures": "Structures informations"
     },
     "AdminStructureSettingsPage": {
       "title": "Structure settings",
@@ -1850,11 +1812,6 @@
         "toolbar_searchPlaceholder": "Search",
         "body_emptyDataSourceMessage": "No results"
       }
-    },
-    "AdminGlobalInfos": {
-      "title": "Manage global info messages",
-      "titleStructure": "Manage structure messages",
-      "createButton": "Create new message"
     }
   },
   "layouts": {

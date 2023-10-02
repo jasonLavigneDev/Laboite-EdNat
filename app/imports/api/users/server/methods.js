@@ -1348,6 +1348,7 @@ export const setLastGlobalInfoRead = new ValidatedMethod({
   }).validator(),
 
   run({ lastGlobalInfoReadDate }) {
+    console.log('lastGlobalInfoReadDate', lastGlobalInfoReadDate);
     if (!this.userId) {
       throw new Meteor.Error('api.users.setLanguage.notPermitted', i18n.__('api.users.mustBeLoggedIn'));
     }

@@ -13,9 +13,6 @@
         "id": "ID",
         "icon": "favicon"
       },
-      "addToPersonalSpace": "Ajouter à l'espace personnel",
-      "keep": "Ajouter",
-      "discard": "Ignorer",
       "creationFailed": "Echec lors de la création. Assurez-vous que tous les champs soient convenablement remplis.",
       "UnknownURL": "Cette URL n'existe pas.",
       "unknownBookmark": "Ce marque-page n'existe pas.",
@@ -510,9 +507,7 @@
       "create_at": "Créé le :",
       "update_at": "Mis à jour le :",
       "expire_at": "Expire le :",
-      "no_message": "Aucun message",
-      "label_expire": "Date d'expiration",
-      "cancel": "Annuler"
+      "no_message": "Aucun message"
     },
     "Notifications": {
       "remove": "Supprimer"
@@ -616,7 +611,7 @@
     "MainMenu": {
       "menuUserBookmarks": "Marque-pages",
       "menuUpload": "Transférer des fichiers",
-      "menuProfileLabel": "Mon profil",
+      "menuProfileLabel": "Profil",
       "menuHelpLabel": "Aide",
       "menuFeedbackLabel": "Partager mon avis",
       "menuOnboardingLabel": "Comment utiliser ce service ?",
@@ -665,8 +660,7 @@
       "menuAdminGlobalInfo": "Informations générales",
       "menuAdminAnalytics": "Analytiques",
       "menuAdminStructureAnalytics": "Analytiques de structure",
-      "menuAdminStructureSettings": "Réglages de structure",
-      "menuAdminStructureInfo": "Informations de structure"
+      "menuAdminStructureSettings": "Réglages de structure"
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Votre compte n'a pas été activé",
@@ -870,15 +864,6 @@
       "OpenInWindow": "Ouvrir le média",
       "copyUrl": "Copier l'URL de ce média"
     },
-    "MediaStorageEdit":{
-      "title": "Modifiez votre image",
-      "subtitle": "",
-      "sendImage": "Envoyer cette image",
-      "turnLeft": "Pivoter à gauche",
-      "turnRight": "Pivoter à droite",
-      "zoom": "Zoom",
-      "cancel": "Annuler"
-    },
     "AvatarEdit": {
       "title": "Créez votre avatar",
       "subtitle": "à partir d'une image",
@@ -1014,31 +999,19 @@
     "steps": {
       "intro": {
         "title": "Bienvenue sur votre espace !",
-        "text": "Un nouvel espace s'ouvre aux agents de l'Éducation nationale. 👋"
+        "text": "Un nouvel espace s'ouvre aux agents de l'État. 👋"
       },
       "mySpace": {
         "title": "Votre espace",
         "text": "C'est là que tout se passe !"
       },
       "services": {
-        "title": "Les applications nationales",
-        "text": "Le magasin d'applications disponibles pour tous les agents de l'Éducation nationale"
-      },
-      "groups": {
-        "title": "Les groupes",
-        "text": "Le magasin des groupes créés par les agents de l'Éducation nationale"
-      },
-      "adminGroups": {
-        "title": "Gérez vos groupes",
-        "text": "Administrez les groupes que vous avez créé"
-      },
-      "addGroup": {
-        "title": "Ajouter un groupe",
-        "text": "Créer votre propre groupe"
+        "title": "Les applications interministérielles",
+        "text": "Le magasin d'applications disponibles pour tous les agents de l'État"
       },
       "structure": {
-        "title": "Les applications locales",
-        "text": "Le magasin d'applications mises à disposition par votre structure de rattachement"
+        "title": "Les applications ministérielles",
+        "text": "Le magasin d'applications mises à disposition pour votre ministère ou organisation"
       },
       "bookMark": {
         "title": "Gérez vos marque-pages",
@@ -1157,17 +1130,7 @@
       "favoriteBookmark": "Ajouter à votre espace personnel",
       "unfavoriteBookmark": "Supprimer de votre espace personnel",
       "close": "Fermer",
-      "showQrCode": "Voir le QR Code",
-      "wantToImport": "Voulez vous importer {$nbOfBoomarks} marques-pages ?",
-      "action": "Action",
-      "proceedWithImport": "Importer les marques-pages",
-      "proceedWithExport": "Exporter les marques-pages",
-      "importSuccess": "{$nbOfBoomarks} marques-pages ont été importés avec succès",
-      "exportSuccess": "{$nbOfBoomarks} marques-pages exportés avec succès",
-      "importFirefox": "Importer les marques-pages dans Firefox",
-      "exportFirefox": "Exporter les marques-pages dans Firefox",
-      "exportChrome": "Exporter ou importer les marques-pages dans Chrome / Chromium",
-      "importHtmlFile": "Importer les marques-page depuis un fichier HTML"
+      "showQrCode": "Voir le QR Code"
     },
     "BookmarksPage": {
       "columnIcon": "Favicon",
@@ -1181,8 +1144,6 @@
       "noAccess": "Vous n'avez pas accès aux marque-pages de ce groupe.",
       "title": "Gestion des marque-pages",
       "materialTableLocalization": {
-        "body_importTooltip": "Importer des marque-pages du navigateur",
-        "body_exportTooltip": "Exporter vos marque-pages",
         "body_addTooltip": "Créer un nouveau marque-page",
         "body_editTooltip": "Modifier ce marque-page",
         "body_deleteTooltip": "Supprimer ce marque-page",
@@ -1264,7 +1225,7 @@
       "cancel": "Annuler"
     },
     "ProfilePage": {
-      "title": "Mon profil",
+      "title": "Mes préférences",
       "firstNameLabel": "Prénom",
       "lastNameLabel": "Nom",
       "emailLabel": "Courriel",
@@ -1313,8 +1274,7 @@
       "ApplyDefaultSpace": "Appliquer l'espace par default de la structure '{$structName}'",
       "ApplyDefaultSpaceMessage": "Cela appliquera les changements sur votre espace personnel",
       "ApplyDefaultSpaceBtn": "Appliquer l'espace par default",
-      "ApplyDefaultSpaceWarning": "On ne peut pas appliquer l'espace par défaut si l'option 'espace personnel avancé' est activé",
-      "activeAccountRequired": "Nécessite un compte actif"
+      "ApplyDefaultSpaceWarning": "On ne peut pas appliquer l'espace par défaut si l'option 'espace personnel avancé' est activé"
     },
     "NotFound": {
       "backButtonLabel": "Retour",
@@ -1440,7 +1400,6 @@
         "pagination_labelRowsSelect": "groupes par page",
         "body_emptyDataSourceMessage": "Aucun groupe à gérer",
         "body_addTooltip": "Ajouter un groupe",
-        "body_cantCreate": "Vous ne pouvez pas créer plus de groupe",
         "body_editTooltip": "Modifier ce groupe",
         "body_deleteTooltip": "Supprimer ce groupe",
         "body_editRow_deleteText": "Souhaitez vous réellement supprimer ce groupe et désinscrire ses membres ?"
@@ -1747,12 +1706,11 @@
       "sortByDate": "Trier par date de publication"
     },
     "MediaStoragePage": {
-      "title": "Stockage de médias",
+      "title": "Stockage de fichiers",
       "usage": "Utilisation",
       "delete": "Supprimer",
       "confirmDelete": "Confirmer la suppression",
-      "objectUsedText": "Ce fichier est utilisé dans un article (titre ci dessous), si vous le supprimez, vos lecteurs tomberont sur un lien vide dans cet article. Si vous confirmez la suppression en cliquant une fois de plus sur le bouton, prenez note que cela ne sera pas réversible.",
-      "publicWarning": "Attention, tous les médias publiés ici sont accessibles publiquement."
+      "objectUsedText": "Ce fichier est utilisé dans un article (titre ci dessous), si vous le supprimez, vos lecteurs tomberont sur un lien vide dans cet article. Si vous confirmez la suppression en cliquant une fois de plus sur le bouton, prenez note que cela ne sera pas réversible."
     },
     "AdminStructureUsersPage": {
       "title": "Gestion des utilisateurs de la structure",
@@ -1782,8 +1740,11 @@
       "backToProfile": "Retourner au profil"
     },
     "IntroductionPage": {
+      "titleAppIntroduction": "Informations générales",
+      "noContent": "Pas de contenu pour le moment",
+      "noTitle": "Pas de titre pour le moment",
       "informationsOf": "Informations de",
-      "structureMessage": "{$structure} vous informe :"
+      "titleStructures": "Informations de structures"
     },
     "AdminStructureSettingsPage": {
       "title": "Informations de la structure",
@@ -1860,11 +1821,6 @@
         "toolbar_searchPlaceholder": "Rechercher",
         "body_emptyDataSourceMessage": "Aucun resultats"
       }
-    },
-    "AdminGlobalInfos": {
-      "title": "Gérer les messages d'information générale",
-      "titleStructure": "Gérer les messages de structure",
-      "createButton": "Créer un nouveau message"
     }
   },
   "layouts": {

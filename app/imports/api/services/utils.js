@@ -5,7 +5,6 @@ export const getServiceInternalUrl = ({ service }) => {
   const isBookmark = service._id === 'bookmarks';
   const isArticles = service._id === 'articles';
   const isForms = service._id === 'forms';
-  const isStrucService = service.structure !== '';
   return isAddressBook
     ? service.url
     : isEvents
@@ -18,7 +17,5 @@ export const getServiceInternalUrl = ({ service }) => {
     ? service.url
     : isForms
     ? service.url
-    : isStrucService
-    ? `/services/${service.structure}/${service.slug}`
     : `/services/${service.slug}`;
 };

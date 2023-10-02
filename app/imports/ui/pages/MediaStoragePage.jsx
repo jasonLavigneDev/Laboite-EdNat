@@ -9,15 +9,13 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import AddIcon from '@mui/icons-material/Add';
-import Alert from '@mui/material/Alert';
 import i18n from 'meteor/universe:i18n';
 import { useDropzone } from 'react-dropzone';
 import { useAppContext } from '../contexts/context';
-import { storageToSize, toBase64 } from '../utils/filesProcess';
+import { toBase64, storageToSize } from '../utils/filesProcess';
 import SingleStorageFile from '../components/mediaStorage/SingleStoragefile';
 import SelectedMediaModal from '../components/mediaStorage/SelectedMediaModal';
 import Spinner from '../components/system/Spinner';
-import AvatarEdit from '../components/users/AvatarEdit';
 
 const { maxMinioDiskPerUser } = Meteor.settings.public;
 
@@ -54,9 +52,6 @@ const MediaStoragePage = ({ selectFile, modal }) => {
   const { classes } = useStyles();
   const [loading, setLoading] = useState(false);
   const [objectUsed, setObjectUsed] = useState(null);
-  const [openImageEdit, setOpenImageEdit] = useState(false);
-  const [imageInBase64, setImageInBase64] = useState('');
-  const [fileMetaData, setFileMetaData] = useState({});
 
   const updateFilesList = () => {
     // get current user files from minio
@@ -80,20 +75,15 @@ const MediaStoragePage = ({ selectFile, modal }) => {
 
   const sendFiles = (selectedFiles) => {
     [...selectedFiles].forEach(async (file) => {
-      const media = file?.image ? fileMetaData : await toBase64(file);
-      const date = new Date().toISOString().replace('T', '-').replaceAll(':', '-').split('.')[0];
-      const fileName = file?.image
-        ? media.name.substring(0, media.name.lastIndexOf('.')) || media.name
-        : file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
+      const image = await toBase64(file);
+      const fileName = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
       dispatch({
         type: 'uploads.add',
         data: {
-          name: file?.image ? media.name : file.name,
-          fileName: `${fileName}-${date}`,
-          file: file?.image ? file.image : media,
-          type: file?.image
-            ? media.name.split('.')[media.name.split('.').length - 1]
-            : file.name.split('.')[file.name.split('.').length - 1],
+          name: file.name,
+          fileName,
+          file: image,
+          type: file.name.split('.')[file.name.split('.').length - 1],
           path: `users/${Meteor.userId()}`,
           storage: true,
           onFinish: updateFilesList,
@@ -107,23 +97,8 @@ const MediaStoragePage = ({ selectFile, modal }) => {
   const onAddClick = () => {
     const input = document.createElement('input');
     input.type = 'file';
-
     input.onchange = (e) => {
-      const file = e.target.files;
-      setFileMetaData(file[0]);
-
-      if (file[0].type.includes('video')) {
-        sendFiles(file);
-      } else {
-        const readerImg = new FileReader();
-
-        readerImg.onload = function onImgLoad() {
-          setImageInBase64(readerImg.result);
-
-          setOpenImageEdit(true);
-        };
-        readerImg.readAsDataURL(file[0]);
-      }
+      sendFiles(e.target.files);
     };
     input.click();
   };
@@ -205,7 +180,6 @@ const MediaStoragePage = ({ selectFile, modal }) => {
               <Typography className={classes.flex}>
                 {i18n.__('pages.MediaStoragePage.usage')} {storageToSize(usedDisk)}/{storageToSize(maxMinioDiskPerUser)}
               </Typography>
-              <Alert severity="warning">{i18n.__('pages.MediaStoragePage.publicWarning')}</Alert>
             </Grid>
             {files.map((file) => (
               <Grid item xs={6} sm={3} md={2} key={Random.id()} className={classes.fileWrapper}>
@@ -213,19 +187,6 @@ const MediaStoragePage = ({ selectFile, modal }) => {
               </Grid>
             ))}
           </Grid>
-
-          {openImageEdit && (
-            <AvatarEdit
-              open={openImageEdit}
-              avatar={imageInBase64}
-              onClose={() => setOpenImageEdit(false)}
-              onSendImage={sendFiles}
-              cardTitle={i18n.__('components.MediaStorageEdit.title')}
-              cardSubTitle={i18n.__('components.MediaStorageEdit.subtitle')}
-              sendButtonText={i18n.__('components.MediaStorageEdit.sendImage')}
-              isMediaStorageCropping
-            />
-          )}
 
           {!!selected && !modal && (
             <SelectedMediaModal

@@ -9,7 +9,6 @@ import Tooltip from '@mui/material/Tooltip';
 import PublishIcon from '@mui/icons-material/Publish';
 import CameraEnhanceIcon from '@mui/icons-material/CameraEnhance';
 import FaceIcon from '@mui/icons-material/Face';
-import Typography from '@mui/material/Typography';
 import { useAppContext } from '../../contexts/context';
 import AvatarGallery from './AvatarGallery';
 import UserAvatar from './UserAvatar';
@@ -73,7 +72,7 @@ const useStyles = makeStyles()((theme) => ({
   },
 }));
 
-const AvatarPicker = ({ userAvatar, userFirstName, onAssignAvatar, avatar, type, profil, userActive }) => {
+const AvatarPicker = ({ userAvatar, userFirstName, onAssignAvatar, avatar, type, profil }) => {
   const { classes } = useStyles();
   const [{ isMobile }] = useAppContext();
   const [imageAvatar, setImageAvatar] = useState('');
@@ -124,30 +123,25 @@ const AvatarPicker = ({ userAvatar, userFirstName, onAssignAvatar, avatar, type,
         <Grid item xs={12} className={classes.buttonWrapper}>
           {!!minioEndPoint && (
             <Tooltip title={i18n.__('pages.ProfilePage.uploadImg')} aria-label={i18n.__('pages.ProfilePage.uploadImg')}>
-              <IconButton disabled={!userActive} tabIndex={-1} size="large">
+              <IconButton tabIndex={-1} size="large">
                 <PublishIcon />
                 <input className={classes.inputFile} type="file" title=" " onChange={uploadAvatarImg} />
               </IconButton>
             </Tooltip>
           )}
           <Tooltip title={i18n.__('pages.ProfilePage.useGallery')} aria-label={i18n.__('pages.ProfilePage.useGallery')}>
-            <IconButton disabled={!userActive} onClick={() => setOpenAvatarGallery(true)} size="large">
+            <IconButton onClick={() => setOpenAvatarGallery(true)} size="large">
               <FaceIcon />
             </IconButton>
           </Tooltip>
           {!!minioEndPoint && (
             <Tooltip title={i18n.__('pages.ProfilePage.useCam')} aria-label={i18n.__('pages.ProfilePage.useCam')}>
-              <IconButton disabled={!userActive} onClick={() => setOpenCamCapture(true)} size="large">
+              <IconButton onClick={() => setOpenCamCapture(true)} size="large">
                 <CameraEnhanceIcon />
               </IconButton>
             </Tooltip>
           )}
         </Grid>
-        {!userActive && (
-          <Grid xs={12} className={classes.buttonWrapper}>
-            <Typography>{i18n.__('pages.ProfilePage.activeAccountRequired')}</Typography>
-          </Grid>
-        )}
       </Grid>
       {openAvatarEdit ? (
         <AvatarEdit
@@ -156,9 +150,6 @@ const AvatarPicker = ({ userAvatar, userFirstName, onAssignAvatar, avatar, type,
           avatar={imageAvatar}
           onClose={() => setOpenAvatarEdit(false)}
           onSendImage={onAssignAvatar}
-          cardTitle={i18n.__('components.AvatarEdit.title')}
-          cardSubTitle={i18n.__('components.AvatarEdit.subtitle')}
-          sendButtonText={i18n.__('components.AvatarEdit.sendImage')}
         />
       ) : null}
       {openCamCapture ? (
@@ -186,11 +177,9 @@ AvatarPicker.defaultProps = {
   userFirstName: '',
   avatar: '',
   type: 0,
-  userActive: false,
 };
 
 AvatarPicker.propTypes = {
-  userActive: PropTypes.bool,
   userAvatar: PropTypes.string,
   userFirstName: PropTypes.string,
   onAssignAvatar: PropTypes.func.isRequired,

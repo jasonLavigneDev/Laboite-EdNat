@@ -247,16 +247,11 @@ Meteor.users.schema = new SimpleSchema(
 
 export const findStructureByEmail = (email) => {
   // split the email in two parts
-  const splittedEmail = email ? email.split('@') : null;
+  const splittedEmail = email.split('@');
   // remove first part to keep extension
-  if (Array.isArray(splittedEmail)) {
-    splittedEmail.shift();
-  }
-  const emailExtension =
-    splittedEmail && Array.isArray(splittedEmail)
-      ? AsamExtensions.findOne({ extension: splittedEmail.join('') })
-      : null;
-  if (emailExtension && typeof emailExtension !== 'undefined' && typeof emailExtension.structureId === 'string') {
+  splittedEmail.shift();
+  const emailExtension = AsamExtensions.findOne({ extension: splittedEmail.join('') });
+  if (typeof emailExtension !== 'undefined' && typeof emailExtension.structureId === 'string') {
     return Structures.findOne({ _id: emailExtension.structureId });
   }
   return undefined;
@@ -266,8 +261,6 @@ if (Meteor.isServer) {
   Accounts.onCreateUser((options, user) => {
     // pass the structure name in the options
     const newUser = { ...user };
-    let email = user.emails && user.emails.length > 0 ? user.emails[0].address : null;
-
     if (user.services && user.services.keycloak) {
       logServer(
         `USERS - API - CREATE - Creating new user after Keycloak authentication :
@@ -276,24 +269,19 @@ if (Meteor.isServer) {
         scopes.SYSTEM,
       );
 
-      email = user.services.keycloak.email;
+      const structure = findStructureByEmail(user.services.keycloak.email);
+      if (structure) {
+        // If we have a structure, assign it to user and make them directly active
+        newUser.structure = structure._id;
+        newUser.isActive = true;
+      }
+
+      newUser.emails = [{ address: user.services.keycloak.email, verified: true }];
     }
-
-    const structure = findStructureByEmail(email);
-
-    if (structure) {
-      // If we have a structure, assign it to user and make them directly active
-      newUser.structure = structure._id;
-      newUser.isActive = true;
-    }
-
-    newUser.emails = [{ address: email, verified: true }];
-
     if (options.firstName) newUser.firstName = options.firstName;
     if (options.lastName) newUser.lastName = options.lastName;
     if (options.structure) newUser.structure = options.structure;
     if (options.profile) newUser.profile = options.profile;
-    if (options.primaryEmail) newUser.primaryEmail = options.primaryEmail;
 
     return newUser;
   });

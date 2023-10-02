@@ -18,7 +18,6 @@ import TopBar from '../../components/menus/TopBar';
 import Footer, { LEGAL_ROUTES } from '../../components/menus/Footer';
 import { useAppContext } from '../../contexts/context';
 import Spinner from '../../components/system/Spinner';
-import { sanitizeParameters } from '../../../api/utils';
 
 const useStyles = makeStyles()(() => ({
   container: {
@@ -55,10 +54,7 @@ const LegalPage = ({ data, dataKey, ready }) => {
               <Typography variant={isMobile ? 'h5' : 'h3'}>{i18n.__(`pages.LegalPage.${dataKey}`)}</Typography>
             </Grid>
             <Grid item xs={12}>
-              <Typography
-                className={classes.text}
-                dangerouslySetInnerHTML={{ __html: sanitizeHtml(data.content, sanitizeParameters) }}
-              />
+              <Typography className={classes.text} dangerouslySetInnerHTML={{ __html: sanitizeHtml(data.content) }} />
             </Grid>
           </Grid>
         </Container>

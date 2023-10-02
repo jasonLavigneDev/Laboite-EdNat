@@ -9,7 +9,6 @@ import getStats from './stats/server/rest';
 import getNcToken from './nextcloud/server/rest';
 import createUser from './users/server/rest';
 import ftUploadProxy from './francetransfert/server/rest';
-import createUserToken from './users/server/restToken';
 import { widget } from './widget';
 
 const unless = (path, middleware) => (req, res, next) => {
@@ -63,13 +62,6 @@ if (cuApiKeys && cuApiKeys.length > 0) {
   const restCu = Rest.create({ ...options, apiKeys: cuApiKeys });
   WebApp.connectHandlers.use(restCu.processRequest());
   restCu.post({ path: '/createuser', version: '>=1.0.0' }, Meteor.bindEnvironment(createUser));
-}
-
-const cutApiKeys = Meteor.settings.private.createUserTokenApiKeys;
-if (cutApiKeys && cutApiKeys.length > 0) {
-  const restCut = Rest.create({ ...options, apiKeys: cutApiKeys });
-  WebApp.connectHandlers.use(restCut.processRequest());
-  restCut.post({ path: '/createusertoken', version: '>=1.0.0' }, Meteor.bindEnvironment(createUserToken));
 }
 
 WebApp.connectHandlers.use('/scripts/widget', (req, res) => {

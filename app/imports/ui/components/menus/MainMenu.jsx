@@ -76,9 +76,6 @@ export const userGroups = [
   {
     path: '/admingroups',
     content: 'menuAdminGroups',
-    props: {
-      'data-tour-id': 'adminGroups',
-    },
   },
 ];
 
