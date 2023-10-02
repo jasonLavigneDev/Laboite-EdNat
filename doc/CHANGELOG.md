@@ -1,5 +1,13 @@
 # Changelog
 
+## [5.6.1](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/5.6.0...release/5.6.1) (2023-10-02)
+
+
+### Bug Fixes
+
+* **articles:** allow embedded videos in articles and descriptions ([4084938](https://gitlab.mim-libre.fr/alphabet/laboite/commit/4084938b57f1d02aecb752a38143e461930aff8f))
+* **articles:** update sanitizeHtml parameters for articles ([b92b1f4](https://gitlab.mim-libre.fr/alphabet/laboite/commit/b92b1f46234726014d9c917c0f68aabac4c6b33d))
+
 # [5.6.0](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/5.5.2...release/5.6.0) (2023-10-02)
 
 
