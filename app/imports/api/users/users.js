@@ -287,60 +287,52 @@ export const findStructureAllowed = (structureObject, apiKey, tabApiKeys, tabApi
   return isAllowed;
 };
 
-export const isMatchingStructureWithParent = (structureObject, apiKey, tabApiKeys, tabApiKeysByStructure) => {
-  const structureParent = Structures.findOne({ _id: structureObject.parentId });
-  let isMatchingWithParent = findStructureAllowed(structureParent, apiKey, tabApiKeys, tabApiKeysByStructure);
+export const isMatchingStructureWithParent = (structure, apiKey, tabApiKeys, tabApiKeysByStructure) => {
+  const structureParent = Structures.findOne({ _id: structure._id });
 
-  if (!isMatchingWithParent) {
-    if (structureObject.parentId === null) {
-      isMatchingWithParent = false;
-    } else {
-      isMatchingStructureWithParent(structureParent, apiKey, tabApiKeys, tabApiKeysByStructure);
-    }
+  const isMatchingWithParent = findStructureAllowed(structureParent, apiKey, tabApiKeys, tabApiKeysByStructure);
+
+  if (!isMatchingWithParent && structureParent.parentId !== null) {
+    isMatchingStructureWithParent(structureParent, apiKey, tabApiKeys, tabApiKeysByStructure);
   }
-
   return isMatchingWithParent;
 };
 
-export const isMatchingStructureWithChildrens = (structureObject, apiKey, tabApiKeys, tabApiKeysByStructure) => {
-  let isMatchingWithChild = false;
+export const isMatchingStructureWithChildrens = (structure, apiKey, tabApiKeys, tabApiKeysByStructure) => {
+  const structureChild = Structures.findOne({ _id: structure._id });
 
-  if (structureObject.childrenIds.length !== 0) {
-    isMatchingWithChild = findStructureAllowed(
-      structureObject.childrenIds[0],
-      apiKey,
-      tabApiKeys,
-      tabApiKeysByStructure,
-    );
-    if (!isMatchingWithChild) {
-      for (let i = 1; i < structureObject.childrenIds.length; i += 1) {
-        isMatchingStructureWithChildrens(structureObject.childrenIds[i], apiKey, tabApiKeys, tabApiKeysByStructure);
-      }
+  const isMatchingWithChild = findStructureAllowed(structureChild, apiKey, tabApiKeys, tabApiKeysByStructure);
+
+  if (!isMatchingWithChild && structureChild.childrenIds.length !== 0) {
+    for (let i = 0; i < structureChild.childrenIds.length; i += 1) {
+      isMatchingStructureWithChildrens(structureChild.childrenIds[i], apiKey, tabApiKeys, tabApiKeysByStructure);
     }
-  } else {
-    isMatchingWithChild = findStructureAllowed(
-      structureObject.childrenIds[0],
-      apiKey,
-      tabApiKeys,
-      tabApiKeysByStructure,
-    );
   }
-
   return isMatchingWithChild;
 };
 
 export const searchMatchingStructure = (structureObject, apiKey, tabApiKeys, tabApiKeysByStructure) => {
   let isMatchingWithChildren = false;
   let isMatchingWithParent = false;
+
   let result = findStructureAllowed(structureObject, apiKey, tabApiKeys, tabApiKeysByStructure);
   if (!result) {
-    isMatchingWithChildren = isMatchingStructureWithChildrens(
-      structureObject,
-      apiKey,
-      tabApiKeys,
-      tabApiKeysByStructure,
-    );
-    isMatchingWithParent = isMatchingStructureWithParent(structureObject, apiKey, tabApiKeys, tabApiKeysByStructure);
+    if (structureObject.childrenIds.length !== 0) {
+      isMatchingWithChildren = isMatchingStructureWithChildrens(
+        structureObject.childrenIds[0],
+        apiKey,
+        tabApiKeys,
+        tabApiKeysByStructure,
+      );
+    }
+    if (structureObject.parentId !== null) {
+      isMatchingWithParent = isMatchingStructureWithParent(
+        structureObject.parentId,
+        apiKey,
+        tabApiKeys,
+        tabApiKeysByStructure,
+      );
+    }
     if (isMatchingWithParent || isMatchingWithChildren) {
       result = true;
     }
