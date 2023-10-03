@@ -86,14 +86,18 @@ FindFromPublication.publish('services.group', function servicesGroup({ ids }) {
   return Services.find({ _id: { $in: ids } }, { fields: Services.allPublicFields, sort: { title: 1 }, limit: 100 });
 });
 
-publishComposite('services.one', ({ slug }) => {
+publishComposite('services.one', ({ slug, structure }) => {
   try {
     new SimpleSchema({
       slug: {
         type: String,
         label: getLabel('api.services.labels.slug'),
       },
-    }).validate({ slug });
+      structure: {
+        type: String,
+        label: getLabel('api.services.labels.structure'),
+      },
+    }).validate({ slug, structure });
   } catch (err) {
     logServer(
       `SERVICES - PUBLICATION - ERROR - services.one, publish services.one : ${err}`,
@@ -108,7 +112,7 @@ publishComposite('services.one', ({ slug }) => {
   return {
     find() {
       // Find top ten highest scoring posts
-      return Services.find({ slug }, { fields: Services.allPublicFields, sort: { title: 1 }, limit: 1 });
+      return Services.find({ slug, structure }, { fields: Services.allPublicFields, sort: { title: 1 }, limit: 1 });
     },
     children: [
       {

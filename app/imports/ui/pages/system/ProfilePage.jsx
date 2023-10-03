@@ -431,9 +431,9 @@ const ProfilePage = () => {
   };
 
   const onAssignAvatar = (avatarObj) => {
-    // avatarObj = {image: base64... or url: http...}
-    if (avatarObj.image) {
-      SendNewAvatarToMedia(avatarObj.image);
+    // avatarObj = [{image: base64...}] or {url: http...}
+    if (avatarObj?.[0]?.image) {
+      SendNewAvatarToMedia(avatarObj[0].image);
     } else if (avatarObj.url !== user.avatar) {
       setUserData({ ...userData, avatar: avatarObj.url });
     }
@@ -599,6 +599,7 @@ const ProfilePage = () => {
                     userAvatar={userData.avatar || ''}
                     userFirstName={userData.firstName || ''}
                     onAssignAvatar={onAssignAvatar}
+                    userActive={user.isActive}
                   />
                 </Grid>
               </Grid>
@@ -755,31 +756,34 @@ const ProfilePage = () => {
             </div>
           </form>
         </Paper>
-        <Paper className={classes.root}>
-          <Typography variant={isMobile ? 'h4' : 'h5'}>
-            {i18n.__('pages.ProfilePage.ApplyDefaultSpace', { structName })}
-            <IconButton
-              onClick={handleExpandDefaultSpaceApplied}
-              sx={{
-                transform: !expandDefaultSpaceApplied ? 'rotate(0deg)' : 'rotate(180deg)',
-                marginTop: '-1vh',
-              }}
-            >
-              <ExpandMoreIcon />
-            </IconButton>
-          </Typography>
-          <Collapse collapsedSize={0} in={expandDefaultSpaceApplied}>
-            <p>
-              <b>{i18n.__('pages.ProfilePage.ApplyDefaultSpaceMessage')}</b>
-            </p>
+        {user.structure ? (
+          <Paper className={classes.root}>
+            <Typography variant={isMobile ? 'h4' : 'h5'}>
+              {i18n.__('pages.ProfilePage.ApplyDefaultSpace', { structName })}
+              <IconButton
+                onClick={handleExpandDefaultSpaceApplied}
+                sx={{
+                  transform: !expandDefaultSpaceApplied ? 'rotate(0deg)' : 'rotate(180deg)',
+                  marginTop: '-1vh',
+                }}
+              >
+                <ExpandMoreIcon />
+              </IconButton>
+            </Typography>
 
-            <Grid item xs={12} sm={6} md={6} className={classes.buttonWrapper}>
-              <Button variant="contained" onClick={applyDefaultSpace}>
-                {i18n.__('pages.ProfilePage.ApplyDefaultSpaceBtn', { structName })}
-              </Button>
-            </Grid>
-          </Collapse>
-        </Paper>
+            <Collapse collapsedSize={0} in={expandDefaultSpaceApplied}>
+              <p>
+                <b>{i18n.__('pages.ProfilePage.ApplyDefaultSpaceMessage')}</b>
+              </p>
+
+              <Grid item xs={12} sm={6} md={6} className={classes.buttonWrapper}>
+                <Button variant="contained" onClick={applyDefaultSpace}>
+                  {i18n.__('pages.ProfilePage.ApplyDefaultSpaceBtn', { structName })}
+                </Button>
+              </Grid>
+            </Collapse>
+          </Paper>
+        ) : null}
         {enableBlog && (
           <Paper className={classes.root}>
             <Typography variant={isMobile ? 'h4' : 'h5'} sx={{ width: '100%' }}>
