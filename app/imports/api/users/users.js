@@ -306,14 +306,24 @@ export const isMatchingStructureWithChildrens = (structureObject, apiKey, tabApi
   let isMatchingWithChild = false;
 
   if (structureObject.childrenIds.length !== 0) {
-    isMatchingWithChild = findStructureAllowed(structureObject.childrenIds[0]);
+    isMatchingWithChild = findStructureAllowed(
+      structureObject.childrenIds[0],
+      apiKey,
+      tabApiKeys,
+      tabApiKeysByStructure,
+    );
     if (!isMatchingWithChild) {
       for (let i = 1; i < structureObject.childrenIds.length; i += 1) {
         isMatchingStructureWithChildrens(structureObject.childrenIds[i], apiKey, tabApiKeys, tabApiKeysByStructure);
       }
     }
   } else {
-    isMatchingWithChild = findStructureAllowed(structureObject.childrenIds[0]);
+    isMatchingWithChild = findStructureAllowed(
+      structureObject.childrenIds[0],
+      apiKey,
+      tabApiKeys,
+      tabApiKeysByStructure,
+    );
   }
 
   return isMatchingWithChild;
