@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import i18n from 'meteor/universe:i18n';
 import Paper from '@mui/material/Paper';
 import Modal from '@mui/material/Modal';
-import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import AddBox from '@mui/icons-material/AddBox';
+import Button from '@mui/material/Button';
 
 import { AdminMessageForm } from '../../components/admin/AdminMessagesForm';
 import { AdminMessagesList } from '../../components/admin/AdminMessagesList';
 
-const AdminGlobalInfos = () => {
+const AdminGlobalInfos = ({ structure = false }) => {
   const [messages, setMessages] = useState([]);
   const [messageToUpdate, setMessageToUpdate] = useState();
   const [isOnUpdateMessage, setIsOnUpdateMessage] = useState(false);
@@ -21,25 +23,25 @@ const AdminGlobalInfos = () => {
   };
 
   useEffect(() => {
-    Meteor.call('globalInfos.getAllGlobalInfo', {}, (error, res) => {
+    Meteor.call('globalInfos.getAllGlobalInfo', { structure }, (error, res) => {
       if (!error) return setMessages(res);
       return console.log('error', error);
     });
   }, []);
   const selectMessageLanguage = (language) => {
     if (language === 'all') {
-      Meteor.call('globalInfos.getAllGlobalInfo', {}, (error, res) => {
+      Meteor.call('globalInfos.getAllGlobalInfo', { structure }, (error, res) => {
         if (!error) setMessages(res);
       });
     } else {
-      Meteor.call('globalInfos.getAllGlobalInfoByLanguage', { language }, (error, res) => {
+      Meteor.call('globalInfos.getAllGlobalInfoByLanguage', { language, structure }, (error, res) => {
         if (!error) setMessages(res);
       });
     }
   };
 
   const createMessage = (newMessage) => {
-    Meteor.call('globalInfos.createGlobalInfo', { ...newMessage }, (error, res) => {
+    Meteor.call('globalInfos.createGlobalInfo', { ...newMessage, structure }, (error, res) => {
       if (!error) return setMessages([...messages, res]);
       return console.log('error', error);
     });
@@ -108,11 +110,13 @@ const AdminGlobalInfos = () => {
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center' }}>
-        <Typography variant="h4"> Creer un message d information générale </Typography>
-        <IconButton onClick={() => setOpenModal(!openModal)}>
-          <AddBox fontSize="large" />
-        </IconButton>
+        <Typography variant="h4">
+          {i18n.__(structure ? 'pages.AdminGlobalInfos.titleStructure' : 'pages.AdminGlobalInfos.title')}
+        </Typography>
       </div>
+      <Button onClick={() => setOpenModal(!openModal)} startIcon={<AddBox />}>
+        {i18n.__('pages.AdminGlobalInfos.createButton')}
+      </Button>
       <AdminMessagesList
         messages={messages}
         deleteMessage={deleteMessage}
@@ -139,6 +143,14 @@ const AdminGlobalInfos = () => {
       </Modal>
     </Paper>
   );
+};
+
+AdminGlobalInfos.propTypes = {
+  structure: PropTypes.bool,
+};
+
+AdminGlobalInfos.defaultProps = {
+  structure: false,
 };
 
 export default AdminGlobalInfos;

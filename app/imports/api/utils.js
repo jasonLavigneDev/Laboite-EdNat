@@ -244,6 +244,14 @@ export const accentInsensitive = (searchString) => {
   return result;
 };
 
+export const formatURL = (name) => {
+  let finalName = name;
+  if (!name.includes('://')) {
+    finalName = `https://${name}`;
+  }
+  return finalName;
+};
+
 // allow iframes for embedded videos in blog articles
 export const sanitizeParameters = {
   allowedTags: sanitizeHtml.defaults.allowedTags.concat(['iframe', 'img', 'audio', 'video']),
