@@ -1,7 +1,7 @@
 import { v4 } from 'uuid';
+import { IS_FRAMED } from './flags';
 
-// eslint-disable-next-line eqeqeq
-const isInWidgetIframe = window.parent != window && window.name === 'lb_iframe-widget';
+const isInWidgetIframe = IS_FRAMED;
 
 const cb = new Map();
 

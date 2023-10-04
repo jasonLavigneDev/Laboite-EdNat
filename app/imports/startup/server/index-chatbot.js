@@ -16,15 +16,13 @@ Meteor.startup(async () => {
         <script>
             function inIframe () {
                 try {
-                    return window.self !== window.top;
+                    return window.self !== window.parent;
                 } catch (e) {
                     return true;
                 }
             }
-
-            const frameName = window.frameElement?.getAttribute('lb_iframe-widget')
-
-            if(!inIframe() || frameName !== 'lb_iframe-widget') {
+            
+            if(!inIframe() || window.name !== 'lb_iframe-widget') {
                 Webchat.init({
                     // Mandatory
                     botURL: '${Meteor.settings.public.chatbotUrl}chatbot',
