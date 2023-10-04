@@ -85,7 +85,7 @@ Copy `settings-development.json.sample` to `settings-development.json` and updat
 ## keycloak:
 
 | Key           | Type     | Default value | Description             |
-| ------------- | -------- | ------------- | ----------------------- |
+|---------------|----------|---------------|-------------------------|
 | pubkey        | string   | ""            | Keycloak public key     |
 | client        | string   | "sso"         | Keycloak client type    |
 | adminEmails   | [string] | []            | Keycloak admin emails   |
@@ -95,7 +95,7 @@ Copy `settings-development.json.sample` to `settings-development.json` and updat
 ## nextcloud:
 
 | Key                 | Type     | Default value | Description                                      |
-| ------------------- | -------- | ------------- | ------------------------------------------------ |
+|---------------------|----------|---------------|--------------------------------------------------|
 | nextcloudUser       | string   | ""            | Nextcloud user for user creation                 |
 | nextcloudPassword   | string   | ""            | Nextcloud password for user creation             |
 | circlesUser         | string   | ""            | Nextcloud user for circle and share creation     |
@@ -108,30 +108,46 @@ Copy `settings-development.json.sample` to `settings-development.json` and updat
 ## rocketChat:
 
 | Key                | Type   | Default value | Description         |
-| ------------------ | ------ | ------------- | ------------------- |
+|--------------------|--------|---------------|---------------------|
 | rocketChatUser     | string | ""            | RocketChat user     |
 | rocketChatPassword | string | ""            | RocketChat password |
+
+## franceTransfert:
+
+| Key      | Type   | Default value | Description                   |
+|----------|--------|---------------|-------------------------------|
+| apiKey   | string | ""            | France Transfert API KEY      |
+| endpoint | string | ""            | France Transfert instance URL |
+
+## monti:
+
+| Key       | Type   | Default value | Description     |
+|-----------|--------|---------------|-----------------|
+| appId     | string | ""            | MontiAPM app ID |
+| appSecret | string | ""            | MontiAPM Secret |
 
 ## smtp:
 
 | Key       | Type   | Default value                         | Description                       |
-| --------- | ------ | ------------------------------------- | --------------------------------- |
+|-----------|--------|---------------------------------------|-----------------------------------|
 | url       | string | "smtps://USERNAME:PASSWORD@HOST:PORT" | SMTP server URI                   |
 | fromEmail | string | ""                                    | Contact mail default "from" value |
 | toEmail   | string | ""                                    | Contact mail default "to" value   |
 
 ## private:
 
-| Key                          | Type     | Default value                              | Description                                                             |
-| ---------------------------- | -------- | ------------------------------------------ | ----------------------------------------------------------------------- |
-| fillWithFakeData             | boolean  | false                                      | If true, fake datas are generated at start                              |
-| minioAccess                  | string   | ""                                         | Minio user                                                              |
-| minioSecret                  | string   | ""                                         | Minio password                                                          |
-| apiKeys                      | [string] | [""]                                       | API access keys for external services                                   |
-| BBBSecret                    | string   | ""                                         | Big Blue Button Secret                                                  |
-| whiteDomains                 | [string] | ["^ac-[a-z-]_\\.fr", "^[a-z-]_\\.gouv.fr"] | Emails white domains for user account activation                        |
-| loginExpirationInDays        | number   | 1                                          | Number of days for the token session to expire                          |
-| cspFrameAncestors            | [string] | ["'self'"]                                 | values for frame-ancestors directive in CSP header                      |
+| Key                           | Type     | Default value                              | Description                                                             |
+|-------------------------------|----------|--------------------------------------------|-------------------------------------------------------------------------|
+| fillWithFakeData              | boolean  | false                                      | If true, fake datas are generated at start                              |
+| minioAccess                   | string   | ""                                         | Minio user                                                              |
+| minioSecret                   | string   | ""                                         | Minio password                                                          |
+| apiKeys                       | [string] | [""]                                       | API access keys for external services                                   |
+| BBBSecret                     | string   | ""                                         | Big Blue Button Secret                                                  |
+| whiteDomains                  | [string] | ["^ac-[a-z-]_\\.fr", "^[a-z-]_\\.gouv.fr"] | Emails white domains for user account activation                        |
+| loginExpirationInDays         | number   | 1                                          | Number of days for the token session to expire                          |
+| cspFrameAncestors             | [string] | ["'self'"]                                 | values for frame-ancestors directive in CSP header                      |
 | checkKeyCloakWhiteListDomain | boolean  | false                                      | active les utilisateurs si ils matchent un domaine des ‘asamExtensions’ |
 | createUserApiKeys            | array    | []                                         |                                                                         |
 | createUserTokenApiKeys       | array    | []                                         |                                                                         |
+| createUserApiKeys      | [string] | []                                         | Api key to create user from the api                |
+| createUserTokenApiKeys | [string] | []                                         | Api key to create login token from the api         |
