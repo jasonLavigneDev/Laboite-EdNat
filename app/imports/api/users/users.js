@@ -288,24 +288,29 @@ export const findStructureAllowed = (structureObject, apiKey, tabApiKeys, tabApi
 };
 
 export const isMatchingStructureWithParent = (structure, apiKey, tabApiKeys, tabApiKeysByStructure) => {
-  const structureParent = Structures.findOne({ _id: structure._id });
+  const structureParent = Structures.findOne({ _id: structure });
 
-  const isMatchingWithParent = findStructureAllowed(structureParent, apiKey, tabApiKeys, tabApiKeysByStructure);
+  let isMatchingWithParent = findStructureAllowed(structureParent, apiKey, tabApiKeys, tabApiKeysByStructure);
 
   if (!isMatchingWithParent && structureParent.parentId !== null) {
-    isMatchingStructureWithParent(structureParent, apiKey, tabApiKeys, tabApiKeysByStructure);
+    isMatchingWithParent = isMatchingStructureWithParent(structureParent, apiKey, tabApiKeys, tabApiKeysByStructure);
   }
   return isMatchingWithParent;
 };
 
 export const isMatchingStructureWithChildrens = (structure, apiKey, tabApiKeys, tabApiKeysByStructure) => {
-  const structureChild = Structures.findOne({ _id: structure._id });
+  const structureChild = Structures.findOne({ _id: structure });
 
-  const isMatchingWithChild = findStructureAllowed(structureChild, apiKey, tabApiKeys, tabApiKeysByStructure);
+  let isMatchingWithChild = findStructureAllowed(structureChild, apiKey, tabApiKeys, tabApiKeysByStructure);
 
   if (!isMatchingWithChild && structureChild.childrenIds.length !== 0) {
     for (let i = 0; i < structureChild.childrenIds.length; i += 1) {
-      isMatchingStructureWithChildrens(structureChild.childrenIds[i], apiKey, tabApiKeys, tabApiKeysByStructure);
+      isMatchingWithChild = isMatchingStructureWithChildrens(
+        structureChild.childrenIds[i],
+        apiKey,
+        tabApiKeys,
+        tabApiKeysByStructure,
+      );
     }
   }
   return isMatchingWithChild;
