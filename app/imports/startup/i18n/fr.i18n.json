@@ -639,7 +639,8 @@
       "menuAdminHelpPage": "Gestion de la page d'aide",
       "menuContact": "Contact",
       "menuAdminAsam": "Gestion des extensions d'email",
-      "menuAdminGlobalInfo": "Informations générales"
+      "menuAdminGlobalInfo": "Informations générales",
+      "menuAdminStructureInfo": "Informations de structure"
     },
     "AdminMenu": {
       "title": "Administration",
@@ -870,7 +871,7 @@
       "OpenInWindow": "Ouvrir le média",
       "copyUrl": "Copier l'URL de ce média"
     },
-    "MediaStorageEdit":{
+    "MediaStorageEdit": {
       "title": "Modifiez votre image",
       "subtitle": "",
       "sendImage": "Envoyer cette image",

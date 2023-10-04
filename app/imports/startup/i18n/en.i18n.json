@@ -714,7 +714,8 @@
       "menuAdminBackHome": "Back to Personnal Space",
       "menuContact": "Contact",
       "menuAdminAsam": "Email extensions Management",
-      "menuAdminGlobalInfo": "Global informations"
+      "menuAdminGlobalInfo": "Global informations",
+      "menuAdminStructureInfo": "Structure information"
     },
     "AdminMenu": {
       "title": "Administration",
@@ -942,7 +943,7 @@
       "OpenInWindow": "Open media",
       "copyUrl": "Copy this media URL"
     },
-    "MediaStorageEdit":{
+    "MediaStorageEdit": {
       "title": "Modify your picture",
       "subtitle": "",
       "sendImage": "Send this picture",
