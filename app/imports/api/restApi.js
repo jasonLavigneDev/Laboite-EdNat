@@ -5,6 +5,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import Rest from 'connect-rest';
 
+import axios from 'axios';
 import addNotification from './notifications/server/rest';
 import getStats from './stats/server/rest';
 import getNcToken from './nextcloud/server/rest';
@@ -13,7 +14,6 @@ import ftUploadProxy from './francetransfert/server/rest';
 import createUserToken from './users/server/restToken';
 import Notifications from './notifications/notifications';
 import { template } from './utils';
-import axios from "axios";
 
 export default function initRestApi() {
   const unless = (path, middleware) => (req, res, next) => {
@@ -87,7 +87,6 @@ export default function initRestApi() {
     res.end();
   });
 
-
   WebApp.connectHandlers.use('/scripts/widget.js', async (req, res) => {
     if (req.method !== 'GET') {
       res.writeHead(405);
@@ -95,7 +94,7 @@ export default function initRestApi() {
       return;
     }
 
-    if(!Meteor.settings.public?.widget?.packageUrl) {
+    if (!Meteor.settings.public?.widget?.packageUrl) {
       res.writeHead(404);
       res.end();
       return;
@@ -106,10 +105,10 @@ export default function initRestApi() {
     });
 
     const response = await axios.get(Meteor.settings.public.widget.packageUrl, {
-      responseType: 'stream'
-    })
+      responseType: 'stream',
+    });
 
-    response.data.pipe(res)
+    response.data.pipe(res);
   });
 
   /**
@@ -120,7 +119,7 @@ export default function initRestApi() {
       'Content-Type': 'application/javascript',
     });
 
-    const url = Meteor.absoluteUrl().slice(0, -1)
+    const url = Meteor.absoluteUrl().slice(0, -1);
 
     res.write(
       template(Assets.getText('widget/script.js'), {
@@ -130,7 +129,6 @@ export default function initRestApi() {
     );
     res.end();
   });
-
 
   WebApp.connectHandlers.use('/widget/assets/', (req, res) => {
     if (req.method !== 'GET') {
