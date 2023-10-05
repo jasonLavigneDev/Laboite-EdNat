@@ -52,7 +52,7 @@ Meteor.startup(() => {
   if (Meteor.settings.public.minioEndPoint) imgSrcs.push(`https://${Meteor.settings.public.minioEndPoint}`);
   const frameAncestors = Meteor.settings.private?.cspFrameAncestors || ["'self'"];
 
-  if (Meteor.settings.public?.widget?.pakcageUrl) scriptSrcs.push(Meteor.settings.public.widget.pakcageUrl);
+  if (Meteor.settings.public?.widget?.packageUrl) scriptSrcs.push(Meteor.settings.public.widget.packageUrl);
   if (Meteor.settings.public?.chatbotUrl) scriptSrcs.push(Meteor.settings.public.chatbotUrl);
 
   WebApp.connectHandlers.use(
