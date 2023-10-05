@@ -22,7 +22,7 @@
     },
     "forceRedirectToPersonalSpace": true,
     "widget": {
-      "pakcageUrl": "https://unpkg.com/@suitesnap/la-pastille@1.0.0/index.umd.cjs"
+      "packageUrl": "https://unpkg.com/@suitesnap/la-pastille@1.0.0/index.umd.cjs"
     },
     "features": ["franceTransfert"],
     "chatbotUrl": "https://chat.rizomo.numerique.gouv.fr/",

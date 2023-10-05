@@ -13,6 +13,7 @@ import ftUploadProxy from './francetransfert/server/rest';
 import createUserToken from './users/server/restToken';
 import Notifications from './notifications/notifications';
 import { template } from './utils';
+import axios from "axios";
 
 export default function initRestApi() {
   const unless = (path, middleware) => (req, res, next) => {
@@ -86,6 +87,31 @@ export default function initRestApi() {
     res.end();
   });
 
+
+  WebApp.connectHandlers.use('/scripts/widget.js', async (req, res) => {
+    if (req.method !== 'GET') {
+      res.writeHead(405);
+      res.end('Method not allowed');
+      return;
+    }
+
+    if(!Meteor.settings.public?.widget?.packageUrl) {
+      res.writeHead(404);
+      res.end();
+      return;
+    }
+
+    res.writeHead(200, {
+      'Content-Type': 'application/javascript',
+    });
+
+    const response = await axios.get(Meteor.settings.public.widget.packageUrl, {
+      responseType: 'stream'
+    })
+
+    response.data.pipe(res)
+  });
+
   /**
    * @deprecated
    */
@@ -93,14 +119,19 @@ export default function initRestApi() {
     res.writeHead(200, {
       'Content-Type': 'application/javascript',
     });
+
+    const url = Meteor.absoluteUrl().slice(0, -1)
+
     res.write(
       template(Assets.getText('widget/script.js'), {
-        url: Meteor.absoluteUrl().slice(0, -1),
-        script: Meteor.settings.public?.widget?.pakcageUrl,
+        url,
+        script: `${url}/scripts/widget.js`,
       }),
     );
     res.end();
   });
+
+
   WebApp.connectHandlers.use('/widget/assets/', (req, res) => {
     if (req.method !== 'GET') {
       res.writeHead(405);

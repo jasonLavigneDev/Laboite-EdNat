@@ -68,7 +68,7 @@ Copy `settings-development.json.sample` to `settings-development.json` and updat
 | onBoarding.enabled                       | boolean                       | false                                |                                                                                             |
 | onBoarding.appDesignation                | string                        | null                                 | Name of the app used in the onboarding                                                      |
 | features                                 | ["franceTransfert" \| string] | []                                   | List of enabled features                                                                    |
-| widget.pakcageUrl                        | string                        | null                                 | Url pointing towards the widget script. If null the widget will not be enabled              |
+| widget.packageUrl                        | string                        | null                                 | Url pointing towards the widget script. If null the widget will not be enabled              |
 | chatbotUrl                               | string                        | null                                 | Url pointing towards a chatbot instance.                                                    |
 | chatbotConfig.chatWidth                  | string                        | null                                 | CSS unit of length for the chatbot widget frame width                                       |
 | chatbotConfig.chatHeight                 | string                        | null                                 | CSS unit of length for the chatbot widget frame height                                      |
