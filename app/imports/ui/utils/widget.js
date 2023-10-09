@@ -5,7 +5,7 @@ const isInWidgetIframe = IS_FRAMED;
 
 const cb = new Map();
 
-function postMessage(data, callback) {
+export function postMessage(data, callback) {
   const callbackId = v4();
   cb.set(callbackId, callback);
 

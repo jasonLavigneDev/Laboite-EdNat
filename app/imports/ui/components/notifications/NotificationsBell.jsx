@@ -11,12 +11,13 @@ import Notification from './Notification';
 import notificationSystem from './NotificationSystem';
 import { badgeStyle } from '../groups/GroupBadge';
 import * as flags from '../../utils/flags';
+import { postMessage } from '../../utils/widget';
 
 const useStyles = makeStyles()((theme) => badgeStyle(theme));
 
 const sendNonReadNotificationCountToWindow = (count) => {
   if (flags.IS_FRAMED) {
-    window.top.postMessage(
+    postMessage(
       {
         type: 'notifications',
         content: count,
