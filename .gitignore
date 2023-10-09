@@ -6,3 +6,7 @@ config/settings.development.json
 app/.reports
 **/.reports/*.*
 passwords.txt
+provisionning/.env
+provisionning/mails.csv
+provisionning/structures.csv
+provisionning/users.csv
