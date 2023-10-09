@@ -147,7 +147,7 @@ def generateUser(id, structure):
     if mailExtension != None:
 
         name = fake.name()
-        username = name.lower().replace(" ", "_") + str(id)
+        username = name.lower().replace(" ", "_").replace(".", "") + str(id)
         mail = username + "@" + mailExtension["extension"]
 
         usernameAllreadyExist = any(x for x in users if x["username"] == username)
