@@ -76,7 +76,10 @@ def resetData():
         if user['username'] != KEYCLOAK_USERNAME:
             print("Remove user: {}".format(user['username']))
             keycloak_admin.delete_user(user['id'])
-            db['users'].delete_one({"username": user['username']})
+            u = db['users'].find_one({"username": user["username"]})
+            if(u != None):
+                db['personalspaces'].delete_one({"userId": u['_id']})
+                db['users'].delete_one({"username": u['_id']})
 
 
 def createStructure(name, parentId):
@@ -206,13 +209,12 @@ def addUserToStructureGroup(idDB, structureID):
 
                 item = {"type": "group", "element_id": group["_id"]}
 
-                persoSpace = {
-                    "_id": generateID(),
-                    "userId": idDB,
-                    "unsorted": [item],
-                    "sorted": []
-                }
-                db['personalspaces'].insert_one(persoSpace)
+                persoSpace = db['personalspaces'].find_one({"userId": idDB})
+                if(persoSpace != None):
+                    tab = persoSpace["ancestorsIds"]
+                    tab.append(item)
+                    db['personalspaces'].update_one(
+                        {"userId": idDB}, {"$set": {"ancestorsIds": tab}})
 
                 role = {
                     "_id": generateID(),
@@ -274,6 +276,20 @@ def execUserGenerator(id, structure):
         db['users'].insert_one(entry)
 
         addUserToStructureGroup(idDB, structure)
+        persoSpace = {
+            "_id": generateID(),
+            "userId": idDB,
+            "unsorted": [],
+            "sorted": [],
+        }
+        db["personalspaces"].insert_one(persoSpace)
+
+        addUserToStructureGroup(idDB, structure)
+        st = db["structures"].find_one({"_id": structure})
+        if(st != None):
+            if(st["ancestorsIds"] != None and len(st["ancestorsIds"]) > 0):
+                for struc in st["ancestorsIds"]:
+                    addUserToStructureGroup(idDB, struc)
 
     else:
         execUserGenerator(id)
