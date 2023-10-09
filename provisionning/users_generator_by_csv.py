@@ -61,7 +61,10 @@ def resetUsers():
         if user["username"] != KEYCLOAK_USERNAME:
             print("Remove user: {}".format(user["username"]))
             keycloak_admin.delete_user(user["id"])
-            db["users"].delete_one({"username": user["username"]})
+            dbUser = db["users"].find_one({"username": user["username"]})
+            if dbUser != None:
+                db["personalspaces"].delete_one({"userId": dbUser["_id"]})
+                db["users"].delete_one({"_id": dbUser["_id"]})
 
 
 def resetStructures():
@@ -74,7 +77,8 @@ def resetStructures():
         db["asamextensions"].delete_one(
             {
                 "extension": "{}.fr".format(
-                    gr["name"].replace(" ", "-").replace("(", "").replace(")", "")
+                    gr["name"].replace(
+                        " ", "-").replace("(", "").replace(")", "")
                 )
             }
         )
@@ -104,15 +108,14 @@ def addUserToStructureGroup(idDB, structureID):
                     {"_id": idDB}, {"$set": {"favGroups": favgroups}}
                 )
 
-                item = {"type": "group", "element_id": group["_id"]}
-
-                persoSpace = {
-                    "_id": generateID(),
-                    "userId": idDB,
-                    "unsorted": [item],
-                    "sorted": [],
-                }
-                db["personalspaces"].insert_one(persoSpace)
+                persoSpace = db["personalspaces"].find_one(
+                    {"userId": user["_id"]})
+                if(persoSpace != None):
+                    item = {"type": "group", "element_id": group["_id"]}
+                    tab = persoSpace["unsorted"]
+                    tab.append(item)
+                    db["personalspaces"].update_one({"userId": user["_id"]}, {
+                                                    "$set": {"unsorted": tab}})
 
                 role = {
                     "_id": generateID(),
@@ -162,7 +165,21 @@ def insertUser(user):
         print("[{}] Insert user: {}".format(datetime.now(), entry["username"]))
         db["users"].insert_one(entry)
 
+        persoSpace = {
+            "_id": generateID(),
+            "userId": idDB,
+            "unsorted": [],
+            "sorted": [],
+        }
+        db["personalspaces"].insert_one(persoSpace)
+
         addUserToStructureGroup(idDB, user["structure"])
+        structure = db["structures"].find_one({"_id": user["structure"]})
+        if(structure != None):
+            if(structure["ancestorsIds"] != None and len(structure["ancestorsIds"]) > 0):
+                for struc in structure["ancestorsIds"]:
+                    addUserToStructureGroup(idDB, struc)
+
     else:
         print(
             "[{}] user {} already exists. Pass...".format(
