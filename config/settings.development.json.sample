@@ -19,6 +19,15 @@
       "mediaStorageMenu": false,
       "bookmarksFromClipboard": false,
     },
+    "chatbotUrl": "https://chat.rizomo.numerique.gouv.fr/",
+    "chatbotConfig": {
+      "chatWidth": "400px",
+      "chatHeight": "500px",
+      "buttonSize": "60px",
+      "buttonColor": "#000091",
+      "iconSize": "30px",
+      "iconColor": "#fff"
+    },
     "ui": {
       "defaultGridViewMode": "compact",
       "isBusinessRegroupingMode": false,
