@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 import { Meteor } from 'meteor/meteor';
 import { Random } from 'meteor/random';
 import PropTypes from 'prop-types';
@@ -133,6 +133,9 @@ const useStyles = (isMobile) =>
       justifyContent: 'flex-end',
     },
   }));
+
+const AUTOSAVE_INTERVAL = 3000;
+
 function PersonalZoneUpdater({
   personalspace,
   isLoading,
@@ -144,85 +147,76 @@ function PersonalZoneUpdater({
   edition,
   handleEditionData,
 }) {
-  const AUTOSAVE_INTERVAL = 3000;
   const [{ user, loadingUser, isMobile }] = useAppContext();
-  const [customDrag, setcustomDrag] = useState(false || edition);
+  const [customDrag, setCustomDrag] = useState(false || edition);
   const [search, setSearch] = useState('');
+  const [localPS, setLocalPS] = useState(personalspace);
   const [searchToggle, setSearchToggle] = useState(false);
   const { classes } = useStyles(isMobile)();
   const inputRef = useRef(null);
 
-  const updateSearch = (e) => {
+  const updateSearch = useCallback((e) => {
     setSearch(e.target.value);
-  };
-  const checkEscape = (e) => {
+  }, []);
+  const checkEscape = useCallback((e) => {
     if (e.keyCode === 27) {
       // ESCAPE key
       setSearchToggle(false);
       setSearch('');
     }
-  };
-  const resetSearch = () => setSearch('');
-  const toggleSearch = () => setSearchToggle(!searchToggle);
+  }, []);
+  const resetSearch = useCallback(() => setSearch(''), []);
+  const toggleSearch = useCallback(() => setSearchToggle(!searchToggle), []);
 
-  const filterSearch = (element) => {
-    if (!search) return true;
-    let searchText = '';
-    switch (element.type) {
-      case 'service': {
-        const service = Services.findOne(element.element_id);
-        searchText = service !== undefined ? service.title : '';
-        break;
+  const filterSearch = useCallback(
+    (element) => {
+      if (!search) return true;
+      let sourceText = '';
+
+      switch (element.type) {
+        case 'service': {
+          const service = Services.findOne(element.element_id);
+          sourceText = service?.title || '';
+          break;
+        }
+        case 'group': {
+          const group = Groups.findOne(element.element_id);
+          sourceText = group?.name || '';
+          break;
+        }
+        case 'link': {
+          const userBookmark = UserBookmarks.findOne(element.element_id);
+          sourceText = userBookmark ? `${userBookmark.name} ${userBookmark.url}` : '';
+          break;
+        }
+        case 'groupLink': {
+          const bookmark = Bookmarks.findOne(element.element_id);
+          sourceText = bookmark ? `${bookmark.name} ${bookmark.url}` : '';
+          break;
+        }
+        default:
+          sourceText = '';
+          break;
       }
-      case 'group': {
-        const group = Groups.findOne(element.element_id);
-        searchText = group !== undefined ? group.name : '';
-        break;
-      }
-      case 'link': {
-        const userBookmark = UserBookmarks.findOne(element.element_id);
-        searchText = userBookmark !== undefined ? `${userBookmark.name} ${userBookmark.url}` : '';
-        break;
-      }
-      case 'groupLink': {
-        const Bookmark = Bookmarks.findOne(element.element_id);
-        searchText = Bookmark !== undefined ? `${Bookmark.name} ${Bookmark.url}` : '';
-        break;
-      }
-      default:
-        searchText = '';
-        break;
-    }
-    searchText = searchText.toLowerCase();
-    return searchText.indexOf(search.toLowerCase()) > -1;
-  };
 
-  const filterLink = (element) => {
-    return element.type === 'link';
-  };
+      return sourceText.toLowerCase().includes(search.toLowerCase());
+    },
+    [search],
+  );
 
-  const filterGroupLink = (element) => {
-    return element.type === 'groupLink';
-  };
+  const filterLink = useCallback((element) => element.type === 'link', []);
+  const filterGroupLink = useCallback((element) => element.type === 'groupLink', []);
+  const filterGroup = useCallback((element) => element.type === 'group', []);
+  const filterService = useCallback(
+    (element) => element.type === 'service' && Services.findOne({ _id: element.element_id })?.state !== 10,
+    [],
+  );
 
-  const filterGroup = (element) => {
-    return element.type === 'group';
-  };
+  const doNotDisplayHidenServices = useCallback(
+    (element) => filterService(element) || filterGroup(element) || filterLink(element) || filterGroupLink(element),
+    [filterLink, filterGroupLink, filterGroup, filterService],
+  );
 
-  const filterService = (element) => {
-    if (element.type === 'service') {
-      const service = Services.findOne({ _id: element.element_id });
-      if (service?.state !== 10) {
-        // 10 = service hide //
-        return true;
-      }
-    }
-    return false;
-  };
-
-  const doNotDisplayHidenServices = (element) => {
-    return filterService(element) || filterGroup(element) || filterLink(element) || filterGroupLink(element);
-  };
   // focus on search input when it appears
   useEffect(() => {
     if (inputRef.current && searchToggle) {
@@ -230,15 +224,15 @@ function PersonalZoneUpdater({
     }
   }, [searchToggle]);
 
-  const handleCustomDrag = (event) => {
+  const handleCustomDrag = useCallback((event) => {
+    setCustomDrag(event.target.checked);
+
     if (event.target.checked) {
       setSearchToggle(false);
       setSearch('');
     }
-    setcustomDrag(event.target.checked);
-  };
+  }, []);
 
-  const [localPS, setLocalPS] = useState(personalspace);
   useEffect(() => {
     if (personalspace && allServices && allGroups && allLinks && allGroupLinks) {
       // Called once
@@ -256,7 +250,7 @@ function PersonalZoneUpdater({
     }
   }, [personalspace]);
 
-  const updatePersonalSpace = () => {
+  const updatePersonalSpace = useCallback(() => {
     if (edition) {
       handleEditionData(localPS);
     } else {
@@ -266,7 +260,7 @@ function PersonalZoneUpdater({
         }
       });
     }
-  };
+  }, [handleEditionData]);
 
   const [psNeedUpdate, setPsNeedUpdate] = useState(false);
   useEffect(() => {
@@ -276,28 +270,37 @@ function PersonalZoneUpdater({
         setPsNeedUpdate(false);
       }
     }, AUTOSAVE_INTERVAL);
+
     return () => clearTimeout(timer);
   }, [psNeedUpdate]);
 
-  const setExpanded = (index) => {
+  const setExpanded = useCallback((index) => {
     if (typeof index === 'number') {
-      const { sorted } = localPS;
-      sorted[index].isExpanded = !sorted[index].isExpanded;
-      setLocalPS({ ...localPS, sorted });
+      setLocalPS((prevPS) => {
+        const nextPS = { ...prevPS };
+
+        nextPS.sorted[index].isExpanded = !nextPS.sorted[index].isExpanded;
+
+        return nextPS;
+      });
       setPsNeedUpdate(true);
     }
-  };
+  }, []);
 
-  const setZoneTitle = (index, title) => {
-    if (typeof index === 'number') {
-      const { sorted } = localPS;
-      if (sorted[index].name !== title) {
-        sorted[index].name = title.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
-        setLocalPS({ ...localPS, sorted });
-        setPsNeedUpdate(true);
+  const setZoneTitle = useCallback(
+    (index, title) => {
+      if (typeof index === 'number') {
+        const { sorted } = localPS;
+
+        if (sorted[index].name !== title) {
+          sorted[index].name = title.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+          setLocalPS({ ...localPS, sorted });
+          setPsNeedUpdate(true);
+        }
       }
-    }
-  };
+    },
+    [localPS],
+  );
 
   const setZoneList = (type) => (index) => (list) => {
     if (typeof index === 'number') {
@@ -353,22 +356,25 @@ function PersonalZoneUpdater({
     }
   };
 
-  const suspendUpdate = () => {
+  const suspendUpdate = useCallback(() => {
     // Called on onStart event of reactsortable zone
     setPsNeedUpdate(false); // will be true again on end drag event (updateList)
-  };
+  }, []);
 
-  const updateList = () => {
+  const updateList = useCallback(() => {
     // Called on onEnd event of reactsortable zone
     setPsNeedUpdate(true);
-  };
+  }, []);
 
-  const delZone = (index) => {
-    const { sorted } = localPS;
-    sorted.splice(index, 1);
-    setLocalPS({ ...localPS, sorted });
-    setPsNeedUpdate(true);
-  };
+  const delZone = useCallback(
+    (index) => {
+      setLocalPS((prevPS) => {
+        return { ...prevPS, sorted: prevPS.sorted.splice(index, 1) };
+      });
+      setPsNeedUpdate(true);
+    },
+    [localPS],
+  );
 
   const upZone = (zoneIndex) => {
     const { sorted } = localPS;
@@ -418,6 +424,23 @@ function PersonalZoneUpdater({
 
   const notReady = isLoading || loadingUser;
   const { personalSpace = {} } = appSettingsValues;
+
+  const {
+    filteredUnsortedPersonalSpacesGroup,
+    filteredUnsortedPersonalSpacesService,
+    filteredUnsortedPersonalSpacesLink,
+    filteredUnsortedPersonalSpacesGroupLink,
+  } = useMemo(() => {
+    const filteredUnsortedPersonalSpaces = localPS.unsorted.filter(filterSearch);
+
+    return {
+      filteredUnsortedPersonalSpaces,
+      filteredUnsortedPersonalSpacesGroup: filteredUnsortedPersonalSpaces.filter(filterGroup),
+      filteredUnsortedPersonalSpacesService: filteredUnsortedPersonalSpaces.filter(filterService),
+      filteredUnsortedPersonalSpacesLink: filteredUnsortedPersonalSpaces.filter(filterLink),
+      filteredUnsortedPersonalSpacesGroupLink: filteredUnsortedPersonalSpaces.filter(filterGroupLink),
+    };
+  }, [localPS, filterSearch, filterGroup, filterService, filterLink, filterGroupLink]);
 
   return (
     <>
@@ -515,59 +538,63 @@ function PersonalZoneUpdater({
                 </Grid>
               ) : null}
             </Grid>
-            {!edition && !disabledFeatures.groups && localPS.unsorted.filter(filterGroup).length !== 0
+            {!edition && !disabledFeatures.groups
               ? [
                   <PersonalZone
                     key="zone-favGroup-000000000000"
-                    elements={localPS.unsorted.filter(filterSearch).filter(filterGroup)}
+                    elements={filteredUnsortedPersonalSpacesGroup}
                     title={i18n.__('pages.PersonalPage.unsortedGroup')}
                     setList={setZoneList('group')}
                     suspendUpdate={suspendUpdate}
                     updateList={updateList}
                     customDrag={customDrag}
                     needUpdate={handleNeedUpdate}
+                    hidden={!filteredUnsortedPersonalSpacesGroup.length}
                   />,
                 ]
               : null}
-            {!edition && localPS.unsorted.filter(filterService).length !== 0
+            {!edition
               ? [
                   <PersonalZone
                     key="zone-favService-000000000000"
-                    elements={localPS.unsorted.filter(filterSearch).filter(filterService)}
+                    elements={filteredUnsortedPersonalSpacesService}
                     title={i18n.__('pages.PersonalPage.unsortedService')}
                     setList={setZoneList('service')}
                     suspendUpdate={suspendUpdate}
                     updateList={updateList} // setAskToCreateNewBookMark(true);
                     customDrag={customDrag}
                     needUpdate={handleNeedUpdate}
+                    hidden={!filteredUnsortedPersonalSpacesService.length}
                   />,
                 ]
               : null}
-            {!edition && localPS.unsorted.filter(filterLink).length !== 0
+            {!edition
               ? [
                   <PersonalZone
                     key="zone-favUserBookmark-000000000000"
-                    elements={localPS.unsorted.filter(filterSearch).filter(filterLink)}
+                    elements={filteredUnsortedPersonalSpacesLink}
                     title={i18n.__('pages.PersonalPage.unsortedLinks')}
                     setList={setZoneList('link')}
                     suspendUpdate={suspendUpdate}
                     updateList={updateList}
                     customDrag={customDrag}
                     needUpdate={handleNeedUpdate}
+                    hidden={!filteredUnsortedPersonalSpacesLink.length}
                   />,
                 ]
               : null}
-            {!edition && localPS.unsorted.filter(filterGroupLink).length !== 0
+            {!edition
               ? [
                   <PersonalZone
                     key="zone-favGroupBookmark-000000000000"
-                    elements={localPS.unsorted.filter(filterSearch).filter(filterGroupLink)}
+                    elements={filteredUnsortedPersonalSpacesGroupLink}
                     title={i18n.__('pages.PersonalPage.unsortedGroupLinks')}
                     setList={setZoneList('groupLink')}
                     suspendUpdate={suspendUpdate}
                     updateList={updateList}
                     customDrag={customDrag}
                     needUpdate={handleNeedUpdate}
+                    hidden={!filteredUnsortedPersonalSpacesGroupLink.length}
                   />,
                 ]
               : null}
