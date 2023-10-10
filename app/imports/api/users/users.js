@@ -287,51 +287,38 @@ export const findStructureAllowed = (structureObject, apiKey, tabApiKeys, tabApi
   return isAllowed;
 };
 
-export const isMatchingStructureWithParent = (structureObject, apiKey, tabApiKeys, tabApiKeysByStructure) => {
-  const structureParent = Structures.findOne({ _id: structureObject.parentId });
-  let isMatchingWithParent = findStructureAllowed(structureParent, apiKey, tabApiKeys, tabApiKeysByStructure);
+export const isMatchingStructureWithParent = (structure, apiKey, tabApiKeys, tabApiKeysByStructure) => {
+  const structureParent = Structures.findOne({ _id: structure });
 
-  if (!isMatchingWithParent) {
-    if (structureObject.parentId === null) {
-      isMatchingWithParent = false;
-    } else {
-      isMatchingStructureWithParent(structureParent, apiKey, tabApiKeys, tabApiKeysByStructure);
-    }
+  let isMatchingWithParent = false;
+
+  if (structureParent.parentId) {
+    isMatchingWithParent = isMatchingStructureWithParent(
+      structureParent.parentId,
+      apiKey,
+      tabApiKeys,
+      tabApiKeysByStructure,
+    );
+  } else {
+    isMatchingWithParent = findStructureAllowed(structureParent, apiKey, tabApiKeys, tabApiKeysByStructure);
   }
 
   return isMatchingWithParent;
 };
 
-export const isMatchingStructureWithChildrens = (structureObject, apiKey, tabApiKeys, tabApiKeysByStructure) => {
-  let isMatchingWithChild = false;
-
-  if (structureObject.childrenIds.length !== 0) {
-    isMatchingWithChild = findStructureAllowed(structureObject.childrenIds[0]);
-    if (!isMatchingWithChild) {
-      for (let i = 1; i < structureObject.childrenIds.length; i += 1) {
-        isMatchingStructureWithChildrens(structureObject.childrenIds[i], apiKey, tabApiKeys, tabApiKeysByStructure);
-      }
-    }
-  } else {
-    isMatchingWithChild = findStructureAllowed(structureObject.childrenIds[0]);
-  }
-
-  return isMatchingWithChild;
-};
-
 export const searchMatchingStructure = (structureObject, apiKey, tabApiKeys, tabApiKeysByStructure) => {
-  let isMatchingWithChildren = false;
   let isMatchingWithParent = false;
   let result = findStructureAllowed(structureObject, apiKey, tabApiKeys, tabApiKeysByStructure);
   if (!result) {
-    isMatchingWithChildren = isMatchingStructureWithChildrens(
-      structureObject,
-      apiKey,
-      tabApiKeys,
-      tabApiKeysByStructure,
-    );
-    isMatchingWithParent = isMatchingStructureWithParent(structureObject, apiKey, tabApiKeys, tabApiKeysByStructure);
-    if (isMatchingWithParent || isMatchingWithChildren) {
+    if (structureObject.parentId !== null) {
+      isMatchingWithParent = isMatchingStructureWithParent(
+        structureObject.parentId,
+        apiKey,
+        tabApiKeys,
+        tabApiKeysByStructure,
+      );
+    }
+    if (isMatchingWithParent) {
       result = true;
     }
   }
