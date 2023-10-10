@@ -549,7 +549,7 @@ function PersonalZoneUpdater({
                     updateList={updateList}
                     customDrag={customDrag}
                     needUpdate={handleNeedUpdate}
-                    hidden={search && !filteredUnsortedPersonalSpacesGroup.length}
+                    hidden={!filteredUnsortedPersonalSpacesGroup.length}
                   />,
                 ]
               : null}
@@ -564,7 +564,7 @@ function PersonalZoneUpdater({
                     updateList={updateList} // setAskToCreateNewBookMark(true);
                     customDrag={customDrag}
                     needUpdate={handleNeedUpdate}
-                    hidden={search && !filteredUnsortedPersonalSpacesService.length}
+                    hidden={!filteredUnsortedPersonalSpacesService.length}
                   />,
                 ]
               : null}
@@ -579,7 +579,7 @@ function PersonalZoneUpdater({
                     updateList={updateList}
                     customDrag={customDrag}
                     needUpdate={handleNeedUpdate}
-                    hidden={search && !filteredUnsortedPersonalSpacesLink.length}
+                    hidden={!filteredUnsortedPersonalSpacesLink.length}
                   />,
                 ]
               : null}
@@ -594,7 +594,7 @@ function PersonalZoneUpdater({
                     updateList={updateList}
                     customDrag={customDrag}
                     needUpdate={handleNeedUpdate}
-                    hidden={search && !filteredUnsortedPersonalSpacesGroupLink.length}
+                    hidden={!filteredUnsortedPersonalSpacesGroupLink.length}
                   />,
                 ]
               : null}
