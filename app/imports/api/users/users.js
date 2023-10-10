@@ -290,46 +290,27 @@ export const findStructureAllowed = (structureObject, apiKey, tabApiKeys, tabApi
 export const isMatchingStructureWithParent = (structure, apiKey, tabApiKeys, tabApiKeysByStructure) => {
   const structureParent = Structures.findOne({ _id: structure });
 
-  let isMatchingWithParent = findStructureAllowed(structureParent, apiKey, tabApiKeys, tabApiKeysByStructure);
+  let isMatchingWithParent = false;
 
-  if (!isMatchingWithParent && structureParent.parentId !== null) {
-    isMatchingWithParent = isMatchingStructureWithParent(structureParent, apiKey, tabApiKeys, tabApiKeysByStructure);
+  if (structureParent.parentId) {
+    isMatchingWithParent = isMatchingStructureWithParent(
+      structureParent.parentId,
+      apiKey,
+      tabApiKeys,
+      tabApiKeysByStructure,
+    );
+  } else {
+    isMatchingWithParent = findStructureAllowed(structureParent, apiKey, tabApiKeys, tabApiKeysByStructure);
   }
+
   return isMatchingWithParent;
 };
 
-export const isMatchingStructureWithChildrens = (structure, apiKey, tabApiKeys, tabApiKeysByStructure) => {
-  const structureChild = Structures.findOne({ _id: structure });
-
-  let isMatchingWithChild = findStructureAllowed(structureChild, apiKey, tabApiKeys, tabApiKeysByStructure);
-
-  if (!isMatchingWithChild && structureChild.childrenIds.length !== 0) {
-    for (let i = 0; i < structureChild.childrenIds.length; i += 1) {
-      isMatchingWithChild = isMatchingStructureWithChildrens(
-        structureChild.childrenIds[i],
-        apiKey,
-        tabApiKeys,
-        tabApiKeysByStructure,
-      );
-    }
-  }
-  return isMatchingWithChild;
-};
-
 export const searchMatchingStructure = (structureObject, apiKey, tabApiKeys, tabApiKeysByStructure) => {
-  let isMatchingWithChildren = false;
   let isMatchingWithParent = false;
 
   let result = findStructureAllowed(structureObject, apiKey, tabApiKeys, tabApiKeysByStructure);
   if (!result) {
-    if (structureObject.childrenIds.length !== 0) {
-      isMatchingWithChildren = isMatchingStructureWithChildrens(
-        structureObject.childrenIds[0],
-        apiKey,
-        tabApiKeys,
-        tabApiKeysByStructure,
-      );
-    }
     if (structureObject.parentId !== null) {
       isMatchingWithParent = isMatchingStructureWithParent(
         structureObject.parentId,
@@ -338,7 +319,7 @@ export const searchMatchingStructure = (structureObject, apiKey, tabApiKeys, tab
         tabApiKeysByStructure,
       );
     }
-    if (isMatchingWithParent || isMatchingWithChildren) {
+    if (isMatchingWithParent) {
       result = true;
     }
   }
