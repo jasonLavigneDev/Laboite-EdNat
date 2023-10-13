@@ -1,5 +1,6 @@
-import React, { forwardRef, useState } from 'react';
+import React, { forwardRef, useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import sanitizeHtml from 'sanitize-html';
 import i18n from 'meteor/universe:i18n';
 import { Roles } from 'meteor/alanning:roles';
@@ -30,7 +31,7 @@ import PersonalLinkDetails from './PersonalLinkDetails';
 import Bookmarks from '../../../api/bookmarks/bookmarks';
 
 export const useZoneStyles = makeStyles()((theme) => ({
-  expansionpanel: {
+  expansionPanel: {
     borderRadius: theme.shape.borderRadius,
     marginTop: 30,
     marginBottom: 10,
@@ -183,57 +184,72 @@ const PersonalZone = ({
   setExpanded,
   needUpdate,
   edition,
+  hidden,
 }) => {
   const { classes } = useZoneStyles();
   const [{ userId, isMobile }] = useAppContext();
   const [localIsExpanded, setIsExpanded] = useState(isExpanded || true);
 
-  const memberGroups = useTracker(() => Roles.getScopesForUser(userId, 'member'));
-  const animatorGroups = useTracker(() => Roles.getScopesForUser(userId, 'animator'));
-  const candidateGroups = useTracker(() => Roles.getScopesForUser(userId, ['candidate']));
-  const managedGroups = useTracker(() => Roles.getScopesForUser(userId, ['animator', 'admin']));
-  const isAdmin = Roles.userIsInRole(userId, 'admin');
+  const { memberGroups, animatorGroups, candidateGroups, managedGroups, isAdmin } = useTracker(
+    () => ({
+      memberGroups: Roles.getScopesForUser(userId, 'member'),
+      animatorGroups: Roles.getScopesForUser(userId, 'animator'),
+      candidateGroups: Roles.getScopesForUser(userId, ['candidate']),
+      managedGroups: Roles.getScopesForUser(userId, ['animator', 'admin']),
+      isAdmin: Roles.userIsInRole(userId, 'admin'),
+    }),
+    [userId],
+  );
 
-  const handleKeyDownTitle = () => (event) => {
+  const handleKeyDownTitle = useCallback((event) => {
     const enterKey = 13;
     if (event.which === enterKey) {
       event.preventDefault();
       event.target.blur();
     }
-  };
+  }, []);
 
-  const handleBlurTitle = (zoneIndex) => (event) => {
-    let newTitle = event.target.innerText;
-    if (newTitle === '') {
-      newTitle = `${i18n.__('pages.PersonalPage.newZone')}-${zoneIndex}`;
-    }
-    setTitle(zoneIndex, newTitle);
-  };
+  const handleBlurTitle = useCallback(
+    (zoneIndex) => (event) => {
+      let newTitle = event.target.innerText;
+      if (newTitle === '') {
+        newTitle = `${i18n.__('pages.PersonalPage.newZone')}-${zoneIndex}`;
+      }
+      setTitle(zoneIndex, newTitle);
+    },
+    [],
+  );
 
-  const handleSelectTitle = (zoneIndex) => () => {
-    const elm = document.getElementById(`title-${zoneIndex}`);
-    const range = document.createRange();
-    range.selectNodeContents(elm);
-    const sel = window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(range);
-  };
+  const handleSelectTitle = useCallback(
+    (zoneIndex) => () => {
+      const elm = document.getElementById(`title-${zoneIndex}`);
+      const range = document.createRange();
+      range.selectNodeContents(elm);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+    },
+    [],
+  );
 
-  const handleClickExpansion = (zoneIndex) => () => {
-    if (isSorted) {
-      setExpanded(zoneIndex);
-    } else {
-      setIsExpanded(!localIsExpanded);
-    }
-  };
+  const handleClickExpansion = useCallback(
+    (zoneIndex) => () => {
+      if (isSorted) {
+        setExpanded(zoneIndex);
+      } else {
+        setIsExpanded(!localIsExpanded);
+      }
+    },
+    [],
+  );
 
-  const handleNeedUpdate = () => {
+  const handleNeedUpdate = useCallback(() => {
     needUpdate();
-  };
+  }, [needUpdate]);
 
   return (
     <Accordion
-      className={classes.expansionpanel}
+      className={clsx(classes.expansionPanel, { hidden })}
       expanded={isSorted ? isExpanded : localIsExpanded}
       data-tour-id="zone"
     >
@@ -258,7 +274,7 @@ const PersonalZone = ({
                 id={`title-${index}`}
                 className={customDrag && isSorted ? classes.title : null}
                 contentEditable={isSorted && customDrag}
-                onKeyDown={handleKeyDownTitle(index)}
+                onKeyDown={handleKeyDownTitle}
                 onBlur={handleBlurTitle(index)}
                 role="presentation"
                 dangerouslySetInnerHTML={{ __html: sanitizeHtml(title) }}
@@ -472,6 +488,7 @@ PersonalZone.propTypes = {
   setExpanded: PropTypes.func,
   needUpdate: PropTypes.func.isRequired,
   edition: PropTypes.bool,
+  hidden: PropTypes.bool,
 };
 
 PersonalZone.defaultProps = {
@@ -485,6 +502,7 @@ PersonalZone.defaultProps = {
   moveDownZone: null,
   moveUpZone: null,
   edition: false,
+  hidden: false,
 };
 
 export default PersonalZone;

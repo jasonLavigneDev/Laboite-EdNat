@@ -4,5 +4,9 @@ config/settings.development.json
 
 .DS_Store
 app/.reports
-.reports
+**/.reports/*.*
 passwords.txt
+provisionning/.env
+provisionning/mails.csv
+provisionning/structures.csv
+provisionning/users.csv

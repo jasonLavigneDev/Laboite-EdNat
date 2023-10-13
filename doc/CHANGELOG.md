@@ -1,5 +1,310 @@
 # Changelog
 
+## [5.6.1](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/5.6.0...release/5.6.1) (2023-10-02)
+
+
+### Bug Fixes
+
+* **articles:** allow embedded videos in articles and descriptions ([4084938](https://gitlab.mim-libre.fr/alphabet/laboite/commit/4084938b57f1d02aecb752a38143e461930aff8f))
+* **articles:** update sanitizeHtml parameters for articles ([b92b1f4](https://gitlab.mim-libre.fr/alphabet/laboite/commit/b92b1f46234726014d9c917c0f68aabac4c6b33d))
+
+# [5.6.0](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/5.5.2...release/5.6.0) (2023-10-02)
+
+
+### Bug Fixes
+
+* **analytics:** build structure tree on any depth ([8ec2258](https://gitlab.mim-libre.fr/alphabet/laboite/commit/8ec22589ec440219f43779116e5e16db88df1885))
+* **articles:** allow embedded videos in articles and descriptions ([fb10267](https://gitlab.mim-libre.fr/alphabet/laboite/commit/fb1026796c87b34f94dfb5984b17a4dbed01526c))
+* **articles:** update sanitizeHtml parameters for articles ([6b1ed4b](https://gitlab.mim-libre.fr/alphabet/laboite/commit/6b1ed4b70cb117698059539aeaab261a96e6913e))
+* **build:** get node image from meteor docker images ([a3d6874](https://gitlab.mim-libre.fr/alphabet/laboite/commit/a3d68740563b3bea2f5e1cebb3756f35f8abe02c))
+* **css:** add selector in css file ([fa91881](https://gitlab.mim-libre.fr/alphabet/laboite/commit/fa918815d7c25ece92e19d2d616aafbde8a37668))
+* **fileUpload:** remove unnecessary log when file is too large ([73107a9](https://gitlab.mim-libre.fr/alphabet/laboite/commit/73107a932169da90863cd944bd9aa540981977de))
+* **forms:** fix typo in get_groups.forms_count method ([b297cd9](https://gitlab.mim-libre.fr/alphabet/laboite/commit/b297cd951068a412d65216f828738b13db5730e4))
+* **globalInfos:** fix display and position of date and text ([beabace](https://gitlab.mim-libre.fr/alphabet/laboite/commit/beabace1a6600511768a29fad3770f6a0d77d032))
+* **globalInfos:** fix various texts and glitches in UI ([e1b8d59](https://gitlab.mim-libre.fr/alphabet/laboite/commit/e1b8d59e559268d2a03059b9eed761cc597794b9))
+* **i18n:** remove duplicate message ([eea2831](https://gitlab.mim-libre.fr/alphabet/laboite/commit/eea283161bff38c9749542bf58f387219a07420e))
+* **informations:** fix modal size to modify a global info ([7464f1e](https://gitlab.mim-libre.fr/alphabet/laboite/commit/7464f1e8a40e471d6812dcbed60667f1157126dc))
+* **IntroductionPage:** replace inline style with classes ([55138e8](https://gitlab.mim-libre.fr/alphabet/laboite/commit/55138e829546bf8ddceba4a0e56f897d629c0322))
+* **labels:** change some labels in menus ([f18644c](https://gitlab.mim-libre.fr/alphabet/laboite/commit/f18644c3819fafecd53c9d653afa31523c31e390))
+* **links:** make html links blue and underlined ([1dcb443](https://gitlab.mim-libre.fr/alphabet/laboite/commit/1dcb4438dcc6f9acddd42b420a9c1cce6e677a52))
+* **logo:** app logo in top bar redirects to personal space ([436cb4b](https://gitlab.mim-libre.fr/alphabet/laboite/commit/436cb4bd20ce18de965592fa236c64f8f7323fab))
+* **onboarding:** disable onboarding until active with structure ([5da15eb](https://gitlab.mim-libre.fr/alphabet/laboite/commit/5da15eb77063accfec4e0382a913d51610bcd4d8))
+* **onBoarding:** remove theme, apps translation is the default ([735c5fd](https://gitlab.mim-libre.fr/alphabet/laboite/commit/735c5fd97632072a4f835f2214a7031b6c64de60))
+* **onboarding:** remove unnecessary Meteor import ([ba21c01](https://gitlab.mim-libre.fr/alphabet/laboite/commit/ba21c01d9f076f39f1340311dd7098cd55557de7))
+* **package:** change script to run tests ([0ed93c5](https://gitlab.mim-libre.fr/alphabet/laboite/commit/0ed93c5bca7f2b42905db0e8e5269bdc0487ce88))
+* **profile:** disable avatar edition if user is not active ([2f3d4be](https://gitlab.mim-libre.fr/alphabet/laboite/commit/2f3d4be154961680d4bd31d6b97dcbe5f9e380f3))
+* **quota:** quota check in admin group page ([07d4be1](https://gitlab.mim-libre.fr/alphabet/laboite/commit/07d4be19e06d8bf08adc9571bf861a7b275de46c))
+* **redirect:** auto redirect from informations page ([85fae14](https://gitlab.mim-libre.fr/alphabet/laboite/commit/85fae14be640c0d77c595662386643ab15f3d604))
+* **redirect:** auto redirect on informations page ([bd840b9](https://gitlab.mim-libre.fr/alphabet/laboite/commit/bd840b978638fb6f3a869ec1136e42fde702d115))
+* **service:** force favservices init if field is missing ([d3d7d09](https://gitlab.mim-libre.fr/alphabet/laboite/commit/d3d7d09a105a720aefcbb084f12ae01d7a8a44e8))
+* **services:** prefix structure service url with structure id ([683e98b](https://gitlab.mim-libre.fr/alphabet/laboite/commit/683e98b6f2aefe60312ca32f99ace374571f6772))
+* **structures:** create and receive structure information messages ([06121a0](https://gitlab.mim-libre.fr/alphabet/laboite/commit/06121a0aec5cf697eb33cc64fada6d2202a0bfd6))
+* **structures:** fix query in getAllGlobalInfoByLanguage ([45a6b87](https://gitlab.mim-libre.fr/alphabet/laboite/commit/45a6b87d06a58144d93d101ee9a091a3ce595768))
+* **structures:** manage structure name and parent struc messages ([4b6c2bc](https://gitlab.mim-libre.fr/alphabet/laboite/commit/4b6c2bccb81b5ff164b9800b5cf3ac9575848764))
+* **structures:** page NewIntroductionPage replaces IntroductionPage ([72cb752](https://gitlab.mim-libre.fr/alphabet/laboite/commit/72cb7523f089f4909edddf26db96823844c28a6f))
+* **structures:** remove chip from admin, change messages design ([c4a1a1f](https://gitlab.mim-libre.fr/alphabet/laboite/commit/c4a1a1f122aec1462439a02a8f7f5e8047d9a508))
+* **user tests:** email not passed correctly at account creation ([ccebeb5](https://gitlab.mim-libre.fr/alphabet/laboite/commit/ccebeb5078692f38a6306d1022de7a5dddb0f4a9))
+
+
+### Features
+
+* **bookmarks:** add import/export ([daf963b](https://gitlab.mim-libre.fr/alphabet/laboite/commit/daf963b88bffc154e2baa365e9a3a04fe5f3f906))
+* **bookmarks:** increase bookmarks url length ([fb28609](https://gitlab.mim-libre.fr/alphabet/laboite/commit/fb28609978b09658de88aa2ec9fd2c3e604dddbf))
+* **forms:** force user to log in when answering a group form ([5b08d1a](https://gitlab.mim-libre.fr/alphabet/laboite/commit/5b08d1a6ee3fdd8f7d49fc012f6d923f8f205ac8))
+* **group:** disable add button if too many groups created ([8517b2c](https://gitlab.mim-libre.fr/alphabet/laboite/commit/8517b2c7d2301a2b0bad829187d8246cfdb8732e))
+* **libs:** update npm libs to wanted version ([1592db4](https://gitlab.mim-libre.fr/alphabet/laboite/commit/1592db43d8f9aaa9376bc549a48a98f6280b79bc))
+* **libs:** update version number of meteor base ([11d81e3](https://gitlab.mim-libre.fr/alphabet/laboite/commit/11d81e3a8545379f728234391813795e1f6de4bc))
+* **mediastorage:** add crop tools for upload image ([081f966](https://gitlab.mim-libre.fr/alphabet/laboite/commit/081f9669eb628982d1892b73f48515ed683f23a3))
+* **mediastorage:** add warning text to media storage page ([600f3d7](https://gitlab.mim-libre.fr/alphabet/laboite/commit/600f3d7b16dc56119553139679083521081d2766))
+* **node:** change node version to previous version ([05d1c41](https://gitlab.mim-libre.fr/alphabet/laboite/commit/05d1c4199ee9efd9461ed67a82578246c77c8612))
+* **onBoarding:** add steps for groups and apps theme ([4cf8adf](https://gitlab.mim-libre.fr/alphabet/laboite/commit/4cf8adfec1474c32709df4cee4e4e69ca00aea64))
+* **packgage:** regen package lock with the new deps ([84d6269](https://gitlab.mim-libre.fr/alphabet/laboite/commit/84d6269f78af219b7aff82f03f6924cdea5ab138))
+* **profile:** hide apply struc perso space if no structure ([d32cb67](https://gitlab.mim-libre.fr/alphabet/laboite/commit/d32cb673c025d243118fa45665c05272e09a32e6))
+* **test:** disable logging initialize for tests ([4653234](https://gitlab.mim-libre.fr/alphabet/laboite/commit/4653234431537e0ab87a5b4362bd4c2767b60a48))
+* **tokenApi:** allow users to login from widget host ([64f555d](https://gitlab.mim-libre.fr/alphabet/laboite/commit/64f555d5254798541f8898f414da6c2ad5204cf8))
+* **widget:** init widget in a shadow root ([2143857](https://gitlab.mim-libre.fr/alphabet/laboite/commit/2143857082c025b0d12488761fa8f32424db0d55))
+
+
+### Tests
+
+* fix tests and eslint errors ([8c6661d](https://gitlab.mim-libre.fr/alphabet/laboite/commit/8c6661d4cc0cc53de6d1534bbeef682d0f217195))
+* **globalinfos:** add tests for structure messages ([6c1c917](https://gitlab.mim-libre.fr/alphabet/laboite/commit/6c1c917680932c32521c68a37ae66996d1965929))
+
+## [5.5.2](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/5.5.1...release/5.5.2) (2023-09-29)
+
+
+### Bug Fixes
+
+* **service:** disable add button for structure groups ([c465878](https://gitlab.mim-libre.fr/alphabet/laboite/commit/c465878ad27476572cd6b4f42c04f51eb92265b5))
+
+## [5.5.1](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/5.5.0...release/5.5.1) (2023-09-01)
+
+
+### Bug Fixes
+
+* **nextcloud:** add setting to hide plugins checkboxes in group admin ([0210865](https://gitlab.mim-libre.fr/alphabet/laboite/commit/0210865e943811b9fdf40af075425d22a62a57a7))
+
+# [5.5.0](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/5.4.0...release/5.5.0) (2023-08-24)
+
+
+### Bug Fixes
+
+* **admin users:** take selected structure into account ([8acb462](https://gitlab.mim-libre.fr/alphabet/laboite/commit/8acb4624f029776e700e02eb2c1630a25d8885e9))
+* **admin:** fix error case in admin message interface ([4fd9e47](https://gitlab.mim-libre.fr/alphabet/laboite/commit/4fd9e47077bb2c1eab374eb76afb08526ec7decb))
+* **adminService:** size url to 20 char max and show it in title ([2aa0a2d](https://gitlab.mim-libre.fr/alphabet/laboite/commit/2aa0a2d2b0a338c97943653264d56ccf986da979))
+* **banner:** fix icon position when only icon is set ([d680ea2](https://gitlab.mim-libre.fr/alphabet/laboite/commit/d680ea2e2a4109df122d0367fd564d109187f2fa))
+* **bookmark:** change error message when edit/create bookmark ([8c46ae6](https://gitlab.mim-libre.fr/alphabet/laboite/commit/8c46ae64033e23498af4b4912cee2526dba425ad))
+* **bookmark:** check if user is member of group or author ([59d7fb2](https://gitlab.mim-libre.fr/alphabet/laboite/commit/59d7fb23c6bc321b1b64f15058ffdcfc0a4e95a0))
+* **bookmark:** missing link ref ([0f8e3be](https://gitlab.mim-libre.fr/alphabet/laboite/commit/0f8e3bebc93882394c102884eba073130babcab6))
+* **bookmark:** rewrite conditions ([e43ec7d](https://gitlab.mim-libre.fr/alphabet/laboite/commit/e43ec7d19dd818b0708004a4c4dbab94722886d7))
+* **button:** fix button position skip to content ([0d2938f](https://gitlab.mim-libre.fr/alphabet/laboite/commit/0d2938fb9f49e2f404e9ff9de13727b86426013b))
+* **circles:** adapt code for api calls on federated instance ([adde624](https://gitlab.mim-libre.fr/alphabet/laboite/commit/adde62402f154a6206807b857907a60443dbd671))
+* **circles:** adapt group resources link for nextcloud ([ad1b93a](https://gitlab.mim-libre.fr/alphabet/laboite/commit/ad1b93a852b91fdee3bda013f8d143e6d1fe96fd))
+* **contact:** array of mails for carbon copy ([185dac0](https://gitlab.mim-libre.fr/alphabet/laboite/commit/185dac0561abe8a179f7ed80ae9a00cde3875563))
+* **contact:** verify external url string ([b731113](https://gitlab.mim-libre.fr/alphabet/laboite/commit/b731113c87278e74375ec25f4d8cd2b4325c0f9f))
+* **eventsAgenda:** add migration step for incomplete events (sondage) ([66015b8](https://gitlab.mim-libre.fr/alphabet/laboite/commit/66015b864bf458fb7a4123adfedbffad0a39533b))
+* **favorite:** unfavorite group bookmark ([ec1c55d](https://gitlab.mim-libre.fr/alphabet/laboite/commit/ec1c55d43af6df80231b3b932e878f822326a40c))
+* **file-transfer:** add server logs ([df61adc](https://gitlab.mim-libre.fr/alphabet/laboite/commit/df61adcb7b9165640707a2918b687dec0ac7c0f4))
+* **file-upload:** add post-rebases fixes ([b81ac01](https://gitlab.mim-libre.fr/alphabet/laboite/commit/b81ac01fe19eddab7337c1ac26091d9bfd2ed904))
+* **forms:** sort on publication ([9cdc6af](https://gitlab.mim-libre.fr/alphabet/laboite/commit/9cdc6afe5045c2d1a98b53add62415a32d43598b))
+* **globalinfos:** reset state when cancel update ([0679d02](https://gitlab.mim-libre.fr/alphabet/laboite/commit/0679d02ee2b6f1e715a419c2f16d940b88f6e72f))
+* **i18n:** add missing messages ([f0ecf16](https://gitlab.mim-libre.fr/alphabet/laboite/commit/f0ecf163260fbe96867c526bd809756e50a3e412))
+* **i18n:** dates display for events ([f8fcb18](https://gitlab.mim-libre.fr/alphabet/laboite/commit/f8fcb187bb68bbb3121efab206f35728f26c3849))
+* **i18n:** fix ortho in "AvatarEdit" ([54dd33c](https://gitlab.mim-libre.fr/alphabet/laboite/commit/54dd33c29d315b0d5a13ed4854047daff1bb29e7))
+* **i18n:** translation ([6aebe8f](https://gitlab.mim-libre.fr/alphabet/laboite/commit/6aebe8fca3458efe0316c74016c44ed60b7b26b5))
+* **import:** remove useless pages ([dfaa05e](https://gitlab.mim-libre.fr/alphabet/laboite/commit/dfaa05eba0c374627e6a3e5e2ec7a97451d29406))
+* **info:** fix message display in user interface ([f97c3df](https://gitlab.mim-libre.fr/alphabet/laboite/commit/f97c3dff281455bcf2a0c51faab63aabf1f707ae))
+* **kcClient:** fix _getToken not working anymore ([3eb4f7b](https://gitlab.mim-libre.fr/alphabet/laboite/commit/3eb4f7b9656e888721eaa3206807748b56b4acaf))
+* **keycloak:** create adminStructure group at startup if needed ([cac7425](https://gitlab.mim-libre.fr/alphabet/laboite/commit/cac7425dde2ce8a1f690a534e6dfff479053ef04))
+* **keycloak:** don't log the full error when authentication fails ([6327d26](https://gitlab.mim-libre.fr/alphabet/laboite/commit/6327d26ceec54f2aa2db1e70178ffa822e51839b))
+* **keycloak:** remove deleted groups from keycloak ([3c4ffbc](https://gitlab.mim-libre.fr/alphabet/laboite/commit/3c4ffbc26dbcaf138165fc2d643f31d0571c057d))
+* **keycloak:** remove useless .then ([fa419a2](https://gitlab.mim-libre.fr/alphabet/laboite/commit/fa419a2722943c773b911fc63bc0e7ba66b34b87))
+* **labels:** improve coherency for menus and page titles ([bbbf1ef](https://gitlab.mim-libre.fr/alphabet/laboite/commit/bbbf1ef119afc807037db6c32ed004915665cdb7))
+* **log:** add LOG_LEVEL env variable for default level ([d597b29](https://gitlab.mim-libre.fr/alphabet/laboite/commit/d597b292c78fcd9f2b17384c73771272176c91eb))
+* **log:** delete last parameter for logServer ([31e12c5](https://gitlab.mim-libre.fr/alphabet/laboite/commit/31e12c59965d3044ff9dfc182dc5ffd13547a818))
+* **log:** display params after at end line ([1277c17](https://gitlab.mim-libre.fr/alphabet/laboite/commit/1277c1745aa584a2ff0fb8ac0d90f3fddc106a14))
+* **logs:** correct object object text in logs ([15e3b2d](https://gitlab.mim-libre.fr/alphabet/laboite/commit/15e3b2d27ab2a3326ead936ae1306fab4596758b))
+* **logs:** stringify object in server logs string ([4fff563](https://gitlab.mim-libre.fr/alphabet/laboite/commit/4fff563bb21e201b73b8bf2d941c05b26bfdab2e))
+* **mails:** get target mails ([8aa041e](https://gitlab.mim-libre.fr/alphabet/laboite/commit/8aa041e6afcea848287d8e7c97ecef07763a14d0))
+* **mails:** improve mails search ([1da3bc0](https://gitlab.mim-libre.fr/alphabet/laboite/commit/1da3bc0b4ec2c13367205968e45d418507c3517a))
+* **mainlayout:** disable redirect if no globalinfo ([4382fe8](https://gitlab.mim-libre.fr/alphabet/laboite/commit/4382fe8961423eeaf975976e8712ea1d774917d9))
+* **menu:** fix errors when rendering Divider inside Tabs component ([15c4cc2](https://gitlab.mim-libre.fr/alphabet/laboite/commit/15c4cc24e7e7b032ccb26e4883f385bf3be329ce))
+* **menu:** reorder items in MenuBar.jsx ([22682f4](https://gitlab.mim-libre.fr/alphabet/laboite/commit/22682f46dab45be9f8a37f4612a5d1a8a14d2c97))
+* **meteor:** change version in packages ([74ad50d](https://gitlab.mim-libre.fr/alphabet/laboite/commit/74ad50db299abb22e270e5e7dd919e691b894d98))
+* **mui:** add select mui component ([9aafd5e](https://gitlab.mim-libre.fr/alphabet/laboite/commit/9aafd5e044925acb23b31311285e9817bdbdf793))
+* **nextcloud:** don't display full errors in logs (sensitive data) ([ec5f779](https://gitlab.mim-libre.fr/alphabet/laboite/commit/ec5f779a2b44335a239c947d5f7b08a553ad28b7))
+* **nextcloud:** fix url for share access button in group page ([85a2b94](https://gitlab.mim-libre.fr/alphabet/laboite/commit/85a2b9400585e737bc9c659d6e57d8d035ab082b))
+* **nextcloud:** inviteMembers ignores users without nclocator ([7dfa421](https://gitlab.mim-libre.fr/alphabet/laboite/commit/7dfa421e0c7876c7d865c8cf7baa25b3d5e7872c))
+* **nextcloud:** take sharename into account at group edition ([beea984](https://gitlab.mim-libre.fr/alphabet/laboite/commit/beea984ef06528fa7b311b50053598cc9d453fd3))
+* **notification:** add multi groups api notification ([72affd9](https://gitlab.mim-libre.fr/alphabet/laboite/commit/72affd9533807ab441c78320e5148807be55a44e))
+* **notification:** change button style ([df88def](https://gitlab.mim-libre.fr/alphabet/laboite/commit/df88def144b55b6ebc31d7961e7d2183c616abd0))
+* **notifications:** hide structure group id in role notifications ([be2dbbf](https://gitlab.mim-libre.fr/alphabet/laboite/commit/be2dbbfe8527e88a0cbc5d98d4397415a1170dab))
+* **onboarding:** adapt to new path for personal space steps ([6e7b2cb](https://gitlab.mim-libre.fr/alphabet/laboite/commit/6e7b2cb357bf87d4b281de047dc25f200659145b))
+* **onBoarding:** settings really disable onboarding ([9f6c56d](https://gitlab.mim-libre.fr/alphabet/laboite/commit/9f6c56ddade7542bcdba71dc7130f4666969acd3))
+* **package:** add script to fix npm problems ([8331a96](https://gitlab.mim-libre.fr/alphabet/laboite/commit/8331a964dd7554d5ced1535fbb90457399073769))
+* **packages:** add correct version of minio library ([4c81147](https://gitlab.mim-libre.fr/alphabet/laboite/commit/4c811474e63085d990259456e9d5b472f85c794e))
+* **packages:** remove reintroduced npm-force-resolutions, audit fix ([d86b42b](https://gitlab.mim-libre.fr/alphabet/laboite/commit/d86b42bbefde8ad2f4e96e7bdbc26ccdfc542e3b))
+* **personalspace:** group card duplication ([8f3cc49](https://gitlab.mim-libre.fr/alphabet/laboite/commit/8f3cc499355746718f7c45080b553d5f907a9d07))
+* **polls:** remove polls page ([5e562cd](https://gitlab.mim-libre.fr/alphabet/laboite/commit/5e562cd261aa7d7c7912168d162c95901129732c))
+* **profilepage:** dont display username if hasnt nclocator ([cad3295](https://gitlab.mim-libre.fr/alphabet/laboite/commit/cad3295d45ee0a875c350da15f720fe61f4ae8d6))
+* **search:** change calcul of nbPage in method callback ([ee082a9](https://gitlab.mim-libre.fr/alphabet/laboite/commit/ee082a997b356f8fbe3dfdb189cbde992e8e3fd7))
+* **search:** change page after search ([6515a2a](https://gitlab.mim-libre.fr/alphabet/laboite/commit/6515a2a63f1e6e3a7a69f1f0f73635e4315a635e))
+* **search:** page change after search ([efe5852](https://gitlab.mim-libre.fr/alphabet/laboite/commit/efe5852f033846c4e83e257c9b1ccaaed9fefde4))
+* **search:** pagination in users search ([ca3ee71](https://gitlab.mim-libre.fr/alphabet/laboite/commit/ca3ee7187bf307a583b4fbab4edac0ed1072479b))
+* **search:** search all users regex ([9f7215b](https://gitlab.mim-libre.fr/alphabet/laboite/commit/9f7215be745da3f5efe19c1cc35cb26a0813abab))
+* **service:** add titles and adjust style ([97f1eb2](https://gitlab.mim-libre.fr/alphabet/laboite/commit/97f1eb2e694bd4a271f6ca1204aea07855330c94))
+* **services:** orders and display of polls and events ([07e5641](https://gitlab.mim-libre.fr/alphabet/laboite/commit/07e56413ab612d47906a5dbf58a490d6420a2fec))
+* **services:** search and publications ([ff28700](https://gitlab.mim-libre.fr/alphabet/laboite/commit/ff28700f6538308ecaa36254c500f54c9a7b1d4a))
+* **settings:** display of save button for global settings ([fbd3a1b](https://gitlab.mim-libre.fr/alphabet/laboite/commit/fbd3a1bfa4105b2435f927c8428de2b5409c3ba6))
+* **settings:** state reset after window resize ([e318ed1](https://gitlab.mim-libre.fr/alphabet/laboite/commit/e318ed1ba9faffdb6da9e79b862a15a99d124450))
+* **smtp:** generation of mails list for carbon copy ([6233037](https://gitlab.mim-libre.fr/alphabet/laboite/commit/62330378158f198d826d431efc7a6f5a31b51365))
+* **structure:** loading page when no structures exist ([75322e7](https://gitlab.mim-libre.fr/alphabet/laboite/commit/75322e7dc646e42cbfc084d4e20bf59974a74fbf))
+* **structures:** fix hover and style attribute ([c0f2c7a](https://gitlab.mim-libre.fr/alphabet/laboite/commit/c0f2c7a381c99b4ee1e41b67a0383204224773a8))
+* **structures:** make structure selection more user friendly ([86060d8](https://gitlab.mim-libre.fr/alphabet/laboite/commit/86060d80a1c67bce722267d39f2ea469453b57c1))
+* **structures:** trim name on structure creation/edition ([391db9c](https://gitlab.mim-libre.fr/alphabet/laboite/commit/391db9cbc9b4978c1ecd01675b6c4363f77483a7))
+* **structure:** trim on structure name on submit only ([e29ec37](https://gitlab.mim-libre.fr/alphabet/laboite/commit/e29ec37f48ef37cf43bd69d99b835b14f867c942))
+* **tooltip-service-fields:** adding tooltip on some service fields ([d9a7127](https://gitlab.mim-libre.fr/alphabet/laboite/commit/d9a7127fcfd745d47159b98a3fee965dbebc053c))
+* **tooltip:** fix tooltip ([5686261](https://gitlab.mim-libre.fr/alphabet/laboite/commit/5686261e175ca1951cb7a7e9c318bc60500130c2))
+* typo ([577f88a](https://gitlab.mim-libre.fr/alphabet/laboite/commit/577f88a6960d75537d7454c30ac85236a8416071))
+* **ui:** fix skiptocontent link position ([89bef68](https://gitlab.mim-libre.fr/alphabet/laboite/commit/89bef68c2cd696b4a04990a3242b59d7caef5437))
+* **user-search:** fix missing structure and reactivity ([7128d83](https://gitlab.mim-libre.fr/alphabet/laboite/commit/7128d832b86de6adbca48074c9d3a03dbd6cd99a))
+* **user-search:** replace subscription with method ([e6170f6](https://gitlab.mim-libre.fr/alphabet/laboite/commit/e6170f60d127a27e79f9604ba137f7b48ace8270))
+* **users:** refetch user list on user deletion ([57e23b6](https://gitlab.mim-libre.fr/alphabet/laboite/commit/57e23b675d60072da2e3efe92cde24324589d9e1))
+* **utils:** search of user in role ([e6928d7](https://gitlab.mim-libre.fr/alphabet/laboite/commit/e6928d793c5dd0092787ad618083f1abd092a12f))
+* **widget:** add ([1867393](https://gitlab.mim-libre.fr/alphabet/laboite/commit/186739314ff190f330b9074451ecc8271759b7b1))
+
+
+### Build System
+
+* **meteor:** update meteor to 2.12 and meteor packages ([7e6ef12](https://gitlab.mim-libre.fr/alphabet/laboite/commit/7e6ef12525d8db0f188e84a06c765f68abde6ae6))
+
+
+### Code Refactoring
+
+* **adminServices:** remove style balise and add style to css class ([2082102](https://gitlab.mim-libre.fr/alphabet/laboite/commit/20821027d1b11ceec769d924f3ceeb50ddc95239))
+* **default_space:** rebase on dev ([9c95f29](https://gitlab.mim-libre.fr/alphabet/laboite/commit/9c95f295f25800c763654ec58fce19abd9e5286b))
+* **gitignore:** add .reports to gitignore ([4c8e1c8](https://gitlab.mim-libre.fr/alphabet/laboite/commit/4c8e1c86dd0f9fa55e3bc2ad725858bf8aec31f2))
+* **group:** poll, event and form pages ([073a4db](https://gitlab.mim-libre.fr/alphabet/laboite/commit/073a4db307b536aa40063d7ace9687b64cfcfaa1))
+
+
+### Continuous Integration
+
+* **husky:** run check-lang script at commit ([c2ec83b](https://gitlab.mim-libre.fr/alphabet/laboite/commit/c2ec83ba23c3d624e6cc72b0ffbe8766ab64d411))
+
+
+### Documentation
+
+* **dev:** start doc about CRUD ([40080a3](https://gitlab.mim-libre.fr/alphabet/laboite/commit/40080a3512e9d2157ee8a9dafcfffba31ed1ca76))
+* **dev:** start new dev doc ([80c1939](https://gitlab.mim-libre.fr/alphabet/laboite/commit/80c193951c09b907da98d66f003aadec79324299))
+* **fix:** remove not useful backtick ([45eb239](https://gitlab.mim-libre.fr/alphabet/laboite/commit/45eb239247b71b4213a019f2d1e79d8681f93c4b))
+* **fs:** add explanation about project file architecture ([ac172b0](https://gitlab.mim-libre.fr/alphabet/laboite/commit/ac172b04faf0806f0e0353920a75d22ed02fd736))
+* **global:** create a contrib doc to link all docs ([6e6a4ac](https://gitlab.mim-libre.fr/alphabet/laboite/commit/6e6a4ac6a987d0afc27164240f29de2d573eef16))
+* **laboite:** add explanation about global app usage ([ae83196](https://gitlab.mim-libre.fr/alphabet/laboite/commit/ae83196de7895c53a84c334e5956c6e9f62830fd))
+* **logs:** add documention for server logging ([4978a52](https://gitlab.mim-libre.fr/alphabet/laboite/commit/4978a52f124b2bcf1675430f55f088f813641a96))
+* **mui:** complete markdown syntax ([7f23dce](https://gitlab.mim-libre.fr/alphabet/laboite/commit/7f23dce33684e12350d5b207853dd84f0321e37d))
+* **readme:** add link to contributing guide in readme ([8842204](https://gitlab.mim-libre.fr/alphabet/laboite/commit/88422044193f407b3fe4a523339c202e7abb8d8e))
+* **theme:** add documention about theme and MUI ([f960856](https://gitlab.mim-libre.fr/alphabet/laboite/commit/f96085650706c9e15f050c329525163a80f8c38f))
+* **theme:** add precisions on tss react ([9c5c4c7](https://gitlab.mim-libre.fr/alphabet/laboite/commit/9c5c4c7a14ce2d6415c1245ee663d3dc3dcb69be))
+
+
+### Features
+
+* **admin:** add front error in admin form ([9e2ad23](https://gitlab.mim-libre.fr/alphabet/laboite/commit/9e2ad23d0c00fff13fd6b705903caa558d3213bd))
+* **admin:** fix admin menu style for global info ([3927094](https://gitlab.mim-libre.fr/alphabet/laboite/commit/3927094296a9fa544c755ce4e80ce143dde11edd))
+* **analytics:** implement analytics module ([0c67517](https://gitlab.mim-libre.fr/alphabet/laboite/commit/0c675174b346e72de08cc84da6ea3014384b0a67))
+* **API:** create nextcloud user in createuser API ([6a19c9c](https://gitlab.mim-libre.fr/alphabet/laboite/commit/6a19c9cb159fd8129a306be8cc7d42b811a3c36b))
+* **bookmark:** add edit option on favorites ([67321f5](https://gitlab.mim-libre.fr/alphabet/laboite/commit/67321f5183c1dbe2b52a51ffec33cf925b23c04f))
+* **bookmark:** add favorite group bookmark to personal space ([4a18eea](https://gitlab.mim-libre.fr/alphabet/laboite/commit/4a18eea29490fa23f16692970d93ef91a59f0da6))
+* **bookmark:** add favorite on groups bookmarks ([64df3d4](https://gitlab.mim-libre.fr/alphabet/laboite/commit/64df3d4d0aa397c29285b640006f265f39f8eb10))
+* **bookmarks:** detect url in clipboard ([e919758](https://gitlab.mim-libre.fr/alphabet/laboite/commit/e919758666504ec886f899802a831daa7c006bf5))
+* **circles:** allow user to specify nextcloud share name ([383ce7e](https://gitlab.mim-libre.fr/alphabet/laboite/commit/383ce7ecf8327cd52e5c305cc81abae5642fa445))
+* **circles:** manage circle and share at group creation/removal ([fba0174](https://gitlab.mim-libre.fr/alphabet/laboite/commit/fba01743bd41a377c03f58fb3864345865de21ed))
+* **circles:** manage circle and share at group edition ([823f260](https://gitlab.mim-libre.fr/alphabet/laboite/commit/823f26012f783b52006494593a32c14bd253d6f6))
+* **circles:** remove groupfolders code from nextcloud plugin ([d54141a](https://gitlab.mim-libre.fr/alphabet/laboite/commit/d54141ac0ea76f6f0f9c443c6ea852eb22cdfe09))
+* **contact:** add backend for new contact settings ([013b248](https://gitlab.mim-libre.fr/alphabet/laboite/commit/013b2486fd5c9a6b5504c5f1da2b0712389b2aaf))
+* **contact:** add options to contact settings ([512670c](https://gitlab.mim-libre.fr/alphabet/laboite/commit/512670cd3c2aa5e0d63c67cc1f3aaaa13e5a388f))
+* **contact:** manage global admin warning ([1733ee1](https://gitlab.mim-libre.fr/alphabet/laboite/commit/1733ee19b57a165a0d54c8f3d30221ce8f36c31d))
+* **contact:** manage send of mail with new contact settings ([8cb0624](https://gitlab.mim-libre.fr/alphabet/laboite/commit/8cb0624d7bde7081609938d49ec13141d95e7b18))
+* **feedback:** add a feedback link in dropdown menu ([baccc88](https://gitlab.mim-libre.fr/alphabet/laboite/commit/baccc8890efcb982ce22fad558f05773f883e66f))
+* **file-transfer:** add drag and drop on widget to france-transfert ([70d5e66](https://gitlab.mim-libre.fr/alphabet/laboite/commit/70d5e664d70297a724bf680a48ffc95a16c8bf98))
+* **form:** add group link for form creation and answers ([464b359](https://gitlab.mim-libre.fr/alphabet/laboite/commit/464b3596f1026618e493e1e835be4e61d98412c7))
+* **globalinfo:** change db collection for globalinfos ([334231e](https://gitlab.mim-libre.fr/alphabet/laboite/commit/334231e0ada698221662d67430943110fde35b31))
+* **globalInfos:** add methods ([7341d27](https://gitlab.mim-libre.fr/alphabet/laboite/commit/7341d2794ce51eae923c0db01701b03ae0c7ceea))
+* **globalinfos:** add unitary test ([d66f33e](https://gitlab.mim-libre.fr/alphabet/laboite/commit/d66f33ea1ca473992ce12ff4b6a47e841d1f23df))
+* **globalinfos:** add unitary test for user table ([e4ea782](https://gitlab.mim-libre.fr/alphabet/laboite/commit/e4ea78281a144138d0ee1f4a7c8836939c1eff7a))
+* **globalinfos:** change expirationDate from timestamps to date object ([8134ad6](https://gitlab.mim-libre.fr/alphabet/laboite/commit/8134ad65aa8232db9fa1be656a0efdc93468f002))
+* **globalinfos:** clean code ([7a2642b](https://gitlab.mim-libre.fr/alphabet/laboite/commit/7a2642b4e0766b483db908a4f55663abb2d7868e))
+* **globalinfos:** fix redirect for english user ([dd20914](https://gitlab.mim-libre.fr/alphabet/laboite/commit/dd20914e83ac58c1b9c016f81ac52c17143d39fc))
+* **globalinfos:** remove old introductionpageand clean code ([4d98dbf](https://gitlab.mim-libre.fr/alphabet/laboite/commit/4d98dbfc923005d7610775503b840734eb9a6b96))
+* **i18n:** add translation in all pages ([37eb729](https://gitlab.mim-libre.fr/alphabet/laboite/commit/37eb7295406193b116bc97fdf84cd0814b861d95))
+* **info:** add style in admin page ([9bb175f](https://gitlab.mim-libre.fr/alphabet/laboite/commit/9bb175fa3699180fbea394227895494c168a6cd2))
+* **info:** add translations in admin menu ([3bebbc7](https://gitlab.mim-libre.fr/alphabet/laboite/commit/3bebbc70b2027964c14224c845387045be53e759))
+* **information:** add super style ([0a4baa7](https://gitlab.mim-libre.fr/alphabet/laboite/commit/0a4baa7edc05f287815140b1fb666ac5024a32e2))
+* **log:** add server logs in categories methods ([76db777](https://gitlab.mim-libre.fr/alphabet/laboite/commit/76db777179c6163c6de6d8b214a3c9d17ee3da9b))
+* **logs:** add error logs in appsettings methods ([0294b3b](https://gitlab.mim-libre.fr/alphabet/laboite/commit/0294b3b72b056761dbd1da904f64debb0704bbda))
+* **logs:** add logs in bookmarks methods ([72d234d](https://gitlab.mim-libre.fr/alphabet/laboite/commit/72d234d0d2608c3efa886ce0efbe717b265f9033))
+* **logs:** add logs in helps methods ([12eef9c](https://gitlab.mim-libre.fr/alphabet/laboite/commit/12eef9c5b0a753e35acbf94ed3014c63cc0a9462))
+* **logs:** add logs in latest migrations ([c7421b0](https://gitlab.mim-libre.fr/alphabet/laboite/commit/c7421b087b26f32ac8f2441a81d090e1095fd009))
+* **logs:** add logs in personalspace methods ([2aa20c9](https://gitlab.mim-libre.fr/alphabet/laboite/commit/2aa20c91ca946e25395af9b3f7e7d0d7341b172f))
+* **logs:** add logs in services methods ([dc2a2f8](https://gitlab.mim-libre.fr/alphabet/laboite/commit/dc2a2f858801851f683d399a588e2ca214c215f1))
+* **logs:** add logs in structures methods ([7517ecc](https://gitlab.mim-libre.fr/alphabet/laboite/commit/7517ecc2f6a0c7d4181999c92ea70b5dce691a88))
+* **logs:** add logs in tags methods ([a9da8cd](https://gitlab.mim-libre.fr/alphabet/laboite/commit/a9da8cd38d296a867f1080d7c67d7bd78bab29d6))
+* **logs:** add logs in users methods ([bf09220](https://gitlab.mim-libre.fr/alphabet/laboite/commit/bf092208f4c6ce4a80396097bec1a6ca5c9e9b9d))
+* **logs:** add missing server logs ([6d971bf](https://gitlab.mim-libre.fr/alphabet/laboite/commit/6d971bf76a1ee249eff502f54cef0ac4464df17c))
+* **logs:** add server error logs in asam methods ([b224c71](https://gitlab.mim-libre.fr/alphabet/laboite/commit/b224c717a461a28c717ab9cad951caf72d57d994))
+* **logs:** add server error logs in bookmark methods ([05905bb](https://gitlab.mim-libre.fr/alphabet/laboite/commit/05905bb9bf409a7abb8b0720151549cba4600695))
+* **logs:** add server error logs in groups methods ([4731c86](https://gitlab.mim-libre.fr/alphabet/laboite/commit/4731c8635c48335d987f1e8caa5f110faba9f43c))
+* **logs:** add server error logs in helps methods ([42a10f7](https://gitlab.mim-libre.fr/alphabet/laboite/commit/42a10f7ebe34ec3fa812dd56558a5e07f24758f5))
+* **logs:** add server error logs in tags methods ([1fb112c](https://gitlab.mim-libre.fr/alphabet/laboite/commit/1fb112cc8c3c301439047242af76fd82761ea140))
+* **logs:** add server log error in migration methods ([613a888](https://gitlab.mim-libre.fr/alphabet/laboite/commit/613a888e036bcab38a1d174a76e5dd9d9e7adab9))
+* **logs:** add server log error in nextcloud methods ([ee0f12a](https://gitlab.mim-libre.fr/alphabet/laboite/commit/ee0f12aa44e606a9bd3d6ec5c47618e0f85caf37))
+* **logs:** add server log error in personalspace methods ([3ddecec](https://gitlab.mim-libre.fr/alphabet/laboite/commit/3ddececf568348751498fad954abed76fe014fb2))
+* **logs:** add server log error in services methods ([52675b4](https://gitlab.mim-libre.fr/alphabet/laboite/commit/52675b4495375d0d83cdf66f883b315ba872dce9))
+* **logs:** add server log error in user methods ([bd32f05](https://gitlab.mim-libre.fr/alphabet/laboite/commit/bd32f05d6fa7057f534147b8a8fcde33cc53eccd))
+* **logs:** add server log error in userBookmark methods ([d7d701b](https://gitlab.mim-libre.fr/alphabet/laboite/commit/d7d701ba67b76ecca4c213477e8477a8cf588451))
+* **logs:** add server log error in utils methods ([9620794](https://gitlab.mim-libre.fr/alphabet/laboite/commit/9620794a0ba8b88c5a90a13822a26fc9b4addc5c))
+* **logs:** add server log errors in smtp methods ([1aed683](https://gitlab.mim-libre.fr/alphabet/laboite/commit/1aed68314f8bf8f25a16d8734ee2e8c16bda2b08))
+* **logs:** add server logs error in article methods ([61993ec](https://gitlab.mim-libre.fr/alphabet/laboite/commit/61993ec1eaddb9dbacbc69c7c411f0546e832ba3))
+* **logs:** add server logs error in bbbClient file ([1c24dc0](https://gitlab.mim-libre.fr/alphabet/laboite/commit/1c24dc0c674e3cee256aa719725d3102eaa20202))
+* **logs:** add server logs error in business methods ([239df0c](https://gitlab.mim-libre.fr/alphabet/laboite/commit/239df0c8dbfe77b178edb808c9ee5912cd54a50b))
+* **logs:** add server logs error in defaultspace methods ([dce3869](https://gitlab.mim-libre.fr/alphabet/laboite/commit/dce3869ee70b247e0d9ea749127b2494133c5fcc))
+* **logs:** add server logs error in files methods ([e1ab452](https://gitlab.mim-libre.fr/alphabet/laboite/commit/e1ab452f228ed9e3122fdfff589753712d3625b3))
+* **logs:** add server logs error in notification methods ([4d4e166](https://gitlab.mim-libre.fr/alphabet/laboite/commit/4d4e1668f8b6aa39be204c4ea7a87e8941c92fba))
+* **logs:** add server logs error in structure methods ([8b66418](https://gitlab.mim-libre.fr/alphabet/laboite/commit/8b6641869af23d5e3d3075451ec4426b8836c34e))
+* **logs:** add server logs errors in categories methods ([25aa872](https://gitlab.mim-libre.fr/alphabet/laboite/commit/25aa872502ac930669bd90ace249993942afaa74))
+* **logs:** add server logs in appsettings folder ([81fc553](https://gitlab.mim-libre.fr/alphabet/laboite/commit/81fc553d4f3a0ec6cefd8eaae4ea1509d52ef930))
+* **logs:** add server logs in asam methods ([fc5c33b](https://gitlab.mim-libre.fr/alphabet/laboite/commit/fc5c33bdfe33648c8a6321d8b1245efce6e3d1e7))
+* **logs:** add server logs in buisiness methods ([8e42620](https://gitlab.mim-libre.fr/alphabet/laboite/commit/8e426203ccf6fa2095f30438b34e5a63d61ffe19))
+* **logs:** add server logs in defaultspace methods ([3a81573](https://gitlab.mim-libre.fr/alphabet/laboite/commit/3a815736d75f17e549663db787d70fa610c6e1b7))
+* **logs:** add server logs in nextcloud methods ([a82bcd2](https://gitlab.mim-libre.fr/alphabet/laboite/commit/a82bcd285966ac9be641a7f26710318c90343272))
+* **logs:** add server logs on articles methods ([68af1c6](https://gitlab.mim-libre.fr/alphabet/laboite/commit/68af1c625551c72e63ddeb07bdedda654631c6d4))
+* **logs:** add server logs on bookmarks methods ([bb52071](https://gitlab.mim-libre.fr/alphabet/laboite/commit/bb52071157d88a8884727312d5dfc6e57555a78e))
+* **logs:** disable logs in unit tests ([9f3c610](https://gitlab.mim-libre.fr/alphabet/laboite/commit/9f3c610c9fbbd09f767bfa9652c2988d04ab5bf4))
+* **logs:** rework levels error in server logs ([5362ec5](https://gitlab.mim-libre.fr/alphabet/laboite/commit/5362ec5f4d0f12d13686f9261dbb3633c4008299))
+* **logs:** rework logs and delete unwanted comments ([97728c5](https://gitlab.mim-libre.fr/alphabet/laboite/commit/97728c5ad149fb19cf6c7b49e29079d95f184359))
+* **logs:** setup singleton for logger ([c21bee1](https://gitlab.mim-libre.fr/alphabet/laboite/commit/c21bee1cd3978aaf7397d27364083cbb0972322c))
+* **los:** add server logs in notification methods ([6e505c9](https://gitlab.mim-libre.fr/alphabet/laboite/commit/6e505c90275fb5356a35504d118d13f6820a1c47))
+* **mainlayout:** redirect user on infopage if new messages has come ([5fe22b3](https://gitlab.mim-libre.fr/alphabet/laboite/commit/5fe22b30de636527b34304843deab204aaabfbfe))
+* **menu:** change order and group menu entries in MenuBar ([eee00ea](https://gitlab.mim-libre.fr/alphabet/laboite/commit/eee00ea2dbb6651bc6a660f04ca223a154562c71))
+* **meteor:** change meteor base version ([5758130](https://gitlab.mim-libre.fr/alphabet/laboite/commit/5758130f4c13a073a8984fd361738e370a4caa30))
+* **nextcloud:** refactor nextcloud plugin using fetch API ([20e2e5b](https://gitlab.mim-libre.fr/alphabet/laboite/commit/20e2e5b4f8c0eb47db958a58ead8f1bb6048ec33))
+* **nextcloud:** use a specific user/password for circles and shares ([2fd2a1b](https://gitlab.mim-libre.fr/alphabet/laboite/commit/2fd2a1bf1535a2cdf0ec40fd439db73794fdeadf))
+* **onboarding:** add onboarding process ([0dda923](https://gitlab.mim-libre.fr/alphabet/laboite/commit/0dda923ce5ab1bb7b0c01c558e772517caefb6ee))
+* **onboarding:** use copyright free image ([de29286](https://gitlab.mim-libre.fr/alphabet/laboite/commit/de292864cc8e025003cb9851dc0057ae6caf70ab))
+* **service:** hide blog and mezig on addressbook if disabled ([34d069b](https://gitlab.mim-libre.fr/alphabet/laboite/commit/34d069b3be1c2ca3cca9ee9930811b27a83f98d1))
+* **service:** hide service card when url is empty ([14ecbdb](https://gitlab.mim-libre.fr/alphabet/laboite/commit/14ecbdbf0b983f89875d81a82714f91a477053ab))
+* **structures:** structure search is accent insensitive ([20f3d61](https://gitlab.mim-libre.fr/alphabet/laboite/commit/20f3d6182da5a38768768619089fef43d870beaf))
+* **style:** add style in test page ([d459b53](https://gitlab.mim-libre.fr/alphabet/laboite/commit/d459b5347aefceef1c48446f4d01a2626c03f5c2))
+* **tabs:** add style for form test in test page ([6037dd2](https://gitlab.mim-libre.fr/alphabet/laboite/commit/6037dd2c2ba321463f7f2cb8153c2e1549f3582e))
+* **theme:** add custom theme ([d8b82ff](https://gitlab.mim-libre.fr/alphabet/laboite/commit/d8b82ffbe6d216c1ca7b32a6cf8c96db43ff38fd))
+* **users:** display nextcloud id in button tooltip ([87e9bd7](https://gitlab.mim-libre.fr/alphabet/laboite/commit/87e9bd7c78184ef8b822ec2f780afdefe7fb457d))
+* **widget:** improve widget script ([99c34cf](https://gitlab.mim-libre.fr/alphabet/laboite/commit/99c34cf2e01bbdad9c61216451796868680f2c72))
+
+
+### Styles
+
+* **service-help-message:** delete space between placeholders ([1b33079](https://gitlab.mim-libre.fr/alphabet/laboite/commit/1b33079c083c2f64beb16da08645f728775a7081))
+
 # [5.4.0](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/5.3.0...release/5.4.0) (2023-04-28)
 
 

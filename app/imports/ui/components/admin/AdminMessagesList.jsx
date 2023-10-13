@@ -1,9 +1,10 @@
 import React from 'react';
 import i18n from 'meteor/universe:i18n';
 // eslint-disable-next-line no-restricted-imports
-import { Button, InputLabel, MenuItem, FormControl, Select, Paper, Chip } from '@mui/material';
+import { Button, InputLabel, MenuItem, FormControl, Select, Paper } from '@mui/material';
 import sanitizeHtml from 'sanitize-html';
 import PropTypes from 'prop-types';
+import { sanitizeParameters } from '../../../api/utils';
 
 export const AdminMessagesList = ({ messages, deleteMessage, selectMessageLanguage, selectMessageToUpdate }) => {
   const handleChangeMessageLanguage = (e) => {
@@ -52,11 +53,8 @@ export const AdminMessagesList = ({ messages, deleteMessage, selectMessageLangua
               width: '66vw',
             }}
           >
-            {message?.structureId?.length ? (
-              <Chip style={{ width: '40%' }} label="Ma super structure" color="primary" />
-            ) : null}
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(message?.content) }} />
+              <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(message?.content, sanitizeParameters) }} />
 
               <div
                 style={{
@@ -76,11 +74,10 @@ export const AdminMessagesList = ({ messages, deleteMessage, selectMessageLangua
                   {i18n.__('components.AdminMesssage.update_at')} {message?.updatedAt?.toLocaleDateString()}
                 </span>
                 <span>
-                  {i18n.__('components.AdminMesssage.expire_at')}
-                  {message?.expirationDate?.toLocaleDateString()}
+                  {i18n.__('components.AdminMesssage.expire_at')} {message?.expirationDate?.toLocaleDateString()}
                 </span>
                 <span>
-                  {i18n.__('components.AdminMesssage.select_language_form')}: {message?.language}
+                  {i18n.__('components.AdminMesssage.select_language_form')} : {message?.language}
                 </span>
               </div>
             </div>

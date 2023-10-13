@@ -190,12 +190,6 @@ Meteor.users.schema = new SimpleSchema(
       },
       label: getLabel('api.users.labels.ncloud'),
     },
-    articlesEnable: {
-      type: Boolean,
-      optional: true,
-      defaultValue: false,
-      label: getLabel('api.users.labels.articlesEnable'),
-    },
     authToken: {
       type: String,
       index: true,
@@ -247,11 +241,16 @@ Meteor.users.schema = new SimpleSchema(
 
 export const findStructureByEmail = (email) => {
   // split the email in two parts
-  const splittedEmail = email.split('@');
+  const splittedEmail = email ? email.split('@') : null;
   // remove first part to keep extension
-  splittedEmail.shift();
-  const emailExtension = AsamExtensions.findOne({ extension: splittedEmail.join('') });
-  if (typeof emailExtension !== 'undefined' && typeof emailExtension.structureId === 'string') {
+  if (Array.isArray(splittedEmail)) {
+    splittedEmail.shift();
+  }
+  const emailExtension =
+    splittedEmail && Array.isArray(splittedEmail)
+      ? AsamExtensions.findOne({ extension: splittedEmail.join('') })
+      : null;
+  if (emailExtension && typeof emailExtension !== 'undefined' && typeof emailExtension.structureId === 'string') {
     return Structures.findOne({ _id: emailExtension.structureId });
   }
   return undefined;
@@ -261,6 +260,8 @@ if (Meteor.isServer) {
   Accounts.onCreateUser((options, user) => {
     // pass the structure name in the options
     const newUser = { ...user };
+    let email = user.emails && user.emails.length > 0 ? user.emails[0].address : null;
+
     if (user.services && user.services.keycloak) {
       logServer(
         `USERS - API - CREATE - Creating new user after Keycloak authentication :
@@ -269,19 +270,24 @@ if (Meteor.isServer) {
         scopes.SYSTEM,
       );
 
-      const structure = findStructureByEmail(user.services.keycloak.email);
-      if (structure) {
-        // If we have a structure, assign it to user and make them directly active
-        newUser.structure = structure._id;
-        newUser.isActive = true;
-      }
-
-      newUser.emails = [{ address: user.services.keycloak.email, verified: true }];
+      email = user.services.keycloak.email;
     }
+
+    const structure = findStructureByEmail(email);
+
+    if (structure) {
+      // If we have a structure, assign it to user and make them directly active
+      newUser.structure = structure._id;
+      newUser.isActive = true;
+    }
+
+    newUser.emails = [{ address: email, verified: true }];
+
     if (options.firstName) newUser.firstName = options.firstName;
     if (options.lastName) newUser.lastName = options.lastName;
     if (options.structure) newUser.structure = options.structure;
     if (options.profile) newUser.profile = options.profile;
+    if (options.primaryEmail) newUser.primaryEmail = options.primaryEmail;
 
     return newUser;
   });
@@ -335,7 +341,6 @@ Meteor.users.selfFields = {
   groupQuota: 1,
   nclocator: 1,
   advancedPersonalPage: 1,
-  articlesEnable: 1,
   lastGlobalInfoReadDate: 1,
 };
 
@@ -354,7 +359,6 @@ Meteor.users.adminFields = {
   groupCount: 1,
   groupQuota: 1,
   nclocator: 1,
-  articlesEnable: 1,
 };
 
 Meteor.users.publicFields = {
@@ -373,7 +377,6 @@ Meteor.users.publicFields = {
   groupQuota: 1,
   mezigName: 1,
   nclocator: 1,
-  articlesEnable: 1,
 };
 
 Meteor.users.deny({

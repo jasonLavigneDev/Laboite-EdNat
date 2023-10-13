@@ -135,6 +135,8 @@ const ExternalServiceGroupPage = ({ loading, group, slug, service }) => {
 
   const userInGroup = Roles.userIsInRole(userId, ['member', 'animator', 'admin'], group._id);
 
+  const isAdmin = Roles.userIsInRole(userId, 'admin', group._id);
+
   const inputRef = useRef(null);
   const handleChangePage = (event, value) => {
     changePage(value);
@@ -183,7 +185,9 @@ const ExternalServiceGroupPage = ({ loading, group, slug, service }) => {
     if (service === 'events')
       return `${testMeteorSettingsUrl(Meteor.settings.public.services.agendaUrl)}/event/${item._id}`;
     if (service === 'forms')
-      return `${testMeteorSettingsUrl(Meteor.settings.public.services.questionnaireURL)}/visualizer/${item._id}`;
+      return `${testMeteorSettingsUrl(Meteor.settings.public.services.questionnaireURL)}/visualizer/${
+        item._id
+      }?autologin`;
     return '';
   };
 
@@ -268,6 +272,13 @@ const ExternalServiceGroupPage = ({ loading, group, slug, service }) => {
     return i18n.__(`pages.ExtService.title.${service}`);
   };
 
+  const userCanAddElement = () => {
+    if (group.type === 15) {
+      return isAdmin;
+    }
+    return true;
+  };
+
   return (
     <Fade in>
       <Container className={classes.root}>
@@ -315,7 +326,7 @@ const ExternalServiceGroupPage = ({ loading, group, slug, service }) => {
                     ) : null,
                   }}
                 />
-                {userInGroup && (
+                {userInGroup && userCanAddElement() && (
                   <IconButton
                     onClick={() => window.open(getUrlForAdd(), '_blank')}
                     size="large"

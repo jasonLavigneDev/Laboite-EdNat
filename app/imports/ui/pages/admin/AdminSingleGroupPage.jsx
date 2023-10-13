@@ -145,7 +145,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
 
   const [plugins, setPlugins] = useState({}); // { nextcloud: false, rocketChat: true}
   const [{ isMobile }] = useAppContext();
-  const { groupPlugins } = Meteor.settings.public;
+  const { groupPlugins, hideGroupPlugins } = Meteor.settings.public;
   const history = useHistory();
   const { classes } = useStyles();
 
@@ -248,9 +248,9 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
     });
   };
   const onAssignAvatar = (avatarObj, groupName) => {
-    // avatarObj = {image: base64... or url: http...}
-    if (avatarObj.image) {
-      SendNewAvatarToMedia(avatarObj.image, groupName);
+    // avatarObj = [{image: base64...}] or {url: http...}
+    if (avatarObj?.[0]?.image) {
+      SendNewAvatarToMedia(avatarObj[0].image, groupName);
     } else if (avatarObj.url !== group.avatar) {
       setGroupData({ ...groupData, avatar: avatarObj.url });
     }
@@ -367,7 +367,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
     .reduce((acculator, currentValue) => acculator && currentValue, true);
 
   const groupPluginsShow = (plugin) => {
-    if (groupPlugins[plugin].enable) {
+    if (groupPlugins[plugin].enable && !hideGroupPlugins) {
       return (
         <FormGroup key={plugin}>
           <FormControlLabel

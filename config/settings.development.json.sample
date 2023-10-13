@@ -8,13 +8,13 @@
     "theme": "laboite",
     "keycloackPopupStyle": false,
     "keycloackPopupStyleIframe": false,
+    "loginWithTokenUrls": "http://localhost",
     "disabledFeatures": {
       "blog": false,
       "notificationsTab": false,
       "groups": false,
       "analytics": false,
       "introductionTab": false,
-      "introductionTabStructuresInfos": true,
       "menuAdminDefaultSpaces": true,  // THIS PARAMS IS SET FOR HIDDEN DEFAULTSPACE FUNCTIONNALITY WHICH DOESN'T WORK
       "mediaStorageMenu": false,
       "bookmarksFromClipboard": false,
@@ -37,7 +37,6 @@
       "url": "https://countly.url.fr",
       "consent": true,
     },
-    "laboiteBlogURL": "",
     "enableBBB": false,
     "BBBUrl": "",
     "minioPort": null,
@@ -59,6 +58,7 @@
       "group": null,
       "default": null
     },
+    "hideGroupPlugins": false,
     "groupPlugins": {
       "rocketChat": {
         "enable": false,
@@ -119,6 +119,7 @@
       ""
     ],
     "createUserApiKeys": [],
+    "createUserTokenApiKeys": [],
     "BBBSecret": "",
     "whiteDomains": [
       "^ac-[a-z-]*\\.fr",
