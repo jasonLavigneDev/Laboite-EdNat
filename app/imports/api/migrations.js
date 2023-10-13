@@ -798,15 +798,3 @@ Migrations.add({
     // no rollback on this step
   },
 });
-
-Migrations.add({
-  version: 33,
-  name: 'Remove articlesEnable field for users',
-  up: () => {
-    logServer(`MIGRATIONS - 33 Remove articlesEnable field for user - USERS - UPDATE`, levels.INFO, scopes.SYSTEM);
-    Meteor.users.rawCollection().updateMany({}, { $unset: { articlesEnable: 1 } });
-  },
-  down: () => {
-    Meteor.users.rawCollection().updateMany({}, { $set: { articlesEnable: false } });
-  },
-});
