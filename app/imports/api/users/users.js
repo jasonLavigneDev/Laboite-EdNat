@@ -310,7 +310,7 @@ export const searchMatchingStructure = (structureObject, apiKey, tabApiKeys, tab
   let isMatchingWithParent = false;
   let result = findStructureAllowed(structureObject, apiKey, tabApiKeys, tabApiKeysByStructure);
   if (!result) {
-    if (structureObject.parentId !== null) {
+    if (structureObject.parentId) {
       isMatchingWithParent = isMatchingStructureWithParent(
         structureObject.parentId,
         apiKey,
