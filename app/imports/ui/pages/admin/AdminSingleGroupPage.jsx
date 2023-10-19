@@ -149,7 +149,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
   const history = useHistory();
   const { classes } = useStyles();
 
-  const [{ userId }] = useAppContext();
+  const [{ user, userId }] = useAppContext();
   const isAdmin = Roles.userIsInRole(userId, 'admin', params._id);
   const canDelete = (isAdmin || group.owner === userId) && !isAutomaticGroup;
 
@@ -484,6 +484,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
                   group={groupData}
                   onAssignAvatar={onAssignAvatar}
                   profil="true"
+                  userActive={user.isActive}
                 />
               </Grid>
             </Grid>
