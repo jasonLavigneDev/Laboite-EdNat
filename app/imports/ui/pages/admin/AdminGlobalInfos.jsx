@@ -48,7 +48,7 @@ const AdminGlobalInfos = ({ structure = false }) => {
   };
 
   const deleteMessage = (messageId) => {
-    Meteor.call('globalInfos.deleteGlobalInfo', { messageId }, (error) => {
+    Meteor.call('globalInfos.deleteGlobalInfo', { messageId, structure }, (error) => {
       if (!error) {
         const restMessages = messages.filter((message) => message._id !== messageId);
         msg.success('Message supprimé');
@@ -73,6 +73,7 @@ const AdminGlobalInfos = ({ structure = false }) => {
         content: messageUpdated.content,
         language: messageUpdated.language,
         expirationDate: messageUpdated.expirationDate,
+        structure,
       },
       (error, res) => {
         if (!error) {

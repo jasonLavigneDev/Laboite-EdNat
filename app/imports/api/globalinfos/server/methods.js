@@ -155,11 +155,19 @@ export const deleteGlobalInfo = new ValidatedMethod({
     messageId: {
       type: String,
     },
+    structure: {
+      type: Boolean,
+      defaultValue: false,
+    },
   }).validator({ clean: true }),
 
-  run({ messageId }) {
+  run({ messageId, structure }) {
     try {
-      const authorized = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
+      const structId = Meteor.users.findOne(this.userId)?.structure;
+      const authorized =
+        isActive(this.userId) && structure
+          ? Roles.userIsInRole(this.userId, 'adminStructure', structId)
+          : Roles.userIsInRole(this.userId, 'admin');
       if (!authorized) {
         throw new Meteor.Error(
           'api.appsettings.updateIntroductionLanguage.notPermitted',
@@ -189,9 +197,13 @@ export const updateGlobalInfo = new ValidatedMethod({
     id: {
       type: String,
     },
+    structure: {
+      type: Boolean,
+      defaultValue: false,
+    },
   }).validator({ clean: true }),
 
-  run({ language, content, expirationDate, id }) {
+  run({ language, content, expirationDate, id, structure }) {
     if (language) validateString(language, true);
     let sanitizedContent = '';
     if (content) {
@@ -199,7 +211,11 @@ export const updateGlobalInfo = new ValidatedMethod({
       validateString(sanitizedContent);
     }
     try {
-      const authorized = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
+      const structId = Meteor.users.findOne(this.userId)?.structure;
+      const authorized =
+        isActive(this.userId) && structure
+          ? Roles.userIsInRole(this.userId, 'adminStructure', structId)
+          : Roles.userIsInRole(this.userId, 'admin');
       if (!authorized) {
         throw new Meteor.Error(
           'api.appsettings.updateIntroductionLanguage.notPermitted',
