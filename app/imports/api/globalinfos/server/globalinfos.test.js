@@ -241,6 +241,43 @@ describe('globalinfos', function () {
       });
     });
 
+    describe('deleteStructureInfo', function () {
+      it('does deleteinfo with adminStructure user', function () {
+        createGlobalInfo._execute({ userId: admin2Id }, { ...structInfo, structure: true });
+        const newglobalInfo = {
+          ...newInfo,
+          language: 'fr',
+        };
+        const messageToDelete = createGlobalInfo._execute({ userId: admin2Id }, { ...newglobalInfo, structure: true });
+        const allInfosBefore = getAllGlobalInfo._execute({}, { structure: true });
+        assert.equal(allInfosBefore.length, 2);
+        deleteGlobalInfo._execute({ userId: admin2Id }, { messageId: messageToDelete._id, structure: true });
+        const allInfos = getAllGlobalInfo._execute({}, { structure: true });
+        assert.equal(allInfos.length, 1);
+      });
+
+      it("does not delete a structure message if you're not adminStructure", function () {
+        createGlobalInfo._execute({ userId: admin2Id }, { ...defaultInfo, structure: true });
+        const messageToDelete = createGlobalInfo._execute({ userId: admin2Id }, { ...newInfo, structure: true });
+
+        // Throws if non adminStructure user, or logged out user, tries to delete the structure info
+        assert.throws(
+          () => {
+            deleteGlobalInfo._execute({ userId }, { messageId: messageToDelete._id, structure: true });
+          },
+          Meteor.Error,
+          /api.appsettings.updateIntroductionLanguage.notPermitted/,
+        );
+        assert.throws(
+          () => {
+            deleteGlobalInfo._execute({}, { messageId: messageToDelete._id, structure: true });
+          },
+          Meteor.Error,
+          /api.appsettings.updateIntroductionLanguage.notPermitted/,
+        );
+      });
+    });
+
     describe('updateGlobalInfos', function () {
       it('does update info with admin user', function () {
         createGlobalInfo._execute({ userId: adminId }, { ...defaultInfo });
@@ -274,6 +311,46 @@ describe('globalinfos', function () {
         assert.throws(
           () => {
             updateGlobalInfo._execute({}, { ...newglobalInfo });
+          },
+          Meteor.Error,
+          /api.appsettings.updateIntroductionLanguage.notPermitted/,
+        );
+      });
+    });
+
+    describe('updateStructureInfos', function () {
+      it('does update info with adminStructure user', function () {
+        createGlobalInfo._execute({ userId: admin2Id }, { ...structInfo, structure: true });
+        const messageToUpdate = createGlobalInfo._execute({ userId: admin2Id }, { ...newInfo, structure: true });
+        const newglobalInfo = {
+          language: messageToUpdate.language,
+          content: 'updated Message',
+          expirationDate: messageToUpdate.expirationDate,
+          id: messageToUpdate._id,
+        };
+        const updatedInfo = updateGlobalInfo._execute({ userId: admin2Id }, { ...newglobalInfo, structure: true });
+        assert.equal(updatedInfo.content, newglobalInfo.content);
+      });
+      it("does not update a structure info if you're not adminStructure", function () {
+        createGlobalInfo._execute({ userId: admin2Id }, { ...defaultInfo, structure: true });
+        const messageToUpdate = createGlobalInfo._execute({ userId: admin2Id }, { ...newInfo, structure: true });
+        const newglobalInfo = {
+          language: messageToUpdate.language,
+          content: 'updated Message',
+          expirationDate: messageToUpdate.expirationDate,
+          id: messageToUpdate._id,
+        };
+
+        assert.throws(
+          () => {
+            updateGlobalInfo._execute({ userId }, { ...newglobalInfo, structure: true });
+          },
+          Meteor.Error,
+          /api.appsettings.updateIntroductionLanguage.notPermitted/,
+        );
+        assert.throws(
+          () => {
+            updateGlobalInfo._execute({}, { ...newglobalInfo, structure: true });
           },
           Meteor.Error,
           /api.appsettings.updateIntroductionLanguage.notPermitted/,
