@@ -240,7 +240,7 @@ const PersonalZone = ({
         setIsExpanded(!localIsExpanded);
       }
     },
-    [],
+    [localIsExpanded],
   );
 
   const handleNeedUpdate = useCallback(() => {
