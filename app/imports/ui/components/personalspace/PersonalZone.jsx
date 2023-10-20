@@ -1,4 +1,4 @@
-import React, { forwardRef, useCallback, useState } from 'react';
+import React, { forwardRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import sanitizeHtml from 'sanitize-html';
@@ -201,51 +201,42 @@ const PersonalZone = ({
     [userId],
   );
 
-  const handleKeyDownTitle = useCallback((event) => {
+  const handleKeyDownTitle = (event) => {
     const enterKey = 13;
     if (event.which === enterKey) {
       event.preventDefault();
       event.target.blur();
     }
-  }, []);
+  };
 
-  const handleBlurTitle = useCallback(
-    (zoneIndex) => (event) => {
-      let newTitle = event.target.innerText;
-      if (newTitle === '') {
-        newTitle = `${i18n.__('pages.PersonalPage.newZone')}-${zoneIndex}`;
-      }
-      setTitle(zoneIndex, newTitle);
-    },
-    [],
-  );
+  const handleBlurTitle = (zoneIndex) => (event) => {
+    let newTitle = event.target.innerText;
+    if (newTitle === '') {
+      newTitle = `${i18n.__('pages.PersonalPage.newZone')}-${zoneIndex}`;
+    }
+    setTitle(zoneIndex, newTitle);
+  };
 
-  const handleSelectTitle = useCallback(
-    (zoneIndex) => () => {
-      const elm = document.getElementById(`title-${zoneIndex}`);
-      const range = document.createRange();
-      range.selectNodeContents(elm);
-      const sel = window.getSelection();
-      sel.removeAllRanges();
-      sel.addRange(range);
-    },
-    [],
-  );
+  const handleSelectTitle = (zoneIndex) => () => {
+    const elm = document.getElementById(`title-${zoneIndex}`);
+    const range = document.createRange();
+    range.selectNodeContents(elm);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+  };
 
-  const handleClickExpansion = useCallback(
-    (zoneIndex) => () => {
-      if (isSorted) {
-        setExpanded(zoneIndex);
-      } else {
-        setIsExpanded(!localIsExpanded);
-      }
-    },
-    [],
-  );
+  const handleClickExpansion = (zoneIndex) => () => {
+    if (isSorted) {
+      setExpanded(zoneIndex);
+    } else {
+      setIsExpanded(!localIsExpanded);
+    }
+  };
 
-  const handleNeedUpdate = useCallback(() => {
+  const handleNeedUpdate = () => {
     needUpdate();
-  }, [needUpdate]);
+  };
 
   return (
     <Accordion

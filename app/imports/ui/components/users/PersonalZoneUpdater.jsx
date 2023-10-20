@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback, useMemo } from 'react';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { Meteor } from 'meteor/meteor';
 import { Random } from 'meteor/random';
 import PropTypes from 'prop-types';
@@ -155,67 +155,60 @@ function PersonalZoneUpdater({
   const { classes } = useStyles(isMobile)();
   const inputRef = useRef(null);
 
-  const updateSearch = useCallback((e) => {
+  const updateSearch = (e) => {
     setSearch(e.target.value);
-  }, []);
-  const checkEscape = useCallback((e) => {
+  };
+  const checkEscape = (e) => {
     if (e.keyCode === 27) {
       // ESCAPE key
       setSearchToggle(false);
       setSearch('');
     }
-  }, []);
-  const resetSearch = useCallback(() => setSearch(''), []);
-  const toggleSearch = useCallback(() => setSearchToggle(!searchToggle), []);
+  };
+  const resetSearch = () => setSearch('');
+  const toggleSearch = () => setSearchToggle(!searchToggle);
 
-  const filterSearch = useCallback(
-    (element) => {
-      if (!search) return true;
-      let sourceText = '';
+  const filterSearch = (element) => {
+    if (!search) return true;
+    let sourceText = '';
 
-      switch (element.type) {
-        case 'service': {
-          const service = Services.findOne(element.element_id);
-          sourceText = service?.title || '';
-          break;
-        }
-        case 'group': {
-          const group = Groups.findOne(element.element_id);
-          sourceText = group?.name || '';
-          break;
-        }
-        case 'link': {
-          const userBookmark = UserBookmarks.findOne(element.element_id);
-          sourceText = userBookmark ? `${userBookmark.name} ${userBookmark.url}` : '';
-          break;
-        }
-        case 'groupLink': {
-          const bookmark = Bookmarks.findOne(element.element_id);
-          sourceText = bookmark ? `${bookmark.name} ${bookmark.url}` : '';
-          break;
-        }
-        default:
-          sourceText = '';
-          break;
+    switch (element.type) {
+      case 'service': {
+        const service = Services.findOne(element.element_id);
+        sourceText = service?.title || '';
+        break;
       }
+      case 'group': {
+        const group = Groups.findOne(element.element_id);
+        sourceText = group?.name || '';
+        break;
+      }
+      case 'link': {
+        const userBookmark = UserBookmarks.findOne(element.element_id);
+        sourceText = userBookmark ? `${userBookmark.name} ${userBookmark.url}` : '';
+        break;
+      }
+      case 'groupLink': {
+        const bookmark = Bookmarks.findOne(element.element_id);
+        sourceText = bookmark ? `${bookmark.name} ${bookmark.url}` : '';
+        break;
+      }
+      default:
+        sourceText = '';
+        break;
+    }
 
-      return sourceText.toLowerCase().includes(search.toLowerCase());
-    },
-    [search],
-  );
+    return sourceText.toLowerCase().includes(search.toLowerCase());
+  };
 
-  const filterLink = useCallback((element) => element.type === 'link', []);
-  const filterGroupLink = useCallback((element) => element.type === 'groupLink', []);
-  const filterGroup = useCallback((element) => element.type === 'group', []);
-  const filterService = useCallback(
-    (element) => element.type === 'service' && Services.findOne({ _id: element.element_id })?.state !== 10,
-    [],
-  );
+  const filterLink = (element) => element.type === 'link';
+  const filterGroupLink = (element) => element.type === 'groupLink';
+  const filterGroup = (element) => element.type === 'group';
+  const filterService = (element) =>
+    element.type === 'service' && Services.findOne({ _id: element.element_id })?.state !== 10;
 
-  const doNotDisplayHidenServices = useCallback(
-    (element) => filterService(element) || filterGroup(element) || filterLink(element) || filterGroupLink(element),
-    [filterLink, filterGroupLink, filterGroup, filterService],
-  );
+  const doNotDisplayHidenServices = (element) =>
+    filterService(element) || filterGroup(element) || filterLink(element) || filterGroupLink(element);
 
   // focus on search input when it appears
   useEffect(() => {
@@ -224,14 +217,14 @@ function PersonalZoneUpdater({
     }
   }, [searchToggle]);
 
-  const handleCustomDrag = useCallback((event) => {
+  const handleCustomDrag = (event) => {
     setCustomDrag(event.target.checked);
 
     if (event.target.checked) {
       setSearchToggle(false);
       setSearch('');
     }
-  }, []);
+  };
 
   useEffect(() => {
     if (personalspace && allServices && allGroups && allLinks && allGroupLinks) {
@@ -250,7 +243,7 @@ function PersonalZoneUpdater({
     }
   }, [personalspace]);
 
-  const updatePersonalSpace = useCallback(() => {
+  const updatePersonalSpace = () => {
     if (edition) {
       handleEditionData(localPS);
     } else {
@@ -260,7 +253,7 @@ function PersonalZoneUpdater({
         }
       });
     }
-  }, [handleEditionData]);
+  };
 
   const [psNeedUpdate, setPsNeedUpdate] = useState(false);
   useEffect(() => {
@@ -274,33 +267,26 @@ function PersonalZoneUpdater({
     return () => clearTimeout(timer);
   }, [psNeedUpdate]);
 
-  const setExpanded = useCallback((index) => {
+  const setExpanded = (index) => {
     if (typeof index === 'number') {
-      setLocalPS((prevPS) => {
-        const nextPS = { ...prevPS };
-
-        nextPS.sorted[index].isExpanded = !nextPS.sorted[index].isExpanded;
-
-        return nextPS;
-      });
+      const { sorted } = localPS;
+      sorted[index].isExpanded = !sorted[index].isExpanded;
+      setLocalPS({ ...localPS, sorted });
       setPsNeedUpdate(true);
     }
-  }, []);
+  };
 
-  const setZoneTitle = useCallback(
-    (index, title) => {
-      if (typeof index === 'number') {
-        const { sorted } = localPS;
+  const setZoneTitle = (index, title) => {
+    if (typeof index === 'number') {
+      const { sorted } = localPS;
 
-        if (sorted[index].name !== title) {
-          sorted[index].name = title.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
-          setLocalPS({ ...localPS, sorted });
-          setPsNeedUpdate(true);
-        }
+      if (sorted[index].name !== title) {
+        sorted[index].name = title.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+        setLocalPS({ ...localPS, sorted });
+        setPsNeedUpdate(true);
       }
-    },
-    [localPS],
-  );
+    }
+  };
 
   const setZoneList = (type) => (index) => (list) => {
     if (typeof index === 'number') {
@@ -356,25 +342,22 @@ function PersonalZoneUpdater({
     }
   };
 
-  const suspendUpdate = useCallback(() => {
+  const suspendUpdate = () => {
     // Called on onStart event of reactsortable zone
     setPsNeedUpdate(false); // will be true again on end drag event (updateList)
-  }, []);
+  };
 
-  const updateList = useCallback(() => {
+  const updateList = () => {
     // Called on onEnd event of reactsortable zone
     setPsNeedUpdate(true);
-  }, []);
+  };
 
-  const delZone = useCallback(
-    (index) => {
-      setLocalPS((prevPS) => {
-        return { ...prevPS, sorted: prevPS.sorted.splice(index, 1) };
-      });
-      setPsNeedUpdate(true);
-    },
-    [localPS],
-  );
+  const delZone = (index) => {
+    const { sorted } = localPS;
+    sorted.splice(index, 1);
+    setLocalPS({ ...localPS, sorted });
+    setPsNeedUpdate(true);
+  };
 
   const upZone = (zoneIndex) => {
     const { sorted } = localPS;
