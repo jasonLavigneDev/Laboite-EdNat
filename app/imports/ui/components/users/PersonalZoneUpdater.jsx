@@ -166,7 +166,7 @@ function PersonalZoneUpdater({
     }
   }, []);
   const resetSearch = useCallback(() => setSearch(''), []);
-  const toggleSearch = useCallback(() => setSearchToggle(!searchToggle), []);
+  const toggleSearch = useCallback(() => setSearchToggle(!searchToggle), [searchToggle]);
 
   const filterSearch = useCallback(
     (element) => {
@@ -260,7 +260,7 @@ function PersonalZoneUpdater({
         }
       });
     }
-  }, [handleEditionData]);
+  }, [handleEditionData, localPS, edition]);
 
   const [psNeedUpdate, setPsNeedUpdate] = useState(false);
   useEffect(() => {
@@ -274,18 +274,17 @@ function PersonalZoneUpdater({
     return () => clearTimeout(timer);
   }, [psNeedUpdate]);
 
-  const setExpanded = useCallback((index) => {
-    if (typeof index === 'number') {
-      setLocalPS((prevPS) => {
-        const nextPS = { ...prevPS };
-
-        nextPS.sorted[index].isExpanded = !nextPS.sorted[index].isExpanded;
-
-        return nextPS;
-      });
-      setPsNeedUpdate(true);
-    }
-  }, []);
+  const setExpanded = useCallback(
+    (index) => {
+      if (typeof index === 'number') {
+        const { sorted } = localPS;
+        sorted[index].isExpanded = !sorted[index].isExpanded;
+        setLocalPS({ ...localPS, sorted });
+        setPsNeedUpdate(true);
+      }
+    },
+    [localPS],
+  );
 
   const setZoneTitle = useCallback(
     (index, title) => {
@@ -368,9 +367,9 @@ function PersonalZoneUpdater({
 
   const delZone = useCallback(
     (index) => {
-      setLocalPS((prevPS) => {
-        return { ...prevPS, sorted: prevPS.sorted.splice(index, 1) };
-      });
+      const { sorted } = localPS;
+      sorted.splice(index, 1);
+      setLocalPS({ ...localPS, sorted });
       setPsNeedUpdate(true);
     },
     [localPS],
