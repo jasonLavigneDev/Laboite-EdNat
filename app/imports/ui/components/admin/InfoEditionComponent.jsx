@@ -7,7 +7,6 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
-import TextField from '@mui/material/TextField';
 import 'react-quill/dist/quill.snow.css';
 import Select from '@mui/material/Select';
 
@@ -157,8 +156,6 @@ const InfoEditionComponent = ({ tabkey, data = [] }) => {
         <CustomToolbarArticle />
         <ReactQuill id="content" value={content || ''} onChange={onUpdateRichText} {...quillOptions} />
       </div>
-      <InputLabel htmlFor="content">{i18n.__('components.InfoEditionComponent.due_date')}</InputLabel>
-      <TextField type="number" style={{ width: '50%' }} />
       {changes && (
         <div className={classes.buttonGroup}>
           <Button variant="contained" color="grey" onClick={onCancel} disabled={loading}>
