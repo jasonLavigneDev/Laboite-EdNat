@@ -798,3 +798,16 @@ Migrations.add({
     // no rollback on this step
   },
 });
+
+Migrations.add({
+  version: 33,
+  name: 'Fix all incomplete events',
+  up: () => {
+    logServer(`MIGRATIONS - 33 Fix all incomplete events - EVENTSAGENDA - UPDATE`, levels.INFO, scopes.SYSTEM);
+    const now = new Date();
+    EventsAgenda.rawCollection().updateMany({ updatedAt: null }, { $set: { updatedAt: now, createdAt: now } });
+  },
+  down: () => {
+    // no rollback on this step
+  },
+});
