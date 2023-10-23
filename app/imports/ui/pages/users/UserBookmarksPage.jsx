@@ -29,7 +29,7 @@ import Container from '@mui/material/Container';
 import { Roles } from 'meteor/alanning:roles';
 import add from '@mui/icons-material/Add';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import BrowserUpdatedIcon from '@mui/icons-material/BrowserUpdated';
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import Button from '@mui/material/Button';
 import LinearProgress from '@mui/material/LinearProgress';
 import { toast } from 'react-toastify';
@@ -453,7 +453,7 @@ function UserBookmarksPage({ loading, bookmarksList }) {
                   },
                 },
                 {
-                  icon: BrowserUpdatedIcon,
+                  icon: CloudDownloadIcon,
                   tooltip: i18n.__('pages.BookmarksPage.materialTableLocalization.body_exportTooltip'),
                   isFreeAction: true,
                   onClick: () => {
