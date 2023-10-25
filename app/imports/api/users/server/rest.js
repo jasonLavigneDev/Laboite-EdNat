@@ -16,13 +16,7 @@ export default async function createUser(req, content) {
   //      -H "Content-Type: application/json" \
   //      -d '{"username":"utilisateur1", "firstname":"", "lastname":"", "email":"", "structure":"" }' \   // avec structure passée en param
   //      http://localhost:3000/api/createuser
-  if (
-    'username' in content &&
-    'firstname' in content &&
-    'lastname' in content &&
-    'email' in content &&
-    'structure' in content
-  ) {
+  if ('username' in content && 'firstname' in content && 'lastname' in content && 'email' in content) {
     const emailUser = Accounts.findUserByEmail(content.email);
     if (emailUser) {
       logServer(`USERS - REST - ERROR - createUser - user already exists with this email`, levels.WARN, scopes.USER, {
@@ -51,11 +45,6 @@ export default async function createUser(req, content) {
         const structureByEmail = findStructureByEmail(content.email);
         if (structureByEmail) {
           userData.structure = structureByEmail._id;
-        } else {
-          throw new Meteor.Error(
-            'Structure not find, we cannot assign a structure to this user',
-            `Error encountered while creating user whith no structure`,
-          );
         }
       } else {
         const apiKey = req.headers['x-api-key'];
