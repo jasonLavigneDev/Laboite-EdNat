@@ -270,7 +270,7 @@ export const findStructureAllowed = (structureObject, apiKey, tabApiKeys, tabApi
     // eslint-disable-next-line no-restricted-syntax, no-plusplus
     for (let i = 0; i < tabApiKeys.length; i++) {
       // allow create user if there is no structure in structureInTab and apiKey is in tabApiKeys and tabApiKeysByStructure
-      if (key === tabApiKeys[i] && structuresInTab.length === 0) {
+      if (apiKey === tabApiKeys[i] && !(key === apiKey)) {
         isAllowed = true;
       }
       // check if the structure gave in curl request is in apiKey tab inside tabApiKeysByStructure
