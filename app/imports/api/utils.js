@@ -273,14 +273,6 @@ export const sanitizeParameters = {
   },
 };
 
-export const formatURL = (name) => {
-  let finalName = name;
-  if (!name.includes('://')) {
-    finalName = `https://${name}`;
-  }
-  return finalName;
-};
-
 export function template(content, options) {
   return Object.entries(options).reduce((acc, [key, value]) => {
     const re = new RegExp(`{{${key}}}`, 'g');
