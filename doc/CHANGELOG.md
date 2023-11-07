@@ -1,5 +1,69 @@
 # Changelog
 
+# [5.7.0](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/5.6.1...release/5.7.0) (2023-11-07)
+
+
+### Bug Fixes
+
+* **adminpage:** remove unused expiration date input ([3074433](https://gitlab.mim-libre.fr/alphabet/laboite/commit/307443338b642667be647cab4957709bfe2de65e))
+* **api:** generate basic user by API ([073280e](https://gitlab.mim-libre.fr/alphabet/laboite/commit/073280edaa716e380b07d9558629be42299558e5))
+* **avatar:** check if user is active ([9f3fdce](https://gitlab.mim-libre.fr/alphabet/laboite/commit/9f3fdceec048e2b63420c06a7dc1939194412865))
+* **env:** variable force cast to int ([208a6d4](https://gitlab.mim-libre.fr/alphabet/laboite/commit/208a6d413f3a893121283befca028271ebe5346d))
+* **eventsAgenda:** ensure updatedAt field is set on all events ([d81ede8](https://gitlab.mim-libre.fr/alphabet/laboite/commit/d81ede8918c4be8eb61bc9d4e251ae2c154dd6c7))
+* **globalInfos:** allow to edit and delete structure infos ([58e09e6](https://gitlab.mim-libre.fr/alphabet/laboite/commit/58e09e6b7f1ed6f925763ddc6ed38f67240d66bd))
+* **matomo:** call to Matomo trackPageView on App component ([be1bec1](https://gitlab.mim-libre.fr/alphabet/laboite/commit/be1bec19f70ed93e30f1174557aa9fa431211233))
+* **personalspace:** fix disappearing blocs after search ([6df6ba9](https://gitlab.mim-libre.fr/alphabet/laboite/commit/6df6ba949252b848bcecb7cb33547d200adc0c6b))
+* **personalSpace:** fix zone expand, deletion and search toggle ([1667c4a](https://gitlab.mim-libre.fr/alphabet/laboite/commit/1667c4a01bf7a24116cbcb99b28cb5fbb81999f9))
+* **personalspace:** hide empty zone by default ([6b439c3](https://gitlab.mim-libre.fr/alphabet/laboite/commit/6b439c3ae5990cd3959c02370a06e003ffdb989d))
+* **personalSpace:** remove useCallbacks as they break pSpace edition ([0368bec](https://gitlab.mim-libre.fr/alphabet/laboite/commit/0368bec0fbb8e447f862308892fa7bb0c7384a1d))
+* **provisionning:** ancestors and children fields for structure ([bec3687](https://gitlab.mim-libre.fr/alphabet/laboite/commit/bec368719f1f62ac0114f6df87ee21525f5f1a44))
+* **provisionning:** imports ([1b97e88](https://gitlab.mim-libre.fr/alphabet/laboite/commit/1b97e88e4c1bdf55cc58474288fdf704f61ff4b4))
+* **provisionning:** mongo uri ([0eaf7f9](https://gitlab.mim-libre.fr/alphabet/laboite/commit/0eaf7f9755f265f303c6db376963af171dbfbe3c))
+* **provisionning:** remove comment ([664d052](https://gitlab.mim-libre.fr/alphabet/laboite/commit/664d052fe9ca85da550ddfa5eb8edf78e0510379))
+* **provisionning:** structure generator for csv ([0d076f4](https://gitlab.mim-libre.fr/alphabet/laboite/commit/0d076f41e96c6e7e5b49ebd98675d8ab416f5a78))
+* **realm:** add user realm name as variable ([91554f9](https://gitlab.mim-libre.fr/alphabet/laboite/commit/91554f9b00298c370fb92c2d7189cce19949536b))
+* **requirement:** add dotenv to requirements ([a2bfb14](https://gitlab.mim-libre.fr/alphabet/laboite/commit/a2bfb14cba43cf3159cb9f9db4134434a69fe490))
+* **requirements:** add keykloak lib to list ([4849ae4](https://gitlab.mim-libre.fr/alphabet/laboite/commit/4849ae42cc66c3fe2ec29bcc37dbdbff51a40de4))
+* **sample:** update .env sample with good k3d value ([009a266](https://gitlab.mim-libre.fr/alphabet/laboite/commit/009a266362190a9686fe8a9f4a5bdeec18c2fa49))
+* **trad:** fix some translation problems in admin struc menu ([e76ae82](https://gitlab.mim-libre.fr/alphabet/laboite/commit/e76ae82b248a943a419e34f4d9269ca8fb1135ae))
+* **user:** add favservices field ([1d87046](https://gitlab.mim-libre.fr/alphabet/laboite/commit/1d870467cb912953d02e8f1f6db84a0974e1747d))
+* **username:** replace point in username ([96b70e5](https://gitlab.mim-libre.fr/alphabet/laboite/commit/96b70e5fec19750283700b0be57a043d706d14c6))
+* **username:** use username instead of mail ([c5f2090](https://gitlab.mim-libre.fr/alphabet/laboite/commit/c5f2090c0978202bf8dfaa95a4eaffe265478b2a))
+
+
+### Features
+
+* **article:** add no articles page message ([8a9cc69](https://gitlab.mim-libre.fr/alphabet/laboite/commit/8a9cc6928f6690fa2d3313ab1514b15871d6a755))
+* **blog:** delete enableArticle from user schema ([6cde847](https://gitlab.mim-libre.fr/alphabet/laboite/commit/6cde847426949354ff1cb114f17f5061c8ba6e3b))
+* **data:** add provisioning for structures and groups ([8fc82a9](https://gitlab.mim-libre.fr/alphabet/laboite/commit/8fc82a91fa407dd57bd85bd47a31544b2890b1ab))
+* **env:** add mongo db name as env ([325da93](https://gitlab.mim-libre.fr/alphabet/laboite/commit/325da931bf31b24b873c3c2f5d2142d028e9938c))
+* **privisionning:** improve mail extension generator ([0520d9f](https://gitlab.mim-libre.fr/alphabet/laboite/commit/0520d9f5df188c4ad37505c9ef2eaf0157097b57))
+* **profile:** publication tab is always enable for user ([a4fce9a](https://gitlab.mim-libre.fr/alphabet/laboite/commit/a4fce9a2bf5afd34752b6ee054c5882bdb937196))
+* **provisionning:** add mail extension ([cd64f7b](https://gitlab.mim-libre.fr/alphabet/laboite/commit/cd64f7b5fc96d8106518bc323cade26899012b11))
+* **provisionning:** add nb structures parameters ([8da9366](https://gitlab.mim-libre.fr/alphabet/laboite/commit/8da93662eb02d18d8af432e6a48a3e70af368f22))
+* **provisionning:** add nb structures parameters and .env file ([834f38d](https://gitlab.mim-libre.fr/alphabet/laboite/commit/834f38d93a77e0730f98512ad099cfc7db77ff38))
+* **provisionning:** add nb structures parameters and .env file ([01af381](https://gitlab.mim-libre.fr/alphabet/laboite/commit/01af38121245eb3511a0b844259036a4a15458dd))
+* **provisionning:** add option to use custom csv ([1df4f09](https://gitlab.mim-libre.fr/alphabet/laboite/commit/1df4f091fea878006bbea505d8f72a46b852fde5))
+* **provisionning:** add reset data option ([dbb9f21](https://gitlab.mim-libre.fr/alphabet/laboite/commit/dbb9f216c989ff34fdbb9c98de3bf869825a4653))
+* **provisionning:** add script to generate csv ([08a784b](https://gitlab.mim-libre.fr/alphabet/laboite/commit/08a784b3cd3e18f42c7791d1dc0fcddccbecb9bf))
+* **provisionning:** add script to generate users ([66c2159](https://gitlab.mim-libre.fr/alphabet/laboite/commit/66c2159cfeb89ee5c44cfb903f1159cd4d371eab))
+* **provisionning:** add script to insert data from csv ([cf0094a](https://gitlab.mim-libre.fr/alphabet/laboite/commit/cf0094a4e729c35c21c46373d059442133fb992f))
+* **provisionning:** add timestamp to log ([9ddb807](https://gitlab.mim-libre.fr/alphabet/laboite/commit/9ddb8070667b9b54396da1272dc3bdd0807d4001))
+* **provisionning:** add users repartition ([374f57f](https://gitlab.mim-libre.fr/alphabet/laboite/commit/374f57fd1d9da8e245bb14e7c7f8e850be343132))
+* **provisionning:** clear code ([9520975](https://gitlab.mim-libre.fr/alphabet/laboite/commit/9520975499aee888db1fdb7591c2ecaa6c8c8575))
+* **provisionning:** create user and add them to structure ([9058b4e](https://gitlab.mim-libre.fr/alphabet/laboite/commit/9058b4e40e2c700799985f64efec4624923f2e3c))
+* **provisionning:** edit .env file ([f71f029](https://gitlab.mim-libre.fr/alphabet/laboite/commit/f71f029d8b9fe2e04cfd9fd7adc0d6c54dc07732))
+* **provisionning:** improve add to structure, generate personalspaces ([5a0d321](https://gitlab.mim-libre.fr/alphabet/laboite/commit/5a0d3213bb7b37b2831a46eb347b7c573eb644f5))
+* **provisionning:** improve data deletion ([db7a9b5](https://gitlab.mim-libre.fr/alphabet/laboite/commit/db7a9b5c190f17eb220080fe28120f2acd408d3f))
+* **provisionning:** improve optional arguments use ([c144f91](https://gitlab.mim-libre.fr/alphabet/laboite/commit/c144f9193acaaee2d1be7e9949f25d791c3b5089))
+* **provisionning:** improve user deletion and user add in group ([9ef5c67](https://gitlab.mim-libre.fr/alphabet/laboite/commit/9ef5c67552b05565cbdbdd1fe4dccc45ae9e76b7))
+* **provisionning:** remove id from csv ([e2af1f1](https://gitlab.mim-libre.fr/alphabet/laboite/commit/e2af1f195843f24cb2e6322589684797fa722996))
+* **provisionning:** user deletion and creation improvement ([0b68f39](https://gitlab.mim-libre.fr/alphabet/laboite/commit/0b68f39f905847a881a3a7a53d4daef8c1af7d3e))
+* **roles:** add users role to group ([653e2e0](https://gitlab.mim-libre.fr/alphabet/laboite/commit/653e2e064ed6d3891c4f11e1b61bc808e68ce567))
+* **settings:** add missing documentation on app settings ([fa6e072](https://gitlab.mim-libre.fr/alphabet/laboite/commit/fa6e072b34bf8a7ddb4614f0246b505a3427f7e1))
+* **settings:** complete settings documentation ([83f620b](https://gitlab.mim-libre.fr/alphabet/laboite/commit/83f620b522c68b3e742ba87f6a5adb80e31bfa47))
+* **zones:** don't show mepty zones on searching ([e79255b](https://gitlab.mim-libre.fr/alphabet/laboite/commit/e79255b20784bd06a4e06b15db06785f64c9ab31))
+
 ## [5.6.1](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/5.6.0...release/5.6.1) (2023-10-02)
 
 
