@@ -282,6 +282,7 @@ describe('globalinfos', function () {
       it('does update info with admin user', function () {
         createGlobalInfo._execute({ userId: adminId }, { ...defaultInfo });
         const messageToUpdate = createGlobalInfo._execute({ userId: adminId }, { ...newInfo });
+        const { updatedAt } = messageToUpdate;
         const newglobalInfo = {
           language: messageToUpdate.language,
           content: 'updated Message',
@@ -290,6 +291,9 @@ describe('globalinfos', function () {
         };
         const updatedInfo = updateGlobalInfo._execute({ userId: adminId }, { ...newglobalInfo });
         assert.equal(updatedInfo.content, newglobalInfo.content);
+        assert.equal(updatedInfo.updatedAt.getTime(), updatedAt.getTime());
+        const publishedInfo = updateGlobalInfo._execute({ userId: adminId }, { ...newglobalInfo, publish: true });
+        assert.notEqual(publishedInfo.updatedAt.getTime(), updatedAt.getTime());
       });
       it("does not update a globalinfo if you're not admin", function () {
         createGlobalInfo._execute({ userId: adminId }, { ...defaultInfo });

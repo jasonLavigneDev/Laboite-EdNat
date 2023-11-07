@@ -32,13 +32,13 @@ export const AdminMessageForm = ({ createMessage, initialMessage, isOnUpdateMess
     setLanguage(initialMessage?.language || userLanguage);
   }, [initialMessage]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e, publish = false) => {
     e.preventDefault();
 
     if (content !== '') {
       if (isOnUpdateMessage) {
         const updatedMessage = { ...initialMessage, content, expirationDate, language };
-        updateMessage(updatedMessage);
+        updateMessage(updatedMessage, publish);
         closeModal();
         msg.success(i18n.__('components.AdminMesssage.update_info_success'));
       } else {
@@ -115,6 +115,15 @@ export const AdminMessageForm = ({ createMessage, initialMessage, isOnUpdateMess
           <Button variant="contained" onClick={handleSubmit} style={{ width: '10vw', marginTop: '2vh' }}>
             {action}
           </Button>
+          {isOnUpdateMessage ? (
+            <Button
+              variant="contained"
+              onClick={(evt) => handleSubmit(evt, true)}
+              style={{ width: '10vw', marginTop: '2vh' }}
+            >
+              {i18n.__('components.AdminMesssage.button_publish')}
+            </Button>
+          ) : null}
         </div>
       </form>
     </div>
