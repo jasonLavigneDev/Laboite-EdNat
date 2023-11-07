@@ -1149,40 +1149,6 @@ export const setActive = new ValidatedMethod({
   },
 });
 
-export const setArticlesEnable = new ValidatedMethod({
-  name: 'users.setArticlesEnable',
-  validate: null,
-
-  run() {
-    if (!this.userId) {
-      logServer(
-        `USERS - METHODS - METEOR ERROR - setArticlesEnable - ${i18n.__('api.users.mustBeLoggedIn')}`,
-        levels.WARN,
-        scopes.SYSTEM,
-      );
-      throw new Meteor.Error('api.users.toggleAdvancedPersonalPage.notPermitted', i18n.__('api.users.mustBeLoggedIn'));
-    }
-    // check user existence
-    const user = Meteor.users.findOne({ _id: this.userId });
-    if (user === undefined) {
-      logServer(
-        `USERS - METHODS - METEOR ERROR - setArticlesEnable - ${i18n.__('api.users.unknownUser')}`,
-        levels.ERROR,
-        scopes.SYSTEM,
-      );
-      throw new Meteor.Error('api.users.toggleAdvancedPersonalPage.unknownUser', i18n.__('api.users.unknownUser'));
-    }
-    const newValue = !(user.articlesEnable || false);
-    logServer(
-      `USERS - METHODS - UPDATE - setArticlesEnable (user meteor) - userId: ${this.userId} 
-      / articlesEnable: ${newValue}`,
-      levels.INFO,
-      scopes.SYSTEM,
-    );
-    Meteor.users.update(this.userId, { $set: { articlesEnable: newValue } });
-  },
-});
-
 export const unsetActive = new ValidatedMethod({
   name: 'users.unsetActive',
   validate: new SimpleSchema({
@@ -1348,7 +1314,6 @@ export const setLastGlobalInfoRead = new ValidatedMethod({
   }).validator(),
 
   run({ lastGlobalInfoReadDate }) {
-    console.log('lastGlobalInfoReadDate', lastGlobalInfoReadDate);
     if (!this.userId) {
       throw new Meteor.Error('api.users.setLanguage.notPermitted', i18n.__('api.users.mustBeLoggedIn'));
     }
@@ -1820,7 +1785,6 @@ const LISTS_METHODS = _.pluck(
   [
     setLastGlobalInfoRead,
     setStructure,
-    setArticlesEnable,
     setActive,
     removeUser,
     removeUserFromStructure,

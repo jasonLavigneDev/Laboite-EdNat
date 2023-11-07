@@ -1,0 +1,4 @@
+faker
+pymongo
+python-keycloak
+python-dotenv

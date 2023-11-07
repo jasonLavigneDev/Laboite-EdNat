@@ -102,7 +102,6 @@ const defaultState = {
   logoutType: '',
   avatar: '',
   advancedPersonalPage: false,
-  articlesEnable: false,
   nclocator: '',
 };
 
@@ -197,7 +196,7 @@ const ProfilePage = () => {
 
   const checkSubmitOk = () => {
     const errSum = Object.keys(errors).reduce((sum, name) => {
-      if (name === 'advancedPersonalPage' || name === 'articlesEnable') {
+      if (name === 'advancedPersonalPage') {
         // checkbox not concerned by errors
         return sum;
       }
@@ -220,7 +219,6 @@ const ProfilePage = () => {
       avatar: userData.avatar === '' || reset ? data.avatar : userData.avatar,
       advancedPersonalPage:
         userData.advancedPersonalPage === false || reset ? data.advancedPersonalPage : userData.advancedPersonalPage,
-      articlesEnable: userData.articlesEnable === false || reset ? data.articlesEnable : userData.articlesEnable,
       nclocator: data.nclocator || userData.nclocator,
     });
     if (reset === true) {
@@ -240,7 +238,6 @@ const ProfilePage = () => {
       userData.logoutType === user.logoutType &&
       userData.avatar === user.avatar &&
       userData.advancedPersonalPage === user.advancedPersonalPage &&
-      userData.articlesEnable === user.articlesEnable &&
       userData.nclocator === user.nclocator
     ) {
       msg.success(i18n.__('pages.ProfilePage.updateSuccess'));
@@ -358,14 +355,6 @@ const ProfilePage = () => {
         }
       });
     }
-    if (userData.articlesEnable !== user.articlesEnable) {
-      modifications = true;
-      Meteor.call('users.setArticlesEnable', {}, (error) => {
-        if (error) {
-          msg.error(error.message);
-        }
-      });
-    }
     if (modifications === false) msg.info(i18n.__('pages.ProfilePage.noModifications'));
   };
 
@@ -431,9 +420,9 @@ const ProfilePage = () => {
   };
 
   const onAssignAvatar = (avatarObj) => {
-    // avatarObj = {image: base64... or url: http...}
-    if (avatarObj.image) {
-      SendNewAvatarToMedia(avatarObj.image);
+    // avatarObj = [{image: base64...}] or {url: http...}
+    if (avatarObj?.[0]?.image) {
+      SendNewAvatarToMedia(avatarObj[0].image);
     } else if (avatarObj.url !== user.avatar) {
       setUserData({ ...userData, avatar: avatarObj.url });
     }
@@ -599,6 +588,7 @@ const ProfilePage = () => {
                     userAvatar={userData.avatar || ''}
                     userFirstName={userData.firstName || ''}
                     onAssignAvatar={onAssignAvatar}
+                    userActive={user.isActive}
                   />
                 </Grid>
               </Grid>
@@ -726,23 +716,6 @@ const ProfilePage = () => {
                 {Meteor.user().advancedPersonalPage && (
                   <FormHelperText>{i18n.__('pages.ProfilePage.advancedPersonalPageWarning')}</FormHelperText>
                 )}
-                {enableBlog && (
-                  <>
-                    <br />
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          id="articlesEnable"
-                          name="articlesEnable"
-                          checked={userData.articlesEnable}
-                          onChange={onCheckOption}
-                          inputProps={{ 'aria-label': 'primary checkbox' }}
-                        />
-                      }
-                      label={i18n.__('pages.ProfilePage.activateArticles')}
-                    />
-                  </>
-                )}
               </Grid>
             </Grid>
             <div className={classes.buttonGroup}>
@@ -755,31 +728,34 @@ const ProfilePage = () => {
             </div>
           </form>
         </Paper>
-        <Paper className={classes.root}>
-          <Typography variant={isMobile ? 'h4' : 'h5'}>
-            {i18n.__('pages.ProfilePage.ApplyDefaultSpace', { structName })}
-            <IconButton
-              onClick={handleExpandDefaultSpaceApplied}
-              sx={{
-                transform: !expandDefaultSpaceApplied ? 'rotate(0deg)' : 'rotate(180deg)',
-                marginTop: '-1vh',
-              }}
-            >
-              <ExpandMoreIcon />
-            </IconButton>
-          </Typography>
-          <Collapse collapsedSize={0} in={expandDefaultSpaceApplied}>
-            <p>
-              <b>{i18n.__('pages.ProfilePage.ApplyDefaultSpaceMessage')}</b>
-            </p>
+        {user.structure ? (
+          <Paper className={classes.root}>
+            <Typography variant={isMobile ? 'h4' : 'h5'}>
+              {i18n.__('pages.ProfilePage.ApplyDefaultSpace', { structName })}
+              <IconButton
+                onClick={handleExpandDefaultSpaceApplied}
+                sx={{
+                  transform: !expandDefaultSpaceApplied ? 'rotate(0deg)' : 'rotate(180deg)',
+                  marginTop: '-1vh',
+                }}
+              >
+                <ExpandMoreIcon />
+              </IconButton>
+            </Typography>
 
-            <Grid item xs={12} sm={6} md={6} className={classes.buttonWrapper}>
-              <Button variant="contained" onClick={applyDefaultSpace}>
-                {i18n.__('pages.ProfilePage.ApplyDefaultSpaceBtn', { structName })}
-              </Button>
-            </Grid>
-          </Collapse>
-        </Paper>
+            <Collapse collapsedSize={0} in={expandDefaultSpaceApplied}>
+              <p>
+                <b>{i18n.__('pages.ProfilePage.ApplyDefaultSpaceMessage')}</b>
+              </p>
+
+              <Grid item xs={12} sm={6} md={6} className={classes.buttonWrapper}>
+                <Button variant="contained" onClick={applyDefaultSpace}>
+                  {i18n.__('pages.ProfilePage.ApplyDefaultSpaceBtn', { structName })}
+                </Button>
+              </Grid>
+            </Collapse>
+          </Paper>
+        ) : null}
         {enableBlog && (
           <Paper className={classes.root}>
             <Typography variant={isMobile ? 'h4' : 'h5'} sx={{ width: '100%' }}>

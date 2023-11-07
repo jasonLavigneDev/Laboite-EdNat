@@ -13,7 +13,6 @@ import BusinessIcon from '@mui/icons-material/Business';
 import AppsIcon from '@mui/icons-material/Apps';
 import InfoIcon from '@mui/icons-material/Info';
 import Divider from '@mui/material/Divider';
-import { useAppContext } from '../../contexts/context';
 import updateDocumentTitle from '../../utils/updateDocumentTitle';
 
 const { disabledFeatures = {} } = Meteor.settings.public;
@@ -64,7 +63,6 @@ export const usePageChange = () => {
 
 const MenuBar = ({ mobile }) => {
   const { pathname } = useLocation();
-  const [{ user }] = useAppContext();
   const { classes } = useStyles(mobile);
   const handleClick = usePageChange();
 
@@ -130,13 +128,16 @@ const MenuBar = ({ mobile }) => {
       contentMobile: 'menuGroupesMobile',
       icon: <GroupIcon />,
       hidden: disabledFeatures.groups,
+      props: {
+        'data-tour-id': 'groups',
+      },
     },
   ];
   const T = i18n.createComponent('components.MenuBar');
   const [currentLink, setCurrentLink] = useState(false);
 
-  const finalLinks = links.filter(({ path, hidden }) => {
-    if (hidden || (path === '/publications' && !user.articlesEnable)) {
+  const finalLinks = links.filter(({ hidden }) => {
+    if (hidden) {
       return false;
     }
     return true;

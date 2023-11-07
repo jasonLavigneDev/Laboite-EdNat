@@ -260,6 +260,11 @@ function ArticlesPage({
               )}
             </Grid>
           )}
+          {total === 0 && (
+            <Grid className={classes.gridItem} item md={12} xs={1}>
+              <div style={{ display: 'flex', marginTop: '10vh' }}> {i18n.__('pages.ArticlesPage.noArticle')} </div>
+            </Grid>
+          )}
           {publicPage && <div className={classes.space} />}
         </Container>
       </Fade>

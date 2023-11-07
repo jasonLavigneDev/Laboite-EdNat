@@ -31,7 +31,6 @@ import {
   setAvatar,
   setNcloudUrlAll,
   toggleAdvancedPersonalPage,
-  setArticlesEnable,
   resetAuthToken,
   removeUserFromStructure,
   getUsersAdmin,
@@ -528,7 +527,7 @@ describe('users', function () {
       it('structure admin can set/unset a user as structure admin', function () {
         const email2 = faker.internet.email();
         const userId2 = Accounts.createUser({
-          email2,
+          email: email2,
           username: email2,
           password: 'toto',
           structure: 'test',
@@ -959,27 +958,6 @@ describe('users', function () {
         assert.throws(
           () => {
             toggleAdvancedPersonalPage._execute({}, {});
-          },
-          Meteor.Error,
-          /api.users.toggleAdvancedPersonalPage.notPermitted/,
-        );
-      });
-    });
-    describe('setArticlesEnable', function () {
-      it('users can toggle their articles option', function () {
-        let user = Meteor.users.findOne({ _id: userId });
-        assert.equal(user.articlesEnable, false);
-        setArticlesEnable._execute({ userId }, {});
-        user = Meteor.users.findOne({ _id: userId });
-        assert.equal(user.articlesEnable, true);
-        setArticlesEnable._execute({ userId }, {});
-        user = Meteor.users.findOne({ _id: userId });
-        assert.equal(user.articlesEnable, false);
-      });
-      it('only logged in users can set their articles option', function () {
-        assert.throws(
-          () => {
-            setArticlesEnable._execute({}, {});
           },
           Meteor.Error,
           /api.users.toggleAdvancedPersonalPage.notPermitted/,

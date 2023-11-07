@@ -8,6 +8,7 @@ import sanitizeHtml from 'sanitize-html';
 import { isActive, sanitizeParameters, validateString } from '../../utils';
 
 import GlobalInfos from '../globalInfo';
+import Structures from '../../structures/structures';
 
 export const createGlobalInfo = new ValidatedMethod({
   name: 'globalInfos.createGlobalInfo',
@@ -22,9 +23,13 @@ export const createGlobalInfo = new ValidatedMethod({
       type: Date,
       optional: false,
     },
+    structure: {
+      type: Boolean,
+      defaultValue: false,
+    },
   }).validator({ clean: true }),
 
-  run({ content, language, expirationDate }) {
+  run({ content, language, expirationDate, structure }) {
     if (language) validateString(language, true);
     let sanitizedContent = '';
     if (content) {
@@ -32,7 +37,11 @@ export const createGlobalInfo = new ValidatedMethod({
       validateString(sanitizedContent);
     }
     try {
-      const authorized = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
+      const structId = Meteor.users.findOne(this.userId)?.structure;
+      const authorized =
+        isActive(this.userId) && structure
+          ? Roles.userIsInRole(this.userId, 'adminStructure', structId)
+          : Roles.userIsInRole(this.userId, 'admin');
       if (!authorized) {
         throw new Meteor.Error(
           'api.appsettings.updateIntroductionLanguage.notPermitted',
@@ -46,6 +55,12 @@ export const createGlobalInfo = new ValidatedMethod({
         expirationDate,
       };
 
+      if (structure) {
+        const structName = Structures.findOne(structId).name;
+        newGlobalInfo.structureId = [structId];
+        newGlobalInfo.structureName = structName;
+      }
+
       const newId = GlobalInfos.insert(newGlobalInfo);
       return GlobalInfos.findOne({ _id: newId });
     } catch (error) {
@@ -56,11 +71,18 @@ export const createGlobalInfo = new ValidatedMethod({
 
 export const getAllGlobalInfo = new ValidatedMethod({
   name: 'globalInfos.getAllGlobalInfo',
-  validate: new SimpleSchema({}).validator({ clean: true }),
+  validate: new SimpleSchema({
+    structure: {
+      type: Boolean,
+      defaultValue: false,
+    },
+  }).validator({ clean: true }),
 
-  run() {
+  run({ structure }) {
     try {
-      return GlobalInfos.find({}).fetch();
+      const structId = Meteor.users.findOne(this.userId)?.structure;
+      const structQuery = structure ? { structureId: structId } : { structureId: [] };
+      return GlobalInfos.find(structQuery).fetch();
     } catch (error) {
       throw new Meteor.Error(error, error);
     }
@@ -73,12 +95,18 @@ export const getAllGlobalInfoByLanguage = new ValidatedMethod({
     language: {
       type: String,
     },
+    structure: {
+      type: Boolean,
+      defaultValue: false,
+    },
   }).validator({ clean: true }),
 
-  run({ language }) {
+  run({ language, structure }) {
     validateString(language, true);
     try {
-      return GlobalInfos.find({ language }).fetch();
+      const structId = Meteor.users.findOne(this.userId)?.structure;
+      const structQuery = structure ? { language, structureId: structId } : { language, structureId: [] };
+      return GlobalInfos.find(structQuery).fetch();
     } catch (error) {
       throw new Meteor.Error(error, error);
     }
@@ -99,8 +127,20 @@ export const getGlobalInfoByLanguageAndNotExpired = new ValidatedMethod({
   run({ language, date }) {
     validateString(language, true);
     try {
+      const structId = Meteor.users.findOne(this.userId)?.structure;
+      let structures = [];
+      if (structId) {
+        const parentStructs = Structures.findOne(structId).ancestorsIds;
+        structures = [structId, ...parentStructs];
+      }
       return GlobalInfos.find(
-        { $and: [{ language }, { expirationDate: { $gt: date } }] },
+        {
+          $and: [
+            { language },
+            { expirationDate: { $gt: date } },
+            { $or: [{ structureId: { $in: structures } }, { structureId: [] }] },
+          ],
+        },
         { sort: { updatedAt: -1 } },
       ).fetch();
     } catch (error) {
@@ -115,11 +155,19 @@ export const deleteGlobalInfo = new ValidatedMethod({
     messageId: {
       type: String,
     },
+    structure: {
+      type: Boolean,
+      defaultValue: false,
+    },
   }).validator({ clean: true }),
 
-  run({ messageId }) {
+  run({ messageId, structure }) {
     try {
-      const authorized = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
+      const structId = Meteor.users.findOne(this.userId)?.structure;
+      const authorized =
+        isActive(this.userId) && structure
+          ? Roles.userIsInRole(this.userId, 'adminStructure', structId)
+          : Roles.userIsInRole(this.userId, 'admin');
       if (!authorized) {
         throw new Meteor.Error(
           'api.appsettings.updateIntroductionLanguage.notPermitted',
@@ -149,9 +197,13 @@ export const updateGlobalInfo = new ValidatedMethod({
     id: {
       type: String,
     },
+    structure: {
+      type: Boolean,
+      defaultValue: false,
+    },
   }).validator({ clean: true }),
 
-  run({ language, content, expirationDate, id }) {
+  run({ language, content, expirationDate, id, structure }) {
     if (language) validateString(language, true);
     let sanitizedContent = '';
     if (content) {
@@ -159,15 +211,17 @@ export const updateGlobalInfo = new ValidatedMethod({
       validateString(sanitizedContent);
     }
     try {
-      const authorized = isActive(this.userId) && Roles.userIsInRole(this.userId, 'admin');
+      const structId = Meteor.users.findOne(this.userId)?.structure;
+      const authorized =
+        isActive(this.userId) && structure
+          ? Roles.userIsInRole(this.userId, 'adminStructure', structId)
+          : Roles.userIsInRole(this.userId, 'admin');
       if (!authorized) {
         throw new Meteor.Error(
           'api.appsettings.updateIntroductionLanguage.notPermitted',
           i18n.__('api.users.adminNeeded'),
         );
       }
-
-      console.log('expirationDate', expirationDate);
 
       const updatedGlobalInfo = {
         language,

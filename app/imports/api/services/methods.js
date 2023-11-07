@@ -187,6 +187,8 @@ export const favService = new ValidatedMethod({
     }
     const user = Meteor.users.findOne(this.userId);
     // store service in user favorite services
+    if (!user.favServices) user.favServices = [];
+
     if (user.favServices.indexOf(serviceId) === -1) {
       Meteor.users.update(this.userId, {
         $push: { favServices: serviceId },

@@ -165,12 +165,6 @@ export const filesupload = new ValidatedMethod({
 
         return result;
       }
-      logServer(
-        `FILES - METHODS - METEOR ERROR - filesupload - ${i18n.__('components.UploaderNotifier.fileTooLarge')}`,
-        levels.WARN,
-        scopes.SYSTEM,
-        { file, path, name, fileType, storage },
-      );
       throw new Meteor.Error(
         i18n.__('components.UploaderNotifier.fileTooLargeTitle'),
         `${i18n.__('components.UploaderNotifier.fileTooLarge')} ${size / 1000}ko`,

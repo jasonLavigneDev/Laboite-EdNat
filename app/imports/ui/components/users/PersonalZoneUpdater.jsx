@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { Meteor } from 'meteor/meteor';
 import { Random } from 'meteor/random';
 import PropTypes from 'prop-types';
@@ -133,6 +133,9 @@ const useStyles = (isMobile) =>
       justifyContent: 'flex-end',
     },
   }));
+
+const AUTOSAVE_INTERVAL = 3000;
+
 function PersonalZoneUpdater({
   personalspace,
   isLoading,
@@ -144,10 +147,10 @@ function PersonalZoneUpdater({
   edition,
   handleEditionData,
 }) {
-  const AUTOSAVE_INTERVAL = 3000;
   const [{ user, loadingUser, isMobile }] = useAppContext();
-  const [customDrag, setcustomDrag] = useState(false || edition);
+  const [customDrag, setCustomDrag] = useState(false || edition);
   const [search, setSearch] = useState('');
+  const [localPS, setLocalPS] = useState(personalspace);
   const [searchToggle, setSearchToggle] = useState(false);
   const { classes } = useStyles(isMobile)();
   const inputRef = useRef(null);
@@ -167,62 +170,46 @@ function PersonalZoneUpdater({
 
   const filterSearch = (element) => {
     if (!search) return true;
-    let searchText = '';
+    let sourceText = '';
+
     switch (element.type) {
       case 'service': {
         const service = Services.findOne(element.element_id);
-        searchText = service !== undefined ? service.title : '';
+        sourceText = service?.title || '';
         break;
       }
       case 'group': {
         const group = Groups.findOne(element.element_id);
-        searchText = group !== undefined ? group.name : '';
+        sourceText = group?.name || '';
         break;
       }
       case 'link': {
         const userBookmark = UserBookmarks.findOne(element.element_id);
-        searchText = userBookmark !== undefined ? `${userBookmark.name} ${userBookmark.url}` : '';
+        sourceText = userBookmark ? `${userBookmark.name} ${userBookmark.url}` : '';
         break;
       }
       case 'groupLink': {
-        const Bookmark = Bookmarks.findOne(element.element_id);
-        searchText = Bookmark !== undefined ? `${Bookmark.name} ${Bookmark.url}` : '';
+        const bookmark = Bookmarks.findOne(element.element_id);
+        sourceText = bookmark ? `${bookmark.name} ${bookmark.url}` : '';
         break;
       }
       default:
-        searchText = '';
+        sourceText = '';
         break;
     }
-    searchText = searchText.toLowerCase();
-    return searchText.indexOf(search.toLowerCase()) > -1;
+
+    return sourceText.toLowerCase().includes(search.toLowerCase());
   };
 
-  const filterLink = (element) => {
-    return element.type === 'link';
-  };
+  const filterLink = (element) => element.type === 'link';
+  const filterGroupLink = (element) => element.type === 'groupLink';
+  const filterGroup = (element) => element.type === 'group';
+  const filterService = (element) =>
+    element.type === 'service' && Services.findOne({ _id: element.element_id })?.state !== 10;
 
-  const filterGroupLink = (element) => {
-    return element.type === 'groupLink';
-  };
+  const doNotDisplayHidenServices = (element) =>
+    filterService(element) || filterGroup(element) || filterLink(element) || filterGroupLink(element);
 
-  const filterGroup = (element) => {
-    return element.type === 'group';
-  };
-
-  const filterService = (element) => {
-    if (element.type === 'service') {
-      const service = Services.findOne({ _id: element.element_id });
-      if (service?.state !== 10) {
-        // 10 = service hide //
-        return true;
-      }
-    }
-    return false;
-  };
-
-  const doNotDisplayHidenServices = (element) => {
-    return filterService(element) || filterGroup(element) || filterLink(element) || filterGroupLink(element);
-  };
   // focus on search input when it appears
   useEffect(() => {
     if (inputRef.current && searchToggle) {
@@ -231,14 +218,14 @@ function PersonalZoneUpdater({
   }, [searchToggle]);
 
   const handleCustomDrag = (event) => {
+    setCustomDrag(event.target.checked);
+
     if (event.target.checked) {
       setSearchToggle(false);
       setSearch('');
     }
-    setcustomDrag(event.target.checked);
   };
 
-  const [localPS, setLocalPS] = useState(personalspace);
   useEffect(() => {
     if (personalspace && allServices && allGroups && allLinks && allGroupLinks) {
       // Called once
@@ -276,6 +263,7 @@ function PersonalZoneUpdater({
         setPsNeedUpdate(false);
       }
     }, AUTOSAVE_INTERVAL);
+
     return () => clearTimeout(timer);
   }, [psNeedUpdate]);
 
@@ -291,6 +279,7 @@ function PersonalZoneUpdater({
   const setZoneTitle = (index, title) => {
     if (typeof index === 'number') {
       const { sorted } = localPS;
+
       if (sorted[index].name !== title) {
         sorted[index].name = title.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
         setLocalPS({ ...localPS, sorted });
@@ -419,6 +408,23 @@ function PersonalZoneUpdater({
   const notReady = isLoading || loadingUser;
   const { personalSpace = {} } = appSettingsValues;
 
+  const {
+    filteredUnsortedPersonalSpacesGroup,
+    filteredUnsortedPersonalSpacesService,
+    filteredUnsortedPersonalSpacesLink,
+    filteredUnsortedPersonalSpacesGroupLink,
+  } = useMemo(() => {
+    const filteredUnsortedPersonalSpaces = localPS.unsorted.filter(filterSearch);
+
+    return {
+      filteredUnsortedPersonalSpaces,
+      filteredUnsortedPersonalSpacesGroup: filteredUnsortedPersonalSpaces.filter(filterGroup),
+      filteredUnsortedPersonalSpacesService: filteredUnsortedPersonalSpaces.filter(filterService),
+      filteredUnsortedPersonalSpacesLink: filteredUnsortedPersonalSpaces.filter(filterLink),
+      filteredUnsortedPersonalSpacesGroupLink: filteredUnsortedPersonalSpaces.filter(filterGroupLink),
+    };
+  }, [localPS, filterSearch, filterGroup, filterService, filterLink, filterGroupLink]);
+
   return (
     <>
       {notReady ? (
@@ -515,59 +521,63 @@ function PersonalZoneUpdater({
                 </Grid>
               ) : null}
             </Grid>
-            {!edition && !disabledFeatures.groups && localPS.unsorted.filter(filterGroup).length !== 0
+            {!edition && !disabledFeatures.groups
               ? [
                   <PersonalZone
                     key="zone-favGroup-000000000000"
-                    elements={localPS.unsorted.filter(filterSearch).filter(filterGroup)}
+                    elements={filteredUnsortedPersonalSpacesGroup}
                     title={i18n.__('pages.PersonalPage.unsortedGroup')}
                     setList={setZoneList('group')}
                     suspendUpdate={suspendUpdate}
                     updateList={updateList}
                     customDrag={customDrag}
                     needUpdate={handleNeedUpdate}
+                    hidden={!filteredUnsortedPersonalSpacesGroup.length}
                   />,
                 ]
               : null}
-            {!edition && localPS.unsorted.filter(filterService).length !== 0
+            {!edition
               ? [
                   <PersonalZone
                     key="zone-favService-000000000000"
-                    elements={localPS.unsorted.filter(filterSearch).filter(filterService)}
+                    elements={filteredUnsortedPersonalSpacesService}
                     title={i18n.__('pages.PersonalPage.unsortedService')}
                     setList={setZoneList('service')}
                     suspendUpdate={suspendUpdate}
                     updateList={updateList} // setAskToCreateNewBookMark(true);
                     customDrag={customDrag}
                     needUpdate={handleNeedUpdate}
+                    hidden={!filteredUnsortedPersonalSpacesService.length}
                   />,
                 ]
               : null}
-            {!edition && localPS.unsorted.filter(filterLink).length !== 0
+            {!edition
               ? [
                   <PersonalZone
                     key="zone-favUserBookmark-000000000000"
-                    elements={localPS.unsorted.filter(filterSearch).filter(filterLink)}
+                    elements={filteredUnsortedPersonalSpacesLink}
                     title={i18n.__('pages.PersonalPage.unsortedLinks')}
                     setList={setZoneList('link')}
                     suspendUpdate={suspendUpdate}
                     updateList={updateList}
                     customDrag={customDrag}
                     needUpdate={handleNeedUpdate}
+                    hidden={!filteredUnsortedPersonalSpacesLink.length}
                   />,
                 ]
               : null}
-            {!edition && localPS.unsorted.filter(filterGroupLink).length !== 0
+            {!edition
               ? [
                   <PersonalZone
                     key="zone-favGroupBookmark-000000000000"
-                    elements={localPS.unsorted.filter(filterSearch).filter(filterGroupLink)}
+                    elements={filteredUnsortedPersonalSpacesGroupLink}
                     title={i18n.__('pages.PersonalPage.unsortedGroupLinks')}
                     setList={setZoneList('groupLink')}
                     suspendUpdate={suspendUpdate}
                     updateList={updateList}
                     customDrag={customDrag}
                     needUpdate={handleNeedUpdate}
+                    hidden={!filteredUnsortedPersonalSpacesGroupLink.length}
                   />,
                 ]
               : null}

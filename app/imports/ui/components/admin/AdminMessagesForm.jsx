@@ -65,7 +65,7 @@ export const AdminMessageForm = ({ createMessage, initialMessage, isOnUpdateMess
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '3vh', padding: '2vh 2vw' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '3vh', padding: '2vh 2vw', width: '60vw' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Typography variant="h5">{title}</Typography>
         <IconButton onClick={closeModal}>
@@ -98,7 +98,7 @@ export const AdminMessageForm = ({ createMessage, initialMessage, isOnUpdateMess
           />
         </div>
 
-        <Typography variant="h6">Date d expiration</Typography>
+        <Typography variant="h6">{i18n.__('components.AdminMesssage.label_expire')}</Typography>
         <Input
           type="date"
           name=""
@@ -110,7 +110,7 @@ export const AdminMessageForm = ({ createMessage, initialMessage, isOnUpdateMess
         />
         <div style={{ display: 'flex', gap: '1vw' }}>
           <Button variant="contained" onClick={closeModal} style={{ width: '10vw', marginTop: '2vh' }}>
-            Annuler
+            {i18n.__('components.AdminMesssage.cancel')}
           </Button>
           <Button variant="contained" onClick={handleSubmit} style={{ width: '10vw', marginTop: '2vh' }}>
             {action}

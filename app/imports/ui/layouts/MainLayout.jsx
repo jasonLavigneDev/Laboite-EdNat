@@ -43,7 +43,7 @@ const NotificationsDisplay = lazy(() => import('../components/notifications/Noti
 const BookmarksPage = lazy(() => import('../pages/groups/BookmarksPage'));
 const StructureSelectionPage = lazy(() => import('../pages/system/StructureSelectionPage'));
 const TabbedNotificationsDisplay = lazy(() => import('../components/notifications/TabbedNotificationsDisplay'));
-const NewIntroductionPage = lazy(() => import('./NewIntroductionPage'));
+const IntroductionPage = lazy(() => import('../pages/IntroductionPage'));
 const UploadPage = lazy(() => import('../pages/Upload'));
 
 // dynamic imports
@@ -114,19 +114,21 @@ function MainLayout({ appsettings, ready }) {
   useEffect(() => {
     if (!user.isActive || !user.structure) return;
 
-    Meteor.call('globalInfos.getGlobalInfoByLanguageAndNotExpired', { language, date: new Date() }, (error, res) => {
-      if (error) {
-        console.log('error', error);
-        return;
-      }
+    if (history.location.pathname === '/') {
+      Meteor.call('globalInfos.getGlobalInfoByLanguageAndNotExpired', { language, date: new Date() }, (error, res) => {
+        if (error) {
+          console.log('error', error);
+          return;
+        }
 
-      if (res.length && (!user.lastGlobalInfoReadDate || new Date(user.lastGlobalInfoReadDate) < res[0].updatedAt)) {
-        Meteor.call('users.setLastGlobalInfoRead', { lastGlobalInfoReadDate: new Date() });
-        return;
-      }
+        if (res.length && (!user.lastGlobalInfoReadDate || new Date(user.lastGlobalInfoReadDate) < res[0].updatedAt)) {
+          Meteor.call('users.setLastGlobalInfoRead', { lastGlobalInfoReadDate: new Date() });
+          return;
+        }
 
-      history.push('/personal');
-    });
+        history.push('/personal');
+      });
+    }
   }, []);
 
   return (
@@ -149,7 +151,7 @@ function MainLayout({ appsettings, ready }) {
                 user.isActive ? (
                   user.structure ? (
                     <Switch>
-                      <Route exact path="/" component={NewIntroductionPage} />
+                      <Route exact path="/" component={IntroductionPage} />
                       <Route exact path="/personal" component={PersonalPage} />
                       <Route exact path="/profile" component={ProfilePage} />
                       <Route exact path="/contact" component={ContactPage} />
@@ -159,7 +161,7 @@ function MainLayout({ appsettings, ready }) {
                       <Route exact path="/help" component={HelpPage} />
 
                       {!disabledFeatures.introductionTab && (
-                        <Route exact path="/informations" component={NewIntroductionPage} />
+                        <Route exact path="/informations" component={IntroductionPage} />
                       )}
 
                       {Meteor.settings.franceTransfert?.endpoint && (
@@ -171,6 +173,7 @@ function MainLayout({ appsettings, ready }) {
                       {!disabledFeatures.blog && <Route exact path="/publications/:slug" component={EditArticlePage} />}
 
                       <Route exact path="/services/:slug" component={SingleServicePage} />
+                      <Route exact path="/services/:structure/:slug" component={SingleServicePage} />
                       <Route exact path="/structure/:slug" component={SingleServicePage} />
                       {!disabledFeatures.groups && <Route exact path="/groups" component={GroupsPage} />}
                       {!disabledFeatures.groups && <Route exact path="/groups/:slug" component={SingleGroupPage} />}
@@ -203,7 +206,7 @@ function MainLayout({ appsettings, ready }) {
                       <Route exact path="/profile" component={ProfilePage} />
                       <Route exact path="/profilestructureselection" component={StructureSelectionPage} />
                       {!disabledFeatures.introductionTab && (
-                        <Route exact path="/informations" component={NewIntroductionPage} />
+                        <Route exact path="/informations" component={IntroductionPage} />
                       )}
                       {user.awaitingStructure ? (
                         <Route component={AwaitingStructureMessage} />

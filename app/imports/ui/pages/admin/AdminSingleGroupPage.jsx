@@ -149,7 +149,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
   const history = useHistory();
   const { classes } = useStyles();
 
-  const [{ userId }] = useAppContext();
+  const [{ user, userId }] = useAppContext();
   const isAdmin = Roles.userIsInRole(userId, 'admin', params._id);
   const canDelete = (isAdmin || group.owner === userId) && !isAutomaticGroup;
 
@@ -248,9 +248,9 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
     });
   };
   const onAssignAvatar = (avatarObj, groupName) => {
-    // avatarObj = {image: base64... or url: http...}
-    if (avatarObj.image) {
-      SendNewAvatarToMedia(avatarObj.image, groupName);
+    // avatarObj = [{image: base64...}] or {url: http...}
+    if (avatarObj?.[0]?.image) {
+      SendNewAvatarToMedia(avatarObj[0].image, groupName);
     } else if (avatarObj.url !== group.avatar) {
       setGroupData({ ...groupData, avatar: avatarObj.url });
     }
@@ -484,6 +484,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
                   group={groupData}
                   onAssignAvatar={onAssignAvatar}
                   profil="true"
+                  userActive={user.isActive}
                 />
               </Grid>
             </Grid>
