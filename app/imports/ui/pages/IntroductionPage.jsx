@@ -44,7 +44,8 @@ const useStyles = makeStyles()((theme, isMobile) => ({
   content: { display: 'flex', flexDirection: 'column' },
 }));
 
-export const IntroductionPage = () => {
+// eslint-disable-next-line react/prop-types
+export const IntroductionPage = ({ receiveData }) => {
   const [messages, setMessages] = useState([]);
   const [{ isMobile, language }] = useAppContext();
   const { classes } = useStyles(isMobile);
@@ -54,7 +55,8 @@ export const IntroductionPage = () => {
       if (!error) return setMessages(res);
       return console.log('error', error);
     });
-  }, []);
+    receiveData(messages);
+  }, [receiveData]);
 
   if (!messages.length) return <p>{i18n.__('components.AdminMesssage.no_message')}</p>;
 

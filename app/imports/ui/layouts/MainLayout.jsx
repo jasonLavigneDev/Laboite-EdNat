@@ -1,4 +1,4 @@
-import React, { useEffect, lazy, Suspense } from 'react';
+import React, { useEffect, useState, lazy, Suspense } from 'react';
 import { useLocation, Route, Switch, useHistory } from 'react-router-dom';
 // import { useHistory } from 'react-router-dom/cjs/react-router-dom';
 import { withTracker } from 'meteor/react-meteor-data';
@@ -95,6 +95,7 @@ export const useLayoutStyles = makeStyles()((theme, isMobile) => ({
 }));
 
 function MainLayout({ appsettings, ready }) {
+  const [introductionPageData, setIntroductionPageData] = useState([]);
   const [{ userId, user, loadingUser, isMobile, language }] = useAppContext();
   const { classes } = useLayoutStyles(isMobile, {
     props: isMobile,
@@ -111,6 +112,10 @@ function MainLayout({ appsettings, ready }) {
     }
   }, [location]);
 
+  const receiveDataFromIntroductionPage = (data) => {
+    setIntroductionPageData([data]);
+  };
+
   useEffect(() => {
     if (!user.isActive || !user.structure) return;
 
@@ -125,8 +130,11 @@ function MainLayout({ appsettings, ready }) {
           Meteor.call('users.setLastGlobalInfoRead', { lastGlobalInfoReadDate: new Date() });
           return;
         }
-
-        history.push('/personal');
+        if (introductionPageData.length) {
+          history.push('/');
+        } else {
+          history.push('/personal');
+        }
       });
     }
   }, []);
@@ -151,7 +159,11 @@ function MainLayout({ appsettings, ready }) {
                 user.isActive ? (
                   user.structure ? (
                     <Switch>
-                      <Route exact path="/" component={IntroductionPage} />
+                      <Route
+                        exact
+                        path="/"
+                        render={() => <IntroductionPage receiveData={receiveDataFromIntroductionPage} />}
+                      />
                       <Route exact path="/personal" component={PersonalPage} />
                       <Route exact path="/profile" component={ProfilePage} />
                       <Route exact path="/contact" component={ContactPage} />
