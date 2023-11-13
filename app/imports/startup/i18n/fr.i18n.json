@@ -504,6 +504,7 @@
       "button_modify": "Modifier le message",
       "button_delete": "Supprimer le message",
       "button_create": "Créer le message",
+      "button_publish": "Publier le message",
       "create_info_success": "Information créée avec succès",
       "update_info_success": "Information mise à jour avec succès",
       "missing_content": "Le contenu du message est vide !",
