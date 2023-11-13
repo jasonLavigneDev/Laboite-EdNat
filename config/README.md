@@ -53,6 +53,8 @@ Copy `settings-development.json.sample` to `settings-development.json` and updat
 | disabledFeatures.blog                    | boolean                       | false                                | disable all blog                                                                            |
 | disabledFeatures.groups                  | boolean                       | false                                | disable all groups                                                                          |
 | disabledFeatures.notificationsTab        | boolean                       | false                                | disable notification divided in two tabs                                                    |
+| disabledFeatures.bookmarksFromClipboard        | boolean  | false                                | Read clipboard to propose bookmark creation from it |
+| disabledFeatures.franceTransfert        | boolean  | false                                | Dsiplay france transfert menu |
 | ui.defaultGridViewMode 				              | string                        | list                                 | "compact" or "detail" for view mod in groups or service page																					           |
 | ui.hideLoginForm                         | boolean                       |                                      |                                                                                             |
 | ui.defaultGridViewMode                   | boolean                       |                                      |                                                                                             |

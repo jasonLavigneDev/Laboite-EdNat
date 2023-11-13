@@ -17,7 +17,8 @@
       "introductionTab": false,
       "menuAdminDefaultSpaces": true,  // THIS PARAMS IS SET FOR HIDDEN DEFAULTSPACE FUNCTIONNALITY WHICH DOESN'T WORK
       "mediaStorageMenu": false,
-      "bookmarksFromClipboard": false,
+      "bookmarksFromClipboard": false
+      "franceTransfert": false,
     },
     "chatbotUrl": "https://chat.rizomo.numerique.gouv.fr/",
     "chatbotConfig": {
@@ -106,7 +107,7 @@
     "nextcloudPassword": "",
     "circlesUser": "",
     "circlesPassword": "",
-    "nextcloudQuota": "1073741824"
+    "nextcloudQuota": "1073741824",
     "nextcloudApiKeys": [],
     "sessionTokenKey": "",
     "sessionTokenAppName": "apps.education.fr"  },
