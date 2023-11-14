@@ -1602,7 +1602,8 @@
       "invalidName": "Nom invalide",
       "shareName": "Nom du partage Nextcloud",
       "invalidCharacters": "caractères invalides",
-      "shareNameExists": "Ce nom de partage existe déjà"
+      "shareNameExists": "Ce nom de partage existe déjà",
+      "shareNameEmpty": "Nom de partage ne peut pas être vide"
     },
     "SingleGroupPage": {
       "backToList": "Retour à la liste",
