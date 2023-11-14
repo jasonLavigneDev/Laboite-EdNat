@@ -318,7 +318,7 @@ const SingleGroupPage = ({ group = {}, ready, services, polls, forms, events, bo
       .replace('[URL]', testUrl(groupPlugins[plugin].URL))
       .replace('[GROUPNAME]', encodeURIComponent(group.name))
       .replace('[GROUPSLUG]', group.slug)
-      .replace('[NCLOCATOR]', user.nclocator)
+      .replace('[NCLOCATOR]', testUrl(user.nclocator))
       .replace('[NCSHARENAME]', shareName);
     window.open(resourceURL, '_blank', 'noopener,noreferrer');
   };
