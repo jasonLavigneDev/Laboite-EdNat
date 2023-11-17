@@ -17,8 +17,8 @@
       "introductionTab": false,
       "menuAdminDefaultSpaces": true,  // THIS PARAMS IS SET FOR HIDDEN DEFAULTSPACE FUNCTIONNALITY WHICH DOESN'T WORK
       "mediaStorageMenu": false,
-      "bookmarksFromClipboard": false
-      "franceTransfert": false,
+      "bookmarksFromClipboard": false,
+      "franceTransfert": false
     },
     "chatbotUrl": "https://chat.rizomo.numerique.gouv.fr/",
     "widget": {
