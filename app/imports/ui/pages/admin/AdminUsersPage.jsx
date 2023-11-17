@@ -28,6 +28,7 @@ import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications';
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import DeleteIcon from '@mui/icons-material/Delete';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import CloudIcon from '@mui/icons-material/Cloud';
 import Pagination from '@mui/material/Pagination';
 import MenuItem from '@mui/material/MenuItem';
@@ -35,6 +36,7 @@ import Select from '@mui/material/Select';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import { Roles } from 'meteor/alanning:roles';
+import { saveAs } from 'file-saver';
 import { usePaginatedMethod } from '../../utils/hooks';
 import Spinner from '../../components/system/Spinner';
 import { useAppContext } from '../../contexts/context';
@@ -298,6 +300,36 @@ const AdminUsersPage = ({ match: { path } }) => {
     return actionButtons;
   };
 
+  const handleUserExport = () => {
+    const args = isStructureSpecific ? { structureId: selectedStructureId } : {};
+    Meteor.call('users.getUsersForExport', args, (error, res) => {
+      if (error) {
+        msg.error(error.message);
+      } else {
+        const csvUsersDatas = res.map((user) => [
+          JSON.stringify(user.firstName),
+          JSON.stringify(user.lastName),
+          JSON.stringify(user.structureName),
+          JSON.stringify(user.emails[0].address),
+        ]);
+
+        csvUsersDatas.unshift([
+          i18n.__('api.users.labels.username'),
+          i18n.__('api.users.labels.lastName'),
+          i18n.__('api.users.labels.structure'),
+          i18n.__('api.users.labels.emailAddress'),
+        ]);
+
+        const csvUsersDatasToExport = csvUsersDatas.map((row) => row.join(';')).join('\n');
+        const currDate = new Date();
+        const formattedOptions = { day: '2-digit', month: '2-digit', year: 'numeric' };
+        const formattedCurrDate = new Intl.DateTimeFormat(formattedOptions).format(currDate);
+        const fileName = `${i18n.__('pages.AdminUsersPage.usersExport')}_${formattedCurrDate}.csv`;
+
+        saveAs(new Blob([csvUsersDatasToExport], { type: 'text/csv;charset=utf-8;' }), fileName);
+      }
+    });
+  };
   return (
     <Fade in className={classes.root}>
       <div>
@@ -353,6 +385,19 @@ const AdminUsersPage = ({ match: { path } }) => {
                   resetSearch={onResetSearch}
                   label={i18n.__('pages.AdminUsersPage.searchText')}
                 />
+                <FormControl>
+                  <Typography>
+                    {i18n.__('pages.AdminUsersPage.usersExport')}
+                    <Tooltip
+                      title={i18n.__('pages.AdminUsersPage.usersExport')}
+                      aria-label={i18n.__('pages.AdminUsersPage.usersExport')}
+                    >
+                      <IconButton onClick={handleUserExport} tabIndex={-1} size="large">
+                        <FileDownloadIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </Typography>
+                </FormControl>
               </Grid>
               <Grid item xs={12} sm={12} md={6} lg={6} className={classes.pagination}>
                 <Grid>
