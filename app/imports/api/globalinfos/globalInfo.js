@@ -26,9 +26,7 @@ GlobalInfos.schema = new SimpleSchema(
     },
     updatedAt: {
       type: Date,
-      autoValue() {
-        return new Date();
-      },
+      defaultValue: new Date(),
     },
     expirationDate: {
       type: Date,

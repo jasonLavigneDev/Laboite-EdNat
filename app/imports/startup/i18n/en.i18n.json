@@ -580,6 +580,7 @@
       "button_modify": "Modify",
       "button_delete": "Delete",
       "button_create": "Create",
+      "button_publish": "Publish",
       "create_info_success": "Information successfully created",
       "update_info_success": "Information successfull updated",
       "missing_content": "Missing content message !",
