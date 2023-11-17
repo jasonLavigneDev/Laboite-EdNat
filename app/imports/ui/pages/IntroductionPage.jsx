@@ -63,7 +63,11 @@ export const IntroductionPage = () => {
       {messages
         ?.sort((a, b) => b.updatedAt - a.updatedAt)
         .map((message) => (
-          <Paper className={classes.message} key={message._id}>
+          <Paper
+            className={classes.message}
+            key={message._id}
+            style={{ backgroundColor: !message?.structureId?.length && 'rgba(90,161,216,0.2)' }}
+          >
             <div className={classes.dateContainer}>
               <div className={classes.dateBorder}>
                 <span>{message?.updatedAt?.toLocaleDateString()}</span>
@@ -75,7 +79,9 @@ export const IntroductionPage = () => {
                 <Typography variant="subtitle1">
                   {i18n.__('pages.IntroductionPage.structureMessage', { structure: message.structureName })}
                 </Typography>
-              ) : null}
+              ) : (
+                <Typography variant="subtitle1">Votre administrateur général vous informe :</Typography>
+              )}
               <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(message?.content, sanitizeParameters) }} />
             </div>
           </Paper>
