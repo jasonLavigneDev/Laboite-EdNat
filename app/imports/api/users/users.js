@@ -294,7 +294,13 @@ if (Meteor.isServer) {
 
   Accounts.setAdditionalFindUserOnExternalLogin(({ serviceName, serviceData }) => {
     if (serviceName === 'keycloak') {
-      const user = Accounts.findUserByUsername(serviceData.preferred_username);
+      let user = Accounts.findUserByUsername(serviceData.preferred_username);
+
+      // If the user as not been found using its name try using the email.
+      if (!user) {
+        user = Accounts.findUserByEmail(serviceData.email);
+      }
+
       if (user) return user;
     }
     return undefined;
