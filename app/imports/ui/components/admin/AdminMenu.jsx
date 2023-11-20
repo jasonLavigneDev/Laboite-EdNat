@@ -74,10 +74,16 @@ export default function AdminMenu() {
   const isAdmin = Roles.userIsInRole(user._id, 'admin');
   const isAdminStructure = Roles.userIsInRole(user._id, 'adminStructure', user.structure);
 
-  const { isUserStructureValidationMandatory } = useTracker(() => {
+  const { isUserStructureValidationMandatory, helpUrl } = useTracker(() => {
     Meteor.subscribe('appsettings.userStructureValidationMandatory');
-    const appSettings = AppSettings.findOne({ _id: 'settings' }, { fields: { userStructureValidationMandatory: 1 } });
-    return { isUserStructureValidationMandatory: appSettings?.userStructureValidationMandatory };
+    const appSettings = AppSettings.findOne(
+      { _id: 'settings' },
+      { fields: { userStructureValidationMandatory: 1, helpUrl: 1 } },
+    );
+    return {
+      isUserStructureValidationMandatory: appSettings?.userStructureValidationMandatory,
+      helpUrl: appSettings?.helpUrl,
+    };
   });
 
   const handleMenuClick = (item) => {
@@ -148,7 +154,7 @@ export default function AdminMenu() {
       path: '/admin/helps',
       content: 'menuAdminHelpPage',
       icon: <HelpIcon />,
-      hidden: !isAdmin,
+      hidden: !isAdmin || helpUrl.external,
     },
     {
       path: '/admin/settings',

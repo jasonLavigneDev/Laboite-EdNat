@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import i18n from 'meteor/universe:i18n';
 import { Roles } from 'meteor/alanning:roles';
+import { useTracker } from 'meteor/react-meteor-data';
 import { useHistory, useLocation } from 'react-router-dom';
 import Chip from '@mui/material/Chip';
 import { makeStyles } from 'tss-react/mui';
@@ -18,6 +19,7 @@ import updateDocumentTitle from '../../utils/updateDocumentTitle';
 import { testMeteorSettingsUrl } from '../../utils/utilsFuncs';
 import { useOnBoarding } from '../../contexts/onboardingContext';
 import { isFeatureEnabled } from '../../utils/features';
+import AppSettings from '../../../api/appsettings/appsettings';
 
 const { disabledFeatures = {} } = Meteor.settings.public;
 
@@ -97,6 +99,14 @@ const MainMenu = ({ user = {} }) => {
   const [hasUserOnAwaitingStructure, setHasUserOnAwaitingStructure] = useState(false);
   const [contactURL, setContactURL] = useState(null);
 
+  const { helpUrl } = useTracker(() => {
+    Meteor.subscribe('appsettings.userStructureValidationMandatory');
+    const appSettings = AppSettings.findOne({ _id: 'settings' }, { fields: { helpUrl: 1 } });
+    return {
+      helpUrl: appSettings?.helpUrl,
+    };
+  });
+
   useEffect(() => {
     if (isAdmin) {
       Meteor.call('users.hasUserOnRequest', {}, (err, res) => {
@@ -121,9 +131,13 @@ const MainMenu = ({ user = {} }) => {
   };
   const handleClose = () => setAnchorEl(null);
   const handleMenuClick = (item) => {
-    updateDocumentTitle(i18n.__(`components.MainMenu.${item.content}`));
-    history.push(item.path);
-    setAnchorEl(null);
+    if (item.path.startsWith('/')) {
+      updateDocumentTitle(i18n.__(`components.MainMenu.${item.content}`));
+      history.push(item.path);
+      setAnchorEl(null);
+    } else {
+      window.open(item.path, '_blank');
+    }
   };
   const handleContactClick = (item) => {
     if (contactURL) {
@@ -160,6 +174,10 @@ const MainMenu = ({ user = {} }) => {
   const closeLogoutDialog = () => {
     setOpenLogout(false);
     setAnchorEl(null);
+  };
+
+  const getPathHelp = () => {
+    return helpUrl.external ? helpUrl.link : '/help';
   };
 
   const onLogout = () => {
@@ -239,7 +257,7 @@ const MainMenu = ({ user = {} }) => {
         </MenuItem>
         <MenuItem
           className={classes.menuItem}
-          onClick={() => handleMenuClick({ path: '/help', content: 'menuHelpLabel' })}
+          onClick={() => handleMenuClick({ path: getPathHelp(), content: 'menuHelpLabel' })}
           selected={pathname === '/help'}
           data-tour-id="help"
         >
