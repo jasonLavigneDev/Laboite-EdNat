@@ -1784,7 +1784,8 @@
     },
     "IntroductionPage": {
       "informationsOf": "Informations of",
-      "structureMessage": "Information from {$structure} :"
+      "structureMessage": "Information from {$structure} :",
+      "adminMessage": "Your administrator informs you :"
     },
     "AdminStructureSettingsPage": {
       "title": "Structure settings",

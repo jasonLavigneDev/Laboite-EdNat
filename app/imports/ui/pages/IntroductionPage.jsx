@@ -80,7 +80,7 @@ export const IntroductionPage = () => {
                   {i18n.__('pages.IntroductionPage.structureMessage', { structure: message.structureName })}
                 </Typography>
               ) : (
-                <Typography variant="subtitle1">Votre administrateur général vous informe :</Typography>
+                <Typography variant="subtitle1">{i18n.__('pages.IntroductionPage.adminMessage')}</Typography>
               )}
               <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(message?.content, sanitizeParameters) }} />
             </div>
