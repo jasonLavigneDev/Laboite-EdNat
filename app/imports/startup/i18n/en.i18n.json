@@ -54,6 +54,9 @@
         "link_personalData": "Personal Data text page link",
         "content_personalData": "Personal Data text",
         "maintenance": "Maintenance status",
+        "helpUrl": "Help page",
+        "external_helpUrl": "Use an external link for help page",
+        "link_helpUrl": "Redirect URL for help page",
         "textMaintenance": "Maintenance reason text",
         "personalSpace": "Personal space",
         "external_personalSpace": "Use an external link for Personal Space page",
@@ -646,7 +649,10 @@
       "title_personalSpace": "Personal Space",
       "content_personalSpace": "Personal Space text",
       "external_personalSpace": "Use an external link for Personal Space page",
-      "link_personalSpace": "Personal Space video link"
+      "link_personalSpace": "Personal Space video link",
+      "title_helpUrl": "Help page",
+      "external_helpUrl": "Use an external link for help page",
+      "link_helpUrl": "Redirect URL for help page"
     },
     "AdminNextcloudUrlEdit": {
       "subtitle": "Add & edit Nextcloud URL",
@@ -1204,6 +1210,7 @@
       "introduction": "Introduction",
       "legal": "Legal notice",
       "gcu": "G.C.U",
+      "helpUrl": "Help",
       "globalInfo": "General informations",
       "accessibility": "Accessibility",
       "personalData": "Personal Data",

@@ -99,6 +99,10 @@ AppSettings.schema = new SimpleSchema(
       type: SettingsType('personal_space'),
       label: getLabel('api.appsettings.labels.personalSpace'),
     },
+    helpUrl: {
+      type: SettingsType('help'),
+      label: getLabel('api.appsettings.labels.helpUrl'),
+    },
     maintenance: {
       type: Boolean,
       defaultValue: false,
@@ -128,6 +132,7 @@ AppSettings.publicFields = {
   textMaintenance: 1,
   userStructureValidationMandatory: 1,
   personalSpace: 1,
+  helpUrl: 1,
 };
 
 AppSettings.introduction = {
@@ -149,6 +154,8 @@ AppSettings.links = {
   'personalData.external': 1,
   'personalSpace.link': 1,
   'personalSpace.external': 1,
+  'helpUrl.link': 1,
+  'helpUrl.external': 1,
 };
 
 AppSettings.legal = {
@@ -175,6 +182,10 @@ AppSettings.personalSpace = {
   'personalSpace.link': 1,
   'personalSpace.external': 1,
   'personalSpace.content': 1,
+};
+AppSettings.helpUrl = {
+  'helpUrl.link': 1,
+  'helpUrl.external': 1,
 };
 
 AppSettings.attachSchema(AppSettings.schema);

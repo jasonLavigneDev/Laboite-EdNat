@@ -56,6 +56,9 @@
         "external_personalData": "Utiliser un lien externe pour la page Données Personnelles",
         "link_personalData": "Données Personnelles",
         "content_personalData": "Texte des Données Personnelles",
+        "helpUrl": "Page d'aide",
+        "external_helpUrl": "Utiliser un lien externe pour la page d'aide",
+        "link_helpUrl": "Lien de redirection vers la page d'aide",
         "maintenance": "Statut de maintenance",
         "textMaintenance": "Raison de la maintenance",
         "personalSpace": "Espace Personnel",
@@ -571,7 +574,10 @@
       "title_personalSpace": "Espace personnel",
       "content_personalSpace": "Texte de l'espace personnel",
       "external_personalSpace": "Utiliser un lien externe pour la page Espace Personnel",
-      "link_personalSpace": "Lien vers la video de la page Espace Personnel"
+      "link_personalSpace": "Lien vers la video de la page Espace Personnel",
+      "title_helpUrl": "Page d'aide",
+      "external_helpUrl": "Utiliser un lien externe pour la page d'aide",
+      "link_helpUrl": "Lien de redirection vers la page d'aide"
     },
     "AdminNextCloudUrlEdit": {
       "subtitle": "Ajout et édition d'URL Nextcloud",
@@ -1212,6 +1218,7 @@
       "introduction": "Introduction",
       "legal": "Mentions légales",
       "gcu": "C.G.U",
+      "helpUrl": "Aide",
       "globalInfo": "Informations générales",
       "accessibility": "Accessibilité",
       "personalData": "Données Personnelles",

@@ -95,6 +95,12 @@ const AdminSettingsPage = ({ appsettings }) => {
       ElementProps: { gcu: appsettings.gcu || [] },
     },
     {
+      key: 'helpUrl',
+      title: i18n.__('pages.AdminSettingsPage.helpUrl'),
+      Element: LegalComponent,
+      ElementProps: { helpUrl: appsettings.helpUrl || [] },
+    },
+    {
       key: 'personalSpace',
       title: i18n.__('pages.AdminSettingsPage.personalSpace'),
       Element: LegalComponent,

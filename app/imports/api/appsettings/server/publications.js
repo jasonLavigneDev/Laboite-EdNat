@@ -68,3 +68,8 @@ Meteor.publish('appsettings.userStructureValidationMandatory', () => {
     { fields: userStructureValidationMandatory, sort: { _id: 1 }, limit: 1 },
   );
 });
+
+Meteor.publish('appsettings.helpUrl', () => {
+  const { helpUrl } = AppSettings;
+  return AppSettings.find({ _id: 'settings' }, { fields: helpUrl, sort: { _id: 1 }, limit: 1 });
+});

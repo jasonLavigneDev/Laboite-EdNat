@@ -110,13 +110,13 @@ const LegalComponent = ({ tabkey, ...props }) => {
           fullWidth
           margin="normal"
         />
-      ) : (
+      ) : tabkey !== 'helpUrl' ? (
         <div className={classes.wysiwyg}>
           <InputLabel htmlFor="content">{i18n.__(`components.LegalComponent.content_${tabkey}`)}</InputLabel>
           <CustomToolbarArticle />
           <ReactQuill id="content" value={config.content || ''} onChange={onUpdateRichText} {...quillOptions} />
         </div>
-      )}
+      ) : null}
       {changes && (
         <div className={classes.buttonGroup}>
           <Button variant="contained" color="grey" onClick={onCancel} disabled={loading}>
