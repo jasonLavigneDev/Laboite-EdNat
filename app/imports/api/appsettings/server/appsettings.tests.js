@@ -67,6 +67,10 @@ describe('appsettings', function () {
           link: 'pSpaceData_link',
           content: 'pSpaceData_content',
         },
+        helpUrl: {
+          external: false,
+          link: 'helpUrl_link',
+        },
       };
       AppSettings.insert(appsettinit);
     });
@@ -83,6 +87,7 @@ describe('appsettings', function () {
           assert.property(appall, 'accessibility');
           assert.property(appall, 'personalData');
           assert.property(appall, 'userStructureValidationMandatory');
+          assert.property(appall, 'helpUrl');
           done();
         });
       });
@@ -228,6 +233,10 @@ describe('appsettings', function () {
           external: false,
           link: 'pSpaceData_link',
           content: 'pSpaceData_content',
+        },
+        helpUrl: {
+          external: false,
+          link: 'helpUrl_link',
         },
       };
       AppSettings.insert(appsettinit);

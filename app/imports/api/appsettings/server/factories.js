@@ -50,4 +50,9 @@ Factory.define('appsettings', AppSettings, {
     link: faker.lorem.slug(),
     content: faker.lorem.sentences(),
   },
+  helpUrl: {
+    external: Boolean(Math.random() * 2),
+    link: faker.lorem.slug(),
+    content: '',
+  },
 });

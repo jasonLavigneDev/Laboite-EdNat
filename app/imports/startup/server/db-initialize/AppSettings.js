@@ -38,6 +38,11 @@ Meteor.startup(() => {
         link: '',
         content: '',
       },
+      helpUrl: {
+        external: false,
+        link: '',
+        content: '',
+      },
 
       userStructureValidationMandatory: false,
     });
