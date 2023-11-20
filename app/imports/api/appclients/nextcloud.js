@@ -15,7 +15,7 @@ function ocsUrl(ncURL) {
 }
 
 function getInstance(user) {
-  return user.nclocator ? new URL(user.nclocator).host : '';
+  return user.nclocator ? new URL(testUrl(user.nclocator)).host : '';
 }
 
 function checkResponse(response) {
@@ -567,7 +567,7 @@ export default class NextcloudClient {
           {
             userData: ncData,
             userId,
-            ncURL: user.nclocator,
+            ncURL: testUrl(user.nclocator),
             error: error.reason || error.message,
           },
         );
@@ -580,7 +580,7 @@ export default class NextcloudClient {
       scopes.SYSTEM,
       {
         username: user.username,
-        ncURL: user.nclocator,
+        ncURL: testUrl(user.nclocator),
       },
     );
     return true;

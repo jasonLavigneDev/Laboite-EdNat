@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.7.1](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/5.7.0...release/5.7.1) (2023-11-20)
+
+
+### Bug Fixes
+
+* **nextcloud:** manage nclocators without https:// at start ([27fb132](https://gitlab.mim-libre.fr/alphabet/laboite/commit/27fb132c1995a31d56f025d5eaca9715ef76b947))
+
 # [5.7.0](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/5.6.1...release/5.7.0) (2023-11-07)
 
 
