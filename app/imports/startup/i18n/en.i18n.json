@@ -1594,7 +1594,8 @@
       "invalidName": "Nom invalide",
       "shareName": "Nextcloud share name",
       "invalidCharacters": "Invalid characters",
-      "shareNameExists": "This share name already exists"
+      "shareNameExists": "This share name already exists",
+      "shareNameEmpty": "Share name can not be empty"
     },
     "SingleGroupPage": {
       "backToList": "Back to the list",
