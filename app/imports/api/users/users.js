@@ -270,7 +270,7 @@ export const findStructureAllowed = (structureObject, apiKey, tabApiKeys, tabApi
     // eslint-disable-next-line no-restricted-syntax, no-plusplus
     for (let i = 0; i < tabApiKeys.length; i++) {
       // allow create user if there is no structure in structureInTab and apiKey is in tabApiKeys and tabApiKeysByStructure
-      if (apiKey === tabApiKeys[i] && !(key === apiKey)) {
+      if (key === tabApiKeys[i] && structuresInTab.length === 0) {
         isAllowed = true;
       }
       // check if the structure gave in curl request is in apiKey tab inside tabApiKeysByStructure
@@ -324,6 +324,43 @@ export const searchMatchingStructure = (structureObject, apiKey, tabApiKeys, tab
     }
   }
   return result;
+};
+
+export const searchRootStructure = (pathGiven) => {
+  let structureToReturn;
+  const structureParentWithName = Structures.find({
+    name: pathGiven[0],
+    $or: [{ parentId: { $eq: null } }, { parentId: { $eq: '' } }],
+  }).fetch();
+
+  if (structureParentWithName) {
+    if (structureParentWithName.length) {
+      structureToReturn = structureParentWithName;
+    } else {
+      throw new Meteor.Error(
+        `${pathGiven[0]} isn't the root structure of ${pathGiven[pathGiven.length - 1]}`,
+        `Error encountered while creating user whith structure << ${pathGiven[pathGiven.length - 1]} >>`,
+      );
+    }
+  }
+  return structureToReturn;
+};
+
+export const checkPathOnChildren = (structureParent, pathGiven) => {
+  let structureToReturn = structureParent;
+
+  // eslint-disable-next-line no-plusplus
+  for (let i = 1; i < pathGiven.length; i++) {
+    const structureChild = Structures.find({ name: pathGiven[i], parentId: structureToReturn._id }).fetch();
+    const structureChildToTest = structureChild.pop();
+
+    if (structureChildToTest) {
+      structureToReturn = structureChildToTest;
+    } else {
+      break;
+    }
+  }
+  return structureToReturn;
 };
 
 if (Meteor.isServer) {

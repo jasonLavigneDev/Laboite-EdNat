@@ -1,10 +1,9 @@
 import { Meteor } from 'meteor/meteor';
 import { Accounts } from 'meteor/accounts-base';
 import i18n from 'meteor/universe:i18n';
-import { findStructureByEmail, searchMatchingStructure } from '../users';
+import { checkPathOnChildren, findStructureByEmail, searchRootStructure, searchMatchingStructure } from '../users';
 import logServer, { levels, scopes } from '../../logging';
 import NextcloudClient from '../../appclients/nextcloud';
-import Structures from '../../structures/structures';
 
 const nextcloudPlugin = Meteor.settings.public.groupPlugins.nextcloud;
 let nextClient = null;
@@ -39,8 +38,7 @@ export default async function createUser(req, content) {
         lastName: content.lastname,
         profile: {},
       };
-      const structureObject = Structures.findOne({ name: content.structure });
-      if (!content.structure || !structureObject) {
+      if (!content.structure) {
         // check if we can determine structure from email
         const structureByEmail = findStructureByEmail(content.email);
         if (structureByEmail) {
@@ -50,13 +48,20 @@ export default async function createUser(req, content) {
         const apiKey = req.headers['x-api-key'];
         const tabApiKeys = Meteor.settings.private.createUserApiKeys;
         const tabApiKeysByStructure = Meteor.settings.private.createUserApiKeysByStructure;
-        const isAllowed = searchMatchingStructure(structureObject, apiKey, tabApiKeys, tabApiKeysByStructure);
+        const pathGiven = content.structure ? content.structure.split('/') : null;
+        const structureParent = searchRootStructure(pathGiven);
+        const structureParentToTest = structureParent.pop();
+
+        const structureChildToTest = checkPathOnChildren(structureParentToTest, pathGiven);
+
+        const isAllowed = searchMatchingStructure(structureChildToTest, apiKey, tabApiKeys, tabApiKeysByStructure);
+
         // add a structure to user if we give a structure in content.structure
         if (content.structure && isAllowed) {
-          userData.structure = structureObject._id;
+          userData.structure = structureChildToTest._id;
         } else {
           throw new Meteor.Error(
-            'Structure not allowed to create users',
+            'Root structure not allowed to create users',
             `Error encountered while creating user whith structure ${content.structure}`,
           );
         }
