@@ -7,6 +7,7 @@ import Rest from 'connect-rest';
 import addNotification from './notifications/server/rest';
 import getStats from './stats/server/rest';
 import getNcToken from './nextcloud/server/rest';
+// eslint-disable-next-line import/no-named-as-default, import/no-named-as-default-member
 import createUser from './users/server/rest';
 import ftUploadProxy from './francetransfert/server/rest';
 import createUserToken from './users/server/restToken';

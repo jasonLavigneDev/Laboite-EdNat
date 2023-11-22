@@ -262,6 +262,104 @@ export const findStructureByEmail = (email) => {
   return undefined;
 };
 
+export const findStructureAllowed = (structureObject, apiKey, tabApiKeys, tabApiKeysByStructure) => {
+  let isAllowed = false;
+  // eslint-disable-next-line no-restricted-syntax, guard-for-in
+  for (const key in tabApiKeysByStructure) {
+    const structuresInTab = tabApiKeysByStructure[key];
+    // eslint-disable-next-line no-restricted-syntax, no-plusplus
+    for (let i = 0; i < tabApiKeys.length; i++) {
+      // allow create user if there is no structure in structureInTab and apiKey is in tabApiKeys and tabApiKeysByStructure
+      if (key === tabApiKeys[i] && structuresInTab.length === 0) {
+        isAllowed = true;
+      }
+      // check if the structure gave in curl request is in apiKey tab inside tabApiKeysByStructure
+      if (key === tabApiKeys[i] && key === apiKey) {
+        // eslint-disable-next-line no-loop-func
+        structuresInTab.forEach((element) => {
+          if (element === structureObject.name) {
+            isAllowed = true;
+          }
+        });
+      }
+    }
+  }
+  return isAllowed;
+};
+
+export const isMatchingStructureWithParent = (structure, apiKey, tabApiKeys, tabApiKeysByStructure) => {
+  const structureParent = Structures.findOne({ _id: structure });
+
+  let isMatchingWithParent = false;
+
+  if (structureParent.parentId) {
+    isMatchingWithParent = isMatchingStructureWithParent(
+      structureParent.parentId,
+      apiKey,
+      tabApiKeys,
+      tabApiKeysByStructure,
+    );
+  } else {
+    isMatchingWithParent = findStructureAllowed(structureParent, apiKey, tabApiKeys, tabApiKeysByStructure);
+  }
+  return isMatchingWithParent;
+};
+
+export const searchMatchingStructure = (structureObject, apiKey, tabApiKeys, tabApiKeysByStructure) => {
+  let isMatchingWithParent = false;
+
+  let result = findStructureAllowed(structureObject, apiKey, tabApiKeys, tabApiKeysByStructure);
+
+  if (!result) {
+    if (structureObject.parentId) {
+      isMatchingWithParent = isMatchingStructureWithParent(
+        structureObject.parentId,
+        apiKey,
+        tabApiKeys,
+        tabApiKeysByStructure,
+      );
+    }
+    if (isMatchingWithParent) {
+      result = true;
+    }
+  }
+  return result;
+};
+
+export const searchRootStructure = (pathGiven) => {
+  let structureToReturn;
+  const structureParentWithName = Structures.find({ name: pathGiven[0], parentId: { $eq: '' } }).fetch();
+
+  if (structureParentWithName) {
+    if (structureParentWithName.length) {
+      structureToReturn = structureParentWithName;
+    } else {
+      throw new Meteor.Error(
+        `${pathGiven[0]} isn't the root structure of ${pathGiven[pathGiven.length - 1]}`,
+        `Error encountered while creating user whith structure << ${pathGiven[pathGiven.length - 1]} >>`,
+      );
+    }
+  }
+  return structureToReturn;
+};
+
+export const checkPathOnChildren = (structureParent, pathGiven) => {
+  let structureToReturn = structureParent;
+
+  // eslint-disable-next-line no-plusplus
+  for (let i = 1; i < pathGiven.length - 1; i++) {
+    const structureChild = Structures.find({ name: pathGiven[i], parentId: structureToReturn._id }).fetch();
+    const structureChildToTest = structureChild.pop();
+
+    if (structureChildToTest) {
+      structureToReturn = structureChildToTest;
+    } else {
+      break;
+    }
+  }
+  return structureToReturn;
+};
+
 if (Meteor.isServer) {
   Accounts.onCreateUser((options, user) => {
     // pass the structure name in the options
