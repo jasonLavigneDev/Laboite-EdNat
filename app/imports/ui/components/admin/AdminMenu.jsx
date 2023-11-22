@@ -154,7 +154,7 @@ export default function AdminMenu() {
       path: '/admin/helps',
       content: 'menuAdminHelpPage',
       icon: <HelpIcon />,
-      hidden: !isAdmin || helpUrl.external,
+      hidden: !isAdmin || helpUrl?.external,
     },
     {
       path: '/admin/settings',

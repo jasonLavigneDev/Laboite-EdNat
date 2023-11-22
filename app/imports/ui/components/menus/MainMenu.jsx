@@ -177,7 +177,7 @@ const MainMenu = ({ user = {} }) => {
   };
 
   const getPathHelp = () => {
-    return helpUrl.external ? helpUrl.link : '/help';
+    return helpUrl && helpUrl.external ? helpUrl.link : '/help';
   };
 
   const onLogout = () => {
