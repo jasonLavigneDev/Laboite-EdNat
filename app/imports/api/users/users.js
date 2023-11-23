@@ -150,6 +150,11 @@ Meteor.users.schema = new SimpleSchema(
       defaultValue: false,
       label: getLabel('api.users.labels.advancedPersonalPage'),
     },
+    betaServices: {
+      type: Boolean,
+      defaultValue: false,
+      label: getLabel('api.users.labels.advancedPersonalPage'),
+    },
     articlesCount: {
       type: SimpleSchema.Integer,
       defaultValue: 0,
@@ -342,6 +347,7 @@ Meteor.users.selfFields = {
   nclocator: 1,
   advancedPersonalPage: 1,
   lastGlobalInfoReadDate: 1,
+  betaServices: 1,
 };
 
 Meteor.users.adminFields = {

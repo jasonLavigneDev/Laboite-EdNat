@@ -271,7 +271,8 @@
         "businessReGrouping": "Regroupement métier",
         "screenshots": "Screenshots",
         "structure": "Service Structure",
-        "url": "URL du service"
+        "url": "URL du service",
+        "isBeta": "beta version"
       }
     },
     "events": {
@@ -682,7 +683,8 @@
       "open": "Open",
       "pin": "Pin",
       "unpin": "Unpin",
-      "backToDefault": "Move back to default zone"
+      "backToDefault": "Move back to default zone",
+      "betaVersion": " (beta version)"
     },
     "TopBar": {
       "sideMenuOpenLabel": "Open side menu",
@@ -1308,7 +1310,8 @@
       "ApplyDefaultSpaceMessage": "This will apply the changes to your personal space",
       "ApplyDefaultSpaceBtn": "Apply default space",
       "ApplyDefaultSpaceWarning": "Can not apply default space if advanced personal page is activated",
-      "activeAccountRequired": "Requires an active account"
+      "activeAccountRequired": "Requires an active account",
+      "betaServices": "Show services in beta version"
     },
     "NotFound": {
       "backButtonLabel": "Back",
@@ -1572,6 +1575,7 @@
       "cancel": "Cancel",
       "logo_url": "Logo URL",
       "offlineService": "Enable this service on the offline page",
+      "isBeta": "This service is in beta version",
       "titleFieldHelperText": "Service title",
       "StateFieldHelperText": "Service state",
       "teamFieldHelperText": "Team that manages the service",

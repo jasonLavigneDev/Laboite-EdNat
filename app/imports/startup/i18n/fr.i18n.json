@@ -274,7 +274,8 @@
         "businessReGrouping": "Business regrouping",
         "screenshots": "Captures d'écran",
         "structure": "Structure d'exploitation",
-        "url": "URL du service"
+        "url": "URL du service",
+        "isBeta": "version bêta"
       }
     },
     "events": {
@@ -607,7 +608,8 @@
       "open": "Ouvrir",
       "pin": "Épingler",
       "unpin": "Retirer",
-      "backToDefault": "Remettre dans la zone par défaut"
+      "backToDefault": "Remettre dans la zone par défaut",
+      "betaVersion": " (version bêta)"
     },
     "TopBar": {
       "sideMenuOpenLabel": "Ouvrir le menu latéral",
@@ -1316,7 +1318,8 @@
       "ApplyDefaultSpaceMessage": "Cela appliquera les changements sur votre espace personnel",
       "ApplyDefaultSpaceBtn": "Appliquer l'espace par default",
       "ApplyDefaultSpaceWarning": "On ne peut pas appliquer l'espace par défaut si l'option 'espace personnel avancé' est activé",
-      "activeAccountRequired": "Nécessite un compte actif"
+      "activeAccountRequired": "Nécessite un compte actif",
+      "betaServices": "Afficher les services en version bêta"
     },
     "NotFound": {
       "backButtonLabel": "Retour",
@@ -1580,6 +1583,7 @@
       "cancel": "Annuler",
       "logo_url": "URL du logo",
       "offlineService": "Activer ce service sur la page non connectée",
+      "isBeta": "Ce service est en version bêta",
       "titleFieldHelperText": "Titre du service",
       "StateFieldHelperText": "État du service",
       "teamFieldHelperText": "Équipe qui gère le service",

@@ -111,7 +111,10 @@ function ServiceDetailsPersSpace({ service, customDrag, isMobile, isSorted, need
         enterDelay={600}
         title={
           <>
-            <Typography>{service.title}</Typography>
+            <Typography>
+              {service.title}
+              {service.isBeta ? i18n.__('components.ServiceDetails.betaVersion') : ''}
+            </Typography>
             {i18n.__('pages.PersonalPage.typeApplication')}
           </>
         }
@@ -137,6 +140,7 @@ function ServiceDetailsPersSpace({ service, customDrag, isMobile, isSorted, need
                   component="h2"
                 >
                   {service.title}
+                  {service.isBeta ? i18n.__('components.ServiceDetails.betaVersion') : ''}
                 </Typography>
               }
               subheader={

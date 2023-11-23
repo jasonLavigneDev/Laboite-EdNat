@@ -73,6 +73,11 @@ Services.schema = new SimpleSchema(
       optional: true,
       label: getLabel('api.services.labels.offline'),
     },
+    isBeta: {
+      type: Boolean,
+      optional: true,
+      label: getLabel('api.services.labels.isBeta'),
+    },
     businessReGrouping: { type: Array, defaultValue: [], label: getLabel('api.services.labels.businessReGrouping') },
     'businessReGrouping.$': { type: String, regEx: SimpleSchema.RegEx.Id },
   },
@@ -99,6 +104,7 @@ Services.publicFields = {
   state: 1,
   offline: 1,
   structure: 1,
+  isBeta: 1,
 };
 
 Services.allPublicFields = {

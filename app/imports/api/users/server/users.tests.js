@@ -31,6 +31,7 @@ import {
   setAvatar,
   setNcloudUrlAll,
   toggleAdvancedPersonalPage,
+  toggleBetaServices,
   resetAuthToken,
   removeUserFromStructure,
   getUsersAdmin,
@@ -961,6 +962,27 @@ describe('users', function () {
           },
           Meteor.Error,
           /api.users.toggleAdvancedPersonalPage.notPermitted/,
+        );
+      });
+    });
+    describe('toggleBetaServices', function () {
+      it('users can toggle display beta services option', function () {
+        let user = Meteor.users.findOne({ _id: userId });
+        assert.equal(user.betaServices, false);
+        toggleBetaServices._execute({ userId }, {});
+        user = Meteor.users.findOne({ _id: userId });
+        assert.equal(user.betaServices, true);
+        toggleBetaServices._execute({ userId }, {});
+        user = Meteor.users.findOne({ _id: userId });
+        assert.equal(user.betaServices, false);
+      });
+      it('only logged in users can set beta services display', function () {
+        assert.throws(
+          () => {
+            toggleBetaServices._execute({}, {});
+          },
+          Meteor.Error,
+          /api.users.toggleBetaServices.notPermitted/,
         );
       });
     });

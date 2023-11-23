@@ -210,6 +210,7 @@ export function ServicesPage({ services, categories, businessRegroupings, ready,
   const filterServices = (service) => {
     let filterSearch = true;
     let filterCat = true;
+    let filterBeta = true;
     if (search) {
       let searchText = service.title + service.description;
       searchText = searchText.toLowerCase();
@@ -219,7 +220,8 @@ export function ServicesPage({ services, categories, businessRegroupings, ready,
       const intersection = catList.filter((value) => service.categories.includes(value));
       filterCat = intersection.length > 0;
     }
-    return filterSearch && filterCat;
+    if (!user.betaServices && service.isBeta) filterBeta = false;
+    return filterSearch && filterCat && filterBeta;
   };
 
   const mapList = (func) => services.filter((service) => filterServices(service)).map(func);
