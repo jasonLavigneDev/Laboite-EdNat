@@ -1,6 +1,5 @@
 import { Meteor } from 'meteor/meteor';
 import { Roles } from 'meteor/alanning:roles';
-import { publishComposite } from 'meteor/reywood:publish-composite';
 import { FindFromPublication } from 'meteor/percolate:find-from-publication';
 import SimpleSchema from 'simpl-schema';
 
@@ -16,58 +15,56 @@ import Articles from '../../articles/articles';
 import Forms from '../../forms/forms';
 
 // publish groups that user is admin/animator of
-publishComposite('groups.adminof', function groupsAdminOf() {
+Meteor.publish('groups.adminof', function groupsAdminOf() {
   if (!isActive(this.userId)) {
     return this.ready();
   }
+
   // if user has global admin, get all groups
   if (Roles.userIsInRole(this.userId, 'admin')) {
-    return {
-      find() {
-        return Groups.find({}, { fields: Groups.adminFields });
-      },
-    };
+    return Groups.find({}, { fields: Groups.adminFields });
   }
+
   // otherwise get groups user is admin/animator of
-  return {
-    find() {
-      return Meteor.roleAssignment.find({
-        'user._id': this.userId,
-        'role._id': { $in: ['admin', 'animator'] },
-        scope: { $ne: null },
-      });
+  const roleAssignmentCursor = Meteor.roleAssignment.find(
+    {
+      'user._id': this.userId,
+      'role._id': { $in: ['admin', 'animator'] },
+      scope: { $ne: null },
     },
-    children: [
-      {
-        find(role) {
-          return Groups.find(role.scope, { fields: Groups.adminFields });
-        },
-      },
-    ],
-  };
+    { sort: { _id: 1 }, limit: 1000 },
+  );
+  const roleAssignments = roleAssignmentCursor.fetch();
+
+  if (!roleAssignments.length) {
+    return this.ready();
+  }
+
+  const roleScoes = roleAssignments.map((role) => role.scope);
+  const groupsCursor = Groups.find(
+    { _id: { $in: roleScoes } },
+    { fields: Groups.adminFields, limit: 1000, sort: { _id: 1 } },
+  );
+
+  return [roleAssignmentCursor, groupsCursor];
 });
 
 // publish groups that user is admin/animator/member of
-publishComposite('groups.member', function groupsAdminOf() {
+Meteor.publish('groups.member', function groupsAdminOf() {
   if (!isActive(this.userId)) {
     return this.ready();
   }
-  return {
-    find() {
-      return Meteor.roleAssignment.find({
-        'user._id': this.userId,
-        'role._id': { $in: ['admin', 'animator', 'member'] },
-        scope: { $ne: null },
-      });
-    },
-    children: [
-      {
-        find(role) {
-          return Groups.find(role.scope, { fields: Groups.adminFields });
-        },
-      },
-    ],
-  };
+
+  const roleAssignmentCursor = Meteor.roleAssignment.find({
+    'user._id': this.userId,
+    'role._id': { $in: ['admin', 'animator', 'member'] },
+    scope: { $ne: null },
+  });
+  const roleAssignments = roleAssignmentCursor.fetch();
+  const rolesScopes = roleAssignments.map((role) => role.scope);
+  const groupsCursor = Groups.find({ _id: { $in: rolesScopes } }, { fields: Groups.adminFields });
+
+  return [roleAssignmentCursor, groupsCursor];
 });
 
 FindFromPublication.publish('groups.one.admin', function GroupsOne({ _id }) {
@@ -97,7 +94,7 @@ FindFromPublication.publish('groups.one.admin', function GroupsOne({ _id }) {
 });
 
 // publish one group and all users associated with given role
-publishComposite('groups.users', function groupDetails({ groupId, role = 'member' }) {
+Meteor.publish('groups.users', function groupDetails({ groupId, role = 'member' }) {
   try {
     new SimpleSchema({
       groupId: {
@@ -126,29 +123,30 @@ publishComposite('groups.users', function groupDetails({ groupId, role = 'member
     return this.ready();
   }
   const usersField = `${role}s`;
-  return {
-    find() {
-      return Groups.find({ _id: groupId }, { fields: { [usersField]: 1 }, limit: 1, sort: { name: 1 } });
-    },
-    children: [
-      {
-        find(group) {
-          const users = group[usersField];
-          return Meteor.users.find(
-            { _id: { $in: users } },
-            {
-              fields: {
-                username: 1,
-                emails: 1,
-                firstName: 1,
-                lastName: 1,
-              },
-            },
-          );
-        },
+  const groupsCursor = Groups.find({ _id: groupId }, { fields: { [usersField]: 1 }, limit: 1, sort: { name: 1 } });
+  const groups = groupsCursor.fetch();
+
+  if (!groups.length) {
+    return this.ready();
+  }
+
+  const users = groups[0][usersField];
+
+  const usersCursor = Meteor.users.find(
+    { _id: { $in: users } },
+    {
+      fields: {
+        username: 1,
+        emails: 1,
+        firstName: 1,
+        lastName: 1,
       },
-    ],
-  };
+      limit: 10000,
+      sort: { _id: 1 },
+    },
+  );
+
+  return [groupsCursor, usersCursor];
 });
 
 // build query for all groups
@@ -311,7 +309,7 @@ FindFromPublication.publish('groups.one', function groupsOne({ slug }) {
 });
 
 // publish one group and events and pools based on its slug
-publishComposite('groups.single', function groupSingle({ slug }) {
+Meteor.publish('groups.single', function groupSingle({ slug }) {
   if (!isActive(this.userId)) {
     return this.ready();
   }
@@ -335,77 +333,31 @@ publishComposite('groups.single', function groupSingle({ slug }) {
     this.error(err);
   }
 
-  return {
-    find() {
-      return Groups.find({ slug }, { fields: Groups.allPublicFields, limit: 1, sort: { name: -1 } });
+  const groupsCursor = Groups.find({ slug }, { fields: Groups.allPublicFields, limit: 1, sort: { name: -1 } });
+  const groups = groupsCursor.fetch();
+
+  if (groups.length === 0) {
+    return this.ready();
+  }
+
+  const groupId = groups[0]._id;
+  const projection = {
+    fields: {
+      _id: 1,
     },
-    children: [
-      {
-        find(group) {
-          const groupId = group._id;
-          return Polls.find(
-            { groups: { $in: [groupId] }, active: true },
-            {
-              fields: {
-                _id: 1,
-              },
-            },
-          );
-        },
-      },
-      {
-        find(group) {
-          const groupId = group._id;
-          const date = new Date();
-          return EventsAgenda.find(
-            { groups: { $elemMatch: { _id: groupId } }, end: { $gte: date } },
-            {
-              fields: {
-                _id: 1,
-              },
-            },
-          );
-        },
-      },
-      {
-        find(group) {
-          const groupId = group._id;
-          return Bookmarks.find(
-            { groupId },
-            {
-              fields: {
-                _id: 1,
-              },
-            },
-          );
-        },
-      },
-      {
-        find(group) {
-          const groupId = group._id;
-          return Articles.find(
-            { groups: { $elemMatch: { _id: groupId } } },
-            {
-              fields: {
-                _id: 1,
-              },
-            },
-          );
-        },
-      },
-      {
-        find(group) {
-          const groupId = group._id;
-          return Forms.find(
-            { groups: { $in: [groupId] }, active: true },
-            {
-              fields: {
-                _id: 1,
-              },
-            },
-          );
-        },
-      },
-    ],
+    sort: { _id: 1 },
+    limit: 100,
   };
+  const now = new Date();
+
+  const pollsCursor = Polls.find({ groups: { $in: [groupId] }, active: true }, projection);
+  const eventsAgendaCursor = EventsAgenda.find(
+    { groups: { $elemMatch: { _id: groupId } }, end: { $gte: now } },
+    projection,
+  );
+  const bookmarksCursor = Bookmarks.find({ groupId }, projection);
+  const articlesCusrsor = Articles.find({ groups: { $elemMatch: { _id: groupId } } }, projection);
+  const formsCursor = Forms.find({ groups: { $in: [groupId] }, active: true }, projection);
+
+  return [groupsCursor, pollsCursor, eventsAgendaCursor, bookmarksCursor, articlesCusrsor, formsCursor];
 });
