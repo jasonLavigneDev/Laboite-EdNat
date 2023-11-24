@@ -1246,6 +1246,7 @@
       "loginError": "Erreur: Mauvais compte ou mot de passe",
       "keycloakError": "Erreur de connexion",
       "EmailAlreadyExists": "Erreur: Un compte existant utilise le même email",
+      "MissingKeycloakData": "Erreur: Les données de votre compte sont incomplètes, vous pouvez utiliser le formulaire de contact pour prévenir un administrateur",
       "loginKeycloak": "Se connecter",
       "rememberMe": "Rester connecté(e)",
       "maintenanceLogin": "Site en maintenance"
