@@ -136,7 +136,7 @@ const MainMenu = ({ user = {} }) => {
       history.push(item.path);
       setAnchorEl(null);
     } else {
-      window.open(item.path, '_blank');
+      window.open(item.path, '_blank', 'noreferrer,noopener');
     }
   };
   const handleContactClick = (item) => {
