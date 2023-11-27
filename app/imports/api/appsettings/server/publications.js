@@ -62,14 +62,21 @@ Meteor.publish('appsettings.textMaintenance', () => {
 
 // publish userStructureValidationMandatory settings
 Meteor.publish('appsettings.userStructureValidationMandatory', () => {
-  const { userStructureValidationMandatory } = AppSettings;
   return AppSettings.find(
     { _id: 'settings' },
-    { fields: userStructureValidationMandatory, sort: { _id: 1 }, limit: 1 },
+    { fields: { userStructureValidationMandatory: 1 }, sort: { _id: 1 }, limit: 1 },
   );
 });
 
 Meteor.publish('appsettings.helpUrl', () => {
   const { helpUrl } = AppSettings;
   return AppSettings.find({ _id: 'settings' }, { fields: helpUrl, sort: { _id: 1 }, limit: 1 });
+});
+
+Meteor.publish('appsettings.settingsForAdminMenu', () => {
+  const res = AppSettings.find(
+    { _id: 'settings' },
+    { fields: { userStructureValidationMandatory: 1, helpUrl: 1 }, sort: { _id: 1 }, limit: 1 },
+  );
+  return res;
 });

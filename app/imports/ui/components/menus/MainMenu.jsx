@@ -100,7 +100,7 @@ const MainMenu = ({ user = {} }) => {
   const [contactURL, setContactURL] = useState(null);
 
   const { helpUrl } = useTracker(() => {
-    Meteor.subscribe('appsettings.userStructureValidationMandatory');
+    Meteor.subscribe('appsettings.helpUrl');
     const appSettings = AppSettings.findOne({ _id: 'settings' }, { fields: { helpUrl: 1 } });
     return {
       helpUrl: appSettings?.helpUrl,
