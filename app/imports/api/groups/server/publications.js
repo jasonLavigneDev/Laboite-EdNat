@@ -40,9 +40,9 @@ Meteor.publish('groups.adminof', function groupsAdminOf() {
     return this.ready();
   }
 
-  const roleScoes = roleAssignments.map((role) => role.scope);
+  const roleScopes = roleAssignments.map((role) => role.scope);
   const groupsCursor = Groups.find(
-    { _id: { $in: roleScoes } },
+    { _id: { $in: roleScopes } },
     { fields: Groups.adminFields, limit: 1000, sort: { _id: 1 } },
   );
 

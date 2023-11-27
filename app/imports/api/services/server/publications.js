@@ -85,7 +85,7 @@ FindFromPublication.publish('services.group', function servicesGroup({ ids }) {
   return Services.find({ _id: { $in: ids } }, { fields: Services.allPublicFields, sort: { title: 1 }, limit: 100 });
 });
 
-Meteor.publish('services.one', ({ slug, structure }) => {
+Meteor.publish('services.one', function publishServicesOne({ slug, structure }) {
   try {
     new SimpleSchema({
       slug: {

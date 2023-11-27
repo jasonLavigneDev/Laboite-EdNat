@@ -4,7 +4,7 @@ import Services from '../../services/services';
 import { hasAdminRightOnStructure } from '../../structures/utils';
 
 // publish personalspace for the connected user
-Meteor.publish('defaultspaces.one', ({ structureId }) => {
+Meteor.publish('defaultspaces.one', function publishDefaultSpaceOne({ structureId }) {
   const isAdminStructure = hasAdminRightOnStructure({ userId: this.userId, structureId });
 
   if (!isActive(this.userId) || !isAdminStructure || !structureId) {

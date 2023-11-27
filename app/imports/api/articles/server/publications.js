@@ -115,7 +115,7 @@ FindFromPublication.publish('articles.one.admin', ({ slug }) => {
   );
 });
 
-Meteor.publish('articles.one', ({ slug }) => {
+Meteor.publish('articles.one', function publishArticlesOne({ slug }) {
   try {
     new SimpleSchema({
       slug: {

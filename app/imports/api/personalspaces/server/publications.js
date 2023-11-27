@@ -6,11 +6,12 @@ import UserBookmarks from '../../userBookmarks/userBookmarks';
 import Bookmarks from '../../bookmarks/bookmarks';
 
 // publish personalspace for the connected user
-Meteor.publish('personalspaces.self', () => {
+Meteor.publish('personalspaces.self', function publishPersonalSpaceSelf() {
   // Find top ten highest scoring posts
   if (!isActive(this.userId)) {
     return this.ready();
   }
+
   const personalSpacesCursor = PersonalSpaces.find(
     { userId: this.userId },
     { fields: PersonalSpaces.publicFields, limit: 1 },
@@ -23,7 +24,10 @@ Meteor.publish('personalspaces.self', () => {
 
   const pSpace = personalSpaces[0];
 
-  const { services, groups, links, groupLinks } = [...pSpace.unsorted, ...pSpace.sorted].reduce(
+  const { services, groups, links, groupLinks } = [
+    ...pSpace.unsorted,
+    ...pSpace.sorted.flatMap((zone) => zone.elements),
+  ].reduce(
     (acc, element) => {
       acc[`${element.type}s`].push(element.element_id);
 
