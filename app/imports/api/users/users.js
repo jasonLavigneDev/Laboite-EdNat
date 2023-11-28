@@ -328,7 +328,10 @@ export const searchMatchingStructure = (structureObject, apiKey, tabApiKeys, tab
 
 export const searchRootStructure = (pathGiven) => {
   let structureToReturn;
-  const structureParentWithName = Structures.find({ name: pathGiven[0], parentId: { $eq: '' } }).fetch();
+  const structureParentWithName = Structures.find({
+    name: pathGiven[0],
+    $or: [{ parentId: { $eq: null } }, { parentId: { $eq: '' } }],
+  }).fetch();
 
   if (structureParentWithName) {
     if (structureParentWithName.length) {
