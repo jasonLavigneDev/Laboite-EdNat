@@ -350,7 +350,7 @@ export const checkPathOnChildren = (structureParent, pathGiven) => {
   let structureToReturn = structureParent;
 
   // eslint-disable-next-line no-plusplus
-  for (let i = 1; i < pathGiven.length - 1; i++) {
+  for (let i = 1; i < pathGiven.length; i++) {
     const structureChild = Structures.find({ name: pathGiven[i], parentId: structureToReturn._id }).fetch();
     const structureChildToTest = structureChild.pop();
 
