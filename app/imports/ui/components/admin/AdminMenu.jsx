@@ -75,7 +75,7 @@ export default function AdminMenu() {
   const isAdminStructure = Roles.userIsInRole(user._id, 'adminStructure', user.structure);
 
   const { isUserStructureValidationMandatory, helpUrl } = useTracker(() => {
-    Meteor.subscribe('appsettings.settingsForMenu');
+    Meteor.subscribe('appsettings.settingsForAdminMenu');
     const appSettings = AppSettings.findOne(
       { _id: 'settings' },
       { fields: { userStructureValidationMandatory: 1, helpUrl: 1 } },
