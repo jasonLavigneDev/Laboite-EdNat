@@ -1255,7 +1255,9 @@
       "redirectMsg": "Your request has been sent. Redirection in progress...",
       "redirectTime": "seconds",
       "errorMsgEmpty": "You can't send an empty message",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "externalDescription": "User support for your structure is managed by an external site",
+      "externalButton": "Access user support site"
     },
     "ProfilePage": {
       "title": "My profile",
