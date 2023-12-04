@@ -1532,6 +1532,40 @@ export const toggleAdvancedPersonalPage = new ValidatedMethod({
   },
 });
 
+export const toggleBetaServices = new ValidatedMethod({
+  name: 'users.toggleBetaServices',
+  validate: null,
+
+  run() {
+    if (!this.userId) {
+      logServer(
+        `USERS - METHODS - METEOR ERROR - toggleBetaServices - ${i18n.__('api.users.mustBeLoggedIn')}`,
+        levels.WARN,
+        scopes.SYSTEM,
+      );
+      throw new Meteor.Error('api.users.toggleBetaServices.notPermitted', i18n.__('api.users.mustBeLoggedIn'));
+    }
+    // check user existence
+    const user = Meteor.users.findOne({ _id: this.userId });
+    if (user === undefined) {
+      logServer(
+        `USERS - METHODS - METEOR ERROR - toggleBetaServices - ${i18n.__('api.users.unknownUser')}`,
+        levels.ERROR,
+        scopes.SYSTEM,
+      );
+      throw new Meteor.Error('api.users.toggleBetaServices.unknownUser', i18n.__('api.users.unknownUser'));
+    }
+    const newValue = !(user.betaServices || false);
+    logServer(
+      `USERS - METHODS - UPDATE - toggleBetaServices (user meteor) - userId: ${this.userId} 
+      / betaServices: ${newValue}`,
+      levels.INFO,
+      scopes.USER,
+    );
+    Meteor.users.update(this.userId, { $set: { betaServices: newValue } });
+  },
+});
+
 export const getAuthToken = new ValidatedMethod({
   name: 'users.getAuthToken',
   validate: null,
@@ -1806,6 +1840,7 @@ const LISTS_METHODS = _.pluck(
     setAvatar,
     userUpdated,
     toggleAdvancedPersonalPage,
+    toggleBetaServices,
     getAuthToken,
     fixUsers,
     hasUserOnRequest,
