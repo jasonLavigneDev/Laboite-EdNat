@@ -24,8 +24,11 @@ In order to work, the API-KEY must be define in createUserApiKeys
 **X-API-KEY header required** : YES
 
 **Data constraints**
+This API call requires username, firstname, lastname and email to identify user, structure correspond to a path to the desired structure.
 
-This API call requires username, firstname, lastname and email to identify user, structure is not necessary because user can choose his structure while he's login for the first time on the app
+A check will be made on the root structure (first structure in the path) and will tell us if we are able to create this user.
+The structure that will be assign to this new user will be the last structure of this given path if it's correct
+It means that the root structure given in the path has to be a parent structure and her child structure has to be the second structure given in the path, again and again until we check all the path structures. In case of an error in the given path, then this is the last tested structure who will be assign to the new user.
 
 ```json
 {
@@ -33,7 +36,6 @@ This API call requires username, firstname, lastname and email to identify user,
   "firstname": "[string : user first name]",
   "lastname": "[string : user last name]",
   "email": "[string : user email]",
-
   "structure": "[optional string : structure assign to user]"
 }
 ```
@@ -43,11 +45,10 @@ This API call requires username, firstname, lastname and email to identify user,
 ```json
 {
   "username": "usern",
-  "firstname": "userf",
-  "lastname": "userl",
-  "email": "userf.userl@mail.fr",
-
-  "structure": "structurename"
+  "firstname": "firstnameUser",
+  "lastname": "lastnameUser",
+  "email": "user.email@mail.fr",
+  "structure": "RootStructure/ChildStructure/DesireStructure"
 }
 ```
 
@@ -65,7 +66,7 @@ curl -X  POST -H "X-API-KEY: XXXXX-XXXXX-XXXXX-XXXXX-XXXXX" \
 ```bash
 curl -X  POST -H "X-API-KEY: XXXXX-XXXXX-XXXXX-XXXXX-XXXXX" \
      -H "Content-Type: application/json" \
-     -d '{"username":"user01", "firstname": "userf", "lastname": "userl", "email": "userf.userl@mail.fr", "structure": "structurename" }' \
+     -d '{"username":"user01", "firstname": "userf", "lastname": "userl", "email": "userf.userl@mail.fr", "structure": "RootStructure/ChildStructure/DesireStructure" }' \
      http://localhost:3000/api/createuser
 ```
 
@@ -81,9 +82,14 @@ curl -X  POST -H "X-API-KEY: XXXXX-XXXXX-XXXXX-XXXXX-XXXXX" \
 ---
 
 - **Condition** : If structure given exist and isn't in tab of the object createUserApiKeysByStructure in settings.
-- **Content** : `Error: Error encountered while creating user whith structure StructureName [Structure not allowed to create users]`
+- **Content** : `Error: Error encountered while creating user whith structure "RootStructure/ChildStructure/DesireStructure" [Root structure not allowed to create users]`
 
 ---
 
 - **Condition** : If user already exist.
 - **Content** : `Error: user already exists with this email: user@mail.fr [restapi.users.createuser.emailExists]`
+
+---
+
+- **Condition** : If the first given structure in the path isn't a parent structure.
+- **Content** : `Error: Error encountered while creating user whith structure << DesireStructure >> [RootStructure isn't the root structure of DesireStructure]`
