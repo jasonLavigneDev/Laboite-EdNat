@@ -414,7 +414,7 @@ function PersonalZoneUpdater({
     filteredUnsortedPersonalSpacesLink,
     filteredUnsortedPersonalSpacesGroupLink,
   } = useMemo(() => {
-    const filteredUnsortedPersonalSpaces = localPS.unsorted.filter(filterSearch);
+    const filteredUnsortedPersonalSpaces = localPS.unsorted ? localPS.unsorted.filter(filterSearch) : [];
 
     return {
       filteredUnsortedPersonalSpaces,
