@@ -32,7 +32,7 @@ export default async function getNcToken(req, content) {
     })
       .then((response) => {
         if (response.data.token) {
-          return { nclocator: user.nclocator, nctoken: response.data.token };
+          return { nclocator: ncUrl, nctoken: response.data.token };
         }
         throw new Meteor.Error(
           'restapi.nextcloud.getNcToken.noTokenReceived',
