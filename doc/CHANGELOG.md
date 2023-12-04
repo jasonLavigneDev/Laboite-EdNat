@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.7.2](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/5.7.1...release/5.7.2) (2023-12-04)
+
+
+### Bug Fixes
+
+* **nctoken:** always return URL with protocol for nclocator ([77f007e](https://gitlab.mim-libre.fr/alphabet/laboite/commit/77f007e9813445dda79c851b70c97c40e666813e))
+
 ## [5.7.1](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/5.7.0...release/5.7.1) (2023-11-20)
 
 
