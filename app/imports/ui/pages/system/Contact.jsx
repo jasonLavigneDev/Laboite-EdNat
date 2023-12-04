@@ -95,24 +95,13 @@ const Contact = ({ structures, loading }) => {
     return null;
   }, [user]);
 
-  const getExternalService = (struc) => {
-    if (struc.externalUrl) {
-      return struc.externalUrl;
-    }
-    if (struc.sendMailToParent) {
-      if (struc.parentId) {
-        const ancestor = structures.find((st) => st._id === struc.parentId);
-        if (ancestor) {
-          return getExternalService(ancestor);
-        }
-      }
-    }
-    return null;
-  };
-
   useEffect(() => {
     if (userStructure) {
-      setExternalSite(getExternalService(userStructure));
+      Meteor.call('structures.getContactURL', {}, (err, res) => {
+        if (res) {
+          setExternalSite(res);
+        }
+      });
     }
   }, [userStructure]);
 

@@ -95,6 +95,7 @@ const MainMenu = ({ user = {} }) => {
 
   const [hasUserOnRequest, setHasUserOnRequest] = useState(false);
   const [hasUserOnAwaitingStructure, setHasUserOnAwaitingStructure] = useState(false);
+  const [contactURL, setContactURL] = useState(null);
 
   useEffect(() => {
     if (isAdmin) {
@@ -107,6 +108,12 @@ const MainMenu = ({ user = {} }) => {
         setHasUserOnAwaitingStructure(res);
       });
     }
+    // check if an external contact URL is defined for user's structure
+    // preload contact URL because it can not be caculated when user clicks on the menu
+    // (some browsers will block window opening if it is not a direct action of the user)
+    Meteor.call('structures.getContactURL', {}, (err, res) => {
+      setContactURL(res);
+    });
   }, []);
 
   const handleClick = (event) => {
@@ -117,6 +124,16 @@ const MainMenu = ({ user = {} }) => {
     updateDocumentTitle(i18n.__(`components.MainMenu.${item.content}`));
     history.push(item.path);
     setAnchorEl(null);
+  };
+  const handleContactClick = (item) => {
+    if (contactURL) {
+      const url =
+        !contactURL.startsWith('http://') && !contactURL.startsWith('https://') ? `http://${contactURL}` : contactURL;
+      window.open(url, '_blank', 'noopener,noreferrer');
+      setAnchorEl(null);
+    } else {
+      handleMenuClick(item);
+    }
   };
   let menu = [...userMenu];
   if (!isAdmin && !disabledFeatures.groups) {
@@ -215,7 +232,7 @@ const MainMenu = ({ user = {} }) => {
         })}
         <MenuItem
           className={classes.menuItem}
-          onClick={() => handleMenuClick({ path: '/contact', content: 'menuContact' })}
+          onClick={() => handleContactClick({ path: '/contact', content: 'menuContact' })}
           selected={pathname === '/contact'}
         >
           {i18n.__('components.MainMenu.menuContact')}

@@ -7,7 +7,7 @@ import { _ } from 'meteor/underscore';
 import sanitizeHtml from 'sanitize-html';
 import { getLabel, isActive, sanitizeParameters, validateString } from '../utils';
 import Structures, { IntroductionStructure } from './structures';
-import { hasAdminRightOnStructure, isAStructureWithSameNameExistWithSameParent } from './utils';
+import { hasAdminRightOnStructure, isAStructureWithSameNameExistWithSameParent, getExternalService } from './utils';
 import Services from '../services/services';
 import Articles from '../articles/articles';
 import Groups from '../groups/groups';
@@ -567,6 +567,19 @@ export const getOneStructure = new ValidatedMethod({
   },
 });
 
+export const getContactURL = new ValidatedMethod({
+  name: 'structures.getContactURL',
+  validate: null,
+  run() {
+    if (!this.userId) {
+      throw new Meteor.Error('api.structures.getContactURL.notPermitted', i18n.__('api.users.notPermitted'));
+    }
+    const user = Meteor.users.findOne(this.userId);
+    const structure = Structures.findOne(user.structure);
+    return getExternalService(structure);
+  },
+});
+
 if (Meteor.isServer) {
   // Get list of all method names on Structures
   const LISTS_METHODS = _.pluck(
@@ -579,6 +592,7 @@ if (Meteor.isServer) {
       updateStructureContactEmail,
       getStructures,
       getOneStructure,
+      getContactURL,
       setUserStructureAdminValidationMandatoryStatus,
     ],
     'name',

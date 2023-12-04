@@ -9,7 +9,14 @@ import { Meteor } from 'meteor/meteor';
 import { _ } from 'meteor/underscore';
 import { Accounts } from 'meteor/accounts-base';
 import { Roles } from 'meteor/alanning:roles';
-import { createStructure, getAllChilds, removeStructure, updateStructure } from '../methods';
+import {
+  createStructure,
+  getAllChilds,
+  removeStructure,
+  updateStructure,
+  getContactURL,
+  updateStructureContactEmail,
+} from '../methods';
 import './publications';
 import './factories';
 import Structures from '../structures';
@@ -72,6 +79,7 @@ describe('structures', function () {
       Meteor.users.remove({});
       Roles.createRole('admin', { unlessExists: true });
       Roles.createRole('animator', { unlessExists: true });
+      Roles.createRole('adminStructure', { unlessExists: true });
 
       const email = faker.internet.email();
       const struct = Factory.create('structure');
@@ -319,6 +327,58 @@ describe('structures', function () {
 
         const allChilds = getAllChilds._execute({ userId: adminId }, { structureId: parentId });
         assert.equal(allChilds.length, 10);
+      });
+    });
+    describe('getContactURL', function () {
+      it("does get contact URL of user's structure", function () {
+        const struc1Id = createStructure._execute({ userId: adminId }, { name: `Struc1` });
+        const struc2Id = createStructure._execute({ userId: adminId }, { name: `Struc2` });
+        Roles.addUsersToRoles(adminId, 'adminStructure', struc2Id);
+
+        updateStructureContactEmail._execute(
+          { userId: adminId },
+          {
+            structureId: struc2Id,
+            contactEmail: '',
+            externalUrl: 'https://contact.gouv.fr',
+            sendMailToParent: false,
+            sendMailToStructureAdmin: false,
+          },
+        );
+        const struc3Id = createStructure._execute({ userId: adminId }, { name: `Struc3`, parentId: struc2Id });
+        Roles.addUsersToRoles(adminId, 'adminStructure', struc3Id);
+        updateStructureContactEmail._execute(
+          { userId: adminId },
+          {
+            structureId: struc3Id,
+            contactEmail: '',
+            externalUrl: '',
+            sendMailToParent: true,
+            sendMailToStructureAdmin: false,
+          },
+        );
+        const email1 = faker.internet.email();
+        const user1Id = Accounts.createUser({
+          email: email1,
+          username: email1,
+          password: 'toto',
+          structure: struc1Id,
+          firstName: faker.name.firstName(),
+          lastName: faker.name.lastName(),
+        });
+        const email3 = faker.internet.email();
+        const user3Id = Accounts.createUser({
+          email: email3,
+          username: email3,
+          password: 'toto',
+          structure: struc3Id,
+          firstName: faker.name.firstName(),
+          lastName: faker.name.lastName(),
+        });
+        const URL1 = getContactURL._execute({ userId: user1Id }, {});
+        assert.equal(URL1, null);
+        const URL3 = getContactURL._execute({ userId: user3Id }, {});
+        assert.equal(URL3, 'https://contact.gouv.fr');
       });
     });
   });
