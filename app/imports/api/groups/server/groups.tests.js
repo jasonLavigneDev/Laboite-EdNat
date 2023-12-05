@@ -131,7 +131,7 @@ describe('groups', function () {
       it('sends all users with a given role on a group', function (done) {
         const collector = new PublicationCollector({ userId });
         collector.collect('groups.users', { groupId, role: 'member' }, (collections) => {
-          assert.notProperty(collections, 'users');
+          assert.equal(collections.users.length, 0);
         });
         setMemberOf._execute({ userId }, { userId, groupId });
         collector.collect('groups.users', { groupId, role: 'member' }, (collections) => {
@@ -154,8 +154,13 @@ describe('groups', function () {
         });
         setAdminOf._execute({ userId }, { userId, groupId });
         Roles.removeUsersFromRoles(userId, 'admin');
+        /**
+         * Here, we need a brand new collector as the existing seems to keep track of documents that are NOT published
+         * (you can check it by logging variables in the publications)
+         */
+        const newCollector = new PublicationCollector({ userId });
         // group admin only : returns only groups user is admin of
-        collector.collect('groups.adminof', (collections) => {
+        newCollector.collect('groups.adminof', (collections) => {
           assert.equal(collections.groups.length, 1);
           assert.equal(collections.groups[0]._id, groupId);
           done();
@@ -175,8 +180,10 @@ describe('groups', function () {
         });
         setAdminOf._execute({ userId }, { userId, groupId });
         Roles.removeUsersFromRoles(userId, 'admin');
+        const newCollector = new PublicationCollector({ userId });
+
         // group admin only : returns only groups user is admin of
-        collector.collect('groups.adminof', (collections) => {
+        newCollector.collect('groups.adminof', (collections) => {
           assert.equal(collections.groups.length, 1);
           assert.equal(collections.groups[0]._id, groupId);
           done();
