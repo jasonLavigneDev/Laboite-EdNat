@@ -1265,7 +1265,9 @@
       "redirectMsg": "Formulaire envoyé. Redirection automatique en cours...",
       "redirectTime": "secondes",
       "errorMsgEmpty": "Vous ne pouvez pas envoyer un message vide",
-      "cancel": "Annuler"
+      "cancel": "Annuler",
+      "externalDescription": "L'assistance de votre structure est gérée par un site externe",
+      "externalButton": "Accéder au site d'assistance"
     },
     "ProfilePage": {
       "title": "Mon profil",
