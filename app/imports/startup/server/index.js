@@ -3,6 +3,7 @@ import { Meteor } from 'meteor/meteor';
 import { WebApp } from 'meteor/webapp';
 import helmet from 'helmet';
 import { SyncedCron } from 'meteor/littledata:synced-cron';
+import cors from 'cors';
 import { NOTIFICATIONS_TYPES, SCOPE_TYPES } from '../../api/notifications/enums';
 import { checkMigrationStatus } from '../../api/appsettings/methods';
 
@@ -43,6 +44,10 @@ Meteor.startup(() => {
   checkMigrationStatus();
   // set up Default language to French in HTML attribute
   WebApp.addHtmlAttributeHook(() => ({ lang: 'fr' }));
+
+  /**
+   * Configure Content Security Policies
+   */
   // set up various security related headers
   const scriptSrcs = ["'self'", "'unsafe-inline'", "'unsafe-eval'"];
   if (Meteor.settings.public.matomo?.urlBase) scriptSrcs.push(Meteor.settings.public.matomo.urlBase);
@@ -73,4 +78,13 @@ Meteor.startup(() => {
     collectionTTL: 172800,
   });
   SyncedCron.start();
+
+  /**
+   * Configure CORS
+   */
+  WebApp.connectHandlers.use(
+    cors({
+      origin: '*', // Enable every origin to load Laboite's scripts (for the widget)
+    }),
+  );
 });
