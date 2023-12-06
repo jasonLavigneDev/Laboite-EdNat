@@ -620,19 +620,19 @@ function UserBookmarksPage({ loading, bookmarksList }) {
                   <li>
                     {dialogMode === 'import' ? (
                       <Link
-                        href="https://support.mozilla.org/fr/kb/importer-marque-pages-fichier-html"
-                        target="blank"
-                        rel="noopener noreferrer"
-                      >
-                        <Typography variant="caption">{i18n.__('pages.UserBookmarksPage.importFirefox')}</Typography>
-                      </Link>
-                    ) : (
-                      <Link
                         href="https://support.mozilla.org/fr/kb/exporter-marque-pages-firefox-fichier-html"
                         target="blank"
                         rel="noopener noreferrer"
                       >
                         <Typography variant="caption">{i18n.__('pages.UserBookmarksPage.exportFirefox')}</Typography>
+                      </Link>
+                    ) : (
+                      <Link
+                        href="https://support.mozilla.org/fr/kb/importer-marque-pages-fichier-html"
+                        target="blank"
+                        rel="noopener noreferrer"
+                      >
+                        <Typography variant="caption">{i18n.__('pages.UserBookmarksPage.importFirefox')}</Typography>
                       </Link>
                     )}
                   </li>
