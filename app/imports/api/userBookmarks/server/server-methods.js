@@ -88,8 +88,17 @@ export const createUserBookmarks = new ValidatedMethod({
     const existingUrls = UserBookmarks.find({ url: { $in: urls }, userId: this.userId })
       .fetch()
       .map((bk) => bk.url);
-    const filteredBookmarks = bookmarks.filter(
-      (bookmark) => !existingUrls.includes(bookmark.url) && bookmark.name && bookmark.url.length <= 256,
+    const { filteredBookmarks, droppedUrls } = bookmarks.reduce(
+      (acc, bookmark) => {
+        if (!existingUrls.includes(bookmark.url) && bookmark.name && bookmark.url.length <= 256) {
+          acc.filteredBookmarks.push(bookmark);
+        } else {
+          acc.droppedUrls.push({ name: bookmark.name, url: bookmark.url });
+        }
+
+        return acc;
+      },
+      { filteredBookmarks: [], droppedUrls: [] },
     );
 
     const finalUrls = [];
@@ -128,12 +137,14 @@ export const createUserBookmarks = new ValidatedMethod({
           scopes.SYSTEM,
         );
 
+        droppedUrls.push({ url, name });
+
         // eslint-disable-next-line no-continue
         continue;
       }
     }
 
-    return finalUrls;
+    return { droppedUrls, finalUrlsCount: finalUrls.length };
   },
 });
 
