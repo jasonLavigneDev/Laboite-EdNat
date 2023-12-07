@@ -18,11 +18,12 @@ window.addEventListener('message', (e) => {
     return;
   }
 
-  if (origins !== '*' && origins.split(',').indexOf(e.origin) === -1) {
-    console.log('Origin not allowed', e.origin);
+  if (origins && origins !== '*' && origins.split(',').indexOf(e.origin) === -1) {
+    console.warn('Origin not allowed', e.origin);
     return;
   }
 
-  const command = commands[e.data.event];
-  command(e.data, e);
+  if (e.data.event && e.data.event in commands && typeof commands[e.data.event] === 'function') {
+    commands[e.data.event](e.data, e);
+  }
 });

@@ -72,12 +72,7 @@ Copy `settings-development.json.sample` to `settings-development.json` and updat
 | features                                 | ["franceTransfert" \| string] | []                                   | List of enabled features                                                                    |
 | widget.packageUrl                        | string                        | null                                 | Url pointing towards the widget script. If null the widget will not be enabled              |
 | chatbotUrl                               | string                        | null                                 | Url pointing towards a chatbot instance.                                                    |
-| chatbotConfig.chatWidth                  | string                        | null                                 | CSS unit of length for the chatbot widget frame width                                       |
-| chatbotConfig.chatHeight                 | string                        | null                                 | CSS unit of length for the chatbot widget frame height                                      |
-| chatbotConfig.buttonSize                 | string                        | null                                 | CSS unit of length for the chatbot widget button size                                       |
-| chatbotConfig.buttonColor                | string                        | null                                 | CSS color for the widget button background                                                  |
-| chatbotConfig.iconSize                   | string                        | null                                 | CSS unit of length for the chatbot widget button's icon size                                |
-| chatbotConfig.iconColor                  | string                        | null                                 | CSS color for the widget button's icon color                                                |
+
 
 ## keycloak:
 
