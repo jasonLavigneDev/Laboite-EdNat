@@ -60,20 +60,7 @@ Meteor.publish('appsettings.textMaintenance', () => {
   return AppSettings.find({ _id: 'settings' }, { fields: textMaintenance, sort: { _id: 1 }, limit: 1 });
 });
 
-// publish userStructureValidationMandatory settings
-Meteor.publish('appsettings.userStructureValidationMandatory', () => {
-  return AppSettings.find(
-    { _id: 'settings' },
-    { fields: { userStructureValidationMandatory: 1 }, sort: { _id: 1 }, limit: 1 },
-  );
-});
-
-Meteor.publish('appsettings.helpUrl', () => {
-  const { helpUrl } = AppSettings;
-  return AppSettings.find({ _id: 'settings' }, { fields: helpUrl, sort: { _id: 1 }, limit: 1 });
-});
-
-Meteor.publish('appsettings.settingsForAdminMenu', () => {
+Meteor.publish('appsettings.settingsForMenu', () => {
   const res = AppSettings.find(
     { _id: 'settings' },
     { fields: { userStructureValidationMandatory: 1, helpUrl: 1 }, sort: { _id: 1 }, limit: 1 },

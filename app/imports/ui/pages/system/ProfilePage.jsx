@@ -150,7 +150,7 @@ const ProfilePage = () => {
     isNewStructCorrespondingToDomainStructure,
     ready: readySettingUserStructureValidationMandatory,
   } = useTracker(() => {
-    const handle = Meteor.subscribe('appsettings.userStructureValidationMandatory');
+    const handle = Meteor.subscribe('appsettings.settingsForMenu');
     const appSettings = AppSettings.findOne({ _id: 'settings' }, { fields: { userStructureValidationMandatory: 1 } });
 
     const handleAsamExt = Meteor.subscribe('asamextensions.all', { getOnlyNotAffected: false });
