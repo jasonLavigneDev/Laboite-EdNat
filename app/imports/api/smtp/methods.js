@@ -32,7 +32,7 @@ export const sendEmailToDiffusionList = new ValidatedMethod({
     mailList: {
       type: Array,
     },
-    'mailList.*': {
+    'mailList.$': {
       type: String,
     },
   }).validator(),
