@@ -13,6 +13,56 @@ Meteor.startup(function startSmtp() {
   process.env.MAIL_URL = Meteor.settings.smtp.url;
 });
 
+export const sendEmailToDiffusionList = new ValidatedMethod({
+  name: 'smtp.sendMailToDiffusionList',
+  validate: new SimpleSchema({
+    firstName: {
+      type: String,
+    },
+    lastName: {
+      type: String,
+    },
+    email: {
+      type: String,
+      regEx: SimpleSchema.RegEx.Email,
+    },
+    text: {
+      type: String,
+    },
+    mailList: {
+      type: Array,
+    },
+    'mailList.*': {
+      type: String,
+    },
+  }).validator(),
+  run({ firstName, lastName, email, text, mailList }) {
+    const { appName = 'LaBoite' } = Meteor.settings.public;
+    const object = `[Contact ${appName}] ${firstName} ${lastName}`;
+
+    const cleanText = sanitizeHtml(text, {
+      allowedTags: ['b', 'i', 'strong', 'em'],
+    });
+
+    const msg = `Message de: ${firstName} ${lastName}
+Adresse mail: ${email}
+                 
+                 
+${cleanText}`;
+
+    const from = Meteor.settings.smtp.fromEmail;
+    const to = Meteor.settings.smtp.toEmail;
+
+    this.unblock();
+
+    if (mailList.length > 0) {
+      Email.send({ to, cci: mailList, from, subject: object, text: msg });
+    } else {
+      Email.send({ to, from, subject: object, text: msg });
+    }
+  },
+});
+
 export const sendContactEmail = new ValidatedMethod({
   name: 'smtp.sendContactEmail',
   validate: new SimpleSchema({
@@ -87,7 +137,7 @@ ${cleanText}`;
 });
 
 // Get list of all method names on Helps
-const LISTS_METHODS = _.pluck([sendContactEmail], 'name');
+const LISTS_METHODS = _.pluck([sendContactEmail, sendEmailToDiffusionList], 'name');
 
 if (Meteor.isServer) {
   // Only allow 5 list operations per connection per second
