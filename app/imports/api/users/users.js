@@ -274,18 +274,17 @@ if (Meteor.isServer) {
       email = user.services.keycloak.email;
       // Check if user has enough informations for account creation in keycloak data
       const kcData = user.services.keycloak;
-      ['preferred_username', 'email', 'family_name', 'given_name'].forEach((userField) => {
-        if (!kcData[userField]) {
-          logServer(
-            'USERS - API - METEOR ERROR - onCreateUser - Missing informations in keycloak data',
-            levels.ERROR,
-            scopes.SYSTEM,
-            { data: kcData },
-          );
-          warnAdministrators(kcData);
-          throw new Meteor.Error('api.users.onCreateUser.missingData', 'Missing Keycloak Data');
-        }
-      });
+      const mandatoryFields = ['preferred_username', 'email', 'family_name', 'given_name'];
+      if (mandatoryFields.some((userField) => !kcData[userField])) {
+        logServer(
+          'USERS - API - METEOR ERROR - onCreateUser - Missing informations in keycloak data',
+          levels.ERROR,
+          scopes.SYSTEM,
+          { data: kcData },
+        );
+        warnAdministrators(kcData);
+        throw new Meteor.Error('api.users.onCreateUser.missingData', 'Missing Keycloak Data');
+      }
     }
 
     const structure = findStructureByEmail(email);
