@@ -27,6 +27,7 @@ import {
   hasRightToAcceptAwaitingStructure,
   hasRightToSetStructureDirectly,
 } from '../../structures/utils';
+import { isFeatureEnabled } from '../../../ui/utils/features';
 
 if (Meteor.settings.private) {
   const { whiteDomains } = Meteor.settings.private;
@@ -1814,45 +1815,46 @@ export const getUsersByStructure = new ValidatedMethod({
   },
 });
 
-export const getUsersForExport = new ValidatedMethod({
-  name: 'users.getUsersForExport',
-  validate: new SimpleSchema({
-    structureId: {
-      type: String,
-      regEx: SimpleSchema.RegEx.Id,
-      label: getLabel('api.structures.labels.id'),
-      optional: true,
+if (isFeatureEnabled('usersExport')) {
+  // eslint-disable-next-line no-unused-vars
+  const getUsersForExport = new ValidatedMethod({
+    name: 'users.getUsersForExport',
+    validate: new SimpleSchema({
+      structureId: {
+        type: String,
+        regEx: SimpleSchema.RegEx.Id,
+        label: getLabel('api.structures.labels.id'),
+        optional: true,
+      },
+    }).validator(),
+
+    run({ structureId = '' }) {
+      let structureToCheck;
+      const projection = { fields: { firstName: 1, lastName: 1, structure: 1, emails: 1 } };
+      const queryUser = structureId ? { structure: structureId } : {};
+      const queryStructure = structureId ? { _id: structureId } : {};
+      const usersToExport = Meteor.users.find(queryUser, projection).fetch();
+      const allStructures = Structures.find(queryStructure).fetch();
+
+      const structuresAfterReduce = allStructures.reduce((result, structure) => {
+        const resultObject = result;
+        resultObject[structure._id] = structure.name;
+        return resultObject;
+      }, {});
+
+      return usersToExport.map((user) => {
+        const userToCheck = user;
+        if (user.structure) {
+          structureToCheck = structuresAfterReduce[user.structure];
+          userToCheck.structureName = structureToCheck || 'Pas de structures';
+        } else {
+          userToCheck.structureName = 'Pas de structures';
+        }
+        return userToCheck;
+      });
     },
-  }).validator(),
-
-  run({ structureId = '' }) {
-    let structureToCheck;
-
-    const projection = { fields: { firstName: 1, lastName: 1, structure: 1, emails: 1 } };
-
-    const queryUser = structureId ? { structure: structureId } : {};
-    const queryStructure = structureId ? { _id: structureId } : {};
-    const usersToExport = Meteor.users.find(queryUser, projection).fetch();
-    const allStructures = Structures.find(queryStructure).fetch();
-
-    const structuresAfterReduce = allStructures.reduce((result, structure) => {
-      const resultObject = result;
-      resultObject[structure._id] = structure.name;
-      return resultObject;
-    }, {});
-
-    return usersToExport.map((user) => {
-      const userToCheck = user;
-      if (user.structure) {
-        structureToCheck = structuresAfterReduce[user.structure];
-        userToCheck.structureName = structureToCheck || 'Pas de structures';
-      } else {
-        userToCheck.structureName = 'Pas de structures';
-      }
-      return userToCheck;
-    });
-  },
-});
+  });
+}
 
 // Get list of all method names on User
 const LISTS_METHODS = _.pluck(
@@ -1887,7 +1889,6 @@ const LISTS_METHODS = _.pluck(
     hasUserOnAwaitingStructure,
     getUsersAdmin,
     getUsersByStructure,
-    getUsersForExport,
   ],
   'name',
 );

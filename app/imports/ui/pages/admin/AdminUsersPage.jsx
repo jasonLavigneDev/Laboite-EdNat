@@ -46,6 +46,7 @@ import SearchField from '../../components/system/SearchField';
 import AdminSendNotification from '../../components/users/AdminSendNotification';
 import { useAdminSelectedStructure, useStructure } from '../../../api/structures/hooks';
 import StructureSelect from '../../components/structures/StructureSelect';
+import { isFeatureEnabled } from '../../utils/features';
 
 let userData = {};
 const useStyles = makeStyles()((theme) => ({
@@ -313,14 +314,12 @@ const AdminUsersPage = ({ match: { path } }) => {
           JSON.stringify(user.firstName),
           JSON.stringify(user.lastName),
           JSON.stringify(user.structureName),
-          JSON.stringify(user.emails[0].address),
         ]);
 
         csvUsersDatas.unshift([
           i18n.__('api.users.labels.username'),
           i18n.__('api.users.labels.lastName'),
           i18n.__('api.users.labels.structure'),
-          i18n.__('api.users.labels.emailAddress'),
         ]);
 
         const csvUsersDatasToExport = csvUsersDatas.map((row) => row.join(';')).join('\n');
@@ -328,7 +327,6 @@ const AdminUsersPage = ({ match: { path } }) => {
         const formattedOptions = { day: '2-digit', month: '2-digit', year: 'numeric' };
         const formattedCurrDate = new Intl.DateTimeFormat(formattedOptions).format(currDate);
         const fileName = `${i18n.__('pages.AdminUsersPage.usersExport')}_${formattedCurrDate}.csv`;
-
         saveAs(new Blob([csvUsersDatasToExport], { type: 'text/csv;charset=utf-8;' }), fileName);
       }
     });
@@ -388,19 +386,21 @@ const AdminUsersPage = ({ match: { path } }) => {
                   resetSearch={onResetSearch}
                   label={i18n.__('pages.AdminUsersPage.searchText')}
                 />
-                <FormControl>
-                  <Typography>
-                    {i18n.__('pages.AdminUsersPage.usersExport')}
-                    <Tooltip
-                      title={i18n.__('pages.AdminUsersPage.usersExport')}
-                      aria-label={i18n.__('pages.AdminUsersPage.usersExport')}
-                    >
-                      <IconButton onClick={handleUserExport} tabIndex={-1} size="large">
-                        <FileDownloadIcon />
-                      </IconButton>
-                    </Tooltip>
-                  </Typography>
-                </FormControl>
+                {isFeatureEnabled('usersExport') && (
+                  <FormControl>
+                    <Typography>
+                      {i18n.__('pages.AdminUsersPage.usersExport')}
+                      <Tooltip
+                        title={i18n.__('pages.AdminUsersPage.usersExport')}
+                        aria-label={i18n.__('pages.AdminUsersPage.usersExport')}
+                      >
+                        <IconButton onClick={handleUserExport} tabIndex={-1} size="large">
+                          <FileDownloadIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Typography>
+                  </FormControl>
+                )}
               </Grid>
               <Grid item xs={12} sm={12} md={6} lg={6} className={classes.pagination}>
                 <Grid>
