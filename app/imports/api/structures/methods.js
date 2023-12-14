@@ -576,7 +576,8 @@ export const getContactURL = new ValidatedMethod({
     }
     const user = Meteor.users.findOne(this.userId);
     const structure = Structures.findOne(user.structure);
-    return getExternalService(structure);
+    if (structure) return getExternalService(structure);
+    return null;
   },
 });
 
