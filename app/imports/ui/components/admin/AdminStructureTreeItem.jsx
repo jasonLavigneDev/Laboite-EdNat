@@ -13,6 +13,10 @@ import { withStyles, makeStyles } from 'tss-react/mui';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import ContactMailIcon from '@mui/icons-material/ContactMail';
+import Modal from '@mui/material/Modal';
+
+import AdminStructureMailModal from './AdminStructureMailModal';
 import CustomDialog from '../system/CustomDialog';
 
 const StyledTreeItem = withStyles(TreeItem, (theme) => ({
@@ -33,9 +37,6 @@ const useStyles = makeStyles()(() => ({
     alignItems: 'center',
     display: 'flex',
   },
-  space: {
-    padding: '12px',
-  },
   line: {
     padding: 2,
   },
@@ -55,9 +56,17 @@ const AdminStructureTreeItem = ({
   const hasChildren = childrenIds.length > 0;
 
   const [choosenStructure, setChoosenStructure] = useState({});
+  const [choosenStructureMail, setChoosenStructureMail] = useState({});
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [isModalMail, setIsModalMail] = useState(false);
   const openConfirm = () => setIsConfirmOpen(true);
   const closeConfirm = () => setIsConfirmOpen(false);
+  const openMail = () => {
+    setIsModalMail(true);
+    setChoosenStructureMail(nodes);
+    console.log(nodes);
+  };
+  const closeMail = () => setIsModalMail(false);
   const onCloseConfirm = () => {
     if (choosenStructure) onClickSelectBtn(choosenStructure);
     closeConfirm();
@@ -77,6 +86,13 @@ const AdminStructureTreeItem = ({
               </div>
             </Box>
             <Box>
+              <Tooltip title="Envoyer un mail aux admin de struc">
+                <span>
+                  <IconButton onClick={() => openMail(nodes)} size="large">
+                    <ContactMailIcon />
+                  </IconButton>
+                </span>
+              </Tooltip>
               {onClickAddBtn && (
                 <Tooltip title={i18n.__('components.AdminStructureTreeItem.actions.addStructure')}>
                   <span>
@@ -152,7 +168,6 @@ const AdminStructureTreeItem = ({
           <span>&nbsp;</span>
         ) : null}
       </StyledTreeItem>
-
       <CustomDialog
         nativeProps={{ maxWidth: 'xs' }}
         isOpen={isConfirmOpen}
@@ -161,6 +176,9 @@ const AdminStructureTreeItem = ({
         onCancel={closeConfirm}
         onValidate={onCloseConfirm}
       />
+      <Modal open={isModalMail} onClose={closeMail}>
+        <AdminStructureMailModal setIsModalMail={setIsModalMail} choosenStructureMail={choosenStructureMail} />
+      </Modal>
     </>
   );
 };

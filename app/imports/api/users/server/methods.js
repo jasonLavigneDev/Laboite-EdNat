@@ -1760,6 +1760,36 @@ export const getUsersAdmin = new ValidatedMethod({
   },
 });
 
+export const getAdminsFromStructure = new ValidatedMethod({
+  name: 'users.getAdminsFromStructure',
+  validate: null,
+  run({ structure }) {
+    const struc = Structures.findOne({ _id: structure });
+    if (!struc) {
+      logServer(
+        `USERS - METHODS - ERROR - getAdminsFromStructure - could not find structure '${structure}'.`,
+        levels.ERROR,
+        scopes.SYSTEM,
+      );
+      throw new Meteor.Error(
+        'api.users.getAdminsFromStructure.notFound',
+        i18n.__('api.users.getAdminsFromStructure.structureNotFound'),
+      );
+    }
+
+    const allStruc = [...struc.childrenIds, structure];
+    const ret = Meteor.roleAssignment.find({
+      'role._id': 'adminStructure',
+      scope: { $in: allStruc },
+    });
+
+    const tab = ret.fetch().map((user) => user.user._id);
+
+    const users = Meteor.users.find({ _id: { $in: tab } }).fetch();
+    return users;
+  },
+});
+
 export const getUsersByStructure = new ValidatedMethod({
   name: 'users.byStructure',
   validate: null,
@@ -1847,6 +1877,7 @@ const LISTS_METHODS = _.pluck(
     hasUserOnAwaitingStructure,
     getUsersAdmin,
     getUsersByStructure,
+    getAdminsFromStructure,
   ],
   'name',
 );

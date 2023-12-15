@@ -1,26 +1,33 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactQuill from 'react-quill';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Checkbox from '@mui/material/Checkbox';
-import Spinner from '../../components/system/Spinner';
 import { CustomToolbarArticle } from '../../components/system/CustomQuill';
 import { quillOptions } from '../../components/admin/InfoEditionComponent';
-import { useStructure, useAdminSelectedStructure } from '../../../api/structures/hooks';
+import { useAppContext } from '../../contexts/appContext';
 
 const AdminMailsDiffusion = () => {
-  const userStructure = useStructure();
   const [content, setContent] = useState();
+  const [users, setUsers] = useState([]);
+  const [{ user }] = useAppContext();
+  const [loading, setLoading] = useState(true);
 
-  const [selectedStructureId, setSelectedStructureId] = useState(
-    userStructure && userStructure._id ? userStructure._id : '',
-  );
-
-  const { loading } = useAdminSelectedStructure({
-    selectedStructureId,
-    setSelectedStructureId,
-  });
+  useEffect(() => {
+    if (user) {
+      if (loading) {
+        Meteor.call('users.getAdminsFromStructure', { structure: user.structure }, (error, result) => {
+          if (result) {
+            if (result.length > 0) {
+              setUsers(result);
+              setLoading(false);
+            }
+          }
+        });
+      }
+    }
+  }, []);
 
   const onUpdateRichText = (html) => {
     const strippedHTML = html.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
@@ -56,9 +63,7 @@ const AdminMailsDiffusion = () => {
     },
   };
 
-  return loading ? (
-    <Spinner />
-  ) : (
+  return (
     <div>
       <h1>Diffusion de mail</h1>
       <Paper sx={style.paper}>
@@ -76,17 +81,27 @@ const AdminMailsDiffusion = () => {
           </div>
         </Paper>
         <Paper sx={{ ...style.paper, ...style.paperContainerList }}>
-          <Paper sx={style.paperList}>
-            <Checkbox />
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <h4>Prénom ADMIN</h4>
-              <p>adresse@adresse.fr</p>
-            </div>
-          </Paper>
-          <Paper sx={style.paperList}>
-            <h4>Prénom ADMIN</h4>
-            <p>adresse@adresse.fr</p>
-          </Paper>
+          {users && !loading
+            ? users.map((admin) => (
+                <Paper sx={style.paperList}>
+                  <Checkbox />
+                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <h4>
+                      <img
+                        height="50px"
+                        width="50px"
+                        style={{ borderRadius: '20px' }}
+                        src={admin.avatar}
+                        alt="mabite"
+                      />
+                      {admin.firstName} {admin.lastName}
+                      <br />
+                      {admin.emails[0].address}
+                    </h4>
+                  </div>
+                </Paper>
+              ))
+            : null}
         </Paper>
       </Paper>
       <ButtonGroup sx={{ display: 'flex' }}>
