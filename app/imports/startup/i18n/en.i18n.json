@@ -1241,6 +1241,7 @@
       "loginError": "Error: Bad account or password",
       "keycloakError": "Connection error",
       "EmailAlreadyExists": "Error: An account already exists with the same email",
+      "MissingKeycloakData": "Error: your account data is insufficient, use contact form to reach an administrator",
       "loginKeycloak": "Login",
       "rememberMe": "Remember me",
       "maintenanceLogin": "Site in maintenance"
