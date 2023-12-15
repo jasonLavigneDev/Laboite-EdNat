@@ -1850,6 +1850,8 @@
       "status": "Status",
       "number": "Nombre",
       "usersByStructure": "Connectés par structure",
+      "startAt": "Entre le",
+      "endAt": "et le",
       "rows": {
         "usersLogged": "Utilisateurs",
         "newAccounts": "Comptes créés il y a moins de 2 jours",
