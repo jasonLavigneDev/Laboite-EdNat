@@ -671,7 +671,8 @@
       "menuAdminAnalytics": "Analytiques",
       "menuAdminStructureAnalytics": "Analytiques de structure",
       "menuAdminStructureSettings": "Réglages de structure",
-      "menuAdminStructureInfo": "Informations de structure"
+      "menuAdminStructureInfo": "Informations de structure",
+      "menuAdminMailDiffusion": "Diffusion de mails"
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Votre compte n'a pas été activé",

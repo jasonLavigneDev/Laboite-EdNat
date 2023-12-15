@@ -20,6 +20,7 @@ import AdminMenu from '../components/admin/AdminMenu';
 import StructureAdminRoute from '../components/system/StructureAdminRoute';
 import { useLayoutStyles } from './MainLayout';
 import AdminHelpPage from '../pages/admin/AdminHelpPage';
+import AdminMailsDiffusion from '../pages/admin/AdminMailsDiffusion';
 
 // pages
 const NotificationsDisplay = lazy(() => import('../components/notifications/NotificationsDisplay'));
@@ -179,6 +180,13 @@ function AdminLayout() {
                       exact
                       path="/admin/globalinfos"
                       component={AdminGlobalInfos}
+                    />
+                    <AdminRoute
+                      userId={userId}
+                      loadingUser={loadingUser}
+                      exact
+                      path="/admin/mailsDiffusion"
+                      component={AdminMailsDiffusion}
                     />
                     {!disabledFeatures.groups && (
                       <AdminRoute
