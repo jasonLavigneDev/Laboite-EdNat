@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactQuill from 'react-quill';
 import PropTypes from 'prop-types';
 
@@ -9,25 +9,39 @@ import Checkbox from '@mui/material/Checkbox';
 import Spinner from '../system/Spinner';
 import { CustomToolbarArticle } from '../system/CustomQuill';
 import { quillOptions } from './InfoEditionComponent';
-import { useStructure, useAdminSelectedStructure } from '../../../api/structures/hooks';
 
 const AdminStructureMailModal = ({ setIsModalMail, choosenStructureMail }) => {
-  const userStructure = useStructure();
   const [content, setContent] = useState();
-
-  const [selectedStructureId, setSelectedStructureId] = useState(
-    userStructure && userStructure._id ? userStructure._id : '',
-  );
-
-  const { loading } = useAdminSelectedStructure({
-    selectedStructureId,
-    setSelectedStructureId,
-  });
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const onUpdateRichText = (html) => {
     const strippedHTML = html.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
     setContent(strippedHTML);
   };
+
+  useEffect(() => {
+    if (choosenStructureMail) {
+      if (loading) {
+        Meteor.call(
+          'users.getAdminsFromStructure',
+          { structure: choosenStructureMail._id, subStructure: false },
+          (error, result) => {
+            if (result) {
+              if (result.length > 0) {
+                setUsers(result);
+                setLoading(false);
+              } else {
+                setIsModalMail(false);
+              }
+            } else {
+              setIsModalMail(false);
+            }
+          },
+        );
+      }
+    }
+  }, []);
 
   const style = {
     paper: {
@@ -100,22 +114,21 @@ const AdminStructureMailModal = ({ setIsModalMail, choosenStructureMail }) => {
             </div>
           </Paper>
           <Paper sx={{ ...style.paper, ...style.paperContainerList }}>
-            <Paper sx={style.paperList}>
-              <Checkbox />
-              <div style={style.divText}>
-                <span style={{ textOverflow: 'ellipsis' }}>Prénom ADMIN</span>
-                <span style={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
-                  {choosenStructureMail.name}
-                </span>
-              </div>
-            </Paper>
-            <Paper sx={style.paperList}>
-              <Checkbox />
-              <div style={style.divText}>
-                <span>Prénom ADMIN</span>
-                <span>adresse@adresse.fr</span>
-              </div>
-            </Paper>
+            {users && users.length > 0 && !loading
+              ? users.map((user) => (
+                  <Paper sx={style.paperList}>
+                    <Checkbox />
+                    <div style={style.divText}>
+                      <span style={{ textOverflow: 'ellipsis' }}>
+                        {user.firstName} {user.lastName}
+                      </span>
+                      <span style={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
+                        {choosenStructureMail.name}
+                      </span>
+                    </div>
+                  </Paper>
+                ))
+              : null}
           </Paper>
         </div>
         <div style={style.divButton}>

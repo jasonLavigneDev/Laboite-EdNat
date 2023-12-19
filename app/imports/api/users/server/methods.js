@@ -1763,7 +1763,7 @@ export const getUsersAdmin = new ValidatedMethod({
 export const getAdminsFromStructure = new ValidatedMethod({
   name: 'users.getAdminsFromStructure',
   validate: null,
-  run({ structure }) {
+  run({ structure, subStructure }) {
     const struc = Structures.findOne({ _id: structure });
     if (!struc) {
       logServer(
@@ -1777,7 +1777,14 @@ export const getAdminsFromStructure = new ValidatedMethod({
       );
     }
 
-    const allStruc = [...struc.childrenIds, structure];
+    let allStruc = [];
+
+    if (subStructure) {
+      allStruc = [...struc.childrenIds, structure];
+    } else {
+      allStruc = [structure];
+    }
+
     const ret = Meteor.roleAssignment.find({
       'role._id': 'adminStructure',
       scope: { $in: allStruc },
