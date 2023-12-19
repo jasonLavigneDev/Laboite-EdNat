@@ -3,7 +3,7 @@ console.warn(
 );
 
 const script = document.createElement('script');
-script.src = '/scripts/widget.js';
+script.src = '{{url}}/scripts/widget.js';
 script.defer = true;
 script.type = 'application/javascript';
 
