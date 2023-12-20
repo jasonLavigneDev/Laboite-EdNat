@@ -14,9 +14,6 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import ContactMailIcon from '@mui/icons-material/ContactMail';
-import Modal from '@mui/material/Modal';
-
-import AdminStructureMailModal from './AdminStructureMailModal';
 import CustomDialog from '../system/CustomDialog';
 
 const StyledTreeItem = withStyles(TreeItem, (theme) => ({
@@ -48,6 +45,7 @@ const AdminStructureTreeItem = ({
   onClickEditBtn,
   onClickDeleteBtn,
   onClickSelectBtn,
+  onClickMailBtn,
   updateParentIdsList,
   selectedId,
 }) => {
@@ -56,17 +54,9 @@ const AdminStructureTreeItem = ({
   const hasChildren = childrenIds.length > 0;
 
   const [choosenStructure, setChoosenStructure] = useState({});
-  const [choosenStructureMail, setChoosenStructureMail] = useState({});
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-  const [isModalMail, setIsModalMail] = useState(false);
   const openConfirm = () => setIsConfirmOpen(true);
   const closeConfirm = () => setIsConfirmOpen(false);
-  const openMail = () => {
-    setIsModalMail(true);
-    setChoosenStructureMail(nodes);
-    console.log(nodes);
-  };
-  const closeMail = () => setIsModalMail(false);
   const onCloseConfirm = () => {
     if (choosenStructure) onClickSelectBtn(choosenStructure);
     closeConfirm();
@@ -86,15 +76,17 @@ const AdminStructureTreeItem = ({
               </div>
             </Box>
             <Box>
-              <Tooltip title="Envoyer un mail aux admin de struc">
-                <span>
-                  <IconButton onClick={() => openMail(nodes)} size="large">
-                    <ContactMailIcon />
-                  </IconButton>
-                </span>
-              </Tooltip>
+              {onClickMailBtn && (
+                <Tooltip title="Envoyer un mail aux admin de struc">
+                  <span>
+                    <IconButton onClick={() => onClickMailBtn(nodes)} size="large">
+                      <ContactMailIcon />
+                    </IconButton>
+                  </span>
+                </Tooltip>
+              )}
               {onClickAddBtn && (
-                <Tooltip title={i18n.__('components.AdminStructureTreeItem.actions.addStructure')}>
+                <Tooltip title={i18n.__('components.AdmiopenMailnStructureTreeItem.actions.addStructure')}>
                   <span>
                     <IconButton onClick={() => onClickAddBtn(nodes)} size="large">
                       <AddBox />
@@ -176,9 +168,6 @@ const AdminStructureTreeItem = ({
         onCancel={closeConfirm}
         onValidate={onCloseConfirm}
       />
-      <Modal open={isModalMail} onClose={closeMail}>
-        <AdminStructureMailModal setIsModalMail={setIsModalMail} choosenStructureMail={choosenStructureMail} />
-      </Modal>
     </>
   );
 };
@@ -189,6 +178,7 @@ AdminStructureTreeItem.propTypes = {
   onClickEditBtn: PropTypes.func,
   onClickDeleteBtn: PropTypes.func,
   onClickSelectBtn: PropTypes.func,
+  onClickMailBtn: PropTypes.func,
   updateParentIdsList: PropTypes.func.isRequired,
   selectedId: PropTypes.string.isRequired,
 };
@@ -198,5 +188,6 @@ AdminStructureTreeItem.defaultProps = {
   onClickEditBtn: undefined,
   onClickDeleteBtn: undefined,
   onClickSelectBtn: undefined,
+  onClickMailBtn: undefined,
 };
 export default AdminStructureTreeItem;

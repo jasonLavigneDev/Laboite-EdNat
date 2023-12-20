@@ -30,7 +30,6 @@ import Typography from '@mui/material/Typography';
 import Toolbar from '@mui/material/Toolbar';
 import Divider from '@mui/material/Divider';
 import InfoIcon from '@mui/icons-material/Info';
-import ContactMailIcon from '@mui/icons-material/ContactMail';
 import { useHistory, useLocation } from 'react-router-dom';
 import updateDocumentTitle from '../../utils/updateDocumentTitle';
 import { useAppContext } from '../../contexts/context';
@@ -163,11 +162,6 @@ export default function AdminMenu() {
       content: 'menuAdminGlobalInfo',
       icon: <InfoIcon />,
       hidden: !isAdmin,
-    },
-    {
-      path: '/admin/mailsDiffusion',
-      content: 'menuAdminMailDiffusion',
-      icon: <ContactMailIcon />,
     },
     {
       path: 'adminDivider',

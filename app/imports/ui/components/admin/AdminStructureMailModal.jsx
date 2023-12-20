@@ -2,18 +2,24 @@ import React, { useEffect, useState } from 'react';
 import ReactQuill from 'react-quill';
 import PropTypes from 'prop-types';
 
+import Switch from '@mui/material/Switch';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
+import FormControl from '@mui/material/FormControl';
+import FormControlLabel from '@mui/material/FormControlLabel';
+// eslint-disable-next-line no-restricted-imports
+import { Fade, Modal } from '@mui/material';
 
-import Spinner from '../system/Spinner';
 import { CustomToolbarArticle } from '../system/CustomQuill';
 import { quillOptions } from './InfoEditionComponent';
+import Spinner from '../system/Spinner';
 
-const AdminStructureMailModal = ({ setIsModalMail, choosenStructureMail }) => {
+const AdminStructureMailModal = ({ open, onClose, setIsModalMail, choosenStructureMail }) => {
   const [content, setContent] = useState();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [subStructure, setSubStructure] = useState(true);
 
   const onUpdateRichText = (html) => {
     const strippedHTML = html.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
@@ -25,23 +31,24 @@ const AdminStructureMailModal = ({ setIsModalMail, choosenStructureMail }) => {
       if (loading) {
         Meteor.call(
           'users.getAdminsFromStructure',
-          { structure: choosenStructureMail._id, subStructure: false },
+          { structure: choosenStructureMail._id, subStructure },
           (error, result) => {
             if (result) {
               if (result.length > 0) {
                 setUsers(result);
-                setLoading(false);
-              } else {
-                setIsModalMail(false);
               }
-            } else {
-              setIsModalMail(false);
             }
+            setLoading(false);
           },
         );
       }
     }
-  }, []);
+  }, [subStructure]);
+
+  const toggleFilterOnSubStructure = () => {
+    setSubStructure(!subStructure);
+    setLoading(true);
+  };
 
   const style = {
     paper: {
@@ -67,8 +74,10 @@ const AdminStructureMailModal = ({ setIsModalMail, choosenStructureMail }) => {
     paperContainerList: {
       flexDirection: 'column',
       width: '20vw',
+      maxHeight: '67vh',
       padding: 1,
       gap: 1,
+      overflow: 'auto',
     },
     paperList: {
       width: '100%',
@@ -94,57 +103,75 @@ const AdminStructureMailModal = ({ setIsModalMail, choosenStructureMail }) => {
     },
   };
 
-  return loading ? (
-    <Spinner />
-  ) : (
-    <div>
-      <Paper sx={style.paper}>
-        <div style={style.divContainer}>
-          <Paper sx={{ ...style.paper, ...style.paperMessage }}>
-            <h2>Créer un nouveau message</h2>
-            <div style={style.containerQuill}>
-              <CustomToolbarArticle />
-              <ReactQuill
-                id="content"
-                value={content || ''}
-                onChange={onUpdateRichText}
-                {...quillOptions}
-                style={style.textEditor}
-              />
-            </div>
-          </Paper>
-          <Paper sx={{ ...style.paper, ...style.paperContainerList }}>
-            {users && users.length > 0 && !loading
-              ? users.map((user) => (
-                  <Paper sx={style.paperList}>
-                    <Checkbox />
-                    <div style={style.divText}>
-                      <span style={{ textOverflow: 'ellipsis' }}>
-                        {user.firstName} {user.lastName}
-                      </span>
-                      <span style={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
-                        {choosenStructureMail.name}
-                      </span>
-                    </div>
-                  </Paper>
-                ))
-              : null}
-          </Paper>
-        </div>
-        <div style={style.divButton}>
-          <Button variant="contained" onClick={() => setIsModalMail(false)}>
-            Annuler
-          </Button>
-          <Button variant="contained" onClick={() => setIsModalMail(false)}>
-            Envoyer
-          </Button>
-        </div>
-      </Paper>
-    </div>
+  return (
+    <Modal open={open} onClose={onClose}>
+      <Fade in={open}>
+        <Paper sx={style.paper}>
+          <div style={style.divContainer}>
+            <Paper sx={{ ...style.paper, ...style.paperMessage }}>
+              <h2>Créer un nouveau message</h2>
+              <div style={style.containerQuill}>
+                <CustomToolbarArticle />
+                <ReactQuill
+                  id="content"
+                  value={content || ''}
+                  onChange={onUpdateRichText}
+                  {...quillOptions}
+                  style={style.textEditor}
+                />
+              </div>
+            </Paper>
+            <Paper sx={style.paper}>
+              <div style={{ ...style.paper, ...style.paperContainerList }}>
+                <FormControl component="fieldset" variant="standard">
+                  <FormControlLabel
+                    control={
+                      <Switch checked={!subStructure} onChange={toggleFilterOnSubStructure} name="subStructure" />
+                    }
+                    label="afficher uniquement les administrateurs de la structure sélectionnée."
+                  />
+                </FormControl>
+                {!loading ? (
+                  users && users.length > 0 ? (
+                    users.map((user) => (
+                      <Paper sx={style.paperList}>
+                        <Checkbox />
+                        <div style={style.divText}>
+                          <span style={{ textOverflow: 'ellipsis' }}>
+                            {user.firstName} {user.lastName}
+                          </span>
+                          <span style={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
+                            {choosenStructureMail.name}
+                          </span>
+                        </div>
+                      </Paper>
+                    ))
+                  ) : (
+                    <p> Aucun administrateur pour cette structure </p>
+                  )
+                ) : (
+                  <Spinner />
+                )}
+              </div>
+            </Paper>
+          </div>
+          <div style={style.divButton}>
+            <Button variant="contained" onClick={() => setIsModalMail(false)}>
+              Annuler
+            </Button>
+            <Button variant="contained" onClick={() => setIsModalMail(false)}>
+              Envoyer
+            </Button>
+          </div>
+        </Paper>
+      </Fade>
+    </Modal>
   );
 };
 
 AdminStructureMailModal.propTypes = {
+  open: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
   setIsModalMail: PropTypes.func.isRequired,
   choosenStructureMail: PropTypes.objectOf(PropTypes.any).isRequired,
 };
