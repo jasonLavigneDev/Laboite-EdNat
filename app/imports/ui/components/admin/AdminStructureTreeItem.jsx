@@ -152,6 +152,7 @@ const AdminStructureTreeItem = ({
               onClickEditBtn={onClickEditBtn}
               onClickDeleteBtn={onClickDeleteBtn}
               onClickSelectBtn={onClickSelectBtn}
+              onClickMailBtn={onClickMailBtn}
               updateParentIdsList={updateParentIdsList}
               selectedId={selectedId}
             />

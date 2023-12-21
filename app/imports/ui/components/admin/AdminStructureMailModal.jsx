@@ -11,16 +11,22 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 // eslint-disable-next-line no-restricted-imports
 import { Fade, Modal } from '@mui/material';
 
+import { useAppContext } from '../../contexts/context';
 import { CustomToolbarArticle } from '../system/CustomQuill';
 import { quillOptions } from './InfoEditionComponent';
 import Spinner from '../system/Spinner';
 
 const AdminStructureMailModal = ({ open, onClose, setIsModalMail, choosenStructureMail }) => {
   const [content, setContent] = useState();
+  const [{ user }] = useAppContext();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [subStructure, setSubStructure] = useState(true);
   const [structures, setStructures] = useState([]);
+
+  // Il faut entrer/supprimer uniquement les adresses mails dans cette liste, par l'event case à cocher
+  // eslint-disable-next-line no-unused-vars
+  const [selectedUsers, setSelectedUsers] = useState([]);
 
   const onUpdateRichText = (html) => {
     const strippedHTML = html.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
@@ -56,6 +62,20 @@ const AdminStructureMailModal = ({ open, onClose, setIsModalMail, choosenStructu
     const currentStructure = structures.find((structure) => structure._id === structureId);
     if (currentStructure) return currentStructure.name;
     return 'N/A';
+  };
+
+  // A lier au bouton envoyer.
+  // eslint-disable-next-line no-unused-vars
+  const SendMailToUsers = () => {
+    if (selectedUsers && selectedUsers.length > 0) {
+      Meteor.call('smtp.sendMailToDiffusionList', {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.emails[0].address,
+        text: content,
+        mailList: selectedUsers,
+      });
+    }
   };
 
   const style = {
@@ -141,15 +161,15 @@ const AdminStructureMailModal = ({ open, onClose, setIsModalMail, choosenStructu
                 </FormControl>
                 {!loading ? (
                   users && users.length > 0 ? (
-                    users.map((user) => (
+                    users.map((admin) => (
                       <Paper sx={style.paperList}>
                         <Checkbox />
                         <div style={style.divText}>
                           <span style={{ textOverflow: 'ellipsis' }}>
-                            {user.firstName} {user.lastName}
+                            {admin.firstName} {admin.lastName}
                           </span>
                           <span style={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
-                            {findStructureOfUser(user.structure)}
+                            {findStructureOfUser(admin.structure)}
                           </span>
                         </div>
                       </Paper>
