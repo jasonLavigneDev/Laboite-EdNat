@@ -20,6 +20,7 @@ const AdminStructureMailModal = ({ open, onClose, setIsModalMail, choosenStructu
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [subStructure, setSubStructure] = useState(true);
+  const [structures, setStructures] = useState([]);
 
   const onUpdateRichText = (html) => {
     const strippedHTML = html.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
@@ -34,8 +35,9 @@ const AdminStructureMailModal = ({ open, onClose, setIsModalMail, choosenStructu
           { structure: choosenStructureMail._id, subStructure },
           (error, result) => {
             if (result) {
-              if (result.length > 0) {
-                setUsers(result);
+              if (result.users.length > 0) {
+                setUsers(result.users);
+                setStructures(result.structures);
               }
             }
             setLoading(false);
@@ -48,6 +50,12 @@ const AdminStructureMailModal = ({ open, onClose, setIsModalMail, choosenStructu
   const toggleFilterOnSubStructure = () => {
     setSubStructure(!subStructure);
     setLoading(true);
+  };
+
+  const findStructureOfUser = (structureId) => {
+    const currentStructure = structures.find((structure) => structure._id === structureId);
+    if (currentStructure) return currentStructure.name;
+    return 'N/A';
   };
 
   const style = {
@@ -141,7 +149,7 @@ const AdminStructureMailModal = ({ open, onClose, setIsModalMail, choosenStructu
                             {user.firstName} {user.lastName}
                           </span>
                           <span style={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
-                            {choosenStructureMail.name}
+                            {findStructureOfUser(user.structure)}
                           </span>
                         </div>
                       </Paper>

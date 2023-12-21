@@ -1790,10 +1790,12 @@ export const getAdminsFromStructure = new ValidatedMethod({
       scope: { $in: allStruc },
     });
 
-    const tab = ret.fetch().map((user) => user.user._id);
+    const tabUsers = ret.fetch().map((user) => user.user._id);
+    const users = Meteor.users.find({ _id: { $in: tabUsers } }, { fields: Meteor.users.publicFields }).fetch();
 
-    const users = Meteor.users.find({ _id: { $in: tab } }).fetch();
-    return users;
+    const structures = Structures.find({ _id: { $in: allStruc } }, { fields: Structures.publicFields }).fetch();
+
+    return { users, structures };
   },
 });
 
