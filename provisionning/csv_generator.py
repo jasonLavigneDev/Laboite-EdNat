@@ -25,7 +25,7 @@ PERSONNE_PAR_ECOLE = int(getenv("PERSONNE_PAR_ECOLE"))
 PERSONNE_PAR_COLLEGE = int(getenv("PERSONNE_PAR_COLLEGE"))
 PERSONNE_PAR_LYCEE = int(getenv("PERSONNE_PAR_LYCEE"))
 
-DEFAULT_PASSWORD = "Yo-12356!"
+DEFAULT_PASSWORD = "Yoyo-12356!"
 INITIAL_ACA = 1     # Nombre à ajouter au numéro d'académie
 
 
