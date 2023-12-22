@@ -1,11 +1,13 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 from sys import argv, exit
 from os import getenv
 from os.path import isfile
 from faker import Faker
 from dotenv import load_dotenv
-from random import choices
 from datetime import datetime
 import csv
+from utils import *
 
 load_dotenv()
 fake = Faker()
@@ -25,11 +27,6 @@ PERSONNE_PAR_LYCEE = int(getenv("PERSONNE_PAR_LYCEE"))
 
 DEFAULT_PASSWORD = "Yo-12356!"
 INITIAL_ACA = 1     # Nombre à ajouter au numéro d'académie
-
-
-def generateID():
-    st = "23456789ABCDEFGHJKLMNPQRSTWXYZabcdefghijkmnopqrstuvwxyz"
-    return "".join(choices(st, k=17))
 
 
 def generateMailExtension(struc):
@@ -65,7 +62,7 @@ def generateCSVForStructure(nb):
         rows.append(mainEntry)
         generateMailExtension(mainEntry)
 
-        print("[{}] Created structure: {}".format(datetime.now(), name))
+        # print("[{}] Created structure: {}".format(datetime.now(), name))
 
         for ec in range(0, ECOLE_PAR_ACADEMIE):
             school_name = "ecole {} ({})".format(ec + 1, name)
@@ -131,12 +128,12 @@ def generateCSVForStructure(nb):
     #     print("=============================================")
     #     print("=============================================")
 
-    # print("[{}] Creation of CSV".format(datetime.now()))
+    print("[{}] Creation of CSV: structures.csv".format(datetime.now()))
     with open("structures.csv", "w", encoding="UTF8", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=headers)
         writer.writeheader()
         writer.writerows(rows)
-    print("=============================================")
+    # print("=============================================")
 
 
 def generateUser(structure):
@@ -169,7 +166,7 @@ def generateUser(structure):
         users.append(entry)
 
         # print(userCount)
-        progress("Insert Users : ", userCount, userNumber)
+        progress("Generate Users : ", userCount, userNumber)
         # print("=============================================")
         return
 
@@ -215,21 +212,15 @@ def generateCSVForUsers():
     # print("=============================================")
 
 
-def progress(prefixe, current_value, max_value):
-    percent = round(100*current_value/max_value)
-    message = f"{prefixe} {percent}% - ["+"#"*int(percent/5)+"."*(20-int(percent/5))+"]"
-    print(message, end='\r')
-
 #####################################
 
 if __name__ == "__main__":
 
     # Confirmation de l'écrasement des fichiers csv pré-existants
     if isfile("users.csv") or isfile("mails.csv") or isfile("structures.csv"):
-        confirm = input("Écraser les fichiers users.csv, mails.csv et structures.csv ? [yN] ")
+        confirm = input("Overwrites files users.csv, mails.csv and structures.csv ? [yN] ")
         if confirm != "y":
-            exit("\nInterruption du script.")
-
+            exit("\nExit script.")
 
     nbStruc = int(argv[1])
     if nbStruc > 0:

@@ -9,3 +9,4 @@ passwords.txt
 provisionning/.env
 provisionning/*.csv
 provisionning/csv
+__pycache__/
