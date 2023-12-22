@@ -25,6 +25,7 @@ const AdminStructureMailModal = ({ open, onClose, setIsModalMail, choosenStructu
   const [structures, setStructures] = useState([]);
 
   // Il faut entrer/supprimer uniquement les adresses mails dans cette liste, par l'event case à cocher
+  // ok
   // eslint-disable-next-line no-unused-vars
   const [selectedUsers, setSelectedUsers] = useState([]);
 
