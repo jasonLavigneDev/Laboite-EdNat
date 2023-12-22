@@ -55,10 +55,12 @@ def get_database():
 
 
 def resetUsers():
+    print("[{}] Remove all users".format(datetime.now()))
     users = keycloak_admin.get_users()
     for user in users:
         if user["username"] != KEYCLOAK_USERNAME:
-            print("Remove user: {}".format(user["username"]))
+            if args.verbose:
+                print("Remove user: {}".format(user["username"]))
             keycloak_admin.delete_user(user["id"])
             dbUser = db["users"].find_one({"username": user["username"]})
             if dbUser != None:
@@ -67,9 +69,11 @@ def resetUsers():
 
 
 def resetStructures():
+    print("[{}] Remove all structures".format(datetime.now()))
     groups = keycloak_admin.get_groups()
     for gr in groups:
-        print("Remove group: {}".format(gr["name"]))
+        if args.verbose:
+            print("Remove group: {}".format(gr["name"]))
         keycloak_admin.delete_group(gr["id"])
         db["groups"].delete_one({"name": gr["name"]})
         db["structures"].delete_one({"name": gr["name"]})
@@ -161,7 +165,8 @@ def insertUser(user):
             "favServices": [],
             "isActive": True,
         }
-        print("[{}] Insert user: {}".format(datetime.now(), entry["username"]))
+        if args.verbose:
+            print("[{}] Insert user: {}".format(datetime.now(), entry["username"]))
         db["users"].insert_one(entry)
 
         persoSpace = {
@@ -180,11 +185,12 @@ def insertUser(user):
                     addUserToStructureGroup(idDB, struc)
 
     else:
-        print(
-            "[{}] user {} already exists. Pass...".format(
-                datetime.now(), alreadyExist["username"]
+        if args.verbose:
+            print(
+                "[{}] user {} already exists. Pass...".format(
+                    datetime.now(), alreadyExist["username"]
+                )
             )
-        )
 
 
 def insertStructure(structure):
@@ -218,7 +224,8 @@ def insertStructure(structure):
             "admins": [],
             "avatar": "",
         }
-        print("[{}] Insert group: {}".format(datetime.now(), group["name"]))
+        if args.verbose:
+            print("[{}] Insert group: {}".format(datetime.now(), group["name"]))
         db["groups"].insert_one(group)
         groupDB = db["groups"].find_one({"name": structure["name"]})
 
@@ -226,11 +233,12 @@ def insertStructure(structure):
             {"name": structure["name"]}, {"$set": {"groupId": groupDB["_id"]}}
         )
     else:
-        print(
-            "[{}] structure {} already exists. Pass...".format(
-                datetime.now(), alreadyExist["name"]
+        if args.verbose:
+            print(
+                "[{}] structure {} already exists. Pass...".format(
+                    datetime.now(), alreadyExist["name"]
+                )
             )
-        )
 
 
 def insertMailExtension(mailExtension):
@@ -238,18 +246,20 @@ def insertMailExtension(mailExtension):
         {"extension": mailExtension["extension"]}
     )
     if alreadyExist == None:
-        print(
-            "[{}] Insert mail extension: {}".format(
-                datetime.now(), mailExtension["extension"]
+        if args.verbose:
+            print(
+                "[{}] Insert mail extension: {}".format(
+                    datetime.now(), mailExtension["extension"]
+                )
             )
-        )
         db["asamextensions"].insert_one(mailExtension)
     else:
-        print(
-            "[{}] Mail extension {} already exists. Pass...".format(
-                datetime.now(), alreadyExist["extension"]
+        if args.verbose:
+            print(
+                "[{}] Mail extension {} already exists. Pass...".format(
+                    datetime.now(), alreadyExist["extension"]
+                )
             )
-        )
 
 
 #####################################
@@ -262,6 +272,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         formatter_class=argparse.RawDescriptionHelpFormatter, description=HELP
     )
+    parser.add_argument("-v","--verbose",action="store_true",help="Print more information during insertion")
     parser.add_argument("-f","--force",action="store_true",help="Force insertion without confirmation")
     group = parser.add_mutually_exclusive_group()
     group.add_argument("-r", "--remove_all", action="store_true", help="remove structures and users before inserting")
@@ -307,7 +318,6 @@ if __name__ == "__main__":
         for i,row in enumerate(csv_reader):
             progress("Insert Structures : ", i, structureNumber)
             insertStructure(row)
-    # print("======================================================")
 
     print("[{}] Start insert mails extension".format(datetime.now()))
     with open(csvMailPath, mode="r") as csv_file:
@@ -318,7 +328,6 @@ if __name__ == "__main__":
             data["_id"] = generateID()
             progress("Insert Mails : ", i, mailNumber)
             insertMailExtension(data)
-    # print("======================================================")
 
     print("[{}] Start insert users".format(datetime.now()))
     with open(csvUserPath, mode="r") as csv_file:
@@ -327,5 +336,4 @@ if __name__ == "__main__":
         for i,row in enumerate(csv_reader):
             progress("Insert Users : ", i, userNumber)
             insertUser(row)
-    # print("======================================================")
     print("[{}] All operations complete".format(datetime.now()))
