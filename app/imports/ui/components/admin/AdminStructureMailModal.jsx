@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import ReactQuill from 'react-quill';
 import PropTypes from 'prop-types';
+import i18n from 'meteor/universe:i18n';
+import { toast } from 'react-toastify';
 
 import Switch from '@mui/material/Switch';
 import Paper from '@mui/material/Paper';
@@ -16,17 +18,73 @@ import { CustomToolbarArticle } from '../system/CustomQuill';
 import { quillOptions } from './InfoEditionComponent';
 import Spinner from '../system/Spinner';
 
+const style = {
+  paper: {
+    display: 'flex',
+    flexDirection: 'column',
+    margin: 5,
+  },
+  divContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  paperMessage: {
+    flexGrow: 2,
+    padding: '5px 10px',
+    flexDirection: 'column',
+  },
+  containerQuill: {
+    padding: '20px 50px',
+  },
+  textEditor: {
+    height: '50vh',
+  },
+  paperContainerList: {
+    flexDirection: 'column',
+    width: '20vw',
+    maxHeight: '67vh',
+    padding: 1,
+    gap: 1,
+    overflow: 'auto',
+  },
+  paperList: {
+    width: '100%',
+    padding: '1vh 1vw',
+    display: 'flex',
+  },
+  divText: {
+    display: 'flex',
+    flexDirection: 'column',
+    placeContent: 'center',
+    marginLeft: '3vw',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+  },
+  divButton: {
+    display: 'flex',
+    placeContent: 'center',
+    paddingBottom: '2vh',
+    gap: '350px',
+  },
+  spanOverflow: {
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+  },
+  subTitleh3: {
+    paddingLeft: '2.5vw',
+    margin: 0,
+  },
+};
+
 const AdminStructureMailModal = ({ open, onClose, setIsModalMail, choosenStructureMail }) => {
-  const [content, setContent] = useState();
+  const [content, setContent] = useState('');
   const [{ user }] = useAppContext();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [subStructure, setSubStructure] = useState(true);
   const [structures, setStructures] = useState([]);
-
-  // Il faut entrer/supprimer uniquement les adresses mails dans cette liste, par l'event case à cocher
-  // ok
-  // eslint-disable-next-line no-unused-vars
   const [selectedUsers, setSelectedUsers] = useState([]);
 
   const onUpdateRichText = (html) => {
@@ -45,6 +103,10 @@ const AdminStructureMailModal = ({ open, onClose, setIsModalMail, choosenStructu
               if (result.users.length > 0) {
                 setUsers(result.users);
                 setStructures(result.structures);
+                // Fill selected Users tab because checkbox are default checked
+                result.users.forEach((element) => {
+                  selectedUsers.push(element);
+                });
               }
             }
             setLoading(false);
@@ -65,8 +127,6 @@ const AdminStructureMailModal = ({ open, onClose, setIsModalMail, choosenStructu
     return 'N/A';
   };
 
-  // A lier au bouton envoyer.
-  // eslint-disable-next-line no-unused-vars
   const SendMailToUsers = () => {
     if (selectedUsers && selectedUsers.length > 0) {
       Meteor.call('smtp.sendMailToDiffusionList', {
@@ -76,60 +136,20 @@ const AdminStructureMailModal = ({ open, onClose, setIsModalMail, choosenStructu
         text: content,
         mailList: selectedUsers,
       });
+      setIsModalMail(false);
+      console.log(content);
+    } else {
+      toast.error(i18n.__('pages.AdminStructureMailModal.noAdminSelected'));
     }
   };
 
-  const style = {
-    paper: {
-      display: 'flex',
-      flexDirection: 'column',
-      margin: 5,
-    },
-    divContainer: {
-      display: 'flex',
-      flexDirection: 'row',
-    },
-    paperMessage: {
-      flexGrow: 2,
-      padding: '5px 10px',
-      flexDirection: 'column',
-    },
-    containerQuill: {
-      padding: '20px 50px',
-    },
-    textEditor: {
-      height: '50vh',
-    },
-    paperContainerList: {
-      flexDirection: 'column',
-      width: '20vw',
-      maxHeight: '67vh',
-      padding: 1,
-      gap: 1,
-      overflow: 'auto',
-    },
-    paperList: {
-      width: '100%',
-      paddingTop: '1vh',
-      paddingBottom: '1vh',
-      paddingLeft: '1vw',
-      display: 'flex',
-    },
-    divText: {
-      display: 'flex',
-      flexDirection: 'column',
-      placeContent: 'center',
-      marginLeft: '3vw',
-      whiteSpace: 'nowrap',
-      textOverflow: 'ellipsis',
-      overflow: 'hidden',
-    },
-    divButton: {
-      display: 'flex',
-      placeContent: 'center',
-      paddingBottom: '2vh',
-      gap: '350px',
-    },
+  const handleCheckboxChange = (admin) => {
+    const isAlreadySelected = selectedUsers.some((adm) => adm._id === admin._id);
+    if (isAlreadySelected) {
+      setSelectedUsers(selectedUsers.filter((adm) => adm._id !== admin._id));
+    } else {
+      selectedUsers.push(admin);
+    }
   };
 
   return (
@@ -138,7 +158,8 @@ const AdminStructureMailModal = ({ open, onClose, setIsModalMail, choosenStructu
         <Paper sx={style.paper}>
           <div style={style.divContainer}>
             <Paper sx={{ ...style.paper, ...style.paperMessage }}>
-              <h2>Créer un nouveau message</h2>
+              <h1>{findStructureOfUser(choosenStructureMail._id)}</h1>
+              <h3 style={style.subTitleh3}>{i18n.__('pages.AdminStructureMailModal.subtitle')}</h3>
               <div style={style.containerQuill}>
                 <CustomToolbarArticle />
                 <ReactQuill
@@ -157,26 +178,24 @@ const AdminStructureMailModal = ({ open, onClose, setIsModalMail, choosenStructu
                     control={
                       <Switch checked={!subStructure} onChange={toggleFilterOnSubStructure} name="subStructure" />
                     }
-                    label="afficher uniquement les administrateurs de la structure sélectionnée."
+                    label={i18n.__('pages.AdminStructureMailModal.SwitchAdminVisibility')}
                   />
                 </FormControl>
                 {!loading ? (
                   users && users.length > 0 ? (
                     users.map((admin) => (
                       <Paper sx={style.paperList}>
-                        <Checkbox />
+                        <Checkbox defaultChecked onChange={() => handleCheckboxChange(admin)} />
                         <div style={style.divText}>
-                          <span style={{ textOverflow: 'ellipsis' }}>
+                          <span style={style.spanOverflow}>
                             {admin.firstName} {admin.lastName}
                           </span>
-                          <span style={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
-                            {findStructureOfUser(admin.structure)}
-                          </span>
+                          <span style={style.spanOverflow}>{findStructureOfUser(admin.structure)}</span>
                         </div>
                       </Paper>
                     ))
                   ) : (
-                    <p> Aucun administrateur pour cette structure </p>
+                    <p> {i18n.__('pages.AdminStructureMailModal.noAdmin')} </p>
                   )
                 ) : (
                   <Spinner />
@@ -186,10 +205,10 @@ const AdminStructureMailModal = ({ open, onClose, setIsModalMail, choosenStructu
           </div>
           <div style={style.divButton}>
             <Button variant="contained" onClick={() => setIsModalMail(false)}>
-              Annuler
+              {i18n.__('pages.AdminStructuresManagementPage.modal.close')}
             </Button>
-            <Button variant="contained" onClick={() => setIsModalMail(false)}>
-              Envoyer
+            <Button variant="contained" onClick={() => SendMailToUsers()} disabled={selectedUsers.length === 0}>
+              {i18n.__('pages.AdminStructuresManagementPage.modal.submitMail')}
             </Button>
           </div>
         </Paper>

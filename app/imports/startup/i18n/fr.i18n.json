@@ -962,7 +962,8 @@
         "selectIconImage": "Chargement d'icône",
         "selectCoverImage": "Chargement de couverture",
         "DeleteIconImage": "Enlever l'image d'icône",
-        "DeleteCoverImage": "Enlever l'image de la couverture"
+        "DeleteCoverImage": "Enlever l'image de la couverture",
+        "sendEmailToAdmins": "Contacter le/les admins de cette structure"
       },
       "attachToStructure": "Souhaitez vous être rattaché(e) à cette structure ?",
       "noStructure": "Il n'y a aucune structure d'enregistrée."
@@ -1431,11 +1432,18 @@
       "modal": {
         "close": "Fermer",
         "cancel": "Annuler",
-        "submit": "Valider"
+        "submit": "Valider",
+        "submitMail": "Envoyer"
       },
       "adminStructureMode": {
         "title": "Gestion des sous-structures"
       }
+    },
+    "AdminStructureMailModal": {
+      "noAdmin": "Aucun administrateur pour cette structure",
+      "SwitchAdminVisibility": "Afficher uniquement les admins de la structure sélectionnée.",
+      "subtitle": "Créer un nouveau message",
+      "noAdminSelected": "Aucun administrateur sélectionné pour envoyer un mail."
     },
     "AdminGroupsPage": {
       "title": "Gestion des groupes",

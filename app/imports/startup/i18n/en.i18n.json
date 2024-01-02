@@ -1034,7 +1034,8 @@
         "selectIconImage": "Upload icon image",
         "selectCoverImage": "Upload cover image",
         "DeleteIconImage": "Remove icon image",
-        "DeleteCoverImage": "Remove cover image"
+        "DeleteCoverImage": "Remove cover image",
+        "sendEmailToAdmins": "Contact the admin(s) of this structure"
       },
       "attachToStructure": "Do you want to be attached to this structure?",
       "noStructure": "There is no structure registered"
@@ -1423,11 +1424,18 @@
       "modal": {
         "close": "Close",
         "cancel": "Cancel",
-        "submit": "Submit"
+        "submit": "Submit",
+        "submitMail": "Send"
       },
       "adminStructureMode": {
         "title": "Sub structures management"
       }
+    },
+    "AdminStructureMailModal": {
+      "noAdmin": "No administrator for this structure",
+      "SwitchAdminVisibility": "Show only the admins of the selected structure",
+      "subtitle": "Create a new message",
+      "noAdminSelected": "No admin selected to send a mail"
     },
     "AdminGroupsPage": {
       "title": "Groups management",

@@ -77,7 +77,7 @@ const AdminStructureTreeItem = ({
             </Box>
             <Box>
               {onClickMailBtn && (
-                <Tooltip title="Envoyer un mail aux admin de struc">
+                <Tooltip title={i18n.__('components.AdminStructureTreeItem.actions.sendEmailToAdmins')}>
                   <span>
                     <IconButton onClick={() => onClickMailBtn(nodes)} size="large">
                       <ContactMailIcon />
@@ -86,7 +86,7 @@ const AdminStructureTreeItem = ({
                 </Tooltip>
               )}
               {onClickAddBtn && (
-                <Tooltip title={i18n.__('components.AdmiopenMailnStructureTreeItem.actions.addStructure')}>
+                <Tooltip title={i18n.__('components.AdminStructureTreeItem.actions.addStructure')}>
                   <span>
                     <IconButton onClick={() => onClickAddBtn(nodes)} size="large">
                       <AddBox />
