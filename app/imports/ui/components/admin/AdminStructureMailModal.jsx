@@ -148,7 +148,7 @@ const AdminStructureMailModal = ({ open, onClose, setIsModalMail, choosenStructu
     if (isAlreadySelected) {
       setSelectedUsers(selectedUsers.filter((adm) => adm._id !== admin._id));
     } else {
-      selectedUsers.push(admin);
+      setSelectedUsers([...selectedUsers, admin]);
     }
   };
 
