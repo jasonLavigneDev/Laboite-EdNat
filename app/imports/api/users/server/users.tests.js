@@ -1058,13 +1058,13 @@ describe('users', function () {
 
         done();
       });
-      describe('setLastGlobalInfoRead', function () {
-        it('update lastInfoRead when user arrive on introductionpage', function () {
-          const date = new Date();
-          setLastGlobalInfoRead._execute({ userId }, { lastGlobalInfoReadDate: new Date() });
-          const updatedUser = Meteor.users.findOne({ _id: userId });
-          assert.equal(date.getTime(), updatedUser.lastGlobalInfoReadDate.getTime());
-        });
+    });
+    describe('setLastGlobalInfoRead', function () {
+      it('update lastInfoRead when user arrive on introductionpage', function () {
+        const date = new Date();
+        setLastGlobalInfoRead._execute({ userId }, { lastGlobalInfoReadDate: date });
+        const updatedUser = Meteor.users.findOne({ _id: userId });
+        assert.equal(date.getTime(), updatedUser.lastGlobalInfoReadDate.getTime());
       });
     });
   });
