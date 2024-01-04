@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import i18n from 'meteor/universe:i18n';
 
 import TreeItem from '@mui/lab/TreeItem';
@@ -65,11 +65,19 @@ const AdminStructureTreeItem = ({
 
   const onClickCollapseStruc = () => {
     if (hasChildren) {
+      sessionStorage.setItem('scrollPosition', window.scrollY);
       updateParentIdsList({ ids: [id] });
-      window.scrollTo(0, window.scrollY);
     }
   };
 
+  // Allow to save scroll position after unfolding substructure
+  useEffect(() => {
+    const scrollPosition = sessionStorage.getItem('scrollPosition');
+    if (scrollPosition) {
+      window.scrollTo(0, scrollPosition);
+      sessionStorage.removeItem('scrollPosition');
+    }
+  }, []);
   return (
     <>
       <StyledTreeItem
