@@ -31,6 +31,8 @@ import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import 'dayjs/locale/fr';
+import 'dayjs/locale/en';
 
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -381,6 +383,8 @@ const ActionClickPanel = ({ selectedStructureId }) => {
   const [call, { loading, result }] = useMethod('analytics.getActionClickedAnalyticsEvents');
   const [startAt, setStartAt] = useState(getOneWeekAgo());
   const [endAt, setEndAt] = useState(new Date());
+  const [{ language }] = useAppContext();
+
   const downloadCSV = () => {
     Meteor.call(
       'analytics.getExportableAnalyticsData',
@@ -458,10 +462,10 @@ const ActionClickPanel = ({ selectedStructureId }) => {
         columns,
         title: 'pages.AdminAnalytics.actionsClickTitle',
         selectorSection: (
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={language}>
             <Box display="flex" justifyContent="space-around">
               <DatePicker
-                label="Entre le"
+                label={i18n.__('pages.AdminAnalytics.startAt')}
                 value={startAt}
                 onChange={(newValue) => {
                   setStartAt(newValue.toDate());
@@ -470,7 +474,7 @@ const ActionClickPanel = ({ selectedStructureId }) => {
                 renderInput={(params) => <TextField {...params} />}
               />
               <DatePicker
-                label="Et le"
+                label={i18n.__('pages.AdminAnalytics.endAt')}
                 value={endAt}
                 onChange={(newValue) => {
                   setEndAt(newValue.toDate());

@@ -1840,6 +1840,8 @@
       "status": "Status",
       "number": "Number",
       "usersByStructure": "Connected by structure",
+      "startAt": "Between",
+      "endAt": "and",
       "rows": {
         "usersLogged": "Users",
         "newAccounts": "Accounts created in the past 2 days",
