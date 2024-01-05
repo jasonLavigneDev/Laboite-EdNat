@@ -130,13 +130,21 @@ const AdminStructureMailModal = ({ open, onClose, setIsModalMail, choosenStructu
   const SendMailToUsers = () => {
     if (selectedUsers && selectedUsers.length > 0) {
       const mailList = selectedUsers.map((admin) => admin.emails[0].address);
-      Meteor.call('smtp.sendMailToDiffusionList', {
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.emails[0].address,
-        text: content,
-        mailList,
-      });
+      Meteor.call(
+        'smtp.sendMailToDiffusionList',
+        {
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.emails[0].address,
+          text: content,
+          mailList,
+        },
+        (res, err) => {
+          if (err) {
+            toast.error(i18n.__('pages.AdminStructureMailModal.errorSendingMail'));
+          }
+        },
+      );
       setIsModalMail(false);
     } else {
       toast.error(i18n.__('pages.AdminStructureMailModal.noAdminSelected'));

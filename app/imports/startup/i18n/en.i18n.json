@@ -1435,7 +1435,10 @@
       "noAdmin": "No administrator for this structure",
       "SwitchAdminVisibility": "Show only the admins of the selected structure",
       "subtitle": "Create a new message",
-      "noAdminSelected": "No admin selected to send a mail"
+      "noAdminSelected": "No admin selected to send a mail",
+      "errorMail": "An error has occured while sending mail.",
+      "errorTextMail": "Text is empty or invalid.",
+      "errorSendingMail": "An error has occured with the sending mail service."
     },
     "AdminGroupsPage": {
       "title": "Groups management",

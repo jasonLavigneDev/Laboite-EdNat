@@ -1762,7 +1762,15 @@ export const getUsersAdmin = new ValidatedMethod({
 
 export const getAdminsFromStructure = new ValidatedMethod({
   name: 'users.getAdminsFromStructure',
-  validate: null,
+  validate: new SimpleSchema({
+    structure: {
+      type: String,
+    },
+    subStructure: {
+      type: Boolean,
+    },
+  }).validator(),
+
   run({ structure, subStructure }) {
     const struc = Structures.findOne({ _id: structure });
     if (!struc) {

@@ -44,6 +44,13 @@ export const sendEmailToDiffusionList = new ValidatedMethod({
       allowedTags: ['b', 'i', 'strong', 'em'],
     });
 
+    if (!cleanText) {
+      throw new Meteor.Error(
+        i18n.__('pages.AdminStructureMailModal.errorMail'),
+        i18n.__('pages.AdminStructureMailModal.errorTextMail'),
+      );
+    }
+
     const msg = `Message de: ${firstName} ${lastName}
 Adresse mail: ${email}
                  
@@ -55,10 +62,28 @@ ${cleanText}`;
 
     this.unblock();
 
-    if (mailList.length > 0) {
-      Email.send({ to, cci: mailList, from, subject: object, text: msg });
-    } else {
-      Email.send({ to, from, subject: object, text: msg });
+    try {
+      if (mailList.length > 0) {
+        Email.send({ to, cci: mailList, from, subject: object, text: msg });
+      } else {
+        Email.send({ to, from, subject: object, text: msg });
+      }
+    } catch (err) {
+      logServer(
+        `SMTP - METEOR ERROR - sendMailToDiffusionList 
+        - Sending mail error: ${err}`,
+        levels.INFO,
+        scopes.SYSTEM,
+        {
+          email,
+          text,
+          mailList,
+        },
+      );
+      throw new Meteor.Error(
+        i18n.__('pages.AdminStructureMailModal.errorMail'),
+        i18n.__('pages.AdminStructureMailModal.errorSendMail'),
+      );
     }
   },
 });

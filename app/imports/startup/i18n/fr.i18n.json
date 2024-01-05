@@ -1443,7 +1443,10 @@
       "noAdmin": "Aucun administrateur pour cette structure",
       "SwitchAdminVisibility": "Afficher uniquement les admins de la structure sélectionnée.",
       "subtitle": "Créer un nouveau message",
-      "noAdminSelected": "Aucun administrateur sélectionné pour envoyer un mail."
+      "noAdminSelected": "Aucun administrateur sélectionné pour envoyer un mail.",
+      "errorMail": "Une erreur est survenue à l'envoie du mail",
+      "errorTextMail": "Le texte est vide ou invalide.",
+      "errorSendingMail": "Une erreur est survenue avec le service d'envoie de mail."
     },
     "AdminGroupsPage": {
       "title": "Gestion des groupes",
