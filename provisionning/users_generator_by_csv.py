@@ -132,8 +132,7 @@ def addUserToStructureGroup(idDB, structureID):
 
 def insertUser(user):
 
-    alreadyExist = db["users"].find_one({"username": user["username"]})
-    if alreadyExist == None:
+    try:
         emails = [{"address": user["emails"], "verified": True}]
         new_user = keycloak_admin.create_user(
             {
@@ -184,11 +183,11 @@ def insertUser(user):
                 for struc in structure["ancestorsIds"]:
                     addUserToStructureGroup(idDB, struc)
 
-    else:
+    except:
         if args.verbose:
             print(
                 "[{}] user {} already exists. Pass...".format(
-                    datetime.now(), alreadyExist["username"]
+                    datetime.now(), user["username"]
                 )
             )
 
