@@ -47,6 +47,7 @@ const StructureSelectionPage = lazy(() => import('../pages/system/StructureSelec
 const TabbedNotificationsDisplay = lazy(() => import('../components/notifications/TabbedNotificationsDisplay'));
 const IntroductionPage = lazy(() => import('../pages/IntroductionPage'));
 const UploadPage = lazy(() => import('../pages/Upload'));
+const AboutPage = lazy(() => import('../pages/AboutPage'));
 
 // dynamic imports
 const AdminGroupsPage = lazy(() => import('../pages/admin/AdminGroupsPage'));
@@ -172,6 +173,7 @@ function MainLayout({ appsettings, ready }) {
                       <Route exact path="/services" component={ServicesPage} />
                       <Route exact path="/structure" component={ServicesPage} />
                       <Route exact path="/help" component={HelpPage} />
+                      <Route exact path="/about" component={AboutPage} />
 
                       {!disabledFeatures.introductionTab && (
                         <Route exact path="/informations" component={IntroductionPage} />
@@ -215,6 +217,7 @@ function MainLayout({ appsettings, ready }) {
                   ) : (
                     <Switch>
                       <Route exact path="/profile" component={ProfilePage} />
+                      <Route exact path="/about" component={AboutPage} />
                       <Route exact path="/profilestructureselection" component={StructureSelectionPage} />
                       {!disabledFeatures.introductionTab && (
                         <Route exact path="/informations" component={IntroductionPage} />
@@ -228,6 +231,7 @@ function MainLayout({ appsettings, ready }) {
                   )
                 ) : (
                   <Switch>
+                    <Route exact path="/about" component={AboutPage} />
                     <Route exact path="/profile" component={ProfilePage} />
                     <Route component={NotValidatedMessage} />
                   </Switch>
