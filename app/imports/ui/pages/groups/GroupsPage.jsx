@@ -29,7 +29,6 @@ import CollapsingSearch from '../../components/system/CollapsingSearch';
 import { useIconStyles, DetaiIconCustom, SimpleIconCustom } from '../../components/system/icons/icons';
 import Spinner from '../../components/system/Spinner';
 import { GRID_VIEW_MODE } from '../../utils/ui';
-import { getGroupName } from '../../utils/utilsFuncs';
 
 const useStyles = makeStyles()(() => ({
   flex: {
@@ -146,13 +145,7 @@ function GroupsPage() {
   };
   const goToAddGroup = () => history.push('/admingroups/new');
 
-  const filterGroups = (group) => {
-    let searchText = getGroupName(group) + group.description + group.digest || '';
-    searchText = searchText.toLowerCase();
-    if (!search) return true;
-    return searchText.indexOf(search.toLowerCase()) > -1;
-  };
-  const mapList = (func) => items.filter((group) => filterGroups(group)).map(func);
+  const mapList = (func) => items.map(func);
 
   const toggleButtons = (
     <ToggleButtonGroup value={viewMode} exclusive aria-label={i18n.__('pages.GroupsPage.viewMode')}>

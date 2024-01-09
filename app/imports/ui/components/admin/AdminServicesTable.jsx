@@ -12,6 +12,7 @@ import keyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import Services from '../../../api/services/services';
 import { handleResult } from '../../../api/utils';
 import setMaterialTableLocalization from '../initMaterialTableLocalization';
+import { accentInsensitiveSearch } from '../../utils/MaterialTable';
 
 const AdminServicesTable = ({ tableTitle, structureMode, urlStruct, urlNew, services }) => {
   const { offlinePage } = Meteor.settings.public;
@@ -25,8 +26,17 @@ const AdminServicesTable = ({ tableTitle, structureMode, urlStruct, urlNew, serv
         return <img style={{ height: 36, borderRadius: '10%' }} src={logo} alt={`Logo - ${title}`} />;
       },
     },
-    { title: i18n.__('pages.AdminServicesPage.columnTitle'), field: 'title', defaultSort: 'asc' },
-    { title: i18n.__('pages.AdminServicesPage.columnUsage'), field: 'usage' },
+    {
+      title: i18n.__('pages.AdminServicesPage.columnTitle'),
+      field: 'title',
+      defaultSort: 'asc',
+      customFilterAndSearch: (value, rowData) => accentInsensitiveSearch(value, rowData, 'title'),
+    },
+    {
+      title: i18n.__('pages.AdminServicesPage.columnUsage'),
+      field: 'usage',
+      customFilterAndSearch: (value, rowData) => accentInsensitiveSearch(value, rowData, 'usage'),
+    },
     {
       title: i18n.__('pages.AdminServicesPage.columnUrl'),
       field: 'url',

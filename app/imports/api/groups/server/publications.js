@@ -3,7 +3,7 @@ import { Roles } from 'meteor/alanning:roles';
 import { FindFromPublication } from 'meteor/percolate:find-from-publication';
 import SimpleSchema from 'simpl-schema';
 
-import { checkPaginationParams, isActive, getLabel } from '../../utils';
+import { checkPaginationParams, isActive, getLabel, accentInsensitive } from '../../utils';
 import Groups from '../groups';
 import AppRoles from '../../users/users';
 import logServer, { levels, scopes } from '../../logging';
@@ -151,7 +151,7 @@ Meteor.publish('groups.users', function groupDetails({ groupId, role = 'member' 
 
 // build query for all groups
 const queryAllGroups = ({ search }) => {
-  const regex = new RegExp(search, 'i');
+  const regex = new RegExp(accentInsensitive(search), 'i');
   return {
     type: { $nin: [10, 15] },
     $or: [
@@ -167,7 +167,7 @@ const queryAllGroups = ({ search }) => {
 
 // build query for groups where user is member of
 const queryAllGroupsMemberOf = ({ search, groups }) => {
-  const regex = new RegExp(search, 'i');
+  const regex = new RegExp(accentInsensitive(search), 'i');
   const fieldsToSearch = ['name', 'type', 'description', 'slug', 'avatar', 'content'];
   const searchQuery = fieldsToSearch.map((field) => ({
     [field]: { $regex: regex },
