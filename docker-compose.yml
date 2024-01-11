@@ -16,7 +16,7 @@ services:
       METEOR_SETTINGS: ${METEOR_SETTINGS}
 
   mongo:
-    image: mongo:6.0.2
+    image: mongo:latest
     command:
       - --storageEngine=wiredTiger
     volumes:

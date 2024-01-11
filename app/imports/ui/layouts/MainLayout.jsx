@@ -113,26 +113,36 @@ function MainLayout({ appsettings, ready }) {
   }, [location]);
 
   useEffect(() => {
-    if (!user.isActive || !user.structure) return;
+    // execute only when user is fully loaded
+    if (!loadingUser) {
+      if (!user.isActive || !user.structure) return;
 
-    if (history.location.pathname === '/') {
-      Meteor.call('globalInfos.getGlobalInfoByLanguageAndNotExpired', { language, date: new Date() }, (error, res) => {
-        if (error) {
-          console.log('error', error);
-          return;
-        }
+      if (history.location.pathname === '/') {
+        Meteor.call(
+          'globalInfos.getGlobalInfoByLanguageAndNotExpired',
+          { language, date: new Date() },
+          (error, res) => {
+            if (error) {
+              console.log('error', error);
+              return;
+            }
 
-        if (res.length && (!user.lastGlobalInfoReadDate || new Date(user.lastGlobalInfoReadDate) < res[0].updatedAt)) {
-          Meteor.call('users.setLastGlobalInfoRead', { lastGlobalInfoReadDate: new Date() });
-          return;
-        }
+            if (
+              res.length &&
+              (!user.lastGlobalInfoReadDate || new Date(user.lastGlobalInfoReadDate) < res[0].updatedAt)
+            ) {
+              Meteor.call('users.setLastGlobalInfoRead', { lastGlobalInfoReadDate: new Date() });
+              return;
+            }
 
-        if (Meteor.settings.public.forceRedirectToPersonalSpace !== false) {
-          history.push('/personal');
-        }
-      });
+            if (Meteor.settings.public.forceRedirectToPersonalSpace !== false) {
+              history.push('/personal');
+            }
+          },
+        );
+      }
     }
-  }, []);
+  }, [loadingUser]);
 
   return (
     <>
