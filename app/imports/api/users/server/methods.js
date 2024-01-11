@@ -1788,7 +1788,10 @@ export const getAdminsFromStructure = new ValidatedMethod({
     let allStruc = [];
 
     if (subStructure) {
-      allStruc = [...struc.childrenIds, structure];
+      const childs = Structures.find({ ancestorsIds: structure })
+        .fetch()
+        .map((child) => child._id);
+      allStruc = [...childs, structure];
     } else {
       allStruc = [structure];
     }
