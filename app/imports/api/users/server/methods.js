@@ -1763,7 +1763,7 @@ export const getUsersAdmin = new ValidatedMethod({
 export const getAdminsFromStructure = new ValidatedMethod({
   name: 'users.getAdminsFromStructure',
   validate: new SimpleSchema({
-    structure: {
+    structureId: {
       type: String,
     },
     subStructure: {
@@ -1771,11 +1771,11 @@ export const getAdminsFromStructure = new ValidatedMethod({
     },
   }).validator(),
 
-  run({ structure, subStructure }) {
-    const struc = Structures.findOne({ _id: structure });
+  run({ structureId, subStructure }) {
+    const struc = Structures.findOne({ _id: structureId });
     if (!struc) {
       logServer(
-        `USERS - METHODS - ERROR - getAdminsFromStructure - could not find structure '${structure}'.`,
+        `USERS - METHODS - ERROR - getAdminsFromStructure - could not find structure '${structureId}'.`,
         levels.ERROR,
         scopes.SYSTEM,
       );
@@ -1788,12 +1788,12 @@ export const getAdminsFromStructure = new ValidatedMethod({
     let allStruc = [];
 
     if (subStructure) {
-      const childs = Structures.find({ ancestorsIds: structure })
+      const childs = Structures.find({ ancestorsIds: structureId })
         .fetch()
         .map((child) => child._id);
-      allStruc = [...childs, structure];
+      allStruc = [...childs, structureId];
     } else {
-      allStruc = [structure];
+      allStruc = [structureId];
     }
 
     const ret = Meteor.roleAssignment.find({

@@ -97,7 +97,7 @@ const AdminStructureMailModal = ({ open, onClose, setIsModalMail, choosenStructu
       if (loading) {
         Meteor.call(
           'users.getAdminsFromStructure',
-          { structure: choosenStructureMail._id, subStructure },
+          { structureId: choosenStructureMail._id, subStructure },
           (error, result) => {
             if (result) {
               if (result.users.length > 0) {
