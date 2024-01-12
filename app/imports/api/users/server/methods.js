@@ -1592,6 +1592,32 @@ export const getAuthToken = new ValidatedMethod({
   },
 });
 
+export const getIdToken = new ValidatedMethod({
+  name: 'users.getIdToken',
+  validate: null,
+  run() {
+    if (!this.userId) {
+      logServer(
+        `USERS - METHODS - METEOR ERROR - getIdToken - ${i18n.__('api.users.mustBeLoggedIn')}`,
+        levels.WARN,
+        scopes.SYSTEM,
+      );
+      throw new Meteor.Error('api.users.getIdToken.notPermitted', i18n.__('api.users.mustBeLoggedIn'));
+    }
+    // check user existence
+    const user = Meteor.users.findOne({ _id: this.userId });
+    if (user === undefined) {
+      logServer(
+        `USERS - METHODS - METEOR ERROR - getIdToken - ${i18n.__('api.users.unknownUser')}`,
+        levels.ERROR,
+        scopes.SYSTEM,
+      );
+      throw new Meteor.Error('api.users.getIdToken.unknownUser', i18n.__('api.users.unknownUser'));
+    }
+    return user.services?.keycloak?.idToken || null;
+  },
+});
+
 export const resetAuthToken = new ValidatedMethod({
   name: 'users.resetAuthToken',
   validate: null,
@@ -1842,6 +1868,7 @@ const LISTS_METHODS = _.pluck(
     toggleAdvancedPersonalPage,
     toggleBetaServices,
     getAuthToken,
+    getIdToken,
     fixUsers,
     hasUserOnRequest,
     hasUserOnAwaitingStructure,

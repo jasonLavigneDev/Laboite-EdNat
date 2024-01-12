@@ -154,7 +154,11 @@ const MainMenu = ({ user = {} }) => {
     const keycloakUrlTested = testMeteorSettingsUrl(keycloakUrl);
     const keycloakLogoutUrl = `${keycloakUrlTested}/realms/${keycloakRealm}/protocol/openid-connect/logout`;
     const redirectUri = `${Meteor.absoluteUrl()}/logout`;
-    window.location = `${keycloakLogoutUrl}?post_logout_redirect_uri=${redirectUri}`;
+    Meteor.call('users.getIdToken', {}, (err, res) => {
+      // if id token has been retrieved, send it as id_token_hint in logout request
+      const tokenHintPart = err || !res ? '' : `&id_token_hint=${res}`;
+      window.location = `${keycloakLogoutUrl}?post_logout_redirect_uri=${redirectUri}${tokenHintPart}`;
+    });
   };
 
   const closeLogoutDialog = () => {
