@@ -1,34 +1,32 @@
-import sys
-import os
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+from sys import argv, exit
+from os import getenv
+from os.path import isfile
 from faker import Faker
-from pymongo import MongoClient
-from keycloak import KeycloakAdmin
-from keycloak import KeycloakOpenIDConnection
 from dotenv import load_dotenv
-from random import choices
 from datetime import datetime
 import csv
+from utils import *
 
 load_dotenv()
 fake = Faker()
 
-
 structures = {}
 mailExtensions = []
 users = []
+userCount = 0
 
-ECOLE_PAR_ACADEMIE = os.getenv("ECOLE_PAR_ACADEMIE")
-COLLEGE_PAR_ACADEMIE = os.getenv("COLLEGE_PAR_ACADEMIE")
-LYCEE_PAR_ACADEMIE = os.getenv("LYCEE_PAR_ACADEMIE")
+ECOLE_PAR_ACADEMIE = int(getenv("ECOLE_PAR_ACADEMIE"))
+COLLEGE_PAR_ACADEMIE = int(getenv("COLLEGE_PAR_ACADEMIE"))
+LYCEE_PAR_ACADEMIE = int(getenv("LYCEE_PAR_ACADEMIE"))
 
-PERSONNE_PAR_ECOLE = os.getenv("PERSONNE_PAR_ECOLE")
-PERSONNE_PAR_COLLEGE = os.getenv("PERSONNE_PAR_COLLEGE")
-PERSONNE_PAR_LYCEE = os.getenv("PERSONNE_PAR_LYCEE")
+PERSONNE_PAR_ECOLE = int(getenv("PERSONNE_PAR_ECOLE"))
+PERSONNE_PAR_COLLEGE = int(getenv("PERSONNE_PAR_COLLEGE"))
+PERSONNE_PAR_LYCEE = int(getenv("PERSONNE_PAR_LYCEE"))
 
-
-def generateID():
-    st = "23456789ABCDEFGHJKLMNPQRSTWXYZabcdefghijkmnopqrstuvwxyz"
-    return "".join(choices(st, k=17))
+DEFAULT_PASSWORD = "Yoyo-12356!"
+INITIAL_ACA = 1     # Nombre à ajouter au numéro d'académie
 
 
 def generateMailExtension(struc):
@@ -51,7 +49,7 @@ def generateCSVForStructure(nb):
     rows = []
     headers = ["_id", "name", "parentId", "ancestorsIds", "childrenIds"]
     for ac in range(0, nb):
-        name = "academie {}".format(ac)
+        name = "academie {}".format(ac+INITIAL_ACA)
 
         mainEntry = {
             "_id": generateID(),
@@ -64,9 +62,9 @@ def generateCSVForStructure(nb):
         rows.append(mainEntry)
         generateMailExtension(mainEntry)
 
-        print("[{}] Created structure: {}".format(datetime.now(), name))
+        # print("[{}] Created structure: {}".format(datetime.now(), name))
 
-        for ec in range(0, int(ECOLE_PAR_ACADEMIE)):
+        for ec in range(0, ECOLE_PAR_ACADEMIE):
             school_name = "ecole {} ({})".format(ec + 1, name)
 
             subEntry = {
@@ -81,15 +79,15 @@ def generateCSVForStructure(nb):
 
             generateMailExtension(subEntry)
 
-            structures[subEntry["_id"]] = int(PERSONNE_PAR_ECOLE)
+            structures[subEntry["_id"]] = PERSONNE_PAR_ECOLE
 
-            print(
-                "[{}] Elementary School created: {}".format(datetime.now(), school_name)
-            )
+        #     print(
+        #         "[{}] Elementary School created: {}".format(datetime.now(), school_name)
+        #     )
 
-        print("=============================================")
+        # print("=============================================")
 
-        for col in range(0, int(COLLEGE_PAR_ACADEMIE)):
+        for col in range(0, COLLEGE_PAR_ACADEMIE):
             col_name = "college {} ({})".format(col + 1, name)
 
             subEntry2 = {
@@ -104,12 +102,12 @@ def generateCSVForStructure(nb):
 
             generateMailExtension(subEntry2)
 
-            structures[subEntry2["_id"]] = int(PERSONNE_PAR_COLLEGE)
-            print("[{}] Middle school created: {}".format(datetime.now(), col_name))
+            structures[subEntry2["_id"]] = PERSONNE_PAR_COLLEGE
+        #     print("[{}] Middle school created: {}".format(datetime.now(), col_name))
 
-        print("=============================================")
+        # print("=============================================")
 
-        for lyc in range(0, int(LYCEE_PAR_ACADEMIE)):
+        for lyc in range(0, LYCEE_PAR_ACADEMIE):
             lyc_name = "lycee {} ({})".format(lyc + 1, name)
 
             subEntry3 = {
@@ -124,45 +122,39 @@ def generateCSVForStructure(nb):
 
             generateMailExtension(subEntry3)
 
-            structures[subEntry3["_id"]] = int(PERSONNE_PAR_LYCEE)
-            print("[{}] High school created: {}".format(datetime.now(), lyc_name))
+            structures[subEntry3["_id"]] = PERSONNE_PAR_LYCEE
+    #         print("[{}] High school created: {}".format(datetime.now(), lyc_name))
 
-        print("=============================================")
-        print("=============================================")
+    #     print("=============================================")
+    #     print("=============================================")
 
-    print("[{}] Creation of CSV".format(datetime.now()))
+    print("[{}] Creation of CSV: structures.csv".format(datetime.now()))
     with open("structures.csv", "w", encoding="UTF8", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=headers)
         writer.writeheader()
         writer.writerows(rows)
-    print("=============================================")
+    # print("=============================================")
 
 
-def generateUser(id, structure):
+def generateUser(structure):
+    global userCount
 
-    mailExtension = next(
-        (x for x in mailExtensions if x["structureId"] == structure), None
-    )
+    mailExtension = next((x["extension"] for x in mailExtensions if x["structureId"] == structure), None)
 
     if mailExtension != None:
 
         name = fake.name()
-        username = name.lower().replace(" ", "_").replace(".", "") + str(id)
-        mail = username + "@" + mailExtension["extension"]
-
-        usernameAllreadyExist = any(x for x in users if x["username"] == username)
-        if usernameAllreadyExist:
-            return generateUser(id, structure)
+        userCount += 1
+        username = name.lower().replace(" ", "_").replace(".", "") + str(userCount)
+        mail = username + "@" + mailExtension
 
         firstname = name.split(" ")[0]
         lastname = name.split(" ")[1]
 
-        idDB = generateID()
-
         entry = {
             "username": username,
             "emails": mail,
-            "password": "123",
+            "password": DEFAULT_PASSWORD,
             "structure": structure,
             "firstName": firstname,
             "lastName": lastname,
@@ -172,11 +164,9 @@ def generateUser(id, structure):
         }
 
         users.append(entry)
-        # print(
-        #     "[{}] Creation of user: {} {} ({})".format(
-        #         datetime.now(), firstname, lastname, mail
-        #     )
-        # )
+
+        # print(userCount)
+        progress("Generate Users : ", userCount, userNumber)
         # print("=============================================")
         return
 
@@ -197,7 +187,7 @@ def generateCSVForMailExtensions():
         writer.writeheader()
         writer.writerows(mailExtensions)
 
-    print("=============================================")
+    # print("=============================================")
 
 
 def generateCSVForUsers():
@@ -219,17 +209,29 @@ def generateCSVForUsers():
         writer.writeheader()
         writer.writerows(users)
 
-    print("=============================================")
+    # print("=============================================")
 
 
-nbStruc = int(sys.argv[1])
-if nbStruc > 0:
-    generateCSVForStructure(nbStruc)
+#####################################
 
-generateCSVForMailExtensions()
+if __name__ == "__main__":
 
-for key in structures:
-    for i in range(0, structures.get(key)):
-        generateUser(i, key)
+    # Confirmation de l'écrasement des fichiers csv pré-existants
+    if isfile("users.csv") or isfile("mails.csv") or isfile("structures.csv"):
+        confirm = input("Overwrites files users.csv, mails.csv and structures.csv ? [yN] ")
+        if confirm != "y":
+            exit("\nExit script.")
 
-generateCSVForUsers()
+    nbStruc = int(argv[1])
+    if nbStruc > 0:
+        generateCSVForStructure(nbStruc)
+
+    generateCSVForMailExtensions()
+
+
+    userNumber = nbStruc * (PERSONNE_PAR_ECOLE * ECOLE_PAR_ACADEMIE + PERSONNE_PAR_COLLEGE * COLLEGE_PAR_ACADEMIE + PERSONNE_PAR_LYCEE * LYCEE_PAR_ACADEMIE)
+    for key in structures:
+        for i in range(0, structures.get(key)):
+            generateUser(key)
+
+    generateCSVForUsers()
