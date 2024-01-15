@@ -3,6 +3,7 @@ import { Paper, Modal, Typography, Button } from '@mui/material';
 import React, { useState } from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import Bowser from 'bowser';
+import { useAppContext } from '../contexts/context';
 
 import PackageJSON from '../../../package.json';
 
@@ -76,10 +77,16 @@ const style = {
     transform: 'translate(-50%, -50%)',
     padding: '5%',
   },
+
+  form: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
 };
 
 const AboutPage = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [{ isMobile }] = useAppContext();
   const bowser = Bowser.parse(window.navigator.userAgent);
   const { browser, os, platform } = bowser;
 
@@ -87,12 +94,21 @@ const AboutPage = () => {
 
   return (
     <>
-      <Paper style={{ display: 'flex', gap: '5vw', height: '80vh', padding: 200 }}>
-        <div style={{ paddingRight: '10vw' }}>
+      <Paper
+        style={{
+          display: 'flex',
+          flexDirection: isMobile ? 'column' : 'row',
+          height: isMobile ? '90vh' : '80vh',
+          padding: 10,
+          placeItems: 'center',
+          overflow: 'auto',
+        }}
+      >
+        <div style={{ display: 'flex', width: '25%', justifyContent: 'center' }}>
           <img style={style.imageSize} src="/images/logos/laboite/Logo-A-fond.png" alt="test" />
         </div>
-        <div>
-          <Typography variant="h3" sx={{ color: '#02235E' }}>
+        <div style={{ width: isMobile ? '100%' : '50vw' }}>
+          <Typography variant={isMobile ? 'h6' : 'h3'} sx={{ color: '#02235E' }}>
             Bienvenue dans <i style={{ color: '#5AA1D8' }}>LaBoite - {version}</i>
           </Typography>
           <p>
@@ -115,51 +131,44 @@ const AboutPage = () => {
               Ministère de l Education Nationale, de la Jeunesse, des Sports et des Jeux Olympiques et Paralympiques
             </a>
           </p>
-          <p>
-            Quelques liens utils :
-            <ul>
-              <li>
-                <a title="chat mim-libre" target="_blank" rel="noreferrer noopenner" href="https://chat.mim-libre.fr">
-                  Chat mim-libre
-                </a>
-              </li>
-              <li>
-                <a
-                  title="chat mim-libre"
-                  target="_blank"
-                  rel="noreferrer noopenner"
-                  href=" https://dev-eole.ac-dijon.fr"
-                >
-                  Site de développement EOLE
-                </a>
-              </li>
-              <li>
-                <a
-                  title="mastodon"
-                  target="_blank"
-                  rel="noreferrer noopenner"
-                  href="https://mastodon.eole.education/@EOLE"
-                >
-                  Mastodon
-                </a>
-              </li>
-              <li>
-                <a title="wiki eole" target="_blank" rel="noreferrer noopenner" href="https://wiki.eole.education/">
-                  Wiki EOLE
-                </a>
-              </li>
-              <li>
-                <a
-                  title="dépot du projet"
-                  target="_blank"
-                  rel="noreferrer noopenner"
-                  href="https://gitlab.mim-libre.fr/alphabet/laboite"
-                >
-                  Dépôt du projet
-                </a>
-              </li>
-            </ul>
-          </p>
+          Quelques liens utils :
+          <ul>
+            <li>
+              <a title="chat mim-libre" target="_blank" rel="noreferrer noopenner" href="https://chat.mim-libre.fr">
+                Chat mim-libre
+              </a>
+            </li>
+            <li>
+              <a title="chat mim-libre" target="_blank" rel="noreferrer noopenner" href=" https://dev-eole.ac-dijon.fr">
+                Site de développement EOLE
+              </a>
+            </li>
+            <li>
+              <a
+                title="mastodon"
+                target="_blank"
+                rel="noreferrer noopenner"
+                href="https://mastodon.eole.education/@EOLE"
+              >
+                Mastodon
+              </a>
+            </li>
+            <li>
+              <a title="wiki eole" target="_blank" rel="noreferrer noopenner" href="https://wiki.eole.education/">
+                Wiki EOLE
+              </a>
+            </li>
+            <li>
+              <a
+                title="dépot du projet"
+                target="_blank"
+                rel="noreferrer noopenner"
+                href="https://gitlab.mim-libre.fr/alphabet/laboite"
+              >
+                Dépôt du projet
+              </a>
+            </li>
+          </ul>
           <Button sx={{ marginTop: '5vh' }} variant="contained" onClick={() => setIsOpen(true)}>
             Informations de dépannage
           </Button>
