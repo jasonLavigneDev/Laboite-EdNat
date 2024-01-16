@@ -8,45 +8,9 @@ import { useAppContext } from '../contexts/context';
 
 import PackageJSON from '../../../package.json';
 
+const [{ isMobile }] = useAppContext();
+
 const style = {
-  paperStyle: {
-    backgroundColor: '#E6EAF5',
-    boxShadow: ' 1px 5px 10px rgba(0,0,0,0.5)',
-    borderRadius: '20px',
-    alignItems: 'center',
-  },
-  divScroller: {
-    height: '40vw',
-    width: '100vw',
-    scrollSnapType: 'y mandatory',
-    overflowY: 'scroll',
-    scrollbarWidth: 'none',
-    padding: '0 10vw',
-  },
-  globalHeight: {
-    height: '34vw',
-    scrollSnapAlign: 'start',
-  },
-  headerSection: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  noBgSection: {
-    padding: '3vw 1vw',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  noBgSectionIntro: {
-    padding: '3vw 1vw',
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  bgLeftSection: {
-    display: 'flex',
-  },
   imageSize: {
     height: '10vw',
     placeContent: 'center',
@@ -54,23 +18,6 @@ const style = {
   marginRight: {
     marginRight: '-10vw',
   },
-  divTextLeft: {
-    display: 'flex',
-    flexDirection: 'column',
-    textAlign: 'end',
-    padding: '0px 10vw',
-  },
-  marginLeft: {
-    marginLeft: '-10vw',
-  },
-  paddingLeft: {
-    paddingLeft: '10vw',
-  },
-
-  paddingRight: {
-    paddingRight: '10vw',
-  },
-
   paper: {
     position: 'absolute',
     left: '50%',
@@ -78,16 +25,26 @@ const style = {
     transform: 'translate(-50%, -50%)',
     padding: '5%',
   },
-
-  form: {
+  containerPaper: {
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: isMobile ? 'column' : 'row',
+    height: isMobile ? '90vh' : '80vh',
+    padding: 10,
+    placeItems: 'center',
+    overflow: 'auto',
+  },
+  imgContainer: {
+    display: 'flex',
+    width: '25%',
+    justifyContent: 'center',
+  },
+  textZone: {
+    width: isMobile ? '100%' : '50vw',
   },
 };
 
 const AboutPage = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [{ isMobile }] = useAppContext();
   const bowser = Bowser.parse(window.navigator.userAgent);
   const { browser, os, platform } = bowser;
 
@@ -95,20 +52,11 @@ const AboutPage = () => {
 
   return (
     <>
-      <Paper
-        style={{
-          display: 'flex',
-          flexDirection: isMobile ? 'column' : 'row',
-          height: isMobile ? '90vh' : '80vh',
-          padding: 10,
-          placeItems: 'center',
-          overflow: 'auto',
-        }}
-      >
-        <div style={{ display: 'flex', width: '25%', justifyContent: 'center' }}>
+      <Paper style={style.containerPaper}>
+        <div style={style.imgContainer}>
           <img style={style.imageSize} src="/images/logos/laboite/Logo-A-fond.png" alt="test" />
         </div>
-        <div style={{ width: isMobile ? '100%' : '50vw' }}>
+        <div style={style.textZone}>
           <Typography variant={isMobile ? 'h6' : 'h3'} sx={{ color: '#02235E' }}>
             {i18n.__('pages.AboutPage.welcome')} <i style={{ color: '#5AA1D8' }}>LaBoite - {version}</i>
           </Typography>
