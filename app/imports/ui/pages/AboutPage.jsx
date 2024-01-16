@@ -8,42 +8,41 @@ import { useAppContext } from '../contexts/context';
 
 import PackageJSON from '../../../package.json';
 
-const [{ isMobile }] = useAppContext();
-
-const style = {
-  imageSize: {
-    height: '10vw',
-    placeContent: 'center',
-  },
-  marginRight: {
-    marginRight: '-10vw',
-  },
-  paper: {
-    position: 'absolute',
-    left: '50%',
-    top: '50%',
-    transform: 'translate(-50%, -50%)',
-    padding: '5%',
-  },
-  containerPaper: {
-    display: 'flex',
-    flexDirection: isMobile ? 'column' : 'row',
-    height: isMobile ? '90vh' : '80vh',
-    padding: 10,
-    placeItems: 'center',
-    overflow: 'auto',
-  },
-  imgContainer: {
-    display: 'flex',
-    width: '25%',
-    justifyContent: 'center',
-  },
-  textZone: {
-    width: isMobile ? '100%' : '50vw',
-  },
-};
-
 const AboutPage = () => {
+  const [{ isMobile }] = useAppContext();
+
+  const style = {
+    imageSize: {
+      height: '10vw',
+      placeContent: 'center',
+    },
+    marginRight: {
+      marginRight: '-10vw',
+    },
+    paper: {
+      position: 'absolute',
+      left: '50%',
+      top: '50%',
+      transform: 'translate(-50%, -50%)',
+      padding: '5%',
+    },
+    containerPaper: {
+      display: 'flex',
+      flexDirection: isMobile ? 'column' : 'row',
+      height: isMobile ? '90vh' : '80vh',
+      padding: 10,
+      placeItems: 'center',
+      overflow: 'auto',
+    },
+    imgContainer: {
+      display: 'flex',
+      width: '25%',
+      justifyContent: 'center',
+    },
+    textZone: {
+      width: isMobile ? '100%' : '50vw',
+    },
+  };
   const [isOpen, setIsOpen] = useState(false);
   const bowser = Bowser.parse(window.navigator.userAgent);
   const { browser, os, platform } = bowser;
