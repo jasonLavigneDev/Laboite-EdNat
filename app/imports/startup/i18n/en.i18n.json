@@ -1113,7 +1113,8 @@
         "os": "Os :",
         "device": "Device :",
         "close": "Close",
-        "copy": "Copy informations"
+        "copy": "Copy informations",
+        "success": "Copy success"
       }
     },
     "UploadPage": {

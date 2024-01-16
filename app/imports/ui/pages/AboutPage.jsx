@@ -1,15 +1,17 @@
 // eslint-disable-next-line no-restricted-imports
 import { Paper, Modal, Typography, Button } from '@mui/material';
+import { toast } from 'react-toastify';
 import React, { useState } from 'react';
 import i18n from 'meteor/universe:i18n';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import Bowser from 'bowser';
 import { useAppContext } from '../contexts/context';
-
 import PackageJSON from '../../../package.json';
+import Footer from '../components/menus/Footer';
+import TopBar from '../components/menus/TopBar';
 
 const AboutPage = () => {
-  const [{ isMobile }] = useAppContext();
+  const [{ isMobile, user }] = useAppContext();
 
   const style = {
     imageSize: {
@@ -42,6 +44,16 @@ const AboutPage = () => {
     textZone: {
       width: isMobile ? '100%' : '50vw',
     },
+    links: {
+      color: '#0000FF',
+      textDecoration: 'underline',
+      cursor: 'pointer',
+    },
+    footer: {
+      position: 'absolute',
+      bottom: 0,
+      width: '100%',
+    },
   };
   const [isOpen, setIsOpen] = useState(false);
   const bowser = Bowser.parse(window.navigator.userAgent);
@@ -49,8 +61,20 @@ const AboutPage = () => {
 
   const { version } = PackageJSON;
 
+  const handleClickModal = () => {
+    navigator.clipboard.writeText(
+      `Navigateur: ${browser.name},
+                 Version: ${JSON.stringify(browser.version)},
+                 Os: ${JSON.stringify(os.name)},
+                 Appareil: ${JSON.stringify(platform.type)}`,
+    );
+    toast.success(i18n.__('pages.AboutPage.Modal.success'));
+    setIsOpen(false);
+  };
+
   return (
     <>
+      {!user && <TopBar publicMenu root="/" />}
       <Paper style={style.containerPaper}>
         <div style={style.imgContainer}>
           <img style={style.imageSize} src="/images/logos/laboite/Logo-A-fond.png" alt="test" />
@@ -76,23 +100,37 @@ const AboutPage = () => {
             </a>{' '}
             {i18n.__('pages.AboutPage.and')}{' '}
             <a title="MENJ" target="_blank" rel="noreferrer noopener" href="https://www.education.gouv.fr/">
-              Ministère de l Education Nationale, de la Jeunesse, des Sports et des Jeux Olympiques et Paralympiques
+              Ministère de l`&apos;`Éducation Nationale, de la Jeunesse, des Sports et des Jeux Olympiques et
+              Paralympiques
             </a>
           </p>
           {i18n.__('pages.AboutPage.links')}
           <ul>
             <li>
-              <a title="chat mim-libre" target="_blank" rel="noreferrer noopenner" href="https://chat.mim-libre.fr">
+              <a
+                style={style.links}
+                title="chat mim-libre"
+                target="_blank"
+                rel="noreferrer noopenner"
+                href="https://chat.mim-libre.fr"
+              >
                 {i18n.__('pages.AboutPage.chat')}
               </a>
             </li>
             <li>
-              <a title="chat mim-libre" target="_blank" rel="noreferrer noopenner" href=" https://dev-eole.ac-dijon.fr">
+              <a
+                style={style.links}
+                title="chat mim-libre"
+                target="_blank"
+                rel="noreferrer noopenner"
+                href=" https://dev-eole.ac-dijon.fr"
+              >
                 {i18n.__('pages.AboutPage.website')}
               </a>
             </li>
             <li>
               <a
+                style={style.links}
                 title="mastodon"
                 target="_blank"
                 rel="noreferrer noopenner"
@@ -102,12 +140,19 @@ const AboutPage = () => {
               </a>
             </li>
             <li>
-              <a title="wiki eole" target="_blank" rel="noreferrer noopenner" href="https://wiki.eole.education/">
+              <a
+                style={style.links}
+                title="wiki eole"
+                target="_blank"
+                rel="noreferrer noopenner"
+                href="https://wiki.eole.education/"
+              >
                 Wiki EOLE
               </a>
             </li>
             <li>
               <a
+                style={style.links}
                 title="dépot du projet"
                 target="_blank"
                 rel="noreferrer noopenner"
@@ -141,22 +186,17 @@ const AboutPage = () => {
             <Button variant="contained" onClick={() => setIsOpen(false)}>
               {i18n.__('pages.AboutPage.Modal.close')}
             </Button>
-            <Button
-              variant="contained"
-              onClick={() =>
-                navigator.clipboard.writeText(
-                  `Navigateur: ${browser.name},
-                 Version: ${JSON.stringify(browser.version)},
-                 Os: ${JSON.stringify(os.name)},
-                 Appareil: ${JSON.stringify(platform.type)}`,
-                )
-              }
-            >
+            <Button variant="contained" onClick={() => handleClickModal()}>
               {i18n.__('pages.AboutPage.Modal.copy')}
             </Button>
           </div>
         </Paper>
       </Modal>
+      {!user && !isMobile && (
+        <div style={style.footer}>
+          <Footer />
+        </div>
+      )}
     </>
   );
 };

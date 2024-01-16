@@ -216,8 +216,8 @@ function MainLayout({ appsettings, ready }) {
                     </Switch>
                   ) : (
                     <Switch>
-                      <Route exact path="/profile" component={ProfilePage} />
                       <Route exact path="/about" component={AboutPage} />
+                      <Route exact path="/profile" component={ProfilePage} />
                       <Route exact path="/profilestructureselection" component={StructureSelectionPage} />
                       {!disabledFeatures.introductionTab && (
                         <Route exact path="/informations" component={IntroductionPage} />
