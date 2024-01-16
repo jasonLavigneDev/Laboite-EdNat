@@ -1,6 +1,7 @@
 // eslint-disable-next-line no-restricted-imports
 import { Paper, Modal, Typography, Button } from '@mui/material';
 import React, { useState } from 'react';
+import i18n from 'meteor/universe:i18n';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import Bowser from 'bowser';
 import { useAppContext } from '../contexts/context';
@@ -109,38 +110,38 @@ const AboutPage = () => {
         </div>
         <div style={{ width: isMobile ? '100%' : '50vw' }}>
           <Typography variant={isMobile ? 'h6' : 'h3'} sx={{ color: '#02235E' }}>
-            Bienvenue dans <i style={{ color: '#5AA1D8' }}>LaBoite - {version}</i>
+            {i18n.__('pages.AboutPage.welcome')} <i style={{ color: '#5AA1D8' }}>LaBoite - {version}</i>
           </Typography>
           <p>
-            Développé sous licence{' '}
+            {i18n.__('pages.AboutPage.developped')}{' '}
             <a title="EUPL 1.2" target="_blank" rel="noreferrer noopener" href="https://eupl.eu/1.2/fr/">
               EUPL 1.2
             </a>
           </p>
           <p>
-            Par le{' '}
+            {i18n.__('pages.AboutPage.by')}{' '}
             <a title="PCLL" target="_blank" rel="noreferrer noopener" href="https://pcll.ac-dijon.fr/pcll/">
               Pôle de Compétences Logiciels Libres
             </a>{' '}
-            avec les contributions de la{' '}
+            {i18n.__('pages.AboutPage.contributions')}{' '}
             <a title="DINUM" target="_blank" rel="noreferrer noopener" href="https://www.numerique.gouv.fr/dinum/">
               Direction interministérielle du numérique
             </a>{' '}
-            et du{' '}
+            {i18n.__('pages.AboutPage.and')}{' '}
             <a title="MENJ" target="_blank" rel="noreferrer noopener" href="https://www.education.gouv.fr/">
               Ministère de l Education Nationale, de la Jeunesse, des Sports et des Jeux Olympiques et Paralympiques
             </a>
           </p>
-          Quelques liens utils :
+          {i18n.__('pages.AboutPage.links')}
           <ul>
             <li>
               <a title="chat mim-libre" target="_blank" rel="noreferrer noopenner" href="https://chat.mim-libre.fr">
-                Chat mim-libre
+                {i18n.__('pages.AboutPage.chat')}
               </a>
             </li>
             <li>
               <a title="chat mim-libre" target="_blank" rel="noreferrer noopenner" href=" https://dev-eole.ac-dijon.fr">
-                Site de développement EOLE
+                {i18n.__('pages.AboutPage.website')}
               </a>
             </li>
             <li>
@@ -165,25 +166,33 @@ const AboutPage = () => {
                 rel="noreferrer noopenner"
                 href="https://gitlab.mim-libre.fr/alphabet/laboite"
               >
-                Dépôt du projet
+                {i18n.__('pages.AboutPage.deposit')}
               </a>
             </li>
           </ul>
           <Button sx={{ marginTop: '5vh' }} variant="contained" onClick={() => setIsOpen(true)}>
-            Informations de dépannage
+            {i18n.__('pages.AboutPage.information')}
           </Button>
         </div>
       </Paper>
       <Modal open={isOpen} onClose={() => setIsOpen(false)}>
         <Paper sx={style.paper}>
-          <Typography variant="h4">Vos informations</Typography>
-          <p>Navigateur: {JSON.stringify(browser.name)}</p>
-          <p>Version: {JSON.stringify(browser.version)}</p>
-          <p>Os: {JSON.stringify(os.name)}</p>
-          <p>Appareil: {JSON.stringify(platform.type)}</p>
+          <Typography variant="h4">{i18n.__('pages.AboutPage.Modal.information')}</Typography>
+          <p>
+            {i18n.__('pages.AboutPage.Modal.navigator')} {JSON.stringify(browser.name)}
+          </p>
+          <p>
+            {i18n.__('pages.AboutPage.Modal.version')} {JSON.stringify(browser.version)}
+          </p>
+          <p>
+            {i18n.__('pages.AboutPage.Modal.os')} {JSON.stringify(os.name)}
+          </p>
+          <p>
+            {i18n.__('pages.AboutPage.Modal.device')} {JSON.stringify(platform.type)}
+          </p>
           <div style={{ display: 'flex', gap: 10 }}>
             <Button variant="contained" onClick={() => setIsOpen(false)}>
-              Fermer
+              {i18n.__('pages.AboutPage.Modal.close')}
             </Button>
             <Button
               variant="contained"
@@ -196,7 +205,7 @@ const AboutPage = () => {
                 )
               }
             >
-              Copier les informations
+              {i18n.__('pages.AboutPage.Modal.copy')}
             </Button>
           </div>
         </Paper>

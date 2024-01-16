@@ -621,6 +621,7 @@
       "menuUserBookmarks": "Marque-pages",
       "menuUpload": "Transférer des fichiers",
       "menuProfileLabel": "Mon profil",
+      "menuAboutLabel": "A propos",
       "menuHelpLabel": "Aide",
       "menuFeedbackLabel": "Partager mon avis",
       "menuOnboardingLabel": "Comment utiliser ce service ?",
@@ -1101,6 +1102,27 @@
     "body_editRow_saveTooltip": "Valider"
   },
   "pages": {
+    "AboutPage": {
+      "welcome": "Bienvenue dans",
+      "developped": "Développé sous licence",
+      "by": "par le",
+      "contributions": "avec les contributions de la",
+      "and": "et du",
+      "links": "Quelques liens utils :",
+      "chat": "Chat mim-libre",
+      "website": "Site de développement EOLE",
+      "deposit": "Dépôt du projet",
+      "information": "Informations de dépannage",
+      "Modal": {
+        "information": "Vos informations",
+        "navigator": "Navigateur :",
+        "version": "Version :",
+        "os": "Os :",
+        "device": "Appareil :",
+        "close": "Fermer",
+        "copy": "Copier les informations"
+      }
+    },
     "UploadPage": {
       "description": "Vous pouvez envoyer des fichiers volumineux non sensibles de manière sécurisée à un agent de l'Etat ou entre agents grâce à France transfert.",
       "fileCount": "{$count} éléments",

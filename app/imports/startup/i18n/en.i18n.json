@@ -697,6 +697,7 @@
       "menuUserBookmarks": "Bookmarks",
       "menuUpload": "Transfer files",
       "menuProfileLabel": "My profile",
+      "menuAboutLabel": "About",
       "menuHelpLabel": "Help",
       "menuFeedbackLabel": "Give feedback",
       "menuOnboardingLabel": "How to use this service?",
@@ -1094,6 +1095,27 @@
     "body_editRow_saveTooltip": "Confirm"
   },
   "pages": {
+    "AboutPage": {
+      "welcome": "Welcome to",
+      "developped": "Developed under license",
+      "by": "by",
+      "contributions": "with contributions from the",
+      "and": "and",
+      "links": "Some useful links :",
+      "chat": "Mim-libre chat",
+      "website": "EOLE development website",
+      "deposit": "Project deposit",
+      "information": "Troubleshooting Information",
+      "Modal": {
+        "information": "Your informations",
+        "navigator": "Navigator :",
+        "version": "Version :",
+        "os": "Os :",
+        "device": "Device :",
+        "close": "Close",
+        "copy": "Copy informations"
+      }
+    },
     "UploadPage": {
       "description": "You can send large, non-sensitive files securely to a government agent or between agents using France transfert.",
       "fileCount": "{$count} elements",
