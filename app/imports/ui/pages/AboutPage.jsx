@@ -44,11 +44,6 @@ const AboutPage = () => {
     textZone: {
       width: isMobile ? '100%' : '50vw',
     },
-    links: {
-      color: '#0000FF',
-      textDecoration: 'underline',
-      cursor: 'pointer',
-    },
     footer: {
       position: 'absolute',
       bottom: 0,
@@ -77,16 +72,20 @@ const AboutPage = () => {
       {!user && <TopBar publicMenu root="/" />}
       <Paper style={style.containerPaper}>
         <div style={style.imgContainer}>
-          <img style={style.imageSize} src="/images/logos/laboite/Logo-A-fond.png" alt="test" />
+          <img style={style.imageSize} src="/images/logos/eole/puce_eole.png" alt="puce eole" />
         </div>
         <div style={style.textZone}>
-          <Typography variant={isMobile ? 'h6' : 'h3'} sx={{ color: '#02235E' }}>
-            {i18n.__('pages.AboutPage.welcome')} <i style={{ color: '#5AA1D8' }}>LaBoite - {version}</i>
+          <Typography variant={isMobile ? 'h6' : 'h3'}>
+            <i style={{ color: '#372F84' }}>LaBoite - version {version}</i>
           </Typography>
           <p>
             {i18n.__('pages.AboutPage.developped')}{' '}
             <a title="EUPL 1.2" target="_blank" rel="noreferrer noopener" href="https://eupl.eu/1.2/fr/">
               EUPL 1.2
+            </a>{' '}
+            {i18n.__('pages.AboutPage.socle')}{' '}
+            <a title="EOLE 3" target="_blank" rel="noreferrer noopener" href="https://pcll.ac-dijon.fr/eole/eole-3/">
+              EOLE³
             </a>
           </p>
           <p>
@@ -94,74 +93,50 @@ const AboutPage = () => {
             <a title="PCLL" target="_blank" rel="noreferrer noopener" href="https://pcll.ac-dijon.fr/pcll/">
               Pôle de Compétences Logiciels Libres
             </a>{' '}
-            {i18n.__('pages.AboutPage.contributions')}{' '}
-            <a title="DINUM" target="_blank" rel="noreferrer noopener" href="https://www.numerique.gouv.fr/dinum/">
-              Direction interministérielle du numérique
-            </a>{' '}
             {i18n.__('pages.AboutPage.and')}{' '}
             <a title="MENJ" target="_blank" rel="noreferrer noopener" href="https://www.education.gouv.fr/">
-              Ministère de l`&apos;`Éducation Nationale, de la Jeunesse, des Sports et des Jeux Olympiques et
-              Paralympiques
+              Ministère de l`&apos;`Éducation Nationale et de la Jeunesse
+            </a>{' '}
+            {i18n.__('pages.AboutPage.contributions')}{' '}
+            <a title="DINUM" target="_blank" rel="noreferrer noopener" href="https://www.numerique.gouv.fr/dinum/">
+              Direction Interministérielle du Numérique
+            </a>{' '}
+            {i18n.__('pages.AboutPage.external')}
+          </p>
+          <p>
+            {i18n.__('pages.AboutPage.links')}{' '}
+            <a title="wiki eole" target="_blank" rel="noreferrer noopener" href="https://wiki.eole.education/">
+              documentation du portail.
             </a>
           </p>
-          {i18n.__('pages.AboutPage.links')}
-          <ul>
-            <li>
-              <a
-                style={style.links}
-                title="chat mim-libre"
-                target="_blank"
-                rel="noreferrer noopenner"
-                href="https://chat.mim-libre.fr"
-              >
-                {i18n.__('pages.AboutPage.chat')}
-              </a>
-            </li>
-            <li>
-              <a
-                style={style.links}
-                title="chat mim-libre"
-                target="_blank"
-                rel="noreferrer noopenner"
-                href=" https://dev-eole.ac-dijon.fr"
-              >
-                {i18n.__('pages.AboutPage.website')}
-              </a>
-            </li>
-            <li>
-              <a
-                style={style.links}
-                title="mastodon"
-                target="_blank"
-                rel="noreferrer noopenner"
-                href="https://mastodon.eole.education/@EOLE"
-              >
-                Mastodon
-              </a>
-            </li>
-            <li>
-              <a
-                style={style.links}
-                title="wiki eole"
-                target="_blank"
-                rel="noreferrer noopenner"
-                href="https://wiki.eole.education/"
-              >
-                Wiki EOLE
-              </a>
-            </li>
-            <li>
-              <a
-                style={style.links}
-                title="dépot du projet"
-                target="_blank"
-                rel="noreferrer noopenner"
-                href="https://gitlab.mim-libre.fr/alphabet/laboite"
-              >
-                {i18n.__('pages.AboutPage.deposit')}
-              </a>
-            </li>
-          </ul>
+          <p>
+            {i18n.__('pages.AboutPage.exchange')}{' '}
+            <a
+              title={i18n.__('pages.AboutPage.chat')}
+              target="_blank"
+              rel="noreferrer noopener"
+              href="https://chat.mim-libre.fr"
+            >
+              {i18n.__('pages.AboutPage.chat')}.
+            </a>
+          </p>
+          <p>
+            {i18n.__('pages.AboutPage.news')}{' '}
+            <a title="Mastodon" target="_blank" rel="noreferrer noopenner" href="https://mastodon.eole.education/@EOLE">
+              Mastodon.
+            </a>
+          </p>
+          <p>
+            {i18n.__('pages.AboutPage.contributing')}{' '}
+            <a
+              title={i18n.__('pages.AboutPage.deposit')}
+              target="_blank"
+              rel="noreferrer noopenner"
+              href="https://gitlab.mim-libre.fr/alphabet/laboite"
+            >
+              {i18n.__('pages.AboutPage.deposit')}.
+            </a>
+          </p>
           <Button sx={{ marginTop: '5vh' }} variant="contained" onClick={() => setIsOpen(true)}>
             {i18n.__('pages.AboutPage.information')}
           </Button>
