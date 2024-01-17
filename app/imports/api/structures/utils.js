@@ -51,3 +51,18 @@ export const hasRightToSetStructureDirectly = (userId, structureId) => {
 
   return !isUserStructureValidationMandatoryAdminLevel && !isUserStructureValidationMandatoryStructureAdminLevel;
 };
+
+export const getExternalService = (struc) => {
+  if (struc.externalUrl) {
+    return struc.externalUrl;
+  }
+  if (struc.sendMailToParent) {
+    if (struc.parentId) {
+      const ancestor = Structures.findOne(struc.parentId);
+      if (ancestor) {
+        return getExternalService(ancestor);
+      }
+    }
+  }
+  return null;
+};

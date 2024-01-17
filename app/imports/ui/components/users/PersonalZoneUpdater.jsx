@@ -204,8 +204,14 @@ function PersonalZoneUpdater({
   const filterLink = (element) => element.type === 'link';
   const filterGroupLink = (element) => element.type === 'groupLink';
   const filterGroup = (element) => element.type === 'group';
-  const filterService = (element) =>
-    element.type === 'service' && Services.findOne({ _id: element.element_id })?.state !== 10;
+  const filterService = (element) => {
+    if (element.type === 'service') {
+      const showBetaServices = user.betaServices || false;
+      const service = Services.findOne({ _id: element.element_id });
+      return service?.state !== 10 && (showBetaServices || service?.isBeta !== true);
+    }
+    return false;
+  };
 
   const doNotDisplayHidenServices = (element) =>
     filterService(element) || filterGroup(element) || filterLink(element) || filterGroupLink(element);
@@ -414,7 +420,7 @@ function PersonalZoneUpdater({
     filteredUnsortedPersonalSpacesLink,
     filteredUnsortedPersonalSpacesGroupLink,
   } = useMemo(() => {
-    const filteredUnsortedPersonalSpaces = localPS.unsorted.filter(filterSearch);
+    const filteredUnsortedPersonalSpaces = localPS.unsorted ? localPS.unsorted.filter(filterSearch) : [];
 
     return {
       filteredUnsortedPersonalSpaces,

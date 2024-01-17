@@ -127,6 +127,7 @@ export default function ServiceDetailsList({ service, favAction, noIconMode = fa
           </Badge>
           <Typography noWrap className={classes.typoTruncate}>
             {service.title}
+            {service.isBeta ? i18n.__('components.ServiceDetails.betaVersion') : ''}
           </Typography>
         </Box>
       ) : (
@@ -137,7 +138,7 @@ export default function ServiceDetailsList({ service, favAction, noIconMode = fa
               avatar={
                 <CardMedia className={classes.cardMedia} component="img" alt={service.title} image={service.logo} />
               }
-              title={service.title}
+              title={`${service.title}${service.isBeta ? i18n.__('components.ServiceDetails.betaVersion') : ''}`}
               titleTypographyProps={{
                 variant: 'h6',
                 color: isDisabled ? 'textSecondary' : 'primary',

@@ -58,7 +58,7 @@ const AdminGlobalInfos = ({ structure = false }) => {
     });
   };
 
-  const updateMessage = (updatedMessage) => {
+  const updateMessage = (updatedMessage, publish = true) => {
     const messageUpdated = {
       ...messageToUpdate,
       content: updatedMessage.content,
@@ -74,6 +74,7 @@ const AdminGlobalInfos = ({ structure = false }) => {
         language: messageUpdated.language,
         expirationDate: messageUpdated.expirationDate,
         structure,
+        publish,
       },
       (error, res) => {
         if (!error) {

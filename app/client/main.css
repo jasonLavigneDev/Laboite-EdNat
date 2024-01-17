@@ -39,3 +39,11 @@ div p a {
 .hidden {
   display: none;
 }
+
+.flex {
+  display: flex;
+}
+
+.flex.align-center {
+  align-items: center;
+}

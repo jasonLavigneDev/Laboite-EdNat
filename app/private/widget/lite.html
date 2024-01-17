@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="robots" content="noindex"/>
+</head>
+<body></body>
+<script>
+    function load() {
+        const token = localStorage.getItem('Meteor.loginToken');
+
+        fetch(window.location.href, {
+            method: 'POST',
+            headers: {
+                Authorization: 'Token ' + token,
+            },
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                if (window !== window.parent) {
+                    window.parent.postMessage(
+                        {
+                            type: 'load',
+                            content: data,
+                        },
+                        '*',
+                    );
+                }
+            });
+    }
+
+    window.addEventListener('message', (event) => {
+        if (event.data === 'load') {
+            load();
+        }
+    });
+</script>
+<script>
+    var Countly = Countly || {};
+    Countly.q = Countly.q || [];
+
+    Countly.app_key = "{{countlyKey}}";
+    Countly.url = "{{countlyUrl}}";
+
+    Countly.q.push(['add_event', {
+        key: 'Loading widget',
+        count: 1,
+        segmentation: {
+            target: 'WIDGET',
+            userAgent: window.navigator.userAgent || null,
+        },
+    }]);
+
+    (function() {
+        var cly = document.createElement('script'); cly.type = 'text/javascript';
+        cly.async = true;
+        cly.src = '/scripts/countly.js';
+        cly.onload = function(){Countly.init()};
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(cly, s);
+    })();
+</script>
+</html>

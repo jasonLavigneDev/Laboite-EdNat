@@ -201,9 +201,13 @@ export const updateGlobalInfo = new ValidatedMethod({
       type: Boolean,
       defaultValue: false,
     },
+    publish: {
+      type: Boolean,
+      defaultValue: false,
+    },
   }).validator({ clean: true }),
 
-  run({ language, content, expirationDate, id, structure }) {
+  run({ language, content, expirationDate, id, structure, publish }) {
     if (language) validateString(language, true);
     let sanitizedContent = '';
     if (content) {
@@ -228,6 +232,7 @@ export const updateGlobalInfo = new ValidatedMethod({
         content,
         expirationDate,
       };
+      if (publish) updatedGlobalInfo.updatedAt = new Date();
       GlobalInfos.update({ _id: id }, { $set: updatedGlobalInfo });
       return GlobalInfos.findOne({ _id: id });
     } catch (error) {

@@ -10,6 +10,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import add from '@mui/icons-material/Add';
 import Fade from '@mui/material/Fade';
+import Switch from '@mui/material/Switch';
 import { makeStyles } from 'tss-react/mui';
 import Spinner from '../../components/system/Spinner';
 import Nextcloud from '../../../api/nextcloud/nextcloud';
@@ -23,21 +24,48 @@ const useStyles = makeStyles()((theme) => ({
     marginTop: theme.spacing(3),
   },
 }));
+
+// Inline styles for switch button;
+// To concatenate multiple styles, use ...classe.attribute in style tag attribute
+const switchStyle = {
+  global: {
+    borderRadius: 20,
+    alignSelf: 'center',
+    padding: 10,
+    height: 10,
+  },
+  container: {
+    display: 'flex',
+    justifyContent: 'space-evenly',
+  },
+  mainContainer: { display: 'flex', alignItems: 'center' },
+  green: { backgroundColor: 'lightgreen' },
+  red: { backgroundColor: 'red' },
+};
 function AdminNextcloudUrlPage({ loading, nextclouds }) {
   const { classes } = useStyles();
   const ncloudData = {};
   const columns = [
     {
-      title: i18n.__('pages.AdminNextcloudUrlPage.columnUrl'),
-      field: 'url',
-    },
-    {
       title: i18n.__('pages.AdminNextcloudUrlPage.columnActive'),
       field: 'active',
+      width: 'fit-content',
       render: (rowData) =>
-        rowData && rowData.active
-          ? i18n.__('pages.AdminNextcloudUrlPage.materialTableLocalization.activated')
-          : i18n.__('pages.AdminNextcloudUrlPage.materialTableLocalization.deactivated'),
+        rowData && rowData.active ? (
+          <div style={switchStyle.container}>
+            <div style={{ ...switchStyle.global, ...switchStyle.green }} />
+            {i18n.__('pages.AdminNextcloudUrlPage.materialTableLocalization.activated')}
+          </div>
+        ) : (
+          <div style={switchStyle.container}>
+            <div style={{ ...switchStyle.global, ...switchStyle.red }} />
+            {i18n.__('pages.AdminNextcloudUrlPage.materialTableLocalization.deactivated')}
+          </div>
+        ),
+    },
+    {
+      title: i18n.__('pages.AdminNextcloudUrlPage.columnUrl'),
+      field: 'url',
     },
     {
       title: i18n.__('pages.AdminNextcloudUrlPage.columnCount'),
@@ -107,7 +135,14 @@ function AdminNextcloudUrlPage({ loading, nextclouds }) {
                 localization={setMaterialTableLocalization('pages.AdminNextcloudUrlPage')}
                 actions={[
                   (rowData) => ({
-                    icon: () => (rowData.active ? <VisibilityOffIcon /> : <VisibilityIcon />),
+                    // icon: () => (rowData.active ? <VisibilityIcon /> : <VisibilityOffIcon />),
+                    icon: () => (
+                      <div style={switchStyle.mainContainer}>
+                        <VisibilityOffIcon />
+                        <Switch checked={rowData.active} />
+                        <VisibilityIcon />
+                      </div>
+                    ),
                     tooltip: i18n.__('pages.AdminNextcloudUrlPage.materialTableLocalization.body_activeTooltip'),
                     onClick: () => {
                       changeURL({ ...rowData, active: !rowData.active });

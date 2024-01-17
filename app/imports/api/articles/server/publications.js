@@ -1,7 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Roles } from 'meteor/alanning:roles';
 import { FindFromPublication } from 'meteor/percolate:find-from-publication';
-import { publishComposite } from 'meteor/reywood:publish-composite';
 import SimpleSchema from 'simpl-schema';
 import logServer, { levels, scopes } from '../../logging';
 import Tags from '../../tags/tags';
@@ -116,7 +115,7 @@ FindFromPublication.publish('articles.one.admin', ({ slug }) => {
   );
 });
 
-publishComposite('articles.one', ({ slug }) => {
+Meteor.publish('articles.one', function publishArticlesOne({ slug }) {
   try {
     new SimpleSchema({
       slug: {
@@ -136,27 +135,27 @@ publishComposite('articles.one', ({ slug }) => {
 
     this.error(err);
   }
-  return {
-    find() {
-      // Find top ten highest scoring posts
-      return Articles.find(
-        { slug },
-        {
-          fields: Articles.PublicFields,
-          limit: 1,
-          sort: { name: -1 },
-        },
-      );
+
+  const articlesCursor = Articles.find(
+    { slug },
+    {
+      fields: Articles.PublicFields,
+      limit: 1,
+      sort: { name: -1 },
     },
-    children: [
-      {
-        find({ tags = [] }) {
-          // Find asssociated tags
-          return Tags.find({ _id: { $in: tags } }, { fields: Tags.publicFields, sort: { name: 1 }, limit: 1000 });
-        },
-      },
-    ],
-  };
+  );
+
+  const articles = articlesCursor.fetch();
+  const tags = Array.from(new Set(articles.flatMap((article) => article.tags)));
+
+  if (!articles.length) {
+    return this.ready();
+  }
+
+  return [
+    articlesCursor,
+    Tags.find({ _id: { $in: tags } }, { fields: Tags.publicFields, sort: { name: 1 }, limit: 1000 }),
+  ];
 });
 
 // build query for all articles from group

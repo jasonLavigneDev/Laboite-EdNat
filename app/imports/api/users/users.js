@@ -7,6 +7,7 @@ import logServer, { levels, scopes } from '../logging';
 import Structures from '../structures/structures';
 import { getLabel } from '../utils';
 import { getRandomNCloudURL } from '../nextcloud/methods';
+import { warnAdministrators } from './userWarning';
 import AsamExtensions from '../asamextensions/asamextensions';
 
 const AppRoles = ['candidate', 'member', 'animator', 'admin', 'adminStructure'];
@@ -150,6 +151,11 @@ Meteor.users.schema = new SimpleSchema(
       defaultValue: false,
       label: getLabel('api.users.labels.advancedPersonalPage'),
     },
+    betaServices: {
+      type: Boolean,
+      defaultValue: false,
+      label: getLabel('api.users.labels.advancedPersonalPage'),
+    },
     articlesCount: {
       type: SimpleSchema.Integer,
       defaultValue: 0,
@@ -271,6 +277,19 @@ if (Meteor.isServer) {
       );
 
       email = user.services.keycloak.email;
+      // Check if user has enough informations for account creation in keycloak data
+      const kcData = user.services.keycloak;
+      const mandatoryFields = ['preferred_username', 'email', 'family_name', 'given_name'];
+      if (mandatoryFields.some((userField) => !kcData[userField])) {
+        logServer(
+          'USERS - API - METEOR ERROR - onCreateUser - Missing informations in keycloak data',
+          levels.ERROR,
+          scopes.SYSTEM,
+          { data: kcData },
+        );
+        warnAdministrators(kcData);
+        throw new Meteor.Error('api.users.onCreateUser.missingData', 'Missing Keycloak Data');
+      }
     }
 
     const structure = findStructureByEmail(email);
@@ -342,6 +361,7 @@ Meteor.users.selfFields = {
   nclocator: 1,
   advancedPersonalPage: 1,
   lastGlobalInfoReadDate: 1,
+  betaServices: 1,
 };
 
 Meteor.users.adminFields = {

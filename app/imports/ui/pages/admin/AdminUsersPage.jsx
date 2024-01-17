@@ -108,7 +108,6 @@ const AdminUsersPage = ({ match: { path } }) => {
     selectedStructureId,
     setSelectedStructureId,
   });
-  console.log('🚀 ~ file: AdminUsersPage.jsx:111 ~ AdminUsersPage ~ structures:', structures);
 
   // variables depending on the admin page we're in
   const methodName = isStructureSpecific ? 'users.byStructure' : 'users.admins';
@@ -130,8 +129,6 @@ const AdminUsersPage = ({ match: { path } }) => {
     },
   ] = usePaginatedMethod(methodName);
   // const [fetchStructures, { data: structure, loading: loadingStructures }] = useMethod('structures.getStructures')
-  // console.log("🚀 ~ file: AdminUsersPage.jsx:132 ~ AdminUsersPage ~ loadingStructures:", loadingStructures)
-  // console.log("🚀 ~ file: AdminUsersPage.jsx:132 ~ AdminUsersPage ~ structures:", structures)
 
   const fetchUsers = useCallback(() => {
     call(search.trim(), { userType, selectedStructureId, sortQuery });

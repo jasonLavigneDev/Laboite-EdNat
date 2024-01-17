@@ -17,8 +17,14 @@
       "introductionTab": false,
       "menuAdminDefaultSpaces": true,  // THIS PARAMS IS SET FOR HIDDEN DEFAULTSPACE FUNCTIONNALITY WHICH DOESN'T WORK
       "mediaStorageMenu": false,
-      "bookmarksFromClipboard": false,
+      "bookmarksFromClipboard": false
+      "franceTransfert": false,
     },
+    "chatbotUrl": "https://chat.rizomo.numerique.gouv.fr/",
+    "widget": {
+      "packageUrl": "https://unpkg.com/@suitesnap/la-pastille@1.0.0/index.umd.cjs"
+    },
+    "forceRedirectToPersonalSpace": true,
     "ui": {
       "defaultGridViewMode": "compact",
       "isBusinessRegroupingMode": false,
@@ -35,7 +41,7 @@
     "countly": {
       "app_key": "lol",
       "url": "https://countly.url.fr",
-      "consent": true,
+      "consent": true
     },
     "enableBBB": false,
     "BBBUrl": "",
@@ -97,7 +103,7 @@
     "nextcloudPassword": "",
     "circlesUser": "",
     "circlesPassword": "",
-    "nextcloudQuota": "1073741824"
+    "nextcloudQuota": "1073741824",
     "nextcloudApiKeys": [],
     "sessionTokenKey": "",
     "sessionTokenAppName": "apps.education.fr"  },
