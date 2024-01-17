@@ -348,11 +348,7 @@ if (Meteor.settings.public.analyticsExpirationInDays) {
     job: function removeOldData() {
       return AnalyticsEvents.remove({
         createdAt: {
-          $lt: new Date(
-            moment()
-              .subtract(Meteor.settings.public.analyticsExpirationInDays || 30, 'days')
-              .format(),
-          ),
+          $lt: new Date(moment().subtract(Meteor.settings.public.analyticsExpirationInDays, 'days').format()),
         },
       });
     },
