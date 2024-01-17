@@ -27,6 +27,7 @@ import AdminStructureTreeView from '../../components/admin/AdminStructureTreeVie
 import CustomDialog from '../../components/system/CustomDialog';
 
 import { useAppContext } from '../../contexts/context';
+import AdminStructureMailModal from '../../components/admin/AdminStructureMailModal';
 
 const onCreate = ({ name, parentId, updateParentIdsList }) => {
   Meteor.call('structures.createStructure', { name, parentId: parentId || null }, (error, success) => {
@@ -125,9 +126,12 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
 
   /** Modal utilities  */
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isMailModalOpen, setIsMailModalOpen] = useState(false);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+  const openMailModal = () => setIsMailModalOpen(true);
+  const closeMailModal = () => setIsMailModalOpen(false);
 
   const [isEditMode, setIsEditMode] = useState(false);
 
@@ -205,6 +209,11 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
     setSelectedStructure(initialStructure);
   };
 
+  const onClickMailBtn = (nodes) => {
+    setSelectedStructure(nodes);
+    openMailModal();
+  };
+
   return (
     <Fade in timeout={{ enter: 200 }}>
       <Container style={{ overflowX: 'auto' }}>
@@ -251,6 +260,14 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
             </Card>
           </Fade>
         </Modal>
+        {isMailModalOpen && (
+          <AdminStructureMailModal
+            open={isMailModalOpen}
+            onClose={closeMailModal}
+            setIsModalMail={setIsMailModalOpen}
+            choosenStructureMail={selectedStructure}
+          />
+        )}
         <CustomDialog
           nativeProps={{ maxWidth: 'xs' }}
           isOpen={isOpenDeleteConfirm}
@@ -317,6 +334,7 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
                 onClickAddBtn={onClickAddBtn}
                 onClickEditBtn={onClickEditBtn}
                 onClickDeleteBtn={onClickDeleteBtn}
+                onClickMailBtn={onClickMailBtn}
                 setExpandedIds={setExpandedIds}
                 updateParentIdsList={updateParentIdsList}
                 expandedIds={expandedIds}

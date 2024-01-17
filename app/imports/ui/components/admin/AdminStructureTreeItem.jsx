@@ -13,6 +13,7 @@ import { withStyles, makeStyles } from 'tss-react/mui';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import ContactMailIcon from '@mui/icons-material/ContactMail';
 import CustomDialog from '../system/CustomDialog';
 
 const StyledTreeItem = withStyles(TreeItem, (theme) => ({
@@ -33,9 +34,6 @@ const useStyles = makeStyles()(() => ({
     alignItems: 'center',
     display: 'flex',
   },
-  space: {
-    padding: '12px',
-  },
   line: {
     padding: 2,
   },
@@ -47,6 +45,7 @@ const AdminStructureTreeItem = ({
   onClickEditBtn,
   onClickDeleteBtn,
   onClickSelectBtn,
+  onClickMailBtn,
   updateParentIdsList,
   selectedId,
 }) => {
@@ -92,6 +91,15 @@ const AdminStructureTreeItem = ({
               </div>
             </Box>
             <Box>
+              {onClickMailBtn && (
+                <Tooltip title={i18n.__('components.AdminStructureTreeItem.actions.sendEmailToAdmins')}>
+                  <span>
+                    <IconButton onClick={() => onClickMailBtn(nodes)} size="large">
+                      <ContactMailIcon />
+                    </IconButton>
+                  </span>
+                </Tooltip>
+              )}
               {onClickAddBtn && (
                 <Tooltip title={i18n.__('components.AdminStructureTreeItem.actions.addStructure')}>
                   <span>
@@ -159,6 +167,7 @@ const AdminStructureTreeItem = ({
               onClickEditBtn={onClickEditBtn}
               onClickDeleteBtn={onClickDeleteBtn}
               onClickSelectBtn={onClickSelectBtn}
+              onClickMailBtn={onClickMailBtn}
               updateParentIdsList={updateParentIdsList}
               selectedId={selectedId}
             />
@@ -167,7 +176,6 @@ const AdminStructureTreeItem = ({
           <span>&nbsp;</span>
         ) : null}
       </StyledTreeItem>
-
       <CustomDialog
         nativeProps={{ maxWidth: 'xs' }}
         isOpen={isConfirmOpen}
@@ -186,6 +194,7 @@ AdminStructureTreeItem.propTypes = {
   onClickEditBtn: PropTypes.func,
   onClickDeleteBtn: PropTypes.func,
   onClickSelectBtn: PropTypes.func,
+  onClickMailBtn: PropTypes.func,
   updateParentIdsList: PropTypes.func.isRequired,
   selectedId: PropTypes.string.isRequired,
 };
@@ -195,5 +204,6 @@ AdminStructureTreeItem.defaultProps = {
   onClickEditBtn: undefined,
   onClickDeleteBtn: undefined,
   onClickSelectBtn: undefined,
+  onClickMailBtn: undefined,
 };
 export default AdminStructureTreeItem;

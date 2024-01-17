@@ -13,6 +13,7 @@ const AdminStructureTreeView = ({
   onClickEditBtn,
   onClickDeleteBtn,
   onClickSelectBtn,
+  onClickMailBtn,
   updateParentIdsList,
   setExpandedIds,
   expandedIds,
@@ -42,6 +43,7 @@ const AdminStructureTreeView = ({
           onClickEditBtn={onClickEditBtn}
           onClickDeleteBtn={onClickDeleteBtn}
           onClickSelectBtn={onClickSelectBtn}
+          onClickMailBtn={onClickMailBtn}
           updateParentIdsList={updateParentIdsList}
           selectedId={selectedId}
         />
@@ -63,6 +65,7 @@ AdminStructureTreeView.propTypes = {
   onClickEditBtn: PropTypes.func,
   onClickDeleteBtn: PropTypes.func,
   onClickSelectBtn: PropTypes.func,
+  onClickMailBtn: PropTypes.func,
   updateParentIdsList: PropTypes.func.isRequired,
   expandedIds: PropTypes.arrayOf(PropTypes.string).isRequired,
   setExpandedIds: PropTypes.func.isRequired,
@@ -74,6 +77,7 @@ AdminStructureTreeView.defaultProps = {
   onClickEditBtn: undefined,
   onClickDeleteBtn: undefined,
   onClickSelectBtn: undefined,
+  onClickMailBtn: undefined,
 };
 
 export default AdminStructureTreeView;

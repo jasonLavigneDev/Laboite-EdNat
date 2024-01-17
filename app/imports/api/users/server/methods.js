@@ -1760,6 +1760,56 @@ export const getUsersAdmin = new ValidatedMethod({
   },
 });
 
+export const getAdminsFromStructure = new ValidatedMethod({
+  name: 'users.getAdminsFromStructure',
+  validate: new SimpleSchema({
+    structureId: {
+      type: String,
+    },
+    subStructure: {
+      type: Boolean,
+    },
+  }).validator(),
+
+  run({ structureId, subStructure }) {
+    const struc = Structures.findOne({ _id: structureId });
+    if (!struc) {
+      logServer(
+        `USERS - METHODS - ERROR - getAdminsFromStructure - could not find structure '${structureId}'.`,
+        levels.ERROR,
+        scopes.SYSTEM,
+      );
+      throw new Meteor.Error(
+        'api.users.getAdminsFromStructure.notFound',
+        i18n.__('api.users.getAdminsFromStructure.structureNotFound'),
+      );
+    }
+
+    let allStruc = [];
+
+    if (subStructure) {
+      const childs = Structures.find({ ancestorsIds: structureId })
+        .fetch()
+        .map((child) => child._id);
+      allStruc = [...childs, structureId];
+    } else {
+      allStruc = [structureId];
+    }
+
+    const ret = Meteor.roleAssignment.find({
+      'role._id': 'adminStructure',
+      scope: { $in: allStruc },
+    });
+
+    const tabUsers = ret.fetch().map((user) => user.user._id);
+    const users = Meteor.users.find({ _id: { $in: tabUsers } }, { fields: Meteor.users.publicFields }).fetch();
+
+    const structures = Structures.find({ _id: { $in: allStruc } }, { fields: Structures.publicFields }).fetch();
+
+    return { users, structures };
+  },
+});
+
 export const getUsersByStructure = new ValidatedMethod({
   name: 'users.byStructure',
   validate: null,
@@ -1847,6 +1897,7 @@ const LISTS_METHODS = _.pluck(
     hasUserOnAwaitingStructure,
     getUsersAdmin,
     getUsersByStructure,
+    getAdminsFromStructure,
   ],
   'name',
 );
