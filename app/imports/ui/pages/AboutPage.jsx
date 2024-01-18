@@ -127,15 +127,26 @@ const AboutPage = () => {
             </a>
           </p>
           <p>
-            {i18n.__('pages.AboutPage.contributing')}{' '}
+            {i18n.__('pages.AboutPage.bug')}{' '}
             <a
-              title={i18n.__('pages.AboutPage.deposit')}
+              title={i18n.__('pages.AboutPage.here')}
               target="_blank"
               rel="noreferrer noopenner"
-              href="https://gitlab.mim-libre.fr/alphabet/laboite"
+              href="https://gitlab.mim-libre.fr/alphabet/laboite/-/issues/new"
             >
-              {i18n.__('pages.AboutPage.deposit')}.
+              {i18n.__('pages.AboutPage.here')}.
             </a>
+            <p>
+              {i18n.__('pages.AboutPage.contributing')}{' '}
+              <a
+                title={i18n.__('pages.AboutPage.deposit')}
+                target="_blank"
+                rel="noreferrer noopenner"
+                href="https://gitlab.mim-libre.fr/alphabet/laboite"
+              >
+                {i18n.__('pages.AboutPage.deposit')}.
+              </a>
+            </p>
           </p>
           <Button sx={{ marginTop: '5vh' }} variant="contained" onClick={() => setIsOpen(true)}>
             {i18n.__('pages.AboutPage.information')}
