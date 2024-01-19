@@ -127,15 +127,6 @@ const AboutPage = () => {
             </a>
           </p>
           <p>
-            {i18n.__('pages.AboutPage.bug')}{' '}
-            <a
-              title={i18n.__('pages.AboutPage.here')}
-              target="_blank"
-              rel="noreferrer noopenner"
-              href="https://gitlab.mim-libre.fr/alphabet/laboite/-/issues/new"
-            >
-              {i18n.__('pages.AboutPage.here')}.
-            </a>
             <p>
               {i18n.__('pages.AboutPage.contributing')}{' '}
               <a
