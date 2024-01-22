@@ -38,7 +38,7 @@ import Structures from '../../../api/structures/structures';
 import { getStructure, useStructure, useAwaitingStructure } from '../../../api/structures/hooks';
 import AppSettings from '../../../api/appsettings/appsettings';
 import { testMeteorSettingsUrl } from '../../utils/utilsFuncs';
-import StructureSelectAutoComplete from '../../components/structures/StructureSelectAutoComplete';
+import StructureSelectAutoComplete, { renderStructure } from '../../components/structures/StructureSelectAutoComplete';
 import AsamExtensions from '../../../api/asamextensions/asamextensions';
 
 const useStyles = makeStyles()((theme) => ({
@@ -630,26 +630,7 @@ const ProfilePage = () => {
                     flatData={flatData}
                     loading={isSearchLoading}
                     getOptionLabel={(option) => option.name}
-                    renderOption={(props, option) => {
-                      let parent;
-                      if (option.parentId) {
-                        parent = flatData.find((s) => s._id === option.parentId);
-                      }
-                      return (
-                        <div
-                          {...props}
-                          style={{ display: 'flex', flexDirection: 'column', alignItems: 'start' }}
-                          key={option._id}
-                        >
-                          <div>{option.name}</div>
-                          {!!option.parentId && (
-                            <div style={{ fontSize: 10, color: 'grey', fontStyle: 'italic' }}>
-                              {parent ? parent.name : ''}
-                            </div>
-                          )}
-                        </div>
-                      );
-                    }}
+                    renderOption={renderStructure(flatData)}
                     onChange={(event, newValue) => {
                       if (newValue && newValue._id)
                         onUpdateField({

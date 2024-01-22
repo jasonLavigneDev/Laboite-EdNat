@@ -41,7 +41,7 @@ import AvatarPicker from '../../components/users/AvatarPicker';
 import AdminGroupDelete from '../../components/admin/AdminGroupDelete';
 import { getGroupName } from '../../utils/utilsFuncs';
 import debounceFunc from '../../utils/debounce';
-import StructureSelectAutoComplete from '../../components/structures/StructureSelectAutoComplete';
+import StructureSelectAutoComplete, { renderStructure } from '../../components/structures/StructureSelectAutoComplete';
 import Structures from '../../../api/structures/structures';
 
 const useStyles = makeStyles()((theme) => ({
@@ -529,26 +529,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
                     loading={isSearchLoading}
                     noOptionsText={i18n.__('pages.AdminAsamExtensionsManagementPage.modal.noOptions')}
                     getOptionLabel={(option) => option.name}
-                    renderOption={(props, option) => {
-                      let parent;
-                      if (option.parentId) {
-                        parent = flatData.find((s) => s._id === option.parentId);
-                      }
-                      return (
-                        <div
-                          {...props}
-                          style={{ display: 'flex', flexDirection: 'column', alignItems: 'start' }}
-                          key={option._id}
-                        >
-                          <div>{option.name}</div>
-                          {!!option.parentId && (
-                            <div style={{ fontSize: 10, color: 'grey', fontStyle: 'italic' }}>
-                              {parent ? parent.name : ''}
-                            </div>
-                          )}
-                        </div>
-                      );
-                    }}
+                    renderOption={renderStructure(flatData)}
                     onChange={(event, newValue) => {
                       if (newValue && newValue._id) onAddStructure(newValue);
                     }}

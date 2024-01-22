@@ -9,6 +9,22 @@ const filterOptions = (options, state) =>
     return normalizeString(option.name).includes(normalizeString(state.inputValue));
   });
 
+export const renderStructure = (flatData) => (props, option) => {
+  let parent;
+  const { parentId, name, _id } = option;
+  if (parentId) {
+    parent = flatData.find((s) => s._id === parentId);
+  }
+  return (
+    <div {...props} style={{ display: 'flex', flexDirection: 'column', alignItems: 'start' }} key={_id}>
+      <div>{name}</div>
+      {!!parentId && (
+        <div style={{ fontSize: 10, color: 'grey', fontStyle: 'italic' }}>{parent ? parent.name : ''}</div>
+      )}
+    </div>
+  );
+};
+
 const StructureSelectAutoComplete = ({
   flatData,
   loading,
