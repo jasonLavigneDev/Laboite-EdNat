@@ -1318,7 +1318,8 @@
       "ApplyDefaultSpaceBtn": "Apply default space",
       "ApplyDefaultSpaceWarning": "Can not apply default space if advanced personal page is activated",
       "activeAccountRequired": "Requires an active account",
-      "betaServices": "Show services in beta version"
+      "betaServices": "Show services in beta version",
+      "chooseStructure": "Add a structure"
     },
     "NotFound": {
       "backButtonLabel": "Back",
@@ -1617,7 +1618,8 @@
       "shareName": "Nextcloud share name",
       "invalidCharacters": "Invalid characters",
       "shareNameExists": "This share name already exists",
-      "shareNameEmpty": "Share name can not be empty"
+      "shareNameEmpty": "Share name can not be empty",
+      "limitToStructs": "Limit group to following structures"
     },
     "SingleGroupPage": {
       "backToList": "Back to the list",

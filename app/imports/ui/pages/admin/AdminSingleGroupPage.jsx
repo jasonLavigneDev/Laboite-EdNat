@@ -1,7 +1,7 @@
 /* eslint-disable react/no-this-in-sfc */
 import React, { useState, useEffect } from 'react';
 import { Meteor } from 'meteor/meteor';
-import { withTracker } from 'meteor/react-meteor-data';
+import { useTracker, withTracker } from 'meteor/react-meteor-data';
 import i18n from 'meteor/universe:i18n';
 import { makeStyles } from 'tss-react/mui';
 import Container from '@mui/material/Container';
@@ -21,6 +21,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Grid from '@mui/material/Grid';
 import InputAdornment from '@mui/material/InputAdornment';
+import Chip from '@mui/material/Chip';
 
 import PropTypes from 'prop-types';
 import slugify from 'slugify';
@@ -40,6 +41,8 @@ import AvatarPicker from '../../components/users/AvatarPicker';
 import AdminGroupDelete from '../../components/admin/AdminGroupDelete';
 import { getGroupName } from '../../utils/utilsFuncs';
 import debounceFunc from '../../utils/debounce';
+import StructureSelectAutoComplete from '../../components/structures/StructureSelectAutoComplete';
+import Structures from '../../../api/structures/structures';
 
 const useStyles = makeStyles()((theme) => ({
   root: {
@@ -74,6 +77,9 @@ const useStyles = makeStyles()((theme) => ({
   },
   adornment: {
     marginRight: '0px',
+  },
+  tag: {
+    margin: 2,
   },
 }));
 
@@ -145,6 +151,17 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
   const [content, setContent] = useState('');
   const isAutomaticGroup = group.type === 15;
   const [openRemoveModal, setOpenRemoveModal] = useState(false);
+  const [searchText, setSearchText] = useState('');
+  const { flatData, isSearchLoading } = useTracker(() => {
+    const ret = { flatData: [], isSearchLoading: false };
+    const subName = 'structures.top.with.direct.parent';
+    const handle = Meteor.subscribe(subName);
+    const isLoading = !handle.ready();
+    const structures = Structures.findFromPublication(subName).fetch();
+    ret.flatData = structures;
+    ret.isSearchLoading = isLoading;
+    return ret;
+  }, []);
 
   const [plugins, setPlugins] = useState({}); // { nextcloud: false, rocketChat: true}
   const [{ isMobile }] = useAppContext();
@@ -203,9 +220,16 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
     if (params._id && group._id && loading) {
       setLoading(false);
       if (group.shareName === undefined) {
-        setGroupData({ ...group, shareName: calcShareName(group.name) });
+        setGroupData({
+          ...group,
+          shareName: calcShareName(group.name),
+          structureIds: group.structureIds || [],
+        });
       } else {
-        setGroupData(group);
+        setGroupData({
+          ...group,
+          structureIds: group.structureIds || [],
+        });
       }
       setContent(group.content || '');
       setPlugins(group.plugins || {});
@@ -238,6 +262,23 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
     } else {
       setGroupData({ ...groupData, [name]: value });
     }
+  };
+
+  const onAddStructure = (structure) => {
+    // add structure in structureIds if not already present
+    if (!groupData.structureIds.includes(structure._id)) {
+      setGroupData({
+        ...groupData,
+        structureIds: [...groupData.structureIds, structure._id],
+      });
+    }
+  };
+
+  const onRemoveStructure = (structureId) => {
+    setGroupData({
+      ...groupData,
+      structureIds: groupData.structureIds.filter((structId) => structId !== structureId),
+    });
   };
 
   const SendNewAvatarToMedia = (avImg) => {
@@ -480,6 +521,66 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
                         </MenuItem>
                       ))}
                   </Select>
+                </FormControl>
+                <FormControl variant="outlined" fullWidth margin="normal">
+                  <Typography component="h1">{i18n.__('pages.AdminSingleGroupPage.limitToStructs')}</Typography>
+                  <StructureSelectAutoComplete
+                    flatData={flatData}
+                    loading={isSearchLoading}
+                    noOptionsText={i18n.__('pages.AdminAsamExtensionsManagementPage.modal.noOptions')}
+                    getOptionLabel={(option) => option.name}
+                    renderOption={(props, option) => {
+                      let parent;
+                      if (option.parentId) {
+                        parent = flatData.find((s) => s._id === option.parentId);
+                      }
+                      return (
+                        <div
+                          {...props}
+                          style={{ display: 'flex', flexDirection: 'column', alignItems: 'start' }}
+                          key={option._id}
+                        >
+                          <div>{option.name}</div>
+                          {!!option.parentId && (
+                            <div style={{ fontSize: 10, color: 'grey', fontStyle: 'italic' }}>
+                              {parent ? parent.name : ''}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    }}
+                    onChange={(event, newValue) => {
+                      if (newValue && newValue._id) onAddStructure(newValue);
+                    }}
+                    searchText={searchText}
+                    onInputChange={(event, newInputValue) => {
+                      setSearchText(newInputValue);
+                    }}
+                    isOptionEqualToValue={(opt, val) => opt._id === val._id}
+                    style={{}}
+                    renderInput={(parameters) => (
+                      <TextField
+                        {...parameters}
+                        onChange={({ target: { value } }) => setSearchText(value)}
+                        variant="outlined"
+                        label={i18n.__('pages.ProfilePage.chooseStructure')}
+                        placeholder={i18n.__('pages.ProfilePage.noSelectedStructure')}
+                      />
+                    )}
+                  />
+                  <div>
+                    {groupData.structureIds.map((structureId) => {
+                      return (
+                        <Chip
+                          className={classes.tag}
+                          key={structureId}
+                          label={isSearchLoading ? '' : flatData.find((struct) => struct._id === structureId).name}
+                          color="secondary"
+                          onDelete={() => onRemoveStructure(structureId)}
+                        />
+                      );
+                    })}
+                  </div>
                 </FormControl>
                 <TextField
                   onChange={onUpdateField}

@@ -201,6 +201,7 @@ Groups.publicFields = {
   plugins: 1,
   articles: 1,
   shareName: 1,
+  structureIds: 1,
 };
 Groups.allPublicFields = {
   content: 1,

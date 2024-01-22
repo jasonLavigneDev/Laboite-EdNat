@@ -1326,7 +1326,8 @@
       "ApplyDefaultSpaceBtn": "Appliquer l'espace par default",
       "ApplyDefaultSpaceWarning": "On ne peut pas appliquer l'espace par défaut si l'option 'espace personnel avancé' est activé",
       "activeAccountRequired": "Nécessite un compte actif",
-      "betaServices": "Afficher les services en version bêta"
+      "betaServices": "Afficher les services en version bêta",
+      "chooseStructure": "Ajouter une structure"
     },
     "NotFound": {
       "backButtonLabel": "Retour",
@@ -1625,7 +1626,8 @@
       "shareName": "Nom du partage Nextcloud",
       "invalidCharacters": "caractères invalides",
       "shareNameExists": "Ce nom de partage existe déjà",
-      "shareNameEmpty": "Nom de partage ne peut pas être vide"
+      "shareNameEmpty": "Nom de partage ne peut pas être vide",
+      "limitToStructs": "Limiter le groupe aux structures suivantes"
     },
     "SingleGroupPage": {
       "backToList": "Retour à la liste",
