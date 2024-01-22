@@ -5,7 +5,7 @@ import { Roles } from 'meteor/alanning:roles';
 import i18n from 'meteor/universe:i18n';
 import { _ } from 'meteor/underscore';
 import sanitizeHtml from 'sanitize-html';
-import { getLabel, isActive, sanitizeParameters, validateString } from '../utils';
+import { getLabel, isActive, sanitizeParameters, validateString, accentInsensitive } from '../utils';
 import Structures, { IntroductionStructure } from './structures';
 import { hasAdminRightOnStructure, isAStructureWithSameNameExistWithSameParent, getExternalService } from './utils';
 import Services from '../services/services';
@@ -581,6 +581,99 @@ export const getContactURL = new ValidatedMethod({
   },
 });
 
+export const getTopLevelStructures = new ValidatedMethod({
+  name: 'structures.getTopLevelStructures',
+  validate: null,
+  run() {
+    return Structures.find({ parentId: null }).fetch();
+  },
+});
+
+function generateTreeParentToChild(structure, tree, level) {
+  if (structure.childrenIds && structure.childrenIds.length > 0) {
+    const structures = Structures.find({ _id: { $in: structure.childrenIds } }).fetch();
+    if (structures) {
+      structures.map((struc) => {
+        const child = { structure: struc, level };
+        tree.push(child);
+        return generateTreeParentToChild(struc, tree, level + 1);
+      });
+    }
+  }
+}
+
+export const getTreeOfStructure = new ValidatedMethod({
+  name: 'structures.getTreeOfStructure',
+  validate: new SimpleSchema({
+    structureId: { type: String, regEx: SimpleSchema.RegEx.Id, label: getLabel('api.structures.labels.id') },
+  }).validator(),
+  run({ structureId }) {
+    const tree = [];
+    const structure = Structures.findOne({ _id: structureId });
+    const obj = { structure, level: 0 };
+    tree.push(obj);
+    generateTreeParentToChild(structure, tree, 1);
+
+    console.log(tree);
+    return tree;
+  },
+});
+
+function generatePathOfStructure(structure, tree) {
+  if (structure.parentId) {
+    const parent = Structures.findOne({ _id: structure.parentId });
+    if (parent) {
+      tree.push(parent);
+      generatePathOfStructure(parent, tree);
+    }
+  }
+}
+
+export const getStructurePath = new ValidatedMethod({
+  name: 'structures.getStructurePath',
+  validate: new SimpleSchema({
+    structureId: { type: String, regEx: SimpleSchema.RegEx.Id, label: getLabel('api.structures.labels.id') },
+  }).validator(),
+  run({ structureId }) {
+    const tree = [];
+    const structure = Structures.findOne({ _id: structureId });
+    tree.push(structure);
+    generatePathOfStructure(structure, tree);
+
+    tree.reverse();
+    return tree;
+  },
+});
+
+function getStructurePathEx(structure) {
+  const tree = [];
+  tree.push(structure);
+  generatePathOfStructure(structure, tree);
+
+  tree.reverse();
+  return tree;
+}
+
+export const searchStructure = new ValidatedMethod({
+  name: 'structures.searchStructure',
+  validate: new SimpleSchema({
+    searchText: { type: String },
+  }).validator(),
+  run({ searchText }) {
+    const regex = new RegExp(accentInsensitive(searchText), 'i');
+    const structures = Structures.find({ name: { $regex: regex } }).fetch();
+    if (structures) {
+      const tree = [];
+      structures.map((struc) => {
+        const path = getStructurePathEx(struc);
+        tree.push(path);
+      });
+      return tree;
+    }
+    return null;
+  },
+});
+
 if (Meteor.isServer) {
   // Get list of all method names on Structures
   const LISTS_METHODS = _.pluck(
@@ -595,6 +688,10 @@ if (Meteor.isServer) {
       getOneStructure,
       getContactURL,
       setUserStructureAdminValidationMandatoryStatus,
+      getTopLevelStructures,
+      getTreeOfStructure,
+      getStructurePath,
+      searchStructure,
     ],
     'name',
   );

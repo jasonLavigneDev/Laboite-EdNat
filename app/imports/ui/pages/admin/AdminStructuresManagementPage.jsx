@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import i18n from 'meteor/universe:i18n';
 import { useTracker } from 'meteor/react-meteor-data';
 import { _ } from 'meteor/underscore';
@@ -214,6 +214,27 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
     openMailModal();
   };
 
+  const [structures, setStructures] = useState([]);
+  const [searchTree, setSearchTree] = useState([]);
+  const [searchMode, setSearchMode] = useState(false);
+
+  useEffect(() => {
+    Meteor.call('structures.getTopLevelStructures', (err, res) => {
+      if (res) {
+        setStructures(res);
+      }
+    });
+  }, []);
+
+  const triggerSearch = (event) => {
+    Meteor.call('structures.searchStructure', { searchText }, (err, res) => {
+      if (res) {
+        setSearchMode(true);
+        setSearchTree(res);
+      }
+    });
+  };
+
   return (
     <Fade in timeout={{ enter: 200 }}>
       <Container style={{ overflowX: 'auto' }}>
@@ -327,23 +348,17 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
               </Box>
             </Box>
             {loading && <Spinner />}
-
-            {atLeastOneStructureExist() ? (
-              <AdminStructureTreeView
-                treeData={getTree(filteredFlatData, isAdminStructureMode ? user.structure : null)}
-                onClickAddBtn={onClickAddBtn}
-                onClickEditBtn={onClickEditBtn}
-                onClickDeleteBtn={onClickDeleteBtn}
-                onClickMailBtn={onClickMailBtn}
-                setExpandedIds={setExpandedIds}
-                updateParentIdsList={updateParentIdsList}
-                expandedIds={expandedIds}
-                selectedId=""
-              />
-            ) : (
-              <p style={{ textAlign: 'center' }}>{i18n.__('components.AdminStructureTreeItem.noStructure')}</p>
-            )}
           </CardContent>
+          <TextField label="Recherche de merde" value={searchText} onChange={(e) => setSearchText(e.target.value)}>
+            PTDR
+          </TextField>
+          <Button onClick={(e) => triggerSearch(e)}>Click me daddy</Button>
+
+          {!searchMode ? (
+            <div>{structures ? structures.map((struc) => <p>{struc.name}</p>) : null}</div>
+          ) : (
+            <div>{searchTree ? searchTree.map((tree) => tree.map((struc) => <p>{struc.name}</p>)) : null}</div>
+          )}
         </Card>
       </Container>
     </Fade>

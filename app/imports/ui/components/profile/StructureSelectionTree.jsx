@@ -19,6 +19,7 @@ import Spinner from '../system/Spinner';
 
 const StructureSelectionTree = () => {
   const history = useHistory();
+
   const goToProfile = () => history.push('/profile');
   const saveStructure = (_id) => {
     Meteor.call('users.setStructure', { structure: _id }, (error) => {
