@@ -159,6 +159,15 @@ Groups.schema = new SimpleSchema(
       optional: true,
       label: getLabel('api.groups.labels.shareId'),
     },
+    structureIds: {
+      type: Array,
+      optional: true,
+    },
+    'structureIds.$': {
+      type: String,
+      regEx: SimpleSchema.RegEx.Id,
+      label: getLabel('api.groups.labels.structureIds'),
+    },
   },
   { tracker: Tracker },
 );

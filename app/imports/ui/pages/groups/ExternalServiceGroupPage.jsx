@@ -298,7 +298,7 @@ const ExternalServiceGroupPage = ({ loading, group, slug, service }) => {
           </Grid>
           {loading ? (
             <Spinner />
-          ) : userInGroup || group.type === 0 ? (
+          ) : Object.keys(group).length !== 0 && (userInGroup || group.type === 0) ? (
             <>
               <Grid item xs={12} sm={12} md={6} style={{ display: 'flex' }}>
                 <TextField
@@ -402,7 +402,7 @@ export default withTracker(
     },
   }) => {
     const subGroup = Meteor.subscribe('groups.single', { slug });
-    const group = Groups.findOne({ slug }) || { slug: '' };
+    const group = Groups.findOne({ slug }) || {};
     const loading = !subGroup.ready();
     return {
       loading,

@@ -11,7 +11,7 @@ import { getStructureIds } from '../structures';
 import logServer, { levels, scopes } from '../../logging';
 
 import { queryUsersAdmin, queryUsersByStructure } from './utils';
-import { hasRightToAcceptAwaitingStructure } from '../../structures/utils';
+import { hasRightToAcceptAwaitingStructure, userStructures } from '../../structures/utils';
 import Structures from '../../structures/structures';
 
 // publish additional fields for current user
@@ -146,6 +146,8 @@ FindFromPublication.publish(
     if (!isActive(this.userId)) {
       return this.ready();
     }
+    const user = Meteor.users.findOne(this.userId);
+    const userStructs = userStructures(user);
     try {
       new SimpleSchema({
         slug: {
@@ -174,9 +176,9 @@ FindFromPublication.publish(
       );
       this.error(err);
     }
-    const group = Groups.findOne({ slug });
+    const group = Groups.findOne({ slug, $or: [{ structureIds: null }, { structureIds: { $in: userStructs } }] });
     // for protected/private groups, publish users only for allowed users
-    if (group.type !== 0 && !Roles.userIsInRole(this.userId, ['admin', 'animator', 'member'], group._id)) {
+    if (!group || (group.type !== 0 && !Roles.userIsInRole(this.userId, ['admin', 'animator', 'member'], group._id))) {
       return this.ready();
     }
 

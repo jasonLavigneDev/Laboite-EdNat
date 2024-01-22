@@ -173,6 +173,7 @@
       "adminNeeded": "You don't have admin rights.",
       "adminGiven": "Admin rights have been given to user: ",
       "notPermitted": "You don't have sufficient rights.",
+      "notInStructure": "User is not in the right structure",
       "lastAdminError": "Can not remove rights on last admin user",
       "managedByKeycloak": "This information must be managed in Keycloak",
       "insertError": "Error while creating user {$user}",
@@ -1647,7 +1648,7 @@
       "Bookmarks": "Bookmarks",
       "ArticlesUsage": "Articles list",
       "Articles": "Articles",
-      "GroupNotExist": "Group {$groupTitle} does not exist"
+      "GroupNotExist": "Group {$groupTitle} does not exist or is not accessible"
     },
     "AddressBook": {
       "sendEmail": "Send an email to",

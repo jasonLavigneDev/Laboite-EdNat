@@ -13,6 +13,7 @@ import EventsAgenda from '../../eventsAgenda/eventsAgenda';
 import Bookmarks from '../../bookmarks/bookmarks';
 import Articles from '../../articles/articles';
 import Forms from '../../forms/forms';
+import { userStructures } from '../../structures/utils';
 
 // publish groups that user is admin/animator of
 Meteor.publish('groups.adminof', function groupsAdminOf() {
@@ -152,17 +153,23 @@ Meteor.publish('groups.users', function groupDetails({ groupId, role = 'member',
 });
 
 // build query for all groups
-const queryAllGroups = ({ search }) => {
+const queryAllGroups = ({ user, search }) => {
   const regex = new RegExp(accentInsensitive(search), 'i');
+  const userStructs = userStructures(user);
   return {
     type: { $nin: [10, 15] },
-    $or: [
+    $and: [
       {
-        name: { $regex: regex },
+        $or: [
+          {
+            name: { $regex: regex },
+          },
+          {
+            description: { $regex: regex },
+          },
+        ],
       },
-      {
-        description: { $regex: regex },
-      },
+      { $or: [{ structureIds: null }, { structureIds: { $in: userStructs } }] },
     ],
   };
 };
@@ -181,7 +188,7 @@ const queryAllGroupsMemberOf = ({ search, groups }) => {
 };
 
 Meteor.methods({
-  'get_groups.memberOf_count': ({ search, userId }) => {
+  'get_groups.memberOf_count': function getGroupsMemberOfCount({ search, userId }) {
     const groups = Meteor.users.findOne({ _id: userId }).favGroups;
 
     try {
@@ -197,9 +204,10 @@ Meteor.methods({
 });
 
 Meteor.methods({
-  'get_groups.all_count': ({ search }) => {
+  'get_groups.all_count': function getGroupsAllCount({ search }) {
+    const user = Meteor.users.findOne(this.userId);
     try {
-      const query = queryAllGroups({ search });
+      const query = queryAllGroups({ user, search });
       return Groups.find(query, { fields: Groups.publicFields, sort: { name: 1 } }).count();
     } catch (error) {
       logServer(`GROUPS - PUBLICATION - ERROR - get_groups.all_count`, levels.ERROR, scopes.SYSTEM, {
@@ -215,6 +223,7 @@ FindFromPublication.publish('groups.all', function groupsAll({ page, search, ite
   if (!isActive(this.userId)) {
     return this.ready();
   }
+  const user = Meteor.users.findOne(this.userId);
   try {
     checkPaginationParams.validate({ page, itemPerPage, search });
   } catch (err) {
@@ -228,8 +237,7 @@ FindFromPublication.publish('groups.all', function groupsAll({ page, search, ite
   }
 
   try {
-    const query = queryAllGroups({ search });
-
+    const query = queryAllGroups({ user, search });
     return Groups.find(query, {
       fields: Groups.publicFields,
       skip: itemPerPage * (page - 1),
@@ -264,7 +272,7 @@ FindFromPublication.publish('groups.memberOf', function groupsMemberOf({ page, s
     this.error(err);
   }
 
-  const groups = Meteor.users.findOne({ _id: this.userId }).favGroups;
+  const groups = Meteor.users.findOne(this.userId).favGroups;
 
   try {
     const query = queryAllGroupsMemberOf({ search, groups });
@@ -315,6 +323,9 @@ Meteor.publish('groups.single', function groupSingle({ slug }) {
   if (!isActive(this.userId)) {
     return this.ready();
   }
+  const user = Meteor.users.findOne(this.userId);
+  const userStructs = userStructures(user);
+
   try {
     new SimpleSchema({
       slug: {
@@ -335,7 +346,10 @@ Meteor.publish('groups.single', function groupSingle({ slug }) {
     this.error(err);
   }
 
-  const groupsCursor = Groups.find({ slug }, { fields: Groups.allPublicFields, limit: 1, sort: { name: -1 } });
+  const groupsCursor = Groups.find(
+    { slug, $or: [{ structureIds: null }, { structureIds: { $in: userStructs } }] },
+    { fields: Groups.allPublicFields, limit: 1, sort: { name: -1 } },
+  );
   const groups = groupsCursor.fetch();
 
   if (groups.length === 0) {

@@ -26,6 +26,7 @@ import {
   hasAdminRightOnStructure,
   hasRightToAcceptAwaitingStructure,
   hasRightToSetStructureDirectly,
+  userStructures,
 } from '../../structures/utils';
 
 if (Meteor.settings.private) {
@@ -485,6 +486,19 @@ export const setAdminOf = new ValidatedMethod({
       );
       throw new Meteor.Error('api.users.setAdminOf.unknownUser', i18n.__('api.users.unknownUser'));
     }
+    // check if group is limited to specific structures
+    if (group.structureIds) {
+      const userStructs = userStructures(user);
+      if (!group.structureIds.some((structureId) => userStructs.includes(structureId))) {
+        logServer(
+          `USERS - METHODS - METEOR ERROR - setAdminOf - ${i18n.__('api.users.notInStructure')}`,
+          levels.ERROR,
+          scopes.SYSTEM,
+          { userId, groupId },
+        );
+        throw new Meteor.Error('api.users.setAdminOf.notPermitted', i18n.__('api.users.notInStructure'));
+      }
+    }
     // add role to user collection
     Roles.addUsersToRoles(userId, 'admin', groupId);
     // store info in group collection
@@ -536,6 +550,19 @@ export const setAnimatorOf = new ValidatedMethod({
         { userId, groupId },
       );
       throw new Meteor.Error('api.users.setAnimatorOf.unknownUser', i18n.__('api.users.unknownUser'));
+    }
+    // check if group is limited to specific structures
+    if (group.structureIds) {
+      const userStructs = userStructures(user);
+      if (!group.structureIds.some((structureId) => userStructs.includes(structureId))) {
+        logServer(
+          `USERS - METHODS - METEOR ERROR - setAnimatorOf - ${i18n.__('api.users.notInStructure')}`,
+          levels.ERROR,
+          scopes.SYSTEM,
+          { userId, groupId },
+        );
+        throw new Meteor.Error('api.users.setAnimatorOf.notPermitted', i18n.__('api.users.notInStructure'));
+      }
     }
     // add role to user collection
     Roles.addUsersToRoles(userId, 'animator', groupId);
@@ -643,6 +670,19 @@ export const setMemberOf = new ValidatedMethod({
     }
     // check if current user has sufficient rights on group
     let authorized = false;
+    // check if group is limited to specific structures
+    if (group.structureIds) {
+      const userStructs = userStructures(user);
+      if (!group.structureIds.some((structureId) => userStructs.includes(structureId))) {
+        logServer(
+          `USERS - METHODS - METEOR ERROR - setMemberOf - ${i18n.__('api.users.notInStructure')}`,
+          levels.ERROR,
+          scopes.SYSTEM,
+          { userId, groupId },
+        );
+        throw new Meteor.Error('api.users.setMemberOf.notPermitted', i18n.__('api.users.notInStructure'));
+      }
+    }
     if (group.type === 0 || group.type === 15) {
       // open group, users cand set themselve as member
       authorized = userId === this.userId || Roles.userIsInRole(this.userId, ['admin', 'animator'], groupId);
@@ -744,6 +784,19 @@ export const setCandidateOf = new ValidatedMethod({
         { userId, groupId },
       );
       throw new Meteor.Error('api.users.setCandidateOf.unknownUser', i18n.__('api.users.unknownUser'));
+    }
+    // check if group is limited to specific structures
+    if (group.structureIds) {
+      const userStructs = userStructures(user);
+      if (!group.structureIds.some((structureId) => userStructs.includes(structureId))) {
+        logServer(
+          `USERS - METHODS - METEOR ERROR - setCandidateOf - ${i18n.__('api.users.notInStructure')}`,
+          levels.ERROR,
+          scopes.SYSTEM,
+          { userId, groupId },
+        );
+        throw new Meteor.Error('api.users.setCandidateOf.notPermitted', i18n.__('api.users.notInStructure'));
+      }
     }
     // add role to user collection
     Roles.addUsersToRoles(userId, 'candidate', groupId);

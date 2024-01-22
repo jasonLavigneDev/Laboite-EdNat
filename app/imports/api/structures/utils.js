@@ -66,3 +66,12 @@ export const getExternalService = (struc) => {
   }
   return null;
 };
+
+export const userStructures = (user) => {
+  let allStructs = [];
+  const userStruct = Structures.findOne(user.structure);
+  if (userStruct) {
+    allStructs = [userStruct._id, ...userStruct.ancestorsIds];
+  }
+  return allStructs;
+};

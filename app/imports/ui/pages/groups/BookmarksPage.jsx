@@ -132,7 +132,7 @@ function BookmarksPage({ loading, bookmarksList, group }) {
         </Grid>
         {loading ? (
           <Spinner />
-        ) : userInGroup || group.type === 0 ? (
+        ) : Object.keys(group).length !== 0 && (userInGroup || group.type === 0) ? (
           <div>
             <Tooltip
               title={

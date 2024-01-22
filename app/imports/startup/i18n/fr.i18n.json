@@ -176,6 +176,7 @@
       "adminNeeded": "Vous n'êtes pas administrateur.",
       "adminGiven": "Les droits d'administration ont été donnés à cet utilisateur: ",
       "notPermitted": "Vous n'avez pas les droits suffisants.",
+      "notInStructure": "L'utilisateur n'appartient pas à la bonne structure",
       "lastAdminError": "Impossible de supprimer les droits du dernier administrateur",
       "managedByKeycloak": "Cette information doit être gérée dans Keycloak",
       "insertError": "Erreur à la création de l'utilisateur {$user}",
@@ -1654,7 +1655,7 @@
       "Bookmarks": "Marque-pages",
       "ArticlesUsage": "Liste des publications",
       "Articles": "Publications",
-      "GroupNotExist": "Le groupe {$groupTitle} n'existe pas"
+      "GroupNotExist": "Le groupe {$groupTitle} n'existe pas ou est inaccessible"
     },
     "AddressBook": {
       "sendEmail": "Envoyer un email à",

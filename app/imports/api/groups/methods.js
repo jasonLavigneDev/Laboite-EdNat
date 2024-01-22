@@ -157,11 +157,11 @@ function validateShareName() {
   return undefined;
 }
 
-export function _createGroup({ name, type, content, description, avatar, plugins, userId, shareName }) {
+export function _createGroup({ name, type, content, description, avatar, plugins, userId, shareName, structureIds }) {
   try {
     const user = Meteor.users.findOne(userId);
     if (user.groupCount < user.groupQuota) {
-      const groupId = Groups.insert({
+      const groupData = {
         name,
         type,
         content,
@@ -173,7 +173,9 @@ export function _createGroup({ name, type, content, description, avatar, plugins
         active: true,
         plugins,
         shareName,
-      });
+      };
+      if (structureIds && structureIds.length > 0) groupData[structureIds] = structureIds;
+      const groupId = Groups.insert(groupData);
       Roles.addUsersToRoles(userId, ['admin', 'animator'], groupId);
 
       favGroup._execute({ userId }, { groupId });
@@ -250,9 +252,18 @@ export const createGroup = new ValidatedMethod({
       label: getLabel('api.groups.labels.shareName'),
       custom: validateShareName,
     },
+    structureIds: {
+      type: Array,
+      optional: true,
+    },
+    'structureIds.$': {
+      type: String,
+      regEx: SimpleSchema.RegEx.Id,
+      label: getLabel('api.groups.labels.structureIds'),
+    },
   }).validator({ clean: true }),
 
-  run({ name, type, content, description, avatar, plugins, shareName }) {
+  run({ name, type, content, description, avatar, plugins, shareName, structureIds }) {
     if (!isActive(this.userId)) {
       logServer(
         `GROUPS - METHODS - METEOR ERROR - createGroup - ${i18n.__('api.users.mustBeLoggedIn')}`,
@@ -286,6 +297,7 @@ export const createGroup = new ValidatedMethod({
       avatar,
       userId: this.userId,
       shareName,
+      structureIds,
     });
   },
 });
@@ -355,6 +367,10 @@ export const removeGroup = new ValidatedMethod({
 function _updateGroup(groupId, groupData, oldGroup) {
   try {
     Groups.update({ _id: groupId }, { $set: groupData });
+    // set structureIds to null if no structure selected
+    if (!groupData.structureIds || groupData.structureIds.length === 0) {
+      Groups.update({ _id: groupId }, { $unset: { structureIds: 1 } });
+    }
     // return both old and new data to allow plugins to detect changes in 'after' hook
     logServer(`GROUPS - METHODS - UPDATE - user update group ${groupId}`, levels.VERBOSE, scopes.USER);
     return [groupData, oldGroup];
@@ -405,6 +421,15 @@ export const updateGroup = new ValidatedMethod({
       optional: true,
       label: getLabel('api.groups.labels.shareName'),
       custom: validateShareName,
+    },
+    'data.structureIds': {
+      type: Array,
+      optional: true,
+    },
+    'data.structureIds.$': {
+      type: String,
+      regEx: SimpleSchema.RegEx.Id,
+      label: getLabel('api.groups.labels.structureIds'),
     },
   }).validator({ clean: true }),
 

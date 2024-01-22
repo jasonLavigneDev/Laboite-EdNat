@@ -76,9 +76,8 @@ const getArticleURL = (article) => {
   return `${Meteor.absoluteUrl()}public/${Meteor.userId()}/${article.slug}`;
 };
 
-const GroupArticlesPage = ({ loading, group }) => {
+const GroupArticlesPage = ({ loading, group, slug }) => {
   const [{ userId }] = useAppContext();
-  const { slug } = group;
   const { classes } = useArticlesPageStyles();
   const history = useHistory();
   const [search, setSearch] = useState('');
@@ -99,7 +98,7 @@ const GroupArticlesPage = ({ loading, group }) => {
   const resetSearch = () => setSearch('');
 
   const userInGroup = Roles.userIsInRole(userId, ['member', 'animator', 'admin'], group._id);
-  const blogPage = `${testMeteorSettingsUrl(Meteor.settings.public.services.laboiteBlogURL, true)}groups/${group.slug}`;
+  const blogPage = `${testMeteorSettingsUrl(Meteor.settings.public.services.laboiteBlogURL, true)}groups/${slug}`;
 
   const goBack = () => {
     history.goBack();
@@ -136,7 +135,7 @@ const GroupArticlesPage = ({ loading, group }) => {
           </Grid>
           {loading ? (
             <Spinner />
-          ) : userInGroup || group.type === 0 ? (
+          ) : Object.keys(group).length !== 0 && (userInGroup || group.type === 0) ? (
             <>
               <Grid item xs={12} sm={12} md={6} style={{ display: 'flex' }}>
                 <TextField
@@ -234,11 +233,12 @@ export default withTracker(
     },
   }) => {
     const subGroup = Meteor.subscribe('groups.single', { slug });
-    const group = Groups.findOne({ slug }) || { slug: '' };
+    const group = Groups.findOne({ slug }) || {};
     const loading = !subGroup.ready();
     return {
       loading,
       group,
+      slug,
     };
   },
 )(GroupArticlesPage);
@@ -246,4 +246,5 @@ export default withTracker(
 GroupArticlesPage.propTypes = {
   loading: PropTypes.bool.isRequired,
   group: PropTypes.objectOf(PropTypes.any).isRequired,
+  slug: PropTypes.string.isRequired,
 };

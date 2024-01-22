@@ -156,7 +156,7 @@ const AddressBook = ({ loading, group, slug }) => {
           </Grid>
           {loading ? (
             <Spinner />
-          ) : userInGroup || group.type === 0 ? (
+          ) : Object.keys(group).length !== 0 && (userInGroup || group.type === 0) ? (
             <>
               <GroupSearch
                 update={updateSearch}
@@ -313,7 +313,7 @@ export default withTracker(
   }) => {
     const structuresHandle = Meteor.subscribe('structures.all');
     const subGroup = Meteor.subscribe('groups.single', { slug });
-    const group = Groups.findOne({ slug }) || { slug: '' };
+    const group = Groups.findOne({ slug }) || {};
     const loading = !subGroup.ready() && !structuresHandle.ready();
     return {
       loading,

@@ -106,6 +106,7 @@ const defaultState = {
   content: '',
   avatar: '',
   type: Number(Object.keys(Groups.typeLabels)[0]),
+  structureIds: [],
 };
 
 const quillOptions = {
