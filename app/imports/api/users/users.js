@@ -270,14 +270,14 @@ export const findStructureAllowed = (structureObject, apiKey, tabApiKeys, tabApi
     // eslint-disable-next-line no-restricted-syntax, no-plusplus
     for (let i = 0; i < tabApiKeys.length; i++) {
       // allow create user if there is no structure in structureInTab and apiKey is in tabApiKeys and tabApiKeysByStructure
-      if (apiKey === tabApiKeys[i] && !(key === apiKey)) {
+      if (key === tabApiKeys[i] && structuresInTab.length === 0) {
         isAllowed = true;
       }
       // check if the structure gave in curl request is in apiKey tab inside tabApiKeysByStructure
       if (key === tabApiKeys[i] && key === apiKey) {
         // eslint-disable-next-line no-loop-func
         structuresInTab.forEach((element) => {
-          if (element === structureObject.name) {
+          if (element === structureObject._id) {
             isAllowed = true;
           }
         });
@@ -309,6 +309,7 @@ export const isMatchingStructureWithParent = (structure, apiKey, tabApiKeys, tab
 export const searchMatchingStructure = (structureObject, apiKey, tabApiKeys, tabApiKeysByStructure) => {
   let isMatchingWithParent = false;
   let result = findStructureAllowed(structureObject, apiKey, tabApiKeys, tabApiKeysByStructure);
+
   if (!result) {
     if (structureObject.parentId) {
       isMatchingWithParent = isMatchingStructureWithParent(
