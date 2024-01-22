@@ -585,7 +585,7 @@ export const getTopLevelStructures = new ValidatedMethod({
   name: 'structures.getTopLevelStructures',
   validate: null,
   run() {
-    return Structures.find({ parentId: null }).fetch();
+    return Structures.find({ $or: [{ parentId: null }, { parentId: '' }] }).fetch();
   },
 });
 
