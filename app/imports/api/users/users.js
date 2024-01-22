@@ -277,7 +277,7 @@ export const findStructureAllowed = (structureObject, apiKey, tabApiKeys, tabApi
       if (key === tabApiKeys[i] && key === apiKey) {
         // eslint-disable-next-line no-loop-func
         structuresInTab.forEach((element) => {
-          if (element === structureObject.name) {
+          if (element === structureObject._id) {
             isAllowed = true;
           }
         });
