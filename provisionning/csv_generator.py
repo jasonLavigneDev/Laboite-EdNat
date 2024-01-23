@@ -55,25 +55,23 @@ def generateCSVForStructure(nb):
             "_id": generateID(),
             "name": name,
             "parentId": None,
-            "ancestorsIds": "",
-            "childrenIds": "",
+            "ancestorsIds": [],
+            "childrenIds": [],
         }
 
-        rows.append(mainEntry)
-        generateMailExtension(mainEntry)
 
         # print("[{}] Created structure: {}".format(datetime.now(), name))
 
         for ec in range(0, ECOLE_PAR_ACADEMIE):
             school_name = "ecole {} ({})".format(ec + 1, name)
-
             subEntry = {
                 "_id": generateID(),
                 "name": school_name,
                 "parentId": mainEntry["_id"],
-                "ancestorsIds": mainEntry["_id"],
-                "childrenIds": "",
+                "ancestorsIds": [mainEntry["_id"]],
+                "childrenIds": [],
             }
+            mainEntry["childrenIds"].append(subEntry["_id"])
 
             rows.append(subEntry)
 
@@ -94,9 +92,10 @@ def generateCSVForStructure(nb):
                 "_id": generateID(),
                 "name": col_name,
                 "parentId": mainEntry["_id"],
-                "ancestorsIds": mainEntry["_id"],
-                "childrenIds": "",
+                "ancestorsIds": [mainEntry["_id"]],
+                "childrenIds": [],
             }
+            mainEntry["childrenIds"].append(subEntry2["_id"])
 
             rows.append(subEntry2)
 
@@ -114,9 +113,10 @@ def generateCSVForStructure(nb):
                 "_id": generateID(),
                 "name": lyc_name,
                 "parentId": mainEntry["_id"],
-                "ancestorsIds": mainEntry["_id"],
-                "childrenIds": "",
+                "ancestorsIds": [mainEntry["_id"]],
+                "childrenIds": [],
             }
+            mainEntry["childrenIds"].append(subEntry3["_id"])
 
             rows.append(subEntry3)
 
@@ -127,6 +127,8 @@ def generateCSVForStructure(nb):
 
     #     print("=============================================")
     #     print("=============================================")
+        rows.append(mainEntry)
+        generateMailExtension(mainEntry)
 
     print("[{}] Creation of CSV: structures.csv".format(datetime.now()))
     with open("structures.csv", "w", encoding="UTF8", newline="") as f:
