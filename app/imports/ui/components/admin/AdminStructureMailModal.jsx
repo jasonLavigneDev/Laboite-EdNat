@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import ReactQuill from 'react-quill';
 import PropTypes from 'prop-types';
 import i18n from 'meteor/universe:i18n';
-import { toast } from 'react-toastify';
 
 import Switch from '@mui/material/Switch';
 import Paper from '@mui/material/Paper';
@@ -135,15 +134,17 @@ const AdminStructureMailModal = ({ open, onClose, setIsModalMail, choosenStructu
           text: content,
           mailList,
         },
-        (res, err) => {
+        (err) => {
           if (err) {
-            toast.error(i18n.__('pages.AdminStructureMailModal.errorSendingMail'));
+            msg.error(i18n.__('pages.AdminStructureMailModal.errorSendingMail'));
+          } else {
+            msg.success(i18n.__('pages.AdminStructureMailModal.emailSuccess'));
           }
         },
       );
       setIsModalMail(false);
     } else {
-      toast.error(i18n.__('pages.AdminStructureMailModal.noAdminSelected'));
+      msg.error(i18n.__('pages.AdminStructureMailModal.noAdminSelected'));
     }
   };
 

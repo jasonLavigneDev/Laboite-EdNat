@@ -1439,7 +1439,8 @@
       "noAdminSelected": "No admin selected to send a mail",
       "errorMail": "An error has occured while sending mail.",
       "errorTextMail": "Text is empty or invalid.",
-      "errorSendingMail": "An error has occured with the sending mail service."
+      "errorSendingMail": "An error has occured with the sending mail service.",
+      "emailSuccess": "Email sent successfully"
     },
     "AdminGroupsPage": {
       "title": "Groups management",
