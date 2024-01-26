@@ -1447,7 +1447,8 @@
       "noAdminSelected": "Aucun administrateur sélectionné pour envoyer un mail.",
       "errorMail": "Une erreur est survenue à l'envoi du mail",
       "errorTextMail": "Le texte est vide ou invalide.",
-      "errorSendingMail": "Une erreur est survenue avec le service d'envoi de mail."
+      "errorSendingMail": "Une erreur est survenue avec le service d'envoi de mail.",
+      "emailSuccess": "Email envoyé avec succès"
     },
     "AdminGroupsPage": {
       "title": "Gestion des groupes",
