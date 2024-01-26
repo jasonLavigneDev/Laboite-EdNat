@@ -94,7 +94,8 @@ FindFromPublication.publish('groups.one.admin', function GroupsOne({ _id }) {
 });
 
 // publish one group and all users associated with given role
-Meteor.publish('groups.users', function groupDetails({ groupId, role = 'member' }) {
+// numUsers is used to force a refetch of users when users are added to the group
+Meteor.publish('groups.users', function groupDetails({ groupId, role = 'member', numUsers }) {
   try {
     new SimpleSchema({
       groupId: {
@@ -114,6 +115,7 @@ Meteor.publish('groups.users', function groupDetails({ groupId, role = 'member' 
       {
         groupId,
         role: 'member',
+        numUsers,
         err,
       },
     );
