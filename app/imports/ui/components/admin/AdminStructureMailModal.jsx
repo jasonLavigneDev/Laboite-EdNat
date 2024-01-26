@@ -100,14 +100,10 @@ const AdminStructureMailModal = ({ open, onClose, setIsModalMail, choosenStructu
           { structureId: choosenStructureMail._id, subStructure },
           (error, result) => {
             if (result) {
-              if (result.users.length > 0) {
-                setUsers(result.users);
-                setStructures(result.structures);
-                // Fill selected Users tab because checkbox are default checked
-                result.users.forEach((element) => {
-                  selectedUsers.push(element);
-                });
-              }
+              setUsers(result.users);
+              setStructures(result.structures);
+              // Fill selected Users tab because checkbox are default checked
+              setSelectedUsers(result.users);
             }
             setLoading(false);
           },
