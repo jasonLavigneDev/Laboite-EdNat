@@ -14,8 +14,7 @@ Copy `settings-development.json.sample` to `settings-development.json` and updat
 | appDescription                           | string                        | ""                                   | Application description, it will be displayed under the title                               |
 | keycloackPopupStyle                      | boolean                       | false                                | Use popup style for keycloak authentication (non iframe)                                    |
 | keycloackPopupStyleIframe                | boolean                       | false                                | Use popup style for keycloak authentication (iframe)                                        |
-| loginWithTokenUrls                       | string                        | "\*"                                 | Restrain API using to specific                                                              |
-| URL                                      |
+| loginWithTokenUrls                       | string                        | "\*"                                 | Restrain API using to specific URL                                                          |
 | enableBBB                                | boolean                       | true                                 | If true, Big Blue Button is enabled                                                         |
 | BBBUrl                                   | string                        | ""                                   | Big Blue Button URL                                                                         |
 | minioPort                                | number                        | null                                 | Minio port                                                                                  |
