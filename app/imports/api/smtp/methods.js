@@ -58,15 +58,18 @@ Adresse mail: ${email}
 ${cleanText}`;
 
     const from = Meteor.settings.smtp.fromEmail;
-    const to = Meteor.settings.smtp.toEmail;
 
     this.unblock();
 
     try {
       if (mailList.length > 0) {
-        Email.send({ to, cci: mailList, from, subject: object, text: msg });
+        Email.send({ to: mailList, from, subject: object, text: msg });
       } else {
-        Email.send({ to, from, subject: object, text: msg });
+        // mailList should not be empty (checked on UI side)
+        throw new Meteor.Error(
+          i18n.__('pages.AdminStructureMailModal.errorMail'),
+          i18n.__('pages.AdminStructureMailModal.errorSendMail'),
+        );
       }
     } catch (err) {
       logServer(
