@@ -26,7 +26,7 @@ const useStyles = makeStyles()((theme, isMobile) => ({
   alert: COMMON_STYLES.alert,
 }));
 
-const AdminGroupQuota = ({ data, open, onClose }) => {
+const AdminGroupQuota = ({ data, open, onClose, fetchUsers }) => {
   const [{ isMobile }] = useAppContext();
   const [quota, setQuota] = useState(data.groupQuota);
   const { classes } = useStyles(isMobile);
@@ -43,6 +43,7 @@ const AdminGroupQuota = ({ data, open, onClose }) => {
           msg.error(error.message);
         } else {
           msg.success(i18n.__('api.methods.operationSuccessMsg'));
+          fetchUsers();
         }
       },
     );
@@ -98,6 +99,7 @@ AdminGroupQuota.propTypes = {
   data: PropTypes.objectOf(PropTypes.any).isRequired,
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
+  fetchUsers: PropTypes.func.isRequired,
 };
 
 export default AdminGroupQuota;

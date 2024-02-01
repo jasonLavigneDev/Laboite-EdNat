@@ -472,7 +472,14 @@ const AdminUsersPage = ({ match: { path } }) => {
             </Grid>
           )}
         </Container>
-        {openQuota && <AdminGroupQuota data={userData} open={openQuota} onClose={() => setOpenQuota(false)} />}
+        {openQuota && (
+          <AdminGroupQuota
+            data={userData}
+            open={openQuota}
+            onClose={() => setOpenQuota(false)}
+            fetchUsers={fetchUsers}
+          />
+        )}
         {openNotif && <AdminSendNotification data={userData} open={openNotif} onClose={() => setOpenNotif(false)} />}
       </div>
     </Fade>
