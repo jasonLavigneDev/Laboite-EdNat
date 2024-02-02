@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import PropTypes from 'prop-types';
 import { useTracker, withTracker } from 'meteor/react-meteor-data';
@@ -85,6 +85,7 @@ const Contact = ({ structures, loading }) => {
   const history = useHistory();
   const { classes, theme } = useStyles();
   const [formState, handleChange] = useFormStateValidator(schema);
+  const [externalSite, setExternalSite] = useState(null);
 
   const userStructure = useTracker(() => {
     if (user) {
@@ -94,28 +95,24 @@ const Contact = ({ structures, loading }) => {
     return null;
   }, [user]);
 
-  const redirectOnExternalService = (struc) => {
-    if (struc.externalUrl) {
-      let url = struc.externalUrl;
-      if (!url.startsWith('http://') && !url.startsWith('https://')) url = `http://${url}`;
-      window.open(`${url}`, '_blank', 'noopener,noreferrer');
-      history.push('/');
-      return null;
-    }
-    if (struc.sendMailToParent) {
-      if (struc.parentId) {
-        const ancestor = structures.find((st) => st._id === struc.parentId);
-        if (ancestor) {
-          return redirectOnExternalService(ancestor);
+  useEffect(() => {
+    if (userStructure) {
+      Meteor.call('structures.getContactURL', {}, (err, res) => {
+        if (res) {
+          setExternalSite(res);
         }
-      }
+      });
     }
-    return null;
-  };
+  }, [userStructure]);
 
-  if (userStructure) {
-    redirectOnExternalService(userStructure);
-  }
+  const externalRedirect = () => {
+    const url =
+      !externalSite.startsWith('http://') && !externalSite.startsWith('https://')
+        ? `http://${externalSite}`
+        : externalSite;
+    window.open(url, '_blank', 'noopener,noreferrer');
+    history.push('/personal');
+  };
 
   const hasError = (field) => !!(formState.touched[field] && formState.errors[field]);
 
@@ -154,7 +151,7 @@ const Contact = ({ structures, loading }) => {
           setFormSubmit(true);
           setCounter(5);
           setTimeout(() => {
-            history.push('/');
+            history.push('/personal');
           }, 5000);
         }
       }
@@ -186,152 +183,165 @@ const Contact = ({ structures, loading }) => {
         <Typography component="h1" variant="h5">
           {i18n.__('pages.ContactForm.appDescription')}
         </Typography>
-
-        <form onSubmit={handleSubmit} className={classes.form} id="my-form" noValidate>
-          <Grid container spacing={4}>
-            <Grid container item xs={12} sm={6}>
-              <TextField
-                autoComplete="fname"
-                required
-                id="firstName"
-                autoFocus
-                fullWidth
-                disabled={!!user}
-                label={i18n.__('pages.ContactForm.firstNameLabel')}
-                name="firstName"
-                type="text"
-                value={user ? user.firstName : formState.values.firstName || ''}
-                error={hasError('firstName')}
-                onChange={handleChange}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item container xs={12} sm={6}>
-              <TextField
-                required
-                id="lastName"
-                autoComplete="lname"
-                fullWidth
-                disabled={!!user}
-                label={i18n.__('pages.ContactForm.nameLabel')}
-                name="lastName"
-                type="text"
-                value={user ? user.lastName : formState.values.lastName || ''}
-                error={hasError('lastName')}
-                onChange={handleChange}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid container item xs={12} className={classes.emailForm}>
-              <TextField
-                margin="normal"
-                required
-                id="email"
-                label={i18n.__('pages.ContactForm.emailLabel')}
-                name="email"
-                disabled={!!user}
-                autoComplete="email"
-                fullWidth
-                helperText=""
-                type="text"
-                value={user ? (user.emails ? user.emails[0].address : '') : formState.values.email || ''}
-                error={hasError('email')}
-                onChange={handleChange}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid container item xs={12}>
-              <FormControl variant="outlined" className={classes.formControl} fullWidth>
-                {user && userStructure ? (
-                  <TextField
-                    margin="normal"
-                    required
-                    id="structure"
-                    name="structure"
-                    label={i18n.__('pages.ContactForm.structureLabel')}
-                    disabled={!!user}
-                    autoComplete="structure"
-                    fullWidth
-                    helperText=""
-                    type="text"
-                    value={userStructure && userStructure._id ? userStructure.name : ''}
-                    error={hasError('structureSelect')}
-                    onChange={handleChange}
-                    variant="outlined"
-                  />
-                ) : (
-                  <>
-                    <InputLabel id="structure-label" className={hasError('structureSelect') ? 'Mui-error' : ''}>
-                      {i18n.__('pages.ContactForm.structureLabel')}
-                    </InputLabel>
-                    <CustomSelect
-                      disabled={!!user}
-                      value={(user && userStructure._id ? userStructure._id : formState.values.structureSelect) || ''}
-                      error={hasError('structureSelect')}
-                      onChange={handleChange}
-                      options={structures.map((opt) => ({ value: opt._id, label: opt.name }))}
-                    />
-                  </>
-                )}
-                <FormHelperText className={hasError('structureSelect') ? 'Mui-error' : ''}>
-                  {hasError('structureSelect') ? i18n.__(formState.errors.structureSelect[0]) : null}
-                </FormHelperText>
-              </FormControl>
-            </Grid>
-            <Grid container item xs={12}>
-              <TextField
-                name="text"
-                multiline
-                fullWidth
-                rows={10}
-                autoFocus={!!user}
-                label={i18n.__('pages.ContactForm.textLabel')}
-                value={formState.values.text || ''}
-                onChange={handleChange}
-                required
-                variant="outlined"
-              />
-              {!user || !user.isActive ? (
+        {externalSite ? (
+          <>
+            <Typography>{i18n.__('pages.ContactForm.externalDescription')}</Typography>
+            <Button variant="contained" onClick={externalRedirect}>
+              {i18n.__('pages.ContactForm.externalButton')}
+            </Button>
+          </>
+        ) : (
+          <form onSubmit={handleSubmit} className={classes.form} id="my-form" noValidate>
+            <Grid container spacing={4}>
+              <Grid container item xs={12} sm={6}>
                 <TextField
-                  margin="normal"
-                  name="captcha"
+                  autoComplete="fname"
                   required
-                  label={`${rndmNr1} + ${rndmNr2}`}
+                  id="firstName"
+                  autoFocus
                   fullWidth
-                  helperText={i18n.__('pages.ContactForm.captchaInfo')}
+                  disabled={!!user}
+                  label={i18n.__('pages.ContactForm.firstNameLabel')}
+                  name="firstName"
                   type="text"
-                  error={!user || !user.isActive ? !captchaIsValid : false}
-                  value={formState.values.captcha || ''}
+                  value={user ? user.firstName : formState.values.firstName || ''}
+                  error={hasError('firstName')}
                   onChange={handleChange}
                   variant="outlined"
                 />
-              ) : null}
-            </Grid>
-            <Grid container item xs={12}>
-              {!formSubmit ? (
+              </Grid>
+              <Grid item container xs={12} sm={6}>
+                <TextField
+                  required
+                  id="lastName"
+                  autoComplete="lname"
+                  fullWidth
+                  disabled={!!user}
+                  label={i18n.__('pages.ContactForm.nameLabel')}
+                  name="lastName"
+                  type="text"
+                  value={user ? user.lastName : formState.values.lastName || ''}
+                  error={hasError('lastName')}
+                  onChange={handleChange}
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid container item xs={12} className={classes.emailForm}>
+                <TextField
+                  margin="normal"
+                  required
+                  id="email"
+                  label={i18n.__('pages.ContactForm.emailLabel')}
+                  name="email"
+                  disabled={!!user}
+                  autoComplete="email"
+                  fullWidth
+                  helperText=""
+                  type="text"
+                  value={user ? (user.emails ? user.emails[0].address : '') : formState.values.email || ''}
+                  error={hasError('email')}
+                  onChange={handleChange}
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid container item xs={12}>
+                <FormControl variant="outlined" className={classes.formControl} fullWidth>
+                  {user && userStructure ? (
+                    <TextField
+                      margin="normal"
+                      required
+                      id="structure"
+                      name="structure"
+                      label={i18n.__('pages.ContactForm.structureLabel')}
+                      disabled={!!user}
+                      autoComplete="structure"
+                      fullWidth
+                      helperText=""
+                      type="text"
+                      value={userStructure && userStructure._id ? userStructure.name : ''}
+                      error={hasError('structureSelect')}
+                      onChange={handleChange}
+                      variant="outlined"
+                    />
+                  ) : (
+                    <>
+                      <InputLabel id="structure-label" className={hasError('structureSelect') ? 'Mui-error' : ''}>
+                        {i18n.__('pages.ContactForm.structureLabel')}
+                      </InputLabel>
+                      <CustomSelect
+                        disabled={!!user}
+                        value={(user && userStructure._id ? userStructure._id : formState.values.structureSelect) || ''}
+                        error={hasError('structureSelect')}
+                        onChange={handleChange}
+                        options={structures.map((opt) => ({ value: opt._id, label: opt.name }))}
+                      />
+                    </>
+                  )}
+                  <FormHelperText className={hasError('structureSelect') ? 'Mui-error' : ''}>
+                    {hasError('structureSelect') ? i18n.__(formState.errors.structureSelect[0]) : null}
+                  </FormHelperText>
+                </FormControl>
+              </Grid>
+              <Grid container item xs={12}>
+                <TextField
+                  name="text"
+                  multiline
+                  fullWidth
+                  rows={10}
+                  autoFocus={!!user}
+                  label={i18n.__('pages.ContactForm.textLabel')}
+                  value={formState.values.text || ''}
+                  onChange={handleChange}
+                  required
+                  variant="outlined"
+                />
+                {!user || !user.isActive ? (
+                  <TextField
+                    margin="normal"
+                    name="captcha"
+                    required
+                    label={`${rndmNr1} + ${rndmNr2}`}
+                    fullWidth
+                    helperText={i18n.__('pages.ContactForm.captchaInfo')}
+                    type="text"
+                    error={!user || !user.isActive ? !captchaIsValid : false}
+                    value={formState.values.captcha || ''}
+                    onChange={handleChange}
+                    variant="outlined"
+                  />
+                ) : null}
+              </Grid>
+              <Grid container item xs={12}>
+                {!formSubmit ? (
+                  <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    className={classes.submit}
+                    disabled={user ? !formState.values.text || onlySpaces(formState.values.text) : !formState.isValid}
+                  >
+                    {i18n.__('pages.ContactForm.submitButtonLabel')}
+                  </Button>
+                ) : (
+                  <p>
+                    {i18n.__('pages.ContactForm.redirectMsg')}
+                    <br />
+                    {counter} {i18n.__('pages.ContactForm.redirectTime')}
+                  </p>
+                )}
                 <Button
-                  type="submit"
                   fullWidth
                   variant="contained"
-                  color="primary"
                   className={classes.submit}
-                  disabled={user ? !formState.values.text || onlySpaces(formState.values.text) : !formState.isValid}
+                  onClick={() => history.push(user ? '/personal' : '/')}
                 >
-                  {i18n.__('pages.ContactForm.submitButtonLabel')}
+                  {i18n.__('pages.ContactForm.cancel')}
                 </Button>
-              ) : (
-                <p>
-                  {i18n.__('pages.ContactForm.redirectMsg')}
-                  <br />
-                  {counter} {i18n.__('pages.ContactForm.redirectTime')}
-                </p>
-              )}
-              <Button fullWidth variant="contained" className={classes.submit} onClick={() => history.push('/')}>
-                {i18n.__('pages.ContactForm.cancel')}
-              </Button>
+              </Grid>
             </Grid>
-          </Grid>
-        </form>
+          </form>
+        )}
       </div>
     </Container>
   );

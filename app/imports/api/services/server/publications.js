@@ -1,6 +1,5 @@
 import { Meteor } from 'meteor/meteor';
 
-import { publishComposite } from 'meteor/reywood:publish-composite';
 import { FindFromPublication } from 'meteor/percolate:find-from-publication';
 import { Roles } from 'meteor/alanning:roles';
 import SimpleSchema from 'simpl-schema';
@@ -86,7 +85,7 @@ FindFromPublication.publish('services.group', function servicesGroup({ ids }) {
   return Services.find({ _id: { $in: ids } }, { fields: Services.allPublicFields, sort: { title: 1 }, limit: 100 });
 });
 
-publishComposite('services.one', ({ slug, structure }) => {
+Meteor.publish('services.one', function publishServicesOne({ slug, structure }) {
   try {
     new SimpleSchema({
       slug: {
@@ -109,23 +108,27 @@ publishComposite('services.one', ({ slug, structure }) => {
     );
     this.error(err);
   }
-  return {
-    find() {
-      // Find top ten highest scoring posts
-      return Services.find({ slug, structure }, { fields: Services.allPublicFields, sort: { title: 1 }, limit: 1 });
-    },
-    children: [
-      {
-        find({ categories = [] }) {
-          // Find top two comments on post
-          return Categories.find(
-            { _id: { $in: categories } },
-            { fields: Categories.publicFields, sort: { name: 1 }, limit: 1000 },
-          );
-        },
-      },
-    ],
-  };
+
+  // Find top ten highest scoring posts
+  const servicesCursor = Services.find(
+    { slug, structure },
+    { fields: Services.allPublicFields, sort: { title: 1 }, limit: 1 },
+  );
+  const services = servicesCursor.fetch();
+
+  if (!services.length) {
+    return this.ready();
+  }
+
+  const { categories } = services[0];
+
+  // Find top two comments on post
+  const categoriesCursor = Categories.find(
+    { _id: { $in: categories } },
+    { fields: Categories.publicFields, sort: { name: 1 }, limit: 1000 },
+  );
+
+  return [servicesCursor, categoriesCursor];
 });
 
 Meteor.publish('services.offline', function servicesOffline() {

@@ -185,7 +185,7 @@ const AdminSingleServicePage = ({ categories, businessReGrouping, service, ready
       });
     } else if (name === 'state') {
       setServiceData({ ...serviceData, [name]: Number(value) });
-    } else if (name === 'offline') {
+    } else if (['offline', 'isBeta'].includes(name)) {
       setServiceData({ ...serviceData, [name]: checked });
     } else {
       setServiceData({ ...serviceData, [name]: value });
@@ -440,18 +440,32 @@ const AdminSingleServicePage = ({ categories, businessReGrouping, service, ready
               margin="normal"
             />
             {offlinePage && !structureMode && (
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    name="offline"
-                    checked={serviceData.offline || false}
-                    onChange={onUpdateField}
-                    inputProps={{ 'aria-label': 'primary checkbox' }}
-                  />
-                }
-                label={i18n.__('pages.AdminSingleServicePage.offlineService')}
-              />
+              <>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      name="offline"
+                      checked={serviceData.offline || false}
+                      onChange={onUpdateField}
+                      inputProps={{ 'aria-label': 'primary checkbox' }}
+                    />
+                  }
+                  label={i18n.__('pages.AdminSingleServicePage.offlineService')}
+                />
+                <br />
+              </>
             )}
+            <FormControlLabel
+              control={
+                <Checkbox
+                  name="isBeta"
+                  checked={serviceData.isBeta || false}
+                  onChange={onUpdateField}
+                  inputProps={{ 'aria-label': 'primary checkbox' }}
+                />
+              }
+              label={i18n.__('pages.AdminSingleServicePage.isBeta')}
+            />
             <div className={`${classes.wysiwyg} ${classes.topSpacing}`}>
               <InputLabel htmlFor="content">{i18n.__('pages.AdminSingleServicePage.content')}</InputLabel>
               <CustomToolbarArticle />

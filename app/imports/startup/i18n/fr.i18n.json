@@ -15,6 +15,7 @@
       },
       "addToPersonalSpace": "Ajouter à l'espace personnel",
       "keep": "Ajouter",
+      "keepOrAddAll": "Tout ajouter ou retirer",
       "discard": "Ignorer",
       "creationFailed": "Echec lors de la création. Assurez-vous que tous les champs soient convenablement remplis.",
       "UnknownURL": "Cette URL n'existe pas.",
@@ -274,7 +275,8 @@
         "businessReGrouping": "Business regrouping",
         "screenshots": "Captures d'écran",
         "structure": "Structure d'exploitation",
-        "url": "URL du service"
+        "url": "URL du service",
+        "isBeta": "version bêta"
       }
     },
     "events": {
@@ -504,6 +506,7 @@
       "button_modify": "Modifier le message",
       "button_delete": "Supprimer le message",
       "button_create": "Créer le message",
+      "button_publish": "Publier le message",
       "create_info_success": "Information créée avec succès",
       "update_info_success": "Information mise à jour avec succès",
       "missing_content": "Le contenu du message est vide !",
@@ -606,7 +609,8 @@
       "open": "Ouvrir",
       "pin": "Épingler",
       "unpin": "Retirer",
-      "backToDefault": "Remettre dans la zone par défaut"
+      "backToDefault": "Remettre dans la zone par défaut",
+      "betaVersion": " (version bêta)"
     },
     "TopBar": {
       "sideMenuOpenLabel": "Ouvrir le menu latéral",
@@ -667,7 +671,8 @@
       "menuAdminAnalytics": "Analytiques",
       "menuAdminStructureAnalytics": "Analytiques de structure",
       "menuAdminStructureSettings": "Réglages de structure",
-      "menuAdminStructureInfo": "Informations de structure"
+      "menuAdminStructureInfo": "Informations de structure",
+      "menuAdminMailDiffusion": "Diffusion de mails"
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Votre compte n'a pas été activé",
@@ -957,7 +962,8 @@
         "selectIconImage": "Chargement d'icône",
         "selectCoverImage": "Chargement de couverture",
         "DeleteIconImage": "Enlever l'image d'icône",
-        "DeleteCoverImage": "Enlever l'image de la couverture"
+        "DeleteCoverImage": "Enlever l'image de la couverture",
+        "sendEmailToAdmins": "Contacter le/les admins de cette structure"
       },
       "attachToStructure": "Souhaitez vous être rattaché(e) à cette structure ?",
       "noStructure": "Il n'y a aucune structure d'enregistrée."
@@ -1245,6 +1251,7 @@
       "loginError": "Erreur: Mauvais compte ou mot de passe",
       "keycloakError": "Erreur de connexion",
       "EmailAlreadyExists": "Erreur: Un compte existant utilise le même email",
+      "MissingKeycloakData": "Erreur: Les données de votre compte sont incomplètes, vous pouvez utiliser le formulaire de contact pour prévenir un administrateur",
       "loginKeycloak": "Se connecter",
       "rememberMe": "Rester connecté(e)",
       "maintenanceLogin": "Site en maintenance"
@@ -1262,7 +1269,9 @@
       "redirectMsg": "Formulaire envoyé. Redirection automatique en cours...",
       "redirectTime": "secondes",
       "errorMsgEmpty": "Vous ne pouvez pas envoyer un message vide",
-      "cancel": "Annuler"
+      "cancel": "Annuler",
+      "externalDescription": "L'assistance de votre structure est gérée par un site externe",
+      "externalButton": "Accéder au site d'assistance"
     },
     "ProfilePage": {
       "title": "Mon profil",
@@ -1315,7 +1324,8 @@
       "ApplyDefaultSpaceMessage": "Cela appliquera les changements sur votre espace personnel",
       "ApplyDefaultSpaceBtn": "Appliquer l'espace par default",
       "ApplyDefaultSpaceWarning": "On ne peut pas appliquer l'espace par défaut si l'option 'espace personnel avancé' est activé",
-      "activeAccountRequired": "Nécessite un compte actif"
+      "activeAccountRequired": "Nécessite un compte actif",
+      "betaServices": "Afficher les services en version bêta"
     },
     "NotFound": {
       "backButtonLabel": "Retour",
@@ -1423,11 +1433,22 @@
       "modal": {
         "close": "Fermer",
         "cancel": "Annuler",
-        "submit": "Valider"
+        "submit": "Valider",
+        "submitMail": "Envoyer"
       },
       "adminStructureMode": {
         "title": "Gestion des sous-structures"
       }
+    },
+    "AdminStructureMailModal": {
+      "noAdmin": "Aucun administrateur pour cette structure",
+      "SwitchAdminVisibility": "Afficher uniquement les admins de la structure sélectionnée.",
+      "subtitle": "Créer un nouveau message",
+      "noAdminSelected": "Aucun administrateur sélectionné pour envoyer un mail.",
+      "errorMail": "Une erreur est survenue à l'envoi du mail",
+      "errorTextMail": "Le texte est vide ou invalide.",
+      "errorSendingMail": "Une erreur est survenue avec le service d'envoi de mail.",
+      "emailSuccess": "Email envoyé avec succès"
     },
     "AdminGroupsPage": {
       "title": "Gestion des groupes",
@@ -1579,6 +1600,7 @@
       "cancel": "Annuler",
       "logo_url": "URL du logo",
       "offlineService": "Activer ce service sur la page non connectée",
+      "isBeta": "Ce service est en version bêta",
       "titleFieldHelperText": "Titre du service",
       "StateFieldHelperText": "État du service",
       "teamFieldHelperText": "Équipe qui gère le service",
@@ -1601,7 +1623,8 @@
       "invalidName": "Nom invalide",
       "shareName": "Nom du partage Nextcloud",
       "invalidCharacters": "caractères invalides",
-      "shareNameExists": "Ce nom de partage existe déjà"
+      "shareNameExists": "Ce nom de partage existe déjà",
+      "shareNameEmpty": "Nom de partage ne peut pas être vide"
     },
     "SingleGroupPage": {
       "backToList": "Retour à la liste",
@@ -1785,7 +1808,8 @@
     },
     "IntroductionPage": {
       "informationsOf": "Informations de",
-      "structureMessage": "{$structure} vous informe :"
+      "structureMessage": "{$structure} vous informe :",
+      "adminMessage": "Votre administrateur vous informe :"
     },
     "AdminStructureSettingsPage": {
       "title": "Informations de la structure",
@@ -1839,6 +1863,8 @@
       "status": "Status",
       "number": "Nombre",
       "usersByStructure": "Connectés par structure",
+      "startAt": "Entre le",
+      "endAt": "et le",
       "rows": {
         "usersLogged": "Utilisateurs",
         "newAccounts": "Comptes créés il y a moins de 2 jours",

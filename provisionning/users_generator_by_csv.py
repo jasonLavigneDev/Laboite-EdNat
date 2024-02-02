@@ -1,65 +1,66 @@
-import sys
-import os
-from faker import Faker
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+from sys import argv, exit
+from os import getenv, popen
+from os.path import isfile
+import argparse
 from pymongo import MongoClient
 from keycloak import KeycloakAdmin
 from keycloak import KeycloakOpenIDConnection
 from dotenv import load_dotenv
-from random import choices
 from datetime import datetime
 import csv
+from utils import *
 
+HELP = """
+Script to insert into keycloak and mongo the structures, mails and users contained in csv files.
+
+There must be the files structures.csv, mails.csv and users.csv in the same folder.
+
+See '.env.sample' to set needed environment variables.
+"""
 
 load_dotenv()
-fake = Faker()
-
-
 structures = {}
 
+KEYCLOAK_URL = getenv("KEYCLOAK_URL")
+KEYCLOAK_REALM = getenv("KEYCLOAK_REALM")
+KEYCLOAK_USER_REALM = getenv("KEYCLOAK_USER_REALM")
+KEYCLOAK_USERNAME = getenv("KEYCLOAK_USERNAME")
+KEYCLOAK_PASSWORD = getenv("KEYCLOAK_PASSWORD")
+KEYCLOAK_CLIENT_ID = getenv("KEYCLOAK_CLIENT_ID")
 
-KEYCLOAK_URL = os.getenv("KEYCLOAK_URL")
-KEYCLOAK_REALM = os.getenv("KEYCLOAK_REALM")
-KEYCLOAK_USER_REALM = os.getenv("KEYCLOAK_USER_REALM")
-KEYCLOAK_USERNAME = os.getenv("KEYCLOAK_USERNAME")
-KEYCLOAK_PASSWORD = os.getenv("KEYCLOAK_PASSWORD")
-KEYCLOAK_CLIENT_ID = os.getenv("KEYCLOAK_CLIENT_ID")
-
-MONGO_URI = os.getenv("MONGO_URI")
-MONGO_DATABASE = os.getenv("MONGO_DATABASE")
-
-# Keycloak connection
-keycloak_connection = KeycloakOpenIDConnection(
-    server_url=KEYCLOAK_URL,
-    user_realm_name=KEYCLOAK_USER_REALM,
-    realm_name=KEYCLOAK_REALM,
-    username=KEYCLOAK_USERNAME,
-    password=KEYCLOAK_PASSWORD,
-    client_id=KEYCLOAK_CLIENT_ID,
-    verify=True,
-)
-
-keycloak_admin = KeycloakAdmin(connection=keycloak_connection)
+MONGO_URI = getenv("MONGO_URI")
+MONGO_DATABASE = getenv("MONGO_DATABASE")
 
 
-def generateID():
-    st = "23456789ABCDEFGHJKLMNPQRSTWXYZabcdefghijkmnopqrstuvwxyz"
-    return "".join(choices(st, k=17))
-
-
-# MongoDB Connection
+def get_KC_admin():
+    # Keycloak connection
+    keycloak_connection = KeycloakOpenIDConnection(
+        server_url=KEYCLOAK_URL,
+        user_realm_name=KEYCLOAK_USER_REALM,
+        realm_name=KEYCLOAK_REALM,
+        username=KEYCLOAK_USERNAME,
+        password=KEYCLOAK_PASSWORD,
+        client_id=KEYCLOAK_CLIENT_ID,
+        verify=True,
+    )
+    return KeycloakAdmin(connection=keycloak_connection)
 
 
 def get_database():
-
+    # MongoDB Connection
     client = MongoClient(MONGO_URI)
     return client[MONGO_DATABASE]
 
 
 def resetUsers():
+    print("[{}] Remove all users".format(datetime.now()))
     users = keycloak_admin.get_users()
     for user in users:
         if user["username"] != KEYCLOAK_USERNAME:
-            print("Remove user: {}".format(user["username"]))
+            if args.verbose:
+                print("Remove user: {}".format(user["username"]))
             keycloak_admin.delete_user(user["id"])
             dbUser = db["users"].find_one({"username": user["username"]})
             if dbUser != None:
@@ -68,9 +69,11 @@ def resetUsers():
 
 
 def resetStructures():
+    print("[{}] Remove all structures".format(datetime.now()))
     groups = keycloak_admin.get_groups()
     for gr in groups:
-        print("Remove group: {}".format(gr["name"]))
+        if args.verbose:
+            print("Remove group: {}".format(gr["name"]))
         keycloak_admin.delete_group(gr["id"])
         db["groups"].delete_one({"name": gr["name"]})
         db["structures"].delete_one({"name": gr["name"]})
@@ -129,8 +132,7 @@ def addUserToStructureGroup(idDB, structureID):
 
 def insertUser(user):
 
-    alreadyExist = db["users"].find_one({"username": user["username"]})
-    if alreadyExist == None:
+    try:
         emails = [{"address": user["emails"], "verified": True}]
         new_user = keycloak_admin.create_user(
             {
@@ -162,7 +164,8 @@ def insertUser(user):
             "favServices": [],
             "isActive": True,
         }
-        print("[{}] Insert user: {}".format(datetime.now(), entry["username"]))
+        if args.verbose:
+            print("[{}] Insert user: {}".format(datetime.now(), entry["username"]))
         db["users"].insert_one(entry)
 
         persoSpace = {
@@ -180,12 +183,13 @@ def insertUser(user):
                 for struc in structure["ancestorsIds"]:
                     addUserToStructureGroup(idDB, struc)
 
-    else:
-        print(
-            "[{}] user {} already exists. Pass...".format(
-                datetime.now(), alreadyExist["username"]
+    except:
+        if args.verbose:
+            print(
+                "[{}] user {} already exists. Pass...".format(
+                    datetime.now(), user["username"]
+                )
             )
-        )
 
 
 def insertStructure(structure):
@@ -219,7 +223,8 @@ def insertStructure(structure):
             "admins": [],
             "avatar": "",
         }
-        print("[{}] Insert group: {}".format(datetime.now(), group["name"]))
+        if args.verbose:
+            print("[{}] Insert group: {}".format(datetime.now(), group["name"]))
         db["groups"].insert_one(group)
         groupDB = db["groups"].find_one({"name": structure["name"]})
 
@@ -227,11 +232,12 @@ def insertStructure(structure):
             {"name": structure["name"]}, {"$set": {"groupId": groupDB["_id"]}}
         )
     else:
-        print(
-            "[{}] structure {} already exists. Pass...".format(
-                datetime.now(), alreadyExist["name"]
+        if args.verbose:
+            print(
+                "[{}] structure {} already exists. Pass...".format(
+                    datetime.now(), alreadyExist["name"]
+                )
             )
-        )
 
 
 def insertMailExtension(mailExtension):
@@ -239,81 +245,94 @@ def insertMailExtension(mailExtension):
         {"extension": mailExtension["extension"]}
     )
     if alreadyExist == None:
-        print(
-            "[{}] Insert mail extension: {}".format(
-                datetime.now(), mailExtension["extension"]
+        if args.verbose:
+            print(
+                "[{}] Insert mail extension: {}".format(
+                    datetime.now(), mailExtension["extension"]
+                )
             )
-        )
         db["asamextensions"].insert_one(mailExtension)
     else:
-        print(
-            "[{}] Mail extension {} already exists. Pass...".format(
-                datetime.now(), alreadyExist["extension"]
+        if args.verbose:
+            print(
+                "[{}] Mail extension {} already exists. Pass...".format(
+                    datetime.now(), alreadyExist["extension"]
+                )
             )
-        )
 
 
-db = get_database()
+#####################################
 
+if __name__ == "__main__":
 
-csvStructurePath = "structures.csv"
-csvMailPath = "mails.csv"
-csvUserPath = "users.csv"
+    keycloak_admin = get_KC_admin()
+    db = get_database()
 
-if "-r" in sys.argv:
-    resetData()
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.RawDescriptionHelpFormatter, description=HELP
+    )
+    parser.add_argument("-v","--verbose",action="store_true",help="Print more information during insertion")
+    parser.add_argument("-f","--force",action="store_true",help="Force insertion without confirmation")
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument("-r", "--remove_all", action="store_true", help="remove structures and users before inserting")
+    group.add_argument("-u", "--remove_users", action="store_true", help="remove only users before inserting")
+    group.add_argument("-s", "--remove_structures", action="store_true", help="remove only structures before inserting")
+    args = parser.parse_args()
 
-if "-ru" in sys.argv:
-    resetUsers()
+    csvStructurePath = "structures.csv"
+    csvMailPath = "mails.csv"
+    csvUserPath = "users.csv"
+    
+    try:
+        # Retrieve line number of csv files
+        structureNumber = int(popen(f'wc -l < {csvStructurePath}').read()[:-1]) -1
+        mailNumber = int(popen(f'wc -l < {csvMailPath}').read()[:-1]) -1
+        userNumber = int(popen(f'wc -l < {csvUserPath}').read()[:-1]) -1
+    except:
+        exit("\nCould not retrieve line number of csv file.")
+    
+    if not args.force:
+        if input("Confirm insertion of datas [y/N] ? ").lower() not in [
+            "y",
+            "yes",
+        ]:
+            parser.print_help()
+            exit()
 
-if "-rs" in sys.argv:
-    resetStructures()
+    if args.remove_all:
+        resetData()
+    elif args.remove_users:
+        resetUsers()
+    elif args.remove_structures:
+        resetStructures()
 
-if "-s" in sys.argv:
-    index = sys.argv.index("-s")
-    csvStructurePath = sys.argv[index + 1]
+    if not (isfile(csvStructurePath) and isfile(csvMailPath) and isfile(csvUserPath)):
+        parser.print_help()
+        exit("Could not find one or more needed csv file in current folder.")
 
-if "-m" in sys.argv:
-    index = sys.argv.index("-m")
-    csvMailPath = sys.argv[index + 1]
-
-if "-u" in sys.argv:
-    index = sys.argv.index("-u")
-    csvUserPath = sys.argv[index + 1]
-
-
-if csvStructurePath != "" and csvStructurePath != "none" and csvStructurePath != None:
     print("[{}] Start insert structures".format(datetime.now()))
     with open(csvStructurePath, mode="r") as csv_file:
         csv_reader = csv.DictReader(csv_file)
         line_count = 0
-        for row in csv_reader:
+        for i,row in enumerate(csv_reader):
+            progress("Insert Structures : ", i, structureNumber)
             insertStructure(row)
-    print("======================================================")
-else:
-    print("[{}] No CSV found for structures.".format(datetime.now()))
 
-
-if csvMailPath != "" and csvMailPath != "none" and csvMailPath != None:
     print("[{}] Start insert mails extension".format(datetime.now()))
     with open(csvMailPath, mode="r") as csv_file:
         csv_reader = csv.DictReader(csv_file)
 
-        for row in csv_reader:
+        for i,row in enumerate(csv_reader):
             data = row
             data["_id"] = generateID()
+            progress("Insert Mails : ", i, mailNumber)
             insertMailExtension(data)
-    print("======================================================")
-else:
-    print("[{}] No CSV found for mails extensions.".format(datetime.now()))
 
-if csvUserPath != "" and csvUserPath != "none" and csvUserPath != None:
     print("[{}] Start insert users".format(datetime.now()))
     with open(csvUserPath, mode="r") as csv_file:
         csv_reader = csv.DictReader(csv_file)
 
-        for row in csv_reader:
+        for i,row in enumerate(csv_reader):
+            progress("Insert Users : ", i, userNumber)
             insertUser(row)
-    print("======================================================")
-else:
-    print("[{}] No CSV found for users.".format(datetime.now()))
+    print("[{}] All operations complete".format(datetime.now()))

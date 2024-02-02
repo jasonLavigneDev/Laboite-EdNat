@@ -28,8 +28,9 @@ const useStyles = (isMobile) =>
     iconImg: {
       position: 'absolute',
       bottom: !isMobile ? '-48px' : '-25px',
-      height: !isMobile ? '100px' : '50px',
+      height: '8vw',
       width: '8vw',
+      borderRadius: '50%',
     },
     containerGrid: {
       paddingTop: theme.spacing(0),
@@ -73,7 +74,6 @@ const IconAndCoverImagePage = () => {
       imgWrapperRef.current.style.height = !isMobile ? '175px' : 'auto';
       iconImgRef.current.style.bottom =
         !isMobile || (isMobile && userStructure?.coverUrlImage === undefined) ? '-48px' : '-25px';
-      iconImgRef.current.style.height = !isMobile ? '100px' : '50px';
     }
   }, [isMobile]);
   return (

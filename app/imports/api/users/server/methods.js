@@ -1532,6 +1532,40 @@ export const toggleAdvancedPersonalPage = new ValidatedMethod({
   },
 });
 
+export const toggleBetaServices = new ValidatedMethod({
+  name: 'users.toggleBetaServices',
+  validate: null,
+
+  run() {
+    if (!this.userId) {
+      logServer(
+        `USERS - METHODS - METEOR ERROR - toggleBetaServices - ${i18n.__('api.users.mustBeLoggedIn')}`,
+        levels.WARN,
+        scopes.SYSTEM,
+      );
+      throw new Meteor.Error('api.users.toggleBetaServices.notPermitted', i18n.__('api.users.mustBeLoggedIn'));
+    }
+    // check user existence
+    const user = Meteor.users.findOne({ _id: this.userId });
+    if (user === undefined) {
+      logServer(
+        `USERS - METHODS - METEOR ERROR - toggleBetaServices - ${i18n.__('api.users.unknownUser')}`,
+        levels.ERROR,
+        scopes.SYSTEM,
+      );
+      throw new Meteor.Error('api.users.toggleBetaServices.unknownUser', i18n.__('api.users.unknownUser'));
+    }
+    const newValue = !(user.betaServices || false);
+    logServer(
+      `USERS - METHODS - UPDATE - toggleBetaServices (user meteor) - userId: ${this.userId} 
+      / betaServices: ${newValue}`,
+      levels.INFO,
+      scopes.USER,
+    );
+    Meteor.users.update(this.userId, { $set: { betaServices: newValue } });
+  },
+});
+
 export const getAuthToken = new ValidatedMethod({
   name: 'users.getAuthToken',
   validate: null,
@@ -1726,6 +1760,56 @@ export const getUsersAdmin = new ValidatedMethod({
   },
 });
 
+export const getAdminsFromStructure = new ValidatedMethod({
+  name: 'users.getAdminsFromStructure',
+  validate: new SimpleSchema({
+    structureId: {
+      type: String,
+    },
+    subStructure: {
+      type: Boolean,
+    },
+  }).validator(),
+
+  run({ structureId, subStructure }) {
+    const struc = Structures.findOne({ _id: structureId });
+    if (!struc) {
+      logServer(
+        `USERS - METHODS - ERROR - getAdminsFromStructure - could not find structure '${structureId}'.`,
+        levels.ERROR,
+        scopes.SYSTEM,
+      );
+      throw new Meteor.Error(
+        'api.users.getAdminsFromStructure.notFound',
+        i18n.__('api.users.getAdminsFromStructure.structureNotFound'),
+      );
+    }
+
+    let allStruc = [];
+
+    if (subStructure) {
+      const childs = Structures.find({ ancestorsIds: structureId })
+        .fetch()
+        .map((child) => child._id);
+      allStruc = [...childs, structureId];
+    } else {
+      allStruc = [structureId];
+    }
+
+    const ret = Meteor.roleAssignment.find({
+      'role._id': 'adminStructure',
+      scope: { $in: allStruc },
+    });
+
+    const tabUsers = ret.fetch().map((user) => user.user._id);
+    const users = Meteor.users.find({ _id: { $in: tabUsers } }, { fields: Meteor.users.publicFields }).fetch();
+
+    const structures = Structures.find({ _id: { $in: allStruc } }, { fields: Structures.publicFields }).fetch();
+
+    return { users, structures };
+  },
+});
+
 export const getUsersByStructure = new ValidatedMethod({
   name: 'users.byStructure',
   validate: null,
@@ -1806,12 +1890,14 @@ const LISTS_METHODS = _.pluck(
     setAvatar,
     userUpdated,
     toggleAdvancedPersonalPage,
+    toggleBetaServices,
     getAuthToken,
     fixUsers,
     hasUserOnRequest,
     hasUserOnAwaitingStructure,
     getUsersAdmin,
     getUsersByStructure,
+    getAdminsFromStructure,
   ],
   'name',
 );

@@ -13,6 +13,84 @@ Meteor.startup(function startSmtp() {
   process.env.MAIL_URL = Meteor.settings.smtp.url;
 });
 
+export const sendEmailToDiffusionList = new ValidatedMethod({
+  name: 'smtp.sendMailToDiffusionList',
+  validate: new SimpleSchema({
+    firstName: {
+      type: String,
+    },
+    lastName: {
+      type: String,
+    },
+    email: {
+      type: String,
+      regEx: SimpleSchema.RegEx.Email,
+    },
+    text: {
+      type: String,
+    },
+    mailList: {
+      type: Array,
+    },
+    'mailList.$': {
+      type: String,
+    },
+  }).validator(),
+  run({ firstName, lastName, email, text, mailList }) {
+    const { appName = 'LaBoite' } = Meteor.settings.public;
+    const object = `[Contact ${appName}] ${firstName} ${lastName}`;
+
+    const cleanText = sanitizeHtml(text, {
+      allowedTags: ['b', 'i', 'strong', 'em'],
+    });
+
+    if (!cleanText) {
+      throw new Meteor.Error(
+        i18n.__('pages.AdminStructureMailModal.errorMail'),
+        i18n.__('pages.AdminStructureMailModal.errorTextMail'),
+      );
+    }
+
+    const msg = `Message de: ${firstName} ${lastName}
+Adresse mail: ${email}
+                 
+                 
+${cleanText}`;
+
+    const from = Meteor.settings.smtp.fromEmail;
+
+    this.unblock();
+
+    try {
+      if (mailList.length > 0) {
+        Email.send({ to: mailList, from, subject: object, text: msg });
+      } else {
+        // mailList should not be empty (checked on UI side)
+        throw new Meteor.Error(
+          i18n.__('pages.AdminStructureMailModal.errorMail'),
+          i18n.__('pages.AdminStructureMailModal.errorSendMail'),
+        );
+      }
+    } catch (err) {
+      logServer(
+        `SMTP - METEOR ERROR - sendMailToDiffusionList 
+        - Sending mail error: ${err}`,
+        levels.INFO,
+        scopes.SYSTEM,
+        {
+          email,
+          text,
+          mailList,
+        },
+      );
+      throw new Meteor.Error(
+        i18n.__('pages.AdminStructureMailModal.errorMail'),
+        i18n.__('pages.AdminStructureMailModal.errorSendMail'),
+      );
+    }
+  },
+});
+
 export const sendContactEmail = new ValidatedMethod({
   name: 'smtp.sendContactEmail',
   validate: new SimpleSchema({
@@ -87,7 +165,7 @@ ${cleanText}`;
 });
 
 // Get list of all method names on Helps
-const LISTS_METHODS = _.pluck([sendContactEmail], 'name');
+const LISTS_METHODS = _.pluck([sendContactEmail, sendEmailToDiffusionList], 'name');
 
 if (Meteor.isServer) {
   // Only allow 5 list operations per connection per second

@@ -72,6 +72,9 @@ const useStyles = makeStyles()((theme) => ({
     display: 'flex',
     alignItems: 'center',
   },
+  adornment: {
+    marginRight: '0px',
+  },
 }));
 
 function TabPanel(props) {
@@ -103,7 +106,6 @@ const defaultState = {
   content: '',
   avatar: '',
   type: Number(Object.keys(Groups.typeLabels)[0]),
-  shareName: '',
 };
 
 const quillOptions = {
@@ -161,8 +163,13 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
   }
 
   function _checkShareName() {
-    const value = groupData.shareName;
-    if (value && plugins.nextcloud === true) {
+    if (plugins.nextcloud === true) {
+      const value = groupData.shareName;
+      if (!value) {
+        setErrorShareText(i18n.__('pages.AdminSingleGroupPage.shareNameEmpty'));
+        setErrorShare(true);
+        return true;
+      }
       if (value.includes('/') || value.includes('\\')) {
         setErrorShareText(`${i18n.__('pages.AdminSingleGroupPage.invalidCharacters')}: /, \\`);
         setErrorShare(true);
@@ -172,10 +179,14 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
       Meteor.call('groups.checkShareName', { shareName: value, groupId: params._id }, (err, res) => {
         if (err) {
           msg.error(err.reason);
-        } else if (res === false) {
+          return false;
+        }
+        if (res === false) {
           setErrorShareText(i18n.__('pages.AdminSingleGroupPage.shareNameExists'));
           setErrorShare(true);
+          return true;
         }
+        return false;
       });
     }
     // if plugins.nextcloud is false we don't need to perform check,
@@ -190,7 +201,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
   useEffect(() => {
     if (params._id && group._id && loading) {
       setLoading(false);
-      if (!group.shareName) {
+      if (group.shareName === undefined) {
         setGroupData({ ...group, shareName: calcShareName(group.name) });
       } else {
         setGroupData(group);
@@ -429,7 +440,7 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
                 {plugins.nextcloud === true ? (
                   <TextField
                     onChange={onUpdateField}
-                    value={groupData.shareName || calcShareName(groupData.name)}
+                    value={groupData.shareName}
                     name="shareName"
                     label={i18n.__('pages.AdminSingleGroupPage.shareName')}
                     variant="outlined"
@@ -438,7 +449,11 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
                     helperText={errorShareText}
                     fullWidth
                     InputProps={{
-                      startAdornment: <InputAdornment position="start">groupe-</InputAdornment>,
+                      startAdornment: (
+                        <InputAdornment className={classes.adornment} position="start">
+                          groupe-
+                        </InputAdornment>
+                      ),
                     }}
                     disabled={(!isAdmin && !!params._id) || (!!params._id && !!group?.circleId)}
                   />

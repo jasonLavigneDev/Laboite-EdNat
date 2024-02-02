@@ -24,6 +24,7 @@ class KeyCloakClient {
     this._expire = this._expire.bind(this);
     this._expireRefresh = this._expireRefresh.bind(this);
     this._checkToken = this._checkToken.bind(this);
+    this._getNewToken = this._getNewToken.bind(this);
     // initialize client id and check that we can get tokens
     this._getToken().then((initToken) => {
       if (initToken) {
@@ -85,7 +86,23 @@ class KeyCloakClient {
   }
 
   _checkToken() {
-    if (this.token) return Promise.resolve(this.token);
+    if (this.token) {
+      // check if token is still valid by calling API
+      return axios
+        .get(`${this.kcURL}/admin/realms/${this.kcRealm}/users/profile`, {
+          headers: {
+            Accept: 'application/json',
+            Authorization: `Bearer ${this.token}`,
+          },
+        })
+        .then(() => {
+          return Promise.resolve(this.token);
+        })
+        .catch(() => {
+          // if call fails, try to get a new token
+          return this._getNewToken();
+        });
+    }
     if (this.refreshToken)
       return this._refreshToken().then((response) => {
         const newToken = response.data.access_token;
@@ -93,6 +110,10 @@ class KeyCloakClient {
         this._setRefreshToken(response.data.refresh_token, response.data.refresh_expires_in);
         return newToken;
       });
+    return this._getNewToken();
+  }
+
+  _getNewToken() {
     return this._authenticate().then((response) => {
       logServer(
         `APPCLIENT - KcCLIENT - THEN - _checkToken -  Keycloak : new access token received'`,
@@ -353,7 +374,7 @@ class KeyCloakClient {
             logServer(
               `APPCLIENT - KcCLIENT - ERROR - _updateGroup -
               ${i18n.__('api.keycloak.groupNotFound', { groupName: oldName })}`,
-              levels.WARN,
+              levels.ERROR,
               scopes.USER,
               {
                 groupName,
@@ -455,7 +476,19 @@ class KeyCloakClient {
                   Authorization: `Bearer ${token}`,
                 },
               })
-              .then(() => logServer(i18n.__('api.keycloak.groupRemoved', { groupName })));
+              .then(() =>
+                logServer(
+                  `APPCLIENT - KcCLIENT - THEN - _removeGroup - ${i18n.__('api.keycloak.groupRemoved', {
+                    groupName,
+                  })}`,
+                  levels.INFO,
+                  scopes.USER,
+                  {
+                    callerId,
+                    groupName,
+                  },
+                ),
+              );
           });
         });
       })
@@ -555,7 +588,7 @@ class KeyCloakClient {
     } else {
       logServer(
         `APPCLIENT - KcCLIENT - ERROR - setAdmin - ${i18n.__('api.keycloak.userNotFound', { userId })}`,
-        levels.WARN,
+        levels.ERROR,
         scopes.USER,
         {
           userId,
@@ -625,7 +658,7 @@ class KeyCloakClient {
     } else {
       logServer(
         `APPCLIENT - KcCLIENT - ERROR - unsetAdmin - ${i18n.__('api.keycloak.userNotFound', { userId })}`,
-        levels.WARN,
+        levels.ERROR,
         scopes.USER,
         {
           userId,
@@ -733,7 +766,7 @@ class KeyCloakClient {
     } else {
       logServer(
         `APPCLIENT - KcCLIENT - ERROR - unsetRole - ${i18n.__('api.keycloak.userNotFound', { userId })}`,
-        levels.WARN,
+        levels.ERROR,
         scopes.USER,
         {
           userId,

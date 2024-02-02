@@ -102,6 +102,7 @@ const defaultState = {
   logoutType: '',
   avatar: '',
   advancedPersonalPage: false,
+  betaServices: false,
   nclocator: '',
 };
 
@@ -196,7 +197,7 @@ const ProfilePage = () => {
 
   const checkSubmitOk = () => {
     const errSum = Object.keys(errors).reduce((sum, name) => {
-      if (name === 'advancedPersonalPage') {
+      if (['advancedPersonalPage', 'betaServices'].includes(name)) {
         // checkbox not concerned by errors
         return sum;
       }
@@ -219,6 +220,7 @@ const ProfilePage = () => {
       avatar: userData.avatar === '' || reset ? data.avatar : userData.avatar,
       advancedPersonalPage:
         userData.advancedPersonalPage === false || reset ? data.advancedPersonalPage : userData.advancedPersonalPage,
+      betaServices: userData.betaServices === false || reset ? data.betaServices : userData.betaServices,
       nclocator: data.nclocator || userData.nclocator,
     });
     if (reset === true) {
@@ -238,6 +240,7 @@ const ProfilePage = () => {
       userData.logoutType === user.logoutType &&
       userData.avatar === user.avatar &&
       userData.advancedPersonalPage === user.advancedPersonalPage &&
+      userData.betaServices === user.betaServices &&
       userData.nclocator === user.nclocator
     ) {
       msg.success(i18n.__('pages.ProfilePage.updateSuccess'));
@@ -350,6 +353,14 @@ const ProfilePage = () => {
     if (userData.advancedPersonalPage !== user.advancedPersonalPage) {
       modifications = true;
       Meteor.call('users.toggleAdvancedPersonalPage', {}, (error) => {
+        if (error) {
+          msg.error(error.message);
+        }
+      });
+    }
+    if (userData.betaServices !== user.betaServices) {
+      modifications = true;
+      Meteor.call('users.toggleBetaServices', {}, (error) => {
         if (error) {
           msg.error(error.message);
         }
@@ -716,6 +727,18 @@ const ProfilePage = () => {
                 {Meteor.user().advancedPersonalPage && (
                   <FormHelperText>{i18n.__('pages.ProfilePage.advancedPersonalPageWarning')}</FormHelperText>
                 )}
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      id="betaServices"
+                      name="betaServices"
+                      checked={userData.betaServices}
+                      onChange={onCheckOption}
+                      inputProps={{ 'aria-label': 'primary checkbox' }}
+                    />
+                  }
+                  label={i18n.__('pages.ProfilePage.betaServices')}
+                />
               </Grid>
             </Grid>
             <div className={classes.buttonGroup}>

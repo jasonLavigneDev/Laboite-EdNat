@@ -43,6 +43,8 @@ Accounts.onLoginFailure((details) => {
   let errMsg;
   if (details.error.reason === 'Email already exists.') {
     errMsg = i18n.__('pages.SignIn.EmailAlreadyExists');
+  } else if (details.error.reason === 'Missing Keycloak Data') {
+    errMsg = i18n.__('pages.SignIn.MissingKeycloakData');
   } else {
     errMsg = `${i18n.__('pages.SignIn.keycloakError')} (${details.error.reason})`;
   }

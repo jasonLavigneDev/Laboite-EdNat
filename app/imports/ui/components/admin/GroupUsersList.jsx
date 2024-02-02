@@ -290,8 +290,12 @@ GroupsUsersList.propTypes = {
 };
 
 export default withTracker(({ groupId, userRole }) => {
-  const subUsers = Meteor.subscribe('groups.users', { groupId, role: userRole });
   const group = Groups.findOne(groupId) || {};
+  const subUsers = Meteor.subscribe('groups.users', {
+    groupId,
+    role: userRole,
+    numUsers: group[`${userRole}s`].length,
+  });
   const users = Meteor.users.find({}).fetch() || [];
   const ready = subUsers.ready();
   return {

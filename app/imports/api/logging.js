@@ -1,5 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import * as winston from 'winston';
+import i18n from 'meteor/universe:i18n';
+import { NOTIFICATIONS_TYPES } from './notifications/enums';
 
 export const levels = {
   ERROR: 'error',
@@ -45,6 +47,20 @@ function logServer(message, level = 'info', scope = 'USER', params = {}) {
       });
     }
     logger.log(level, `${message.toString()} ${JSON.stringify({ ...params })}`);
+    if (level === levels.ERROR && params.callerId) {
+      // send notification to user if error and callerId is specified
+      const expireAt = new Date();
+      // notification expires in 7 days
+      expireAt.setDate(expireAt.getDate() + 7);
+      const notifData = {
+        userId: params.callerId,
+        title: i18n.__(`api.logging.${level}`),
+        content: message.toString(),
+        type: NOTIFICATIONS_TYPES.ERROR,
+        expireAt,
+      };
+      Meteor.call('notifications.createNotification', { data: notifData });
+    }
   }
 }
 

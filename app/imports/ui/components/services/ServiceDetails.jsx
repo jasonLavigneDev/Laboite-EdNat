@@ -127,7 +127,7 @@ function ServiceDetails({ service, favAction, isShort }) {
                 <CardMedia className={classes.cardMedia} component="img" alt={service.title} image={service.logo} />
               )
             }
-            title={service.title}
+            title={`${service.title}${service.isBeta ? i18n.__('components.ServiceDetails.betaVersion') : ''}`}
             titleTypographyProps={{
               variant: 'h6',
               color: 'primary',

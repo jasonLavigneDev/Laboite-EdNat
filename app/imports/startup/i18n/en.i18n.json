@@ -12,6 +12,7 @@
       },
       "addToPersonalSpace": "Add to personal space",
       "keep": "Keep",
+      "keepOrAddAll": "Keep or add all",
       "discard": "Discard",
       "creationFailed": "Creation failed. Make sure all fields are filled.",
       "UnknownURL": "This URL doesn't exist.",
@@ -271,7 +272,8 @@
         "businessReGrouping": "Regroupement métier",
         "screenshots": "Screenshots",
         "structure": "Service Structure",
-        "url": "URL du service"
+        "url": "URL du service",
+        "isBeta": "beta version"
       }
     },
     "events": {
@@ -580,6 +582,7 @@
       "button_modify": "Modify",
       "button_delete": "Delete",
       "button_create": "Create",
+      "button_publish": "Publish",
       "create_info_success": "Information successfully created",
       "update_info_success": "Information successfull updated",
       "missing_content": "Missing content message !",
@@ -681,7 +684,8 @@
       "open": "Open",
       "pin": "Pin",
       "unpin": "Unpin",
-      "backToDefault": "Move back to default zone"
+      "backToDefault": "Move back to default zone",
+      "betaVersion": " (beta version)"
     },
     "TopBar": {
       "sideMenuOpenLabel": "Open side menu",
@@ -742,7 +746,8 @@
       "menuAdminAnalytics": "Analytics",
       "menuAdminStructureAnalytics": "Structure analytics",
       "menuAdminStructureSettings": "Structure settings",
-      "menuAdminStructureInfo": "Structure information"
+      "menuAdminStructureInfo": "Structure information",
+      "menuAdminMailDiffusion": "Mails diffusion"
     },
     "NotValidatedMessage": {
       "inactiveAccount": "Your account has not been activated",
@@ -1029,7 +1034,8 @@
         "selectIconImage": "Upload icon image",
         "selectCoverImage": "Upload cover image",
         "DeleteIconImage": "Remove icon image",
-        "DeleteCoverImage": "Remove cover image"
+        "DeleteCoverImage": "Remove cover image",
+        "sendEmailToAdmins": "Contact the admin(s) of this structure"
       },
       "attachToStructure": "Do you want to be attached to this structure?",
       "noStructure": "There is no structure registered"
@@ -1237,6 +1243,7 @@
       "loginError": "Error: Bad account or password",
       "keycloakError": "Connection error",
       "EmailAlreadyExists": "Error: An account already exists with the same email",
+      "MissingKeycloakData": "Error: your account data is insufficient, use contact form to reach an administrator",
       "loginKeycloak": "Login",
       "rememberMe": "Remember me",
       "maintenanceLogin": "Site in maintenance"
@@ -1254,7 +1261,9 @@
       "redirectMsg": "Your request has been sent. Redirection in progress...",
       "redirectTime": "seconds",
       "errorMsgEmpty": "You can't send an empty message",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "externalDescription": "User support for your structure is managed by an external site",
+      "externalButton": "Access user support site"
     },
     "ProfilePage": {
       "title": "My profile",
@@ -1307,7 +1316,8 @@
       "ApplyDefaultSpaceMessage": "This will apply the changes to your personal space",
       "ApplyDefaultSpaceBtn": "Apply default space",
       "ApplyDefaultSpaceWarning": "Can not apply default space if advanced personal page is activated",
-      "activeAccountRequired": "Requires an active account"
+      "activeAccountRequired": "Requires an active account",
+      "betaServices": "Show services in beta version"
     },
     "NotFound": {
       "backButtonLabel": "Back",
@@ -1415,11 +1425,22 @@
       "modal": {
         "close": "Close",
         "cancel": "Cancel",
-        "submit": "Submit"
+        "submit": "Submit",
+        "submitMail": "Send"
       },
       "adminStructureMode": {
         "title": "Sub structures management"
       }
+    },
+    "AdminStructureMailModal": {
+      "noAdmin": "No administrator for this structure",
+      "SwitchAdminVisibility": "Show only the admins of the selected structure",
+      "subtitle": "Create a new message",
+      "noAdminSelected": "No admin selected to send a mail",
+      "errorMail": "An error has occured while sending mail.",
+      "errorTextMail": "Text is empty or invalid.",
+      "errorSendingMail": "An error has occured with the sending mail service.",
+      "emailSuccess": "Email sent successfully"
     },
     "AdminGroupsPage": {
       "title": "Groups management",
@@ -1571,6 +1592,7 @@
       "cancel": "Cancel",
       "logo_url": "Logo URL",
       "offlineService": "Enable this service on the offline page",
+      "isBeta": "This service is in beta version",
       "titleFieldHelperText": "Service title",
       "StateFieldHelperText": "Service state",
       "teamFieldHelperText": "Team that manages the service",
@@ -1593,7 +1615,8 @@
       "invalidName": "Nom invalide",
       "shareName": "Nextcloud share name",
       "invalidCharacters": "Invalid characters",
-      "shareNameExists": "This share name already exists"
+      "shareNameExists": "This share name already exists",
+      "shareNameEmpty": "Share name can not be empty"
     },
     "SingleGroupPage": {
       "backToList": "Back to the list",
@@ -1783,7 +1806,8 @@
     },
     "IntroductionPage": {
       "informationsOf": "Informations of",
-      "structureMessage": "Information from {$structure} :"
+      "structureMessage": "Information from {$structure} :",
+      "adminMessage": "Your administrator informs you :"
     },
     "AdminStructureSettingsPage": {
       "title": "Structure settings",
@@ -1829,6 +1853,8 @@
       "status": "Status",
       "number": "Number",
       "usersByStructure": "Connected by structure",
+      "startAt": "Between",
+      "endAt": "and",
       "rows": {
         "usersLogged": "Users",
         "newAccounts": "Accounts created in the past 2 days",

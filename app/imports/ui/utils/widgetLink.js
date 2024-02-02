@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
+import { postMessage } from './widget';
 
 export default function useWidgetLink() {
   const history = useHistory();
@@ -27,4 +28,10 @@ export default function useWidgetLink() {
       window.removeEventListener('message', handle);
     };
   }, [history]);
+
+  useEffect(() => {
+    postMessage({
+      type: 'ready',
+    });
+  }, []);
 }
