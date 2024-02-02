@@ -175,6 +175,7 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
   const [structures, setStructures] = useState([]);
   const [searchTree, setSearchTree] = useState([]);
   const [searchMode, setSearchMode] = useState(false);
+  const [treeMode, setTreeMode] = useState(false);
 
   useEffect(() => {
     Meteor.call('structures.getTopLevelStructures', (err, res) => {
@@ -185,13 +186,36 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
   }, []);
 
   const [loading, setLoading] = useState(false);
-  const triggerSearch = (event) => {
+  const resetSearch = () => {
+    setSearchMode(false);
+    setTreeMode(false);
+    setSearchTree([]);
+  };
+
+  const triggerSearch = () => {
+    resetSearch();
     setLoading(true);
     Meteor.call('structures.searchStructure', { searchText }, (err, res) => {
       if (res) {
         setSearchMode(true);
+        setTreeMode(false);
         setSearchTree(res);
         setLoading(false);
+        console.log(res);
+      }
+    });
+  };
+
+  const getChildsOfStructure = (struc) => {
+    resetSearch();
+    setLoading(true);
+    Meteor.call('structures.getTreeOfStructure', { structureId: struc._id }, (err, res) => {
+      if (res) {
+        setTreeMode(true);
+        setSearchMode(false);
+        setSearchTree(res);
+        setLoading(false);
+        console.log(res);
       }
     });
   };
@@ -303,16 +327,33 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
             </Box>
             {loading && <Spinner />}
           </CardContent>
-          <TextField label="Recherche de merde" value={searchText} onChange={(e) => setSearchText(e.target.value)}>
-            PTDR
+          <TextField label="Recherche" value={searchText} onChange={(e) => setSearchText(e.target.value)}>
+            Chercher une structure
           </TextField>
-          <Button onClick={(e) => triggerSearch(e)}>Click me</Button>
+          <Button onClick={(e) => triggerSearch(e)}>Chercher</Button>
+          <Button onClick={(e) => resetSearch(e)}>Reset</Button>
 
-          {!searchMode ? (
-            <div>{structures ? structures.map((struc) => <p>{struc.name}</p>) : null}</div>
-          ) : (
+          {!searchMode && !treeMode ? (
+            <div>
+              {structures
+                ? structures.map((struc) => (
+                    <div onClick={(e) => getChildsOfStructure(struc)}>
+                      <p>{struc.name}</p>
+                    </div>
+                  ))
+                : null}
+            </div>
+          ) : null}
+
+          {searchMode ? (
             <div>{searchTree ? searchTree.map((tree) => tree.map((struc) => <p>{struc.name}</p>)) : null}</div>
-          )}
+          ) : null}
+
+          {treeMode ? (
+            <div>
+              {searchTree ? searchTree.map((struc) => <p>{struc.structure.name}</p>) : <p>Pas de structures enfants</p>}
+            </div>
+          ) : null}
         </Card>
       </Container>
     </Fade>
