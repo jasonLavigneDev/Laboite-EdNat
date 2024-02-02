@@ -1,5 +1,77 @@
 # Changelog
 
+# [5.8.0](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/5.7.2...release/5.8.0) (2024-02-02)
+
+
+### Bug Fixes
+
+* **analytics:** set locale on date pickers ([2ad768f](https://gitlab.mim-libre.fr/alphabet/laboite/commit/2ad768f1407c4aa597e6d3530538f79516f9a539))
+* **audit:** update vulnerable libraries ([2095274](https://gitlab.mim-libre.fr/alphabet/laboite/commit/2095274f72e28eca42220f96f83d0b42231e02fc))
+* **bookmarks:** change export icon ([ef36fb3](https://gitlab.mim-libre.fr/alphabet/laboite/commit/ef36fb319d53502a620974381513b1d56a465257))
+* **bookmarks:** switch firefox sources ([e60a48f](https://gitlab.mim-libre.fr/alphabet/laboite/commit/e60a48f3d4c373aa85a7fe33323f55ac38dc9d02))
+* **contact URL:** fix method getContactURL if user has no structure ([1539c56](https://gitlab.mim-libre.fr/alphabet/laboite/commit/1539c56ee09f56ad4cb3ee4d0a62d165238b59d5))
+* **contact:** redirect to contact URL on menu click ([be0fb73](https://gitlab.mim-libre.fr/alphabet/laboite/commit/be0fb7380224c3d3b6cf9886b6c0d990979cd609))
+* **contact:** use a button to redirect to external contact site ([5b35fc6](https://gitlab.mim-libre.fr/alphabet/laboite/commit/5b35fc69c87725e73a8e44d45f454e5a9e1d15f8))
+* **default space:** admin default space returns a blank page ([ed9ea5a](https://gitlab.mim-libre.fr/alphabet/laboite/commit/ed9ea5aef240e34005a6caf2771f487019663c1c))
+* **groups:** refresh users publication when adding/removing members ([c59d764](https://gitlab.mim-libre.fr/alphabet/laboite/commit/c59d7646d31105a6b522090a70d9cabd228bcd67))
+* **i18n:** fault in error messages ([d0f9df1](https://gitlab.mim-libre.fr/alphabet/laboite/commit/d0f9df13d65ab3c2e372d860b0ad434b505e6d26))
+* **keycloak:** replay authentication if token is no more valid ([229fb6c](https://gitlab.mim-libre.fr/alphabet/laboite/commit/229fb6c4dd286b5742563efdd0c320f5943bc2ec))
+* **list:** list all childs of structure ([d01ddec](https://gitlab.mim-libre.fr/alphabet/laboite/commit/d01ddecc48e56e13aae1fc6f634b5078203388e9))
+* **listmail:** improve state on push user in list ([a10f0aa](https://gitlab.mim-libre.fr/alphabet/laboite/commit/a10f0aa41dd153a5524128fabb5c2353a4a9851d))
+* **method:** change variable name for more comprehension ([7b57606](https://gitlab.mim-libre.fr/alphabet/laboite/commit/7b5760653816f7f841511989fb0595886ec4e613))
+* **method:** validate schema on mail list ([9601243](https://gitlab.mim-libre.fr/alphabet/laboite/commit/9601243ebfcd276c7fbe28b40eb008661b24cc93))
+* **nextcloud:** fix group sharename input behavior ([29fc33d](https://gitlab.mim-libre.fr/alphabet/laboite/commit/29fc33d9816e3cf434186f465917df2c36001d07))
+* **provisionning:** add verbose mode for insertion ([9c4106a](https://gitlab.mim-libre.fr/alphabet/laboite/commit/9c4106a5b10cdf015268e04c567c5a0a4694fd1f))
+* **provisionning:** faster csv generator ([b27c4d0](https://gitlab.mim-libre.fr/alphabet/laboite/commit/b27c4d0c8a95351797a9d6e0adbb2e137eecefaa))
+* **provisionning:** modify default password ([59349b2](https://gitlab.mim-libre.fr/alphabet/laboite/commit/59349b2814bc3f626ec487d0cacda87de87e8657))
+* **provisionning:** refactor scripts ([df3aeac](https://gitlab.mim-libre.fr/alphabet/laboite/commit/df3aeacc9f06db67ae4a820dcfa2733fcf6f9b6f))
+* **provisionning:** use try statement to insert users in mongodb ([4aeba00](https://gitlab.mim-libre.fr/alphabet/laboite/commit/4aeba00b22bfaafbd3c7d6bc82dd839ae3f1e025))
+* **publications:** remove publish-composite ([ea338a3](https://gitlab.mim-libre.fr/alphabet/laboite/commit/ea338a310b6ab4766198e83fcc73a4d4a5528bc5))
+* **settings:** add france-transfert ([a69e7ad](https://gitlab.mim-libre.fr/alphabet/laboite/commit/a69e7adf52f489b79829b2ca005e40ccc2e92149))
+* **structure:** generate docker image ([f60097f](https://gitlab.mim-libre.fr/alphabet/laboite/commit/f60097f36e0994d06b4aa2807286d51132027f9c))
+* **structures:** display failure or success when sending email ([1d2ab89](https://gitlab.mim-libre.fr/alphabet/laboite/commit/1d2ab8945d84523029f994371ff3feafd682f347))
+* **structures:** don't send admin structure email to default contact ([151f045](https://gitlab.mim-libre.fr/alphabet/laboite/commit/151f0458fe794301e2a9ac4f2d5203c7e298fb12))
+* **structures:** fix default user selection in AdminStructureMailModal ([08810c4](https://gitlab.mim-libre.fr/alphabet/laboite/commit/08810c48030ee572244536e6fcdb008c39545ad2))
+* **tests:** remove testing artefact of publish-composite ([0bd6768](https://gitlab.mim-libre.fr/alphabet/laboite/commit/0bd6768a41f680792299e737131f06816a38f7fa))
+* **tests:** setLastGlobalInfoRead test can fail ([154001f](https://gitlab.mim-libre.fr/alphabet/laboite/commit/154001f70a32fa7792ad33dc8052a97f34659e0c))
+* **users:** block user creation if keycloak data is incomplete ([d1b7780](https://gitlab.mim-libre.fr/alphabet/laboite/commit/d1b7780efe714800ff381e0c37d2f4e4d629ef0e))
+* **users:** fix missing fields detection at user creation ([d73e0ff](https://gitlab.mim-libre.fr/alphabet/laboite/commit/d73e0ffcb27418c2a20118c15db19c86590fbdc5))
+
+
+### Features
+
+* **bookmarks:** add early dedup ([7f779e5](https://gitlab.mim-libre.fr/alphabet/laboite/commit/7f779e547567ffd6890d9162cc9e4492c90f5220))
+* **chatbot:** add to widget ([d30922b](https://gitlab.mim-libre.fr/alphabet/laboite/commit/d30922b77ddeaf7051dc0d596f6d7f032ad99b13))
+* **docApi:** add a documentation for create user and token api ([2565a20](https://gitlab.mim-libre.fr/alphabet/laboite/commit/2565a20c3408675aef1ed4812c3140867ae46789))
+* **docApi:** complete doc with structure in curl request changes ([0e80ff6](https://gitlab.mim-libre.fr/alphabet/laboite/commit/0e80ff6d240e17d689730728be130dee665d0cfe))
+* **globalInfos:** allow to edit a message without publishing it ([cc97cd3](https://gitlab.mim-libre.fr/alphabet/laboite/commit/cc97cd39aea044f47223386c952932ac1751163c))
+* **information:** add translation for admin message header ([1702557](https://gitlab.mim-libre.fr/alphabet/laboite/commit/170255785b0c67c5081c30df43a2d766ad120d19))
+* **information:** highlight admin information ([1348af2](https://gitlab.mim-libre.fr/alphabet/laboite/commit/1348af29ca4874d2f6d9a01f83dedced53221e75))
+* **logging:** notify user if error when calling keycloak API ([0a4ed5c](https://gitlab.mim-libre.fr/alphabet/laboite/commit/0a4ed5c143ba43a3aecb1f1ae00ae8d8a8d0b238))
+* **mail:** add backend method for sending mail ([c84f0a2](https://gitlab.mim-libre.fr/alphabet/laboite/commit/c84f0a2c958f28e49ae6a48c24961f8afb463838))
+* **mail:** add filter on structure admin list ([c77b369](https://gitlab.mim-libre.fr/alphabet/laboite/commit/c77b369c2b0a068e3a22ce7c375fb2db4db6801f))
+* **mail:** create send mail event ([d1d590d](https://gitlab.mim-libre.fr/alphabet/laboite/commit/d1d590ddbccbfb3a3d440451f93f3cc232e76a49))
+* **mail:** load admins on modal ([63fd897](https://gitlab.mim-libre.fr/alphabet/laboite/commit/63fd8970b0dd296b318c98fa9bf6aa73196980b7))
+* **mails:** add path and page for diffusion mails ([029bdc4](https://gitlab.mim-libre.fr/alphabet/laboite/commit/029bdc4772baa8f17b2600ec1131b60c62f5b741))
+* **mails:** link backend method to load admins ([9e46ca2](https://gitlab.mim-libre.fr/alphabet/laboite/commit/9e46ca2b28e8cef592e7f6638a84b7b84fec0e11))
+* **mails:** load structures and display right name ([5e89d2e](https://gitlab.mim-libre.fr/alphabet/laboite/commit/5e89d2ecaf1031428e20efb748578a0178ae6ca6))
+* **meteor:** update meteor and packages to 2.13.3 ([842d4f5](https://gitlab.mim-libre.fr/alphabet/laboite/commit/842d4f567a0b1bccf037b3b47695002bf88594a8))
+* **nextcloud:** clarify nexcloud url admin page ([fc476f4](https://gitlab.mim-libre.fr/alphabet/laboite/commit/fc476f4489ebc4ff03283cba7478a65fdd018c64))
+* **profile:** save scroll position when picking a structure ([2f39e37](https://gitlab.mim-libre.fr/alphabet/laboite/commit/2f39e37216345a7caf32481d96c0aac9700f1f08))
+* **services:** services can be declared in beta version ([d787608](https://gitlab.mim-libre.fr/alphabet/laboite/commit/d787608047512627d355e1526594fb681f75a8bb))
+* setup cors in meteor response ([c8ebe33](https://gitlab.mim-libre.fr/alphabet/laboite/commit/c8ebe3398e8413c56a31312709834caa8f7a6b35))
+* **smtp:** error management for sending mail ([42ecc72](https://gitlab.mim-libre.fr/alphabet/laboite/commit/42ecc7201d6f8c9e93e881e1128345b30f672afd))
+* **smtp:** users list treatment for validation ([e6caac6](https://gitlab.mim-libre.fr/alphabet/laboite/commit/e6caac6a185fe77180c31160bff2e20fb4f48141))
+* **structure:** add translation and visual element to modal ([60b4196](https://gitlab.mim-libre.fr/alphabet/laboite/commit/60b419660a0cf9e27f84b86b6cd5857fde4e4e69))
+* **structure:** save scroll position in selection structure tree ([9736fbf](https://gitlab.mim-libre.fr/alphabet/laboite/commit/9736fbf1d8d8f00e8a2f63134b6ec4dc71ad8037))
+* **widget:** support lite widget ([445f114](https://gitlab.mim-libre.fr/alphabet/laboite/commit/445f114dc3d52a587719ad41b408fbc09da75276))
+
+
+### Styles
+
+* **iconImg:** add border radius to iconImg ([e32790c](https://gitlab.mim-libre.fr/alphabet/laboite/commit/e32790c344267803735c9810a3d32e769ec91c3c))
+* **image:** adjust icon image on main page ([225cbf7](https://gitlab.mim-libre.fr/alphabet/laboite/commit/225cbf741b9be33a2b98d402df465e51a55447a3))
+
 ## [5.7.2](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/5.7.1...release/5.7.2) (2023-12-04)
 
 
