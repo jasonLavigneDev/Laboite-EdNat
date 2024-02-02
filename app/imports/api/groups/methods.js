@@ -10,6 +10,7 @@ import { isActive, getLabel, validateString, sanitizeParameters } from '../utils
 import Groups from './groups';
 import { addGroup, removeElement } from '../personalspaces/methods';
 import logServer, { levels, scopes } from '../logging';
+import { checkGroupUsers, validateShareName } from './utils';
 
 const reservedGroupNames = ['admins', 'adminStructure'];
 
@@ -148,14 +149,6 @@ export const findGroups = new ValidatedMethod({
     return { data, page, totalCount };
   },
 });
-
-function validateShareName() {
-  const name = this.value;
-  if (this.value) {
-    return name.includes('/') || name.includes('\\') ? SimpleSchema.ErrorTypes.VALUE_NOT_ALLOWED : undefined;
-  }
-  return undefined;
-}
 
 export function _createGroup({ name, type, content, description, avatar, plugins, userId, shareName, structureIds }) {
   try {
@@ -370,6 +363,12 @@ function _updateGroup(groupId, groupData, oldGroup) {
     // set structureIds to null if no structure selected
     if (!groupData.structureIds || groupData.structureIds.length === 0) {
       Groups.update({ _id: groupId }, { $unset: { structureIds: 1 } });
+    }
+    if (Meteor.isServer) {
+      // after update, check if some users are no longer authorized (based on structureIds)
+      const oldStructs = Array.isArray(oldGroup.structureIds) ? oldGroup.structureIds.sort().toString() : '';
+      const newStructs = Array.isArray(groupData.structureIds) ? groupData.structureIds.sort().toString() : '';
+      if (oldStructs !== newStructs) checkGroupUsers(groupId);
     }
     // return both old and new data to allow plugins to detect changes in 'after' hook
     logServer(`GROUPS - METHODS - UPDATE - user update group ${groupId}`, levels.VERBOSE, scopes.USER);

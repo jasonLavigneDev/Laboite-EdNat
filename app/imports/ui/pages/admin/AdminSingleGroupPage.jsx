@@ -522,47 +522,49 @@ const AdminSingleGroupPage = ({ group, ready, match: { params } }) => {
                       ))}
                   </Select>
                 </FormControl>
-                <FormControl variant="outlined" fullWidth margin="normal">
-                  <Typography component="h1">{i18n.__('pages.AdminSingleGroupPage.limitToStructs')}</Typography>
-                  <StructureSelectAutoComplete
-                    flatData={flatData}
-                    loading={isSearchLoading}
-                    noOptionsText={i18n.__('pages.AdminAsamExtensionsManagementPage.modal.noOptions')}
-                    getOptionLabel={(option) => option.name}
-                    renderOption={renderStructure(flatData)}
-                    onChange={(event, newValue) => {
-                      if (newValue && newValue._id) onAddStructure(newValue);
-                    }}
-                    searchText={searchText}
-                    onInputChange={(event, newInputValue) => {
-                      setSearchText(newInputValue);
-                    }}
-                    isOptionEqualToValue={(opt, val) => opt._id === val._id}
-                    style={{}}
-                    renderInput={(parameters) => (
-                      <TextField
-                        {...parameters}
-                        onChange={({ target: { value } }) => setSearchText(value)}
-                        variant="outlined"
-                        label={i18n.__('pages.ProfilePage.chooseStructure')}
-                        placeholder={i18n.__('pages.ProfilePage.noSelectedStructure')}
-                      />
-                    )}
-                  />
-                  <div>
-                    {groupData.structureIds.map((structureId) => {
-                      return (
-                        <Chip
-                          className={classes.tag}
-                          key={structureId}
-                          label={isSearchLoading ? '' : flatData.find((struct) => struct._id === structureId).name}
-                          color="secondary"
-                          onDelete={() => onRemoveStructure(structureId)}
+                {isAutomaticGroup ? null : (
+                  <FormControl variant="outlined" fullWidth margin="normal">
+                    <Typography component="h1">{i18n.__('pages.AdminSingleGroupPage.limitToStructs')}</Typography>
+                    <StructureSelectAutoComplete
+                      flatData={flatData}
+                      loading={isSearchLoading}
+                      noOptionsText={i18n.__('pages.AdminAsamExtensionsManagementPage.modal.noOptions')}
+                      getOptionLabel={(option) => option.name}
+                      renderOption={renderStructure(flatData)}
+                      onChange={(event, newValue) => {
+                        if (newValue && newValue._id) onAddStructure(newValue);
+                      }}
+                      searchText={searchText}
+                      onInputChange={(event, newInputValue) => {
+                        setSearchText(newInputValue);
+                      }}
+                      isOptionEqualToValue={(opt, val) => opt._id === val._id}
+                      style={{}}
+                      renderInput={(parameters) => (
+                        <TextField
+                          {...parameters}
+                          onChange={({ target: { value } }) => setSearchText(value)}
+                          variant="outlined"
+                          label={i18n.__('pages.ProfilePage.chooseStructure')}
+                          placeholder={i18n.__('pages.ProfilePage.noSelectedStructure')}
                         />
-                      );
-                    })}
-                  </div>
-                </FormControl>
+                      )}
+                    />
+                    <div>
+                      {groupData.structureIds.map((structureId) => {
+                        return (
+                          <Chip
+                            className={classes.tag}
+                            key={structureId}
+                            label={isSearchLoading ? '' : flatData.find((struct) => struct._id === structureId).name}
+                            color="secondary"
+                            onDelete={() => onRemoveStructure(structureId)}
+                          />
+                        );
+                      })}
+                    </div>
+                  </FormControl>
+                )}
                 <TextField
                   onChange={onUpdateField}
                   value={groupData.description}

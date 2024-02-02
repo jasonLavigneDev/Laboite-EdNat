@@ -276,7 +276,7 @@ export const unsetMemberOf = new ValidatedMethod({
       });
     }
     // if user has no longer roles, remove group from personalspace
-    if (!Roles.userIsInRole(userId, ['animator', 'admin', 'candidate'], groupId)) {
+    if (Roles.getRolesForUser(userId, { scope: groupId, onlyScoped: true }).length === 0) {
       unfavGroup._execute({ userId }, { groupId });
     }
     // Notify user
@@ -331,7 +331,7 @@ export const unsetAdminOf = new ValidatedMethod({
       Groups.update(groupId, { $pull: { admins: userId } });
     }
     // if user has no longer roles, remove group from personalspace
-    if (!Roles.userIsInRole(userId, ['animator', 'member', 'candidate'], groupId)) {
+    if (Roles.getRolesForUser(userId, { scope: groupId, onlyScoped: true }).length === 0) {
       unfavGroup._execute({ userId }, { groupId });
     }
     // Notify user
@@ -631,7 +631,7 @@ export const unsetAnimatorOf = new ValidatedMethod({
       Groups.update(groupId, { $pull: { animators: userId } });
     }
     // if user has no longer roles, remove group from personalspace
-    if (!Roles.userIsInRole(userId, ['member', 'admin', 'candidate'], groupId)) {
+    if (Roles.getRolesForUser(userId, { scope: groupId, onlyScoped: true }).length === 0) {
       unfavGroup._execute({ userId }, { groupId });
     }
     // Notify user
@@ -871,7 +871,7 @@ export const unsetCandidateOf = new ValidatedMethod({
       });
     }
     // if user has no longer roles, remove group from personalspace
-    if (!Roles.userIsInRole(userId, ['animator', 'member', 'admin'], groupId)) {
+    if (Roles.getRolesForUser(userId, { scope: groupId, onlyScoped: true }).length === 0) {
       unfavGroup._execute({ userId }, { groupId });
     }
     // Notify user

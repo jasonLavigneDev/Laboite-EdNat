@@ -7,6 +7,7 @@ import { isActive, getLabel } from '../../utils';
 import Groups from '../groups';
 import { favGroup } from '../methods';
 import logServer, { levels, scopes } from '../../logging';
+import { userStructures } from '../../structures/utils';
 
 export const addGroupMembersToGroup = new ValidatedMethod({
   name: 'groups.addGroupMembersToGroup',
@@ -44,25 +45,39 @@ export const addGroupMembersToGroup = new ValidatedMethod({
 
     const usersGroup = group2.members;
 
+    const checkStructs = (user, groupData) => {
+      // bypass check if group is not restricted
+      if (!groupData.structureIds) return true;
+      const userData = Meteor.users.findOne(user);
+      if (userData) {
+        const userStructs = userStructures(userData);
+        if (groupData.structureIds.some((structureId) => userStructs.includes(structureId))) return true;
+      }
+      return false;
+    };
+
     let nb = 0;
     usersGroup.forEach((user) => {
-      // add role to user collection
-      if (!Roles.userIsInRole(user, 'member', groupId)) {
-        Roles.addUsersToRoles(user, 'member', groupId);
-        // remove candidate Role if present
-        if (Roles.userIsInRole(user, 'candidate', groupId)) {
-          Roles.removeUsersFromRoles(user, 'candidate', groupId);
+      // check if group is restricted to some structures
+      if (checkStructs(user, group)) {
+        // add role to user collection
+        if (!Roles.userIsInRole(user, 'member', groupId)) {
+          Roles.addUsersToRoles(user, 'member', groupId);
+          // remove candidate Role if present
+          if (Roles.userIsInRole(user, 'candidate', groupId)) {
+            Roles.removeUsersFromRoles(user, 'candidate', groupId);
+          }
+          // store info in group collection
+          if (group.members.indexOf(user) === -1) {
+            Groups.update(groupId, {
+              $push: { members: user },
+              $pull: { candidates: user },
+            });
+          }
+          // update user personalSpace
+          favGroup._execute({ userId: usersGroup[nb] }, { groupId });
+          nb += 1;
         }
-        // store info in group collection
-        if (group.members.indexOf(user) === -1) {
-          Groups.update(groupId, {
-            $push: { members: user },
-            $pull: { candidates: user },
-          });
-        }
-        // update user personalSpace
-        favGroup._execute({ userId: usersGroup[nb] }, { groupId });
-        nb += 1;
       }
     });
     logServer(
