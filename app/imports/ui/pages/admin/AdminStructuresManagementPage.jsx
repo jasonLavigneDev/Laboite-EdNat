@@ -85,44 +85,6 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
   const [expandedIds, setExpandedIds] = useState([]);
 
   const [searchText, setSearchText] = useState('');
-  const resetSearchText = () => setSearchText('');
-
-  const [filteredFlatData, setFilteredFlatData] = useState([]);
-  const { flatData, loading } = useTracker(() => {
-    const structuresHandle = Meteor.subscribe('structures.top.with.childs', {
-      parentIds: [user.structure, ...parentIds],
-      searchText,
-      /** - We want top level structures in the application level admin page of management
-       *
-       * - In structure level admin page of manegement, we want the root to be the admin managed structure
-       */
-      getTopLevelStructures: !isAdminStructureMode,
-    });
-    const isLoading = !structuresHandle.ready();
-    const structures = Structures.findFromPublication('structures.top.with.childs').fetch();
-
-    /* Update the dom */
-    setFilteredFlatData(structures);
-
-    /* Expand ids if we have children to show */
-    if (!isLoading)
-      setExpandedIds(
-        structures.reduce((accumulator, structure) => {
-          if (structure.parentId) accumulator.push(structure.parentId);
-          return accumulator;
-        }, []),
-      );
-
-    return {
-      loading: isLoading,
-      flatData: structures,
-    };
-  }, [parentIds, searchText.length > 2 && searchText]);
-
-  const resetFilter = () => {
-    setFilteredFlatData(flatData);
-    setExpandedIds([]);
-  };
 
   /** Modal utilities  */
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -195,10 +157,6 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
     setIsOpenDeleteConfirm(true);
   };
 
-  const atLeastOneStructureExist = () => {
-    return filteredFlatData && filteredFlatData.length > 0;
-  };
-
   const onDeleteConfirm = () => {
     onDelete({
       structureId: selectedStructure._id,
@@ -226,11 +184,14 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
     });
   }, []);
 
+  const [loading, setLoading] = useState(false);
   const triggerSearch = (event) => {
+    setLoading(true);
     Meteor.call('structures.searchStructure', { searchText }, (err, res) => {
       if (res) {
         setSearchMode(true);
         setSearchTree(res);
+        setLoading(false);
       }
     });
   };
@@ -309,13 +270,6 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
                 {i18n.__('pages.AdminStructuresManagementPage.helpText')}
               </Typography>
             </Box>
-
-            <AdminStructureSearchBar
-              searchValue={searchText}
-              setSearchText={setSearchText}
-              resetSearchText={resetSearchText}
-              resetFilter={resetFilter}
-            />
           </Box>
           <CardContent>
             {currentUserStructure && (
@@ -352,7 +306,7 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
           <TextField label="Recherche de merde" value={searchText} onChange={(e) => setSearchText(e.target.value)}>
             PTDR
           </TextField>
-          <Button onClick={(e) => triggerSearch(e)}>Click me daddy</Button>
+          <Button onClick={(e) => triggerSearch(e)}>Click me</Button>
 
           {!searchMode ? (
             <div>{structures ? structures.map((struc) => <p>{struc.name}</p>) : null}</div>
