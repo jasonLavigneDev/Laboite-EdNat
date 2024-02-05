@@ -897,6 +897,40 @@ export function AddUserToGroupOfStructure(currentUserId, user, structure) {
   }
 }
 
+// checks all subscribed groups to detect if user is still allowed to access them after structure change
+function checkGroupsPermissions(userId) {
+  const user = Meteor.users.findOne(userId);
+  // find all groups user is subscribed to, only for groups with structure limitations
+  const groups = Groups.find({ _id: { $in: user.favGroups }, structureIds: { $ne: null } });
+  const userStructs = userStructures(user);
+  const unsubFuncs = {
+    candidates: 'users.unsetCandidateOf',
+    member: 'users.unsetMemberOf',
+    animator: 'users.unsetAnimatorOf',
+    admin: 'users.unsetAdminOf',
+  };
+  groups.forEach((group) => {
+    if (!group.structureIds.some((structId) => userStructs.includes(structId))) {
+      // user has no longer access to group, fetch his roles on this group
+      const groupRoles = Roles.getRolesForUser(user._id, { scope: group._id, onlyScoped: true });
+      groupRoles.forEach((role) => {
+        // unsubscribe user for this role
+        Meteor.call(unsubFuncs[role], { userId: user._id, groupId: group._id }, (err) => {
+          if (err)
+            logServer(
+              `USERS - METHODS - ERROR - checkGroupsPermissions - error when unsubscribing user`,
+              levels.ERROR,
+              scopes.SYSTEM,
+              {
+                errorMEssage: err.message,
+              },
+            );
+        });
+      });
+    }
+  });
+}
+
 export const acceptAwaitingStructure = new ValidatedMethod({
   name: 'users.acceptAwaitingStructure',
   validate: new SimpleSchema({
@@ -964,6 +998,7 @@ export const acceptAwaitingStructure = new ValidatedMethod({
     );
 
     AddUserToGroupOfStructure(this.userId, targetUser, structure);
+    checkGroupsPermissions(targetUserId);
   },
 });
 
@@ -1045,7 +1080,10 @@ export const setStructure = new ValidatedMethod({
       },
     );
 
-    if (isAuthorizedToSetStructureDirectly || isAppAdmin) AddUserToGroupOfStructure(this.userId, user, structureToFind);
+    if (isAuthorizedToSetStructureDirectly || isAppAdmin) {
+      AddUserToGroupOfStructure(this.userId, user, structureToFind);
+      checkGroupsPermissions(this.userId);
+    }
   },
 });
 
