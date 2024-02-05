@@ -14,6 +14,7 @@ import Groups from '../../../api/groups/groups';
 import { removeGroup } from '../../../api/groups/methods';
 import setMaterialTableLocalization from '../../components/initMaterialTableLocalization';
 import { getGroupName } from '../../utils/utilsFuncs';
+import { accentInsensitiveSearch } from '../../utils/MaterialTable';
 
 function AdminGroupsPage({ groups, loading, user }) {
   const history = useHistory();
@@ -23,10 +24,12 @@ function AdminGroupsPage({ groups, loading, user }) {
       title: i18n.__('pages.AdminGroupsPage.columnName'),
       field: 'name',
       render: (rowData) => getGroupName(rowData),
+      customFilterAndSearch: (value, rowData) => accentInsensitiveSearch(value, rowData, 'name'),
     },
     {
       title: i18n.__('pages.AdminGroupsPage.columnInfo'),
       field: 'description',
+      customFilterAndSearch: (value, rowData) => accentInsensitiveSearch(value, rowData, 'description'),
     },
     {
       title: i18n.__('pages.AdminGroupsPage.columnType'),

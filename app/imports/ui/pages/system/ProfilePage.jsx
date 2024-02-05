@@ -184,13 +184,14 @@ const ProfilePage = () => {
   const { flatData, isSearchLoading } = useTracker(() => {
     const subName = 'structures.top.with.direct.parent';
     const ret = { flatData: [], isSearchLoading: false };
-    const handle = Meteor.subscribe(subName, { searchText });
+    // fetch all structures, filtering on search is handled by automcomplete component
+    const handle = Meteor.subscribe(subName, { searchText: '' });
     const isLoading = !handle.ready();
     const structures = Structures.findFromPublication(subName).fetch();
     ret.flatData = structures;
     ret.isSearchLoading = isLoading;
     return ret;
-  }, [searchText && searchText.length > 2]);
+  });
 
   const [tempImageLoaded, setTempImageLoaded] = useState(false);
   const { minioEndPoint } = Meteor.settings.public;

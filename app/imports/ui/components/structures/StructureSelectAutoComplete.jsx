@@ -1,6 +1,13 @@
 import React from 'react';
 import AutoComplete from '@mui/material/Autocomplete';
 import PropTypes from 'prop-types';
+import { normalizeString } from '../../utils/MaterialTable';
+
+// filter options ignores accentuated characters
+const filterOptions = (options, state) =>
+  options.filter((option) => {
+    return normalizeString(option.name).includes(normalizeString(state.inputValue));
+  });
 
 const StructureSelectAutoComplete = ({
   flatData,
@@ -17,6 +24,7 @@ const StructureSelectAutoComplete = ({
     <AutoComplete
       options={flatData}
       noOptionsText={noOptionsText}
+      filterOptions={filterOptions}
       loading={loading}
       getOptionLabel={(option) => option.name}
       renderOption={(props, option) => {

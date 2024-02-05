@@ -11,6 +11,7 @@ import { createTag, updateTag, removeTag } from '../../../api/tags/methods';
 import setMaterialTableLocalization from '../../components/initMaterialTableLocalization';
 import Tags from '../../../api/tags/tags';
 import { handleResult } from '../../../api/utils';
+import { accentInsensitiveSearch } from '../../utils/MaterialTable';
 
 const onRowAdd = ({ name }) =>
   new Promise((resolve, reject) => {
@@ -40,6 +41,7 @@ const AdminTagsPage = ({ tags, loading }) => {
       name: i18n.__('pages.AdminTagsPage.columnName'),
       field: 'name',
       defaultSort: 'asc',
+      customFilterAndSearch: (value, rowData) => accentInsensitiveSearch(value, rowData, 'name'),
     },
   ];
 

@@ -11,6 +11,7 @@ import { createCategorie, updateCategorie, removeCategorie } from '../../../api/
 import setMaterialTableLocalization from '../../components/initMaterialTableLocalization';
 import Categories from '../../../api/categories/categories';
 import { handleResult } from '../../../api/utils';
+import { accentInsensitiveSearch } from '../../utils/MaterialTable';
 
 const onRowAdd = ({ name }) =>
   new Promise((resolve, reject) => {
@@ -40,6 +41,7 @@ const AdminCategoriesPage = ({ categories, loading }) => {
       name: i18n.__('pages.AdminCategoriesPage.columnName'),
       field: 'name',
       defaultSort: 'asc',
+      customFilterAndSearch: (value, rowData) => accentInsensitiveSearch(value, rowData, 'name'),
     },
   ];
 
