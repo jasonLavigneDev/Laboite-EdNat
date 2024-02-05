@@ -140,6 +140,12 @@ Structures.schema = new SimpleSchema(
       defaultValue: false,
       label: getLabel('api.appsettings.label.sendMailToStructureAdmin'),
     },
+    structurePath: {
+      type: String,
+      optional: true,
+      defaultValue: '',
+      label: getLabel('api.appsettings.label.structurePath'),
+    },
   },
   {
     tracker: Tracker,
