@@ -9,6 +9,7 @@ from keycloak import KeycloakAdmin
 from keycloak import KeycloakOpenIDConnection
 from dotenv import load_dotenv
 from datetime import datetime
+from ast import literal_eval
 import csv
 from utils import *
 
@@ -198,9 +199,9 @@ def insertStructure(structure):
         st = {
             "_id": structure["_id"],
             "name": structure["name"],
-            "parentId": structure["parentId"],
-            "ancestorsIds": structure["ancestorsIds"].split(),
-            "childrenIds": structure["childrenIds"].split(),
+            "parentId": None if structure["parentId"] == "" else structure["parentId"],
+            "ancestorsIds": literal_eval(structure["ancestorsIds"]),
+            "childrenIds": literal_eval(structure["childrenIds"]),
         }
         db["structures"].insert_one(st)
 
@@ -282,7 +283,7 @@ if __name__ == "__main__":
     csvStructurePath = "structures.csv"
     csvMailPath = "mails.csv"
     csvUserPath = "users.csv"
-    
+
     try:
         # Retrieve line number of csv files
         structureNumber = int(popen(f'wc -l < {csvStructurePath}').read()[:-1]) -1
@@ -290,7 +291,7 @@ if __name__ == "__main__":
         userNumber = int(popen(f'wc -l < {csvUserPath}').read()[:-1]) -1
     except:
         exit("\nCould not retrieve line number of csv file.")
-    
+
     if not args.force:
         if input("Confirm insertion of datas [y/N] ? ").lower() not in [
             "y",
