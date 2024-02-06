@@ -167,7 +167,7 @@ export function _createGroup({ name, type, content, description, avatar, plugins
         plugins,
         shareName,
       };
-      if (structureIds && structureIds.length > 0) groupData[structureIds] = structureIds;
+      if (structureIds && structureIds.length > 0) groupData.structureIds = structureIds;
       const groupId = Groups.insert(groupData);
       Roles.addUsersToRoles(userId, ['admin', 'animator'], groupId);
 
@@ -358,17 +358,18 @@ export const removeGroup = new ValidatedMethod({
 });
 
 function _updateGroup(groupId, groupData, oldGroup) {
+  if (Meteor.isServer) {
+    // before update, check if some users are no longer authorized (based on structureIds)
+    const oldStructs = Array.isArray(oldGroup.structureIds) ? oldGroup.structureIds.sort().toString() : '';
+    const newStructs = Array.isArray(groupData.structureIds) ? groupData.structureIds.sort().toString() : '';
+    // will raise an error if any user in the group has no access to chosen structures
+    if (oldStructs !== newStructs) checkGroupUsers(groupId, groupData.structureIds);
+  }
   try {
     Groups.update({ _id: groupId }, { $set: groupData });
     // set structureIds to null if no structure selected
     if (!groupData.structureIds || groupData.structureIds.length === 0) {
       Groups.update({ _id: groupId }, { $unset: { structureIds: 1 } });
-    }
-    if (Meteor.isServer) {
-      // after update, check if some users are no longer authorized (based on structureIds)
-      const oldStructs = Array.isArray(oldGroup.structureIds) ? oldGroup.structureIds.sort().toString() : '';
-      const newStructs = Array.isArray(groupData.structureIds) ? groupData.structureIds.sort().toString() : '';
-      if (oldStructs !== newStructs) checkGroupUsers(groupId);
     }
     // return both old and new data to allow plugins to detect changes in 'after' hook
     logServer(`GROUPS - METHODS - UPDATE - user update group ${groupId}`, levels.VERBOSE, scopes.USER);

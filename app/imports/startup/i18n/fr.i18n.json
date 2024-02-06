@@ -223,6 +223,7 @@
       "userNotFound": "Utilisateur non retrouvé",
       "groupAlreadyExist": "Un groupe avec le même nom existe déjà",
       "toManyGroup": "Vous avez atteint votre quota de groupes créés",
+      "unauthorizedUser": "Des utilisateurs inscrits n'appartiennent pas aux structures choisies",
       "types": {
         "open": "ouvert",
         "moderated": "modéré",
