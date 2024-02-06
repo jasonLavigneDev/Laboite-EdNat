@@ -95,7 +95,7 @@ export const useAppContext = () => useContext(Context);
 
 const DynamicStore = withTracker(() => {
   const userHandle = Meteor.subscribe('userData');
-  const loadingUser = !userHandle.ready() && !Roles.subscription.ready();
+  const loadingUser = !userHandle.ready() || !Roles.subscription.ready();
   const loggingIn = Meteor.loggingIn();
   const user = Meteor.user();
   const userId = Meteor.userId();

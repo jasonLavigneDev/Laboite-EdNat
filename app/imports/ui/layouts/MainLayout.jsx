@@ -22,6 +22,7 @@ import AwaitingStructureMessage from '../components/system/AwaitingStructure';
 import SiteInMaintenance from '../components/system/SiteInMaintenance';
 import Footer from '../components/menus/Footer';
 import { isFeatureEnabled } from '../utils/features';
+import { useMethod } from '../utils/hooks';
 
 // pages
 const ServicesPage = lazy(() => import('../pages/services/ServicesPage'));
@@ -112,27 +113,36 @@ function MainLayout({ appsettings, ready }) {
     }
   }, [location]);
 
+  const [getGlobalInfoByLanguageAndNotExpired] = useMethod('globalInfos.getGlobalInfoByLanguageAndNotExpired');
+  const [setLastGlobalInfoRead] = useMethod('users.setLastGlobalInfoRead');
+
   useEffect(() => {
-    if (!user.isActive || !user.structure) return;
+    // execute only when user is fully loaded
+    if (!loadingUser) {
+      if (!user.isActive || !user.structure) return;
 
-    if (history.location.pathname === '/') {
-      Meteor.call('globalInfos.getGlobalInfoByLanguageAndNotExpired', { language, date: new Date() }, (error, res) => {
-        if (error) {
-          console.log('error', error);
-          return;
-        }
+      if (history.location.pathname === '/') {
+        getGlobalInfoByLanguageAndNotExpired({ language, date: new Date() })
+          .then((res) => {
+            if (
+              res.length &&
+              (!user.lastGlobalInfoReadDate || new Date(user.lastGlobalInfoReadDate) < res[0].updatedAt)
+            ) {
+              // Meteor.call('users.setLastGlobalInfoRead', { lastGlobalInfoReadDate: new Date() });
+              setLastGlobalInfoRead({ lastGlobalInfoReadDate: new Date() });
+              return;
+            }
 
-        if (res.length && (!user.lastGlobalInfoReadDate || new Date(user.lastGlobalInfoReadDate) < res[0].updatedAt)) {
-          Meteor.call('users.setLastGlobalInfoRead', { lastGlobalInfoReadDate: new Date() });
-          return;
-        }
-
-        if (Meteor.settings.public.forceRedirectToPersonalSpace !== false) {
-          history.push('/personal');
-        }
-      });
+            if (Meteor.settings.public.forceRedirectToPersonalSpace !== false) {
+              history.push('/personal');
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
     }
-  }, []);
+  }, [loadingUser]);
 
   return (
     <>
