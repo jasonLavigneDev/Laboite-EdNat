@@ -3,7 +3,7 @@
 
 import { PublicationCollector } from 'meteor/johanbrook:publication-collector';
 import { assert } from 'chai';
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import { Factory } from 'meteor/dburles:factory';
 import { Meteor } from 'meteor/meteor';
 import { _ } from 'meteor/underscore';
@@ -70,7 +70,7 @@ const initStructures = (userId) => {
   Structures.remove({});
   let cpt = 0;
   _.times(4, () => {
-    createStructure._execute({ userId }, { name: `${faker.company.companyName()}_${cpt}` });
+    createStructure._execute({ userId }, { name: `${faker.company.name()}_${cpt}` });
     cpt += 1;
   });
   Roles.removeUsersFromRoles(userId, 'admin');
@@ -96,8 +96,8 @@ describe('users', function () {
     let group2;
     let group3;
     let group4;
-    const lastName = `test${faker.name.lastName()}`;
-    const firstName = `test${faker.name.firstName()}`;
+    const lastName = `test${faker.person.lastName()}`;
+    const firstName = `test${faker.person.firstName()}`;
     beforeEach(function () {
       Meteor.roleAssignment.remove({});
       Meteor.users.remove({});
@@ -114,9 +114,9 @@ describe('users', function () {
           email,
           username: email,
           password: 'toto',
-          structure: faker.company.companyName(),
-          firstName: `test${faker.name.firstName()}`,
-          lastName: `test${faker.name.lastName()}`,
+          structure: faker.company.name(),
+          firstName: `test${faker.person.firstName()}`,
+          lastName: `test${faker.person.lastName()}`,
           nclocator: 'toto',
         });
       });
@@ -126,7 +126,7 @@ describe('users', function () {
         email,
         username: email,
         password: 'titi',
-        structure: faker.company.companyName(),
+        structure: faker.company.name(),
         firstName,
         lastName,
       });
@@ -135,9 +135,9 @@ describe('users', function () {
         email,
         username: email,
         password: 'titi',
-        structure: faker.company.companyName(),
+        structure: faker.company.name(),
         firstName: 'BobLeFilou',
-        lastName: `test${faker.name.lastName()}`,
+        lastName: `test${faker.person.lastName()}`,
       });
 
       initStructures(userId);
@@ -408,18 +408,18 @@ describe('users', function () {
         email,
         username: email,
         password: 'toto',
-        structure: faker.company.companyName(),
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
+        structure: faker.company.name(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
       });
       emailAdmin = faker.internet.email();
       adminId = Accounts.createUser({
         email: emailAdmin,
         username: emailAdmin,
         password: 'toto',
-        structure: faker.company.companyName(),
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
+        structure: faker.company.name(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
       });
       initStructures(userId);
       allowedStructures = getStructureIds();
@@ -532,8 +532,8 @@ describe('users', function () {
           username: email2,
           password: 'toto',
           structure: 'test',
-          firstName: faker.name.firstName(),
-          lastName: faker.name.lastName(),
+          firstName: faker.person.firstName(),
+          lastName: faker.person.lastName(),
         });
 
         Meteor.users.update(userId, { $set: { structure: 'test' } });
@@ -894,9 +894,9 @@ describe('users', function () {
             email: mm,
             username: mm,
             password: 'toto',
-            structure: faker.company.companyName(),
-            firstName: faker.name.firstName(),
-            lastName: faker.name.lastName(),
+            structure: faker.company.name(),
+            firstName: faker.person.firstName(),
+            lastName: faker.person.lastName(),
           });
         }
 

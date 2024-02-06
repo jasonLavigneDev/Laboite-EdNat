@@ -1,4 +1,4 @@
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import { Factory } from 'meteor/dburles:factory';
 
 import AppSettings from '../appsettings';

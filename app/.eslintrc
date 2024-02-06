@@ -30,6 +30,7 @@
   "ignorePatterns": ["packages/**/*.js", "packages/**/*.jsx"],
   "rules": {
     "import/prefer-default-export": "off",
+    "import/no-extraneous-dependencies": "off",
     "no-restricted-imports": ["error", "@mui/material", "@mui/icons-material", "@material-ui/lab"],
     "no-underscore-dangle": "off",
     "react/no-danger": "off",

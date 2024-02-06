@@ -1,4 +1,4 @@
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import { Factory } from 'meteor/dburles:factory';
 import { Random } from 'meteor/random';
 
@@ -9,5 +9,5 @@ Factory.define('article', Articles, {
   content: faker.lorem.sentence(),
   description: faker.lorem.sentence().substring(0, 399),
   userId: () => Random.id(),
-  structure: () => faker.company.companyName(),
+  structure: () => faker.company.name(),
 });

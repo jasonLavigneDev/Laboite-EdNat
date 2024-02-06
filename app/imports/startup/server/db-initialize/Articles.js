@@ -1,5 +1,5 @@
 import { Meteor } from 'meteor/meteor';
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import Articles from '../../../api/articles/articles';
 import logServer, { levels, scopes } from '../../../api/logging';
 

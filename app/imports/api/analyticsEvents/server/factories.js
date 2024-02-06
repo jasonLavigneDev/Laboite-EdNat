@@ -1,6 +1,7 @@
 import { Factory } from 'meteor/dburles:factory';
 import { Random } from 'meteor/random';
-import faker from 'faker';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { faker } from '@faker-js/faker';
 
 import AnalyticsEvents from '../analyticsEvents';
 

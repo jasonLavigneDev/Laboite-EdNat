@@ -6,7 +6,7 @@ import { assert } from 'chai';
 import { Meteor } from 'meteor/meteor';
 import { Random } from 'meteor/random';
 import '../../../startup/i18n/en.i18n.json';
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import { Factory } from 'meteor/dburles:factory';
 import { Accounts } from 'meteor/accounts-base';
 import { Roles } from 'meteor/alanning:roles';
@@ -45,8 +45,8 @@ describe('DefaultSpaces', function () {
         password: 'toto',
         email: faker.internet.email(),
         structure: structureId,
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
       });
       Meteor.users.update(userId, {
         $set: {
@@ -114,8 +114,8 @@ describe('DefaultSpaces', function () {
         password: 'admin',
         email: faker.internet.email(),
         structure: structureId,
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
       });
       Meteor.users.update(adminUserId, {
         $set: {
@@ -131,8 +131,8 @@ describe('DefaultSpaces', function () {
         password: 'user',
         email: faker.internet.email(),
         structure: structureId,
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
       });
       Meteor.users.update(normalUserId, {
         $set: {
@@ -245,8 +245,8 @@ describe('DefaultSpaces', function () {
           password: 'user2',
           email: faker.internet.email(),
           structure: Random.id(),
-          firstName: faker.name.firstName(),
-          lastName: faker.name.lastName(),
+          firstName: faker.person.firstName(),
+          lastName: faker.person.lastName(),
         });
         Factory.create('personalspace', { userId: otherStructureUserId });
 

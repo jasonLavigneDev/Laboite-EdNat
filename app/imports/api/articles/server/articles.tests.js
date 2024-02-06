@@ -7,7 +7,7 @@ import { Meteor } from 'meteor/meteor';
 import { Roles } from 'meteor/alanning:roles';
 import { _ } from 'meteor/underscore';
 import '../../../startup/i18n/en.i18n.json';
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import { Random } from 'meteor/random';
 import { Factory } from 'meteor/dburles:factory';
 import { Accounts } from 'meteor/accounts-base';
@@ -45,8 +45,8 @@ describe('articles', function () {
         username: email,
         password: 'toto',
         structure: Random.id(),
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
       });
       Meteor.users.update(userId, { $set: { isActive: true } });
       Articles.remove({});
@@ -120,9 +120,9 @@ describe('articles', function () {
         username: 'randomguy',
         password: 'toto',
         email: faker.internet.email(),
-        structure: faker.company.companyName(),
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
+        structure: faker.company.name(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
         groupCount: 0,
         groupQuota: 10,
       });
@@ -130,9 +130,9 @@ describe('articles', function () {
         email: faker.internet.email(),
         username: 'admin',
         password: 'toto',
-        structure: faker.company.companyName(),
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
+        structure: faker.company.name(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
         groupCount: 0,
         groupQuota: 10,
       });
@@ -140,9 +140,9 @@ describe('articles', function () {
         email: faker.internet.email(),
         username: 'member',
         password: 'toto',
-        structure: faker.company.companyName(),
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
+        structure: faker.company.name(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
         groupCount: 0,
         groupQuota: 10,
       });
@@ -229,16 +229,16 @@ describe('articles', function () {
         username: email,
         password: 'toto',
         structure: `userId_${Random.id()}`,
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
       });
       otherUserId = Accounts.createUser({
         email: faker.internet.email(),
         username: 'otherUser',
         password: 'toto',
         structure: Random.id(),
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
       });
       // set users as active
       Meteor.users.update({}, { $set: { isActive: true } }, { multi: true });

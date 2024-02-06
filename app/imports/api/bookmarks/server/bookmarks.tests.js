@@ -6,7 +6,7 @@ import { Factory } from 'meteor/dburles:factory';
 import { PublicationCollector } from 'meteor/johanbrook:publication-collector';
 import { Meteor } from 'meteor/meteor';
 import '../../../startup/i18n/en.i18n.json';
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import { Roles } from 'meteor/alanning:roles';
 import { Accounts } from 'meteor/accounts-base';
 import { updateBookmark, removeBookmark, createBookmark } from '../methods';
@@ -35,9 +35,9 @@ describe('bookmarks', function () {
         username: 'randomguy',
         password: 'toto',
         email: faker.internet.email(),
-        structure: faker.company.companyName(),
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
+        structure: faker.company.name(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
         groupCount: 0,
         groupQuota: 10,
       });
@@ -45,9 +45,9 @@ describe('bookmarks', function () {
         email: faker.internet.email(),
         username: 'admin',
         password: 'toto',
-        structure: faker.company.companyName(),
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
+        structure: faker.company.name(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
         groupCount: 0,
         groupQuota: 10,
       });
@@ -55,9 +55,9 @@ describe('bookmarks', function () {
         email: faker.internet.email(),
         username: 'member',
         password: 'toto',
-        structure: faker.company.companyName(),
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
+        structure: faker.company.name(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
         groupCount: 0,
         groupQuota: 10,
       });
@@ -132,9 +132,9 @@ describe('bookmarks', function () {
         email: emailAdmin,
         username: emailAdmin,
         password: 'toto',
-        structure: faker.company.companyName(),
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
+        structure: faker.company.name(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
         groupCount: 0,
         groupQuota: 10,
       });
@@ -146,9 +146,9 @@ describe('bookmarks', function () {
         email: emailGroupAdmin,
         username: emailGroupAdmin,
         password: 'toto',
-        structure: faker.company.companyName(),
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
+        structure: faker.company.name(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
         groupCount: 0,
         groupQuota: 10,
       });
@@ -159,9 +159,9 @@ describe('bookmarks', function () {
         email: userGroupEmail,
         username: userGroupEmail,
         password: 'toto',
-        structure: faker.company.companyName(),
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
+        structure: faker.company.name(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
         groupCount: 0,
         groupQuota: 10,
       });
@@ -171,9 +171,9 @@ describe('bookmarks', function () {
         username: 'yo',
         password: 'toto',
         email: faker.internet.email(),
-        structure: faker.company.companyName(),
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
+        structure: faker.company.name(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
         nclocator: '',
       });
       Meteor.users.update({}, { $set: { isActive: true } }, { multi: true });
