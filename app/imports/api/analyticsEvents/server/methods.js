@@ -9,8 +9,6 @@ import SimpleSchema from 'simpl-schema';
 import AnalyticsEvents from '../analyticsEvents';
 import Structures from '../../structures/structures';
 
-const { analyticsExpirationInDays } = Meteor.settings.public;
-
 export const getConnectionInfo = new ValidatedMethod({
   name: 'analytics.getConnectionInfo',
   validate: null,
@@ -261,7 +259,7 @@ export const analyticsChartData = new ValidatedMethod({
     const structureArrayWithChilds = [structureId, ...(structure?.childrenIds || [])];
 
     const $facet = {};
-    const timeslots = analyticsExpirationInDays * 24;
+    const timeslots = (Meteor.settings.public.analyticsExpirationInDays || 30) * 24;
     const now = moment().startOf('hour');
 
     new Array(timeslots).fill().forEach(() => {
@@ -341,20 +339,18 @@ DDPRateLimiter.addRule(
   1000,
 );
 
-SyncedCron.add({
-  name: 'Delete analytics old data',
-  schedule: function removeSchedule(parser) {
-    return parser.text(`every day at 2:00 am`);
-  },
-  job: function removeOldData() {
-    return AnalyticsEvents.remove({
-      createdAt: {
-        $lt: new Date(
-          moment()
-            .subtract(Meteor.settings.public.analyticsExpirationInDays || 1, 'days')
-            .format(),
-        ),
-      },
-    });
-  },
-});
+if (Meteor.settings.public.analyticsExpirationInDays) {
+  SyncedCron.add({
+    name: 'Delete analytics old data',
+    schedule: function removeSchedule(parser) {
+      return parser.text(`every day at 2:00 am`);
+    },
+    job: function removeOldData() {
+      return AnalyticsEvents.remove({
+        createdAt: {
+          $lt: new Date(moment().subtract(Meteor.settings.public.analyticsExpirationInDays, 'days').format()),
+        },
+      });
+    },
+  });
+}
