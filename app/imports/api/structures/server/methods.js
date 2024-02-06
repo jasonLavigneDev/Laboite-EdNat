@@ -207,7 +207,10 @@ export const getStructureAndAllChilds = new ValidatedMethod({
 // Get list of all method names on Structures
 
 if (Meteor.isServer) {
-  const LISTS_METHODS = _.pluck([updateStructureIconOrCoverImage, deleteIconOrCoverImage], 'name');
+  const LISTS_METHODS = _.pluck(
+    [updateStructureIconOrCoverImage, deleteIconOrCoverImage, getStructureAndAllChilds],
+    'name',
+  );
 
   // Only allow 5 list operations per connection per second
   DDPRateLimiter.addRule(

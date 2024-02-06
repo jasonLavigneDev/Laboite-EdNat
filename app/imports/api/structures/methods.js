@@ -7,7 +7,12 @@ import { _ } from 'meteor/underscore';
 import sanitizeHtml from 'sanitize-html';
 import { getLabel, isActive, sanitizeParameters, validateString } from '../utils';
 import Structures, { IntroductionStructure } from './structures';
-import { hasAdminRightOnStructure, isAStructureWithSameNameExistWithSameParent, getExternalService } from './utils';
+import {
+  hasAdminRightOnStructure,
+  isAStructureWithSameNameExistWithSameParent,
+  getExternalService,
+  removeGroupLimitations,
+} from './utils';
 import Services from '../services/services';
 import Articles from '../articles/articles';
 import Groups from '../groups/groups';
@@ -353,12 +358,15 @@ export const removeStructure = new ValidatedMethod({
       }
     }
 
+    // remove structure automatic group
     const group = Groups.findOne({ _id: structure.groupId });
     if (group) {
       _removeGroup({ groupId: group._id, userId: this.userId });
     }
     // If there are icon or cover images ==> delete them from minio
     structureRemoveIconOrCoverImagesFromMinio(structure, true, true);
+    // If there are any group limited to this structure, remove limitation and delete unused groups
+    removeGroupLimitations(structureId, this.userId);
 
     logServer(`STRUCTURE - METHODS - REMOVE - removeStructure`, levels.VERBOSE, scopes.SYSTEM, { structureId });
     return Structures.remove(structureId);
