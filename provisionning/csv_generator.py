@@ -47,7 +47,7 @@ def generateMailExtension(struc):
 
 def generateCSVForStructure(nb):
     rows = []
-    headers = ["_id", "name", "parentId", "ancestorsIds", "childrenIds"]
+    headers = ["_id", "name", "parentId", "ancestorsIds", "childrenIds", "structurePath"]
     for ac in range(0, nb):
         name = "academie {}".format(ac+INITIAL_ACA)
 
@@ -57,6 +57,7 @@ def generateCSVForStructure(nb):
             "parentId": None,
             "ancestorsIds": [],
             "childrenIds": [],
+            "structurePath": name,
         }
 
 
@@ -70,6 +71,7 @@ def generateCSVForStructure(nb):
                 "parentId": mainEntry["_id"],
                 "ancestorsIds": [mainEntry["_id"]],
                 "childrenIds": [],
+                "structurePath": name + ' - ' + school_name
             }
             mainEntry["childrenIds"].append(subEntry["_id"])
 
@@ -94,6 +96,7 @@ def generateCSVForStructure(nb):
                 "parentId": mainEntry["_id"],
                 "ancestorsIds": [mainEntry["_id"]],
                 "childrenIds": [],
+                "structurePath": name + ' - ' + col_name
             }
             mainEntry["childrenIds"].append(subEntry2["_id"])
 
@@ -115,6 +118,7 @@ def generateCSVForStructure(nb):
                 "parentId": mainEntry["_id"],
                 "ancestorsIds": [mainEntry["_id"]],
                 "childrenIds": [],
+                "structurePath": name + ' - ' + lyc_name
             }
             mainEntry["childrenIds"].append(subEntry3["_id"])
 

@@ -143,6 +143,7 @@ Structures.schema = new SimpleSchema(
     structurePath: {
       type: String,
       optional: true,
+      index: true,
       defaultValue: '',
       label: getLabel('api.appsettings.label.structurePath'),
     },

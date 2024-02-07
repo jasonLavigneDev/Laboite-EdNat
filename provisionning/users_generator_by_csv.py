@@ -202,6 +202,7 @@ def insertStructure(structure):
             "parentId": None if structure["parentId"] == "" else structure["parentId"],
             "ancestorsIds": literal_eval(structure["ancestorsIds"]),
             "childrenIds": literal_eval(structure["childrenIds"]),
+            "structurePath": structure["structurePath"]
         }
         db["structures"].insert_one(st)
 

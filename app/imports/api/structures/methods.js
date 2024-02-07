@@ -614,7 +614,6 @@ export const getTreeOfStructure = new ValidatedMethod({
     tree.push(obj);
     generateTreeParentToChild(structure, tree, 1);
 
-    console.log(tree);
     return tree;
   },
 });
@@ -655,36 +654,13 @@ export const getStructurePath = new ValidatedMethod({
 }*/
 
 function getStructurePathEx(structure) {
-  const path = [];
   const names = structure.structurePath.split(' - ');
-  names.map((strucName) => {
-    const struc = Structures.findOne({ name: strucName });
-    if (struc) {
-      path.push(struc);
-    }
-  });
-  return path;
+  const struc = Structures.find({ name: { $in: names } }).fetch();
+  if (struc) {
+    return struc;
+  }
+  return [];
 }
-
-/*export const searchStructure = new ValidatedMethod({
-  name: 'structures.searchStructure',
-  validate: new SimpleSchema({
-    searchText: { type: String },
-  }).validator(),
-  run({ searchText }) {
-    const regex = new RegExp(accentInsensitive(searchText), 'i');
-    const structures = Structures.find({ name: { $regex: regex } }).fetch();
-    if (structures) {
-      const tree = [];
-      structures.map((struc) => {
-        const path = getStructurePathEx(struc);
-        tree.push(path);
-      });
-      return tree;
-    }
-    return null;
-  },
-});*/
 
 export const searchStructure = new ValidatedMethod({
   name: 'structures.searchStructure',
@@ -693,17 +669,8 @@ export const searchStructure = new ValidatedMethod({
   }).validator(),
   run({ searchText }) {
     const regex = new RegExp(accentInsensitive(searchText), 'i');
-    const structures = Structures.find({ structurePath: { $regex: regex } }).fetch();
-
-    if (structures) {
-      const tree = [];
-      structures.map((struc) => {
-        const path = getStructurePathEx(struc);
-        tree.push(path);
-      });
-      return tree;
-    }
-    return null;
+    const structures = Structures.find({ name: { $regex: regex } }).fetch();
+    return structures;
   },
 });
 

@@ -201,7 +201,6 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
         setTreeMode(false);
         setSearchTree(res);
         setLoading(false);
-        console.log(res);
       }
     });
   };
@@ -215,7 +214,6 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
         setSearchMode(false);
         setSearchTree(res);
         setLoading(false);
-        console.log(res);
       }
     });
   };
@@ -346,7 +344,18 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
           ) : null}
 
           {searchMode ? (
-            <div>{searchTree ? searchTree.map((tree) => tree.map((struc) => <p>{struc.name}</p>)) : null}</div>
+            <div>
+              {searchTree
+                ? searchTree.map((struc) => (
+                    <div>
+                      <p>- {struc.name}</p>
+                      <p>
+                        <i>{struc.structurePath}</i>
+                      </p>
+                    </div>
+                  ))
+                : null}
+            </div>
           ) : null}
 
           {treeMode ? (
