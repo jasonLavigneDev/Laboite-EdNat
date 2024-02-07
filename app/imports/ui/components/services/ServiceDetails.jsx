@@ -20,7 +20,7 @@ const useStyles = makeStyles()((theme) => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: '1vw',
+    marginTop: 24,
   },
   cardActionShort: {
     display: 'flex',
@@ -52,7 +52,10 @@ const useStyles = makeStyles()((theme) => ({
     justifyContent: 'space-between',
     flexGrow: 1,
     backgroundColor: theme.palette.primary.light,
-    padding: '1vw 2vw',
+    paddingLeft: 32,
+    paddingRight: 32,
+    paddingBottom: 32,
+    paddingTop: 24,
   },
   cardContentMobile: {
     flexGrow: 1,
