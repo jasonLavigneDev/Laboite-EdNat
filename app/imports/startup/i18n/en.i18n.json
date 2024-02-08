@@ -220,7 +220,8 @@
       "userNotFound": "User not found",
       "groupAlreadyExist": "A group with the same name already exists",
       "toManyGroup": "To many groups already created",
-      "unauthorizedUser": "Some subscribed users don't belong to chosen structures",
+      "usersNotInStructures": "Some subscribed users don't belong to chosen structures",
+      "ownerNotInStructures": "You don't belong to any of the chosen structures",
       "types": {
         "open": "open",
         "moderated": "moderated",

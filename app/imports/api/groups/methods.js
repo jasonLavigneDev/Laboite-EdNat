@@ -11,6 +11,7 @@ import Groups from './groups';
 import { addGroup, removeElement } from '../personalspaces/methods';
 import logServer, { levels, scopes } from '../logging';
 import { checkGroupUsers, validateShareName } from './utils';
+import { userStructures } from '../structures/utils';
 
 const reservedGroupNames = ['admins', 'adminStructure'];
 
@@ -167,7 +168,14 @@ export function _createGroup({ name, type, content, description, avatar, plugins
         plugins,
         shareName,
       };
-      if (structureIds && structureIds.length > 0) groupData.structureIds = structureIds;
+      if (structureIds && structureIds.length > 0) {
+        // Check that group owner is in one of the allowed structures
+        const userStructs = userStructures(user);
+        if (!structureIds.some((structId) => userStructs.includes(structId))) {
+          throw new Meteor.Error('api.groups.createGroup.unauthorized', i18n.__('api.groups.ownerNotInStructures'));
+        }
+        groupData.structureIds = structureIds;
+      }
       const groupId = Groups.insert(groupData);
       Roles.addUsersToRoles(userId, ['admin', 'animator'], groupId);
 
@@ -363,7 +371,7 @@ function _updateGroup(groupId, groupData, oldGroup) {
     const oldStructs = Array.isArray(oldGroup.structureIds) ? oldGroup.structureIds.sort().toString() : '';
     const newStructs = Array.isArray(groupData.structureIds) ? groupData.structureIds.sort().toString() : '';
     // will raise an error if any user in the group has no access to chosen structures
-    if (oldStructs !== newStructs) checkGroupUsers(groupId, groupData.structureIds);
+    if (oldStructs !== newStructs) checkGroupUsers(oldGroup, groupData.structureIds);
   }
   try {
     Groups.update({ _id: groupId }, { $set: groupData });

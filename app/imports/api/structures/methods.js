@@ -7,16 +7,11 @@ import { _ } from 'meteor/underscore';
 import sanitizeHtml from 'sanitize-html';
 import { getLabel, isActive, sanitizeParameters, validateString } from '../utils';
 import Structures, { IntroductionStructure } from './structures';
-import {
-  hasAdminRightOnStructure,
-  isAStructureWithSameNameExistWithSameParent,
-  getExternalService,
-  removeGroupLimitations,
-} from './utils';
+import { hasAdminRightOnStructure, isAStructureWithSameNameExistWithSameParent, getExternalService } from './utils';
 import Services from '../services/services';
 import Articles from '../articles/articles';
 import Groups from '../groups/groups';
-import { _createGroup, _removeGroup } from '../groups/methods';
+import { _createGroup, _removeGroup, removeGroup } from '../groups/methods';
 import { removeFilesFolder } from '../files/server/methods';
 import logServer, { levels, scopes } from '../logging';
 
@@ -258,6 +253,23 @@ export const structureRemoveIconOrCoverImagesFromMinio = (structure, removeIconI
       removeFilesFolder(`structures/${structure._id}/coverImg`);
     }
   }
+};
+
+const removeGroupLimitations = (structureId, userId) => {
+  // get all groups wih limitation on this structure
+  const groups = Groups.find({ structureIds: structureId }).fetch();
+  // for groups limited to this structure only, check if there are remaining users
+  groups.forEach((group) => {
+    if (group.structureIds.length === 1) {
+      const numUsers = group.candidates.length + group.members.length + group.animators.length + group.admins.length;
+      if (numUsers === 0) {
+        // remove empty group
+        removeGroup._execute({ userId }, { groupId: group._id });
+      }
+    }
+  });
+  // remove limitation on this structure on all groups concerned
+  Groups.update({ structureIds: structureId }, { $pull: { structureIds: structureId } }, { multi: true });
 };
 
 export const removeStructure = new ValidatedMethod({

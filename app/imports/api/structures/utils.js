@@ -2,8 +2,6 @@
 import { Roles } from 'meteor/alanning:roles';
 import AppSettings from '../appsettings/appsettings';
 import Structures from './structures';
-import Groups from '../groups/groups';
-import { removeGroup } from '../groups/methods';
 
 export const hasAdminRightOnStructure = ({ userId, structureId }) => {
   const ids = [structureId];
@@ -76,21 +74,4 @@ export const userStructures = (user) => {
     allStructs = [userStruct._id, ...userStruct.ancestorsIds];
   }
   return allStructs;
-};
-
-export const removeGroupLimitations = (structureId, userId) => {
-  // get all groups wih limitation on this structure
-  const groups = Groups.find({ structureIds: structureId }).fetch();
-  // for groups limited to this structure only, check if there are remaining users
-  groups.forEach((group) => {
-    if (group.structureIds.length === 1) {
-      const numUsers = group.candidates.length + group.members.length + group.animators.length + group.admins.length;
-      if (numUsers === 0) {
-        // remove empty group
-        removeGroup._execute({ userId }, { groupId: group._id });
-      }
-    }
-  });
-  // remove limitation on this structure on all groups concerned
-  Groups.update({ structureIds: structureId }, { $pull: { structureIds: structureId } }, { multi: true });
 };

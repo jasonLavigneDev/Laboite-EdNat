@@ -496,7 +496,7 @@ export const setAdminOf = new ValidatedMethod({
           scopes.SYSTEM,
           { userId, groupId },
         );
-        throw new Meteor.Error('api.users.setAdminOf.notPermitted', i18n.__('api.users.notInStructure'));
+        throw new Meteor.Error('api.users.setAdminOf.wrongStructure', i18n.__('api.users.notInStructure'));
       }
     }
     // add role to user collection
@@ -561,7 +561,7 @@ export const setAnimatorOf = new ValidatedMethod({
           scopes.SYSTEM,
           { userId, groupId },
         );
-        throw new Meteor.Error('api.users.setAnimatorOf.notPermitted', i18n.__('api.users.notInStructure'));
+        throw new Meteor.Error('api.users.setAnimatorOf.wrongStructure', i18n.__('api.users.notInStructure'));
       }
     }
     // add role to user collection
@@ -680,7 +680,7 @@ export const setMemberOf = new ValidatedMethod({
           scopes.SYSTEM,
           { userId, groupId },
         );
-        throw new Meteor.Error('api.users.setMemberOf.notPermitted', i18n.__('api.users.notInStructure'));
+        throw new Meteor.Error('api.users.setMemberOf.wrongStructure', i18n.__('api.users.notInStructure'));
       }
     }
     if (group.type === 0 || group.type === 15) {
@@ -795,7 +795,7 @@ export const setCandidateOf = new ValidatedMethod({
           scopes.SYSTEM,
           { userId, groupId },
         );
-        throw new Meteor.Error('api.users.setCandidateOf.notPermitted', i18n.__('api.users.notInStructure'));
+        throw new Meteor.Error('api.users.setCandidateOf.wrongStructure', i18n.__('api.users.notInStructure'));
       }
     }
     // add role to user collection
