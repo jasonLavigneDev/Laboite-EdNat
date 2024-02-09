@@ -5,7 +5,7 @@ Copy `settings-development.json.sample` to `settings-development.json` and updat
 ## public:
 
 | Key                                      | Type                          | Default value                        | Description                                                                                 |
-|------------------------------------------|-------------------------------|--------------------------------------|---------------------------------------------------------------------------------------------|
+| ---------------------------------------- | ----------------------------- | ------------------------------------ | ------------------------------------------------------------------------------------------- |
 | keycloakUrl                              | string                        | ""                                   | Keycloak URL                                                                                |
 | keycloakRealm                            | string                        | ""                                   | Keycloak Realm                                                                              |
 | offlinePage                              | boolean                       | false                                | If true, offline services at signin page                                                    |
@@ -14,6 +14,7 @@ Copy `settings-development.json.sample` to `settings-development.json` and updat
 | appDescription                           | string                        | ""                                   | Application description, it will be displayed under the title                               |
 | keycloackPopupStyle                      | boolean                       | false                                | Use popup style for keycloak authentication (non iframe)                                    |
 | keycloackPopupStyleIframe                | boolean                       | false                                | Use popup style for keycloak authentication (iframe)                                        |
+| loginWithTokenUrls                       | string                        | "\*"                                 | Restrain API using to specific URL                                                          |
 | enableBBB                                | boolean                       | true                                 | If true, Big Blue Button is enabled                                                         |
 | BBBUrl                                   | string                        | ""                                   | Big Blue Button URL                                                                         |
 | minioPort                                | number                        | null                                 | Minio port                                                                                  |
@@ -54,9 +55,9 @@ Copy `settings-development.json.sample` to `settings-development.json` and updat
 | disabledFeatures.blog                    | boolean                       | false                                | disable all blog                                                                            |
 | disabledFeatures.groups                  | boolean                       | false                                | disable all groups                                                                          |
 | disabledFeatures.notificationsTab        | boolean                       | false                                | disable notification divided in two tabs                                                    |
-| disabledFeatures.bookmarksFromClipboard        | boolean  | false                                | Read clipboard to propose bookmark creation from it |
-| disabledFeatures.franceTransfert        | boolean  | false                                | Dsiplay france transfert menu |
-| ui.defaultGridViewMode 				              | string                        | list                                 | "compact" or "detail" for view mod in groups or service page																					           |
+| disabledFeatures.bookmarksFromClipboard  | boolean                       | false                                | Read clipboard to propose bookmark creation from it                                         |
+| disabledFeatures.franceTransfert         | boolean                       | false                                | Dsiplay france transfert menu                                                               |
+| ui.defaultGridViewMode                   | string                        | list                                 | "compact" or "detail" for view mod in groups or service page                                |
 | ui.hideLoginForm                         | boolean                       |                                      |                                                                                             |
 | ui.defaultGridViewMode                   | boolean                       |                                      |                                                                                             |
 | ui.isBusinessRegroupingMode              | boolean                       |                                      |                                                                                             |
@@ -74,11 +75,10 @@ Copy `settings-development.json.sample` to `settings-development.json` and updat
 | widget.packageUrl                        | string                        | null                                 | Url pointing towards the widget script. If null the widget will not be enabled              |
 | chatbotUrl                               | string                        | null                                 | Url pointing towards a chatbot instance.                                                    |
 
-
 ## keycloak:
 
 | Key           | Type     | Default value | Description             |
-|---------------|----------|---------------|-------------------------|
+| ------------- | -------- | ------------- | ----------------------- |
 | pubkey        | string   | ""            | Keycloak public key     |
 | client        | string   | "sso"         | Keycloak client type    |
 | adminEmails   | [string] | []            | Keycloak admin emails   |
@@ -88,7 +88,7 @@ Copy `settings-development.json.sample` to `settings-development.json` and updat
 ## nextcloud:
 
 | Key                 | Type     | Default value | Description                                      |
-|---------------------|----------|---------------|--------------------------------------------------|
+| ------------------- | -------- | ------------- | ------------------------------------------------ |
 | nextcloudUser       | string   | ""            | Nextcloud user for user creation                 |
 | nextcloudPassword   | string   | ""            | Nextcloud password for user creation             |
 | circlesUser         | string   | ""            | Nextcloud user for circle and share creation     |
@@ -101,28 +101,28 @@ Copy `settings-development.json.sample` to `settings-development.json` and updat
 ## rocketChat:
 
 | Key                | Type   | Default value | Description         |
-|--------------------|--------|---------------|---------------------|
+| ------------------ | ------ | ------------- | ------------------- |
 | rocketChatUser     | string | ""            | RocketChat user     |
 | rocketChatPassword | string | ""            | RocketChat password |
 
 ## franceTransfert:
 
 | Key      | Type   | Default value | Description                   |
-|----------|--------|---------------|-------------------------------|
+| -------- | ------ | ------------- | ----------------------------- |
 | apiKey   | string | ""            | France Transfert API KEY      |
 | endpoint | string | ""            | France Transfert instance URL |
 
 ## monti:
 
 | Key       | Type   | Default value | Description     |
-|-----------|--------|---------------|-----------------|
+| --------- | ------ | ------------- | --------------- |
 | appId     | string | ""            | MontiAPM app ID |
 | appSecret | string | ""            | MontiAPM Secret |
 
 ## smtp:
 
 | Key       | Type   | Default value                         | Description                       |
-|-----------|--------|---------------------------------------|-----------------------------------|
+| --------- | ------ | ------------------------------------- | --------------------------------- |
 | url       | string | "smtps://USERNAME:PASSWORD@HOST:PORT" | SMTP server URI                   |
 | fromEmail | string | ""                                    | Contact mail default "from" value |
 | toEmail   | string | ""                                    | Contact mail default "to" value   |
@@ -130,7 +130,7 @@ Copy `settings-development.json.sample` to `settings-development.json` and updat
 ## private:
 
 | Key                    | Type     | Default value                              | Description                                        |
-|------------------------|----------|--------------------------------------------|----------------------------------------------------|
+| ---------------------- | -------- | ------------------------------------------ | -------------------------------------------------- |
 | fillWithFakeData       | boolean  | false                                      | If true, fake datas are generated at start         |
 | minioAccess            | string   | ""                                         | Minio user                                         |
 | minioSecret            | string   | ""                                         | Minio password                                     |
