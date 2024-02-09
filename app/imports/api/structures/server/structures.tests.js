@@ -6,6 +6,7 @@ import faker from 'faker';
 import { assert } from 'chai';
 import { Factory } from 'meteor/dburles:factory';
 import { Meteor } from 'meteor/meteor';
+import { Random } from 'meteor/random';
 import { _ } from 'meteor/underscore';
 import { Accounts } from 'meteor/accounts-base';
 import { Roles } from 'meteor/alanning:roles';
@@ -21,6 +22,7 @@ import './publications';
 import './factories';
 import Structures from '../structures';
 import Groups from '../../groups/groups';
+import '../../groups/server/factories';
 
 describe('structures', function () {
   describe('mutators', function () {
@@ -269,6 +271,40 @@ describe('structures', function () {
         assert.equal(structure, undefined);
       });
 
+      it('does remove groups limited to this structure only', function () {
+        const group = Factory.create('group', {
+          name: 'limitedGroup',
+          structureIds: [structureId],
+          owner: Random.id(),
+        });
+        assert.equal(Groups.findOne(group._id).structureIds.includes(structureId), true);
+        removeStructure._execute(
+          { userId: adminId },
+          {
+            structureId,
+          },
+        );
+        const structure = Structures.findOne(structureId);
+        assert.equal(structure, undefined);
+        assert.equal(Groups.findOne(group._id), undefined);
+      });
+      it('does remove group limitations for this structure', function () {
+        const group = Factory.create('group', {
+          name: 'limitedGroup',
+          structureIds: [structureId, Random.id()],
+          owner: Random.id(),
+        });
+        assert.equal(Groups.findOne(group._id).structureIds.includes(structureId), true);
+        removeStructure._execute(
+          { userId: adminId },
+          {
+            structureId,
+          },
+        );
+        const structure = Structures.findOne(structureId);
+        assert.equal(structure, undefined);
+        assert.equal(Groups.findOne(group._id).structureIds.includes(structureId), false);
+      });
       it('does remove group linked to the structure', function () {
         const _id = createStructure._execute({ userId: adminId }, { name: `${structureName}ForRemoval` });
         const structure = Structures.findOne({ _id });

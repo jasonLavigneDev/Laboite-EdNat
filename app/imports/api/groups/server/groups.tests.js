@@ -27,6 +27,7 @@ import {
 } from '../methods';
 import './publications';
 import './factories';
+import '../../structures/server/factories';
 import {
   setAdminOf,
   unsetAdminOf,
@@ -37,6 +38,7 @@ import {
   setAnimatorOf,
   unsetAnimatorOf,
 } from '../../users/server/methods';
+import Structures from '../../structures/structures';
 
 function pspaceHasGroup(user, id) {
   const pspace = PersonalSpaces.findOne({
@@ -196,15 +198,22 @@ describe('groups', function () {
     let group2Id;
     let group3Id;
     let group4Id;
+    let group5Id;
+    let group6Id;
+    let group7Id;
+    let group8Id;
     let moderatedGroupId;
     let closedGroupId;
     let userId;
     let adminId;
     let otherUserId;
+    let structureId;
+    let otherStructureId;
     beforeEach(function () {
       // Clear
       Groups.remove({});
       PersonalSpaces.remove({});
+      Structures.remove({});
       Meteor.roleAssignment.remove({});
       Meteor.users.remove({});
       Meteor.roles.remove({});
@@ -212,13 +221,16 @@ describe('groups', function () {
       Roles.createRole('animator');
       Roles.createRole('member');
       Roles.createRole('candidate');
+      // Generate 'structures'
+      structureId = Factory.create('structure')._id;
+      otherStructureId = Factory.create('structure')._id;
       // Generate 'users'
       const email = faker.internet.email();
       userId = Accounts.createUser({
         email,
         username: email,
         password: 'toto',
-        structure: faker.company.companyName(),
+        structure: structureId,
         firstName: faker.name.firstName(),
         lastName: faker.name.lastName(),
         groupCount: 0,
@@ -229,7 +241,7 @@ describe('groups', function () {
         email: emailAdmin,
         username: emailAdmin,
         password: 'toto',
-        structure: faker.company.companyName(),
+        structure: structureId,
         firstName: faker.name.firstName(),
         lastName: faker.name.lastName(),
         groupCount: 0,
@@ -240,7 +252,7 @@ describe('groups', function () {
         email: emailOtherUser,
         username: emailOtherUser,
         password: 'toto',
-        structure: faker.company.companyName(),
+        structure: structureId,
         firstName: faker.name.firstName(),
         lastName: faker.name.lastName(),
         groupCount: 0,
@@ -257,10 +269,14 @@ describe('groups', function () {
       group2Id = Factory.create('group', { owner: Random.id() })._id;
       group3Id = Factory.create('group', { owner: Random.id() })._id;
       group4Id = Factory.create('group', { name: 'group4', owner: userId })._id;
+      group5Id = Factory.create('group', { owner: Random.id(), structureIds: [structureId] })._id;
+      group6Id = Factory.create('group', { owner: Random.id(), structureIds: [otherStructureId] })._id;
       setAdminOf._execute({ userId: adminId }, { userId, groupId: group4Id });
       // create moderated/closed groups
       moderatedGroupId = Factory.create('group', { type: 5, owner: Random.id() })._id;
       closedGroupId = Factory.create('group', { type: 10, owner: Random.id() })._id;
+      group7Id = Factory.create('group', { type: 5, owner: Random.id(), structureIds: [structureId] })._id;
+      group8Id = Factory.create('group', { type: 5, owner: Random.id(), structureIds: [otherStructureId] })._id;
       setAdminOf._execute({ userId: adminId }, { userId, groupId: group2Id });
     });
     describe('(un)setAdminOf', function () {
@@ -273,6 +289,17 @@ describe('groups', function () {
         group = Groups.findOne(group3Id);
         assert.equal(Roles.userIsInRole(userId, 'admin', group3Id), false);
         assert.notInclude(group.admins, userId, "group admins list shouldn't contain userId");
+        // can not setAdminOf if target user is not in permitted structures
+        assert.throws(
+          () => {
+            setAdminOf._execute({ userId: adminId }, { userId, groupId: group6Id });
+          },
+          Meteor.Error,
+          /api.users.setAdminOf.wrongStructure/,
+        );
+        // can setAdminOf if target user is in permitted structures
+        setAdminOf._execute({ userId: adminId }, { userId, groupId: group5Id });
+        assert.equal(Roles.userIsInRole(userId, 'admin', group5Id), true);
       });
       it('group admin can set/unset a user as admin of a group', function () {
         setAdminOf._execute({ userId }, { userId: otherUserId, groupId: group2Id });
@@ -314,6 +341,17 @@ describe('groups', function () {
         assert.equal(Roles.userIsInRole(userId, 'animator', group3Id), false);
         assert.notInclude(group.animators, userId, "group animators list shouldn't contain userId");
         assert.equal(pspaceHasGroup(userId, group3Id), false, 'group is no longer in personal space');
+        // can not setAnimatorOf if target user is not in permitted structures
+        assert.throws(
+          () => {
+            setAnimatorOf._execute({ userId: adminId }, { userId, groupId: group6Id });
+          },
+          Meteor.Error,
+          /api.users.setAnimatorOf.wrongStructure/,
+        );
+        // can setAnimatorOf if target user is in permitted structures
+        setAnimatorOf._execute({ userId: adminId }, { userId, groupId: group5Id });
+        assert.equal(Roles.userIsInRole(userId, 'animator', group5Id), true);
       });
       it('group admin can set/unset a user as animator of a group', function () {
         setAnimatorOf._execute({ userId }, { userId: otherUserId, groupId: group2Id });
@@ -357,6 +395,17 @@ describe('groups', function () {
         assert.equal(Roles.userIsInRole(userId, 'member', group3Id), false);
         assert.notInclude(group.members, userId, "group members list shouldn't contain userId");
         assert.equal(pspaceHasGroup(userId, group3Id), false, 'group is no longer in personal space');
+        // can not setMemberOf if target user is not in permitted structures
+        assert.throws(
+          () => {
+            setMemberOf._execute({ userId: adminId }, { userId, groupId: group6Id });
+          },
+          Meteor.Error,
+          /api.users.setMemberOf.wrongStructure/,
+        );
+        // can setMemberOf if target user is in permitted structures
+        setMemberOf._execute({ userId: adminId }, { userId, groupId: group5Id });
+        assert.equal(Roles.userIsInRole(userId, 'member', group5Id), true);
       });
       it('group admin can set/unset a user as member of a group', function () {
         setMemberOf._execute({ userId }, { userId: otherUserId, groupId: group2Id });
@@ -409,6 +458,17 @@ describe('groups', function () {
           Meteor.Error,
           /api.users.setMemberOf.notPermitted/,
         );
+        // can not setMemberOf if user is not in permitted structures
+        assert.throws(
+          () => {
+            setMemberOf._execute({ userId }, { userId, groupId: group6Id });
+          },
+          Meteor.Error,
+          /api.users.setMemberOf.wrongStructure/,
+        );
+        // can setMemberOf if user is in permitted structures
+        setMemberOf._execute({ userId }, { userId, groupId: group5Id });
+        assert.equal(Roles.userIsInRole(userId, 'member', group5Id), true);
       });
       it('normal users can not set/unset another user as member of a group', function () {
         // Throws if non owner/admin user, or logged out user
@@ -483,6 +543,17 @@ describe('groups', function () {
           Meteor.Error,
           /api.users.setCandidateOf.moderatedGroupOnly/,
         );
+        // can not setCandidateOf if target user is not in permitted structures
+        assert.throws(
+          () => {
+            setCandidateOf._execute({ userId: adminId }, { userId, groupId: group8Id });
+          },
+          Meteor.Error,
+          /api.users.setCandidateOf.wrongStructure/,
+        );
+        // can setCandidateOf if target user is in permitted structures
+        setCandidateOf._execute({ userId: adminId }, { userId, groupId: group7Id });
+        assert.equal(Roles.userIsInRole(userId, 'candidate', group7Id), true);
       });
       it('group admin can set/unset a user as candidate of a moderated group', function () {
         setAdminOf._execute({ userId: adminId }, { userId, groupId: moderatedGroupId });
@@ -577,6 +648,37 @@ describe('groups', function () {
           /api.groups.createGroup.duplicateName/,
         );
       });
+      it('does checks that owner has access when setting limiting structures', function () {
+        assert.throws(
+          () => {
+            createGroup._execute(
+              { userId },
+              {
+                name: 'limitedGroup',
+                type: 0,
+                description: 'une description',
+                content: 'une note',
+                structureIds: [otherStructureId],
+              },
+            );
+          },
+          Meteor.Error,
+          /api.groups.createGroup.unauthorized/,
+        );
+        createGroup._execute(
+          { userId },
+          {
+            name: 'limitedGroup',
+            type: 0,
+            description: 'une description',
+            content: 'une note',
+            structureIds: [structureId],
+          },
+        );
+        const group = Groups.findOne({ name: 'limitedGroup' });
+        assert.isArray(group.structureIds);
+        assert.equal(group.structureIds[0], structureId);
+      });
       it('does not create a group when not logged in', function () {
         assert.throws(
           () => {
@@ -663,6 +765,39 @@ describe('groups', function () {
           },
           Meteor.Error,
           /api.groups.updateGroup.duplicateName/,
+        );
+      });
+      it('does unset strucutreIds when structureIds list is empty', function () {
+        updateGroup._execute(
+          { userId: adminId },
+          { groupId: group3Id, data: { description: 'test', structureIds: [structureId] } },
+        );
+        assert.isArray(Groups.findOne(group3Id).structureIds);
+        assert.equal(Groups.findOne(group3Id).structureIds.length, 1);
+        updateGroup._execute(
+          { userId: adminId },
+          { groupId: group3Id, data: { description: 'test', structureIds: [] } },
+        );
+        assert.isUndefined(Groups.findOne(group3Id).structureIds);
+      });
+      it('does verify that all existing users are allowed when updating strucutreIds', function () {
+        // limit to a structure that current admin is member of, should succeed
+        updateGroup._execute(
+          { userId: adminId },
+          { groupId, data: { description: 'test', structureIds: [structureId] } },
+        );
+        assert.isArray(Groups.findOne(groupId).structureIds);
+        assert.equal(Groups.findOne(groupId).structureIds.length, 1);
+        // limit to a structure that current admin is not member of, should fail
+        assert.throws(
+          () => {
+            updateGroup._execute(
+              { userId: adminId },
+              { groupId, data: { description: 'test', structureIds: [otherStructureId] } },
+            );
+          },
+          Meteor.Error,
+          /api.groups.checkGroupUsers.unauthorized/,
         );
       });
     });

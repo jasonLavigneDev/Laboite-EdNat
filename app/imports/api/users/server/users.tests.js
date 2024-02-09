@@ -6,6 +6,7 @@ import { assert } from 'chai';
 import faker from 'faker';
 import { Factory } from 'meteor/dburles:factory';
 import { Meteor } from 'meteor/meteor';
+import { Random } from 'meteor/random';
 import { _ } from 'meteor/underscore';
 import { Accounts } from 'meteor/accounts-base';
 import { Roles } from 'meteor/alanning:roles';
@@ -40,6 +41,7 @@ import {
   setLastGlobalInfoRead,
 } from './methods';
 import Groups from '../../groups/groups';
+import '../../groups/server/factories';
 import PersonalSpaces from '../../personalspaces/personalspaces';
 import Nextcloud from '../../nextcloud/nextcloud';
 import './publications';
@@ -607,6 +609,27 @@ describe('users', function () {
 
         assert.equal(Roles.userIsInRole(userId, 'adminStructure', allowedStructures[1]), false);
       });
+      it('users lose limited group membership when structure changes (validation structure mandatory)', function () {
+        const newStructure = allowedStructures[0];
+        setValidationMandatory(true);
+        setStructure._execute({ userId }, { structure: newStructure });
+        acceptAwaitingStructure._execute({ userId: adminId }, { targetUserId: userId });
+        const user = Meteor.users.findOne({ _id: userId });
+        assert.equal(user.structure, newStructure);
+        const group = Factory.create('group', {
+          name: 'limitedGroup',
+          structureIds: [allowedStructures[0]],
+          owner: Random.id(),
+        });
+        setMemberOf._execute({ userId }, { userId, groupId: group._id });
+        assert.equal(Roles.userIsInRole(userId, 'member', group._id), true);
+        assert.equal(Groups.findOne(group._id).members.includes(userId), true);
+        setStructure._execute({ userId }, { structure: allowedStructures[1] });
+        acceptAwaitingStructure._execute({ userId: adminId }, { targetUserId: userId });
+        // after structure change, user should be removed from the group
+        assert.equal(Roles.userIsInRole(userId, 'member', group._id), false);
+        assert.equal(Groups.findOne(group._id).members.includes(userId), false);
+      });
       it('users can set their structure (validation structure not mandatory ==> validation needed)', function () {
         const newStructure = allowedStructures[0];
 
@@ -630,7 +653,25 @@ describe('users', function () {
         setStructure._execute({ userId }, { structure: allowedStructures[1] });
         assert.equal(Roles.userIsInRole(userId, 'adminStructure', allowedStructures[1]), false);
       });
-      // }
+      it('users lose limited group membership at structure change (validation structure not mandatory)', function () {
+        const newStructure = allowedStructures[0];
+        setValidationMandatory(false);
+        setStructure._execute({ userId }, { structure: newStructure });
+        const user = Meteor.users.findOne({ _id: userId });
+        assert.equal(user.awaitingStructure, null);
+        const group = Factory.create('group', {
+          name: 'limitedGroup',
+          structureIds: [allowedStructures[0]],
+          owner: Random.id(),
+        });
+        setMemberOf._execute({ userId }, { userId, groupId: group._id });
+        assert.equal(Roles.userIsInRole(userId, 'member', group._id), true);
+        assert.equal(Groups.findOne(group._id).members.includes(userId), true);
+        setStructure._execute({ userId }, { structure: allowedStructures[1] });
+        // after structure change, user should be removed from the group
+        assert.equal(Roles.userIsInRole(userId, 'member', group._id), false);
+        assert.equal(Groups.findOne(group._id).members.includes(userId), false);
+      });
       it('users can only set their structure to allowed values', function () {
         assert.throws(
           () => {
