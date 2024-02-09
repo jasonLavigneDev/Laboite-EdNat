@@ -60,19 +60,26 @@ describe('groups', function () {
   describe('publications', function () {
     let userId;
     let groupId;
+    let structureId;
+    let otherStructureId;
+    let limitedGroup1Id;
+    let limitedGroup2Id;
     beforeEach(function () {
       Groups.remove({});
+      Structures.remove({});
       Meteor.roleAssignment.remove({});
       Meteor.roles.remove({});
       Meteor.users.remove({});
       Roles.createRole('admin');
       Roles.createRole('member');
+      structureId = Factory.create('structure')._id;
+      otherStructureId = Factory.create('structure')._id;
       const email = faker.internet.email();
       userId = Accounts.createUser({
         email,
         username: email,
         password: 'toto',
-        structure: faker.company.companyName(),
+        structure: structureId,
         firstName: faker.name.firstName(),
         lastName: faker.name.lastName(),
         groupCount: 0,
@@ -82,19 +89,37 @@ describe('groups', function () {
       Groups.remove({});
       _.times(3, () => Factory.create('group', { name: `test${Random.id()}`, owner: Random.id() }));
       groupId = Factory.create('group', { owner: Random.id(), name: 'MonGroupe' })._id;
+      // this group should be accessible to user 'userId'
+      limitedGroup1Id = Factory.create('group', {
+        owner: Random.id(),
+        name: 'limitedGroup1',
+        slug: 'limitedgroup1',
+        structureIds: [structureId],
+      })._id;
+      // this group should not be accessible to user 'userId' (no access to limiting structure)
+      limitedGroup2Id = Factory.create('group', {
+        owner: Random.id(),
+        name: 'limitedGroup2',
+        slug: 'limitedgroup2',
+        structureIds: [otherStructureId],
+      })._id;
     });
     describe('groups.all', function () {
       it('sends all groups', function (done) {
         const collector = new PublicationCollector({ userId });
         collector.collect('groups.all', { page: 1, search: '', itemPerPage: 10 }, (collections) => {
-          assert.equal(collections.groups.length, 4);
+          assert.equal(collections.groups.length, 5);
+          // check that limitedGroup1 is returned, but not limitedGroup2
+          const groupIds = collections.groups.map((group) => group._id);
+          assert.equal(groupIds.includes(limitedGroup1Id), true);
+          assert.equal(groupIds.includes(limitedGroup2Id), false);
           done();
         });
       });
       it('sends a specific page from all groups', function (done) {
         const collector = new PublicationCollector({ userId });
         collector.collect('groups.all', { page: 2, search: '', itemPerPage: 3 }, (collections) => {
-          assert.equal(collections.groups.length, 1);
+          assert.equal(collections.groups.length, 2);
           done();
         });
       });
@@ -102,6 +127,29 @@ describe('groups', function () {
         const collector = new PublicationCollector({ userId });
         collector.collect('groups.all', { page: 1, search: 'test', itemPerPage: 10 }, (collections) => {
           assert.equal(collections.groups.length, 3);
+          done();
+        });
+      });
+    });
+    describe('groups.single', function () {
+      it('sends all public fields for a specific group', function (done) {
+        const collector = new PublicationCollector({ userId });
+        collector.collect('groups.single', { slug: 'mongroupe' }, (collections) => {
+          assert.equal(collections.groups.length, 1);
+          done();
+        });
+      });
+      it('sends all public fields for an accessible structure limited group', function (done) {
+        const collector = new PublicationCollector({ userId });
+        collector.collect('groups.single', { slug: 'limitedgroup1' }, (collections) => {
+          assert.equal(collections.groups.length, 1);
+          done();
+        });
+      });
+      it('sends nothing for a non accessible structure limited group', function (done) {
+        const collector = new PublicationCollector({ userId });
+        collector.collect('groups.single', { slug: 'limitedgroup2' }, (collections) => {
+          assert.equal(collections.groups, undefined);
           done();
         });
       });
@@ -152,7 +200,7 @@ describe('groups', function () {
         Roles.addUsersToRoles(userId, 'admin');
         // global admin : returns all existing groups
         collector.collect('groups.adminof', (collections) => {
-          assert.equal(collections.groups.length, 4);
+          assert.equal(collections.groups.length, 6);
         });
         setAdminOf._execute({ userId }, { userId, groupId });
         Roles.removeUsersFromRoles(userId, 'admin');
@@ -178,7 +226,7 @@ describe('groups', function () {
         Roles.addUsersToRoles(userId, 'admin');
         // global admin : returns all existing groups
         collector.collect('groups.adminof', (collections) => {
-          assert.equal(collections.groups.length, 4);
+          assert.equal(collections.groups.length, 6);
         });
         setAdminOf._execute({ userId }, { userId, groupId });
         Roles.removeUsersFromRoles(userId, 'admin');
