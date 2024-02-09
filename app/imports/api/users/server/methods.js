@@ -904,10 +904,10 @@ function checkGroupsPermissions(userId) {
   const groups = Groups.find({ _id: { $in: user.favGroups }, structureIds: { $ne: null } });
   const userStructs = userStructures(user);
   const unsubFuncs = {
-    candidates: 'users.unsetCandidateOf',
-    member: 'users.unsetMemberOf',
-    animator: 'users.unsetAnimatorOf',
-    admin: 'users.unsetAdminOf',
+    candidates: unsetCandidateOf,
+    member: unsetMemberOf,
+    animator: unsetAnimatorOf,
+    admin: unsetAdminOf,
   };
   groups.forEach((group) => {
     if (!group.structureIds.some((structId) => userStructs.includes(structId))) {
@@ -915,17 +915,18 @@ function checkGroupsPermissions(userId) {
       const groupRoles = Roles.getRolesForUser(user._id, { scope: group._id, onlyScoped: true });
       groupRoles.forEach((role) => {
         // unsubscribe user for this role
-        Meteor.call(unsubFuncs[role], { userId: user._id, groupId: group._id }, (err) => {
-          if (err)
-            logServer(
-              `USERS - METHODS - ERROR - checkGroupsPermissions - error when unsubscribing user`,
-              levels.ERROR,
-              scopes.SYSTEM,
-              {
-                errorMEssage: err.message,
-              },
-            );
-        });
+        try {
+          unsubFuncs[role]._execute({ userId }, { userId: user._id, groupId: group._id });
+        } catch (err) {
+          logServer(
+            `USERS - METHODS - ERROR - checkGroupsPermissions - error when unsubscribing user`,
+            levels.ERROR,
+            scopes.SYSTEM,
+            {
+              errorMEssage: err.message,
+            },
+          );
+        }
       });
     }
   });
