@@ -240,12 +240,15 @@ export const uploadBackupPublications = new ValidatedMethod({
           levels.VERBOSE,
           scopes.SYSTEM,
         );
-        return Articles.insert({
+        const ret = Articles.insert({
           ...article,
           content: sanitizedContent,
           userId: this.userId,
           structure: updateStructure ? userStructure : article.structure,
         });
+        // increment user articles count
+        Meteor.users.update({ _id: this.userId }, { $inc: { articlesCount: 1 }, $set: { lastArticle: new Date() } });
+        return ret;
       });
     } catch (error) {
       logServer(`ARTICLES - METHODS - METEOR ERROR - uploadBackupPublications`, levels.ERROR, scopes.SYSTEM, { error });
