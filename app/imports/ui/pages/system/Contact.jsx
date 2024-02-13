@@ -147,24 +147,34 @@ const Contact = ({ structures, loading }) => {
           const { text } = formState.values;
           const { _id: structureId } = userStructure;
 
-          Meteor.call('smtp.sendContactEmail', { firstName, lastName, email, text, structureId });
-          setFormSubmit(true);
-          setCounter(5);
-          setTimeout(() => {
-            history.push('/personal');
-          }, 5000);
+          Meteor.call('smtp.sendContactEmail', { firstName, lastName, email, text, structureId }, (err) => {
+            if (err) {
+              msg.error(err.reason || err.message);
+            } else {
+              setFormSubmit(true);
+              setCounter(5);
+              setTimeout(() => {
+                history.push('/personal');
+              }, 5000);
+            }
+          });
         }
       }
     } else if (formState.isValid === true) {
       if (parseInt(formState.values.captcha, 10) === totalNr) {
         setCaptchaIsValid(true);
         const { firstName, lastName, email, text, structureSelect: structureId } = formState.values;
-        Meteor.call('smtp.sendContactEmail', { firstName, lastName, email, text, structureId });
-        setFormSubmit(true);
-        setCounter(5);
-        setTimeout(() => {
-          history.push('/');
-        }, 5000);
+        Meteor.call('smtp.sendContactEmail', { firstName, lastName, email, text, structureId }, (err) => {
+          if (err) {
+            msg.error(err.reason || err.message);
+          } else {
+            setFormSubmit(true);
+            setCounter(5);
+            setTimeout(() => {
+              history.push('/');
+            }, 5000);
+          }
+        });
       } else {
         setCaptchaIsValid(false);
       }

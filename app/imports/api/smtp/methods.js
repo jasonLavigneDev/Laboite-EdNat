@@ -68,7 +68,7 @@ ${cleanText}`;
         // mailList should not be empty (checked on UI side)
         throw new Meteor.Error(
           i18n.__('pages.AdminStructureMailModal.errorMail'),
-          i18n.__('pages.AdminStructureMailModal.errorSendMail'),
+          i18n.__('pages.AdminStructureMailModal.errorSendingMail'),
         );
       }
     } catch (err) {
@@ -85,7 +85,7 @@ ${cleanText}`;
       );
       throw new Meteor.Error(
         i18n.__('pages.AdminStructureMailModal.errorMail'),
-        i18n.__('pages.AdminStructureMailModal.errorSendMail'),
+        i18n.__('pages.AdminStructureMailModal.errorSendingMail'),
       );
     }
   },
@@ -156,10 +156,17 @@ ${cleanText}`;
 
     this.unblock();
 
-    if (tabTo.length > 0) {
-      Email.send({ to, cc: tabTo, from, subject: object, text: msg });
-    } else {
-      Email.send({ to, from, subject: object, text: msg });
+    try {
+      if (tabTo.length > 0) {
+        Email.send({ to, cc: tabTo, from, subject: object, text: msg });
+      } else {
+        Email.send({ to, from, subject: object, text: msg });
+      }
+    } catch (error) {
+      throw new Meteor.Error(
+        'api.smtp.sendContactEmail.errorMail',
+        i18n.__('pages.AdminStructureMailModal.errorSendingMail'),
+      );
     }
   },
 });
