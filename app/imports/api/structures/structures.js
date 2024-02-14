@@ -53,6 +53,17 @@ export const defaultIntroduction = [
   },
 ];
 
+export const StructurePath = new SimpleSchema({
+  structureId: {
+    type: String,
+    label: getLabel('api.structures.labels.structurePath.structureId'),
+  },
+  structureName: {
+    type: String,
+    label: getLabel('api.structures.labels.structurePath.structureName'),
+  },
+});
+
 Structures.schema = new SimpleSchema(
   {
     name: {
@@ -132,20 +143,23 @@ Structures.schema = new SimpleSchema(
       type: Boolean,
       optional: true,
       defaultValue: false,
-      label: getLabel('api.appsettings.label.sendMailToParent'),
+      label: getLabel('api.structures.label.sendMailToParent'),
     },
     sendMailToStructureAdmin: {
       type: Boolean,
       optional: true,
       defaultValue: false,
-      label: getLabel('api.appsettings.label.sendMailToStructureAdmin'),
+      label: getLabel('api.structures.label.sendMailToStructureAdmin'),
     },
     structurePath: {
-      type: String,
+      type: Array,
       optional: true,
       index: true,
-      defaultValue: '',
-      label: getLabel('api.appsettings.label.structurePath'),
+      defaultValue: [],
+      label: getLabel('api.structures.label.structurePath'),
+    },
+    'structurePath.$': {
+      type: StructurePath,
     },
   },
   {

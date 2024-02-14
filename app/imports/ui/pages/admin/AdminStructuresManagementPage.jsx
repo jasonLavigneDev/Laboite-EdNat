@@ -349,9 +349,13 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
                 ? searchTree.map((struc) => (
                     <div>
                       <p>- {struc.name}</p>
-                      <p>
-                        <i>{struc.structurePath}</i>
-                      </p>
+                      {struc.structurePath && struc.structurePath.length > 0
+                        ? (pathStruc) => (
+                            <p>
+                              <i>{pathStruc.name}</i>
+                            </p>
+                          )
+                        : null}
                     </div>
                   ))
                 : null}

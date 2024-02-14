@@ -644,24 +644,6 @@ export const getStructurePath = new ValidatedMethod({
   },
 });
 
-/*function getStructurePathEx(structure) {
-  const tree = [];
-  tree.push(structure);
-  generatePathOfStructure(structure, tree);
-
-  tree.reverse();
-  return tree;
-}*/
-
-function getStructurePathEx(structure) {
-  const names = structure.structurePath.split(' - ');
-  const struc = Structures.find({ name: { $in: names } }).fetch();
-  if (struc) {
-    return struc;
-  }
-  return [];
-}
-
 export const searchStructure = new ValidatedMethod({
   name: 'structures.searchStructure',
   validate: new SimpleSchema({
