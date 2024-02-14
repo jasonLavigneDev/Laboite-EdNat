@@ -205,6 +205,19 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
     });
   };
 
+  const searchStructure = (structureId) => {
+    resetSearch();
+    setLoading(true);
+    Meteor.call('structures.searchStructureById', { structureId }, (err, res) => {
+      if (res) {
+        setSearchMode(true);
+        setTreeMode(false);
+        setSearchTree(res);
+        setLoading(false);
+      }
+    });
+  };
+
   const getChildsOfStructure = (struc) => {
     resetSearch();
     setLoading(true);
@@ -350,11 +363,11 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
                     <div>
                       <p>- {struc.name}</p>
                       {struc.structurePath && struc.structurePath.length > 0
-                        ? (pathStruc) => (
-                            <p>
-                              <i>{pathStruc.name}</i>
+                        ? struc.structurePath.map((pathStruc) => (
+                            <p onClick={(e) => searchStructure(pathStruc.structureId)}>
+                              <i>{pathStruc.structureName}</i>
                             </p>
-                          )
+                          ))
                         : null}
                     </div>
                   ))

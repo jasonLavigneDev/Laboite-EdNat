@@ -656,6 +656,17 @@ export const searchStructure = new ValidatedMethod({
   },
 });
 
+export const searchStructureById = new ValidatedMethod({
+  name: 'structures.searchStructureById',
+  validate: new SimpleSchema({
+    structureId: { type: String },
+  }).validator(),
+  run({ structureId }) {
+    const structure = Structures.find({ _id: structureId }).fetch();
+    return structure;
+  },
+});
+
 if (Meteor.isServer) {
   // Get list of all method names on Structures
   const LISTS_METHODS = _.pluck(
