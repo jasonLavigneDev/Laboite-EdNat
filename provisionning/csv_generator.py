@@ -50,14 +50,15 @@ def generateCSVForStructure(nb):
     headers = ["_id", "name", "parentId", "ancestorsIds", "childrenIds", "structurePath"]
     for ac in range(0, nb):
         name = "academie {}".format(ac+INITIAL_ACA)
+        academieId = generateID()
 
         mainEntry = {
-            "_id": generateID(),
+            "_id": academieId,
             "name": name,
             "parentId": None,
             "ancestorsIds": [],
             "childrenIds": [],
-            "structurePath": name,
+            "structurePath": [{"structureId": academieId, "structureName": name}],
         }
 
 
@@ -65,13 +66,14 @@ def generateCSVForStructure(nb):
 
         for ec in range(0, ECOLE_PAR_ACADEMIE):
             school_name = "ecole {} ({})".format(ec + 1, name)
+            school_id = generateID()
             subEntry = {
-                "_id": generateID(),
+                "_id": school_id,
                 "name": school_name,
                 "parentId": mainEntry["_id"],
                 "ancestorsIds": [mainEntry["_id"]],
                 "childrenIds": [],
-                "structurePath": name + ' - ' + school_name
+                "structurePath": [{"structureId": academieId, "structureName": name}, {"structureId": school_id, "structureName": school_name}]
             }
             mainEntry["childrenIds"].append(subEntry["_id"])
 
@@ -89,14 +91,15 @@ def generateCSVForStructure(nb):
 
         for col in range(0, COLLEGE_PAR_ACADEMIE):
             col_name = "college {} ({})".format(col + 1, name)
+            col_id = generateID()
 
             subEntry2 = {
-                "_id": generateID(),
+                "_id": col_id,
                 "name": col_name,
                 "parentId": mainEntry["_id"],
                 "ancestorsIds": [mainEntry["_id"]],
                 "childrenIds": [],
-                "structurePath": name + ' - ' + col_name
+                "structurePath": [{"structureId": academieId, "structureName": name}, {"structureId": col_id, "structureName": col_name}]
             }
             mainEntry["childrenIds"].append(subEntry2["_id"])
 
@@ -111,14 +114,15 @@ def generateCSVForStructure(nb):
 
         for lyc in range(0, LYCEE_PAR_ACADEMIE):
             lyc_name = "lycee {} ({})".format(lyc + 1, name)
+            lyc_id = generateID()
 
             subEntry3 = {
-                "_id": generateID(),
+                "_id": lyc_id,
                 "name": lyc_name,
                 "parentId": mainEntry["_id"],
                 "ancestorsIds": [mainEntry["_id"]],
                 "childrenIds": [],
-                "structurePath": name + ' - ' + lyc_name
+                "structurePath": [{"structureId": academieId, "structureName": name}, {"structureId": lyc_id, "structureName": lyc_name}]
             }
             mainEntry["childrenIds"].append(subEntry3["_id"])
 
