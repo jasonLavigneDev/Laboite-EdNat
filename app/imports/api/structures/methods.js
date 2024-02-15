@@ -15,6 +15,34 @@ import { _createGroup, _removeGroup } from '../groups/methods';
 import { removeFilesFolder } from '../files/server/methods';
 import logServer, { levels, scopes } from '../logging';
 
+function generatePathOfStructure(structure, tree) {
+  if (structure.parentId) {
+    const parent = Structures.findOne({ _id: structure.parentId });
+    if (parent) {
+      const obj = { structureName: parent.Name, structureId: parent._id };
+      tree.push(obj);
+      generatePathOfStructure(parent, tree);
+    }
+  }
+}
+
+export const getStructurePath = new ValidatedMethod({
+  name: 'structures.getStructurePath',
+  validate: new SimpleSchema({
+    structureId: { type: String, regEx: SimpleSchema.RegEx.Id, label: getLabel('api.structures.labels.id') },
+  }).validator(),
+  run({ structureId }) {
+    const tree = [];
+    const structure = Structures.findOne({ _id: structureId });
+    const obj = { structureName: structure.Name, structureId: structure._id };
+    tree.push(obj);
+    generatePathOfStructure(structure, tree);
+
+    tree.reverse();
+    return tree;
+  },
+});
+
 export const createStructure = new ValidatedMethod({
   name: 'structures.createStructure',
   validate: Structures.schema.pick('name', 'parentId').validator(),
@@ -74,7 +102,21 @@ export const createStructure = new ValidatedMethod({
           levels.INFO,
           scopes.SYSTEM,
         );
-        Structures.update({ _id: parentId }, { $set: { childrenIds: [...new Set(directParentStructureChildrenIds)] } });
+
+        const currentStructure = Structures.findOne({ _id: structureId });
+        if (currentStructure) {
+          currentStructure.StructurePath = getStructurePath(currentStructure);
+        }
+
+        Structures.update(
+          { _id: parentId },
+          {
+            $set: {
+              childrenIds: [...new Set(directParentStructureChildrenIds)],
+              StructurePath: currentStructure.StructurePath,
+            },
+          },
+        );
 
         logServer(
           `STRUCTURE - METHODS - UPDATE - createStructure - id: ${structureId}
@@ -182,6 +224,25 @@ export const updateStructure = new ValidatedMethod({
       group.name = `${structure._id}_${name}`;
       Groups.update({ _id: group._id }, { $set: { name: `${structure._id}_${name}` } });
     }
+
+    const structureOfPath = structure.StructurePath;
+    if (structureOfPath && structureOfPath.length > 0) {
+      const ids = structureOfPath.map((struc) => struc.structureId);
+      const allStructures = Structures.find({ _id: { $in: { ids } } }).fetch();
+      if (allStructures && allStructures.length > 0) {
+        allStructures.map((struc) => {
+          if (struc.structurePath) {
+            const obj = struc.structurePath.find((strucOnPath) => strucOnPath.structureId === structure._id);
+            if (obj) {
+              obj.structureName = name;
+              return Structures.update({ _id: struc._id }, { $set: { structurePath: struc.StructurePath } });
+            }
+          }
+          return null;
+        });
+      }
+    }
+
     logServer(`STRUCTURE - METHODS - UPDATE - updateStructure`, levels.VERBOSE, scopes.SYSTEM, { structureId, name });
     return Structures.update({ _id: structureId }, { $set: { name } });
   },
@@ -614,32 +675,6 @@ export const getTreeOfStructure = new ValidatedMethod({
     tree.push(obj);
     generateTreeParentToChild(structure, tree, 1);
 
-    return tree;
-  },
-});
-
-function generatePathOfStructure(structure, tree) {
-  if (structure.parentId) {
-    const parent = Structures.findOne({ _id: structure.parentId });
-    if (parent) {
-      tree.push(parent);
-      generatePathOfStructure(parent, tree);
-    }
-  }
-}
-
-export const getStructurePath = new ValidatedMethod({
-  name: 'structures.getStructurePath',
-  validate: new SimpleSchema({
-    structureId: { type: String, regEx: SimpleSchema.RegEx.Id, label: getLabel('api.structures.labels.id') },
-  }).validator(),
-  run({ structureId }) {
-    const tree = [];
-    const structure = Structures.findOne({ _id: structureId });
-    tree.push(structure);
-    generatePathOfStructure(structure, tree);
-
-    tree.reverse();
     return tree;
   },
 });
