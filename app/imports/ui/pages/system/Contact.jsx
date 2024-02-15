@@ -171,6 +171,23 @@ const Contact = ({ structures, loading }) => {
     }
   };
 
+  function mailTo() {
+    if (userStructure) {
+      const { contactEmail, sendMailToStructureAdmin, sendMailToParent } = userStructure;
+      if (contactEmail) return i18n.__('pages.ContactForm.mail.mailSetup');
+      if (sendMailToStructureAdmin) return i18n.__('pages.ContactForm.mail.adminStructure');
+      if (sendMailToParent) {
+        if (userStructure.parentId) {
+          const ancestor = Structures.findOne({ _id: userStructure.parentId });
+          if (ancestor) {
+            return i18n.__('pages.ContactForm.mail.adminStructureParent');
+          }
+        }
+      }
+    }
+    return i18n.__('pages.ContactForm.mail.adminGlobal');
+  }
+
   return (
     <Container component="main" maxWidth="md">
       <CssBaseline />
@@ -183,6 +200,9 @@ const Contact = ({ structures, loading }) => {
         <Typography component="h1" variant="h5">
           {i18n.__('pages.ContactForm.appDescription')}
         </Typography>
+        {user && (
+          <Typography component="h1">( {`${i18n.__('pages.ContactForm.mail.sendTo')} ${mailTo()}`} )</Typography>
+        )}
         {externalSite ? (
           <>
             <Typography>{i18n.__('pages.ContactForm.externalDescription')}</Typography>
