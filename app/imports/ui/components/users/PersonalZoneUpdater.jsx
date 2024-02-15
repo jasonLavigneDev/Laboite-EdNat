@@ -180,7 +180,8 @@ function PersonalZoneUpdater({
       }
       case 'group': {
         const group = Groups.findOne(element.element_id);
-        sourceText = group?.name || '';
+        // for structure groups (type 15), ignore the id prefix (first 18 chars)
+        sourceText = group?.name ? (group?.type === 15 ? group?.name.slice(18) : group?.name) : '';
         break;
       }
       case 'link': {
