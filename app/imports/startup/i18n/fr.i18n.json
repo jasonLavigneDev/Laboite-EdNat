@@ -1294,7 +1294,7 @@
       "externalButton": "Accéder au site d'assistance",
       "mail": {
         "sendTo": "mail envoyé ",
-        "mailSetup": "au support accadémique",
+        "mailSetup": "au support académique",
         "adminStructure": "à un administrateur de votre structure",
         "adminStructureParent": "à un administrateur de la structure parente à la votre",
         "adminGlobal": "à un administrateur du portail"

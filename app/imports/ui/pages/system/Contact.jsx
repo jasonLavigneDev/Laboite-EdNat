@@ -200,7 +200,7 @@ const Contact = ({ structures, loading }) => {
         <Typography component="h1" variant="h5">
           {i18n.__('pages.ContactForm.appDescription')}
         </Typography>
-        {user && (
+        {user && !externalSite && (
           <Typography component="h1">( {`${i18n.__('pages.ContactForm.mail.sendTo')} ${mailTo()}`} )</Typography>
         )}
         {externalSite ? (
