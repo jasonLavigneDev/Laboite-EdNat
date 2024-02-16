@@ -26,6 +26,26 @@ function generatePathOfStructure(structure, tree) {
   }
 }
 
+function updatePathOfStructure(structure, name, strucToEdit) {
+  const structureOfPath = structure.childrenIds;
+  if (structureOfPath && structureOfPath.length > 0) {
+    const allStructures = Structures.find({ _id: { $in: structure.childrenIds } }).fetch();
+    if (allStructures && allStructures.length > 0) {
+      allStructures.map((struc) => {
+        if (struc.structurePath) {
+          const obj = struc.structurePath.find((strucOnPath) => strucOnPath.structureId === strucToEdit._id);
+          if (obj) {
+            obj.structureName = name;
+            Structures.update({ _id: struc._id }, { $set: { structurePath: struc.structurePath } });
+          }
+        }
+        updatePathOfStructure(struc, name, strucToEdit);
+        return null;
+      });
+    }
+  }
+}
+
 function getStructurePath(structure) {
   const tree = [];
   generatePathOfStructure(structure, tree);
@@ -216,23 +236,7 @@ export const updateStructure = new ValidatedMethod({
       Groups.update({ _id: group._id }, { $set: { name: `${structure._id}_${name}` } });
     }
 
-    const structureOfPath = structure.StructurePath;
-    if (structureOfPath && structureOfPath.length > 0) {
-      const ids = structureOfPath.map((struc) => struc.structureId);
-      const allStructures = Structures.find({ _id: { $in: { ids } } }).fetch();
-      if (allStructures && allStructures.length > 0) {
-        allStructures.map((struc) => {
-          if (struc.structurePath) {
-            const obj = struc.structurePath.find((strucOnPath) => strucOnPath.structureId === structure._id);
-            if (obj) {
-              obj.structureName = name;
-              return Structures.update({ _id: struc._id }, { $set: { structurePath: struc.StructurePath } });
-            }
-          }
-          return null;
-        });
-      }
-    }
+    updatePathOfStructure(structure, name, structure);
 
     logServer(`STRUCTURE - METHODS - UPDATE - updateStructure`, levels.VERBOSE, scopes.SYSTEM, { structureId, name });
     return Structures.update({ _id: structureId }, { $set: { name } });

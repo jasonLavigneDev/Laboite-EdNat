@@ -428,7 +428,7 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
                           ? struc.structurePath.map((pathStruc) => (
                               <div style={{ display: 'flex' }}>
                                 <p onClick={(e) => searchStructure(pathStruc.structureId)}>
-                                  <i>{pathStruc.structureName}</i>
+                                  <i> {pathStruc.structureName} -</i>
                                 </p>
                               </div>
                             ))
