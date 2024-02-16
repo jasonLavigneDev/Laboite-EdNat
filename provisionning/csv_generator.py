@@ -58,7 +58,7 @@ def generateCSVForStructure(nb):
             "parentId": None,
             "ancestorsIds": [],
             "childrenIds": [],
-            "structurePath": [{"structureId": academieId, "structureName": name}],
+            "structurePath": [],
         }
 
 
@@ -73,7 +73,7 @@ def generateCSVForStructure(nb):
                 "parentId": mainEntry["_id"],
                 "ancestorsIds": [mainEntry["_id"]],
                 "childrenIds": [],
-                "structurePath": [{"structureId": academieId, "structureName": name}, {"structureId": school_id, "structureName": school_name}]
+                "structurePath": [{"structureId": academieId, "structureName": name}]
             }
             mainEntry["childrenIds"].append(subEntry["_id"])
 
@@ -99,7 +99,7 @@ def generateCSVForStructure(nb):
                 "parentId": mainEntry["_id"],
                 "ancestorsIds": [mainEntry["_id"]],
                 "childrenIds": [],
-                "structurePath": [{"structureId": academieId, "structureName": name}, {"structureId": col_id, "structureName": col_name}]
+                "structurePath": [{"structureId": academieId, "structureName": name}]
             }
             mainEntry["childrenIds"].append(subEntry2["_id"])
 
@@ -122,7 +122,7 @@ def generateCSVForStructure(nb):
                 "parentId": mainEntry["_id"],
                 "ancestorsIds": [mainEntry["_id"]],
                 "childrenIds": [],
-                "structurePath": [{"structureId": academieId, "structureName": name}, {"structureId": lyc_id, "structureName": lyc_name}]
+                "structurePath": [{"structureId": academieId, "structureName": name}]
             }
             mainEntry["childrenIds"].append(subEntry3["_id"])
 

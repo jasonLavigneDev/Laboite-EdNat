@@ -56,10 +56,12 @@ export const defaultIntroduction = [
 export const StructurePath = new SimpleSchema({
   structureId: {
     type: String,
+    optional: true,
     label: getLabel('api.structures.labels.structurePath.structureId'),
   },
   structureName: {
     type: String,
+    optional: true,
     label: getLabel('api.structures.labels.structurePath.structureName'),
   },
 });

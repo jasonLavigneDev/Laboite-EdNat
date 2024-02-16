@@ -19,29 +19,20 @@ function generatePathOfStructure(structure, tree) {
   if (structure.parentId) {
     const parent = Structures.findOne({ _id: structure.parentId });
     if (parent) {
-      const obj = { structureName: parent.Name, structureId: parent._id };
+      const obj = { structureName: parent.name, structureId: parent._id };
       tree.push(obj);
       generatePathOfStructure(parent, tree);
     }
   }
 }
 
-export const getStructurePath = new ValidatedMethod({
-  name: 'structures.getStructurePath',
-  validate: new SimpleSchema({
-    structureId: { type: String, regEx: SimpleSchema.RegEx.Id, label: getLabel('api.structures.labels.id') },
-  }).validator(),
-  run({ structureId }) {
-    const tree = [];
-    const structure = Structures.findOne({ _id: structureId });
-    const obj = { structureName: structure.Name, structureId: structure._id };
-    tree.push(obj);
-    generatePathOfStructure(structure, tree);
+function getStructurePath(structure) {
+  const tree = [];
+  generatePathOfStructure(structure, tree);
 
-    tree.reverse();
-    return tree;
-  },
-});
+  tree.reverse();
+  return tree;
+}
 
 export const createStructure = new ValidatedMethod({
   name: 'structures.createStructure',
@@ -105,7 +96,8 @@ export const createStructure = new ValidatedMethod({
 
         const currentStructure = Structures.findOne({ _id: structureId });
         if (currentStructure) {
-          currentStructure.StructurePath = getStructurePath(currentStructure);
+          currentStructure.structurePath = getStructurePath(currentStructure);
+          Structures.update({ _id: structureId }, { $set: { structurePath: currentStructure.structurePath } });
         }
 
         Structures.update(
@@ -113,7 +105,6 @@ export const createStructure = new ValidatedMethod({
           {
             $set: {
               childrenIds: [...new Set(directParentStructureChildrenIds)],
-              StructurePath: currentStructure.StructurePath,
             },
           },
         );
@@ -718,7 +709,6 @@ if (Meteor.isServer) {
       setUserStructureAdminValidationMandatoryStatus,
       getTopLevelStructures,
       getTreeOfStructure,
-      getStructurePath,
       searchStructure,
     ],
     'name',

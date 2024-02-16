@@ -13,18 +13,26 @@ import { makeStyles } from 'tss-react/mui';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import ClearIcon from '@mui/icons-material/Clear';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
+import TreeItem from '@mui/lab/TreeItem';
+import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import AddBox from '@mui/icons-material/AddBox';
-import PropTypes from 'prop-types';
+import DeleteIcon from '@mui/icons-material/DeleteOutline';
+import EditIcon from '@mui/icons-material/Edit';
+import { alpha } from '@mui/material/styles';
+import { withStyles } from 'tss-react/mui';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import ContactMailIcon from '@mui/icons-material/ContactMail';
+import CustomDialog from '../../components/system/CustomDialog';
+
 import Spinner from '../../components/system/Spinner';
 import { useObjectState } from '../../utils/hooks';
 import { getTree } from '../../../api/utils';
 import Structures from '../../../api/structures/structures';
 import AdminStructureSearchBar from '../../components/admin/AdminStructureSearchBar';
 import AdminStructureTreeView from '../../components/admin/AdminStructureTreeView';
-import CustomDialog from '../../components/system/CustomDialog';
 
 import { useAppContext } from '../../contexts/context';
 import AdminStructureMailModal from '../../components/admin/AdminStructureMailModal';
@@ -231,6 +239,10 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
     });
   };
 
+  const hasChildren = (struc) => {
+    return struc.childrenIds && struc.childrenIds.length > 0;
+  };
+
   return (
     <Fade in timeout={{ enter: 200 }}>
       <Container style={{ overflowX: 'auto' }}>
@@ -361,14 +373,67 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
               {searchTree
                 ? searchTree.map((struc) => (
                     <div>
-                      <p>- {struc.name}</p>
-                      {struc.structurePath && struc.structurePath.length > 0
-                        ? struc.structurePath.map((pathStruc) => (
-                            <p onClick={(e) => searchStructure(pathStruc.structureId)}>
-                              <i>{pathStruc.structureName}</i>
-                            </p>
-                          ))
-                        : null}
+                      <div style={{ display: 'flex' }}>
+                        <p>- {struc.name}</p>
+                        {onClickMailBtn && (
+                          <Tooltip title={i18n.__('components.AdminStructureTreeItem.actions.sendEmailToAdmins')}>
+                            <span>
+                              <IconButton onClick={() => onClickMailBtn(struc)} size="large">
+                                <ContactMailIcon />
+                              </IconButton>
+                            </span>
+                          </Tooltip>
+                        )}
+                        {onClickAddBtn && (
+                          <Tooltip title={i18n.__('components.AdminStructureTreeItem.actions.addStructure')}>
+                            <span>
+                              <IconButton onClick={() => onClickAddBtn(struc)} size="large">
+                                <AddBox />
+                              </IconButton>
+                            </span>
+                          </Tooltip>
+                        )}
+                        {onClickEditBtn && (
+                          <Tooltip title={i18n.__('components.AdminStructureTreeItem.actions.editStructure')}>
+                            <span>
+                              <IconButton onClick={() => onClickEditBtn(struc)} size="large">
+                                <EditIcon />
+                              </IconButton>
+                            </span>
+                          </Tooltip>
+                        )}
+
+                        {onClickDeleteBtn && (
+                          <Tooltip
+                            title={i18n.__(
+                              `components.AdminStructureTreeItem.actions.deleteStructure${
+                                hasChildren(struc) ? 'ImpossibleHasChildren' : ''
+                              }`,
+                            )}
+                          >
+                            <span>
+                              <IconButton
+                                disabled={hasChildren(struc)}
+                                role="button"
+                                onClick={() => onClickDeleteBtn(struc)}
+                                size="large"
+                              >
+                                <DeleteIcon />
+                              </IconButton>
+                            </span>
+                          </Tooltip>
+                        )}
+                        <br />
+                        {struc.structurePath && struc.structurePath.length > 0
+                          ? struc.structurePath.map((pathStruc) => (
+                              <div style={{ display: 'flex' }}>
+                                <p onClick={(e) => searchStructure(pathStruc.structureId)}>
+                                  <i>{pathStruc.structureName}</i>
+                                </p>
+                              </div>
+                            ))
+                          : null}
+                      </div>
                     </div>
                   ))
                 : null}
