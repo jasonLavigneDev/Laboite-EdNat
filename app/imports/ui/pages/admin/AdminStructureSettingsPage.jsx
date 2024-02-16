@@ -7,7 +7,6 @@ import i18n from 'meteor/universe:i18n';
 import Spinner from '../../components/system/Spinner';
 import { useStructure, useAdminSelectedStructure } from '../../../api/structures/hooks';
 import StructureSelect from '../../components/structures/StructureSelect';
-import AdminStructuresIntroductionEdition from '../../components/admin/AdminStructureIntroductionEdition';
 import TabbedForms from '../../components/system/TabbedForms';
 import { useStyles } from '../../components/admin/InfoEditionComponent';
 import { useAppContext } from '../../contexts/context';
@@ -55,12 +54,6 @@ const AdminStructureSettingsPage = () => {
             <Grid item md={12} className={classes.marginTop}>
               <TabbedForms
                 tabs={[
-                  {
-                    title: i18n.__('pages.AdminStructureSettingsPage.title'),
-                    key: 'structureIntroduction',
-                    Element: AdminStructuresIntroductionEdition,
-                    ElementProps: { structure: selectedStructure },
-                  },
                   {
                     title: 'Contact',
                     key: 'Contact',
