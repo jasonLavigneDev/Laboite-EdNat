@@ -140,7 +140,11 @@ function ServiceDetails({ service, favAction, isShort }) {
       </Tooltip>
       {!isAddressBook && !isEvents && !isPoll && !isBookmark && !isArticles && !isForms && (
         <CardContent className={isShort ? classes.cardContentMobile : classes.cardContent}>
-          {!isShort && <Typography variant="body1">{service.description}</Typography>}
+          {!isShort && (
+            <Typography sx={{ height: '4vw' }} variant="body1">
+              {service.description}
+            </Typography>
+          )}
           <div className={isShort ? classes.cardActionShort : classes.cardActions}>
             <DisplayButton service={service} />
             {!!favAction && <FavButton classesArray={[classes.fab]} service={service} favorite={favorite} />}
