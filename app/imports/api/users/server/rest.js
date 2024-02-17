@@ -87,7 +87,7 @@ export default async function createUser(req, content) {
     throw new Meteor.Error('restapi.users.createuser.alreadyExists', 'username already exists');
   }
   logServer(`USERS - REST - ERROR - createUser - Missing request parameters`, levels.ERROR, scopes.USER, {
-    req,
+    content,
   });
   throw new Meteor.Error('restapi.users.createuser.dataMissing', 'Missing request parameters');
 }
