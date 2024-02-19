@@ -481,6 +481,10 @@ const ProfilePage = () => {
     }
   };
 
+  const handleClick = () => {
+    Meteor.settings.public.theme = 'eole';
+    console.log('yes', Meteor.settings.public.theme);
+  };
   return loadingUser ? (
     <Spinner />
   ) : (
@@ -501,6 +505,7 @@ const ProfilePage = () => {
                       </a>
                     </Typography>
                   </Paper>
+                  <Button onClick={() => handleClick()}>test</Button>
                   <TextField
                     disabled
                     margin="normal"
