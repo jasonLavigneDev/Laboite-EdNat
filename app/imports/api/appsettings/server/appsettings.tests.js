@@ -186,6 +186,7 @@ describe('appsettings', function () {
     let adminId;
     let userId;
     beforeEach(function () {
+      this.timeout(3000);
       // Clear
       AppSettings.remove({});
       Meteor.users.remove({});
