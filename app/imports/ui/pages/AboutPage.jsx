@@ -1,6 +1,7 @@
 // eslint-disable-next-line no-restricted-imports
 import { Paper, Modal, Typography, Button } from '@mui/material';
 import { toast } from 'react-toastify';
+import { makeStyles } from 'tss-react/mui';
 import React, { useState } from 'react';
 import i18n from 'meteor/universe:i18n';
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -10,50 +11,50 @@ import PackageJSON from '../../../package.json';
 import Footer from '../components/menus/Footer';
 import TopBar from '../components/menus/TopBar';
 
+const useStyles = makeStyles()((_theme, props) => ({
+  imageSize: {
+    height: '10vw',
+    placeContent: 'center',
+  },
+  marginRight: {
+    marginRight: '-10vw',
+  },
+  paper: {
+    position: 'absolute',
+    left: '50%',
+    top: '50%',
+    transform: 'translate(-50%, -50%)',
+    padding: '5%',
+  },
+  containerPaper: {
+    display: 'flex',
+    flexDirection: props.isMobile ? 'column' : 'row',
+    height: props.isMobile ? '90vh' : '80vh',
+    padding: 10,
+    placeItems: 'center',
+    overflow: 'auto',
+  },
+  imgContainer: {
+    display: 'flex',
+    width: '25%',
+    justifyContent: 'center',
+  },
+  textZone: {
+    width: props.isMobile ? '100%' : '50vw',
+  },
+  footer: {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+  },
+}));
+
 const AboutPage = () => {
   const [{ isMobile, user }] = useAppContext();
-
-  const style = {
-    imageSize: {
-      height: '10vw',
-      placeContent: 'center',
-    },
-    marginRight: {
-      marginRight: '-10vw',
-    },
-    paper: {
-      position: 'absolute',
-      left: '50%',
-      top: '50%',
-      transform: 'translate(-50%, -50%)',
-      padding: '5%',
-    },
-    containerPaper: {
-      display: 'flex',
-      flexDirection: isMobile ? 'column' : 'row',
-      height: isMobile ? '90vh' : '80vh',
-      padding: 10,
-      placeItems: 'center',
-      overflow: 'auto',
-    },
-    imgContainer: {
-      display: 'flex',
-      width: '25%',
-      justifyContent: 'center',
-    },
-    textZone: {
-      width: isMobile ? '100%' : '50vw',
-    },
-    footer: {
-      position: 'absolute',
-      bottom: 0,
-      width: '100%',
-    },
-  };
   const [isOpen, setIsOpen] = useState(false);
   const bowser = Bowser.parse(window.navigator.userAgent);
   const { browser, os, platform } = bowser;
-
+  const { classes } = useStyles({ isMobile });
   const { version } = PackageJSON;
 
   const handleClickModal = () => {
@@ -70,11 +71,11 @@ const AboutPage = () => {
   return (
     <>
       {!user && <TopBar publicMenu root="/" />}
-      <Paper style={style.containerPaper}>
-        <div style={style.imgContainer}>
-          <img style={style.imageSize} src="/images/logos/eole/puce_eole.png" alt="puce eole" />
+      <Paper className={classes.containerPaper}>
+        <div className={classes.imgContainer}>
+          <img className={classes.imageSize} src="/images/logos/eole/puce_eole.png" alt="puce eole" />
         </div>
-        <div style={style.textZone}>
+        <div className={classes.textZone}>
           <Typography variant={isMobile ? 'h6' : 'h3'}>
             <i style={{ color: '#372F84' }}>LaBoite - version {version}</i>
           </Typography>
@@ -145,7 +146,7 @@ const AboutPage = () => {
         </div>
       </Paper>
       <Modal open={isOpen} onClose={() => setIsOpen(false)}>
-        <Paper sx={style.paper}>
+        <Paper className={classes.paper}>
           <Typography variant="h4">{i18n.__('pages.AboutPage.Modal.information')}</Typography>
           <p>
             {i18n.__('pages.AboutPage.Modal.navigator')} {JSON.stringify(browser.name)}
@@ -170,7 +171,7 @@ const AboutPage = () => {
         </Paper>
       </Modal>
       {!user && !isMobile && (
-        <div style={style.footer}>
+        <div className={classes.footer}>
           <Footer />
         </div>
       )}
