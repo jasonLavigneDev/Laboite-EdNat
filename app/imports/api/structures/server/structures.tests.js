@@ -2,7 +2,7 @@
 /* eslint-disable func-names, prefer-arrow-callback */
 
 import { PublicationCollector } from 'meteor/johanbrook:publication-collector';
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import { assert } from 'chai';
 import { Factory } from 'meteor/dburles:factory';
 import { Meteor } from 'meteor/meteor';
@@ -41,8 +41,8 @@ describe('structures', function () {
         username: email,
         password: 'toto',
         structure: struct._id,
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
       });
       Meteor.users.update(userId, { $set: { isActive: true, articlesCount: 2, lastArticle: new Date() } });
       _.times(4, () => {
@@ -88,8 +88,8 @@ describe('structures', function () {
         username: email,
         password: 'toto',
         structure: struct._id,
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
       });
 
       const structAdmin = Factory.create('structure');
@@ -99,8 +99,8 @@ describe('structures', function () {
         username: emailAdmin,
         password: 'toto',
         structure: structAdmin._id,
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
       });
 
       // set this user as global admin
@@ -363,8 +363,8 @@ describe('structures', function () {
           username: email1,
           password: 'toto',
           structure: struc1Id,
-          firstName: faker.name.firstName(),
-          lastName: faker.name.lastName(),
+          firstName: faker.person.firstName(),
+          lastName: faker.person.lastName(),
         });
         const email3 = faker.internet.email();
         const user3Id = Accounts.createUser({
@@ -372,8 +372,8 @@ describe('structures', function () {
           username: email3,
           password: 'toto',
           structure: struc3Id,
-          firstName: faker.name.firstName(),
-          lastName: faker.name.lastName(),
+          firstName: faker.person.firstName(),
+          lastName: faker.person.lastName(),
         });
         const URL1 = getContactURL._execute({ userId: user1Id }, {});
         assert.equal(URL1, null);

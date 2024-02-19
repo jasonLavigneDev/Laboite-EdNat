@@ -1,5 +1,5 @@
 import { Meteor } from 'meteor/meteor';
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import { Roles } from 'meteor/alanning:roles';
 import Groups from '../../../api/groups/groups';
 import Services from '../../../api/services/services';

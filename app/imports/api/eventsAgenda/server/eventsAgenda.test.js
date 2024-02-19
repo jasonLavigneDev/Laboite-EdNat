@@ -5,7 +5,7 @@ import { Random } from 'meteor/random';
 import { Factory } from 'meteor/dburles:factory';
 import { assert } from 'chai';
 import moment from 'moment';
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import EventsAgenda from '../eventsAgenda';
 import './factories';
 import './publications';
@@ -41,9 +41,9 @@ describe('eventAgenda', function eventTests() {
         username: 'randomguy',
         password: 'toto',
         email: faker.internet.email(),
-        structure: faker.company.companyName(),
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
+        structure: faker.company.name(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
         groupCount: 0,
         groupQuota: 10,
       });
@@ -51,9 +51,9 @@ describe('eventAgenda', function eventTests() {
         email: faker.internet.email(),
         username: 'admin',
         password: 'toto',
-        structure: faker.company.companyName(),
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
+        structure: faker.company.name(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
         groupCount: 0,
         groupQuota: 10,
       });
@@ -61,9 +61,9 @@ describe('eventAgenda', function eventTests() {
         email: faker.internet.email(),
         username: 'member',
         password: 'toto',
-        structure: faker.company.companyName(),
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
+        structure: faker.company.name(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
         groupCount: 0,
         groupQuota: 10,
       });

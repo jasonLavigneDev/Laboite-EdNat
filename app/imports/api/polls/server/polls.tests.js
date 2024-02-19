@@ -3,7 +3,7 @@
 
 import { assert } from 'chai';
 import { Meteor } from 'meteor/meteor';
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import { Factory } from 'meteor/dburles:factory';
 import { PublicationCollector } from 'meteor/johanbrook:publication-collector';
 import { Roles } from 'meteor/alanning:roles';
@@ -43,9 +43,9 @@ describe('polls', function () {
         username: 'randomguy',
         password: 'toto',
         email: faker.internet.email(),
-        structure: faker.company.companyName(),
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
+        structure: faker.company.name(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
         groupCount: 0,
         groupQuota: 10,
       });
@@ -53,9 +53,9 @@ describe('polls', function () {
         email: faker.internet.email(),
         username: 'admin',
         password: 'toto',
-        structure: faker.company.companyName(),
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
+        structure: faker.company.name(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
         groupCount: 0,
         groupQuota: 10,
       });
@@ -63,9 +63,9 @@ describe('polls', function () {
         email: faker.internet.email(),
         username: 'member',
         password: 'toto',
-        structure: faker.company.companyName(),
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
+        structure: faker.company.name(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
         groupCount: 0,
         groupQuota: 10,
       });

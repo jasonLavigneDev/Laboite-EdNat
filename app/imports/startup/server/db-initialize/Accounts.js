@@ -4,7 +4,7 @@ import { Roles } from 'meteor/alanning:roles';
 import { ServiceConfiguration } from 'meteor/service-configuration';
 
 // required: loads accounts customization before initial users creation
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 
 import AppRoles from '../../../api/users/users';
 import { getStructureIds } from '../../../api/users/structures';
@@ -103,8 +103,8 @@ if (Meteor.users.find().count() === 0) {
               faker.internet.password(),
               null,
               faker.random.arrayElement(getStructureIds()),
-              faker.name.firstName(),
-              faker.name.lastName(),
+              faker.person.firstName(),
+              faker.person.lastName(),
             );
             retries = 0;
           } catch (error) {

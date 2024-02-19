@@ -5,7 +5,7 @@ import { PublicationCollector } from 'meteor/johanbrook:publication-collector';
 import { assert } from 'chai';
 import { Meteor } from 'meteor/meteor';
 import '../../../startup/i18n/en.i18n.json';
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import { Factory } from 'meteor/dburles:factory';
 import { Accounts } from 'meteor/accounts-base';
 import { Roles } from 'meteor/alanning:roles';
@@ -239,18 +239,18 @@ describe('appsettings', function () {
         email,
         username: email,
         password: 'toto',
-        structure: faker.company.companyName(),
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
+        structure: faker.company.name(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
       });
       const emailAdmin = faker.internet.email();
       adminId = Accounts.createUser({
         email: emailAdmin,
         username: emailAdmin,
         password: 'toto',
-        structure: faker.company.companyName(),
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
+        structure: faker.company.name(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
       });
       // set this user as global admin
       Roles.addUsersToRoles(adminId, 'admin');

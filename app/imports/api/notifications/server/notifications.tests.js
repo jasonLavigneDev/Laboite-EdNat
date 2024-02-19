@@ -5,7 +5,7 @@ import { PublicationCollector } from 'meteor/johanbrook:publication-collector';
 import { assert } from 'chai';
 import { Meteor } from 'meteor/meteor';
 import { _ } from 'meteor/underscore';
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import { Random } from 'meteor/random';
 import { Factory } from 'meteor/dburles:factory';
 import { Accounts } from 'meteor/accounts-base';
@@ -40,9 +40,9 @@ describe('notifications', function () {
         username: 'yo',
         password: 'toto',
         email: faker.internet.email(),
-        structure: faker.company.companyName(),
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
+        structure: faker.company.name(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
       });
       Meteor.users.update(userId, { $set: { isActive: true } });
       Notifications.remove({});
@@ -75,9 +75,9 @@ describe('notifications', function () {
         username: 'yo',
         password: 'toto',
         email: faker.internet.email(),
-        structure: faker.company.companyName(),
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
+        structure: faker.company.name(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
       });
       Meteor.users.update({}, { $set: { isActive: true } }, { multi: true });
       Notifications.remove({});

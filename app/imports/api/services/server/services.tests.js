@@ -7,7 +7,7 @@ import { Meteor } from 'meteor/meteor';
 import { Random } from 'meteor/random';
 import { _ } from 'meteor/underscore';
 import '../../../startup/i18n/en.i18n.json';
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import { Factory } from 'meteor/dburles:factory';
 import { Accounts } from 'meteor/accounts-base';
 import { Roles } from 'meteor/alanning:roles';
@@ -60,8 +60,8 @@ describe('services', function () {
         username: email,
         password: 'toto',
         structure: userStruct,
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
       });
       Meteor.users.update(userId, { $set: { isActive: true } });
       Services.remove({});
@@ -170,8 +170,8 @@ describe('services', function () {
         username: email,
         password: 'toto',
         structure: 'maStructure',
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
       });
       const emailAdminStructure = `struct${faker.internet.email()}`;
       adminStructureId = Accounts.createUser({
@@ -179,8 +179,8 @@ describe('services', function () {
         username: emailAdminStructure,
         password: 'toto',
         structure: 'maStructure',
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
       });
       const emailAdmin = `admin${faker.internet.email()}`;
       adminId = Accounts.createUser({
@@ -188,8 +188,8 @@ describe('services', function () {
         username: emailAdmin,
         password: 'toto',
         structure: 'maStructure',
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
       });
       // set this user as global admin
       Roles.addUsersToRoles(adminId, 'admin');

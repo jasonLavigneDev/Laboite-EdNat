@@ -1,6 +1,6 @@
 import { Random } from 'meteor/random';
 import { Factory } from 'meteor/dburles:factory';
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import Polls from '../polls';
 
 Factory.define('poll', Polls, {

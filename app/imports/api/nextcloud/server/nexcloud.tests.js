@@ -4,7 +4,7 @@
 import { assert } from 'chai';
 import { Meteor } from 'meteor/meteor';
 import '../../../startup/i18n/en.i18n.json';
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import { Roles } from 'meteor/alanning:roles';
 import { Accounts } from 'meteor/accounts-base';
 import { updateNextcloudURL, removeNextcloudURL, getRandomNCloudURL } from '../methods';
@@ -22,9 +22,9 @@ describe('nextcloud', function () {
         username: 'yo',
         password: 'toto',
         email: faker.internet.email(),
-        structure: faker.company.companyName(),
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
+        structure: faker.company.name(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
         nclocator: '',
       });
       Meteor.users.update(userId, { $set: { isActive: true } });
@@ -47,9 +47,9 @@ describe('nextcloud', function () {
         email: emailAdmin,
         username: emailAdmin,
         password: 'toto',
-        structure: faker.company.companyName(),
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
+        structure: faker.company.name(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
         groupCount: 0,
         groupQuota: 10,
       });
@@ -60,9 +60,9 @@ describe('nextcloud', function () {
         username: 'yo',
         password: 'toto',
         email: faker.internet.email(),
-        structure: faker.company.companyName(),
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
+        structure: faker.company.name(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
         nclocator: '',
       });
       Meteor.users.update({}, { $set: { isActive: true } });

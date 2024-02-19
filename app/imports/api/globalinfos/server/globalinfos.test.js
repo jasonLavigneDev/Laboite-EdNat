@@ -5,7 +5,7 @@ import { assert } from 'chai';
 import { Meteor } from 'meteor/meteor';
 import { Factory } from 'meteor/dburles:factory';
 import '../../../startup/i18n/en.i18n.json';
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import { Accounts } from 'meteor/accounts-base';
 import { Roles } from 'meteor/alanning:roles';
 
@@ -55,8 +55,8 @@ describe('globalinfos', function () {
         username: email,
         password: 'toto',
         structure: structAdminId,
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
       });
       const emailAdmin = faker.internet.email();
       adminId = Accounts.createUser({
@@ -64,8 +64,8 @@ describe('globalinfos', function () {
         username: emailAdmin,
         password: 'toto',
         structure: subStructId,
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
       });
       const emailAdmin2 = faker.internet.email();
       admin2Id = Accounts.createUser({
@@ -73,8 +73,8 @@ describe('globalinfos', function () {
         username: emailAdmin2,
         password: 'toto',
         structure: structAdmin2Id,
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
       });
 
       defaultInfo = {
