@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { Meteor } from 'meteor/meteor';
 import i18n from 'meteor/universe:i18n';
 import { Quill } from 'react-quill';
@@ -10,6 +10,9 @@ import App from '../../ui/layouts/App';
 import getLang from '../../ui/utils/getLang';
 import { registerSchemaMessages } from '../../api/utils';
 import './iframecommands';
+
+const container = document.getElementById('root');
+const root = createRoot(container);
 
 /** Startup the application by rendering the App layout component. */
 Meteor.startup(() => {
@@ -39,5 +42,6 @@ Meteor.startup(() => {
       };
     }
   });
-  render(<App />, document.getElementById('root')); // eslint-disable-line
+
+  root.render(<App tab="home" />);
 });
