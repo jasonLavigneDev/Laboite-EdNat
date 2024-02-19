@@ -1,6 +1,6 @@
 # Laboite
 
-Plateforme de services en ligne.
+Plateforme de services en ligne..
 
 Portail de presentation des applications disponibles et des groupes utilisateurs.
 
