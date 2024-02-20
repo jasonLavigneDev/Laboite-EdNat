@@ -297,14 +297,16 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
             choosenStructureMail={selectedStructure}
           />
         )}
-        <CustomDialog
-          nativeProps={{ maxWidth: 'xs' }}
-          isOpen={isOpenDeleteConfirm}
-          title={selectedStructure.name}
-          content={i18n.__('components.AdminStructureTreeItem.actions.deleteStructureConfirm')}
-          onCancel={() => setIsOpenDeleteConfirm(false)}
-          onValidate={onDeleteConfirm}
-        />
+        {isOpenDeleteConfirm && (
+          <CustomDialog
+            nativeProps={{ maxWidth: 'xs' }}
+            isOpen={isOpenDeleteConfirm}
+            title={selectedStructure.name}
+            content={i18n.__('components.AdminStructureTreeItem.actions.deleteStructureConfirm')}
+            onCancel={() => setIsOpenDeleteConfirm(false)}
+            onValidate={onDeleteConfirm}
+          />
+        )}
         <Card>
           <Box display="flex" justifyContent="space-between">
             <Box>
@@ -360,9 +362,55 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
             <div>
               {structures
                 ? structures.map((struc) => (
-                    <div onClick={(e) => getChildsOfStructure(struc)}>
-                      <p>{struc.name}</p>
-                    </div>
+                    <>
+                      <div onClick={(e) => getChildsOfStructure(struc)}>
+                        <p>{struc.name}</p>
+                      </div>
+                      <div>
+                        <Tooltip title={i18n.__('components.AdminStructureTreeItem.actions.sendEmailToAdmins')}>
+                          <span>
+                            <IconButton onClick={() => onClickMailBtn(struc)} size="large">
+                              <ContactMailIcon />
+                            </IconButton>
+                          </span>
+                        </Tooltip>
+
+                        <Tooltip title={i18n.__('components.AdminStructureTreeItem.actions.addStructure')}>
+                          <span>
+                            <IconButton onClick={() => onClickAddBtn(struc)} size="large">
+                              <AddBox />
+                            </IconButton>
+                          </span>
+                        </Tooltip>
+
+                        <Tooltip title={i18n.__('components.AdminStructureTreeItem.actions.editStructure')}>
+                          <span>
+                            <IconButton onClick={() => onClickEditBtn(struc)} size="large">
+                              <EditIcon />
+                            </IconButton>
+                          </span>
+                        </Tooltip>
+
+                        <Tooltip
+                          title={i18n.__(
+                            `components.AdminStructureTreeItem.actions.deleteStructure${
+                              hasChildren(struc) ? 'ImpossibleHasChildren' : ''
+                            }`,
+                          )}
+                        >
+                          <span>
+                            <IconButton
+                              disabled={hasChildren(struc)}
+                              role="button"
+                              onClick={() => onClickDeleteBtn(struc)}
+                              size="large"
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                          </span>
+                        </Tooltip>
+                      </div>
+                    </>
                   ))
                 : null}
             </div>
@@ -375,54 +423,50 @@ const AdminStructureManagementPage = ({ match: { path } }) => {
                     <div>
                       <div style={{ display: 'flex' }}>
                         <p>- {struc.name}</p>
-                        {onClickMailBtn && (
-                          <Tooltip title={i18n.__('components.AdminStructureTreeItem.actions.sendEmailToAdmins')}>
-                            <span>
-                              <IconButton onClick={() => onClickMailBtn(struc)} size="large">
-                                <ContactMailIcon />
-                              </IconButton>
-                            </span>
-                          </Tooltip>
-                        )}
-                        {onClickAddBtn && (
-                          <Tooltip title={i18n.__('components.AdminStructureTreeItem.actions.addStructure')}>
-                            <span>
-                              <IconButton onClick={() => onClickAddBtn(struc)} size="large">
-                                <AddBox />
-                              </IconButton>
-                            </span>
-                          </Tooltip>
-                        )}
-                        {onClickEditBtn && (
-                          <Tooltip title={i18n.__('components.AdminStructureTreeItem.actions.editStructure')}>
-                            <span>
-                              <IconButton onClick={() => onClickEditBtn(struc)} size="large">
-                                <EditIcon />
-                              </IconButton>
-                            </span>
-                          </Tooltip>
-                        )}
 
-                        {onClickDeleteBtn && (
-                          <Tooltip
-                            title={i18n.__(
-                              `components.AdminStructureTreeItem.actions.deleteStructure${
-                                hasChildren(struc) ? 'ImpossibleHasChildren' : ''
-                              }`,
-                            )}
-                          >
-                            <span>
-                              <IconButton
-                                disabled={hasChildren(struc)}
-                                role="button"
-                                onClick={() => onClickDeleteBtn(struc)}
-                                size="large"
-                              >
-                                <DeleteIcon />
-                              </IconButton>
-                            </span>
-                          </Tooltip>
-                        )}
+                        <Tooltip title={i18n.__('components.AdminStructureTreeItem.actions.sendEmailToAdmins')}>
+                          <span>
+                            <IconButton onClick={() => onClickMailBtn(struc)} size="large">
+                              <ContactMailIcon />
+                            </IconButton>
+                          </span>
+                        </Tooltip>
+
+                        <Tooltip title={i18n.__('components.AdminStructureTreeItem.actions.addStructure')}>
+                          <span>
+                            <IconButton onClick={() => onClickAddBtn(struc)} size="large">
+                              <AddBox />
+                            </IconButton>
+                          </span>
+                        </Tooltip>
+
+                        <Tooltip title={i18n.__('components.AdminStructureTreeItem.actions.editStructure')}>
+                          <span>
+                            <IconButton onClick={() => onClickEditBtn(struc)} size="large">
+                              <EditIcon />
+                            </IconButton>
+                          </span>
+                        </Tooltip>
+
+                        <Tooltip
+                          title={i18n.__(
+                            `components.AdminStructureTreeItem.actions.deleteStructure${
+                              hasChildren(struc) ? 'ImpossibleHasChildren' : ''
+                            }`,
+                          )}
+                        >
+                          <span>
+                            <IconButton
+                              disabled={hasChildren(struc)}
+                              role="button"
+                              onClick={() => onClickDeleteBtn(struc)}
+                              size="large"
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                          </span>
+                        </Tooltip>
+
                         <br />
                         {struc.structurePath && struc.structurePath.length > 0
                           ? struc.structurePath.map((pathStruc) => (
