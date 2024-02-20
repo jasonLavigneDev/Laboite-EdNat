@@ -157,6 +157,9 @@ const Footer = () => {
         <Toolbar className={classes.root}>
           <div>{toolbarContent()}</div>
           <div>
+            <Link key="aboutKey" className={classes.link} to="/about">
+              {i18n.__('components.MainMenu.menuAboutLabel')}
+            </Link>
             <Link key="contactKey" className={classes.link} to="/contact">
               {i18n.__(`components.Footer.contact`)}
             </Link>

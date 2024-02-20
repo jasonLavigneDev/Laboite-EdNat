@@ -621,6 +621,7 @@
       "menuUserBookmarks": "Marque-pages",
       "menuUpload": "Transférer des fichiers",
       "menuProfileLabel": "Mon profil",
+      "menuAboutLabel": "À propos",
       "menuHelpLabel": "Aide",
       "menuFeedbackLabel": "Partager mon avis",
       "menuOnboardingLabel": "Comment utiliser ce service ?",
@@ -1101,6 +1102,31 @@
     "body_editRow_saveTooltip": "Valider"
   },
   "pages": {
+    "AboutPage": {
+      "developped": "LaBoite est un portail applicatif sous licence",
+      "socle": "faisant partie du socle",
+      "by": "Réalisation du",
+      "and": "du",
+      "contributions": "en partenariat avec la",
+      "external": "et des contributeurs externes.",
+      "links": "Vous pouvez consulter la",
+      "exchange": "Vous pouvez échanger avec nous sur le",
+      "chat": "chat Mim-libre",
+      "news": "Retrouvez les dernières informations du pôle sur ",
+      "contributing": "Envie de participer à l'amélioration du portail ? Retouvez le projet sur la",
+      "deposit": "forge Mim-libre",
+      "information": "Informations de dépannage",
+      "Modal": {
+        "information": "Vos informations",
+        "navigator": "Navigateur :",
+        "version": "Version :",
+        "os": "Os :",
+        "device": "Appareil :",
+        "close": "Fermer",
+        "copy": "Copier les informations",
+        "success": "Informations copié avec succès"
+      }
+    },
     "UploadPage": {
       "description": "Vous pouvez envoyer des fichiers volumineux non sensibles de manière sécurisée à un agent de l'Etat ou entre agents grâce à France transfert.",
       "fileCount": "{$count} éléments",

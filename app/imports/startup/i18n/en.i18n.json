@@ -697,6 +697,7 @@
       "menuUserBookmarks": "Bookmarks",
       "menuUpload": "Transfer files",
       "menuProfileLabel": "My profile",
+      "menuAboutLabel": "About",
       "menuHelpLabel": "Help",
       "menuFeedbackLabel": "Give feedback",
       "menuOnboardingLabel": "How to use this service?",
@@ -1094,6 +1095,31 @@
     "body_editRow_saveTooltip": "Confirm"
   },
   "pages": {
+    "AboutPage": {
+      "developped": "LaBoite is an application portal licensed as",
+      "socle": "part of the base",
+      "by": "Made by",
+      "and": "and",
+      "contributions": "in partnership with the",
+      "external": "and external contributors.",
+      "links": "You can consult the",
+      "exchange": "You can communicate with us on the",
+      "chat": "Mim-libre chat",
+      "news": "Find the latest information on ",
+      "contributing": "Want to participate in improving the portal? Find the project on ",
+      "deposit": "Gitlab Mim-libre",
+      "information": "Troubleshooting Information",
+      "Modal": {
+        "information": "Your informations",
+        "navigator": "Navigator :",
+        "version": "Version :",
+        "os": "Os :",
+        "device": "Device :",
+        "close": "Close",
+        "copy": "Copy informations",
+        "success": "Copy success"
+      }
+    },
     "UploadPage": {
       "description": "You can send large, non-sensitive files securely to a government agent or between agents using France transfert.",
       "fileCount": "{$count} elements",

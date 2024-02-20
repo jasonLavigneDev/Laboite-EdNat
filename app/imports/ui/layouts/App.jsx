@@ -27,6 +27,7 @@ const ArticlesPage = lazy(() => import('../pages/articles/ArticlesPage'));
 const PublicArticleDetailsPage = lazy(() => import('../pages/articles/PublicArticleDetailsPage'));
 const PublishersPage = lazy(() => import('../pages/articles/PublishersPage'));
 const UploaderNotifier = lazy(() => import('../components/uploader/UploaderNotifier'));
+const AboutPage = lazy(() => import('../pages/AboutPage'));
 
 export const muiCache = createCache({
   key: 'mui',
@@ -69,6 +70,7 @@ function App() {
           <CssBaseline />
           <Switch>
             <PublicRoute exact path="/signin" component={SignLayout} {...state} />
+            {!userId && <PublicRoute exact path="/about" component={AboutPage} />}
             {externalBlog || !enableBlog ? null : <Route exact path="/public/" component={PublishersPage} />}
             {externalBlog || !enableBlog ? null : <Route exact path="/public/:userId" component={ArticlesPage} />}
             {externalBlog || !enableBlog ? null : (

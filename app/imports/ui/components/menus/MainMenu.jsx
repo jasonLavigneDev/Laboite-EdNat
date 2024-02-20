@@ -11,7 +11,6 @@ import Divider from '@mui/material/Divider';
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PropTypes from 'prop-types';
-import AppVersion from '../system/AppVersion';
 import LogoutDialog from '../system/LogoutDialog';
 import UserAvatar from '../users/UserAvatar';
 import updateDocumentTitle from '../../utils/updateDocumentTitle';
@@ -278,8 +277,12 @@ const MainMenu = ({ user = {} }) => {
           {i18n.__('components.MainMenu.menuLogoutLabel')}
         </MenuItem>
         <Divider />
-        <MenuItem disabled style={{ opacity: 1 }}>
-          <AppVersion />
+        <MenuItem
+          className={classes.menuItem}
+          onClick={() => handleMenuClick({ path: '/about', content: 'menuAboutLabel' })}
+          selected={pathname === '/about'}
+        >
+          {i18n.__('components.MainMenu.menuAboutLabel')}
         </MenuItem>
       </Menu>
       <LogoutDialog open={openLogout} onClose={closeLogoutDialog} onAccept={keycloakLogout} />
