@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.8.1](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/5.8.0...release/5.8.1) (2024-02-20)
+
+
+### Bug Fixes
+
+* **users:** createuser API activates users when creating them ([11d05e3](https://gitlab.mim-libre.fr/alphabet/laboite/commit/11d05e34542b8b0b0532b46d888d3efcbb4aff53))
+
 # [5.8.0](https://gitlab.mim-libre.fr/alphabet/laboite/compare/release/5.7.2...release/5.8.0) (2024-02-02)
 
 
