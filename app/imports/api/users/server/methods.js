@@ -612,6 +612,48 @@ export const unsetAnimatorOf = new ValidatedMethod({
   },
 });
 
+function _setMemberOf(user, group) {
+  const userId = user._id;
+  const groupId = group._id;
+  // add role to user collection
+  Roles.addUsersToRoles(userId, 'member', groupId);
+  // remove candidate Role if present
+  if (Roles.userIsInRole(userId, 'candidate', groupId)) {
+    Roles.removeUsersFromRoles(userId, 'candidate', groupId);
+  }
+  // store info in group collection
+  if (group.members.indexOf(userId) === -1) {
+    logServer(`USERS - METHODS - UPDATE - setMemberOf (groups)`, levels.VERBOSE, scopes.SYSTEM, {
+      userId,
+      groupId,
+    });
+    Groups.update(groupId, {
+      $push: { members: userId },
+      $pull: { candidates: userId },
+    });
+  }
+  // update user personalSpace
+  favGroup._execute({ userId }, { groupId });
+
+  const insertUser = { email: user.emails[0].address, _id: userId, groupId, status: 1 };
+
+  logServer(
+    `USERS - METHODS - UPDATE MANY - setMemberOf (event) - groupId: ${groupId} / participants: ${JSON.stringify(
+      insertUser,
+    )}`,
+    levels.INFO,
+    scopes.SYSTEM,
+  );
+  // update Events
+  EventsAgenda.rawCollection().updateMany(
+    { groups: { $elemMatch: { _id: groupId } } },
+    { $push: { participants: insertUser } },
+  );
+
+  // Notify user
+  if (this.userId !== userId) createRoleNotification(this.userId, userId, groupId, 'member', true);
+}
+
 export const setMemberOf = new ValidatedMethod({
   name: 'users.setMemberOf',
   validate: new SimpleSchema({
@@ -643,7 +685,7 @@ export const setMemberOf = new ValidatedMethod({
     }
     // check if current user has sufficient rights on group
     let authorized = false;
-    if (group.type === 0 || group.type === 15) {
+    if (group.type === 0) {
       // open group, users cand set themselve as member
       authorized = userId === this.userId || Roles.userIsInRole(this.userId, ['admin', 'animator'], groupId);
     } else {
@@ -658,40 +700,7 @@ export const setMemberOf = new ValidatedMethod({
       );
       throw new Meteor.Error('api.users.setMemberOf.notPermitted', i18n.__('api.users.notPermitted'));
     }
-    // add role to user collection
-    Roles.addUsersToRoles(userId, 'member', groupId);
-    // remove candidate Role if present
-    if (Roles.userIsInRole(userId, 'candidate', groupId)) {
-      Roles.removeUsersFromRoles(userId, 'candidate', groupId);
-    }
-    // store info in group collection
-    if (group.members.indexOf(userId) === -1) {
-      logServer(`USERS - METHODS - UPDATE - setMemberOf (groups)`, levels.VERBOSE, scopes.SYSTEM, { userId, groupId });
-      Groups.update(groupId, {
-        $push: { members: userId },
-        $pull: { candidates: userId },
-      });
-    }
-    // update user personalSpace
-    favGroup._execute({ userId }, { groupId });
-
-    const insertUser = { email: user.emails[0].address, _id: userId, groupId, status: 1 };
-
-    logServer(
-      `USERS - METHODS - UPDATE MANY - setMemberOf (event) - groupId: ${groupId} / participants: ${JSON.stringify(
-        insertUser,
-      )}`,
-      levels.INFO,
-      scopes.SYSTEM,
-    );
-    // update Events
-    EventsAgenda.rawCollection().updateMany(
-      { groups: { $elemMatch: { _id: groupId } } },
-      { $push: { participants: insertUser } },
-    );
-
-    // Notify user
-    if (this.userId !== userId) createRoleNotification(this.userId, userId, groupId, 'member', true);
+    _setMemberOf(user, group);
   },
 });
 
@@ -826,9 +835,10 @@ export const unsetCandidateOf = new ValidatedMethod({
   },
 });
 
-export function AddUserToGroupOfStructure(currentUserId, user, structure) {
+export function AddUserToGroupOfStructure(user, structure) {
   if (structure.groupId) {
-    setMemberOf._execute({ userId: currentUserId }, { userId: user._id, groupId: structure.groupId });
+    const group = Groups.findOne(structure.groupId);
+    _setMemberOf(user, group);
   }
 
   const ancestors = Structures.find({ _id: { $in: structure.ancestorsIds } }).fetch();
@@ -837,7 +847,7 @@ export function AddUserToGroupOfStructure(currentUserId, user, structure) {
       if (st.groupId) {
         const gr = Groups.findOne({ _id: st.groupId });
         if (gr) {
-          setMemberOf._execute({ userId: currentUserId }, { userId: user._id, groupId: gr._id });
+          _setMemberOf(user, gr);
         }
       }
     });
@@ -910,7 +920,7 @@ export const acceptAwaitingStructure = new ValidatedMethod({
       },
     );
 
-    AddUserToGroupOfStructure(this.userId, targetUser, structure);
+    AddUserToGroupOfStructure(targetUser, structure);
   },
 });
 
@@ -992,7 +1002,7 @@ export const setStructure = new ValidatedMethod({
       },
     );
 
-    if (isAuthorizedToSetStructureDirectly || isAppAdmin) AddUserToGroupOfStructure(this.userId, user, structureToFind);
+    if (isAuthorizedToSetStructureDirectly || isAppAdmin) AddUserToGroupOfStructure(user, structureToFind);
   },
 });
 
