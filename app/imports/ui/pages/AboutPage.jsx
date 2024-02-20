@@ -106,7 +106,7 @@ const AboutPage = () => {
           </p>
           <p>
             {i18n.__('pages.AboutPage.links')}{' '}
-            <a title="wiki eole" target="_blank" rel="noreferrer noopener" href="https://wiki.eole.education/">
+            <a title="wiki eole" target="_blank" rel="noreferrer noopener" href="https://eole.education/">
               documentation du portail.
             </a>
           </p>
