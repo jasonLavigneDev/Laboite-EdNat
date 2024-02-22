@@ -4,9 +4,8 @@ import SimpleSchema from 'simpl-schema';
 import { Roles } from 'meteor/alanning:roles';
 import i18n from 'meteor/universe:i18n';
 import { _ } from 'meteor/underscore';
-import sanitizeHtml from 'sanitize-html';
-import { getLabel, isActive, sanitizeParameters, validateString } from '../utils';
-import Structures, { IntroductionStructure } from './structures';
+import { getLabel, isActive, validateString } from '../utils';
+import Structures from './structures';
 import { hasAdminRightOnStructure, isAStructureWithSameNameExistWithSameParent, getExternalService } from './utils';
 import Services from '../services/services';
 import Articles from '../articles/articles';
@@ -470,84 +469,6 @@ export const updateStructureContactEmail = new ValidatedMethod({
   },
 });
 
-export const updateStructureIntroduction = new ValidatedMethod({
-  name: 'structures.updateIntroduction',
-  validate: new SimpleSchema({
-    structureId: { type: String, regEx: SimpleSchema.RegEx.Id, label: getLabel('api.structures.labels.id') },
-    ...IntroductionStructure,
-  }).validator(),
-  run({ structureId, language, title, content }) {
-    const structure = Structures.findOne({ _id: structureId });
-
-    if (structure === undefined) {
-      logServer(
-        `STRUCTURE - METHODS - METEOR ERROR - updateStructureIntroduction - ${i18n.__(
-          'api.structures.unknownStructure',
-        )}`,
-        levels.ERROR,
-        scopes.SYSTEM,
-        { structureId, language, title, content },
-      );
-      throw new Meteor.Error(
-        'api.structures.updateIntroduction.unknownStructure',
-        i18n.__('api.structures.unknownStructure'),
-      );
-    }
-    const isAdminOfStructure = hasAdminRightOnStructure({
-      userId: this.userId,
-      structureId,
-    });
-    const authorized = isActive(this.userId) && (Roles.userIsInRole(this.userId, 'admin') || isAdminOfStructure);
-
-    if (!authorized) {
-      logServer(
-        `STRUCTURE - METHODS - METEOR ERROR - updateStructureIntroduction - ${i18n.__('api.users.notPermitted')}`,
-        levels.ERROR,
-        scopes.SYSTEM,
-        { structureId, language, title, content },
-      );
-      throw new Meteor.Error('api.structures.updateIntroduction.notPermitted', i18n.__('api.users.notPermitted'));
-    }
-
-    const oldIntroductionArray = [...structure.introduction];
-    let introductionToChange = oldIntroductionArray.find((entry) => entry.language === language);
-    if (!introductionToChange) {
-      logServer(
-        `STRUCTURE - METHODS - METEOR ERROR - updateStructureIntroduction - ${i18n.__(
-          'api.users.unknownIntroduction',
-        )}`,
-        levels.ERROR,
-        scopes.SYSTEM,
-        { structureId, language, title, content },
-      );
-      throw new Meteor.Error(
-        'api.structures.updateIntroduction.introductionToChangeNotExists',
-        i18n.__('api.users.unknownIntroduction'),
-      );
-    }
-    validateString(title);
-    const sanitizedContent = sanitizeHtml(content, sanitizeParameters);
-    validateString(sanitizedContent);
-    introductionToChange = {
-      ...introductionToChange,
-      title,
-      content: sanitizedContent,
-    };
-    const newIntroductionArray = oldIntroductionArray.map((entry) => {
-      if (entry.language === language) return introductionToChange;
-      return entry;
-    });
-
-    logServer(
-      `STRUCTURE - METHODS - UPDATE - updateStructureIntroduction - structure id: ${structureId}
-      / introduction: ${newIntroductionArray}`,
-      levels.INFO,
-      scopes.SYSTEM,
-    );
-    return Structures.update({ _id: structureId }, { $set: { introduction: newIntroductionArray } });
-  },
-});
-
 export const getStructures = new ValidatedMethod({
   name: 'structures.getStructures',
   validate: null,
@@ -589,7 +510,6 @@ if (Meteor.isServer) {
       updateStructure,
       removeStructure,
       getAllChilds,
-      updateStructureIntroduction,
       updateStructureContactEmail,
       getStructures,
       getOneStructure,

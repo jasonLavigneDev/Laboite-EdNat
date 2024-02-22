@@ -1053,12 +1053,6 @@
     "StructureSelect": {
       "label": "Choose structure"
     },
-    "AdminStructureIntroductionEdition": {
-      "form": {
-        "title": "Title (optional)",
-        "content": "Content"
-      }
-    },
     "AdminStructureChangeEmailContact": {
       "label": "Email de contact"
     },

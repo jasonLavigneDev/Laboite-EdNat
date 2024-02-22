@@ -981,12 +981,6 @@
     "StructureSelect": {
       "label": "Choisir la structure"
     },
-    "AdminStructureIntroductionEdition": {
-      "form": {
-        "title": "Titre (facultatif)",
-        "content": "Contenu"
-      }
-    },
     "AdminStructureChangeEmailContact": {
       "label": "Email de contact"
     },
