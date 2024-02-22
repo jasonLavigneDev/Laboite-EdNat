@@ -93,9 +93,27 @@ FindFromPublication.publish('groups.one.admin', function GroupsOne({ _id }) {
   return Groups.find({ _id }, { fields: Groups.adminFields, sort: { name: 1 }, limit: 1 });
 });
 
+const fetchUsersFromIdsList = (ids) => {
+  return Meteor.users
+    .find(
+      { _id: { $in: ids } },
+      {
+        fields: {
+          username: 1,
+          emails: 1,
+          firstName: 1,
+          lastName: 1,
+        },
+        limit: 10000,
+        sort: { _id: 1 },
+      },
+    )
+    .fetch();
+};
+
 // publish one group and all users associated with given role
 // numUsers is used to force a refetch of users when users are added to the group
-Meteor.publish('groups.users', function groupDetails({ groupId, role = 'member', numUsers }) {
+Meteor.publish('groups.users', function groupDetails({ groupId, role = 'member' }) {
   try {
     new SimpleSchema({
       groupId: {
@@ -114,8 +132,7 @@ Meteor.publish('groups.users', function groupDetails({ groupId, role = 'member',
       scopes.SYSTEM,
       {
         groupId,
-        role: 'member',
-        numUsers,
+        role,
         err,
       },
     );
@@ -132,23 +149,43 @@ Meteor.publish('groups.users', function groupDetails({ groupId, role = 'member',
     return this.ready();
   }
 
-  const users = groups[0][usersField];
+  let currentUsersIds = groups[0][usersField];
+  fetchUsersFromIdsList(currentUsersIds).forEach((user) => {
+    // send the initially found users to the client
+    this.added('users', user._id, user);
+  });
 
-  const usersCursor = Meteor.users.find(
-    { _id: { $in: users } },
-    {
-      fields: {
-        username: 1,
-        emails: 1,
-        firstName: 1,
-        lastName: 1,
-      },
-      limit: 10000,
-      sort: { _id: 1 },
+  // Now, let's watch the document over the wire
+  groupsCursor.observeChanges({
+    // when the doc is updated
+    changed: (_id, fields) => {
+      // if we updated the list of user ids
+      if (fields[usersField]) {
+        const newUsersIds = fields[usersField];
+
+        // find and publish users that have been added
+        const newUsers = fetchUsersFromIdsList(newUsersIds.filter((userId) => !currentUsersIds.includes(userId)));
+        // Find and add new users
+        newUsers.forEach((user) => {
+          // send it to the client
+          this.added('users', user._id, user);
+        });
+
+        // Find and remove users that are no longer in the group
+        currentUsersIds.forEach((userId) => {
+          if (!newUsersIds.includes(userId)) {
+            // If some user is removed from the list, remove it from the client
+            this.removed('users', userId);
+          }
+        });
+
+        // Update the current users list
+        currentUsersIds = newUsersIds;
+      }
     },
-  );
+  });
 
-  return [groupsCursor, usersCursor];
+  return [groupsCursor];
 });
 
 // build query for all groups

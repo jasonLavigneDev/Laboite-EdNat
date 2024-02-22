@@ -130,11 +130,11 @@ describe('groups', function () {
     describe('groups.users', function () {
       it('sends all users with a given role on a group', function (done) {
         const collector = new PublicationCollector({ userId });
-        collector.collect('groups.users', { groupId, role: 'member', numUsers: 0 }, (collections) => {
-          assert.equal(collections.users.length, 0);
+        collector.collect('groups.users', { groupId, role: 'member' }, (collections) => {
+          assert.equal(collections.users, undefined);
         });
         setMemberOf._execute({ userId }, { userId, groupId });
-        collector.collect('groups.users', { groupId, role: 'member', numUsers: 1 }, (collections) => {
+        collector.collect('groups.users', { groupId, role: 'member' }, (collections) => {
           assert.equal(collections.users.length, 1);
           assert.equal(collections.users[0]._id, userId);
           done();
