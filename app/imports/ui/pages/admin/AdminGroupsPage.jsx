@@ -24,7 +24,11 @@ function AdminGroupsPage({ groups, loading, user }) {
       title: i18n.__('pages.AdminGroupsPage.columnName'),
       field: 'name',
       render: (rowData) => getGroupName(rowData),
-      customFilterAndSearch: (value, rowData) => accentInsensitiveSearch(value, rowData, 'name'),
+      customFilterAndSearch: (value, rowData) => {
+        // for structure groups, ignore the Id prefix (18 first chars)
+        const finalData = { ...rowData, name: rowData.type === 15 ? rowData.name.slice(18) : rowData.name };
+        return accentInsensitiveSearch(value, finalData, 'name');
+      },
     },
     {
       title: i18n.__('pages.AdminGroupsPage.columnInfo'),

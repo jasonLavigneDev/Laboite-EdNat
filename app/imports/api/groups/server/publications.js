@@ -207,7 +207,7 @@ const queryAllGroups = ({ search }) => {
 // build query for groups where user is member of
 const queryAllGroupsMemberOf = ({ search, groups }) => {
   const regex = new RegExp(accentInsensitive(search), 'i');
-  const fieldsToSearch = ['name', 'type', 'description', 'slug', 'avatar', 'content'];
+  const fieldsToSearch = ['name', 'description'];
   const searchQuery = fieldsToSearch.map((field) => ({
     [field]: { $regex: regex },
     _id: { $in: groups },
