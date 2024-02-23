@@ -80,12 +80,14 @@ const rndmNr2 = Math.floor(Math.random() * 10);
 const totalNr = rndmNr1 + rndmNr2;
 
 const Contact = ({ structures, loading }) => {
-  if (loading) return <Spinner full />;
+  const [formState, handleChange] = useFormStateValidator(schema);
+  const [externalSite, setExternalSite] = useState(null);
+  const [captchaIsValid, setCaptchaIsValid] = useState(true);
+  const [formSubmit, setFormSubmit] = useState(false);
+  const [counter, setCounter] = useState(0);
   const [{ user }] = useAppContext();
   const history = useHistory();
   const { classes, theme } = useStyles();
-  const [formState, handleChange] = useFormStateValidator(schema);
-  const [externalSite, setExternalSite] = useState(null);
 
   const userStructure = useTracker(() => {
     if (user) {
@@ -105,31 +107,14 @@ const Contact = ({ structures, loading }) => {
     }
   }, [userStructure]);
 
-  const externalRedirect = () => {
-    const url =
-      !externalSite.startsWith('http://') && !externalSite.startsWith('https://')
-        ? `http://${externalSite}`
-        : externalSite;
-    window.open(url, '_blank', 'noopener,noreferrer');
-    history.push('/personal');
-  };
-
-  const hasError = (field) => !!(formState.touched[field] && formState.errors[field]);
-
-  const [captchaIsValid, setCaptchaIsValid] = useState(true);
-
-  const [formSubmit, setFormSubmit] = useState(false);
-
-  const [counter, setCounter] = React.useState(0);
-
-  function onlySpaces(str) {
-    return str.trim().length === 0;
-  }
-
-  React.useEffect(() => {
+  useEffect(() => {
     const timer = counter > 0 && setInterval(() => setCounter(counter - 1), 1000);
     return () => clearInterval(timer);
   }, [counter]);
+
+  const onlySpaces = (str) => {
+    return str.trim().length === 0;
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -139,8 +124,9 @@ const Contact = ({ structures, loading }) => {
     }
     if (user) {
       if (formState.values.text) {
-        if (!user.isActive && parseInt(formState.values.captcha, 10) !== totalNr) setCaptchaIsValid(false);
-        else {
+        if (!user.isActive && parseInt(formState.values.captcha, 10) !== totalNr) {
+          setCaptchaIsValid(false);
+        } else {
           setCaptchaIsValid(true);
           const { firstName, lastName } = user;
           const email = user.emails[0].address;
@@ -171,7 +157,18 @@ const Contact = ({ structures, loading }) => {
     }
   };
 
-  function mailTo() {
+  const externalRedirect = () => {
+    const url =
+      !externalSite.startsWith('http://') && !externalSite.startsWith('https://')
+        ? `http://${externalSite}`
+        : externalSite;
+    window.open(url, '_blank', 'noopener,noreferrer');
+    history.push('/personal');
+  };
+
+  const hasError = (field) => !!(formState.touched[field] && formState.errors[field]);
+
+  const mailTo = () => {
     if (userStructure) {
       const { contactEmail, sendMailToStructureAdmin, sendMailToParent } = userStructure;
       if (contactEmail) return i18n.__('pages.ContactForm.mail.mailSetup');
@@ -186,9 +183,11 @@ const Contact = ({ structures, loading }) => {
       }
     }
     return i18n.__('pages.ContactForm.mail.adminGlobal');
-  }
+  };
 
-  return (
+  return loading ? (
+    <Spinner full />
+  ) : (
     <Container component="main" maxWidth="md">
       <CssBaseline />
       <GlobalStyles
