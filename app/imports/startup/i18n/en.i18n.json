@@ -1286,7 +1286,7 @@
       "externalButton": "Access user support site",
       "mail": {
         "sendTo": "email sent to",
-        "mailSetup": "academic support",
+        "mailSetup": "support",
         "adminStructure": "an administrator of your structure",
         "adminStructureParent": "an administrator of the parent structure to yours",
         "adminGlobal": "a portal administrator"
